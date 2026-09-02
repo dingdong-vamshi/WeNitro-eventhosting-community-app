@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "weNitro-module",
+    "slug": "weNitro-module",
+    "scheme": "wenitro",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.wenitro.app",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "WeNitro uses selected photos and videos only when you choose to publish a profile photo, vibe, story, community image, or message attachment.",
+        "NSCameraUsageDescription": "WeNitro uses the camera only when you choose to capture media for your profile or a post."
+      }
+    },
+    "android": {
+      "package": "com.wenitro.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-asset",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow WeNitro to share profile photos, stories, and chat images."
+        }
+      ],
+      "expo-secure-store",
+      "expo-video"
+    ]
+  }
+}
