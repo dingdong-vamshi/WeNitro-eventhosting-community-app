@@ -6,6 +6,7 @@ node_modules/
 # Expo
 .expo/
 dist/
+dist-android/
 web-build/
 expo-env.d.ts
 
@@ -31,6 +32,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
@@ -39,3 +41,11 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+.vercel
+
+# generated reports and test/runtime artifacts
+/artifacts/
+/output/
+/tmp/
+/.agents/
+/supabase/.temp/

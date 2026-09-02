@@ -1,0 +1,208 @@
+openapi: 3.1.0
+info:
+  title: WeNitro API
+  version: 1.1.0
+  description: PostgreSQL and Supabase-ready contract for communities, conversations, messages, and stories.
+servers:
+  - url: https://api.wenitro.app/api/v1
+security:
+  - bearerAuth: []
+paths:
+  /communities:
+    get:
+      summary: Discover communities
+      parameters:
+        - { name: q, in: query, schema: { type: string } }
+        - { name: scope, in: query, schema: { type: string, enum: [all, joined, created] } }
+        - { name: category, in: query, schema: { type: string } }
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 50, default: 20 } }
+      responses:
+        '200': { description: Paginated communities, content: { application/json: { schema: { $ref: '#/components/schemas/CommunityCollection' } } } }
+    post:
+      summary: Create a community
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/CommunityInput' } } } }
+      responses:
+        '201': { description: Community created, content: { application/json: { schema: { $ref: '#/components/schemas/CommunityResponse' } } } }
+  /communities/{communityId}:
+    parameters: [ { $ref: '#/components/parameters/CommunityId' } ]
+    get:
+      summary: Get a community
+      responses: { '200': { description: Community detail, content: { application/json: { schema: { $ref: '#/components/schemas/CommunityResponse' } } } } }
+    patch:
+      summary: Update an owned community
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/CommunityInput' } } } }
+      responses: { '200': { description: Community updated } }
+    delete:
+      summary: Delete an owned community
+      responses: { '204': { description: Community deleted } }
+  /communities/{communityId}/membership:
+    parameters: [ { $ref: '#/components/parameters/CommunityId' } ]
+    post:
+      summary: Join a community
+      responses: { '200': { description: Membership active or pending } }
+    delete:
+      summary: Leave a community
+      responses: { '204': { description: Membership removed } }
+  /communities/{communityId}/posts:
+    parameters: [ { $ref: '#/components/parameters/CommunityId' } ]
+    get:
+      summary: Read the community feed
+      responses: { '200': { description: Paginated posts } }
+    post:
+      summary: Publish a community post
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PostInput' } } } }
+      responses: { '201': { description: Post created } }
+  /community-posts/{postId}:
+    parameters: [ { $ref: '#/components/parameters/PostId' } ]
+    patch:
+      summary: Edit an authored post
+      responses: { '200': { description: Post updated } }
+    delete:
+      summary: Remove an authored or moderated post
+      responses: { '204': { description: Post removed } }
+  /community-posts/{postId}/reaction:
+    parameters: [ { $ref: '#/components/parameters/PostId' } ]
+    put:
+      summary: Upsert a reaction
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [reaction], properties: { reaction: { type: string, enum: [like, love, laugh, support] } } } } } }
+      responses: { '200': { description: Reaction saved } }
+    delete:
+      summary: Remove a reaction
+      responses: { '204': { description: Reaction removed } }
+  /community-posts/{postId}/comments:
+    parameters: [ { $ref: '#/components/parameters/PostId' } ]
+    get:
+      summary: Read threaded comments
+      responses: { '200': { description: Paginated comments } }
+    post:
+      summary: Add a comment
+      responses: { '201': { description: Comment created } }
+  /uploads/community-image:
+    post:
+      summary: Create a signed community media upload
+      responses: { '201': { description: Signed upload URL and public asset path } }
+  /conversations:
+    get:
+      summary: List direct and group conversations
+      responses: { '200': { description: Conversations ordered by recent activity } }
+    post:
+      summary: Create a direct conversation or group
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ConversationInput' } } } }
+      responses: { '201': { description: Conversation and memberships created } }
+  /conversations/{conversationId}/messages:
+    parameters: [ { $ref: '#/components/parameters/ConversationId' } ]
+    get:
+      summary: Read member-visible messages
+      parameters:
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 40 } }
+      responses: { '200': { description: Cursor-paginated messages } }
+    post:
+      summary: Send a message
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/MessageInput' } } } }
+      responses: { '201': { description: Message sent } }
+  /conversations/{conversationId}/members:
+    parameters: [ { $ref: '#/components/parameters/ConversationId' } ]
+    post:
+      summary: Add a group member
+      responses: { '201': { description: Member added } }
+  /conversations/{conversationId}/members/{userId}:
+    parameters: [ { $ref: '#/components/parameters/ConversationId' }, { $ref: '#/components/parameters/UserId' } ]
+    delete:
+      summary: Leave or remove a group member
+      responses: { '204': { description: Member removed } }
+  /stories:
+    get:
+      summary: List active stories with view state
+      responses: { '200': { description: Active stories } }
+    post:
+      summary: Publish a 24-hour story
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/StoryInput' } } } }
+      responses: { '201': { description: Story published } }
+  /stories/{storyId}:
+    parameters: [ { $ref: '#/components/parameters/StoryId' } ]
+    delete:
+      summary: Delete an owned story
+      responses: { '204': { description: Story deleted } }
+  /stories/{storyId}/view:
+    parameters: [ { $ref: '#/components/parameters/StoryId' } ]
+    put:
+      summary: Mark a story viewed
+      responses: { '200': { description: View receipt saved } }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  parameters:
+    CommunityId: { name: communityId, in: path, required: true, schema: { type: string, format: uuid } }
+    PostId: { name: postId, in: path, required: true, schema: { type: string, format: uuid } }
+    ConversationId: { name: conversationId, in: path, required: true, schema: { type: string, format: uuid } }
+    UserId: { name: userId, in: path, required: true, schema: { type: string, format: uuid } }
+    StoryId: { name: storyId, in: path, required: true, schema: { type: string, format: uuid } }
+  schemas:
+    CommunityInput:
+      type: object
+      required: [name, category, description, imageUrl, coverUrl, rules]
+      properties:
+        name: { type: string, minLength: 3, maxLength: 80 }
+        category: { type: string }
+        description: { type: string, minLength: 20, maxLength: 500 }
+        tagline: { type: string, maxLength: 160 }
+        imageUrl: { type: string, format: uri }
+        coverUrl: { type: string, format: uri }
+        tags: { type: array, maxItems: 8, items: { type: string } }
+        rules: { type: array, minItems: 1, maxItems: 10, items: { type: string, maxLength: 500 } }
+        visibility: { type: string, enum: [public, private], default: public }
+    Community:
+      allOf:
+        - { $ref: '#/components/schemas/CommunityInput' }
+        - type: object
+          required: [id, membership, memberCount, onlineCount]
+          properties:
+            id: { type: string, format: uuid }
+            membership: { type: string, enum: [none, pending, joined, created] }
+            memberCount: { type: integer }
+            onlineCount: { type: integer }
+            verified: { type: boolean }
+    PostInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, maxLength: 180 }
+        body: { type: string, maxLength: 5000 }
+        category: { type: string, default: General }
+        mediaUrl: { type: string, format: uri }
+        mediaType: { type: string, enum: [image, video] }
+    ConversationInput:
+      type: object
+      required: [kind, memberIds]
+      properties:
+        kind: { type: string, enum: [direct, group] }
+        name: { type: string, minLength: 3, maxLength: 80 }
+        avatarUrl: { type: string, format: uri }
+        memberIds: { type: array, minItems: 1, uniqueItems: true, items: { type: string, format: uuid } }
+    MessageInput:
+      type: object
+      properties:
+        body: { type: string, maxLength: 5000 }
+        mediaUrl: { type: string, format: uri }
+        mediaType: { type: string, enum: [image, video, audio, document] }
+        replyToId: { type: string, format: uuid }
+      anyOf: [ { required: [body] }, { required: [mediaUrl] } ]
+    StoryInput:
+      type: object
+      required: [mediaUrl, mediaType]
+      properties:
+        mediaUrl: { type: string, format: uri }
+        mediaType: { type: string, enum: [image, video] }
+        caption: { type: string, maxLength: 500 }
+        visibility: { type: string, enum: [public, followers, close_friends], default: public }
+    CommunityResponse:
+      type: object
+      properties: { data: { $ref: '#/components/schemas/Community' }, error: { type: 'null' } }
+    CommunityCollection:
+      type: object
+      properties:
+        data: { type: array, items: { $ref: '#/components/schemas/Community' } }
+        meta: { type: object, properties: { nextCursor: { type: [string, 'null'] }, total: { type: integer } } }
+        error: { type: 'null' }
