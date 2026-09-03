@@ -15,3 +15,14 @@ The local files retain the complete schema SQL for fresh environments. Productio
 Eleven incompatible UUID-era migrations are preserved under `supabase/migrations_archive/incompatible_uuid/` and are no longer in the active chain.
 
 Never move those archived migrations back into the active directory or run a linked reset against production. Before a future push, confirm the project ref and inspect `supabase migration list`. The local CLI account used during this reconciliation lacked project-management privileges, so the remote ledger was verified through the Supabase migration API instead.
+
+## Reconciled follow-up migrations
+
+The production migration ledger assigned the following canonical versions to four follow-up changes that were originally authored with later planned timestamps:
+
+- `20260902172441_activity_contract_and_media_authorization.sql`
+- `20260902172729_explicit_onboarding_state.sql`
+- `20260902172918_onboarding_column_read_grant.sql`
+- `20260902173417_profile_and_community_privacy.sql`
+
+The local filenames now match those existing production ledger entries exactly. This reconciliation does not replay SQL or alter production schema objects.
