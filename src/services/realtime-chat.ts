@@ -83,6 +83,7 @@ export type RealtimeChatHandlers = {
 export type SubscribeToConversationOptions = RealtimeChatHandlers & {
   conversationId: number;
   deviceId?: string;
+  /** @deprecated Conversation channels are always private. */
   privateChannel?: boolean;
 };
 export type RealtimeChatSubscription = {
@@ -90,6 +91,22 @@ export type RealtimeChatSubscription = {
   sendTyping: (isTyping: boolean) => Promise<void>;
   markRead: (readAt?: Date) => Promise<ReadReceipt>;
   presenceState: () => PresenceParticipant[];
+  cleanup: () => Promise<void>;
+};
+export type InboxMessageChange = {
+  eventType: "INSERT" | "UPDATE" | "DELETE";
+  conversationId: number | null;
+  message: ChatMessage | null;
+  old: Partial<ChatMessage>;
+  occurredAt: string;
+};
+export type InboxRealtimeHandlers = {
+  onConversationChange?: (change: InboxMessageChange) => void;
+  onStatus?: (status: string) => void;
+  onError?: (error: RealtimeChatError) => void;
+};
+export type InboxRealtimeSubscription = {
+  channel: RealtimeChannel;
   cleanup: () => Promise<void>;
 };
 
@@ -500,8 +517,7 @@ export async function subscribeToConversation(
   try {
     const userId = await currentUserId(operation);
     await requireMembership(options.conversationId, operation);
-    const isPrivate = options.privateChannel ?? true;
-    if (isPrivate) await supabase.realtime.setAuth();
+    await supabase.realtime.setAuth();
     let closed = false;
     let typingTimer: ReturnType<typeof setTimeout> | null = null;
     const deviceId = options.deviceId?.trim() || crypto.randomUUID();
@@ -509,7 +525,7 @@ export async function subscribeToConversation(
       config: {
         broadcast: { ack: true, self: false },
         presence: { key: String(userId), enabled: true },
-        private: isPrivate,
+        private: true,
       },
     });
     const report = (error: unknown, failedOperation: string) =>
@@ -597,7 +613,11 @@ export async function subscribeToConversation(
     };
     const markRead = async (readAt = new Date()) => {
       const receipt = await persistRead(options.conversationId, userId, readAt);
-      await broadcast("read-receipt", receipt);
+      try {
+        await broadcast("read-receipt", receipt);
+      } catch (error) {
+        report(error, "broadcast a read receipt");
+      }
       return receipt;
     };
     const cleanup = async () => {
@@ -623,6 +643,94 @@ export async function subscribeToConversation(
   }
 }
 
+export async function subscribeToInbox(
+  handlers: InboxRealtimeHandlers = {},
+): Promise<InboxRealtimeSubscription> {
+  const operation = "subscribe to the chat inbox";
+  let channel: RealtimeChannel | null = null;
+  try {
+    const userId = await currentUserId(operation);
+    await supabase.realtime.setAuth();
+    let closed = false;
+    const report = (error: unknown, failedOperation: string) =>
+      callback(handlers.onError, chatError(error, failedOperation));
+
+    channel = supabase.channel(`inbox:${userId}`, {
+      config: { private: true },
+    });
+    channel.on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "tbl_messages" },
+      (payload) => {
+        void (async () => {
+          try {
+            const source = record(
+              payload.eventType === "DELETE" ? payload.old : payload.new,
+            );
+            const conversationId =
+              source.room_id == null
+                ? null
+                : id(source.room_id, "room id");
+            const message =
+              payload.eventType === "DELETE"
+                ? null
+                : (await signMedia([mapMessage(payload.new)], 3_600))[0];
+            callback(handlers.onConversationChange, {
+              eventType: payload.eventType,
+              conversationId,
+              message,
+              old: partialMessage(payload.old),
+              occurredAt: message?.created_at ?? new Date().toISOString(),
+            });
+          } catch (error) {
+            report(error, "process an inbox message change");
+          }
+        })();
+      },
+    );
+    channel.on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "tbl_chat_participants",
+        filter: `user_id=eq.${userId}`,
+      },
+      (payload) => {
+        const source = record(payload.new);
+        callback(handlers.onConversationChange, {
+          eventType: "UPDATE",
+          conversationId:
+            source.room_id == null ? null : id(source.room_id, "room id"),
+          message: null,
+          old: {},
+          occurredAt: new Date().toISOString(),
+        });
+      },
+    );
+
+    await new Promise<void>((resolve, reject) => {
+      channel!.subscribe((status, error) => {
+        callback(handlers.onStatus, status);
+        if (status === "SUBSCRIBED") resolve();
+        else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          reject(error ?? new Error(`Inbox subscription ${status}.`));
+        }
+      });
+    });
+
+    const cleanup = async () => {
+      if (closed) return;
+      closed = true;
+      await supabase.removeChannel(channel!);
+    };
+    return { channel, cleanup };
+  } catch (error) {
+    if (channel) await supabase.removeChannel(channel);
+    throw chatError(error, operation);
+  }
+}
+
 export const realtimeChatService = {
   createDirectConversation,
   createGroupConversation,
@@ -632,4 +740,5 @@ export const realtimeChatService = {
   sendMessage,
   markConversationRead,
   subscribeToConversation,
+  subscribeToInbox,
 };

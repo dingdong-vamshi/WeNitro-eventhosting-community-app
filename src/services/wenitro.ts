@@ -149,7 +149,10 @@ export async function loadRemoteWorkspace() {
   if (sessionError) throw sessionError;
   if (!session.session) return null;
 
-  const loadStage = async <T>(label: string, task: Promise<T>): Promise<T> => {
+  const loadStage = async <T>(
+    label: string,
+    task: PromiseLike<T>,
+  ): Promise<T> => {
     try {
       return await task;
     } catch (error) {
@@ -205,14 +208,28 @@ export async function loadRemoteWorkspace() {
   if (peopleResult.error) throw workspaceError("people", peopleResult.error);
 
   const eventIds = activityPage.items.map((item) => Number(item.id));
-  const participantResult = eventIds.length
-    ? await supabase
-        .from("tbl_event_participants")
-        .select("event_id,user_id,status")
-        .in("event_id", eventIds)
-    : { data: [] as Row[], error: null };
+  const inboxTask = (
+    supabase.rpc as unknown as (
+      fn: "list_chat_inbox",
+      args: { p_message_limit: number },
+    ) => PromiseLike<{ data: Row[] | null; error: unknown }>
+  )("list_chat_inbox", { p_message_limit: 50 });
+  const [participantResult, inboxResult] = await Promise.all([
+    eventIds.length
+      ? supabase
+          .from("tbl_event_participants")
+          .select("event_id,user_id,status")
+          .in("event_id", eventIds)
+      : Promise.resolve({ data: [] as Row[], error: null }),
+    loadStage(
+      "conversations",
+      inboxTask,
+    ),
+  ]);
   if (participantResult.error)
     throw workspaceError("participants", participantResult.error);
+  if (inboxResult.error)
+    throw workspaceError("conversations", inboxResult.error);
   const participants = (participantResult.data ?? []) as Row[];
   const participantCount = new Map<number, number>();
   for (const row of participants) {
@@ -223,85 +240,117 @@ export async function loadRemoteWorkspace() {
       );
   }
 
-  const communityRows = await loadStage(
-    "community details",
-    Promise.all(communityPage.items.map(async (community) => {
-      const [details, feed] = await Promise.all([
-        communitiesProductionService.getCommunity(community.id),
-        communitiesProductionService.getFeed(community.id, {
-          pageSize: 20,
-        }),
-      ]);
-      return {
-        ...details,
-        owner_id: details.ownerId,
-        is_private: details.visibility === "private",
-        is_verified: details.verified,
-        image_url: details.imageUrl,
-        cover_url: details.coverUrl,
-        member_count: details.memberCount,
-        memberships: [{ count: details.memberCount ?? 0 }],
-        community_rules: details.rules.map((rule) => ({ body: rule.body })),
-        community_posts: feed.items.map((post) => ({
-          ...post,
-          media_url: post.mediaUrl,
-          profiles: post.author,
-          community_post_reactions: [{ count: post.reactionCount }],
-          community_post_comments: [{ count: post.commentCount }],
-          created_at: post.createdAt,
-        })),
-      };
-    })),
-  );
+  const communityRows = communityPage.items.map((community) => ({
+    ...community,
+    owner_id: community.ownerId,
+    is_private: community.visibility === "private",
+    is_verified: community.verified,
+    image_url: community.imageUrl,
+    cover_url: community.coverUrl,
+    member_count: community.memberCount,
+    memberships: [{ count: community.memberCount ?? 0 }],
+    community_rules: [],
+    community_posts: [],
+  }));
 
-  const roomMemberships = await supabase
-    .from("tbl_chat_participants")
-    .select("room_id,user_id")
-    .eq("user_id", userId);
-  if (roomMemberships.error)
-    throw workspaceError("chat memberships", roomMemberships.error);
-  const roomIds = (roomMemberships.data ?? []).map((row: Row) => Number(row.room_id));
-  const roomsResult = roomIds.length
-    ? await supabase.from("tbl_chat_rooms").select("*").in("id", roomIds)
-    : { data: [] as Row[], error: null };
-  if (roomsResult.error) throw workspaceError("chat rooms", roomsResult.error);
-  const conversationRows = await loadStage(
-    "conversations",
-    Promise.all(((roomsResult.data ?? []) as Row[])
-      .filter((room) => room.room_type !== "community")
-      .map(async (room) => {
-        const [members, messages] = await Promise.all([
-          realtimeChatService.loadConversationMembers(Number(room.id)),
-          realtimeChatService.loadMessages(Number(room.id), { limit: 50 }),
-        ]);
-        return {
-          id: String(room.id),
-          name: room.name ?? room.room_name ?? "WeNitro chat",
-          kind: room.room_type === "personal" ? "direct" : "group",
-          chat_members: members.map((member) => ({
-            user_id: String(member.user_id),
-            profiles: member.profiles
-              ? {
-                  id: String(member.profiles.id),
-                  username: member.profiles.username,
-                  full_name: member.profiles.full_name,
-                  avatar_url: member.profiles.avatar_url,
-                }
-              : null,
-          })),
-          chat_messages: messages.map((message) => ({
-            id: String(message.id),
-            sender_id: String(message.sender_id),
-            body: message.body,
-            media_url: message.media_signed_url,
-            created_at: message.created_at,
-            profiles: safeProfile((peopleResult.data as Row[]).find(
-              (person) => Number(person.id) === message.sender_id,
-            )),
-          })),
-        };
-      })),
+  const inboxRows = inboxResult.data ?? [];
+  const inboxMessages = inboxRows.flatMap((room) =>
+    Array.isArray(room.chat_messages) ? (room.chat_messages as Row[]) : [],
   );
+  const inboxMediaPaths = [
+    ...new Set(
+      inboxMessages
+        .map((message) => message.media_url)
+        .filter(
+          (path): path is string =>
+            typeof path === "string" &&
+            path.length > 0 &&
+            !/^https?:\/\//i.test(path),
+        ),
+    ),
+  ];
+  const signedInboxMedia = new Map<string, string>();
+  if (inboxMediaPaths.length) {
+    const signedResult = await loadStage(
+      "chat media",
+      supabase.storage.from("messages").createSignedUrls(inboxMediaPaths, 3_600),
+    );
+    if (signedResult.error)
+      throw workspaceError("chat media", signedResult.error);
+    for (const item of signedResult.data ?? []) {
+      if (item.path && item.signedUrl)
+        signedInboxMedia.set(item.path, item.signedUrl);
+    }
+  }
+
+  const conversationRows = inboxRows.map((room) => {
+    const members = Array.isArray(room.chat_members)
+      ? (room.chat_members as Row[])
+      : [];
+    const messages = Array.isArray(room.chat_messages)
+      ? (room.chat_messages as Row[])
+      : [];
+    const chatMessages = messages.map((message) => {
+      const sender = message.sender as Row | null;
+      const mediaPath =
+        typeof message.media_url === "string" ? message.media_url : null;
+      return {
+        id: String(message.id),
+        sender_id: String(message.sender_id),
+        body: String(message.content ?? message.body ?? ""),
+        media_url: mediaPath
+          ? signedInboxMedia.get(mediaPath) ?? mediaPath
+          : null,
+        created_at: String(message.created_at),
+        profiles: sender?.id
+          ? {
+              id: String(sender.id),
+              username: String(sender.username ?? ""),
+              full_name: sender.fullname == null ? null : String(sender.fullname),
+              avatar_url:
+                sender.profile_image == null
+                  ? null
+                  : String(sender.profile_image),
+            }
+          : null,
+      };
+    });
+    return {
+      id: String(room.id),
+      name: room.title ?? room.name ?? room.room_name ?? "WeNitro chat",
+      kind: room.room_type === "personal" ? "direct" : "group",
+      last_message_at:
+        room.last_message_at == null ? null : String(room.last_message_at),
+      unread_count: Math.max(0, Number(room.unread_count) || 0),
+      viewer_last_read_at:
+        room.viewer_last_read_at == null
+          ? null
+          : String(room.viewer_last_read_at),
+      chat_members: members.map((member) => {
+        const profile = member.user as Row | null;
+        return {
+          user_id: String(member.user_id),
+          role: member.role,
+          last_read_at: member.last_read_at ?? null,
+          muted: Boolean(member.muted),
+          profiles: profile?.id
+            ? {
+                id: String(profile.id),
+                username: String(profile.username ?? ""),
+                full_name:
+                  profile.fullname == null ? null : String(profile.fullname),
+                avatar_url:
+                  profile.profile_image == null
+                    ? null
+                    : String(profile.profile_image),
+              }
+            : null,
+        };
+      }),
+      chat_messages: chatMessages,
+      last_message: chatMessages.at(-1) ?? null,
+    };
+  });
 
   const activities = await loadStage(
     "activity media",
@@ -745,9 +794,14 @@ const writeActivityFromUi = async (
       p_status: status,
     });
     if (error) throw error;
-    const details = await activitiesProductionService.getDetails(
-      activityIdFromRpc(data),
-    );
+    const createdActivityId = activityIdFromRpc(data);
+    const details =
+      await activitiesProductionService.getDetails(createdActivityId);
+    if (details.activity.joinType !== input.joinType) {
+      throw new Error(
+        "The saved joining method did not match your selection. Please retry.",
+      );
+    }
     return activityForWorkspace(
       details.activity,
       details.viewerState.participation?.status ?? null,

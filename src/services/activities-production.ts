@@ -16,8 +16,10 @@ export type ActivityType =
 export type ParticipationStatus =
   | "going"
   | "interested"
+  | "pending"
   | "declined"
   | "waitlist";
+export type JoinActivityStatus = Exclude<ParticipationStatus, "pending">;
 export type ParticipationRole = "participant" | "host" | "cohost";
 
 export type ActivityProfile = {
@@ -412,11 +414,17 @@ const activityFromDb = (
 };
 
 const participationStatusFromDb = (value: unknown): ParticipationStatus => {
-  if (value === "approved") return "going";
-  if (value === "rejected" || value === "left" || value === "no_show") {
+  if (value === "approved" || value === "going") return "going";
+  if (
+    value === "rejected" ||
+    value === "declined" ||
+    value === "left" ||
+    value === "no_show"
+  ) {
     return "declined";
   }
-  if (value === "waitlist" || value === "pending") return "waitlist";
+  if (value === "pending") return "pending";
+  if (value === "waitlist") return "waitlist";
   return "interested";
 };
 
@@ -1029,7 +1037,7 @@ export const activitiesProductionService = {
     await callRpc<unknown>("cancel_activity", { p_event_id: eventId });
   },
 
-  async join(activityId: string, status: ParticipationStatus = "going") {
+  async join(activityId: string, status: JoinActivityStatus = "going") {
     const eventId = parseId(activityId, "Activity ID");
     await currentUserId();
     const row = firstRecord(

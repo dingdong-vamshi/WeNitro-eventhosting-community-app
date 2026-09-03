@@ -158,4 +158,78 @@ export const notificationService = {
           onError?.(error);
       });
   },
+
+  async subscribeUnreadCount(
+    requestedUserId: number | undefined,
+    onCount: (count: number) => void,
+    onError?: (error: Error) => void,
+  ): Promise<() => Promise<void>> {
+    const userId = await currentUserId();
+    if (requestedUserId != null && requestedUserId !== userId)
+      throw new Error("Cannot subscribe to another user's notifications.");
+
+    let disposed = false;
+    let refreshQueued = false;
+    let refreshPromise: Promise<void> | null = null;
+
+    const reportError = (error: unknown) => {
+      if (!disposed)
+        onError?.(error instanceof Error ? error : new Error(String(error)));
+    };
+    const loadUnreadCount = async () => {
+      const { count, error } = await supabase
+        .from("tbl_notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("is_read", false);
+      if (error) throw error;
+      if (!disposed) onCount(count ?? 0);
+    };
+    const refreshUnreadCount = () => {
+      if (disposed) return;
+      if (refreshPromise) {
+        refreshQueued = true;
+        return;
+      }
+      refreshPromise = (async () => {
+        do {
+          refreshQueued = false;
+          await loadUnreadCount();
+        } while (refreshQueued && !disposed);
+      })()
+        .catch(reportError)
+        .finally(() => {
+          refreshPromise = null;
+          if (refreshQueued && !disposed) refreshUnreadCount();
+        });
+    };
+
+    const channel = supabase
+      .channel(`notification-unread-count:${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "tbl_notifications",
+          filter: `user_id=eq.${userId}`,
+        },
+        refreshUnreadCount,
+      )
+      .subscribe((status, error) => {
+        if (status === "SUBSCRIBED") refreshUnreadCount();
+        if (
+          (status === "CHANNEL_ERROR" || status === "TIMED_OUT") &&
+          error
+        )
+          reportError(error);
+      });
+
+    return async () => {
+      if (disposed) return;
+      disposed = true;
+      refreshQueued = false;
+      await supabase.removeChannel(channel);
+    };
+  },
 };
