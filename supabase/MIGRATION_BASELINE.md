@@ -26,3 +26,18 @@ The production migration ledger assigned the following canonical versions to fou
 - `20260902173417_profile_and_community_privacy.sql`
 
 The local filenames now match those existing production ledger entries exactly. This reconciliation does not replay SQL or alter production schema objects.
+
+## Remote activation ledger
+
+The phone-auth, Cashfree sandbox, verified-user, internal-share, and participant-status changes below were applied to canonical project `klyjzbisgycegkkacbjw` through the connected Supabase plugin. Local migration versions use the versions assigned by the production ledger:
+
+- `20260903171713_phone_auth_server_slice.sql`
+- `20260903171725_cashfree_activity_payments.sql`
+- `20260904062444_real_user_flow_activation.sql`
+- `20260904063640_restrict_internal_share_rpc.sql`
+- `20260904063834_fix_internal_share_client_id_variable.sql`
+- `20260904064217_secure_discoverable_people_directory.sql`
+- `20260904064255_reload_real_user_flow_schema_cache.sql`
+- `20260904085443_allow_cashfree_payment_required_participant_status.sql`
+
+The three focused internal-share hardening entries and schema-cache reload are represented as ledger markers because their final definitions are consolidated in `20260904062444_real_user_flow_activation.sql` for fresh environments.
