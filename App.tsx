@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Manrope_400Regular,
   Manrope_500Medium,
@@ -50,17 +49,34 @@ import {
 import {
   bootstrapSession,
   loginWithPassword,
-  signInWithGoogle,
+  requestPhoneOtp,
   signUpWithPassword,
   subscribeToAuthRedirects,
+  verifyPhoneOtp,
   requestEmailVerification,
 } from "./src/services/auth-production";
-import { realtimeChatService } from "./src/services/realtime-chat";
+import {
+  createActivityPayment,
+  launchCashfreeCheckout,
+  verifyActivityPayment,
+} from "./src/services/payments";
+import { realtimeChatService, type ChatSharePayload } from "./src/services/realtime-chat";
 import { profileProductionService } from "./src/services/profile-production";
+import { normalizeOnboardingDateOfBirth } from "./src/utils/onboarding";
 import {
   communitiesProductionService,
   createCommunityPost,
 } from "./src/services/communities-production";
+import { vibesProductionService } from "./src/services/vibes-production";
+import { subscribeToAppForeground } from "./src/services/app-freshness";
+import {
+  openSharedContent,
+  requestInternalShare,
+  subscribeToInternalShareRequests,
+  subscribeToSharedContentNavigation,
+  type InternalShareEntity,
+} from "./src/services/internal-share";
+import { ShareToChatModal } from "./src/components/ShareToChatModal";
 import {
   verificationService,
   type VerificationRequest,
@@ -119,7 +135,8 @@ const readWebRoute = (): WebRoute | null => {
   const [name, encodedId] = window.location.hash.replace(/^#\/?/, "").split("/");
   const entityId = encodedId ? decodeURIComponent(encodedId) : undefined;
   if (name === "activity" && entityId) return { screen: "activityDetail", entityId };
-  if (name === "community" && entityId) return { screen: "communityDetail", entityId };
+    if (name === "community" && entityId) return { screen: "communityDetail", entityId };
+    if (name === "vibe" && entityId) return { screen: "vibes", entityId };
   if (name === "profile" && entityId) return { screen: "profile", entityId };
   if (name === "chat") return { screen: "chat", entityId };
   if (routableScreens.has(name as Screen)) return { screen: name as Screen };
@@ -131,7 +148,8 @@ const webHashFor = (screen: Screen, entityId?: string) => {
   if (screen === "activityDetail") return `#/activity${encodedId}`;
   if (screen === "communityDetail") return `#/community${encodedId}`;
   if (screen === "profile") return `#/profile${encodedId}`;
-  if (screen === "chat") return `#/chat${encodedId}`;
+    if (screen === "chat") return `#/chat${encodedId}`;
+    if (screen === "vibes" && entityId) return `#/vibe${encodedId}`;
   return `#/${screen}`;
 };
 
@@ -150,6 +168,8 @@ type Activity = {
   match?: number;
   end?: string;
   closes?: string;
+  endsAt?: string;
+  registrationClosesAt?: string;
   viewerStatus?:
     | "going"
     | "approved"
@@ -158,6 +178,10 @@ type Activity = {
     | "declined"
     | "rejected"
     | "waitlist"
+    | "payment_pending"
+    | "approved_pending_payment"
+    | "paid"
+    | "payment_failed"
     | null;
   ownerId?: string;
   startsAt?: string;
@@ -166,6 +190,7 @@ type Activity = {
   activityType?: "meetup" | "sport" | "study" | "cowork" | "tournament";
   joinType?: "direct" | "approval";
   communityId?: string | null;
+  hostAvatar?: string;
 };
 
 type ActivityParticipantView = {
@@ -195,6 +220,7 @@ type Vibe = {
   mediaType?: "image" | "video";
   comments?: { id: string; author: string; body: string }[];
   mine?: boolean;
+  authorAvatar?: string;
 };
 
 type CommunityPost = {
@@ -208,6 +234,8 @@ type CommunityPost = {
   liked: boolean;
   image?: string;
   commentItems?: { id: string; author: string; body: string }[];
+  authorAvatar?: string;
+  createdAt?: string;
 };
 
 type Community = {
@@ -235,6 +263,8 @@ type ChatMessage = {
   mine: boolean;
   image?: string;
   createdAt?: string;
+  messageType?: string;
+  share?: ChatSharePayload | null;
 };
 
 type ChatConversation = {
@@ -260,6 +290,8 @@ type ChatStory = {
   viewed: boolean;
   mine?: boolean;
   createdAt?: string;
+  authorId?: string;
+  authorAvatar?: string;
 };
 
 type AppBadge = {
@@ -280,7 +312,7 @@ type DiscoverablePerson = {
 };
 
 type AppData = {
-  mode: "demo" | "authenticated";
+  mode: "authenticated" | "unauthenticated";
   name: string;
   username: string;
   email: string;
@@ -302,6 +334,7 @@ type AppData = {
   onboarded: boolean;
   avatarUri?: string;
   theme: "light" | "dark";
+  friendCount: number;
 };
 
 const ThemeContext = React.createContext<"light" | "dark">("light");
@@ -342,529 +375,85 @@ const photoAssets = {
   bonfire: bundledUri(require("./assets/photos/bonfire.jpg")),
   mic: bundledUri(require("./assets/photos/mic.jpg")),
   ride: bundledUri(require("./assets/photos/ride.jpg")),
-  vibeCoast: bundledUri(require("./assets/vibe-coast.png")),
-  ananya: bundledUri(require("./assets/photos/avatar-ananya.jpg")),
   suchit: bundledUri(require("./assets/photos/avatar-suchit.jpg")),
-  maya: bundledUri(require("./assets/photos/avatar-maya.jpg")),
-  rohan: bundledUri(require("./assets/photos/avatar-rohan.jpg")),
-  indiaBadminton: bundledUri(
-    require("./assets/generated-india/bengaluru-badminton-reel.jpg"),
-  ),
-  indiaCricket: bundledUri(
-    require("./assets/generated-india/bhubaneswar-cricket-reel.jpg"),
-  ),
-  indiaStudy: bundledUri(
-    require("./assets/generated-india/bhubaneswar-study-reel.jpg"),
-  ),
-  indiaCycling: bundledUri(
-    require("./assets/generated-india/dhauli-cycling-reel.jpg"),
-  ),
-  indiaChai: bundledUri(
-    require("./assets/generated-india/patia-founders-chai-reel.jpg"),
-  ),
 };
 
 const mediaSource = (source: any) =>
   typeof source === "string" ? { uri: source } : source;
+const neutralAvatar =
+  "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' rx='80' fill='%23162B4D'/%3E%3Ccircle cx='80' cy='62' r='27' fill='%235E7EAC'/%3E%3Cpath d='M31 142c8-31 26-47 49-47s41 16 49 47' fill='%235E7EAC'/%3E%3C/svg%3E";
+const neutralMediaPlaceholder =
+  "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='960' height='540' viewBox='0 0 960 540'%3E%3Crect width='960' height='540' fill='%2309192D'/%3E%3Ccircle cx='480' cy='238' r='68' fill='%231E4F91'/%3E%3Cpath d='M452 238h56M480 210v56' stroke='%23D9E8FF' stroke-width='14' stroke-linecap='round'/%3E%3Ctext x='480' y='350' text-anchor='middle' font-family='sans-serif' font-size='32' fill='%238EA6C7'%3EWeNitro%3C/text%3E%3C/svg%3E";
 
-const seedActivities: Activity[] = [
-  {
-    id: "a1",
-    title: "Looking for a study buddy for a focused 2-hour sprint",
-    category: "Study",
-    when: "Today, 6:30 PM",
-    end: "Today, 8:30 PM",
-    closes: "Today, 5:30 PM",
-    where: "Indiranagar, Bhubaneswar",
-    price: "Free",
-    seats: 40,
-    joined: 39,
-    host: "Ananya R.",
-    match: 94,
-    description:
-      "Preparing for CAT. Pomodoro blocks, quiet work, then a short coffee break.",
-    image: photoAssets.indiaStudy,
-  },
-  {
-    id: "a2",
-    title: "Need an intermediate pickleball partner",
-    category: "Sport",
-    when: "Tomorrow, 7:30 AM",
-    where: "KISS Layout",
-    price: "₹350",
-    seats: 12,
-    joined: 8,
-    host: "Arjun M.",
-    match: 88,
-    description:
-      "Fast-paced rallies only please. Court is booked, bring your own paddle if possible.",
-    image: photoAssets.indiaBadminton,
-  },
-  {
-    id: "a3",
-    title: "Accountability partner to ship our side projects",
-    category: "Co-work",
-    when: "Sat, 10:00 AM",
-    where: "Koramangala",
-    price: "₹200",
-    seats: 8,
-    joined: 5,
-    host: "Rohan K.",
-    match: 91,
-    description:
-      "Two founders, one table, tons of distraction-free hours. Quick goals at the start and demo at the end.",
-    image: photoAssets.indiaChai,
-  },
-  {
-    id: "a4",
-    title: "Sunrise badminton doubles partner",
-    category: "Sport",
-    when: "Thu, 6:30 AM",
-    where: "Kalinga Stadium",
-    price: "Free",
-    seats: 4,
-    joined: 3,
-    host: "Maya S.",
-    match: 96,
-    description:
-      "Intermediate doubles practice before work. Shuttlecocks are arranged.",
-    image: photoAssets.indiaBadminton,
-  },
-  {
-    id: "a5",
-    title: "Quiet Sunday reading circle",
-    category: "Study",
-    when: "Sun, 10:00 AM",
-    where: "Ekamra Kanan",
-    price: "Free",
-    seats: 10,
-    joined: 6,
-    host: "Nia T.",
-    match: 89,
-    description:
-      "Bring any book, read quietly, then share one idea with the circle.",
-    image: photoAssets.indiaStudy,
-  },
-  {
-    id: "a6",
-    title: "Founders coffee walk",
-    category: "Co-work",
-    when: "Fri, 7:00 AM",
-    where: "Patia Square",
-    price: "₹120",
-    seats: 12,
-    joined: 9,
-    host: "Arjun R.",
-    match: 93,
-    description:
-      "A relaxed walk for founders to compare notes and make useful introductions.",
-    image: photoAssets.indiaChai,
-  },
-  {
-    id: "a7",
-    title: "Weekend city cycling crew",
-    category: "Sport",
-    when: "Sat, 5:45 AM",
-    where: "Dhauli Gate",
-    price: "Free",
-    seats: 18,
-    joined: 14,
-    host: "Karan P.",
-    match: 86,
-    description:
-      "Steady 25 km city loop with regroup points and breakfast after the ride.",
-    image: photoAssets.indiaCycling,
-  },
-  {
-    id: "a8",
-    title: "Acoustic jam and music buddies",
-    category: "Music",
-    when: "Sat, 6:00 PM",
-    where: "Saheed Nagar",
-    price: "₹150",
-    seats: 15,
-    joined: 11,
-    host: "Dev A.",
-    match: 84,
-    description:
-      "Bring an instrument or just your voice. Beginner-friendly collaborative jam.",
-    image: photoAssets.indiaChai,
-  },
-];
+const activityFallbackCover = (category?: string, activityType?: string) => {
+  const value = `${category || ""} ${activityType || ""}`.toLowerCase();
+  if (/sport|badminton|cricket|football|tennis|fitness|tournament/.test(value))
+    return photoAssets.sport;
+  if (/study|learn|book|class/.test(value)) return photoAssets.study;
+  if (/music|concert|sing|dance/.test(value)) return photoAssets.mic;
+  if (/cowork|startup|work|business/.test(value)) return photoAssets.cowork;
+  if (/food|coffee|cafe/.test(value)) return photoAssets.food;
+  return neutralMediaPlaceholder;
+};
 
-const seedVibes: Vibe[] = [
-  {
-    id: "v1",
-    author: "Maya",
-    event: "Study Buddy: IIT Prep",
-    text: "Looking for one focused study buddy for tonight. Pomodoro, no distractions, chai break included.",
-    likes: 42,
-    saved: true,
-    mediaUrl: photoAssets.indiaStudy,
-    mediaType: "image",
-  },
-  {
-    id: "v2",
-    author: "Dev",
-    event: "Badminton Partner: Intermediate",
-    text: "Need one intermediate player near Koramangala. Friendly games, proper warm-up, no ego.",
-    likes: 29,
-    saved: false,
-    mediaUrl: photoAssets.indiaBadminton,
-    mediaType: "image",
-  },
-  {
-    id: "v3",
-    author: "Nia",
-    event: "Sunday Cricket Tournament",
-    text: "We have two spots left for Sunday. Bring your own gloves and your loudest cheering voice.",
-    likes: 18,
-    saved: false,
-    mediaUrl: photoAssets.indiaCricket,
-    mediaType: "image",
-  },
-  {
-    id: "v4",
-    author: "Karan",
-    event: "Dhauli Sunrise Cycling Crew",
-    text: "A calm sunrise loop through Dhauli, followed by breakfast and route planning for next weekend.",
-    likes: 67,
-    saved: false,
-    mediaUrl: photoAssets.indiaCycling,
-    mediaType: "image",
-  },
-  {
-    id: "v5",
-    author: "Arjun",
-    event: "Patia Founders' Chai Walk",
-    text: "Ideas, introductions, and cutting chai. The next walk starts Friday at 7 AM in Patia.",
-    likes: 51,
-    saved: false,
-    mediaUrl: photoAssets.indiaChai,
-    mediaType: "image",
-  },
-];
+const communityFallbackCover = photoAssets.friends;
 
-const seedCommunityPosts: CommunityPost[] = [
-  {
-    id: "cp1",
-    author: "soulful_wanderer",
-    title: "Sunset in Goa never gets old",
-    body: "Calming waves, orange skies and good company.",
-    category: "Travel",
-    reactions: 890,
-    comments: 64,
-    liked: false,
-    image: photoAssets.vibeCoast,
-  },
-  {
-    id: "cp2",
-    author: "chai_aur_code",
-    title: "Weekend well spent",
-    body: "Good coffee, great conversations and a perfect evening.",
-    category: "Lifestyle",
-    reactions: 742,
-    comments: 58,
-    liked: false,
-    image: photoAssets.cowork,
-  },
-  {
-    id: "cp3",
-    author: "curious_mind_",
-    title: "Which book changed your perspective on life?",
-    body: "Would love to know the one book that had the biggest impact on you and why.",
-    category: "Discussion",
-    reactions: 612,
-    comments: 231,
-    liked: false,
-  },
-  {
-    id: "cp4",
-    author: "desi_thinker",
-    title: "Best thing I read today on the internet",
-    body: "This hit me hard! Wanted to share with you all and hear your thoughts.",
-    category: "General",
-    reactions: 1200,
-    comments: 126,
-    liked: false,
-  },
-];
+const runtimeField = (value: unknown, keys: readonly string[]): unknown => {
+  if (!value || typeof value !== "object") return undefined;
+  for (const key of keys) {
+    const candidate = Reflect.get(value, key);
+    if (candidate !== undefined && candidate !== null) return candidate;
+  }
+  return undefined;
+};
+const runtimeString = (value: unknown, keys: readonly string[]): string | undefined => {
+  const candidate = runtimeField(value, keys);
+  return typeof candidate === "string" && candidate.trim() ? candidate : undefined;
+};
+const runtimeId = (value: unknown, keys: readonly string[]): string | undefined => {
+  const candidate = runtimeField(value, keys);
+  return typeof candidate === "string" || typeof candidate === "number" ? String(candidate) : undefined;
+};
+const runtimeNumber = (value: unknown, keys: readonly string[]): number | undefined => {
+  const candidate = runtimeField(value, keys);
+  return typeof candidate === "number" && Number.isFinite(candidate) ? candidate : undefined;
+};
+const formatRuntimeTime = (value?: string): string => {
+  if (!value) return "";
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return "";
+  const minutes = Math.max(0, Math.floor((Date.now() - timestamp) / 60000));
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  return `${Math.floor(hours / 24)}d`;
+};
 
-const seedCommunities: Community[] = [
-  {
-    id: "c1",
-    name: "Bhubaneswar Explorers",
-    tagline: "Explore. Connect. Experience.",
-    category: "Travel",
-    tags: ["Travel", "Outdoors", "Adventure"],
-    memberCount: 2400,
-    onlineCount: 184,
-    visibility: "Public",
-    membership: "none",
-    verified: true,
-    image: photoAssets.cycling,
-    cover: photoAssets.camera,
-    rules: [
-      "Be respectful to others",
-      "No spam or self-promotion",
-      "Keep posts relevant",
-    ],
-    posts: seedCommunityPosts,
-  },
-  {
-    id: "c2",
-    name: "Badminton Bhubaneswar",
-    tagline: "Smash together. Win together.",
-    category: "Sports",
-    tags: ["Sports", "Badminton", "Fitness"],
-    memberCount: 1800,
-    onlineCount: 96,
-    visibility: "Public",
-    membership: "joined",
-    image: photoAssets.sport,
-    cover: photoAssets.sport,
-    rules: ["Respect every skill level", "Confirm court attendance"],
-    posts: seedCommunityPosts.slice(1),
-  },
-  {
-    id: "c3",
-    name: "Coffee & Conversations",
-    tagline: "Good coffee. Great people.",
-    category: "Social",
-    tags: ["Social", "Networking", "Lifestyle"],
-    memberCount: 950,
-    onlineCount: 72,
-    visibility: "Public",
-    membership: "none",
-    image: photoAssets.cowork,
-    cover: photoAssets.cowork,
-    rules: ["Keep conversations welcoming"],
-    posts: seedCommunityPosts.slice(1, 3),
-  },
-  {
-    id: "c4",
-    name: "Music Vibes",
-    tagline: "Feel the rhythm. Live the music.",
-    category: "Music",
-    tags: ["Music", "Entertainment", "Events"],
-    memberCount: 1200,
-    onlineCount: 118,
-    visibility: "Public",
-    membership: "created",
-    image: photoAssets.mic,
-    cover: photoAssets.bonfire,
-    rules: ["Credit artists", "No unauthorized promotion"],
-    posts: seedCommunityPosts.slice(0, 2),
-  },
-  {
-    id: "c5",
-    name: "Foodies of Bhubaneswar",
-    tagline: "Eat. Share. Review.",
-    category: "Food & Drinks",
-    tags: ["Food", "Reviews", "Hangout"],
-    memberCount: 1600,
-    onlineCount: 142,
-    visibility: "Public",
-    membership: "none",
-    image: photoAssets.food,
-    cover: photoAssets.food,
-    rules: ["Post honest reviews", "Mention the location"],
-    posts: seedCommunityPosts,
-  },
-];
 
-const seedStories: ChatStory[] = [
-  {
-    id: "s1",
-    name: "Maya",
-    image: photoAssets.sport,
-    text: "One badminton slot is open for Thursday evening.",
-    viewed: false,
-  },
-  {
-    id: "s2",
-    name: "Arjun",
-    image: photoAssets.cycling,
-    text: "Founders coffee walk starts at 7 AM tomorrow.",
-    viewed: false,
-  },
-  {
-    id: "s3",
-    name: "Nia",
-    image: photoAssets.friends,
-    text: "Two cricket spots are still open for Sunday.",
-    viewed: true,
-  },
-  {
-    id: "s4",
-    name: "Design Circle",
-    image: photoAssets.cowork,
-    text: "Focused study sprint tonight at the library.",
-    viewed: false,
-  },
-];
-
-const seedConversations: ChatConversation[] = [
-  {
-    id: "dm-maya",
-    name: "Maya Chen",
-    type: "People",
-    avatar: photoAssets.maya,
-    memberCount: 2,
-    online: true,
-    unread: 2,
-    messages: [
-      {
-        id: "m1",
-        sender: "Maya",
-        text: "Hey! Are you free for badminton this Thursday?",
-        time: "6:42 PM",
-        mine: false,
-      },
-      {
-        id: "m2",
-        sender: "You",
-        text: "Yes. I can join after work. Which court?",
-        time: "6:44 PM",
-        mine: true,
-      },
-      {
-        id: "m3",
-        sender: "Maya",
-        text: "Kalinga indoor court. I will reserve the 7 PM slot.",
-        time: "6:45 PM",
-        mine: false,
-      },
-    ],
-  },
-  {
-    id: "group-cricket",
-    name: "Sunday Cricket Tournament",
-    type: "Groups",
-    avatar: photoAssets.friends,
-    memberCount: 18,
-    online: true,
-    unread: 5,
-    messages: [
-      {
-        id: "m4",
-        sender: "Nia",
-        text: "We still need two players for Sunday. Who is in?",
-        time: "5:18 PM",
-        mine: false,
-      },
-      {
-        id: "m5",
-        sender: "Arjun",
-        text: "Count me in. I can bring an extra bat.",
-        time: "5:23 PM",
-        mine: false,
-      },
-      {
-        id: "m6",
-        sender: "You",
-        text: "I am joining too. Please share the ground location.",
-        time: "5:30 PM",
-        mine: true,
-      },
-    ],
-  },
-  {
-    id: "group-study",
-    name: "Study Sprint",
-    type: "Groups",
-    avatar: photoAssets.study,
-    memberCount: 9,
-    online: false,
-    unread: 0,
-    messages: [
-      {
-        id: "m7",
-        sender: "Dev",
-        text: "Starting a focused CAT study sprint at 7 PM.",
-        time: "3:10 PM",
-        mine: false,
-      },
-      {
-        id: "m8",
-        sender: "Maya",
-        text: "I will join for the first two Pomodoro blocks.",
-        time: "3:14 PM",
-        mine: false,
-      },
-    ],
-  },
-  {
-    id: "dm-arjun",
-    name: "Arjun Rao",
-    type: "People",
-    avatar: photoAssets.rohan,
-    memberCount: 2,
-    online: false,
-    unread: 0,
-    messages: [
-      {
-        id: "m9",
-        sender: "Arjun",
-        text: "The coffee walk route is confirmed for tomorrow.",
-        time: "Yesterday",
-        mine: false,
-      },
-    ],
-  },
-];
 
 const initialData: AppData = {
-  mode: "demo",
-  name: "Suchit Pradhan",
-  username: "@suchitp",
-  email: "demo@wenitro.app",
-  bio: "Building better offline social momentum with WeNitro.",
-  location: "Bhubaneswar, Odisha",
-  trustScore: 70,
-  interests: ["Badminton", "Travel", "Reading", "Coffee", "Music"],
-  badges: [
-    { id: "demo-trusted", name: "Trusted", description: "High trust score" },
-  ],
-  activities: seedActivities,
-  vibes: seedVibes,
-  communities: seedCommunities,
-  conversations: seedConversations,
-  stories: seedStories,
-  people: [
-    {
-      id: "person-maya",
-      name: "Maya Sharma",
-      username: "@maya",
-      avatar: photoAssets.maya,
-      bio: "Badminton, focused work, and coffee walks.",
-      location: "Bhubaneswar",
-      online: true,
-    },
-    {
-      id: "person-arjun",
-      name: "Arjun Rao",
-      username: "@arjun",
-      avatar: photoAssets.rohan,
-      bio: "Founder and weekend cricket organizer.",
-      location: "Bhubaneswar",
-      online: false,
-    },
-    {
-      id: "person-nia",
-      name: "Nia Thomas",
-      username: "@nia",
-      avatar: photoAssets.ananya,
-      bio: "Study sprints and community meetups.",
-      location: "Bhubaneswar",
-      online: true,
-    },
-  ],
-  savedIds: ["activity:a2", "vibe:v1"],
-  likedIds: ["activity:a1", "vibe:v2"],
-  nitro: 1240,
+  mode: "unauthenticated",
+  name: "",
+  username: "",
+  email: "",
+  bio: "",
+  location: "",
+  trustScore: 0,
+  interests: [],
+  badges: [],
+  activities: [],
+  vibes: [],
+  communities: [],
+  conversations: [],
+  stories: [],
+  people: [],
+  savedIds: [],
+  likedIds: [],
+  nitro: 0,
   onboarded: false,
   theme: "light",
+  friendCount: 0,
 };
 
 const isUuid = (value: string) =>
@@ -884,17 +473,21 @@ const activityFromRemote = (item: any): Activity => ({
   when: new Date(item.starts_at).toLocaleString(),
   startsAt: item.starts_at,
   end: item.ends_at ? new Date(item.ends_at).toLocaleString() : undefined,
+  endsAt: item.ends_at ?? undefined,
   closes: item.registration_closes_at
     ? new Date(item.registration_closes_at).toLocaleString()
     : undefined,
+  registrationClosesAt: item.registration_closes_at ?? undefined,
   where: item.location_name,
   price: Number(item.price_inr) ? `₹${item.price_inr}` : "Free",
   seats: item.capacity,
   joined: item.participants?.[0]?.count ?? 0,
-  host: item.profiles?.full_name ?? item.profiles?.username ?? "WeNitro member",
-  match: item.match_score ?? 90,
+  host: item.profiles?.full_name ?? item.profiles?.username ?? "",
+  hostAvatar: runtimeString(item.profiles, ["profile_image", "avatar_url", "avatar"]) ?? runtimeString(item, ["hostAvatar", "host_avatar"]),
+  match: item.match_score ?? 0,
   description: item.description ?? "",
-  image: item.cover_url || photoAssets.friends,
+  image:
+    item.cover_url || activityFallbackCover(item.category, item.activity_type),
   viewerStatus: item.viewer_status ?? null,
   visibility: item.visibility ?? "public",
   status: item.status ?? "published",
@@ -902,14 +495,54 @@ const activityFromRemote = (item: any): Activity => ({
   communityId: item.community_id ? String(item.community_id) : null,
 });
 
+const chatMessageFromRemote = (message: any, userId: string | undefined): ChatMessage => {
+  const rawShare = message.share_payload;
+  const share = rawShare
+    ? {
+        version: 1 as const,
+        kind: rawShare.kind,
+        entityId: String(rawShare.entityId ?? rawShare.entity_id ?? ""),
+        parentId:
+          rawShare.parentId == null && rawShare.parent_id == null
+            ? null
+            : String(rawShare.parentId ?? rawShare.parent_id),
+        title: String(rawShare.title ?? "Shared from WeNitro"),
+        preview: String(rawShare.preview ?? ""),
+        deepLink: String(rawShare.deepLink ?? rawShare.deep_link ?? ""),
+        sharedBy: Number(rawShare.sharedBy ?? rawShare.shared_by) || 0,
+        thumbnailBucket: rawShare.thumbnailBucket ?? rawShare.thumbnail_bucket ?? null,
+        thumbnailPath: rawShare.thumbnailPath ?? rawShare.thumbnail_path ?? null,
+        thumbnailUrl:
+          rawShare.thumbnailUrl ??
+          rawShare.thumbnail_url ??
+          (/^https?:\/\//i.test(rawShare.thumbnail_path ?? "") ? rawShare.thumbnail_path : null),
+      }
+    : null;
+  return {
+  id: String(message.id),
+  sender:
+    String(message.sender_id) === String(userId)
+      ? "You"
+      : message.profiles?.full_name || message.profiles?.username || "Member",
+  text: String(message.body ?? message.content ?? ""),
+  time: new Date(message.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+  mine: String(message.sender_id) === String(userId),
+  image: message.media_signed_url || message.media_url || undefined,
+  createdAt: String(message.created_at),
+  messageType: String(message.message_type ?? "text"),
+  share,
+  };
+};
+
 function hydrateRemoteData(remote: any, fallback: AppData): AppData {
   const profile = remote.profile;
   const userId = profile?.id;
   const activities: Activity[] = remote.activities.map(activityFromRemote);
   const vibes: Vibe[] = remote.vibes.map((item: any) => ({
     id: item.id,
-    author: item.profiles?.username || item.profiles?.full_name || "Member",
-    event: item.caption || "WeNitro Vibe",
+    author: item.profiles?.username || item.profiles?.full_name || "",
+    authorAvatar: runtimeString(item.profiles, ["profile_image", "avatar_url", "avatar"]),
+    event: item.caption || "",
     text: item.caption,
     likes: item.likes?.[0]?.count ?? 0,
     saved: false,
@@ -925,11 +558,11 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
   }));
   const people: DiscoverablePerson[] = remote.people.map((item: any) => ({
     id: item.id,
-    name: item.full_name || item.username || "WeNitro member",
-    username: item.username ? `@${item.username}` : "@member",
-    avatar: item.avatar_url || photoAssets.friends,
-    bio: item.bio || "Looking for people with shared intent.",
-    location: item.location || "Nearby",
+    name: item.full_name || item.username || "",
+    username: item.username ? `@${item.username}` : "",
+    avatar: item.avatar_url || neutralAvatar,
+    bio: item.bio || "",
+    location: item.location || "",
     online: item.last_active_at
       ? Date.now() - new Date(item.last_active_at).getTime() < 15 * 60 * 1000
       : false,
@@ -952,12 +585,14 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
           ? "joined"
           : "none",
     verified: item.is_verified,
-    image: item.image_url || photoAssets.friends,
-    cover: item.cover_url || photoAssets.friends,
+    image: item.image_url || communityFallbackCover,
+    cover: item.cover_url || communityFallbackCover,
     rules: (item.community_rules || []).map((rule: any) => rule.body),
     posts: (item.community_posts || []).map((post: any) => ({
       id: post.id,
-      author: "Member",
+      author: post.profiles?.full_name || post.profiles?.username || "",
+      authorAvatar: runtimeString(post.profiles, ["profile_image", "avatar_url", "avatar"]),
+      createdAt: runtimeString(post, ["createdAt", "created_at"]),
       title: post.title,
       body: post.body,
       category: post.category,
@@ -981,7 +616,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
               "WeNitro member",
         type: item.kind === "group" ? "Groups" : "People",
         avatar:
-          item.avatar_url || other?.profiles?.avatar_url || photoAssets.friends,
+          item.avatar_url || other?.profiles?.avatar_url || neutralAvatar,
         memberCount: members.length,
         online: false,
         unread: Number(item.unread_count ?? 0),
@@ -991,23 +626,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
         userId: other?.user_id,
         messages: (item.chat_messages || [])
           .sort((a: any, b: any) => a.created_at.localeCompare(b.created_at))
-          .map((message: any) => ({
-            id: message.id,
-            sender:
-              message.sender_id === userId
-                ? "You"
-                : message.profiles?.full_name ||
-                  message.profiles?.username ||
-                  "Member",
-            text: message.body,
-            time: new Date(message.created_at).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            mine: message.sender_id === userId,
-            image: message.media_url || undefined,
-            createdAt: message.created_at,
-          })),
+          .map((message: any) => chatMessageFromRemote(message, userId)),
       };
     },
   );
@@ -1028,6 +647,8 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
     ),
     mine: item.owner_id === userId,
     createdAt: item.created_at,
+    authorId: String(item.owner_id),
+    authorAvatar: runtimeString(item.profiles, ["profile_image", "avatar_url", "avatar"]),
   }));
   return {
     mode: "authenticated",
@@ -1036,7 +657,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
     email: remote.email || "",
     userId: userId ? String(userId) : undefined,
     bio: profile?.bio || "",
-    location: profile?.location || "Nearby",
+    location: profile?.location || "",
     trustScore: Number(profile?.trust_score ?? 0),
     interests: remote.interests || [],
     badges: (remote.badges || []).map((badge: any) => ({
@@ -1060,17 +681,9 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
     savedIds: (remote.savedIds || []).map((id: string) => activityReactionId(String(id))),
     onboarded: Boolean(profile?.onboarding_completed),
     theme: fallback.theme,
+    friendCount: runtimeNumber(remote, ["friendCount", "friend_count"]) ?? 0,
   };
 }
-
-const storageKey = "wenitro-module-demo-db-v6-dynamic-chat";
-
-const faces = [
-  photoAssets.ananya,
-  photoAssets.suchit,
-  photoAssets.maya,
-  photoAssets.rohan,
-];
 
 let clickAudioContext: any;
 function playClickSound() {
@@ -1258,7 +871,6 @@ function BrandHeader({
         <Text style={styles.brandName}>WeNitro</Text>
         <View style={styles.brandLocation}>
           <Icon name="location" color="#fff" size={12} />
-          <Text style={styles.brandLocationText}>Bhubaneswar</Text>
         </View>
       </View>
       <View style={styles.brandActions}>
@@ -1283,23 +895,13 @@ function BrandHeader({
   );
 }
 
-function AvatarStack({ count = 4, extra }: { count?: number; extra?: number }) {
+function AvatarStack({ count = 0, extra = 0 }: { count?: number; extra?: number }) {
+  const total = Math.max(0, count + extra);
+  if (total === 0) return null;
   return (
-    <View style={styles.avatarStack}>
-      {faces.slice(0, count).map((source, index) => (
-        <Image
-          key={index}
-          source={mediaSource(source)}
-          style={[styles.stackAvatar, { marginLeft: index ? -8 : 0 }]}
-        />
-      ))}
-      {extra ? (
-        <View
-          style={[styles.stackAvatar, styles.stackExtra, { marginLeft: -8 }]}
-        >
-          <Text style={styles.stackExtraText}>+{extra}</Text>
-        </View>
-      ) : null}
+    <View style={styles.row}>
+      <Icon name="people-outline" size={17} color={colors.purple600} />
+      <Text style={styles.metaStrong}>{total}</Text>
     </View>
   );
 }
@@ -1523,22 +1125,6 @@ function AuthCard({ children }: { children: React.ReactNode }) {
               Meet with intent. Make real plans.
             </Text>
           </View>
-          <View style={styles.authFaces}>
-            {faces.slice(0, 3).map((face, i) => (
-              <View
-                key={i}
-                style={[styles.authFace, { marginLeft: i ? -9 : 0 }]}
-              >
-                <Image
-                  source={mediaSource(face)}
-                  style={styles.authFaceImage}
-                />
-              </View>
-            ))}
-            <Text style={styles.authSocialProof}>
-              12k people are making plans today
-            </Text>
-          </View>
         </LinearGradient>
         <View style={styles.authCard}>{children}</View>
       </ScrollView>
@@ -1546,32 +1132,195 @@ function AuthCard({ children }: { children: React.ReactNode }) {
   );
 }
 
-function LoginScreen({
+function AuthMethodTabs({
+  method,
+  setMethod,
+}: {
+  method: "email" | "phone";
+  setMethod: (method: "email" | "phone") => void;
+}) {
+  return (
+    <View style={{ flexDirection: "row", gap: 8, marginBottom: 18 }}>
+      {(["email", "phone"] as const).map((item) => (
+        <Pressable
+          key={item}
+          onPress={() => setMethod(item)}
+          style={{
+            flex: 1,
+            paddingVertical: 12,
+            borderRadius: 12,
+            alignItems: "center",
+            backgroundColor: method === item ? colors.purple600 : colors.purple50,
+          }}
+        >
+          <Text
+            style={{
+              color: method === item ? "#fff" : colors.purple600,
+              fontWeight: "800",
+            }}
+          >
+            {item === "email" ? "Email" : "Phone"}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
+function PhoneOtpForm({
+  createAccount,
   go,
   setData,
 }: {
+  createAccount: boolean;
+  go: (screen: Screen) => void;
+  setData: React.Dispatch<React.SetStateAction<AppData>>;
+}) {
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [sentPhone, setSentPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(
+      () => setCooldown((current) => Math.max(0, current - 1)),
+      1000,
+    );
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
+  const sendOtp = async () => {
+    if (submitting || (sentPhone && cooldown > 0)) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      if (!isSupabaseConfigured) throw new Error("Supabase is not configured.");
+      const result = await requestPhoneOtp({
+        phone,
+        fullName: createAccount ? fullName : undefined,
+        createAccount,
+      });
+      setSentPhone(result.phone);
+      setCooldown(30);
+      setOtp("");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not send OTP.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const verify = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      await verifyPhoneOtp({ phone: sentPhone, token: otp });
+      const remote = await loadRemoteWorkspace();
+      if (!remote) throw new Error("Could not load your WeNitro profile.");
+      setData((current) => hydrateRemoteData(remote, current));
+      go(remote.profile.onboarding_completed ? "feed" : "onboarding");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "OTP verification failed.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (sentPhone) {
+    const maskedPhone = `${sentPhone.slice(0, 3)}${"•".repeat(
+      Math.max(0, sentPhone.length - 7),
+    )}${sentPhone.slice(-4)}`;
+    return (
+      <>
+        <Text style={styles.formIntro}>
+          Verify your phone. Enter the six-digit OTP sent to {maskedPhone}.
+        </Text>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <Field
+          label="OTP"
+          value={otp}
+          onChangeText={(value) => setOtp(value.replace(/\D/g, "").slice(0, 6))}
+          placeholder="6-digit OTP"
+        />
+        <Button
+          label={
+            submitting
+              ? "Verifying..."
+              : createAccount
+                ? "Verify & Create Account"
+                : "Verify & Continue"
+          }
+          icon="shield-checkmark"
+          onPress={verify}
+        />
+        <Pressable onPress={sendOtp} disabled={cooldown > 0 || submitting}>
+          <Text style={styles.centerLink}>
+            {cooldown > 0 ? `Resend OTP in ${cooldown}s` : "Resend OTP"}
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            setSentPhone("");
+            setOtp("");
+            setCooldown(0);
+            setError("");
+          }}
+        >
+          <Text style={styles.centerLink}>Edit phone number</Text>
+        </Pressable>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {createAccount ? (
+        <Field
+          label="Full name"
+          value={fullName}
+          onChangeText={setFullName}
+          placeholder="Your name"
+        />
+      ) : null}
+      <Field
+        label="Phone number"
+        value={phone}
+        onChangeText={setPhone}
+        placeholder="+91 98765 43210"
+      />
+      <Button
+        label={submitting ? "Sending OTP..." : "Send OTP"}
+        icon="phone-portrait-outline"
+        onPress={sendOtp}
+      />
+    </>
+  );
+}
+
+function LoginScreen({ go, setData }: {
   go: (s: Screen) => void;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
 }) {
+  const [method, setMethod] = useState<"email" | "phone">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const socialLogin = async (provider: "google" | "apple") => {
-    setSubmitting(true);
-    setError("");
+  const [verificationPending, setVerificationPending] = useState(false);
+  const [resendStatus, setResendStatus] = useState("");
+  const resend = async () => {
+    setResendStatus("Sending...");
     try {
-      if (isSupabaseConfigured) {
-        if (provider === "google") await signInWithGoogle();
-        else await authService.signInWithProvider(provider);
-      } else {
-        setData((d) => ({ ...d, onboarded: true }));
-        go("feed");
-      }
+      await requestEmailVerification({ email });
+      setResendStatus("If verification is pending, a new email has been sent.");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not sign in.");
-    } finally {
-      setSubmitting(false);
+      setResendStatus(caught instanceof Error ? caught.message : "Could not resend verification.");
     }
   };
   const passwordLogin = async () => {
@@ -1582,13 +1331,17 @@ function LoginScreen({
     setSubmitting(true);
     setError("");
     try {
+      if (!isSupabaseConfigured) throw new Error("Supabase is not configured.");
       await loginWithPassword({ email, password });
       const remote = await loadRemoteWorkspace();
       if (!remote) throw new Error("Could not load your WeNitro workspace.");
       setData((current) => hydrateRemoteData(remote, current));
       go(remote.profile.onboarding_completed ? "feed" : "onboarding");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not sign in.");
+      const source = caught as { code?: string; message?: string };
+      const needsVerification = source?.code === "email_not_confirmed" || /email.*not.*confirm/i.test(source?.message ?? "");
+      setVerificationPending(needsVerification);
+      setError(needsVerification ? "Please verify your email before signing in." : caught instanceof Error ? caught.message : "Could not sign in.");
     } finally {
       setSubmitting(false);
     }
@@ -1598,184 +1351,128 @@ function LoginScreen({
       <View style={styles.loginHeading}>
         <Text style={styles.authEyebrow}>WELCOME BACK</Text>
         <Text style={styles.formTitle}>Log in to WeNitro</Text>
-        <Text style={styles.formIntro}>
-          Continue securely with the account already on your phone.
-        </Text>
+        <Text style={styles.formIntro}>Continue with your real WeNitro account.</Text>
       </View>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Field
-        label="Email"
-        value={email}
-        onChangeText={setEmail}
-        placeholder="you@example.com"
-      />
-      <Field
-        label="Password"
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Your password"
-        secureTextEntry
-      />
-      <Button
-        label={submitting ? "Signing in..." : "Sign in"}
-        icon="log-in"
-        onPress={passwordLogin}
-      />
+      <AuthMethodTabs method={method} setMethod={setMethod} />
+      {method === "phone" ? (
+        <PhoneOtpForm createAccount={false} go={go} setData={setData} />
+      ) : (
+        <>
+          {error ? <Text style={styles.error}>{error}</Text> : null}
+          <Field label="Email" value={email} onChangeText={setEmail} placeholder="you@example.com" />
+          <Field label="Password" value={password} onChangeText={setPassword} placeholder="Your password" secureTextEntry />
+            <Button label={submitting ? "Signing in..." : "Sign in"} icon="log-in" onPress={passwordLogin} />
+            {verificationPending ? <Pressable onPress={() => void resend()}><Text style={styles.centerLink}>Resend verification email</Text></Pressable> : null}
+            {resendStatus ? <Text style={styles.meta}>{resendStatus}</Text> : null}
+        </>
+      )}
       <Pressable onPress={() => go("signup")}>
         <Text style={styles.centerLink}>New to WeNitro? Create an account</Text>
       </Pressable>
-      <Button
-        label={submitting ? "Opening account..." : "Continue with Google"}
-        icon="logo-google"
-        variant="outline"
-        onPress={() => socialLogin("google")}
-      />
-      <Button
-        label="Continue with Apple Account"
-        icon="logo-apple"
-        variant="outline"
-        onPress={() => socialLogin("apple")}
-      />
-      <Button
-        label="Explore the interactive demo"
-        icon="play-circle"
-        variant="ghost"
-        onPress={() => {
-          if (isSupabaseConfigured) {
-            setError("Sign in to use the connected WeNitro workspace.");
-            return;
-          }
-          setError("");
-          setData((current) => ({
-            ...current,
-            mode: "demo",
-            email: "demo@wenitro.app",
-            onboarded: true,
-          }));
-          go("feed");
-        }}
-      />
-      <Text style={styles.legal}>
-        By continuing, you agree to our Terms of Service and Privacy Policy.
-      </Text>
+      <Text style={styles.meta}>Google sign-in is paused.</Text>
+      <Text style={styles.legal}>By continuing, you agree to our Terms of Service and Privacy Policy.</Text>
     </AuthCard>
   );
 }
 
-function SignupScreen({
-  go,
-  setData,
-}: {
+function SignupScreen({ go, setData }: {
   go: (s: Screen) => void;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
 }) {
+  const [method, setMethod] = useState<"email" | "phone">("email");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const requirements = [
-    ["8+ characters", password.length >= 8],
-    ["One number", /\d/.test(password)],
-    ["One uppercase letter", /[A-Z]/.test(password)],
-  ] as const;
+  const [error, setError] = useState("");
+  const [verificationEmail, setVerificationEmail] = useState("");
+  const [resendStatus, setResendStatus] = useState("");
   const submit = async () => {
-    if (!name || !email.includes("@") || requirements.some((r) => !r[1])) {
-      Alert.alert(
-        "Complete signup",
-        "Add your name, valid email, and password requirements.",
-      );
+    if (!name.trim() || !email.includes("@") || password.length < 8) {
+      setError("Enter your name, a valid email, and a password of at least 8 characters.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
     setSubmitting(true);
+    setError("");
     try {
-      if (isSupabaseConfigured) {
-        const result = await signUpWithPassword({
-          fullName: name.trim(),
-          email: email.trim(),
-          password,
-        });
-        if (result.verificationRequired) {
-          Alert.alert(
-            "Verify your email",
-            "We sent a secure confirmation link. Open it, then return to sign in.",
-          );
-          go("login");
-          return;
-        }
+      if (!isSupabaseConfigured) throw new Error("Supabase is not configured.");
+      const result = await signUpWithPassword({ fullName: name.trim(), email: email.trim(), password });
+      if (result.verificationRequired) {
+        setVerificationEmail(email.trim().toLowerCase());
+        return;
       }
-      setData((d) => ({
-        ...d, mode: "authenticated", name, email, username: "", bio: "",
-        location: "", trustScore: 0, interests: [], badges: [], activities: [],
-        vibes: [], communities: [], conversations: [], stories: [], people: [],
-        savedIds: [], likedIds: [], nitro: 0, onboarded: false,
-      }));
-      go("onboarding");
+      const remote = await loadRemoteWorkspace();
+      if (!remote) throw new Error("Could not load your new WeNitro profile.");
+      setData((current) => hydrateRemoteData(remote, current));
+      go(remote.profile.onboarding_completed ? "feed" : "onboarding");
     } catch (caught) {
-      Alert.alert(
-        "Could not create account",
-        caught instanceof Error ? caught.message : "Please try again.",
-      );
+      setError(caught instanceof Error ? caught.message : "Could not create account.");
     } finally {
       setSubmitting(false);
     }
   };
+  if (verificationEmail) {
+    const [localPart, domain = ""] = verificationEmail.split("@");
+    const maskedEmail = `${localPart.slice(0, 1)}${"•".repeat(Math.max(2, localPart.length - 1))}@${domain}`;
+    const resend = async () => {
+      setResendStatus("Sending...");
+      try {
+        await requestEmailVerification({ email: verificationEmail });
+        setResendStatus("A new verification email has been sent.");
+      } catch (caught) {
+        setResendStatus(caught instanceof Error ? caught.message : "Could not resend verification.");
+      }
+    };
+    return (
+      <AuthCard>
+        <View style={{ alignItems: "center", gap: 14, paddingVertical: 12 }}>
+          <View style={{ width: 72, height: 72, borderRadius: 24, backgroundColor: "#E8E7FF", alignItems: "center", justifyContent: "center" }}>
+            <Icon name="mail-unread-outline" color="#1D16CE" size={36} />
+          </View>
+          <Text style={[styles.formTitle, { textAlign: "center" }]}>Check your email</Text>
+          <Text style={[styles.formIntro, { textAlign: "center" }]}>We sent a verification link to {maskedEmail}. Verify your email to continue.</Text>
+        </View>
+        {resendStatus ? <Text style={styles.meta}>{resendStatus}</Text> : null}
+        <Button label="Resend Verification Email" icon="refresh" onPress={() => void resend()} />
+        <Pressable onPress={() => go("login")}><Text style={styles.centerLink}>Back to Sign In</Text></Pressable>
+      </AuthCard>
+    );
+  }
   return (
     <AuthCard>
       <Text style={styles.authEyebrow}>JOIN THE COMMUNITY</Text>
       <Text style={styles.formTitle}>Create your account</Text>
-      <Text style={styles.formIntro}>
-        A few details, then the interesting part begins.
-      </Text>
-      <Field
-        label="Full name"
-        value={name}
-        onChangeText={setName}
-        placeholder="Your name"
-      />
-      <Field
-        label="Email"
-        value={email}
-        onChangeText={setEmail}
-        placeholder="you@example.com"
-      />
-      <Field
-        label="Password"
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Create password"
-        secureTextEntry
-      />
-      <View style={styles.requirements}>
-        {requirements.map(([text, ok]) => (
-          <Text key={text} style={[styles.req, ok && styles.reqOk]}>
-            {ok ? "✓" : "○"} {text}
-          </Text>
-        ))}
-      </View>
-      <Button
-        label={submitting ? "Creating account..." : "Sign up"}
-        icon="person-add"
-        onPress={submit}
-      />
-      <Button
-        label="Sign up with Google"
-        icon="logo-google"
-        variant="outline"
-        onPress={() =>
-          signInWithGoogle().catch((caught) =>
-            Alert.alert(
-              "Google sign-up unavailable",
-              caught instanceof Error ? caught.message : "Please try again.",
-            ),
-          )
-        }
-      />
+      <Text style={styles.formIntro}>Create a real account backed by Supabase.</Text>
+      <AuthMethodTabs method={method} setMethod={setMethod} />
+      {method === "phone" ? (
+        <PhoneOtpForm createAccount go={go} setData={setData} />
+      ) : (
+        <>
+          {error ? <Text style={styles.error}>{error}</Text> : null}
+          <Field label="Full name" value={name} onChangeText={setName} placeholder="Your name" />
+          <Field label="Email" value={email} onChangeText={setEmail} placeholder="you@example.com" />
+          <Field label="Password" value={password} onChangeText={setPassword} placeholder="At least 8 characters" secureTextEntry />
+          <Field label="Confirm password" value={confirmPassword} onChangeText={setConfirmPassword} placeholder="Repeat password" secureTextEntry />
+          <View style={styles.requirements}>
+            <Text style={[styles.req, password.length >= 8 && styles.reqOk]}>
+              {password.length >= 8 ? "✓" : "○"} 8+ characters
+            </Text>
+            <Text style={[styles.req, Boolean(confirmPassword) && password === confirmPassword && styles.reqOk]}>
+              {Boolean(confirmPassword) && password === confirmPassword ? "✓" : "○"} Passwords match
+            </Text>
+          </View>
+          <Button label={submitting ? "Creating account..." : "Sign up"} icon="person-add" onPress={submit} />
+        </>
+      )}
       <Pressable onPress={() => go("login")}>
         <Text style={styles.centerLink}>Already have an account? Sign in</Text>
       </Pressable>
-      <Text style={styles.legal}>
-        Protected by validation, account policy, and consent-first legal text.
-      </Text>
+      <Text style={styles.meta}>Google sign-up is paused.</Text>
     </AuthCard>
   );
 }
@@ -1790,10 +1487,15 @@ function OnboardingScreen({
   setData: React.Dispatch<React.SetStateAction<AppData>>;
 }) {
   const [name, setName] = useState(data.name);
-  const [username, setUsername] = useState(data.mode === "authenticated" ? "" : data.username.replace("@", ""));
-  const [dob, setDob] = useState(data.mode === "authenticated" ? "" : "1998-05-12");
+  const [username, setUsername] = useState(data.username.replace("@", ""));
+  const [dob, setDob] = useState("");
   const [gender, setGender] = useState("Prefer not to say");
-  const [interests, setInterests] = useState<string[]>(data.mode === "authenticated" ? [] : data.interests);
+  const [interests, setInterests] = useState<string[]>(data.interests);
+  const [avatarUri, setAvatarUri] = useState(data.avatarUri || "");
+  const [pendingAvatarUri, setPendingAvatarUri] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [pickingPhoto, setPickingPhoto] = useState(false);
   const choices = ["Women", "Men", "Non-binary", "Prefer not to say"];
   const topicChoices = [
     "Sports",
@@ -1809,6 +1511,80 @@ function OnboardingScreen({
     setInterests((list) =>
       list.includes(item) ? list.filter((x) => x !== item) : [...list, item],
     );
+  const chooseAvatar = async () => {
+    if (pickingPhoto || submitting) return;
+    setError("");
+    setPickingPhoto(true);
+    try {
+      if (Platform.OS !== "web") {
+        const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permission.granted) {
+          setError("Photo-library permission is required to add your picture.");
+          return;
+        }
+      }
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.85,
+      });
+      const uri = result.canceled ? null : result.assets[0]?.uri;
+      if (uri) {
+        setAvatarUri(uri);
+        setPendingAvatarUri(uri);
+      }
+    } catch (caught) {
+      setError(
+        caught instanceof Error ? caught.message : "Could not open your photo library.",
+      );
+    } finally {
+      setPickingPhoto(false);
+    }
+  };
+  const completeOnboarding = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      let savedAvatarUri = avatarUri || undefined;
+      if (data.mode === "authenticated" && isSupabaseConfigured) {
+        const normalizedDob = normalizeOnboardingDateOfBirth(dob);
+        const catalog = await profileProductionService.listAvailableInterests();
+        await profileProductionService.setInterests(
+          catalog
+            .filter((interest) => interests.includes(interest.name))
+            .map((interest) => interest.id),
+        );
+        if (pendingAvatarUri) {
+          savedAvatarUri = await profileProductionService.uploadAvatar(
+            pendingAvatarUri,
+          );
+        }
+        await profileProductionService.editProfile({
+          full_name: name.trim(),
+          username: username.trim(),
+          date_of_birth: normalizedDob,
+          gender,
+        });
+      }
+      setData((current) => ({
+        ...current,
+        name: name.trim(),
+        username: `@${username.trim()}`,
+        interests,
+        avatarUri: savedAvatarUri,
+        onboarded: true,
+      }));
+      go("feed");
+    } catch (caught) {
+      setError(
+        caught instanceof Error ? caught.message : "Profile could not be saved. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <ScreenFrame
       title="Make it yours"
@@ -1819,16 +1595,42 @@ function OnboardingScreen({
       </View>
       <View style={styles.onboardingIntro}>
         <View style={styles.profileAvatarLarge}>
-          <Text style={styles.profileAvatarText}>{name[0] || "W"}</Text>
+          {avatarUri ? (
+            <Image
+              source={{ uri: avatarUri }}
+              style={StyleSheet.absoluteFill}
+              resizeMode="cover"
+            />
+          ) : (
+            <Text style={styles.profileAvatarText}>{name[0] || "W"}</Text>
+          )}
         </View>
-        <Pressable style={styles.photoButton}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={avatarUri ? "Change profile photo" : "Add profile photo"}
+          accessibilityState={{ disabled: pickingPhoto || submitting }}
+          disabled={pickingPhoto || submitting}
+          onPress={() => void chooseAvatar()}
+          style={styles.photoButton}
+        >
           <Icon name="camera" size={17} color="#fff" />
         </Pressable>
-        <Text style={styles.meta}>Add a profile photo</Text>
+        <Text style={styles.meta}>
+          {pickingPhoto
+            ? "Opening photo library..."
+            : avatarUri
+              ? "Change profile photo"
+              : "Add a profile photo"}
+        </Text>
       </View>
       <Field label="Full name" value={name} onChangeText={setName} />
       <Field label="Username" value={username} onChangeText={setUsername} />
-      <Field label="Date of birth" value={dob} onChangeText={setDob} />
+      <Field
+        label="Date of birth"
+        value={dob}
+        onChangeText={setDob}
+        placeholder="DD-MM-YYYY"
+      />
       <Text style={styles.label}>Gender</Text>
       <View style={styles.wrap}>
         {choices.map((item) => (
@@ -1845,41 +1647,12 @@ function OnboardingScreen({
           </Pressable>
         ))}
       </View>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <Button
-        label="Get Started"
+        label={submitting ? "Saving profile..." : "Get Started"}
         icon="sparkles"
-        onPress={async () => {
-          if (data.mode === "authenticated" && isSupabaseConfigured) {
-            try {
-              await profileProductionService.editProfile({
-                full_name: name.trim(),
-                username: username.trim(),
-                date_of_birth: dob,
-                gender,
-              });
-              const catalog = await profileProductionService.listAvailableInterests();
-              await profileProductionService.setInterests(
-                catalog
-                  .filter((interest) => interests.includes(interest.name))
-                  .map((interest) => interest.id),
-              );
-            } catch (caught) {
-              Alert.alert(
-                "Profile not saved",
-                caught instanceof Error ? caught.message : "Please try again.",
-              );
-              return;
-            }
-          }
-          setData((d) => ({
-            ...d,
-            name,
-            username: `@${username}`,
-            interests,
-            onboarded: true,
-          }));
-          go("feed");
-        }}
+        disabled={submitting || pickingPhoto}
+        onPress={() => void completeOnboarding()}
       />
     </ScreenFrame>
   );
@@ -1994,7 +1767,6 @@ function HomeActivityTile({
           <View style={styles.pricePill}>
             <Text style={styles.pricePillText}>{price}</Text>
           </View>
-          <AvatarStack count={3} extra={4} />
         </View>
       </View>
     </Pressable>
@@ -2044,10 +1816,6 @@ function DiscoveryActivityCard({
           />
           <Text style={styles.discoveryTagText}>{item.category}</Text>
         </View>
-        <View style={styles.matchPill}>
-          <View style={styles.onlineDot} />
-          <Text style={styles.matchText}>{item.match}% match</Text>
-        </View>
       </View>
       <View style={styles.discoveryBody}>
         <Text style={styles.discoveryMeta}>
@@ -2058,14 +1826,12 @@ function DiscoveryActivityCard({
         <View style={styles.rowBetween}>
           <View style={styles.hostIdentity}>
             <Image
-              source={mediaSource(
-                faces[item.id === "a1" ? 0 : item.id === "a2" ? 1 : 3],
-              )}
+              source={mediaSource(item.hostAvatar || neutralAvatar)}
               style={styles.hostAvatar}
             />
             <Text style={styles.hostName}>{item.host}</Text>
           </View>
-          <AvatarStack count={3} extra={Math.max(item.joined - 3, 3)} />
+          <AvatarStack count={item.joined} />
         </View>
       </View>
     </Pressable>
@@ -2115,7 +1881,7 @@ function FeedScreen({
       text: "Create an activity, meet amazing people and make memories.",
       action: "Create Activity",
       screen: "createActivity" as Screen,
-      image: photoAssets.friends,
+      image: neutralMediaPlaceholder,
       colors: ["#1F16C6", "#4E46E5"] as const,
     },
     {
@@ -2139,7 +1905,7 @@ function FeedScreen({
       text: "Share the people and plans that made today worth remembering.",
       action: "Watch Vibes",
       screen: "vibes" as Screen,
-      image: photoAssets.vibeCoast,
+      image: neutralMediaPlaceholder,
       colors: ["#1910C2", "#4E46E5"] as const,
     },
     {
@@ -2258,7 +2024,7 @@ function FeedScreen({
               key={item.id}
               title={item.title}
               tag={
-                index === 0 ? "Trending" : index < 4 ? "Nearby" : item.category
+                ""
               }
               meta={`${item.where} · ${item.when}`}
               price={item.price}
@@ -2303,7 +2069,7 @@ function FeedScreen({
           </Pressable>
         </LinearGradient>
         <SectionTitle
-          title="People Nearby"
+          title="People on WeNitro"
           action="See all  ›"
           onAction={() => go("search")}
         />
@@ -2419,7 +2185,7 @@ function FeedScreen({
               onPress={() => go("vibes")}
             >
               <Image
-                source={{ uri: item.mediaUrl || photoAssets.vibeCoast }}
+                source={{ uri: item.mediaUrl || neutralMediaPlaceholder }}
                 style={styles.vibePreviewImage}
               />
               <View style={styles.communityShade} />
@@ -2674,7 +2440,7 @@ function ActivitiesScreen({
         ) : null}
         <View style={styles.activitiesHeading}>
           <Text style={styles.activityHeadingText}>
-            Activities in & around <Text style={styles.link}>Bhubaneswar</Text>
+            Activities
           </Text>
           <Text style={styles.sortText}>
             Sort by: <Text style={styles.link}>Recommended</Text>
@@ -2737,7 +2503,7 @@ function ReelMedia({ vibe, muted }: { vibe: Vibe; muted: boolean }) {
   }
   return (
     <Image
-      source={mediaSource(vibe.mediaUrl || photoAssets.indiaCycling)}
+      source={mediaSource(vibe.mediaUrl || neutralMediaPlaceholder)}
       style={styles.fullReelImage}
       resizeMode="contain"
     />
@@ -2777,10 +2543,12 @@ function VibesScreen({
   data,
   go,
   setData,
+  initialVibeId,
 }: {
   data: AppData;
   go: (s: Screen) => void;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
+  initialVibeId?: string | null;
 }) {
   const [vibeIndex, setVibeIndex] = useState(0);
   const [touchStartY, setTouchStartY] = useState(0);
@@ -2791,6 +2559,26 @@ function VibesScreen({
   const vibe = availableVibes.length
     ? availableVibes[vibeIndex % availableVibes.length]
     : undefined;
+  useEffect(() => {
+    if (!initialVibeId) return;
+    const index = availableVibes.findIndex((item) => item.id === initialVibeId);
+    if (index >= 0) setVibeIndex(index);
+  }, [initialVibeId, availableVibes]);
+  useEffect(() => {
+    if (data.mode !== "authenticated" || !isSupabaseConfigured || !vibe || !isBackendId(vibe.id)) return;
+    const channel = vibesProductionService.subscribeToComments(vibe.id, () => {
+      vibeService.listComments(vibe.id).then((comments) => {
+        setData((current) => ({
+          ...current,
+          vibes: current.vibes.map((item) => item.id === vibe.id ? {
+            ...item,
+            comments: comments.map((entry) => ({ id: entry.id, author: entry.profiles?.full_name || entry.profiles?.username || "Member", body: entry.body })),
+          } : item),
+        }));
+      }).catch(() => undefined);
+    });
+    return () => { void supabase.removeChannel(channel); };
+  }, [data.mode, vibe?.id]);
   useEffect(() => {
     if (
       data.mode !== "authenticated" ||
@@ -2934,21 +2722,7 @@ function VibesScreen({
     setComment("");
   };
   const shareVibe = async () => {
-    await Share.share({
-      title: vibe.event,
-      message: `${vibe.text}\n\nShared from WeNitro`,
-    });
-    if (
-      data.mode === "authenticated" &&
-      isSupabaseConfigured &&
-      isBackendId(vibe.id)
-    )
-      vibeService.recordShare(vibe.id, "system").catch((caught) =>
-        Alert.alert(
-          "Share not recorded",
-          caught instanceof Error ? caught.message : "Please try again.",
-        ),
-      );
+    requestInternalShare({ kind: "vibe", id: vibe.id, title: vibe.event || "WeNitro Vibe", preview: vibe.text });
   };
   const deleteVibe = async () => {
     const remove = async () => {
@@ -3081,7 +2855,7 @@ function VibesScreen({
         <View style={styles.fullReelCopy}>
           <View style={styles.vibeIdentity}>
             <Image
-              source={mediaSource(data.avatarUri || faces[1])}
+              source={mediaSource(data.avatarUri || neutralAvatar)}
               style={styles.vibeAvatar}
             />
             <View>
@@ -3094,7 +2868,7 @@ function VibesScreen({
             </View>
           </View>
           <Text style={styles.vibeCaption}>{vibe.text}</Text>
-          <Text style={styles.vibeHashtags}>#wenitro #realplans #people</Text>
+          <Text style={styles.vibeHashtags}></Text>
         </View>
         {commentsOpen ? (
           <View style={styles.vibeCommentsSheet}>
@@ -3388,7 +3162,7 @@ function CreateActivityScreen({
         seats: Number(capacity),
         joined: status === "published" ? 1 : 0,
         host: data.name,
-        image: created?.cover_url || coverUri || photoAssets.friends,
+        image: created?.cover_url || coverUri || neutralMediaPlaceholder,
         description,
         ownerId: created?.owner_id,
         visibility,
@@ -3829,16 +3603,26 @@ function CreateCommunityScreen({
   const [rules, setRules] = useState(
     "Be respectful to others\nNo spam or self-promotion\nNo hate speech or harassment\nKeep content relevant to the community",
   );
-  const [image, setImage] = useState(photoAssets.food);
-  const [cover, setCover] = useState(photoAssets.friends);
+  const [image, setImage] = useState("");
+  const [cover, setCover] = useState("");
   const [createdId, setCreatedId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const nameLength = name.trim().length;
+  const descriptionLength = description.trim().length;
+  const rulesLength = rules.trim().length;
+  const nameValid = nameLength >= 3;
+  const categoryValid = Boolean(category);
+  const descriptionValid = descriptionLength >= 20;
+  const rulesValid = rulesLength >= 10;
   const valid =
-    name.trim().length >= 3 &&
-    category &&
-    description.trim().length >= 20 &&
-    rules.trim().length >= 10;
+    nameValid && categoryValid && descriptionValid && rulesValid;
+  const Requirement = ({ valid: requirementValid, text }: { valid: boolean; text: string }) => (
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 7, marginTop: 6 }}>
+      <Icon name={requirementValid ? "checkmark-circle" : "information-circle-outline"} color={requirementValid ? "#13A66B" : "#D64545"} size={16} />
+      <Text style={[styles.communityHelp, { color: requirementValid ? "#137A55" : "#B42318", marginTop: 0 }]}>{text}</Text>
+    </View>
+  );
   const pickImage = async (kind: "image" | "cover") => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) return;
@@ -3855,7 +3639,7 @@ function CreateCommunityScreen({
     if (!valid)
       return Alert.alert(
         "Complete required fields",
-        "Add a title, category, description, images, and community rules.",
+        "Add a title, category, description, and community rules.",
       );
     setCreating(true);
     try {
@@ -3886,8 +3670,8 @@ function CreateCommunityScreen({
         onlineCount: 1,
         visibility: "Public",
         membership: "created",
-        image,
-        cover,
+        image: image || communityFallbackCover,
+        cover: cover || communityFallbackCover,
         rules: parsedRules,
         posts: [],
       };
@@ -3939,6 +3723,7 @@ function CreateCommunityScreen({
         <Text style={styles.communityHelp}>
           Choose a name that represents your community
         </Text>
+        <Requirement valid={nameValid} text={nameValid ? "At least 3 characters" : `${3 - nameLength} more character${3 - nameLength === 1 ? "" : "s"} required`} />
         <Text style={styles.communityLabel}>
           Category <Text style={styles.required}>*</Text>
         </Text>
@@ -3986,6 +3771,7 @@ function CreateCommunityScreen({
         <Text style={styles.communityHelp}>
           Choose the category that best fits your community
         </Text>
+        <Requirement valid={categoryValid} text={categoryValid ? "Category selected" : "Select one category"} />
         <Text style={styles.communityLabel}>
           Description <Text style={styles.required}>*</Text>
         </Text>
@@ -4003,8 +3789,9 @@ function CreateCommunityScreen({
         <Text style={styles.communityHelp}>
           A clear description helps people understand your community
         </Text>
+        <Requirement valid={descriptionValid} text={descriptionValid ? "At least 20 characters" : `${20 - descriptionLength} more character${20 - descriptionLength === 1 ? "" : "s"} required`} />
         <Text style={styles.communityLabel}>
-          Community Image <Text style={styles.required}>*</Text>
+          Community Image <Text style={styles.meta}>(optional)</Text>
         </Text>
         <Text style={styles.communityHelp}>
           This image will represent your community
@@ -4021,7 +3808,7 @@ function CreateCommunityScreen({
         <Text style={styles.uploadTitle}>Upload Image</Text>
         <Text style={styles.communityHelpCenter}>JPG, PNG (Max. 5MB)</Text>
         <Text style={styles.communityLabel}>
-          Community Cover Image <Text style={styles.required}>*</Text>
+          Community Cover Image <Text style={styles.meta}>(optional)</Text>
         </Text>
         <Text style={styles.communityHelp}>
           This cover image will appear at the top of your community
@@ -4055,9 +3842,10 @@ function CreateCommunityScreen({
           />
           <Text style={styles.counter}>{rules.length}/1000</Text>
         </View>
+        <Requirement valid={rulesValid} text={rulesValid ? "At least 10 characters" : `${10 - rulesLength} more character${10 - rulesLength === 1 ? "" : "s"} required`} />
         <Pressable
           onPress={create}
-          disabled={creating}
+          disabled={!valid || creating}
           style={[
             styles.communityPrimary,
             (!valid || creating) && styles.communityPrimaryDisabled,
@@ -4085,7 +3873,7 @@ function CreateCommunityScreen({
               Your community has been created successfully.
             </Text>
             <View style={styles.successCommunity}>
-              <Image source={{ uri: image }} style={styles.successAvatar} />
+              <Image source={{ uri: image || communityFallbackCover }} style={styles.successAvatar} />
               <View style={styles.messageBody}>
                 <Text style={styles.successCommunityName}>{name}</Text>
                 <Text style={styles.successCategory}>{category}</Text>
@@ -4124,8 +3912,13 @@ function ActivityDetailScreen({
   openActivity: (id: string) => void;
   openProfile: (id: string) => void;
 }) {
+  const isPaidActivity = activity.price !== "Free" && Number(activity.price.replace(/[^0-9.]/g, "")) > 0;
+  const [paymentState, setPaymentState] = useState<
+    "idle" | "pending" | "paid" | "failed"
+  >("idle");
   const [joined, setJoined] = useState(
-    ["going", "approved"].includes(String(activity.viewerStatus)),
+    ["going", "paid"].includes(String(activity.viewerStatus)) ||
+      (!isPaidActivity && activity.viewerStatus === "approved"),
   );
   const [joining, setJoining] = useState(false);
   const [comment, setComment] = useState("");
@@ -4143,6 +3936,13 @@ function ActivityDetailScreen({
   const liked = data.likedIds.includes(reactionId);
   const saved = data.savedIds.includes(reactionId);
   const requestPending = ["pending", "waitlist"].includes(String(viewerStatus));
+  const paymentRequired =
+    isPaidActivity &&
+    ["payment_required", "approved_pending_payment", "payment_pending", "payment_failed"].includes(
+      String(viewerStatus),
+    );
+  const activityEnded = activity.status === "completed" || Boolean(activity.endsAt && Date.parse(activity.endsAt) <= Date.now());
+  const registrationClosed = !joined && !requestPending && (activityEnded || Boolean(activity.registrationClosesAt && Date.parse(activity.registrationClosesAt) <= Date.now()));
   const refreshDetails = async () => {
     if (!isSupabaseConfigured || !isBackendId(activity.id)) return;
     setLoadingDetails(true);
@@ -4154,11 +3954,7 @@ function ActivityDetailScreen({
       setIsHost(details.isHost);
       setJoinType(details.joinType === "approval" ? "approval" : "direct");
       setViewerStatus(details.viewerStatus);
-      setJoined(
-        ["going", "approved"].includes(
-          String(details.viewerStatus),
-        ),
-      );
+      setJoined(details.viewerStatus === "going");
       setData((current) => ({
         ...current,
         likedIds: details.liked
@@ -4183,24 +3979,74 @@ function ActivityDetailScreen({
   useEffect(() => {
     void refreshDetails();
   }, [activity.id]);
+  useEffect(() => {
+    if (!isSupabaseConfigured || !isBackendId(activity.id)) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const channel = activityService.subscribe(activity.id, () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => void refreshDetails(), 180);
+    });
+    return () => {
+      if (timer) clearTimeout(timer);
+      void supabase.removeChannel(channel);
+    };
+  }, [activity.id]);
+  const completePayment = async () => {
+    setPaymentState("pending");
+    try {
+      const order = await createActivityPayment(activity.id);
+      const paymentSessionId = runtimeString(order, [
+        "paymentSessionId",
+        "payment_session_id",
+      ]);
+      const orderId = runtimeString(order, ["orderId", "order_id"]);
+      if (!paymentSessionId || !orderId) {
+        throw new Error("Payment order did not return the required identifiers.");
+      }
+      const returnUrl =
+        Platform.OS === "web" && typeof window !== "undefined"
+          ? window.location.href
+          : "wenitro://payment-return";
+      await launchCashfreeCheckout(paymentSessionId, returnUrl);
+      const verification = await verifyActivityPayment(orderId);
+      const status = runtimeString(verification, ["status", "paymentStatus", "payment_status"]);
+      if (!status || !["paid", "success", "completed"].includes(status.toLowerCase())) {
+        throw new Error("Cashfree has not verified this payment yet.");
+      }
+      setPaymentState("paid");
+      setViewerStatus("paid");
+      setJoined(true);
+      await refreshDetails();
+      return "paid";
+    } catch (error) {
+      setPaymentState("failed");
+      throw error;
+    }
+  };
   const join = async () => {
     if (joining) return;
+    if (registrationClosed) {
+      Alert.alert(activityEnded ? "Activity ended" : "Registration closed", activityEnded ? "This activity has already ended." : "The host is no longer accepting registrations for this activity.");
+      return;
+    }
     setJoining(true);
     try {
       const leaving = joined || requestPending;
       let nextStatus: string | null = null;
-      if (isSupabaseConfigured) {
-        if (!isBackendId(activity.id))
-          throw new Error("This activity is not connected to WeNitro yet.");
-        if (leaving) await activityService.leave(activity.id);
-        else {
-          const participation = await activityService.join(activity.id);
-          nextStatus = String(participation.status);
-        }
-      } else if (!leaving) {
-        nextStatus = joinType === "approval" ? "pending" : "going";
+      if (!isSupabaseConfigured)
+        throw new Error("Supabase is not configured for this build.");
+      if (!isBackendId(activity.id))
+        throw new Error("This activity is not connected to WeNitro yet.");
+      if (leaving) await activityService.leave(activity.id);
+      else if (isPaidActivity && (joinType === "direct" || paymentRequired)) {
+        nextStatus = await completePayment();
+      } else {
+        const participation = await activityService.join(activity.id);
+        nextStatus = String(participation.status);
       }
-      const nextJoined = ["going", "approved"].includes(String(nextStatus));
+      const nextJoined =
+        ["going", "paid"].includes(String(nextStatus)) ||
+        (!isPaidActivity && nextStatus === "approved");
       setViewerStatus(nextStatus);
       setJoined(nextJoined);
       setData((current) => ({
@@ -4209,14 +4055,11 @@ function ActivityDetailScreen({
           item.id === activity.id
             ? {
                 ...item,
-                joined: Math.max(
-                  0,
-                  Math.min(
+                joined: Math.min(
                     item.joined +
                       (joined && !nextJoined ? -1 : !joined && nextJoined ? 1 : 0),
                     item.seats,
                   ),
-                ),
                 viewerStatus: nextStatus as Activity["viewerStatus"],
               }
             : item,
@@ -4362,7 +4205,7 @@ function ActivityDetailScreen({
             <Icon name="arrow-back" color="#fff" />
           </Pressable>
           <View style={styles.detailTopActions}>
-            <Pressable style={styles.detailRound}>
+            <Pressable style={styles.detailRound} onPress={() => requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.where}` })}>
               <Icon name="share-outline" />
             </Pressable>
             <Pressable style={styles.detailRound}>
@@ -4374,11 +4217,7 @@ function ActivityDetailScreen({
             <Text style={styles.discoveryTagText}>{activity.category}</Text>
           </View>
           <View style={styles.detailPeople}>
-            <AvatarStack count={4} extra={4} />
-            <View style={styles.row}>
-              <View style={styles.onlineDot} />
-              <Text style={styles.detailMatch}>{activity.match}% Match</Text>
-            </View>
+            <AvatarStack count={activity.joined} />
           </View>
         </View>
         <View style={styles.detailContent}>
@@ -4451,7 +4290,7 @@ function ActivityDetailScreen({
               disabled={!activity.ownerId}
               onPress={() => activity.ownerId && openProfile(activity.ownerId)}
             >
-              <Image source={{ uri: faces[0] }} style={styles.hostLargeAvatar} />
+              <Image source={{ uri: activity.hostAvatar ?? neutralAvatar }} style={styles.hostLargeAvatar} />
             </Pressable>
             <Pressable
               disabled={!activity.ownerId}
@@ -4477,7 +4316,7 @@ function ActivityDetailScreen({
           </View>
           <View style={styles.detailSection}>
             <Text style={styles.detailSectionTitle}>
-              Participants ({participants.length || activity.joined})
+              Participants ({participants.length})
             </Text>
             <View style={styles.rowBetween}>
               <AvatarStack
@@ -4498,7 +4337,7 @@ function ActivityDetailScreen({
               <View key={participant.id} style={styles.rowBetween}>
                 <View style={styles.row}>
                   <Image
-                    source={mediaSource(participant.avatarUrl || faces[0])}
+                    source={mediaSource(participant.avatarUrl || (runtimeString(participant, ["avatar", "profileImage", "profile_image"]) ?? neutralAvatar))}
                     style={styles.commentAvatar}
                   />
                   <View>
@@ -4555,7 +4394,7 @@ function ActivityDetailScreen({
               </Text>
             </View>
             <View style={styles.commentBar}>
-              <Image source={{ uri: faces[1] }} style={styles.commentAvatar} />
+              <Image source={{ uri: activity.hostAvatar ?? neutralAvatar }} style={styles.commentAvatar} />
               <TextInput
                 value={comment}
                 onChangeText={setComment}
@@ -4589,7 +4428,7 @@ function ActivityDetailScreen({
               <Text style={styles.smallPrimaryText}>Add Vibe</Text>
             </Pressable>
           </View>
-          <SectionTitle title="Recommended Activities" action="See all" />
+          <SectionTitle title="More Activities" action="See all" />
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -4625,15 +4464,19 @@ function ActivityDetailScreen({
               <Pressable
                 style={styles.joinButtonLarge}
                 onPress={join}
-                disabled={joining}
+                disabled={joining || registrationClosed}
               >
               <Text style={styles.joinButtonText}>
-                {joining
-                  ? "Saving..."
+                {registrationClosed
+                  ? activityEnded ? "Activity Ended" : "Registration Closed"
+                  : joining || paymentState === "pending"
+                  ? isPaidActivity ? "Opening Cashfree..." : "Saving..."
                   : requestPending
                     ? "Withdraw Request"
                     : joined
                       ? "Leave Activity"
+                      : paymentRequired || (isPaidActivity && joinType === "direct")
+                        ? paymentState === "failed" ? "Retry Payment" : "Pay & Join"
                       : joinType === "approval"
                         ? "Request to Join"
                         : "Join Activity"}
@@ -4690,7 +4533,31 @@ function ChatScreen({
   const chatSubscription = useRef<Awaited<
     ReturnType<typeof realtimeChatService.subscribeToConversation>
   > | null>(null);
-  const activeStory = data.stories.find((story) => story.id === activeStoryId);
+  const storyGroups = Array.from(
+    data.stories
+      .slice()
+      .sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")))
+      .reduce((groups, story) => {
+        const authorKey = story.authorId || (story.mine ? `mine:${data.userId}` : `name:${story.name}`);
+        const existing = groups.get(authorKey) || [];
+        existing.push(story);
+        groups.set(authorKey, existing);
+        return groups;
+      }, new Map<string, ChatStory[]>()),
+  )
+    .map(([authorId, stories]) => ({ authorId, stories }))
+    .sort((a, b) =>
+      String(b.stories.at(-1)?.createdAt || "").localeCompare(
+        String(a.stories.at(-1)?.createdAt || ""),
+      ),
+    );
+  const activeStoryGroup = storyGroups.find((group) =>
+    group.stories.some((story) => story.id === activeStoryId),
+  );
+  const activeStoryIndex = activeStoryGroup?.stories.findIndex(
+    (story) => story.id === activeStoryId,
+  ) ?? -1;
+  const activeStory = activeStoryGroup?.stories[activeStoryIndex];
   const selected = data.conversations.find(
     (conversation) => conversation.id === selectedConversationId,
   );
@@ -4791,6 +4658,8 @@ function ChatScreen({
             mine,
             image: record.media_signed_url || undefined,
             createdAt: String(record.created_at),
+            messageType: record.message_type,
+            share: record.share_payload,
           };
           updateConversation(selectedConversationId, (conversation) =>
             conversation.messages.some((item) => item.id === message.id)
@@ -4901,14 +4770,11 @@ function ChatScreen({
       if (isSupabaseConfigured && !isBackendId(person.id)) {
         throw new Error("This member is not linked to the production chat service.");
       }
-      const id =
-        isSupabaseConfigured && isBackendId(person.id)
-          ? String(
-              await realtimeChatService.createDirectConversation(
-                Number(person.id),
-              ),
-            )
-          : `dm-${Date.now()}`;
+      if (!isSupabaseConfigured)
+        throw new Error("Supabase is not configured for this build.");
+      const id = String(
+        await realtimeChatService.createDirectConversation(Number(person.id)),
+      );
       const conversation: ChatConversation = {
         id,
         name: person.name,
@@ -4925,6 +4791,7 @@ function ChatScreen({
         conversations: [conversation, ...current.conversations],
       }));
       setSelectedConversationId(id);
+      onConversationChange?.(id);
     } catch (caught) {
       Alert.alert(
         "Could not start chat",
@@ -5025,6 +4892,9 @@ function ChatScreen({
               text: created?.caption || "A new WeNitro moment",
               viewed: false,
               mine: true,
+              authorId: String(current.userId || "me"),
+              authorAvatar: current.avatarUri,
+              createdAt: new Date().toISOString(),
             },
             ...current.stories,
           ],
@@ -5080,9 +4950,14 @@ function ChatScreen({
     }));
   };
   const nextStory = () => {
-    const index = data.stories.findIndex((story) => story.id === activeStoryId);
-    if (index < data.stories.length - 1) openStory(data.stories[index + 1].id);
+    if (!activeStoryGroup || activeStoryIndex < 0) return setActiveStoryId(null);
+    const next = activeStoryGroup.stories[activeStoryIndex + 1];
+    if (next) openStory(next.id);
     else setActiveStoryId(null);
+  };
+  const previousStory = () => {
+    if (!activeStoryGroup || activeStoryIndex <= 0) return;
+    openStory(activeStoryGroup.stories[activeStoryIndex - 1].id);
   };
   const deleteStory = async () => {
     if (!activeStory?.mine) return;
@@ -5100,7 +4975,10 @@ function ChatScreen({
             (story) => story.id !== activeStory.id,
           ),
         }));
-        setActiveStoryId(null);
+        const nextStoryInGroup = activeStoryGroup?.stories.find(
+          (story) => story.id !== activeStory.id,
+        );
+        setActiveStoryId(nextStoryInGroup?.id ?? null);
       } catch (caught) {
         Alert.alert(
           "Story not deleted",
@@ -5154,7 +5032,7 @@ function ChatScreen({
       id: groupId,
       name: groupName.trim(),
       type: "Groups",
-      avatar: photoAssets.friends,
+      avatar: neutralMediaPlaceholder,
       memberCount: groupMembers.length + 1,
       online: true,
       unread: 0,
@@ -5252,7 +5130,18 @@ function ChatScreen({
                   style={styles.dynamicMessageImage}
                 />
               ) : null}
-              {message.text ? (
+              {message.share ? (
+                <Pressable onPress={() => openSharedContent(message.share!)} style={{ width: 250, overflow: "hidden", borderRadius: 16, backgroundColor: message.mine ? "rgba(255,255,255,.14)" : "#192A40" }}>
+                  {message.share.thumbnailUrl ? <Image source={{ uri: message.share.thumbnailUrl }} style={{ width: "100%", height: 112 }} /> : null}
+                  <View style={{ padding: 13, gap: 4 }}>
+                    <Text style={{ fontFamily: "Manrope_800ExtraBold", fontSize: 11, textTransform: "uppercase", color: "#8FB7FF" }}>{message.share.kind.replaceAll("_", " ")}</Text>
+                    <Text style={{ fontFamily: "Manrope_700Bold", fontSize: 16, color: "#fff" }}>{message.share.title}</Text>
+                    {message.share.preview ? <Text numberOfLines={2} style={{ fontFamily: "Manrope_400Regular", fontSize: 12, color: "#CFD8E4" }}>{message.share.preview}</Text> : null}
+                    <Text style={{ marginTop: 5, fontFamily: "Manrope_700Bold", fontSize: 13, color: "#9CB8FF" }}>View in WeNitro</Text>
+                  </View>
+                </Pressable>
+              ) : null}
+              {message.text && !message.share ? (
                 <Text
                   style={[
                     styles.dynamicMessageText,
@@ -5434,7 +5323,7 @@ function ChatScreen({
           <Pressable style={styles.dynamicStoryItem} onPress={() => void addStory()}>
             <View style={styles.yourStory}>
               <Image
-                source={{ uri: data.avatarUri || faces[1] }}
+                source={{ uri: data.avatarUri || neutralAvatar }}
                 style={styles.dynamicStoryImage}
               />
               <View style={styles.storyAddBadge}>
@@ -5443,15 +5332,18 @@ function ChatScreen({
             </View>
             <Text style={styles.dynamicStoryName}>Add Story</Text>
           </Pressable>
-          {data.stories.map((story) => (
+          {storyGroups.map((group) => {
+            const story = group.stories.at(-1)!;
+            const viewed = group.stories.every((item) => item.viewed);
+            return (
               <Pressable
-                key={story.id}
+                key={group.authorId}
                 style={styles.dynamicStoryItem}
-                onPress={() => openStory(story.id)}
+                onPress={() => openStory(group.stories[0].id)}
               >
                 <LinearGradient
                   colors={
-                    story.viewed
+                    viewed
                       ? ["#344157", "#344157"]
                       : ["#1910C2", "#4E46E5"]
                   }
@@ -5460,7 +5352,7 @@ function ChatScreen({
                   <Image
                     source={
                       story.mediaType === "video"
-                        ? { uri: photoAssets.friends }
+                        ? { uri: neutralMediaPlaceholder }
                         : { uri: story.image }
                     }
                     style={styles.dynamicStoryImage}
@@ -5470,7 +5362,8 @@ function ChatScreen({
                   {story.name}
                 </Text>
               </Pressable>
-          ))}
+            );
+          })}
         </ScrollView>
         {activeSegment === "People" ? (
           <>
@@ -5586,7 +5479,43 @@ function ChatScreen({
       </ScrollView>
       {activeStory ? (
         <View style={styles.dynamicStoryViewer}>
-          <StoryMedia story={activeStory} />
+              <View style={{ flex: 1, width: "100%" }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 12,
+                    left: 12,
+                    right: 12,
+                    zIndex: 5,
+                    flexDirection: "row",
+                    gap: 5,
+                  }}
+                >
+                  {activeStoryGroup?.stories.map((story, index) => (
+                    <View
+                      key={story.id}
+                      style={{
+                        flex: 1,
+                        height: 3,
+                        borderRadius: 2,
+                        backgroundColor:
+                          index <= activeStoryIndex ? "#FFFFFF" : "rgba(255,255,255,0.35)",
+                      }}
+                    />
+                  ))}
+                </View>
+                <StoryMedia story={activeStory} />
+                <Pressable
+                  accessibilityLabel="Previous Story"
+                  onPress={previousStory}
+                  style={{ position: "absolute", left: 0, top: 48, bottom: 0, width: "35%" }}
+                />
+                <Pressable
+                  accessibilityLabel="Next Story"
+                  onPress={nextStory}
+                  style={{ position: "absolute", right: 0, top: 48, bottom: 0, width: "35%" }}
+                />
+              </View>
           <LinearGradient
             colors={["rgba(0,0,0,.25)", "transparent", "rgba(0,0,0,.85)"]}
             style={styles.dynamicStoryShade}
@@ -5606,7 +5535,7 @@ function ChatScreen({
             <Image
               source={
                 activeStory.mediaType === "video"
-                  ? { uri: photoAssets.friends }
+                  ? { uri: neutralMediaPlaceholder }
                   : { uri: activeStory.image }
               }
               style={styles.storyViewerAvatar}
@@ -5739,10 +5668,12 @@ function PublicProfileScreen({
             <View style={styles.profileIdentityCopy}>
               <Text style={styles.profileNameRef}>{person.name}</Text>
               <Text style={styles.profileHandle}>@{person.username.replace(/^@/, "")}</Text>
-              <View style={styles.brandLocation}>
-                <Icon name="location-outline" color="#fff" size={14} />
-                <Text style={styles.profileLocation}>{person.location || "Nearby"}</Text>
-              </View>
+              {person.location ? (
+                <View style={styles.brandLocation}>
+                  <Icon name="location-outline" color="#fff" size={14} />
+                  <Text style={styles.profileLocation}>{person.location}</Text>
+                </View>
+              ) : null}
             </View>
           </View>
         </LinearGradient>
@@ -5838,7 +5769,7 @@ function ProfileScreen({
   const profileActivities = data.activities.filter(
     (item) => item.ownerId === data.userId || ["going", "approved", "pending", "waitlist"].includes(String(item.viewerStatus)),
   );
-  const profileVibes = data.vibes;
+  const profileVibes = data.vibes.filter((vibe) => runtimeId(vibe, ["authorId", "userId", "user_id"]) === String(data.userId || ""));
   return (
     <SafeAreaView style={[styles.safe, dark && styles.safeDark]}>
       <ScrollView
@@ -5884,7 +5815,7 @@ function ProfileScreen({
                 />
               ) : (
                 <Image
-                  source={{ uri: faces[1] }}
+                  source={{ uri: neutralAvatar }}
                   style={styles.profileAvatarImage}
                 />
               )}
@@ -5985,7 +5916,7 @@ function ProfileScreen({
               "Activities",
               "#1910C2",
             ],
-            ["people-outline", String(data.people.length), "Squad", "#F13E9C"],
+            ["people-outline", String(data.friendCount), "Squad", "#F13E9C"],
             ["star-outline", String(data.trustScore), "Karma", "#F7A51B"],
             [
               "flash-outline",
@@ -6160,7 +6091,7 @@ function ProfileScreen({
                     uri:
                       item.mediaUrl ||
                       [
-                        photoAssets.vibeCoast,
+                        neutralMediaPlaceholder,
                         photoAssets.cycling,
                         photoAssets.study,
                       ][index % 3],
@@ -6392,7 +6323,7 @@ function SearchScreen({
               onPress={() => go("vibes")}
             >
               <Image
-                source={{ uri: item.mediaUrl || photoAssets.vibeCoast }}
+                source={{ uri: item.mediaUrl || neutralMediaPlaceholder }}
                 style={styles.searchPersonAvatar}
               />
               <View style={styles.messageBody}>
@@ -6508,12 +6439,6 @@ function NotificationsScreen({
           <Icon name="cloud-offline-outline" size={34} />
           <Text style={styles.cardTitle}>Notifications are unavailable</Text>
           <Text style={styles.meta}>{error}</Text>
-        </View>
-      ) : mode === "demo" ? (
-        <View style={styles.empty}>
-          <Icon name="notifications-outline" size={38} />
-          <Text style={styles.cardTitle}>Demo notifications are quiet</Text>
-          <Text style={styles.meta}>Sign in to receive live chat, activity, community, and verification updates.</Text>
         </View>
       ) : items.length === 0 ? (
         <View style={styles.empty}>
@@ -6828,6 +6753,28 @@ function CommunityDetailScreen({
       active = false;
     };
   }, [community.id]);
+  useEffect(() => {
+    if (!isSupabaseConfigured || !isBackendId(community.id)) return;
+    let active = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const channel = communitiesProductionService.subscribeToPosts(community.id, () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        communitiesProductionService.getFeed(community.id, { page: 1, pageSize: 20 }).then((feed) => {
+          if (!active) return;
+          update((item) => ({
+            ...item,
+            posts: feed.items.map((post) => ({ id: post.id, author: post.author?.fullName || post.author?.username || "WeNitro member", title: post.title, body: post.body, category: post.category || "General", reactions: post.reactionCount, comments: post.commentCount, liked: Boolean(post.myReaction), image: post.mediaUrl || undefined })),
+          }));
+        }).catch(() => undefined);
+      }, 180);
+    });
+    return () => {
+      active = false;
+      if (timer) clearTimeout(timer);
+      void supabase.removeChannel(channel);
+    };
+  }, [community.id]);
   const join = async () => {
     if (community.membership === "created") return;
     const joining = community.membership === "none";
@@ -6839,7 +6786,7 @@ function CommunityDetailScreen({
       update((item) => ({
         ...item,
         membership: joining ? (pending ? "pending" : "joined") : "none",
-        memberCount: Math.max(0, item.memberCount + (joining && !pending ? 1 : !joining ? -1 : 0)),
+        memberCount: item.memberCount + (joining && !pending ? 1 : !joining ? -1 : 0),
       }));
     } catch (error) {
       Alert.alert("Membership not synced", error instanceof Error ? error.message : "Please try again.");
@@ -7002,7 +6949,7 @@ function CommunityDetailScreen({
             <Icon name="arrow-back" color="#fff" size={26} />
           </Pressable>
           <View style={styles.communityTopActions}>
-            <Pressable style={styles.communityRoundAction}>
+            <Pressable style={styles.communityRoundAction} onPress={() => requestInternalShare({ kind: "community", id: community.id, title: community.name, preview: community.tagline })}>
               <Icon name="share-outline" color="#fff" />
             </Pressable>
             <Pressable style={styles.communityRoundAction}>
@@ -7026,8 +6973,7 @@ function CommunityDetailScreen({
               {community.memberCount >= 1000
                 ? `${(community.memberCount / 1000).toFixed(1)}K`
                 : community.memberCount}{" "}
-              Humans • {community.onlineCount} Socializing
-            </Text>
+              Humans • {community.onlineCount} </Text>
           </View>
           <Pressable
             onPress={join}
@@ -7058,7 +7004,7 @@ function CommunityDetailScreen({
         <Text style={styles.communityDetailTagline}>{community.tagline}</Text>
         <View style={styles.communityLinks}>
           <Text>Wiki</Text>
-          <Text>#2 in Places in Asia</Text>
+          <Text></Text>
           <Text>Top Members</Text>
         </View>
         <ScrollView
@@ -7091,7 +7037,7 @@ function CommunityDetailScreen({
         </ScrollView>
         <View style={styles.communityComposer}>
           <View style={styles.communityComposerTop}>
-            <Image source={{ uri: faces[1] }} style={styles.composerAvatar} />
+            <Image source={{ uri: neutralAvatar }} style={styles.composerAvatar} />
             <TextInput
               value={draft}
               onChangeText={setDraft}
@@ -7124,17 +7070,17 @@ function CommunityDetailScreen({
             </View>
           ) : null}
         </View>
-        {visible.map((post, index) => (
+        {visible.map((post) => (
           <View key={post.id} style={styles.communityPost}>
             <View style={styles.postHeader}>
               <Image
-                source={{ uri: faces[index % faces.length] }}
+                source={{ uri: runtimeString(post, ["authorAvatar", "author_avatar", "avatar"]) ?? neutralAvatar }}
                 style={styles.postAvatar}
               />
               <View style={styles.messageBody}>
                 <Text style={styles.postAuthor}>
                   {post.author}{" "}
-                  <Text style={styles.postTime}>{index * 2 + 3}h · ◉</Text>
+                  <Text style={styles.postTime}>{formatRuntimeTime(post.createdAt) || "Recently"}</Text>
                 </Text>
               </View>
               <Icon name="ellipsis-horizontal" color="#CDD2DA" />
@@ -7181,7 +7127,7 @@ function CommunityDetailScreen({
                 <Icon name="chatbubble-outline" color="#B7C0CD" />
                 <Text style={styles.postActionText}>Comment</Text>
               </Pressable>
-              <Pressable style={styles.postAction} onPress={() => Share.share({ title: post.title, message: `${post.title}\n\n${post.body}\n\nShared from WeNitro` })}>
+              <Pressable style={styles.postAction} onPress={() => requestInternalShare({ kind: "community_post", id: post.id, title: post.title, preview: post.body })}>
                 <Icon name="share-outline" color="#B7C0CD" />
                 <Text style={styles.postActionText}>Share</Text>
               </Pressable>
@@ -7357,6 +7303,10 @@ function EditProfile({
   const [name, setName] = useState(data.name);
   const [username, setUsername] = useState(data.username);
   const [bio, setBio] = useState(data.bio);
+  const [avatarPreview, setAvatarPreview] = useState(
+    data.avatarUri || neutralAvatar,
+  );
+  const [pendingAvatarUri, setPendingAvatarUri] = useState<string | null>(null);
   const [catalog, setCatalog] = useState<Array<{ id: number; name: string }>>(
     [],
   );
@@ -7366,6 +7316,25 @@ function EditProfile({
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const chooseAvatar = async () => {
+    setError("");
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      setError("Photo-library permission is required to change your picture.");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.85,
+    });
+    const uri = result.canceled ? null : result.assets[0]?.uri;
+    if (uri) {
+      setAvatarPreview(uri);
+      setPendingAvatarUri(uri);
+    }
+  };
   useEffect(() => {
     if (data.mode !== "authenticated" || !isSupabaseConfigured) {
       setCatalog(
@@ -7401,12 +7370,14 @@ function EditProfile({
     setError("");
     try {
       if (data.mode === "authenticated" && isSupabaseConfigured) {
+        const previousName = data.name;
         await profileService.edit({
           full_name: name.trim(),
           username: username.trim().replace(/^@/, ""),
           bio: bio.trim(),
         });
         await profileService.setInterests(selectedInterestIds);
+        if (pendingAvatarUri) await profileService.updateAvatar(pendingAvatarUri);
         const details = await profileService.load();
         setData((current) => ({
           ...current,
@@ -7423,6 +7394,45 @@ function EditProfile({
             name: badge.name,
             description: badge.description || "Awarded by WeNitro",
             icon: badge.icon,
+          })),
+          activities: current.activities.map((activity) =>
+            activity.ownerId === current.userId
+              ? {
+                  ...activity,
+                  host: details.profile.full_name || details.profile.username,
+                  hostAvatar: details.profile.avatar_url || undefined,
+                }
+              : activity,
+          ),
+          vibes: current.vibes.map((vibe) =>
+            vibe.mine
+              ? {
+                  ...vibe,
+                  author: details.profile.full_name || details.profile.username,
+                  authorAvatar: details.profile.avatar_url || undefined,
+                }
+              : vibe,
+          ),
+          stories: current.stories.map((story) =>
+            story.mine
+              ? {
+                  ...story,
+                  name: "Your Story",
+                  authorAvatar: details.profile.avatar_url || undefined,
+                }
+              : story,
+          ),
+          communities: current.communities.map((community) => ({
+            ...community,
+            posts: community.posts.map((post) =>
+              post.author === previousName
+                ? {
+                    ...post,
+                    author: details.profile.full_name || details.profile.username,
+                    authorAvatar: details.profile.avatar_url || undefined,
+                  }
+                : post,
+            ),
           })),
         }));
       } else {
@@ -7451,6 +7461,31 @@ function EditProfile({
     >
       <View style={styles.profileAvatarLarge}>
         <Text style={styles.profileAvatarText}>{name[0] || "W"}</Text>
+      </View>
+      <View style={{ alignItems: "center", gap: 10, marginBottom: 20 }}>
+        <Image
+          source={{ uri: avatarPreview }}
+          style={{ width: 104, height: 104, borderRadius: 52 }}
+        />
+        <Pressable
+          accessibilityLabel="Choose a new profile picture"
+          onPress={chooseAvatar}
+          style={{
+            backgroundColor: colors.purple50,
+            borderColor: colors.purple500,
+            borderWidth: 1,
+            borderRadius: 12,
+            paddingHorizontal: 18,
+            paddingVertical: 10,
+          }}
+        >
+          <Text style={{ color: colors.purple600, fontWeight: "800" }}>
+            Change Photo
+          </Text>
+        </Pressable>
+        {pendingAvatarUri ? (
+          <Text style={styles.meta}>The selected photo will upload when you save.</Text>
+        ) : null}
       </View>
       <Field label="Name" value={name} onChangeText={setName} />
       <Field label="Username" value={username} onChangeText={setUsername} />
@@ -7877,7 +7912,7 @@ function SimpleForm({
       <Button
         label="Save"
         icon="save"
-        onPress={() => Alert.alert("Saved", `${title} updated for demo.`)}
+        onPress={() => Alert.alert("Saved", `${title} updated.`)}
       />
     </ScreenFrame>
   );
@@ -7890,10 +7925,10 @@ function VerificationScreen({ back, data }: { back: () => void; data: AppData })
     phoneVerified: boolean;
     profileComplete: boolean;
   }>({
-    trustScore: data.mode === "demo" ? 70 : 0,
-    emailVerified: data.mode === "demo",
-    phoneVerified: data.mode === "demo",
-    profileComplete: data.mode === "demo",
+    trustScore: data.trustScore,
+    emailVerified: false,
+    phoneVerified: false,
+    profileComplete: false,
   });
   const [requests, setRequests] = useState<VerificationRequest[]>([]);
   const [loading, setLoading] = useState(data.mode === "authenticated");
@@ -8397,8 +8432,12 @@ export default function App() {
   );
   const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
   const [history, setHistory] = useState<Screen[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const [loaded] = useState(true);
   const [sessionChecked, setSessionChecked] = useState(!isSupabaseConfigured);
+  const [shareEntity, setShareEntity] = useState<InternalShareEntity | null>(null);
+  const [selectedVibeId, setSelectedVibeId] = useState<string | null>(initialWebRoute?.screen === "vibes" ? initialWebRoute.entityId ?? null : null);
+
+  useEffect(() => subscribeToInternalShareRequests(setShareEntity), []);
 
   useEffect(() => {
     if (Platform.OS !== "web" || typeof window === "undefined") return;
@@ -8410,6 +8449,7 @@ export default function App() {
       setSelectedCommunityId(route.screen === "communityDetail" ? route.entityId ?? null : null);
       setSelectedProfileId(route.screen === "profile" ? route.entityId ?? null : null);
       setSelectedConversationId(route.screen === "chat" ? route.entityId ?? null : null);
+      setSelectedVibeId(route.screen === "vibes" ? route.entityId ?? null : null);
     };
     window.addEventListener("popstate", restoreRoute);
     window.addEventListener("hashchange", restoreRoute);
@@ -8418,48 +8458,6 @@ export default function App() {
       window.removeEventListener("hashchange", restoreRoute);
     };
   }, []);
-
-  useEffect(() => {
-    AsyncStorage.getItem(storageKey)
-      .then((value) => {
-        if (value) {
-          try {
-            const parsed = JSON.parse(value) as Partial<AppData>;
-            const isIntentDataset =
-              Array.isArray(parsed.activities) &&
-              parsed.activities.some((item) =>
-                ["Study", "Badminton", "Cricket"].includes(item.category),
-              );
-            if (isIntentDataset)
-              setData({
-                ...initialData,
-                ...parsed,
-                mode: "demo",
-                communities: Array.isArray(parsed.communities)
-                  ? parsed.communities
-                  : seedCommunities,
-                conversations: Array.isArray(parsed.conversations)
-                  ? parsed.conversations
-                  : seedConversations,
-                stories: Array.isArray(parsed.stories)
-                  ? parsed.stories
-                  : seedStories,
-              } as AppData);
-          } catch {
-            // A malformed local demo record falls back to the current seed dataset.
-          }
-        }
-        setLoaded(true);
-      })
-      .catch(() => setLoaded(true));
-  }, []);
-
-  useEffect(() => {
-    if (loaded && data.mode === "demo")
-      AsyncStorage.setItem(storageKey, JSON.stringify(data)).catch(
-        () => undefined,
-      );
-  }, [data, loaded]);
 
   useEffect(() => {
     if (data.mode !== "authenticated" || !isSupabaseConfigured) {
@@ -8488,27 +8486,22 @@ export default function App() {
   useEffect(() => {
     if (data.mode !== "authenticated" || !isSupabaseConfigured) return;
     let active = true;
-    let timer: ReturnType<typeof setTimeout> | undefined;
     let retryTimer: ReturnType<typeof setTimeout> | undefined;
-    let refreshSequence = 0;
     let retryAttempt = 0;
     let subscription:
       | Awaited<ReturnType<typeof realtimeChatService.subscribeToInbox>>
       | undefined;
-    const refreshInbox = () => {
-      if (timer) clearTimeout(timer);
-      const sequence = ++refreshSequence;
-      timer = setTimeout(() => {
-        loadRemoteWorkspace()
-          .then((remote) => {
-            if (!active || !remote || sequence !== refreshSequence) return;
-            setData((current) => {
-              const refreshed = hydrateRemoteData(remote, current);
-              return { ...current, conversations: refreshed.conversations };
-            });
-          })
-          .catch((error) => console.warn("Chat inbox refresh failed", error));
-      }, 120);
+    const refreshInbox = (change: import("./src/services/realtime-chat").InboxMessageChange) => {
+      if (!active || change.eventType !== "INSERT" || !change.message) return;
+      const incoming = chatMessageFromRemote(change.message, data.userId);
+      setData((current) => ({
+        ...current,
+        conversations: current.conversations.map((conversation) =>
+          conversation.id !== String(change.conversationId) || conversation.messages.some((message) => message.id === incoming.id)
+            ? conversation
+            : { ...conversation, messages: [...conversation.messages, incoming], lastMessageAt: incoming.createdAt, unread: incoming.mine || selectedConversationId === conversation.id ? conversation.unread : conversation.unread + 1 },
+        ),
+      }));
     };
     const subscribe = () => {
       realtimeChatService
@@ -8535,11 +8528,38 @@ export default function App() {
     subscribe();
     return () => {
       active = false;
-      if (timer) clearTimeout(timer);
       if (retryTimer) clearTimeout(retryTimer);
       void subscription?.cleanup();
     };
-  }, [data.mode, data.userId]);
+  }, [data.mode, data.userId, selectedConversationId]);
+
+  useEffect(() => {
+    if (data.mode !== "authenticated" || !isSupabaseConfigured) return;
+    let active = true;
+    let refreshing = false;
+    const unsubscribe = subscribeToAppForeground(async () => {
+      if (!active || refreshing) return;
+      refreshing = true;
+      try {
+        const remote = await loadRemoteWorkspace();
+        if (!active || !remote) return;
+        setData((current) => {
+          const next = hydrateRemoteData(remote, current);
+          if (screen === "activities" || screen === "activityDetail") return { ...current, activities: next.activities, likedIds: next.likedIds, savedIds: next.savedIds };
+          if (screen === "communities" || screen === "communityDetail") return { ...current, communities: next.communities };
+          if (screen === "vibes") return { ...current, vibes: next.vibes, likedIds: next.likedIds };
+          if (screen === "chat") return { ...current, conversations: next.conversations, stories: next.stories, people: next.people };
+          if (screen === "feed") return { ...current, activities: next.activities, vibes: next.vibes, stories: next.stories };
+          return next;
+        });
+      } catch (error) {
+        console.warn("Foreground refresh failed", error);
+      } finally {
+        refreshing = false;
+      }
+    });
+    return () => { active = false; unsubscribe(); };
+  }, [data.mode, data.userId, screen]);
 
   useEffect(() => {
     if (!loaded || !isSupabaseConfigured) return;
@@ -8628,6 +8648,7 @@ export default function App() {
     if (next !== "communityDetail") setSelectedCommunityId(null);
     if (next !== "profile") setSelectedProfileId(null);
     if (next !== "chat") setSelectedConversationId(null);
+    if (next !== "vibes") setSelectedVibeId(null);
     if (next === "profile") setSelectedProfileId(null);
     setScreen(next);
     pushWebRoute(next);
@@ -8673,6 +8694,18 @@ export default function App() {
     else pushWebRoute("chat", undefined, true);
   };
 
+  useEffect(() => subscribeToSharedContentNavigation((payload) => {
+    if (payload.kind === "activity") openActivity(payload.entityId);
+    else if (payload.kind === "community") openCommunity(payload.entityId);
+    else if (payload.kind === "community_post" && payload.parentId) openCommunity(payload.parentId);
+    else {
+      setHistory((items) => [...items, screen]);
+      setSelectedVibeId(payload.entityId);
+      setScreen("vibes");
+      pushWebRoute("vibes", payload.entityId);
+    }
+  }), [screen]);
+
   const content = useMemo(() => {
     const props = { data, setData, go, back };
     if (screen === "login") return <LoginScreen go={go} setData={setData} />;
@@ -8698,7 +8731,7 @@ export default function App() {
         />
       );
     if (screen === "vibes")
-      return <VibesScreen data={data} go={go} setData={setData} />;
+      return <VibesScreen data={data} go={go} setData={setData} initialVibeId={selectedVibeId} />;
     if (screen === "host")
       return <HostScreen go={go} data={data} setData={setData} />;
     if (screen === "chat")
@@ -8791,7 +8824,7 @@ export default function App() {
         go={go}
       />
     );
-  }, [screen, data, selectedActivityId, selectedCommunityId, selectedProfileId, selectedConversationId]);
+  }, [screen, data, selectedActivityId, selectedCommunityId, selectedProfileId, selectedConversationId, selectedVibeId]);
 
   if (!fontsLoaded || !loaded || !sessionChecked) {
     return (
@@ -8825,6 +8858,26 @@ export default function App() {
       <View style={[styles.app, data.theme === "dark" && styles.appDark]}>
         <StatusBar style={data.theme === "dark" ? "light" : "dark"} />
         {content}
+        <ShareToChatModal
+          entity={shareEntity}
+          conversations={data.conversations}
+          people={data.people}
+          onClose={() => setShareEntity(null)}
+          onSent={(roomIds, messages) => {
+            const mapped = messages.map((message) => chatMessageFromRemote(message, data.userId));
+            setData((current) => ({
+              ...current,
+              conversations: current.conversations.map((conversation) => {
+                const messageIndex = roomIds.indexOf(conversation.id);
+                const message = messageIndex >= 0 ? mapped[messageIndex] : undefined;
+                return message && !conversation.messages.some((item) => item.id === message.id)
+                  ? { ...conversation, messages: [...conversation.messages, message], lastMessageAt: message.createdAt }
+                  : conversation;
+              }),
+            }));
+            if (shareEntity?.kind === "vibe" && isBackendId(shareEntity.id)) vibeService.recordShare(shareEntity.id, "direct").catch(() => undefined);
+          }}
+        />
         {showTabs ? (
           <TabBar
             active={
@@ -9524,6 +9577,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
+    overflow: "hidden",
   },
   profileAvatarText: {
     color: colors.purple600,
@@ -10352,8 +10406,8 @@ const styles = StyleSheet.create({
   },
   homeHeroShell: {
     paddingBottom: 24,
-    borderBottomLeftRadius: 44,
-    borderBottomRightRadius: 44,
+    borderBottomLeftRadius: 72,
+    borderBottomRightRadius: 72,
     overflow: "hidden",
     shadowColor: "#1910C2",
     shadowOffset: { width: 0, height: 8 },
