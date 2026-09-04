@@ -17,6 +17,7 @@ export type ParticipationStatus =
   | "going"
   | "interested"
   | "pending"
+  | "payment_required"
   | "declined"
   | "waitlist";
 export type JoinActivityStatus = Exclude<ParticipationStatus, "pending">;
@@ -329,17 +330,13 @@ const profileFromDb = (row?: DbRecord): ActivityProfile | null =>
 
 const statusFromDb = (row: DbRecord, metadata: DbRecord): ActivityStatus => {
   const status = row.status ?? metadata.status;
-  if (
-    status === "draft" ||
-    status === "published" ||
-    status === "cancelled" ||
-    status === "completed"
-  ) {
-    return status;
-  }
   if (row.is_cancelled === true) return "cancelled";
   const end = nullableString(row.event_end_time);
-  return end && new Date(end).getTime() < Date.now() ? "completed" : "published";
+  if (end && new Date(end).getTime() < Date.now()) return "completed";
+  if (status === "draft" || status === "cancelled" || status === "completed") {
+    return status;
+  }
+  return "published";
 };
 
 const visibilityFromDb = (value: unknown): ActivityVisibility => {
@@ -424,6 +421,7 @@ const participationStatusFromDb = (value: unknown): ParticipationStatus => {
     return "declined";
   }
   if (value === "pending") return "pending";
+  if (value === "payment_required") return "payment_required";
   if (value === "waitlist") return "waitlist";
   return "interested";
 };
