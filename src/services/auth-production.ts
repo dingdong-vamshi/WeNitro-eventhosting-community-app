@@ -7,38 +7,6 @@ import * as Linking from "expo-linking";
 import { Platform } from "react-native";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 
-export type Profile = {
-  id: string;
-  username: string;
-  full_name: string | null;
-  avatar_url: string | null;
-  bio: string | null;
-  website: string | null;
-  location: string | null;
-  trust_score: number;
-  karma: number;
-  nitro_points: number;
-  is_private: boolean;
-  date_of_birth: string | null;
-  gender: string | null;
-  deleted_at: string | null;
-  last_active_at: string;
-  created_at: string;
-  updated_at: string;
-};
-
-export type EditableProfileFields = {
-  username?: string;
-  full_name?: string | null;
-  avatar_url?: string | null;
-  bio?: string | null;
-  website?: string | null;
-  location?: string | null;
-  is_private?: boolean;
-  date_of_birth?: string | null;
-  gender?: string | null;
-};
-
 export type SignUpInput = {
   email: string;
   password: string;
@@ -50,6 +18,17 @@ export type SignUpInput = {
 export type PasswordLoginInput = {
   email: string;
   password: string;
+};
+
+export type PhoneOtpRequestInput = {
+  phone: string;
+  fullName?: string;
+  createAccount?: boolean;
+};
+
+export type PhoneOtpVerifyInput = {
+  phone: string;
+  token: string;
 };
 
 export type GoogleOAuthOptions = {
@@ -70,7 +49,7 @@ export type SessionBootstrap =
       status: "authenticated";
       session: Session;
       user: User;
-      profile: Profile | null;
+      profile: null;
     };
 
 export type OAuthRedirectResult =
@@ -96,10 +75,18 @@ const requireBackend = () => {
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
+export const normalizeIndianPhone = (phone: string) => {
+  let digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("0") && digits.length === 11) digits = digits.slice(1);
+  if (digits.startsWith("91") && digits.length === 12) digits = digits.slice(2);
+  if (!/^[6-9]\d{9}$/.test(digits)) {
+    throw new Error("Enter a valid 10-digit Indian mobile number.");
+  }
+  return `+91${digits}`;
+};
+
 const normalizeUsername = (username: string) =>
   username.trim().replace(/^@/, "").toLowerCase();
-
-const defaultUsername = (userId: string) => `user_${userId.slice(0, 8)}`;
 
 const webRedirectUrl = () => {
   if (typeof window === "undefined") return undefined;
@@ -135,8 +122,6 @@ const clearWebAuthParameters = () => {
   );
 };
 
-const profileFromRow = (row: unknown) => row as Profile;
-
 const getValidatedUser = async () => {
   requireBackend();
   const { data, error } = await supabase.auth.getUser();
@@ -144,98 +129,6 @@ const getValidatedUser = async () => {
   if (!data.user) throw new Error("Authentication required.");
   return data.user;
 };
-
-export async function createProfile(
-  input: EditableProfileFields = {},
-): Promise<Profile> {
-  const user = await getValidatedUser();
-  const metadata = user.user_metadata as Record<string, unknown>;
-  const metadataUsername =
-    typeof metadata.username === "string" ? metadata.username : undefined;
-  const username = normalizeUsername(
-    input.username ?? metadataUsername ?? defaultUsername(user.id),
-  );
-  const fullName =
-    input.full_name ??
-    (typeof metadata.full_name === "string" ? metadata.full_name : null);
-  const avatarUrl =
-    input.avatar_url ??
-    (typeof metadata.avatar_url === "string" ? metadata.avatar_url : null);
-
-  const { data, error } = await supabase
-    .from("profiles")
-    .insert({
-      id: user.id,
-      username,
-      full_name: fullName,
-      avatar_url: avatarUrl,
-      bio: input.bio,
-      website: input.website,
-      location: input.location,
-      is_private: input.is_private,
-      date_of_birth: input.date_of_birth,
-      gender: input.gender,
-    })
-    .select("*")
-    .single();
-  if (error) throw error;
-  return profileFromRow(data);
-}
-
-export async function getProfile(): Promise<Profile | null> {
-  const user = await getValidatedUser();
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .is("deleted_at", null)
-    .maybeSingle();
-  if (error) throw error;
-  return data ? profileFromRow(data) : null;
-}
-
-export async function ensureProfile(
-  input: EditableProfileFields = {},
-): Promise<Profile> {
-  const existing = await getProfile();
-  if (!existing) return createProfile(input);
-
-  const updates = { ...input };
-  if (updates.username === undefined) {
-    const user = await getValidatedUser();
-    const metadataUsername = user.user_metadata.username;
-    if (
-      existing.username === defaultUsername(user.id) &&
-      typeof metadataUsername === "string"
-    ) {
-      updates.username = metadataUsername;
-    }
-  }
-  return Object.keys(updates).length > 0 ? updateProfile(updates) : existing;
-}
-
-export async function updateProfile(
-  input: EditableProfileFields,
-): Promise<Profile> {
-  const user = await getValidatedUser();
-  const updates: EditableProfileFields & { last_active_at: string } = {
-    ...input,
-    last_active_at: new Date().toISOString(),
-  };
-  if (updates.username !== undefined) {
-    updates.username = normalizeUsername(updates.username);
-  }
-
-  const { data, error } = await supabase
-    .from("profiles")
-    .update(updates)
-    .eq("id", user.id)
-    .is("deleted_at", null)
-    .select("*")
-    .single();
-  if (error) throw error;
-  return profileFromRow(data);
-}
 
 export async function handleAuthRedirect(
   url: string,
@@ -354,6 +247,39 @@ export async function loginWithPassword(input: PasswordLoginInput) {
   return data;
 }
 
+export async function requestPhoneOtp(input: PhoneOtpRequestInput) {
+  requireBackend();
+  const phone = normalizeIndianPhone(input.phone);
+  const fullName = input.fullName?.trim();
+  if (input.createAccount && !fullName) {
+    throw new Error("Full name is required to create an account.");
+  }
+  const { data, error } = await supabase.auth.signInWithOtp({
+    phone,
+    options: {
+      shouldCreateUser: Boolean(input.createAccount),
+      ...(fullName ? { data: { full_name: fullName } } : {}),
+    },
+  });
+  if (error) throw error;
+  return { data, phone };
+}
+
+export async function verifyPhoneOtp(input: PhoneOtpVerifyInput) {
+  requireBackend();
+  const phone = normalizeIndianPhone(input.phone);
+  const token = input.token.replace(/\D/g, "");
+  if (!/^\d{6}$/.test(token)) throw new Error("Enter the 6-digit OTP.");
+  const { data, error } = await supabase.auth.verifyOtp({
+    phone,
+    token,
+    type: "sms",
+  });
+  if (error) throw error;
+  if (!data.session) throw new Error("OTP verification did not create a session.");
+  return data;
+}
+
 export async function signInWithGoogle(options: GoogleOAuthOptions = {}) {
   requireBackend();
   const redirectTo = options.redirectTo ?? getAuthRedirectUrl();
@@ -414,7 +340,13 @@ export async function requestEmailVerification(input?: {
 
 export async function getVerificationStatus(): Promise<VerificationStatus> {
   const user = await getValidatedUser();
-  const profile = await getProfile();
+  const { data: profile, error } = await supabase
+    .from("tbl_users")
+    .select("rating")
+    .eq("auth_user_id", user.id)
+    .eq("is_delete", 0)
+    .maybeSingle();
+  if (error) throw error;
   return {
     userId: user.id,
     email: user.email ?? null,
@@ -423,7 +355,7 @@ export async function getVerificationStatus(): Promise<VerificationStatus> {
     phone: user.phone ?? null,
     phoneVerified: Boolean(user.phone_confirmed_at),
     phoneVerifiedAt: user.phone_confirmed_at ?? null,
-    trustScore: profile?.trust_score ?? 0,
+    trustScore: Number(profile?.rating ?? 0),
   };
 }
 
@@ -431,15 +363,14 @@ export const authProductionService = {
   bootstrapSession,
   signUpWithPassword,
   loginWithPassword,
+  requestPhoneOtp,
+  verifyPhoneOtp,
+  normalizeIndianPhone,
   signInWithGoogle,
   handleAuthRedirect,
   subscribeToAuthRedirects,
   logout,
   onAuthStateChange,
-  createProfile,
-  getProfile,
-  ensureProfile,
-  updateProfile,
   requestEmailVerification,
   getVerificationStatus,
 };
