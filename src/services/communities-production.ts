@@ -23,8 +23,8 @@ export type CreateCommunityInput = {
   tags?: string[];
   rules?: string[];
   visibility?: CommunityVisibility;
-  image: string | CommunityMediaSource;
-  cover: string | CommunityMediaSource;
+  image?: string | CommunityMediaSource;
+  cover?: string | CommunityMediaSource;
 };
 export type DiscoverCommunitiesOptions = {
   query?: string;
@@ -505,10 +505,16 @@ export async function createCommunity(input: CreateCommunityInput): Promise<stri
   const authUserId = await currentAuthUserId();
   const uploadedPaths: string[] = [];
   try {
-    const image = await uploadCommunityImage(input.image, authUserId, "image");
-    uploadedPaths.push(image.path);
-    const cover = await uploadCommunityImage(input.cover, authUserId, "cover");
-    uploadedPaths.push(cover.path);
+    const imageSource = input.image ? sourceDescriptor(input.image) : null;
+    const coverSource = input.cover ? sourceDescriptor(input.cover) : null;
+    const image = imageSource?.uri.trim()
+      ? await uploadCommunityImage(imageSource, authUserId, "image")
+      : null;
+    if (image) uploadedPaths.push(image.path);
+    const cover = coverSource?.uri.trim()
+      ? await uploadCommunityImage(coverSource, authUserId, "cover")
+      : null;
+    if (cover) uploadedPaths.push(cover.path);
     const { data, error } = await supabase.rpc("community_create", {
       p_name: input.name.trim(),
       p_tagline: input.tagline?.trim() ?? "",
@@ -516,8 +522,8 @@ export async function createCommunity(input: CreateCommunityInput): Promise<stri
       p_category: input.category.trim(),
       p_tags: input.tags?.map((tag) => tag.trim()).filter(Boolean) ?? [],
       p_rules: input.rules?.map((rule) => rule.trim()).filter(Boolean) ?? [],
-      p_image_path: image.path,
-      p_cover_path: cover.path,
+      p_image_path: image?.path ?? null,
+      p_cover_path: cover?.path ?? null,
       p_visibility: input.visibility ?? "public",
     });
     if (error) throw error;
