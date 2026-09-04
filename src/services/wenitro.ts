@@ -21,8 +21,8 @@ export type CommunityInput = {
   tags: string[];
   rules: string[];
   visibility: "public" | "private";
-  imageUri: string;
-  coverUri: string;
+  imageUri?: string;
+  coverUri?: string;
 };
 
 type Row = Record<string, any>;
@@ -176,6 +176,7 @@ export async function loadRemoteWorkspace() {
     communityPage,
     profileDetails,
     peopleResult,
+    friendResult,
     vibePage,
     stories,
   ] =
@@ -195,17 +196,26 @@ export async function loadRemoteWorkspace() {
       loadStage("profile", profileProductionService.loadProfile()),
       loadStage(
         "people",
-        (async () =>
-          await supabase
-            .from("tbl_users")
-            .select("id,username,fullname,bio,profile_image,rating")
-            .neq("id", userId)
-            .limit(50))(),
+        (supabase.rpc as unknown as (
+          name: "list_discoverable_people",
+          args: { p_limit: number },
+        ) => PromiseLike<{ data: Row[] | null; error: unknown }>)(
+          "list_discoverable_people",
+          { p_limit: 50 },
+        ),
+      ),
+      loadStage(
+        "friends",
+        supabase
+          .from("tbl_friends")
+          .select("id", { count: "exact", head: true })
+          .or(`user_id.eq.${userId},friend_id.eq.${userId}`),
       ),
       loadStage("vibes", vibesProductionService.listReels({ pageSize: 50 })),
       loadStage("stories", storiesProductionService.listActive(50)),
     ]);
   if (peopleResult.error) throw workspaceError("people", peopleResult.error);
+  if (friendResult.error) throw workspaceError("friends", friendResult.error);
 
   const eventIds = activityPage.items.map((item) => Number(item.id));
   const inboxTask = (
@@ -301,6 +311,8 @@ export async function loadRemoteWorkspace() {
         media_url: mediaPath
           ? signedInboxMedia.get(mediaPath) ?? mediaPath
           : null,
+        message_type: String(message.message_type ?? "text"),
+        share_payload: message.share_payload ?? null,
         created_at: String(message.created_at),
         profiles: sender?.id
           ? {
@@ -369,7 +381,11 @@ export async function loadRemoteWorkspace() {
       ends_at: item.endsAt,
       registration_closes_at: item.registrationClosesAt,
       profiles: item.owner
-        ? { full_name: item.owner.fullName, username: item.owner.username }
+        ? {
+            full_name: item.owner.fullName,
+            username: item.owner.username,
+            avatar_url: item.owner.avatarUrl,
+          }
         : null,
       participants: [{ count: participantCount.get(Number(item.id)) ?? 0 }],
       viewer_status: item.viewerState.participation?.status ?? null,
@@ -393,6 +409,7 @@ export async function loadRemoteWorkspace() {
   return {
     profile: normalizedProfile,
     people: (peopleResult.data ?? []).map((person: Row) => safeProfile(person)),
+    friendCount: friendResult.count ?? 0,
     activities,
     vibes: vibePage.reels.map((reel) => ({
       id: reel.id,
@@ -421,6 +438,7 @@ export async function loadRemoteWorkspace() {
       media_url: story.mediaUrl,
       media_type: story.mediaType,
       caption: story.caption,
+      created_at: story.createdAt,
       profiles: {
         username: story.author.username,
         full_name: story.author.fullName,
@@ -503,8 +521,8 @@ export const communityService = {
       tags: input.tags,
       rules: input.rules,
       visibility: input.visibility,
-      image: { uri: input.imageUri },
-      cover: { uri: input.coverUri },
+      image: input.imageUri ? { uri: input.imageUri } : undefined,
+      cover: input.coverUri ? { uri: input.coverUri } : undefined,
     });
   },
   setMembership(communityId: string, joined: boolean) {
@@ -568,6 +586,13 @@ export const chatService = {
       await realtimeChatService.createDirectConversation(Number(memberId)),
     );
   },
+  async share(
+    conversationIds: string[],
+    kind: import("./realtime-chat").ChatShareKind,
+    entityId: string,
+  ) {
+    return realtimeChatService.sendShare(conversationIds.map(Number), kind, Number(entityId));
+  },
   async loadMessagesPage(
     conversationId: string,
     cursor?: { createdAt: string; id: number } | null,
@@ -593,6 +618,9 @@ export const chatService = {
         }),
         mine: message.sender_id === ownId,
         image: message.media_signed_url || undefined,
+        messageType: message.message_type,
+        share: message.share_payload,
+        createdAt: message.created_at,
       })),
       nextCursor: page.nextCursor,
     };
@@ -643,6 +671,9 @@ export const storyService = {
       text: story.caption || "A WeNitro moment",
       viewed: story.viewed,
       mine: story.isMine,
+      authorId: String(story.userId),
+      authorAvatar: story.author.avatarUrl || undefined,
+      createdAt: story.createdAt,
     }));
   },
   delete(storyId: string) {
@@ -723,7 +754,11 @@ const activityForWorkspace = async (
   activity_type: activity.activityType,
   community_id: activity.communityId,
   profiles: activity.owner
-    ? { full_name: activity.owner.fullName, username: activity.owner.username }
+    ? {
+        full_name: activity.owner.fullName,
+        username: activity.owner.username,
+        avatar_url: activity.owner.avatarUrl,
+      }
     : null,
   participants: [{ count: participantCount }],
   viewer_status: viewerStatus,
@@ -950,6 +985,9 @@ export const activityService = {
         createdAt: item.createdAt,
       })),
     };
+  },
+  subscribe(activityId: string, onRefresh: () => void) {
+    return activitiesProductionService.subscribeToActivity(activityId, { onRefresh });
   },
   join(activityId: string) {
     return activitiesProductionService.join(activityId);

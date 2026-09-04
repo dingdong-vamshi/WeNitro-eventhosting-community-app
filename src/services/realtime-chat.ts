@@ -2,6 +2,20 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 
 export type ChatMediaType = "image" | "video" | "audio" | "document";
+export type ChatShareKind = "activity" | "community" | "community_post" | "vibe";
+export type ChatSharePayload = {
+  version: 1;
+  kind: ChatShareKind;
+  entityId: string;
+  parentId: string | null;
+  title: string;
+  preview: string;
+  deepLink: string;
+  sharedBy: number;
+  thumbnailBucket: string | null;
+  thumbnailPath: string | null;
+  thumbnailUrl: string | null;
+};
 export type ChatProfile = {
   id: number;
   username: string;
@@ -24,6 +38,8 @@ export type ChatMessage = {
   body: string;
   media_url: string | null;
   media_type: ChatMediaType | null;
+  message_type: string;
+  share_payload: ChatSharePayload | null;
   reply_to_id: number | null;
   edited_at: string | null;
   deleted_at: string | null;
@@ -135,6 +151,7 @@ export const realtimeChatBridgeRpc = {
   listMembers: "list_chat_participants",
   listMessages: "list_chat_messages",
   sendMessage: "send_chat_message",
+  sendShare: "send_chat_share",
   markRead: "mark_chat_read",
 } as const;
 
@@ -195,6 +212,24 @@ function mapProfile(value: unknown): ChatProfile | null {
     avatar_url: nullableString(row.profile_image ?? row.avatar_url),
   };
 }
+function mapSharePayload(value: unknown): ChatSharePayload | null {
+  const row = record(value);
+  const kind = row.kind;
+  if (kind !== "activity" && kind !== "community" && kind !== "community_post" && kind !== "vibe") return null;
+  return {
+    version: 1,
+    kind,
+    entityId: String(row.entity_id ?? ""),
+    parentId: row.parent_id == null ? null : String(row.parent_id),
+    title: String(row.title ?? "Shared from WeNitro"),
+    preview: String(row.preview ?? ""),
+    deepLink: String(row.deep_link ?? ""),
+    sharedBy: Number(row.shared_by) || 0,
+    thumbnailBucket: nullableString(row.thumbnail_bucket),
+    thumbnailPath: nullableString(row.thumbnail_path),
+    thumbnailUrl: nullableString(row.thumbnail_url),
+  };
+}
 function mapMessage(value: unknown): ChatMessage {
   const row = record(value);
   const mediaUrl = nullableString(row.media_url);
@@ -211,6 +246,8 @@ function mapMessage(value: unknown): ChatMessage {
         : rawType === "image" || rawType === "video" || rawType === "audio"
           ? rawType
           : "document",
+    message_type: String(rawType ?? "text"),
+    share_payload: mapSharePayload(row.share_payload),
     reply_to_id:
       row.reply_to_id == null ? null : id(row.reply_to_id, "reply id"),
     edited_at: nullableString(row.edited_at),
@@ -299,25 +336,53 @@ async function signMedia(messages: ChatMessage[], expiresIn: number) {
         ),
     ),
   ];
+  let signedMessages = messages;
   if (!paths.length) {
-    return messages.map((message) => ({
+    signedMessages = messages.map((message) => ({
       ...message,
       media_signed_url: message.media_url,
     }));
+  } else {
+    const { data, error } = await supabase.storage.from("messages").createSignedUrls(paths, expiresIn);
+    if (error) throw error;
+    const urls = new Map((data ?? []).map((item) => [item.path, item.signedUrl ?? null]));
+    signedMessages = messages.map((message) => ({
+      ...message,
+      media_signed_url: message.media_url ? (urls.get(message.media_url) ?? message.media_url) : null,
+    }));
   }
-  const { data, error } = await supabase.storage
-    .from("messages")
-    .createSignedUrls(paths, expiresIn);
-  if (error) throw error;
-  const urls = new Map(
-    (data ?? []).map((item) => [item.path, item.signedUrl ?? null]),
-  );
-  return messages.map((message) => ({
-    ...message,
-    media_signed_url: message.media_url
-      ? (urls.get(message.media_url) ?? message.media_url)
-      : null,
+
+  const byBucket = new Map<string, Set<string>>();
+  signedMessages.forEach((message) => {
+    const bucket = message.share_payload?.thumbnailBucket;
+    const path = message.share_payload?.thumbnailPath;
+    if (!bucket || !path || /^https?:\/\//i.test(path)) return;
+    if (!byBucket.has(bucket)) byBucket.set(bucket, new Set());
+    byBucket.get(bucket)!.add(path);
+  });
+  const shareUrls = new Map<string, string>();
+  await Promise.all([...byBucket].map(async ([bucket, bucketPaths]) => {
+    const { data, error } = await supabase.storage.from(bucket).createSignedUrls([...bucketPaths], expiresIn);
+    if (error) return;
+    (data ?? []).forEach((item) => {
+      if (item.path && item.signedUrl) shareUrls.set(`${bucket}:${item.path}`, item.signedUrl);
+    });
   }));
+  return signedMessages.map((message) => {
+    const share = message.share_payload;
+    if (!share?.thumbnailPath) return message;
+    return {
+      ...message,
+      share_payload: {
+        ...share,
+        thumbnailUrl: /^https?:\/\//i.test(share.thumbnailPath)
+          ? share.thumbnailPath
+          : share.thumbnailBucket
+            ? shareUrls.get(`${share.thumbnailBucket}:${share.thumbnailPath}`) ?? null
+            : null,
+      },
+    };
+  });
 }
 
 export const createMessageClientId = () => crypto.randomUUID();
@@ -455,6 +520,31 @@ export async function sendMessage(input: SendMessageInput) {
     );
     if (error) throw error;
     return (await signMedia([mapMessage(first(data))], 3_600))[0];
+  } catch (error) {
+    throw chatError(error, operation);
+  }
+}
+export async function sendShare(conversationIds: number[], kind: ChatShareKind, entityId: number) {
+  const operation = "share content";
+  try {
+    await currentUserId(operation);
+    if (!Number.isSafeInteger(entityId) || entityId <= 0) throw new Error("Invalid shared item.");
+    const roomIds = [...new Set(conversationIds)];
+    if (!roomIds.length || roomIds.length > 20) throw new Error("Select between 1 and 20 conversations.");
+    roomIds.forEach((roomId) => assertId(roomId, "conversationId", operation));
+    const rpc = supabase.rpc as unknown as (
+      name: "send_chat_share",
+      args: { p_room_ids: number[]; p_client_ids: string[]; p_share_kind: ChatShareKind; p_entity_id: number },
+    ) => PromiseLike<{ data: unknown; error: unknown }>;
+    const { data, error } = await rpc("send_chat_share", {
+      p_room_ids: roomIds,
+      p_client_ids: roomIds.map(() => createMessageClientId()),
+      p_share_kind: kind,
+      p_entity_id: entityId,
+    });
+    if (error) throw error;
+    const rows = Array.isArray(data) ? data : data ? [data] : [];
+    return await signMedia(rows.map(mapMessage), 3_600);
   } catch (error) {
     throw chatError(error, operation);
   }
@@ -738,6 +828,7 @@ export const realtimeChatService = {
   loadMessagesPage,
   loadMessages,
   sendMessage,
+  sendShare,
   markConversationRead,
   subscribeToConversation,
   subscribeToInbox,
