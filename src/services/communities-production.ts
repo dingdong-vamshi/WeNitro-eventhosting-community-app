@@ -7,13 +7,14 @@ const MAX_PAGE_SIZE = 50;
 const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
 const SIGNED_URL_TTL_SECONDS = 60 * 60;
 const IMAGE_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const POST_MIME_TYPES = new Set([...IMAGE_MIME_TYPES, "video/mp4"]);
 
 export type CommunityVisibility = "public" | "private";
 export type CommunityMembership = "none" | "joined" | "created" | "pending";
 export type CommunityReaction = "like" | "love" | "laugh" | "support";
 export type CommunityMediaSource = {
   uri: string;
-  contentType?: "image/jpeg" | "image/png" | "image/webp";
+  contentType?: "image/jpeg" | "image/png" | "image/webp" | "video/mp4";
 };
 export type CreateCommunityInput = {
   name: string;
@@ -207,14 +208,16 @@ function sourceDescriptor(source: string | CommunityMediaSource): CommunityMedia
 function contentTypeFor(source: CommunityMediaSource, response: Response) {
   if (source.contentType) return source.contentType;
   const responseType = response.headers.get("content-type")?.split(";")[0].toLowerCase();
-  if (responseType && IMAGE_MIME_TYPES.has(responseType)) return responseType;
+  if (responseType && POST_MIME_TYPES.has(responseType)) return responseType;
   const extension = source.uri.split("?")[0].split(".").pop()?.toLowerCase();
+  if (extension === "mp4") return "video/mp4";
   if (extension === "png") return "image/png";
   if (extension === "webp") return "image/webp";
   return "image/jpeg";
 }
 
 function extensionFor(contentType: string) {
+  if (contentType === "video/mp4") return "mp4";
   return contentType === "image/png" ? "png" : contentType === "image/webp" ? "webp" : "jpg";
 }
 
@@ -231,14 +234,15 @@ async function uploadCommunityImage(
 ) {
   const source = sourceDescriptor(sourceInput);
   const response = await fetch(source.uri);
-  if (!response.ok) throw new Error("Could not read the selected image.");
+  if (!response.ok) throw new Error("Could not read the selected media.");
   const contentType = contentTypeFor(source, response);
-  if (!IMAGE_MIME_TYPES.has(contentType)) {
-    throw new Error("Community images must be JPEG, PNG, or WebP.");
+  const allowedTypes = kind === "post" ? POST_MIME_TYPES : IMAGE_MIME_TYPES;
+  if (!allowedTypes.has(contentType)) {
+    throw new Error(kind === "post" ? "Community posts support JPEG, PNG, WebP, or MP4." : "Community images must be JPEG, PNG, or WebP.");
   }
   const body = await response.arrayBuffer();
   if (!body.byteLength || body.byteLength > MAX_IMAGE_BYTES) {
-    throw new Error("Community images must be non-empty and 20 MB or smaller.");
+    throw new Error("Community media must be non-empty and 20 MB or smaller.");
   }
   const path = authUserId + "/" + kind + "/" + uniqueId() + "." + extensionFor(contentType);
   const { error } = await supabase.storage.from(COMMUNITY_BUCKET).upload(path, body, {
@@ -247,7 +251,7 @@ async function uploadCommunityImage(
     upsert: false,
   });
   if (error) throw error;
-  return { path };
+  return { path, contentType };
 }
 
 async function signedMediaUrl(path: string | null) {
@@ -574,12 +578,18 @@ export async function createCommunityPost(input: {
   body?: string;
   category?: string;
   image?: string | CommunityMediaSource;
+  media?: string | CommunityMediaSource;
+  mediaType?: "image" | "video";
 }): Promise<CommunityPost> {
   const authUserId = await currentAuthUserId();
   let uploadedPath: string | null = null;
   try {
-    const media = input.image
-      ? await uploadCommunityImage(input.image, authUserId, "post")
+    const mediaSource = input.media ?? input.image;
+    const media = mediaSource
+      ? await uploadCommunityImage(mediaSource, authUserId, "post")
+      : null;
+    const mediaType = media
+      ? input.mediaType ?? (media.contentType === "video/mp4" ? "video" : "image")
       : null;
     uploadedPath = media?.path ?? null;
     const { data, error } = await supabase.rpc("community_create_post", {
@@ -588,7 +598,7 @@ export async function createCommunityPost(input: {
       p_body: input.body?.trim() ?? "",
       p_category: input.category?.trim() || "General",
       p_media_path: media?.path ?? null,
-      p_media_type: media ? "image" : null,
+      p_media_type: mediaType,
     });
     if (error) throw error;
     const row = data as Record<string, unknown>;
@@ -600,7 +610,7 @@ export async function createCommunityPost(input: {
       body: String(row.body ?? input.body?.trim() ?? ""),
       category: String(row.category ?? input.category?.trim() ?? "General"),
       mediaUrl: await signedMediaUrl((row.media_path as string | null) ?? media?.path ?? null),
-      mediaType: media ? "image" : null,
+      mediaType,
       status: "published",
       author: null,
       reactionCount: 0,
