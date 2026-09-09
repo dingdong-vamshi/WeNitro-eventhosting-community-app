@@ -42,6 +42,10 @@ try {
   if (await fallback.isVisible().catch(() => false)) {
     await fallback.click();
   }
+  const createAccount = page.getByText("New to WeNitro? Create an account", { exact: true });
+  if (await createAccount.isVisible().catch(() => false)) {
+    await createAccount.click();
+  }
   await phoneTab.click();
   const signupFields = page.locator("input:visible");
   await signupFields.nth(0).fill("Vamshi");
