@@ -4,6 +4,7 @@ import { captureReferral } from './src/services/referrals';
 import { ReferenceCollection } from "./src/components/reconstruction/collections";
 import { CommunityInfo } from "./src/components/community/community-info";
 import { ReferenceFeed, ReferenceSearch } from "./src/components/reconstruction/feed-search";
+import { ClientActivitiesScreen } from "./src/components/discovery/activities-screen";
 import { ReferenceMessages } from "./src/components/reconstruction/messages";
 import { ReferenceProfile, ReferenceMemberProfile } from "./src/components/reconstruction/profile";
 import { ReferenceSquad } from "./src/components/reconstruction/squad";
@@ -11,7 +12,7 @@ import { ReferenceSettings, ReferencePrivacy, ReferenceUtility, ReferenceStore }
 import { ReferenceActivityHistory, ReferenceEmergencyContact, ReferenceNitroHistory, ReferenceVerification } from "./src/components/reconstruction/profile-utilities";
 import { ReferenceTheme, ReferenceNavigation, Sheet as ReferenceSheet, usePalette } from "./src/components/reconstruction/ui";
 import { referenceDeltaService, type ParticipantRating } from "./src/services/reference-delta";
-import { CreateCommunitySheet, CommunityConversation, VibeEntryState } from "./src/components/community/reference-community";
+import { CreateCommunitySheet, CommunityConversation, PollComposer, VibeEntryState } from "./src/components/community/reference-community";
 import { HostActivityScreen, HostLanding, HostNavigation } from "./src/components/hosting/host-activity-screen";
 import { PartnerAccountScreen } from "./src/components/partner-account-screen";
 import type { PartnerBusinessProfile } from "./src/services/partner-account";
@@ -279,6 +280,7 @@ type Vibe = {
   comments?: { id: string; author: string; body: string; avatar?: string; createdAt?: string }[];
   mine?: boolean;
   authorAvatar?: string;
+  hashtags?: string[];
 };
 
 type CommunityPost = {
@@ -291,6 +293,7 @@ type CommunityPost = {
   comments: number;
   liked: boolean;
   image?: string;
+  mediaType?: "image" | "video";
   commentItems?: { id: string; author: string; body: string }[];
   authorAvatar?: string;
   createdAt?: string;
@@ -457,10 +460,17 @@ const activityFallbackCover = (category?: string, activityType?: string) => {
   if (/music|concert|sing|dance/.test(value)) return photoAssets.mic;
   if (/cowork|startup|work|business/.test(value)) return photoAssets.cowork;
   if (/food|coffee|cafe/.test(value)) return photoAssets.food;
-  return neutralMediaPlaceholder;
+  if (/cycle|cycling|bike|bicycle/.test(value)) return photoAssets.cycling;
+  if (/travel|trip|outdoor|explore|adventure|hike/.test(value))
+    return photoAssets.ride;
+  if (/photo|camera|creative/.test(value)) return photoAssets.camera;
+  if (/social|party|meetup|community|friends|hangout/.test(value))
+    return photoAssets.friends;
+  return photoAssets.bonfire;
 };
 
-const communityFallbackCover = photoAssets.friends;
+const communityFallbackCover = (category?: string) =>
+  activityFallbackCover(category, "community");
 
 const runtimeField = (value: unknown, keys: readonly string[]): unknown => {
   if (!value || typeof value !== "object") return undefined;
@@ -614,8 +624,9 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
     id: item.id,
     author: item.profiles?.username || item.profiles?.full_name || "",
     authorAvatar: runtimeString(item.profiles, ["profile_image", "avatar_url", "avatar"]),
-    event: item.caption || "",
+    event: runtimeString(item, ["activity_title", "event_title"]) || "",
     text: item.caption,
+    hashtags: Array.isArray(item.hashtags) ? item.hashtags.map(String) : [],
     likes: item.likes?.[0]?.count ?? 0,
     saved: false,
     mediaUrl: item.media_url,
@@ -659,8 +670,8 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
           ? "joined"
           : "none",
     verified: item.is_verified,
-    image: item.image_url || communityFallbackCover,
-    cover: item.cover_url || communityFallbackCover,
+    image: item.image_url || communityFallbackCover(item.category),
+    cover: item.cover_url || communityFallbackCover(item.category),
     rules: (item.community_rules || []).map((rule: any) => rule.body),
     posts: (item.community_posts || []).map((post: any) => ({
       id: post.id,
@@ -674,6 +685,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
       comments: post.community_post_comments?.[0]?.count ?? 0,
       liked: false,
       image: post.media_url,
+      mediaType: post.media_type === "video" ? "video" : post.media_url ? "image" : undefined,
     })),
   }));
   const conversations: ChatConversation[] = remote.conversations.map(
@@ -2591,34 +2603,39 @@ function ReelVideo({ uri, muted }: { uri: string; muted: boolean }) {
     <VideoView
       player={player}
       style={styles.fullReelImage}
-      contentFit="contain"
+      contentFit="cover"
       nativeControls={false}
     />
   );
 }
 
 function ReelMedia({ vibe, muted }: { vibe: Vibe; muted: boolean }) {
-  if (vibe.mediaType === "video" && vibe.mediaUrl) {
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [vibe.id, vibe.mediaUrl]);
+  if (vibe.mediaType === "video" && vibe.mediaUrl && !failed) {
     return <ReelVideo uri={vibe.mediaUrl} muted={muted} />;
   }
-  if (Platform.OS === "web" && vibe.mediaUrl) {
+  const media = failed || !vibe.mediaUrl ? photoAssets.friends : vibe.mediaUrl;
+  if (Platform.OS === "web") {
     return React.createElement("img", {
-      src: vibe.mediaUrl,
+      src: media,
       alt: "WeNitro vibe",
+      onError: () => setFailed(true),
       style: {
         width: "100%",
         height: "100%",
         display: "block",
-        objectFit: "contain",
+        objectFit: "cover",
         backgroundColor: "#000",
       },
     });
   }
   return (
     <Image
-      source={mediaSource(vibe.mediaUrl || neutralMediaPlaceholder)}
+      source={mediaSource(media)}
       style={styles.fullReelImage}
-      resizeMode="contain"
+      resizeMode="cover"
+      onError={() => setFailed(true)}
     />
   );
 }
@@ -2894,13 +2911,6 @@ function VibesScreen({
           colors={["rgba(0,0,0,0.02)", "rgba(4,5,12,0.9)"]}
           style={styles.fullReelShade}
         />
-        <View style={styles.reelsTabs}>
-          <Text style={styles.reelsTabMuted}>Following</Text>
-          <View style={styles.reelsTabActiveWrap}>
-            <Text style={styles.reelsTabActive}>Nearby</Text>
-            <View style={styles.reelsTabUnderline} />
-          </View>
-        </View>
         <View style={styles.reelHeader}>
           <BrandHeader
             go={go}
@@ -2969,20 +2979,18 @@ function VibesScreen({
         <View style={styles.fullReelCopy}>
           <View style={styles.vibeIdentity}>
             <Image
-              source={mediaSource(data.avatarUri || neutralAvatar)}
+              source={mediaSource(vibe.authorAvatar || neutralAvatar)}
               style={styles.vibeAvatar}
             />
             <View>
               <View style={styles.row}>
                 <Text style={styles.vibeUser}>{vibe.author}</Text>
               </View>
-              <View style={styles.row}>
-                <Text style={styles.vibeMood}>{vibe.event}</Text>
-              </View>
+              {vibe.event ? <View style={styles.row}><Text style={styles.vibeMood}>{vibe.event}</Text></View> : null}
             </View>
           </View>
           <Text style={styles.vibeCaption}>{vibe.text}</Text>
-          <Text style={styles.vibeHashtags}></Text>
+          {vibe.hashtags?.length ? <Text style={styles.vibeHashtags}>{vibe.hashtags.map(tag => `#${tag.replace(/^#/, '')}`).join(' ')}</Text> : null}
         </View>
         {commentsOpen ? (
           <View style={[styles.vibeCommentsSheet, { backgroundColor: palette.card }]}>
@@ -3811,6 +3819,8 @@ export function ActivityDetailScreen({
   const [reportDetails, setReportDetails] = useState("");
   const [reporting, setReporting] = useState(false);
   const [messageBusy, setMessageBusy] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(true);
+  const [heroLoadFailed, setHeroLoadFailed] = useState(false);
   const [feedback, setFeedback] = useState<Array<{ id: string; reaction: string; comment: string; createdAt: string; createdBy: string }>>([]);
   const [activityVibes, setActivityVibes] = useState<Array<{ id: string; mediaUrl: string; mediaType: "image" | "video"; caption: string }>>([]);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
@@ -3874,6 +3884,7 @@ export function ActivityDetailScreen({
     }
   };
   useEffect(() => {
+    setHeroLoadFailed(false);
     void refreshDetails();
   }, [activity.id]);
   useEffect(() => {
@@ -4159,6 +4170,23 @@ export function ActivityDetailScreen({
     } finally { setReporting(false); }
   };
   const joinedParticipants = participants.filter(participant => ["approved", "going", "paid"].includes(participant.status));
+  const compactDate = (value?: string) => value
+    ? new Date(value).toLocaleString([], {
+        day: "numeric",
+        month: "short",
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    : "To be decided";
+  const categoryIcon: IconName = /sport|fitness|badminton|tennis/i.test(activity.category)
+    ? "fitness-outline"
+    : /study|learn|book/i.test(activity.category)
+      ? "book-outline"
+      : /music|dance/i.test(activity.category)
+        ? "musical-notes-outline"
+        : /food|coffee/i.test(activity.category)
+          ? "cafe-outline"
+          : "sparkles-outline";
   const participantStatus = (status: string) => ({ approved: "APPROVED", going: "JOINED", paid: "PAID", pending: "PENDING", waitlist: "WAITLISTED", payment_required: "PAYMENT REQUIRED", payment_pending: "PAYMENT PENDING", approved_pending_payment: "PAYMENT REQUIRED", payment_failed: "PAYMENT FAILED", rejected: "REJECTED" }[status] || status.replace(/_/g, " ").toUpperCase());
   const feedbackEligible = activityEnded && ["approved", "going", "paid"].includes(String(viewerStatus));
   const submitActivityFeedback = async () => {
@@ -4193,8 +4221,10 @@ export function ActivityDetailScreen({
       <ScrollView ref={detailScrollRef} style={{ flex: 1 }} contentContainerStyle={[styles.detailScreen, { backgroundColor: palette.bg }]}>
         <View style={[styles.detailHero, activity.isPartner && styles.partnerActivityAccent]}>
           <Image
-            source={{ uri: activity.image }}
+            source={mediaSource(heroLoadFailed ? activityFallbackCover(activity.category, activity.activityType) : activity.image || activityFallbackCover(activity.category, activity.activityType))}
             style={styles.detailHeroImage}
+            resizeMode="cover"
+            onError={() => setHeroLoadFailed(true)}
           />
           <LinearGradient
             colors={["rgba(0,0,0,.35)", "transparent", "rgba(0,0,0,.46)"]}
@@ -4204,24 +4234,46 @@ export function ActivityDetailScreen({
             <Icon name="arrow-back" color="#fff" />
           </Pressable>
           <View style={styles.detailTopActions}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Share activity"
+              style={styles.detailRound}
+              onPress={() => requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.where}` })}
+            >
+              <Icon name="share-social-outline" color="#fff" />
+            </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel={saved ? "Remove bookmark" : "Save activity"} style={styles.detailRound} onPress={toggleSave}>
-              <Icon name={saved ? "bookmark" : "bookmark-outline"} />
+              <Icon name={saved ? "bookmark" : "bookmark-outline"} color="#fff" />
             </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel="Activity options" style={styles.detailRound} onPress={() => setOptionsOpen(true)}>
-              <Icon name="ellipsis-vertical" />
+              <Icon name="ellipsis-vertical" color="#fff" />
             </Pressable>
           </View>
           <View style={styles.detailCategory}>
-            <Icon name="sparkles" size={13} />
+            <Icon name={categoryIcon} size={13} color="#4933DA" />
             <Text style={styles.discoveryTagText}>{activity.category}</Text>
           </View>
           <View style={styles.detailPeople}>
-            {joinedParticipants.length > 0 ? <AvatarStack count={joinedParticipants.length} /> : null}
+            {joinedParticipants.length > 0 ? <>
+              <View style={{ flexDirection: "row" }}>
+                {joinedParticipants.slice(0, 5).map((participant, index) => participant.avatarUrl ? (
+                  <Image
+                    key={participant.id}
+                    source={{ uri: participant.avatarUrl }}
+                    style={[styles.detailHeroAvatar, { marginLeft: index ? -9 : 0 }]}
+                  />
+                ) : (
+                  <View key={participant.id} style={[styles.detailHeroAvatar, styles.detailHeroAvatarFallback, { marginLeft: index ? -9 : 0 }]}>
+                    <Text style={styles.detailHeroInitial}>{participant.name.slice(0, 1).toUpperCase()}</Text>
+                  </View>
+                ))}
+              </View>
+              <Text style={styles.detailPeopleText}>{joinedParticipants.length} joined</Text>
+            </> : null}
           </View>
         </View>
         <View style={styles.detailContent}>
           {joinError ? <Text style={styles.error}>{joinError}</Text> : null}
-          {isHost && data.accountType === "partner" ? <Button label="Manage registrations & earnings" icon="business-outline" onPress={onManagePartner} /> : null}
           {registrationForm ? <RegistrationAnswerForm key={activity.id} questions={registrationForm.questions} busy={joining} initialAnswers={registrationForm.answers} onSubmit={submitRegistration} submitLabel={isPaidActivity && joinType === "direct" ? "Continue to payment" : joinType === "approval" ? "Submit request" : "Confirm registration"} onCancel={() => setRegistrationForm(null)} dark={data.theme === "dark"} /> : null}
           <View style={styles.rowBetween}>
             <View style={styles.detailTitleWrap}>
@@ -4235,20 +4287,20 @@ export function ActivityDetailScreen({
             </View>
             <View style={{ alignItems: "flex-end", gap: 5 }}><Text style={{ color: activityEnded || joined ? "#6DD4A0" : "#E7B85C", fontSize: 10, fontFamily: "Manrope_700Bold", textTransform: "uppercase" }}>{activityEnded ? "Completed" : joined ? "Joined" : requestPending ? "Pending" : registrationClosed ? "Registration Closed" : "Upcoming"}</Text><View style={{ flexDirection: "row", gap: 8 }}><Icon name={activity.visibility === "public" ? "globe-outline" : "lock-closed-outline"} size={16} color="#9A8AFF" />{activity.verifiedOnly ? <Icon name="shield-checkmark-outline" size={16} color="#9A8AFF" /> : null}</View></View>
           </View>
-          <Text style={styles.timelineHeading}>ACTIVITY TIMELINE</Text>
+          <Text style={[styles.timelineHeading, { color: palette.muted }]}>ACTIVITY TIMELINE</Text>
           <View style={[styles.scheduleCard, { backgroundColor: palette.card, borderColor: palette.border }]}>
             {[
-              ["calendar-outline", "START", activity.startsAt ? new Date(activity.startsAt).toLocaleString() : "To Be Decided", "#61D2A3"],
+              ["calendar-outline", "START", compactDate(activity.startsAt), "#35BD8A"],
               [
                 "calendar-outline",
                 "END",
-                activity.endsAt ? new Date(activity.endsAt).toLocaleString() : "To Be Decided",
+                compactDate(activity.endsAt),
                 "#9A8AFF",
               ],
               [
                 "calendar-outline",
                 "REG. BY",
-                activity.registrationClosesAt ? new Date(activity.registrationClosesAt).toLocaleString() : "To Be Decided",
+                compactDate(activity.registrationClosesAt),
                 "#F04463",
               ],
             ].map(([icon, label, value, color]) => (
@@ -4265,7 +4317,7 @@ export function ActivityDetailScreen({
             <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flex: 1 }}><Icon name="location-outline" color="#A899FF" /><View style={{ flex: 1, gap: 3 }}><Text style={[styles.detailCardTitle, { color: palette.text }]}>{activity.where || "Location to be decided"}</Text>{activity.locationInstruction ? <Text style={[styles.detailCardMuted, { color: palette.muted }]}>{activity.locationInstruction}</Text> : null}<Text style={{ color: "#8F82F4", fontSize: 9 }}>Tap to open in Maps</Text></View></View><Icon name="chevron-forward" color="#8A94A3" size={18} />
           </Pressable>
           <View style={[styles.detailSection, { backgroundColor: palette.card, borderColor: palette.border }]}>
-            <Text style={[styles.detailSectionTitle, { color: palette.text }]}>Description</Text>
+            <Text style={[styles.detailSectionTitle, { color: palette.text }]}>About this activity</Text>
             <Text style={[styles.detailBody, { color: palette.muted }]}>{activity.description || "No description provided."}</Text>
             <View style={styles.detailChipRow}>
               {[
@@ -4292,7 +4344,6 @@ export function ActivityDetailScreen({
               <Text style={styles.scheduleLabel}>ACTIVITY HOST</Text>
               <View style={styles.row}>
                 <Text style={[styles.detailHostName, { color: palette.text }]}>{activity.host}</Text>
-                <Icon name="checkmark-circle" size={15} />
               </View>
               <Text style={[styles.detailCardMuted, { color: palette.muted }]}>Tap the profile to view host details</Text>
             </Pressable>
@@ -4356,19 +4407,22 @@ export function ActivityDetailScreen({
               </Pressable>
             ) : null}
           </View>
-          <View style={[styles.termsCard, { borderColor: palette.border }]}>
-            <Icon name="shield-checkmark-outline" />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ expanded: termsOpen }}
+            accessibilityLabel="Community guidelines"
+            onPress={() => setTermsOpen((current) => !current)}
+            style={[styles.termsCard, { borderColor: palette.border }]}
+          >
+            <Icon name="shield-checkmark-outline" color="#5747E8" />
             <View style={styles.messageBody}>
-              <Text style={[styles.detailSectionTitle, { color: palette.text }]}>
-                Terms & Conditions by Host
-              </Text>
-              <Text style={[styles.detailBody, { color: palette.muted }]}>
-                Be respectful, no distractions, be on time and cancel in advance
-                if you can’t make it. <Text style={styles.link}>Read more</Text>
-              </Text>
+              <Text style={[styles.detailSectionTitle, { color: palette.text }]}>Community Guidelines</Text>
+              {termsOpen ? (
+                <Text style={[styles.detailBody, { color: palette.muted }]}>Be respectful, arrive on time, and update your registration if your plans change.</Text>
+              ) : null}
             </View>
-            <Icon name="chevron-down" />
-          </View>
+            <Icon name={termsOpen ? "chevron-up" : "chevron-down"} color="#5747E8" />
+          </Pressable>
           <View style={[styles.detailSection, { backgroundColor: palette.card, borderColor: palette.border }]}>
             <View style={styles.rowBetween}>
               <Text style={[styles.detailSectionTitle, { color: palette.text }]}>
@@ -4421,7 +4475,7 @@ export function ActivityDetailScreen({
             </Pressable>
             </View>
           </View>
-          <View style={styles.rowBetween}><Text style={[styles.detailSectionTitle, { color: palette.text }]}>Suggested Activities</Text><Text style={styles.link}>See all</Text></View>
+          <View style={styles.rowBetween}><Text style={[styles.detailSectionTitle, { color: palette.text }]}>Recommended Activities</Text><Text style={styles.link}>See all</Text></View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -6495,26 +6549,16 @@ export function CommunitiesScreen({
           .toLowerCase()
           .includes(normalized)),
   );
-  const toggleJoin = (id: string) => {
+  const toggleJoin = async (id: string) => {
     const currentCommunity = data.communities.find((item) => item.id === id);
     if (!currentCommunity) return;
+    if (currentCommunity.membership === "created") return;
     const joining = currentCommunity.membership !== "joined";
-    setData((current) => ({
-      ...current,
-      communities: current.communities.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              membership: joining ? "joined" : "none",
-              memberCount: item.memberCount + (joining ? 1 : -1),
-            }
-          : item,
-      ),
-    }));
-    if (isSupabaseConfigured && isBackendId(id))
-      communityService
-        .setMembership(id, joining)
-        .catch((error) => Alert.alert("Membership not synced", error.message));
+    try {
+      const result = isSupabaseConfigured && isBackendId(id) ? await communityService.setMembership(id, joining) : null;
+      const pending = Boolean(joining && result && "status" in result && result.status === "pending");
+      setData((current) => ({ ...current, communities: current.communities.map((item) => item.id === id ? { ...item, membership: joining ? (pending ? "pending" : "joined") : "none", memberCount: Math.max(0, item.memberCount + (joining && !pending ? 1 : !joining ? -1 : 0)) } : item) }));
+    } catch (error) { Alert.alert("Membership not synced", error instanceof Error ? error.message : "Please try again."); }
   };
   return (
     <SafeAreaView style={[styles.communitySafe, { backgroundColor: palette.bg }]}>
@@ -6564,6 +6608,8 @@ export function CommunitiesScreen({
           {data.communities.slice(0, 5).map((item) => (
             <Pressable
               key={item.id}
+              accessibilityRole="button"
+              accessibilityLabel={`Open community ${item.name}`}
               style={styles.communityStory}
               onPress={() => openCommunity(item.id)}
             >
@@ -6607,7 +6653,7 @@ export function CommunitiesScreen({
         </View>
         {visible.map((item) => (
           <View key={item.id} style={[styles.communityListCard, { backgroundColor: palette.card, borderColor: palette.border }]}>
-            <Pressable onPress={() => openCommunity(item.id)}>
+            <Pressable accessibilityRole="button" accessibilityLabel={`Open community ${item.name} cover`} onPress={() => openCommunity(item.id)}>
               <Image
                 source={{ uri: item.image }}
                 style={styles.communityCardImage}
@@ -6617,6 +6663,8 @@ export function CommunitiesScreen({
               </View>
             </Pressable>
             <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Open community ${item.name} details`}
               style={styles.communityCardBody}
               onPress={() => openCommunity(item.id)}
             >
@@ -6624,9 +6672,6 @@ export function CommunitiesScreen({
                 <Text style={[styles.communityCardName, { color: palette.text }]} numberOfLines={1}>
                   {item.name}
                 </Text>
-                {item.verified ? (
-                  <Icon name="checkmark-circle" color="#2D8DFF" size={17} />
-                ) : null}
               </View>
               <Text style={[styles.communityCardTagline, { color: palette.muted }]} numberOfLines={1}>
                 {item.tagline}
@@ -6663,7 +6708,7 @@ export function CommunitiesScreen({
             <View style={styles.communityCardActions}>
               <Icon name="ellipsis-vertical" color={palette.iconMuted} />
               <Pressable
-                onPress={() => toggleJoin(item.id)}
+                onPress={() => void toggleJoin(item.id)}
                 style={[
                   styles.communityJoin,
                   item.membership === "joined" && styles.communityJoined,
@@ -6678,6 +6723,8 @@ export function CommunitiesScreen({
                 >
                   {item.membership === "joined"
                     ? "Joined"
+                    : item.membership === "pending"
+                      ? "Pending"
                     : item.membership === "created"
                       ? "Created"
                       : "Join Now"}
@@ -6700,6 +6747,12 @@ export function CommunitiesScreen({
   );
 }
 
+function CommunityPostMedia({ uri, type }: { uri: string; type?: "image" | "video" }) {
+  const player = useVideoPlayer(type === "video" ? uri : null);
+  if (type !== "video") return <Image source={{ uri }} style={styles.postImage} />;
+  return <VideoView player={player} nativeControls contentFit="cover" style={styles.postImage} />;
+}
+
 export function CommunityDetailScreen({
   community,
   authorName,
@@ -6717,13 +6770,13 @@ export function CommunityDetailScreen({
   const [filter, setFilter] = useState("All");
   const [draft, setDraft] = useState("");
   const [postImageUri, setPostImageUri] = useState<string | null>(null);
+  const [postMediaType, setPostMediaType] = useState<"image" | "video">("image");
+  const [postPollOpen, setPostPollOpen] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [commentDraft, setCommentDraft] = useState("");
   const [commentsLoading, setCommentsLoading] = useState(false);
-  const visible = community.posts.filter(
-    (post) => filter === "All" || post.category === filter,
-  );
+  const visible = community.posts.filter((post) => filter === "All" || post.category === filter);
   const update = (transform: (item: Community) => Community) =>
     setData((current) => ({
       ...current,
@@ -6746,11 +6799,12 @@ export function CommunityDetailScreen({
               post.author?.fullName || post.author?.username || "WeNitro member",
             title: post.title,
             body: post.body,
-            category: post.category || "General",
+            category: post.mediaType === "video" ? "Videos" : post.mediaUrl ? "Photos" : "Text",
             reactions: post.reactionCount,
             comments: post.commentCount,
             liked: Boolean(post.myReaction),
             image: post.mediaUrl || undefined,
+            mediaType: post.mediaType || undefined,
           })),
         }));
       })
@@ -6777,7 +6831,7 @@ export function CommunityDetailScreen({
           if (!active) return;
           update((item) => ({
             ...item,
-            posts: feed.items.map((post) => ({ id: post.id, author: post.author?.fullName || post.author?.username || "WeNitro member", title: post.title, body: post.body, category: post.category || "General", reactions: post.reactionCount, comments: post.commentCount, liked: Boolean(post.myReaction), image: post.mediaUrl || undefined })),
+            posts: feed.items.map((post) => ({ id: post.id, author: post.author?.fullName || post.author?.username || "WeNitro member", title: post.title, body: post.body, category: post.mediaType === "video" ? "Videos" : post.mediaUrl ? "Photos" : "Text", reactions: post.reactionCount, comments: post.commentCount, liked: Boolean(post.myReaction), image: post.mediaUrl || undefined, mediaType: post.mediaType || undefined })),
           }));
         }).catch(() => undefined);
       }, 180);
@@ -6833,9 +6887,9 @@ export function CommunityDetailScreen({
           ? await createCommunityPost({
               communityId: community.id,
               title,
-              body: "Shared with the WeNitro community.",
-              category: "General",
-              image: postImageUri || undefined,
+              body: "",
+              media: postImageUri || undefined,
+              mediaType: postImageUri ? postMediaType : undefined,
             })
           : null;
       update((item) => ({
@@ -6845,18 +6899,20 @@ export function CommunityDetailScreen({
             id: created?.id || `cp${Date.now()}`,
             author: authorName,
             title,
-            body: "Shared with the WeNitro community.",
-            category: "General",
+            body: "",
+            category: postImageUri ? (postMediaType === "video" ? "Videos" : "Photos") : "Text",
             reactions: 0,
             comments: 0,
             liked: false,
             image: created?.mediaUrl || postImageUri || undefined,
+            mediaType: created?.mediaType || (postImageUri ? postMediaType : undefined),
           },
           ...item.posts,
         ],
       }));
       setDraft("");
       setPostImageUri(null);
+      setPostMediaType("image");
     } catch (caught) {
       Alert.alert(
         "Could not publish",
@@ -6866,14 +6922,17 @@ export function CommunityDetailScreen({
       setPublishing(false);
     }
   };
-  const pickPostImage = async () => {
+  const pickPostMedia = async (mediaType: "image" | "video") => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) return;
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
+      mediaTypes: mediaType === "video" ? ["videos"] : ["images"],
       quality: 0.85,
     });
-    if (!result.canceled && result.assets[0]?.uri) setPostImageUri(result.assets[0].uri);
+    if (!result.canceled && result.assets[0]?.uri) {
+      setPostImageUri(result.assets[0].uri);
+      setPostMediaType(mediaType);
+    }
   };
   const openComments = async (postId: string) => {
     if (commentPostId === postId) {
@@ -6978,15 +7037,12 @@ export function CommunityDetailScreen({
           <View style={styles.messageBody}>
             <View style={styles.row}>
               <Text style={[styles.communityDetailName, { color: palette.text }]}>{community.name}</Text>
-              {community.verified ? (
-                <Icon name="checkmark-circle" color="#3B8BFF" />
-              ) : null}
             </View>
             <Text style={[styles.communityDetailStats, { color: palette.muted }]}>
               {community.memberCount >= 1000
                 ? `${(community.memberCount / 1000).toFixed(1)}K`
                 : community.memberCount}{" "}
-              Humans • {community.onlineCount} </Text>
+              members • {community.visibility}</Text>
           </View>
           <Pressable
             onPress={join}
@@ -7016,18 +7072,14 @@ export function CommunityDetailScreen({
         </View>
         <Text style={[styles.communityDetailTagline, { color: palette.muted }]}>{community.tagline}</Text>
         {["created", "joined"].includes(community.membership) ? <Button label="Open conversation" icon="chatbubble-outline" onPress={onConversation} /> : null}
-        <View style={[styles.communityLinks, { backgroundColor: palette.inset }]}>
-          <Text style={{ color: palette.text }}>Wiki</Text>
-          <Text style={{ color: palette.muted }}></Text>
-          <Text style={{ color: palette.text }}>Top Members</Text>
-        </View>
+        <View style={[styles.communityLinks, { backgroundColor: palette.inset }]}><Text style={{ color: palette.text, fontWeight: "700" }}>{community.category}</Text><Text style={{ color: palette.muted }}>{community.visibility}</Text></View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.communityDetailFilters}
         >
           <Icon name="options-outline" color={palette.iconMuted} size={24} />
-          {["All", "Travel", "Lifestyle", "Discussion", "General"].map(
+          {["All", "Text", "Photos", "Videos"].map(
             (item) => (
               <Pressable
                 key={item}
@@ -7062,8 +7114,14 @@ export function CommunityDetailScreen({
               placeholderTextColor={palette.muted}
               style={[styles.communityComposerInput, { color: palette.text }]}
             />
-            <Pressable onPress={() => void pickPostImage()} accessibilityLabel="Attach image">
+            <Pressable onPress={() => void pickPostMedia("image")} accessibilityLabel="Attach photo">
               <Icon name="image-outline" color="#1910C2" />
+            </Pressable>
+            <Pressable onPress={() => void pickPostMedia("video")} accessibilityLabel="Attach video">
+              <Icon name="videocam-outline" color="#1910C2" />
+            </Pressable>
+            <Pressable onPress={() => setPostPollOpen(true)} accessibilityLabel="Create poll">
+              <Icon name="stats-chart-outline" color="#1910C2" />
             </Pressable>
             <Pressable onPress={publish} disabled={publishing}>
               {publishing ? (
@@ -7075,7 +7133,7 @@ export function CommunityDetailScreen({
           </View>
           {postImageUri ? (
             <View style={{ position: "relative", marginTop: 10 }}>
-              <Image source={{ uri: postImageUri }} style={styles.postImage} />
+              {postMediaType === "video" ? <View style={[styles.postImage, { backgroundColor: palette.inset, alignItems: "center", justifyContent: "center", gap: 8 }]}><Icon name="videocam" color={palette.accent} size={34} /><Text style={{ color: palette.muted, fontSize: 11 }}>Video ready to post</Text></View> : <Image source={{ uri: postImageUri }} style={styles.postImage} />}
               <Pressable
                 accessibilityLabel="Remove attached image"
                 onPress={() => setPostImageUri(null)}
@@ -7107,7 +7165,7 @@ export function CommunityDetailScreen({
             </View>
             <Text style={[styles.postBody, { color: palette.muted }]}>{post.body}</Text>
             {post.image ? (
-              <Image source={{ uri: post.image }} style={styles.postImage} />
+              <CommunityPostMedia uri={post.image} type={post.mediaType} />
             ) : null}
             <View style={styles.postMetrics}>
               <Text style={[styles.postReactions, { color: palette.muted }]}>
@@ -7184,6 +7242,7 @@ export function CommunityDetailScreen({
           </View>
         ))}
       </ScrollView>
+      {postPollOpen ? <PollComposer roomId={community.id} close={() => setPostPollOpen(false)} onPosted={async () => { setPostPollOpen(false); onConversation(); }} /> : null}
     </SafeAreaView>
   );
 }
@@ -8833,7 +8892,7 @@ export default function App() {
       );
     if (screen === "activities")
       return (
-        <ActivitiesScreen
+        <ClientActivitiesScreen
           data={data}
           setData={setData}
           go={go}
@@ -8843,7 +8902,7 @@ export default function App() {
     if (screen === "vibes")
       return <VibesScreen data={data} go={go} setData={setData} initialVibeId={selectedVibeId} />;
     if (screen === "host")
-      return <HostLanding onActivity={() => go("createActivity")} onVibe={() => go("postVibe")} onCommunity={() => go("createCommunity")} />;
+      return <HostLanding go={go} onActivity={() => go("createActivity")} onVibe={() => go("postVibe")} onCommunity={() => go("createCommunity")} />;
     if (screen === "chat" && selectedConversationId && (data.conversations.some(c => c.id === selectedConversationId && c.roomType === "community") || data.communities.some(c => c.id === selectedConversationId))) {
       const conversation = data.conversations.find(c => c.id === selectedConversationId);
       const community = data.communities.find(c => c.id === selectedConversationId);
@@ -8968,9 +9027,9 @@ export default function App() {
     }
     if (screen === "postVibe") return <PostVibeEntry {...props} />;
     if (screen === "createCommunity") return <>
-      <HostLanding onActivity={() => go("createActivity")} onVibe={() => go("postVibe")} onCommunity={() => undefined} />
+      <HostLanding go={go} onActivity={() => go("createActivity")} onVibe={() => go("postVibe")} onCommunity={() => undefined} />
       <CreateCommunitySheet onClose={() => go("host")} onCreated={created => {
-        setData(current => ({ ...current, communities: [{ id: created.id, name: created.name, tagline: created.description, category: created.category, tags: [created.category, "Local", "New"], memberCount: 1, onlineCount: 0, visibility: "Public", membership: "created", image: created.image || communityFallbackCover, cover: communityFallbackCover, rules: created.rules, posts: [] }, ...current.communities.filter(c => c.id !== created.id)], conversations: [{ id: created.id, name: created.name, roomType: "community", type: "Groups", avatar: created.image || neutralAvatar, memberCount: 1, online: false, unread: 0, messages: [], memberIds: [current.userId!] }, ...current.conversations.filter(c => c.id !== created.id)] }));
+        setData(current => ({ ...current, communities: [{ id: created.id, name: created.name, tagline: created.description, category: created.category, tags: [created.category, "Local", "New"], memberCount: 1, onlineCount: 0, visibility: "Public", membership: "created", image: created.image || communityFallbackCover(created.category), cover: created.cover || communityFallbackCover(created.category), rules: created.rules, posts: [] }, ...current.communities.filter(c => c.id !== created.id)], conversations: [{ id: created.id, name: created.name, roomType: "community", type: "Groups", avatar: created.image || neutralAvatar, memberCount: 1, online: false, unread: 0, messages: [], memberIds: [current.userId!] }, ...current.conversations.filter(c => c.id !== created.id)] }));
         setCommunitySuccess(true); setSelectedConversationId(created.id); go("chat", created.id);
       }} />
     </>;
@@ -9067,7 +9126,7 @@ export default function App() {
   );
 }
 
-const maxWidth = 540;
+const maxWidth = 430;
 const styles = StyleSheet.create({
   partnerActivityAccent: { borderWidth: 2, borderColor: "#8B5CF6" },
   app: { flex: 1, backgroundColor: "#EEEAF2" },
@@ -11259,15 +11318,15 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth,
     alignSelf: "center",
-    backgroundColor: "#101824",
-    paddingBottom: 18,
+    backgroundColor: "#F7F8FC",
+    paddingBottom: 24,
   },
   detailHero: {
-    height: 270,
+    height: 248,
     position: "relative",
     overflow: "hidden",
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 22,
+    borderBottomRightRadius: 22,
   },
   detailHeroImage: { width: "100%", height: "100%" },
   detailHeroShade: {
@@ -11281,9 +11340,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 15,
     left: 15,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     backgroundColor: "rgba(0,0,0,.42)",
     alignItems: "center",
     justifyContent: "center",
@@ -11293,12 +11352,12 @@ const styles = StyleSheet.create({
     top: 15,
     right: 15,
     flexDirection: "row",
-    gap: 9,
+    gap: 7,
   },
   detailRound: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     backgroundColor: "rgba(17,24,39,.84)",
     alignItems: "center",
     justifyContent: "center",
@@ -11306,7 +11365,7 @@ const styles = StyleSheet.create({
   detailCategory: {
     position: "absolute",
     left: 15,
-    top: 82,
+    top: 68,
     backgroundColor: "#fff",
     borderRadius: 14,
     paddingHorizontal: 10,
@@ -11321,15 +11380,39 @@ const styles = StyleSheet.create({
     bottom: 12,
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 8,
+  },
+  detailHeroAvatar: {
+    width: 29,
+    height: 29,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: "#FFFFFF",
+  },
+  detailHeroAvatarFallback: {
+    backgroundColor: "#5A48E6",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  detailHeroInitial: {
+    color: "#FFFFFF",
+    fontFamily: "Manrope_700Bold",
+    fontSize: 9,
+  },
+  detailPeopleText: {
+    color: "#FFFFFF",
+    fontFamily: "Manrope_700Bold",
+    fontSize: 11,
+    textShadowColor: "rgba(0,0,0,.75)",
+    textShadowRadius: 5,
   },
   detailMatch: {
     fontFamily: "Manrope_700Bold",
     color: "#41D19B",
     fontSize: 11,
   },
-  detailContent: { paddingHorizontal: 14, paddingTop: 15, gap: 14 },
-  detailTitleWrap: { flex: 1, gap: 5 },
+  detailContent: { paddingHorizontal: 15, paddingTop: 17, gap: 13 },
+  detailTitleWrap: { flex: 1, gap: 6, paddingRight: 8 },
   detailTags: { flexDirection: "row", gap: 6 },
   detailTagText: {
     fontFamily: "Manrope_600SemiBold",
@@ -11339,7 +11422,7 @@ const styles = StyleSheet.create({
   timelineHeading: {
     fontFamily: "Manrope_800ExtraBold",
     color: "#6F7A89",
-    fontSize: 9,
+    fontSize: 10,
     letterSpacing: 1.1,
   },
   detailCardTitle: { fontFamily: "Manrope_700Bold", color: "#F2F4F8", fontSize: 12 },
@@ -11355,10 +11438,11 @@ const styles = StyleSheet.create({
   },
   scheduleCard: {
     backgroundColor: "#202C38",
-    borderRadius: 11,
-    padding: 13,
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
     flexDirection: "row",
-    gap: 7,
+    gap: 5,
     borderWidth: 1,
     borderColor: "#344150",
   },
@@ -11366,47 +11450,48 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
     flexDirection: "row",
-    gap: 7,
+    gap: 6,
     alignItems: "center",
   },
   scheduleLabel: {
     fontFamily: "Manrope_500Medium",
     color: colors.soft,
-    fontSize: 9,
+    fontSize: 8,
   },
   scheduleValue: {
     fontFamily: "Manrope_700Bold",
     color: colors.text,
     fontSize: 9,
+    lineHeight: 12,
     marginTop: 2,
   },
   locationBar: {
     backgroundColor: "#202C38",
-    borderRadius: 11,
-    padding: 13,
+    borderRadius: 16,
+    padding: 14,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  detailSection: { padding: 13, gap: 8, backgroundColor: "#202C38", borderRadius: 11, borderWidth: 1, borderColor: "#344150" },
+  detailSection: { padding: 15, gap: 10, backgroundColor: "#202C38", borderRadius: 16, borderWidth: 1, borderColor: "#344150" },
   detailSectionTitle: {
     fontFamily: "Manrope_800ExtraBold",
     color: "#F3F4F7",
-    fontSize: 14,
+    fontSize: 15,
   },
   detailBody: {
     fontFamily: "Manrope_400Regular",
     color: "#A3ABB6",
     fontSize: 12,
-    lineHeight: 18,
+    lineHeight: 19,
   },
   detailChipRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   hostSection: {
     borderWidth: 1,
     borderColor: "#344150",
     backgroundColor: "#202C38",
-    borderRadius: 11,
-    padding: 12,
+    borderRadius: 16,
+    padding: 14,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
@@ -11424,7 +11509,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: colors.border,
-    paddingVertical: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 2,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
@@ -11432,8 +11518,8 @@ const styles = StyleSheet.create({
   commentBar: {
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 8,
-    minHeight: 45,
+    borderRadius: 14,
+    minHeight: 48,
     paddingHorizontal: 8,
     flexDirection: "row",
     alignItems: "center",
@@ -11450,15 +11536,15 @@ const styles = StyleSheet.create({
   } as any,
   vibeAddCard: {
     backgroundColor: "#202C38",
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: 16,
+    padding: 14,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
   },
   feedbackCard: {
     backgroundColor: "#F7F4FF",
-    borderRadius: 8,
+    borderRadius: 16,
     padding: 12,
     flexDirection: "row",
     alignItems: "center",
@@ -11473,8 +11559,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   recommendedRow: { gap: 10, paddingBottom: 4 },
-  recommendedCard: { width: 145, gap: 5 },
-  recommendedImage: { width: "100%", height: 72, borderRadius: 7 },
+  recommendedCard: { width: 152, gap: 6 },
+  recommendedImage: { width: "100%", height: 84, borderRadius: 12 },
   recommendedTitle: {
     fontFamily: "Manrope_700Bold",
     color: "#F3F4F7",
@@ -11486,8 +11572,8 @@ const styles = StyleSheet.create({
     gap: 12,
     borderTopWidth: 1,
     borderTopColor: "#344150",
-    padding: 10,
-    paddingBottom: 12,
+    padding: 12,
+    paddingBottom: 14,
     backgroundColor: "#101824",
   },
   likeButton: {
@@ -11495,7 +11581,7 @@ const styles = StyleSheet.create({
     width: 110,
     borderWidth: 1,
     borderColor: colors.purple600,
-    borderRadius: 8,
+    borderRadius: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -11507,14 +11593,14 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 50,
     backgroundColor: colors.purple600,
-    borderRadius: 8,
+    borderRadius: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
   },
   joinButtonText: { fontFamily: "Manrope_700Bold", color: "#fff" },
-  feedbackSection: { padding: 13, gap: 10, backgroundColor: "#202C38", borderRadius: 11, borderWidth: 1, borderColor: "#344150" },
+  feedbackSection: { padding: 15, gap: 10, backgroundColor: "#202C38", borderRadius: 16, borderWidth: 1, borderColor: "#344150" },
   feedbackReaction: { borderRadius: 15, paddingHorizontal: 10, paddingVertical: 7, backgroundColor: "#5749B950", borderWidth: 1, borderColor: "#7566D8" },
   feedbackReview: { backgroundColor: "#17212D", borderRadius: 8, padding: 10 },
   optionRow: { minHeight: 52, borderRadius: 10, backgroundColor: "#202C38", flexDirection: "row", alignItems: "center", gap: 14, paddingHorizontal: 14 },
