@@ -1,3 +1,4 @@
+import { normalizeRegistrationQuestions, validateRegistrationQuestions, type RegistrationQuestionDraft } from "./registration-questions";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 
@@ -6,7 +7,7 @@ export type ActivityStatus =
   | "published"
   | "cancelled"
   | "completed";
-export type ActivityVisibility = "public" | "community" | "private";
+export type ActivityVisibility = "public" | "community" | "private" | "squad";
 export type ActivityType =
   | "meetup"
   | "sport"
@@ -16,14 +17,18 @@ export type ActivityType =
 export type ParticipationStatus =
   | "going"
   | "interested"
+  | "pending"
+  | "payment_required"
   | "declined"
   | "waitlist";
+export type JoinActivityStatus = Exclude<ParticipationStatus, "pending">;
 export type ParticipationRole = "participant" | "host" | "cohost";
 
 export type ActivityProfile = {
   id: string;
   username: string;
   fullName: string | null;
+  isPartner?: boolean;
   avatarUrl: string | null;
 };
 
@@ -49,11 +54,17 @@ export type Activity = {
   capacity: number;
   matchScore: number | null;
   activityType: ActivityType;
+  joinType: "direct" | "approval";
   visibility: ActivityVisibility;
   status: ActivityStatus;
   startsAt: string;
   endsAt: string | null;
   registrationClosesAt: string | null;
+  locationInstruction: string | null;
+  verifiedOnly: boolean;
+  ageMin: number | null;
+  ageMax: number | null;
+  genderPreference: string | null;
   createdAt: string;
   updatedAt: string;
   owner: ActivityProfile | null;
@@ -131,9 +142,10 @@ export type HostedActivitiesInput = {
 };
 
 export type CreateActivityInput = {
+  registrationQuestions?: RegistrationQuestionDraft[];
   title: string;
   category: string;
-  startsAt: string;
+  startsAt: string | null;
   locationName: string;
   description?: string | null;
   communityId?: string | null;
@@ -141,10 +153,12 @@ export type CreateActivityInput = {
   latitude?: number | null;
   longitude?: number | null;
   priceInr?: number;
-  capacity?: number;
+  capacity?: number | null;
+  locationInstruction?: string; verifiedOnly?: boolean; ageMin?: number | null; ageMax?: number | null; genderPreference?: string | null;
   matchScore?: number | null;
   activityType?: ActivityType;
   visibility?: ActivityVisibility;
+  joinType?: "direct" | "approval";
   endsAt?: string | null;
   registrationClosesAt?: string | null;
 };
@@ -179,19 +193,12 @@ export type ActivityRealtimeHandlers = {
 
 type DbRecord = Record<string, unknown>;
 
-const ACTIVITY_SELECT = `
-  *,
-  owner:profiles!activities_owner_id_fkey(id,username,full_name,avatar_url),
-  community:communities(id,name,slug,image_url)
-`;
-const COMMENT_SELECT = `
-  *,
-  author:profiles!comments_author_id_fkey(id,username,full_name,avatar_url)
-`;
+const EVENT_SELECT =
+  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,currency,intent,status,latitude,longitude,display_location,location_instruction,verified_only,age_min,age_max,gender_preference";
+const FEEDBACK_SELECT = "id,event_id,created_by,reaction,comment,created_at";
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
-const UUID_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const INTEGER_ID = /^[1-9]\d*$/;
 
 const requireBackend = () => {
   if (!isSupabaseConfigured) {
@@ -199,22 +206,62 @@ const requireBackend = () => {
   }
 };
 
-const requireUuid = (value: string, label: string) => {
-  if (!UUID_PATTERN.test(value)) throw new Error(`${label} must be a UUID.`);
-  return value;
+const parseId = (value: string | number, label: string) => {
+  const text = String(value);
+  if (!INTEGER_ID.test(text)) throw new Error(`${label} must be a positive integer.`);
+  const id = Number(text);
+  if (!Number.isSafeInteger(id)) {
+    throw new Error(`${label} is outside the supported integer range.`);
+  }
+  return id;
+};
+
+const firstRecord = (value: unknown): DbRecord | null => {
+  if (Array.isArray(value)) return (value[0] as DbRecord | undefined) ?? null;
+  return value && typeof value === "object" ? (value as DbRecord) : null;
+};
+
+const callRpc = async <T>(name: string, parameters: DbRecord): Promise<T> => {
+  requireBackend();
+  const { data, error } = await supabase.rpc(name, parameters);
+  if (error) throw error;
+  return data as T;
+};
+
+const appUserIdFromRpc = (value: unknown): number | null => {
+  if (value == null) return null;
+  if (typeof value === "number" || typeof value === "string") {
+    return parseId(value, "App user ID");
+  }
+  const row = firstRecord(value);
+  const candidate = row?.id ?? row?.user_id ?? row?.get_current_app_user_id;
+  return candidate == null ? null : parseId(String(candidate), "App user ID");
 };
 
 const currentUserId = async () => {
   requireBackend();
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) throw error ?? new Error("Authentication required.");
-  return data.user.id;
+  const id = appUserIdFromRpc(
+    await callRpc<unknown>("get_current_app_user_id", {}),
+  );
+  if (id == null) {
+    throw new Error("Authenticated account is not linked to a WeNitro user.");
+  }
+  return id;
 };
 
 const optionalCurrentUserId = async () => {
   requireBackend();
   const { data } = await supabase.auth.getUser();
-  return data.user?.id ?? null;
+  if (!data.user) return null;
+  try {
+    return appUserIdFromRpc(
+      await callRpc<unknown>("get_current_app_user_id", {}),
+    );
+  } catch {
+    return null;
+  }
 };
 
 const pagination = (page = 1, pageSize = DEFAULT_PAGE_SIZE) => {
@@ -224,114 +271,204 @@ const pagination = (page = 1, pageSize = DEFAULT_PAGE_SIZE) => {
     Math.max(1, Math.trunc(pageSize) || DEFAULT_PAGE_SIZE),
   );
   const from = (safePage - 1) * safePageSize;
-  return { page: safePage, pageSize: safePageSize, from, to: from + safePageSize - 1 };
+  return {
+    page: safePage,
+    pageSize: safePageSize,
+    from,
+    to: from + safePageSize - 1,
+  };
 };
 
 const requiredText = (value: string, label: string) => {
-  const normalized = value.trim();
-  if (!normalized) throw new Error(`${label} is required.`);
-  return normalized;
+  const text = value.trim();
+  if (!text) throw new Error(`${label} is required.`);
+  return text;
 };
 
 const optionalText = (value: string | null | undefined) => {
   if (value == null) return value;
-  const normalized = value.trim();
-  return normalized || null;
+  return value.trim() || null;
 };
 
-const isoDate = (value: string, label: string) => {
+const asIso = (value: string, label: string) => {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) throw new Error(`${label} is invalid.`);
   return date.toISOString();
 };
 
-const nullableIsoDate = (value: string | null, label: string) =>
-  value === null ? null : isoDate(value, label);
-
-const finiteNumber = (value: number, label: string) => {
-  if (!Number.isFinite(value)) throw new Error(`${label} must be a finite number.`);
+const finite = (value: number, label: string) => {
+  if (!Number.isFinite(value)) throw new Error(`${label} must be finite.`);
   return value;
 };
 
-// PostgREST's or() accepts raw filter syntax, so quote reserved characters.
-const quotedFilterValue = (value: string) =>
+const quoteFilter = (value: string) =>
   `"${value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
 
-const firstRelation = (value: unknown): DbRecord | null => {
-  if (Array.isArray(value)) return (value[0] as DbRecord | undefined) ?? null;
-  return value && typeof value === "object" ? (value as DbRecord) : null;
+const nullableString = (value: unknown) =>
+  value == null || value === "" ? null : String(value);
+
+const mediaMetadata = (value: unknown): DbRecord => {
+  if (!value) return {};
+  if (typeof value === "string") {
+    try {
+      return mediaMetadata(JSON.parse(value));
+    } catch {
+      return { cover_url: value };
+    }
+  }
+  if (Array.isArray(value)) {
+    const first = value[0];
+    return typeof first === "string"
+      ? { cover_url: first }
+      : firstRecord(first) ?? {};
+  }
+  const media = firstRecord(value) ?? {};
+  const bridge = firstRecord(media.wenitro) ?? firstRecord(media._wenitro);
+  return bridge ? { ...media, ...bridge } : media;
 };
 
-const profileFromDb = (value: unknown): ActivityProfile | null => {
-  const row = firstRelation(value);
-  if (!row) return null;
+const profileFromDb = (row?: DbRecord): ActivityProfile | null =>
+  row
+    ? {
+        id: String(row.id),
+        username: String(row.username ?? ""),
+        fullName: nullableString(row.fullname),
+        isPartner: row.account_type === "partner",
+        avatarUrl: nullableString(row.profile_image),
+      }
+    : null;
+
+const statusFromDb = (row: DbRecord, metadata: DbRecord): ActivityStatus => {
+  const status = row.status ?? metadata.status;
+  if (row.is_cancelled === true) return "cancelled";
+  const end = nullableString(row.event_end_time);
+  if (end && new Date(end).getTime() < Date.now()) return "completed";
+  if (status === "draft" || status === "cancelled" || status === "completed") {
+    return status;
+  }
+  return "published";
+};
+
+const visibilityFromDb = (value: unknown): ActivityVisibility => {
+  if (value === "community") return "community";
+  if (value === "squad") return "squad";
+  if (value === "private" || value === "friends") return "private";
+  return "public";
+};
+
+const activityTypeFromDb = (
+  value: unknown,
+  metadata: DbRecord,
+  category: string,
+): ActivityType => {
+  const type = value ?? metadata.activity_type;
+  if (
+    type === "meetup" ||
+    type === "sport" ||
+    type === "study" ||
+    type === "cowork" ||
+    type === "tournament"
+  ) {
+    return type;
+  }
+  const name = category.toLowerCase();
+  if (name.includes("sport") || name.includes("fitness")) return "sport";
+  if (name.includes("study") || name.includes("learn")) return "study";
+  if (name.includes("work")) return "cowork";
+  if (name.includes("tournament")) return "tournament";
+  return "meetup";
+};
+
+const activityFromDb = (
+  row: DbRecord,
+  category: string,
+  owner?: DbRecord,
+  community?: ActivityCommunity | null,
+): Activity => {
+  const metadata = mediaMetadata(row.media);
+  const price = Number(row.price ?? metadata.price_inr ?? 0);
+  const capacity = Number(row.max_participants ?? 0);
+  const matchScore =
+    metadata.match_score == null ? null : Number(metadata.match_score);
   return {
     id: String(row.id),
-    username: String(row.username),
-    fullName: row.full_name == null ? null : String(row.full_name),
-    avatarUrl: row.avatar_url == null ? null : String(row.avatar_url),
+    ownerId: String(row.created_by),
+    communityId: community?.id ?? nullableString(metadata.community_id),
+    title: String(row.title ?? ""),
+    description: nullableString(row.description),
+    category,
+    coverUrl: nullableString(
+      metadata.cover_url ?? metadata.url ?? metadata.path ?? metadata.media_url,
+    ),
+    locationName: String(row.display_location ?? row.location ?? ""),
+    latitude: row.latitude == null ? null : Number(row.latitude),
+    longitude: row.longitude == null ? null : Number(row.longitude),
+    priceInr: Number.isFinite(price) ? price : 0,
+    capacity: Number.isFinite(capacity) ? capacity : 0,
+    matchScore:
+      matchScore != null && Number.isFinite(matchScore) ? matchScore : null,
+    activityType: activityTypeFromDb(row.intent, metadata, category),
+    joinType: row.join_type === "approval" ? "approval" : "direct",
+    visibility: visibilityFromDb(row.visibility_type),
+    status: statusFromDb(row, metadata),
+    startsAt: String(row.event_start_time ?? ""),
+    endsAt: nullableString(row.event_end_time),
+    registrationClosesAt: nullableString(row.registration_close_time),
+    locationInstruction: nullableString(row.location_instruction),
+    verifiedOnly: row.verified_only === true,
+    ageMin: row.age_min == null ? null : Number(row.age_min),
+    ageMax: row.age_max == null ? null : Number(row.age_max),
+    genderPreference: nullableString(row.gender_preference),
+    createdAt: String(row.created_at ?? row.event_start_time ?? ""),
+    updatedAt: String(row.updated_at ?? row.created_at ?? ""),
+    owner: profileFromDb(owner),
+    community: community ?? null,
   };
 };
 
-const activityFromDb = (row: DbRecord): Activity => ({
-  id: String(row.id),
-  ownerId: String(row.owner_id),
-  communityId: row.community_id == null ? null : String(row.community_id),
-  title: String(row.title),
-  description: row.description == null ? null : String(row.description),
-  category: String(row.category),
-  coverUrl: row.cover_url == null ? null : String(row.cover_url),
-  locationName: String(row.location_name),
-  latitude: row.latitude == null ? null : Number(row.latitude),
-  longitude: row.longitude == null ? null : Number(row.longitude),
-  priceInr: Number(row.price_inr),
-  capacity: Number(row.capacity),
-  matchScore: row.match_score == null ? null : Number(row.match_score),
-  activityType: row.activity_type as ActivityType,
-  visibility: row.visibility as ActivityVisibility,
-  status: row.status as ActivityStatus,
-  startsAt: String(row.starts_at),
-  endsAt: row.ends_at == null ? null : String(row.ends_at),
-  registrationClosesAt:
-    row.registration_closes_at == null
-      ? null
-      : String(row.registration_closes_at),
-  createdAt: String(row.created_at),
-  updatedAt: String(row.updated_at),
-  owner: profileFromDb(row.owner),
-  community: (() => {
-    const community = firstRelation(row.community);
-    return community
-      ? {
-          id: String(community.id),
-          name: String(community.name),
-          slug: String(community.slug),
-          imageUrl:
-            community.image_url == null ? null : String(community.image_url),
-        }
-      : null;
-  })(),
-});
+const participationStatusFromDb = (value: unknown): ParticipationStatus => {
+  if (value === "approved" || value === "going") return "going";
+  if (
+    value === "rejected" ||
+    value === "declined" ||
+    value === "left" ||
+    value === "no_show"
+  ) {
+    return "declined";
+  }
+  if (value === "pending") return "pending";
+  if (value === "payment_required") return "payment_required";
+  if (value === "waitlist") return "waitlist";
+  return "interested";
+};
 
 const participationFromDb = (row: DbRecord): ActivityParticipation => ({
-  activityId: String(row.activity_id),
+  activityId: String(row.event_id),
   userId: String(row.user_id),
-  role: row.role as ParticipationRole,
-  status: row.status as ParticipationStatus,
-  createdAt: String(row.created_at),
-  updatedAt: String(row.updated_at),
+  role: (row.role as ParticipationRole | undefined) ?? "participant",
+  status: participationStatusFromDb(row.status),
+  createdAt: String(row.created_at ?? row.joined_at ?? ""),
+  updatedAt: String(row.responded_at ?? row.joined_at ?? row.created_at ?? ""),
 });
 
-const commentFromDb = (row: DbRecord): ActivityComment => ({
-  id: String(row.id),
-  activityId: String(row.activity_id),
-  authorId: String(row.author_id),
-  parentId: row.parent_id == null ? null : String(row.parent_id),
-  body: String(row.body),
-  createdAt: String(row.created_at),
-  updatedAt: String(row.updated_at),
-  author: profileFromDb(row.author),
-});
+const commentFromDb = (
+  row: DbRecord,
+  author?: DbRecord,
+): ActivityComment => {
+  const embeddedAuthor = firstRecord(row.author);
+  return {
+    id: String(row.id),
+    activityId: String(row.event_id),
+    authorId: String(row.user_id ?? row.created_by),
+    parentId: row.parent_id === null || row.parent_id === undefined
+      ? null
+      : String(row.parent_id),
+    body: String(row.body ?? row.comment ?? row.reaction ?? ""),
+    createdAt: String(row.created_at ?? ""),
+    updatedAt: String(row.updated_at ?? row.created_at ?? ""),
+    author: profileFromDb(author ?? embeddedAuthor ?? undefined),
+  };
+};
 
 const emptyViewerState = (): ActivityViewerState => ({
   liked: false,
@@ -339,127 +476,256 @@ const emptyViewerState = (): ActivityViewerState => ({
   participation: null,
 });
 
-const buildActivityWrite = (
+const buildPayload = (
   input: CreateActivityInput | UpdateActivityInput,
 ): DbRecord => {
-  const values: DbRecord = {};
-  if (input.title !== undefined)
-    values.title = requiredText(input.title, "Title");
-  if (input.category !== undefined)
-    values.category = requiredText(input.category, "Category");
-  if (input.locationName !== undefined)
-    values.location_name = requiredText(input.locationName, "Location");
-  if (input.description !== undefined)
-    values.description = optionalText(input.description);
-  if (input.communityId !== undefined)
-    values.community_id =
+  const payload: DbRecord = {};
+  if (input.registrationQuestions) {
+    const error = validateRegistrationQuestions(input.registrationQuestions);
+    if (error) throw new Error(error);
+    payload.registration_questions = normalizeRegistrationQuestions(input.registrationQuestions);
+  }
+  if (input.title !== undefined) payload.title = requiredText(input.title, "Title");
+  if (input.category !== undefined) {
+    payload.category = requiredText(input.category, "Category");
+  }
+  if (input.locationName !== undefined) {
+    const location = requiredText(input.locationName, "Location");
+    payload.location = location;
+    payload.display_location = location;
+  }
+  if (input.description !== undefined) {
+    payload.description = optionalText(input.description);
+  }
+  if (input.communityId !== undefined) {
+    payload.community_id =
       input.communityId === null
         ? null
-        : requireUuid(input.communityId, "Community ID");
-  if (input.coverUrl !== undefined) values.cover_url = optionalText(input.coverUrl);
-  if (input.startsAt !== undefined)
-    values.starts_at = isoDate(input.startsAt, "Start time");
-  if (input.endsAt !== undefined)
-    values.ends_at = nullableIsoDate(input.endsAt, "End time");
-  if (input.registrationClosesAt !== undefined)
-    values.registration_closes_at = nullableIsoDate(
-      input.registrationClosesAt,
-      "Registration close time",
-    );
-  if (input.latitude !== undefined)
-    values.latitude =
-      input.latitude === null ? null : finiteNumber(input.latitude, "Latitude");
-  if (input.longitude !== undefined)
-    values.longitude =
-      input.longitude === null
+        : parseId(input.communityId, "Community ID");
+  }
+  if (input.coverUrl !== undefined) {
+    payload.cover_url = optionalText(input.coverUrl);
+  }
+  if (input.startsAt !== undefined) {
+    payload.event_start_time = input.startsAt === null ? null : asIso(input.startsAt, "Start time");
+  }
+  if (input.endsAt !== undefined) {
+    payload.event_end_time =
+      input.endsAt === null ? null : asIso(input.endsAt, "End time");
+  }
+  if (input.registrationClosesAt !== undefined) {
+    payload.registration_close_time =
+      input.registrationClosesAt === null
         ? null
-        : finiteNumber(input.longitude, "Longitude");
+        : asIso(input.registrationClosesAt, "Registration close time");
+  }
+  if (input.latitude !== undefined) {
+    payload.latitude =
+      input.latitude === null ? null : finite(input.latitude, "Latitude");
+  }
+  if (input.longitude !== undefined) {
+    payload.longitude =
+      input.longitude === null ? null : finite(input.longitude, "Longitude");
+  }
   if (input.priceInr !== undefined) {
-    const price = finiteNumber(input.priceInr, "Price");
+    const price = finite(input.priceInr, "Price");
     if (price < 0) throw new Error("Price cannot be negative.");
-    values.price_inr = price;
+    payload.price_inr = price;
+    payload.is_paid = price > 0;
   }
   if (input.capacity !== undefined) {
-    if (!Number.isInteger(input.capacity) || input.capacity < 1)
+    if (input.capacity !== null && (!Number.isInteger(input.capacity) || input.capacity < 1)) {
       throw new Error("Capacity must be a positive integer.");
-    values.capacity = input.capacity;
+    }
+    payload.max_participants = input.capacity;
   }
+  if (input.locationInstruction !== undefined) payload.location_instruction = input.locationInstruction.trim();
+  if (input.verifiedOnly !== undefined) payload.verified_only = input.verifiedOnly;
+  if (input.ageMin !== undefined) payload.age_min = input.ageMin;
+  if (input.ageMax !== undefined) payload.age_max = input.ageMax;
+  if (input.genderPreference !== undefined) payload.gender_preference = input.genderPreference;
   if (input.matchScore !== undefined) {
     if (
       input.matchScore !== null &&
       (!Number.isInteger(input.matchScore) ||
         input.matchScore < 0 ||
         input.matchScore > 100)
-    )
+    ) {
       throw new Error("Match score must be an integer from 0 to 100.");
-    values.match_score = input.matchScore;
+    }
+    payload.match_score = input.matchScore;
   }
-  if (input.activityType !== undefined)
-    values.activity_type = input.activityType;
-  if (input.visibility !== undefined) values.visibility = input.visibility;
-  if ("status" in input && input.status !== undefined)
-    values.status = input.status;
+  if (input.activityType !== undefined) {
+    payload.activity_type = input.activityType;
+  }
+  if (input.visibility !== undefined) {
+    payload.visibility_type = input.visibility;
+  }
+  if (input.joinType !== undefined) payload.join_type = input.joinType;
+  if ("status" in input && input.status !== undefined) {
+    payload.status = input.status;
+  }
 
-  const start = values.starts_at as string | undefined;
-  const end = values.ends_at as string | null | undefined;
-  const closes = values.registration_closes_at as string | null | undefined;
-  if (start && end && new Date(end) < new Date(start))
+  const start = payload.event_start_time as string | undefined;
+  const end = payload.event_end_time as string | null | undefined;
+  const closes = payload.registration_close_time as string | null | undefined;
+  if (start && end && new Date(end) < new Date(start)) {
     throw new Error("End time cannot be before start time.");
-  if (start && closes && new Date(closes) > new Date(start))
+  }
+  if (start && closes && new Date(closes) > new Date(start)) {
     throw new Error("Registration must close by the start time.");
-  return values;
+  }
+  return payload;
 };
 
-const chunked = <T>(values: T[], size: number) => {
+const loadProfiles = async (ids: number[]) => {
+  const profiles = new Map<number, DbRecord>();
+  const unique = [...new Set(ids)];
+  if (!unique.length) return profiles;
+  const { data, error } = await supabase
+    .from("tbl_users")
+    .select("id,username,fullname,profile_image,account_type")
+    .in("id", unique);
+  if (error) throw error;
+  for (const row of (data ?? []) as DbRecord[]) {
+    profiles.set(Number(row.id), row);
+  }
+  return profiles;
+};
+
+const loadCategories = async (eventIds: number[]) => {
+  const result = new Map<number, string>();
+  if (!eventIds.length) return result;
+  const { data: links, error: linkError } = await supabase
+    .from("tbl_event_categories")
+    .select("event_id,category_id")
+    .in("event_id", eventIds);
+  if (linkError) throw linkError;
+  const categoryIds = [
+    ...new Set(((links ?? []) as DbRecord[]).map((row) => Number(row.category_id))),
+  ];
+  if (!categoryIds.length) return result;
+  const { data: categories, error } = await supabase
+    .from("tbl_categories")
+    .select("id,name")
+    .in("id", categoryIds);
+  if (error) throw error;
+  const names = new Map<number, string>();
+  for (const row of (categories ?? []) as DbRecord[]) {
+    names.set(Number(row.id), String(row.name));
+  }
+  for (const link of (links ?? []) as DbRecord[]) {
+    const eventId = Number(link.event_id);
+    const name = names.get(Number(link.category_id));
+    if (name && !result.has(eventId)) result.set(eventId, name);
+  }
+  return result;
+};
+
+const hydrateActivities = async (rows: DbRecord[]) => {
+  const eventIds = rows.map((row) => Number(row.id));
+  const [profiles, categories, communityResult] = await Promise.all([
+    loadProfiles(rows.map((row) => Number(row.created_by))),
+    loadCategories(eventIds),
+    eventIds.length
+      ? supabase.from("tbl_chat_rooms").select("id,event_id,title").eq("room_type", "community").in("event_id", eventIds)
+      : Promise.resolve({ data: [], error: null }),
+  ]);
+  if (communityResult.error) throw communityResult.error;
+  const communities = new Map<number, ActivityCommunity>();
+  for (const room of (communityResult.data ?? []) as DbRecord[]) {
+    if (room.event_id == null) continue;
+    const id = String(room.id);
+    const name = String(room.title ?? `Community ${id}`);
+    communities.set(Number(room.event_id), { id, name, slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""), imageUrl: null });
+  }
+  return rows.map((row) =>
+    activityFromDb(
+      row,
+      categories.get(Number(row.id)) ?? "General",
+      profiles.get(Number(row.created_by)),
+      communities.get(Number(row.id)) ?? null,
+    ),
+  );
+};
+
+const eventIdsForCategories = async (names: string[]) => {
+  if (!names.length) return null;
+  const { data: categories, error } = await supabase
+    .from("tbl_categories")
+    .select("id")
+    .in("name", names);
+  if (error) throw error;
+  const ids = ((categories ?? []) as DbRecord[]).map((row) => Number(row.id));
+  if (!ids.length) return [];
+  const { data: links, error: linksError } = await supabase
+    .from("tbl_event_categories")
+    .select("event_id")
+    .in("category_id", ids);
+  if (linksError) throw linksError;
+  return [
+    ...new Set(((links ?? []) as DbRecord[]).map((row) => Number(row.event_id))),
+  ];
+};
+
+const chunksOf = <T>(values: T[], size: number) => {
   const chunks: T[][] = [];
-  for (let index = 0; index < values.length; index += size)
+  for (let index = 0; index < values.length; index += size) {
     chunks.push(values.slice(index, index + size));
+  }
   return chunks;
 };
 
 async function getViewerStates(
   activityIds: string[],
 ): Promise<Record<string, ActivityViewerState>> {
-  const ids = [...new Set(activityIds)];
-  const result = Object.fromEntries(ids.map((id) => [id, emptyViewerState()]));
-  if (!ids.length) return result;
+  const ids = [...new Set(activityIds.map((id) => parseId(id, "Activity ID")))];
+  const states: Record<string, ActivityViewerState> = Object.fromEntries(
+    ids.map((id) => [String(id), emptyViewerState()]),
+  );
+  if (!ids.length) return states;
   const userId = await optionalCurrentUserId();
-  if (!userId) return result;
+  if (userId == null) return states;
 
   const batches = await Promise.all(
-    chunked(ids, 100).map(async (batch) => {
+    chunksOf(ids, 100).map(async (batch) => {
       const [likes, saves, participants] = await Promise.all([
         supabase
-          .from("likes")
-          .select("activity_id")
+          .from("tbl_event_likes")
+          .select("event_id")
           .eq("user_id", userId)
-          .in("activity_id", batch),
+          .in("event_id", batch),
         supabase
-          .from("saves")
-          .select("activity_id")
+          .from("tbl_event_saves")
+          .select("event_id")
           .eq("user_id", userId)
-          .in("activity_id", batch),
+          .in("event_id", batch),
         supabase
-          .from("participants")
-          .select("*")
+          .from("tbl_event_participants")
+          .select(
+            "event_id,user_id,status,invited_by,responded_at,created_at,joined_at",
+          )
           .eq("user_id", userId)
-          .in("activity_id", batch),
+          .in("event_id", batch),
       ]);
       const error = likes.error ?? saves.error ?? participants.error;
       if (error) throw error;
-      return { likes: likes.data ?? [], saves: saves.data ?? [], participants: participants.data ?? [] };
+      return {
+        likes: (likes.data ?? []) as DbRecord[],
+        saves: (saves.data ?? []) as DbRecord[],
+        participants: (participants.data ?? []) as DbRecord[],
+      };
     }),
   );
 
   for (const batch of batches) {
-    for (const row of batch.likes as DbRecord[])
-      result[String(row.activity_id)].liked = true;
-    for (const row of batch.saves as DbRecord[])
-      result[String(row.activity_id)].saved = true;
-    for (const row of batch.participants as DbRecord[])
-      result[String(row.activity_id)].participation = participationFromDb(row);
+    for (const row of batch.likes) states[String(row.event_id)].liked = true;
+    for (const row of batch.saves) states[String(row.event_id)].saved = true;
+    for (const row of batch.participants) {
+      states[String(row.event_id)].participation = participationFromDb(row);
+    }
   }
-  return result;
+  return states;
 }
 
 async function listComments(
@@ -467,60 +733,85 @@ async function listComments(
   options: { page?: number; pageSize?: number; signal?: AbortSignal } = {},
 ): Promise<Page<ActivityComment>> {
   requireBackend();
-  requireUuid(activityId, "Activity ID");
+  const eventId = parseId(activityId, "Activity ID");
   const window = pagination(options.page, options.pageSize);
-  let query = supabase
-    .from("comments")
-    .select(COMMENT_SELECT, { count: "exact" })
-    .eq("activity_id", activityId)
-    .order("created_at", { ascending: true })
-    .range(window.from, window.to);
-  if (options.signal) query = query.abortSignal(options.signal);
-  const { data, error, count } = await query;
-  if (error) throw error;
-  const total = count ?? 0;
+  if (options.signal?.aborted) throw new Error("Activity comment request cancelled.");
+  const result = firstRecord(
+    await callRpc<unknown>("list_activity_comments", {
+      p_event_id: eventId,
+      p_page: window.page,
+      p_page_size: window.pageSize,
+    }),
+  );
+  if (!result) throw new Error("Activity comments could not be loaded.");
+  const rows = Array.isArray(result.items)
+    ? result.items.map(firstRecord).filter((row): row is DbRecord => Boolean(row))
+    : [];
+  const total = Number(result.total ?? rows.length);
   return {
-    items: ((data ?? []) as DbRecord[]).map(commentFromDb),
+    items: rows.map((row) => commentFromDb(row)),
     page: window.page,
     pageSize: window.pageSize,
     total,
-    hasMore: window.from + (data?.length ?? 0) < total,
+    hasMore: window.from + rows.length < total,
   };
 }
+
+const eventIdFromRpc = (value: unknown, fallback?: number) => {
+  if (typeof value === "number" || typeof value === "string") {
+    return parseId(value, "Activity ID");
+  }
+  const row = firstRecord(value);
+  const candidate = row?.id ?? row?.event_id;
+  if (candidate != null) return parseId(String(candidate), "Activity ID");
+  if (fallback != null) return fallback;
+  throw new Error("Activity RPC did not return an activity ID.");
+};
+
+const getActivity = async (eventId: number, signal?: AbortSignal) => {
+  let query = supabase
+    .from("tbl_events")
+    .select(EVENT_SELECT)
+    .eq("id", eventId)
+    .eq("is_deleted", false);
+  if (signal) query = query.abortSignal(signal);
+  const { data, error } = await query.maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error("Activity not found or not accessible.");
+  return (await hydrateActivities([data as DbRecord]))[0];
+};
 
 async function writeActivity(
   input: CreateActivityInput,
   status: "draft" | "published",
 ) {
-  const userId = await currentUserId();
-  const values = buildActivityWrite(input);
-  const { data, error } = await supabase
-    .from("activities")
-    .insert({ ...values, owner_id: userId, status })
-    .select(ACTIVITY_SELECT)
-    .single();
-  if (error) throw error;
-  return activityFromDb(data as DbRecord);
+  await currentUserId();
+  const payload = buildPayload(input);
+  const data = await callRpc<unknown>("create_activity", {
+    p_payload: payload,
+    p_status: status,
+  });
+  return getActivity(eventIdFromRpc(data));
 }
 
 async function setActivityState(
-  table: "likes" | "saves",
+  table: "tbl_event_likes" | "tbl_event_saves",
   activityId: string,
   enabled: boolean,
 ) {
-  requireUuid(activityId, "Activity ID");
+  const eventId = parseId(activityId, "Activity ID");
   const userId = await currentUserId();
   if (enabled) {
     const { error } = await supabase
       .from(table)
-      .insert({ activity_id: activityId, user_id: userId });
+      .insert({ event_id: eventId, user_id: userId });
     if (error && error.code !== "23505") throw error;
     return;
   }
   const { error } = await supabase
     .from(table)
     .delete()
-    .eq("activity_id", activityId)
+    .eq("event_id", eventId)
     .eq("user_id", userId);
   if (error) throw error;
 }
@@ -534,12 +825,11 @@ const realtimeRefresh = (
   },
 ): ActivityRealtimeRefresh => {
   const record = Object.keys(payload.new).length ? payload.new : payload.old;
-  const activityId =
-    table === "activities" ? record.id : record.activity_id;
+  const activityId = table === "activities" ? record.id : record.event_id;
   return {
     table,
     eventType: payload.eventType as ActivityRealtimeEventType,
-    activityId: typeof activityId === "string" ? activityId : null,
+    activityId: activityId == null ? null : String(activityId),
     newRecord: payload.new,
     oldRecord: payload.old,
   };
@@ -551,83 +841,116 @@ const subscribeStatus = (
   error?: Error,
 ) => handlers.onStatus?.(status as ActivityRealtimeStatus, error);
 
+const emptyPage = <T>(page: number, pageSize: number): Page<T> => ({
+  items: [],
+  page,
+  pageSize,
+  total: 0,
+  hasMore: false,
+});
+
 export const activitiesProductionService = {
+  async listVibeEligible(afterId?: string, signal?: AbortSignal) {
+    await currentUserId();
+    let query = supabase.rpc("list_eligible_vibe_activities", { p_after_id: afterId ? Number(afterId) : null, p_limit: 51 });
+    if (signal) query = query.abortSignal(signal);
+    const { data, error } = await query;
+    if (error) throw error;
+    const rows = (data ?? []) as DbRecord[];
+    return { items: await hydrateActivities(rows.slice(0, 50)), nextCursor: rows.length > 50 ? String(rows[49].id) : null };
+  },
   async discover(
     input: DiscoverActivitiesInput = {},
   ): Promise<Page<ActivityListItem>> {
     requireBackend();
     const window = pagination(input.page, input.pageSize);
-    let query = supabase
-      .from("activities")
-      .select(ACTIVITY_SELECT, { count: "exact" })
-      .eq("status", "published");
+    const categoryNames = [
+      ...new Set(
+        [...(input.categories ?? []), ...(input.activityTypes ?? [])]
+          .map((item) => item.trim())
+          .filter(Boolean),
+      ),
+    ];
+    const categoryEventIds = await eventIdsForCategories(categoryNames);
+    if (categoryEventIds?.length === 0) {
+      return emptyPage(window.page, window.pageSize);
+    }
 
+    let query = supabase
+      .from("tbl_events")
+      .select(EVENT_SELECT, { count: "exact" })
+      .eq("status", "published")
+      .eq("is_cancelled", false)
+      .eq("is_deleted", false);
     const search = input.search?.trim();
     if (search) {
-      const pattern = quotedFilterValue(`%${search}%`);
+      const pattern = quoteFilter(`%${search}%`);
       query = query.or(
-        `title.ilike.${pattern},description.ilike.${pattern},location_name.ilike.${pattern},category.ilike.${pattern}`,
+        `title.ilike.${pattern},description.ilike.${pattern},location.ilike.${pattern},display_location.ilike.${pattern}`,
       );
     }
-    const categories = input.categories?.map((item) => item.trim()).filter(Boolean);
-    if (categories?.length) query = query.in("category", categories);
-    if (input.activityTypes?.length)
-      query = query.in("activity_type", input.activityTypes);
-    if (input.communityId)
-      query = query.eq(
-        "community_id",
-        requireUuid(input.communityId, "Community ID"),
-      );
-    if (input.ownerId)
-      query = query.eq("owner_id", requireUuid(input.ownerId, "Owner ID"));
-    if (input.location?.trim())
-      query = query.ilike("location_name", `%${input.location.trim()}%`);
-    if (input.freeOnly) query = query.eq("price_inr", 0);
-    else {
-      if (input.minPriceInr !== undefined)
-        query = query.gte(
-          "price_inr",
-          finiteNumber(input.minPriceInr, "Minimum price"),
-        );
-      if (input.maxPriceInr !== undefined)
-        query = query.lte(
-          "price_inr",
-          finiteNumber(input.maxPriceInr, "Maximum price"),
-        );
+    if (categoryEventIds) query = query.in("id", categoryEventIds);
+    if (input.communityId) {
+      const communityId = parseId(input.communityId, "Community ID");
+      query = query.contains("media", { wenitro: { community_id: communityId } });
     }
-    if (input.startsAfter)
-      query = query.gte("starts_at", isoDate(input.startsAfter, "Start date"));
-    else if (input.upcomingOnly !== false)
-      query = query.gte("starts_at", new Date().toISOString());
-    if (input.startsBefore)
-      query = query.lte("starts_at", isoDate(input.startsBefore, "End date"));
+    if (input.ownerId) {
+      query = query.eq("created_by", parseId(input.ownerId, "Owner ID"));
+    }
+    if (input.location?.trim()) {
+      const pattern = quoteFilter(`%${input.location.trim()}%`);
+      query = query.or(
+        `location.ilike.${pattern},display_location.ilike.${pattern}`,
+      );
+    }
+    if (input.freeOnly || input.maxPriceInr === 0) {
+      query = query.eq("is_paid", false);
+    } else if ((input.minPriceInr ?? 0) > 0) {
+      query = query.eq("is_paid", true);
+    }
+    if (input.startsAfter) {
+      query = query.gte(
+        "event_start_time",
+        asIso(input.startsAfter, "Start date"),
+      );
+    } else if (input.upcomingOnly !== false) {
+      query = query.or(`event_start_time.gte.${new Date().toISOString()},event_start_time.is.null`);
+    }
+    if (input.startsBefore) {
+      query = query.lte(
+        "event_start_time",
+        asIso(input.startsBefore, "End date"),
+      );
+    }
 
     switch (input.sort) {
       case "latest":
-        query = query.order("starts_at", { ascending: false });
+        query = query.order("event_start_time", { ascending: false });
         break;
       case "newest":
         query = query.order("created_at", { ascending: false });
         break;
-      case "price_asc":
-        query = query
-          .order("price_inr", { ascending: true })
-          .order("starts_at", { ascending: true });
-        break;
       case "price_desc":
         query = query
-          .order("price_inr", { ascending: false })
-          .order("starts_at", { ascending: true });
+          .order("is_paid", { ascending: false })
+          .order("event_start_time", { ascending: true });
+        break;
+      case "price_asc":
+        query = query
+          .order("is_paid", { ascending: true })
+          .order("event_start_time", { ascending: true });
         break;
       default:
-        query = query.order("starts_at", { ascending: true });
+        query = query.order("event_start_time", { ascending: true });
     }
-    query = query.order("id", { ascending: true }).range(window.from, window.to);
+    query = query
+      .order("id", { ascending: true })
+      .range(window.from, window.to);
     if (input.signal) query = query.abortSignal(input.signal);
 
     const { data, error, count } = await query;
     if (error) throw error;
-    const activities = ((data ?? []) as DbRecord[]).map(activityFromDb);
+    const activities = await hydrateActivities((data ?? []) as DbRecord[]);
     const states = await getViewerStates(activities.map((item) => item.id));
     const total = count ?? 0;
     return {
@@ -648,18 +971,23 @@ export const activitiesProductionService = {
     const userId = await currentUserId();
     const window = pagination(input.page, input.pageSize);
     let query = supabase
-      .from("activities")
-      .select(ACTIVITY_SELECT, { count: "exact" })
-      .eq("owner_id", userId);
-    if (input.statuses?.length) query = query.in("status", input.statuses);
-    query = query
-      .order("starts_at", { ascending: false })
+      .from("tbl_events")
+      .select(EVENT_SELECT, { count: "exact" })
+      .eq("created_by", userId)
+      .eq("is_deleted", false)
+      .order("event_start_time", { ascending: false })
       .order("id", { ascending: true })
       .range(window.from, window.to);
+    if (input.statuses?.length) query = query.in("status", input.statuses);
     if (input.signal) query = query.abortSignal(input.signal);
     const { data, error, count } = await query;
     if (error) throw error;
-    const activities = ((data ?? []) as DbRecord[]).map(activityFromDb);
+    let activities = await hydrateActivities((data ?? []) as DbRecord[]);
+    if (input.statuses?.length) {
+      activities = activities.filter((activity) =>
+        input.statuses?.includes(activity.status),
+      );
+    }
     const states = await getViewerStates(activities.map((item) => item.id));
     const total = count ?? 0;
     return {
@@ -676,19 +1004,16 @@ export const activitiesProductionService = {
 
   async getDetails(
     activityId: string,
-    options: { commentPage?: number; commentPageSize?: number; signal?: AbortSignal } = {},
+    options: {
+      commentPage?: number;
+      commentPageSize?: number;
+      signal?: AbortSignal;
+    } = {},
   ): Promise<ActivityDetails> {
     requireBackend();
-    requireUuid(activityId, "Activity ID");
-    let query = supabase
-      .from("activities")
-      .select(ACTIVITY_SELECT)
-      .eq("id", activityId);
-    if (options.signal) query = query.abortSignal(options.signal);
-    const { data, error } = await query.maybeSingle();
-    if (error) throw error;
-    if (!data) throw new Error("Activity not found or not accessible.");
-    const [comments, states] = await Promise.all([
+    const eventId = parseId(activityId, "Activity ID");
+    const [activity, comments, states] = await Promise.all([
+      getActivity(eventId, options.signal),
       listComments(activityId, {
         page: options.commentPage,
         pageSize: options.commentPageSize,
@@ -697,7 +1022,7 @@ export const activitiesProductionService = {
       getViewerStates([activityId]),
     ]);
     return {
-      activity: activityFromDb(data as DbRecord),
+      activity,
       viewerState: states[activityId] ?? emptyViewerState(),
       comments,
     };
@@ -714,20 +1039,21 @@ export const activitiesProductionService = {
   },
 
   async update(activityId: string, input: UpdateActivityInput) {
-    requireUuid(activityId, "Activity ID");
-    const userId = await currentUserId();
-    const values = buildActivityWrite(input);
-    if (!Object.keys(values).length) throw new Error("No activity changes supplied.");
-    const { data, error } = await supabase
-      .from("activities")
-      .update(values)
-      .eq("id", activityId)
-      .eq("owner_id", userId)
-      .select(ACTIVITY_SELECT)
-      .maybeSingle();
-    if (error) throw error;
-    if (!data) throw new Error("Activity not found or not editable.");
-    return activityFromDb(data as DbRecord);
+    const eventId = parseId(activityId, "Activity ID");
+    await currentUserId();
+    if (input.status === "cancelled") {
+      await callRpc<unknown>("cancel_activity", { p_event_id: eventId });
+      return getActivity(eventId);
+    }
+    const patch = buildPayload(input);
+    if (!Object.keys(patch).length) {
+      throw new Error("No activity changes supplied.");
+    }
+    const data = await callRpc<unknown>("update_activity", {
+      p_event_id: eventId,
+      p_patch: patch,
+    });
+    return getActivity(eventIdFromRpc(data, eventId));
   },
 
   publish(activityId: string, input: UpdateActivityInput = {}) {
@@ -738,129 +1064,92 @@ export const activitiesProductionService = {
   },
 
   async delete(activityId: string) {
-    requireUuid(activityId, "Activity ID");
-    const userId = await currentUserId();
-    const { data, error } = await supabase
-      .from("activities")
-      .delete()
-      .eq("id", activityId)
-      .eq("owner_id", userId)
-      .select("id")
-      .maybeSingle();
-    if (error) throw error;
-    if (!data) throw new Error("Activity not found or not deletable.");
+    const eventId = parseId(activityId, "Activity ID");
+    await currentUserId();
+    await callRpc<unknown>("cancel_activity", { p_event_id: eventId });
   },
 
-  async join(activityId: string, status: ParticipationStatus = "going") {
-    requireUuid(activityId, "Activity ID");
-    const userId = await currentUserId();
-    let { data, error } = await supabase
-      .from("participants")
-      .insert({
-        activity_id: activityId,
-        user_id: userId,
-        role: "participant",
-        status,
-      })
-      .select()
-      .maybeSingle();
-    if (error?.code === "23505") {
-      const updated = await supabase
-        .from("participants")
-        .update({ status })
-        .eq("activity_id", activityId)
-        .eq("user_id", userId)
-        .select()
-        .maybeSingle();
-      data = updated.data;
-      error = updated.error;
-    }
-    if (error) throw error;
-    if (!data) throw new Error("Participation could not be saved.");
-    return participationFromDb(data as DbRecord);
+  async join(activityId: string, status: JoinActivityStatus = "going") {
+    const eventId = parseId(activityId, "Activity ID");
+    await currentUserId();
+    const row = firstRecord(
+      await callRpc<unknown>("request_join_activity", {
+        p_event_id: eventId,
+        p_status: status,
+      }),
+    );
+    if (!row) throw new Error("Participation could not be saved.");
+    return participationFromDb(row);
   },
 
   async leave(activityId: string) {
-    requireUuid(activityId, "Activity ID");
-    const userId = await currentUserId();
-    const { error } = await supabase
-      .from("participants")
-      .delete()
-      .eq("activity_id", activityId)
-      .eq("user_id", userId);
-    if (error) throw error;
+    const eventId = parseId(activityId, "Activity ID");
+    await currentUserId();
+    await callRpc<unknown>("request_join_activity", {
+      p_event_id: eventId,
+      p_status: "left",
+    });
+  },
+
+  async respondJoin(
+    activityId: string,
+    userId: string,
+    status: "approved" | "rejected" | "waitlist",
+  ) {
+    const eventId = parseId(activityId, "Activity ID");
+    const participantUserId = parseId(userId, "Participant user ID");
+    await currentUserId();
+    const row = firstRecord(
+      await callRpc<unknown>("respond_activity_join", {
+        p_event_id: eventId,
+        p_user_id: participantUserId,
+        p_status: status,
+      }),
+    );
+    if (!row) throw new Error("Participation response could not be saved.");
+    return participationFromDb(row);
   },
 
   async addComment(activityId: string, body: string, parentId?: string) {
-    requireUuid(activityId, "Activity ID");
-    const userId = await currentUserId();
-    const normalizedBody = requiredText(body, "Comment");
-    const normalizedParentId = parentId
-      ? requireUuid(parentId, "Parent comment ID")
-      : null;
-    if (normalizedParentId) {
-      const { data: parent, error: parentError } = await supabase
-        .from("comments")
-        .select("activity_id")
-        .eq("id", normalizedParentId)
-        .maybeSingle();
-      if (parentError) throw parentError;
-      if (!parent || parent.activity_id !== activityId)
-        throw new Error("Parent comment does not belong to this activity.");
-    }
-    const { data, error } = await supabase
-      .from("comments")
-      .insert({
-        activity_id: activityId,
-        author_id: userId,
-        parent_id: normalizedParentId,
-        body: normalizedBody,
-      })
-      .select(COMMENT_SELECT)
-      .single();
-    if (error) throw error;
-    return commentFromDb(data as DbRecord);
+    const eventId = parseId(activityId, "Activity ID");
+    const row = firstRecord(
+      await callRpc<unknown>("create_activity_comment", {
+        p_event_id: eventId,
+        p_body: requiredText(body, "Comment"),
+        p_parent_id: parentId ? parseId(parentId, "Parent comment ID") : null,
+      }),
+    );
+    if (!row) throw new Error("Activity comment could not be created.");
+    return commentFromDb(row);
   },
 
   async updateComment(commentId: string, body: string) {
-    requireUuid(commentId, "Comment ID");
-    const userId = await currentUserId();
-    const { data, error } = await supabase
-      .from("comments")
-      .update({ body: requiredText(body, "Comment") })
-      .eq("id", commentId)
-      .eq("author_id", userId)
-      .select(COMMENT_SELECT)
-      .maybeSingle();
-    if (error) throw error;
-    if (!data) throw new Error("Comment not found or not editable.");
-    return commentFromDb(data as DbRecord);
+    const row = firstRecord(
+      await callRpc<unknown>("update_activity_comment", {
+        p_comment_id: parseId(commentId, "Comment ID"),
+        p_body: requiredText(body, "Comment"),
+      }),
+    );
+    if (!row) throw new Error("Activity comment could not be updated.");
+    return commentFromDb(row);
   },
 
   async deleteComment(commentId: string) {
-    requireUuid(commentId, "Comment ID");
-    const userId = await currentUserId();
-    const { data, error } = await supabase
-      .from("comments")
-      .delete()
-      .eq("id", commentId)
-      .eq("author_id", userId)
-      .select("id")
-      .maybeSingle();
-    if (error) throw error;
-    if (!data) throw new Error("Comment not found or not deletable.");
+    await callRpc<unknown>("delete_activity_comment", {
+      p_comment_id: parseId(commentId, "Comment ID"),
+    });
   },
 
   setLiked(activityId: string, liked: boolean) {
-    return setActivityState("likes", activityId, liked);
+    return setActivityState("tbl_event_likes", activityId, liked);
   },
 
   setSaved(activityId: string, saved: boolean) {
-    return setActivityState("saves", activityId, saved);
+    return setActivityState("tbl_event_saves", activityId, saved);
   },
 
   async getViewerState(activityId: string) {
-    requireUuid(activityId, "Activity ID");
+    parseId(activityId, "Activity ID");
     const states = await getViewerStates([activityId]);
     return states[activityId] ?? emptyViewerState();
   },
@@ -870,7 +1159,7 @@ export const activitiesProductionService = {
     handlers: ActivityRealtimeHandlers,
   ): RealtimeChannel {
     requireBackend();
-    requireUuid(activityId, "Activity ID");
+    const eventId = parseId(activityId, "Activity ID");
     const notify =
       (table: ActivityRealtimeTable) =>
       (payload: {
@@ -879,50 +1168,68 @@ export const activitiesProductionService = {
         old: Record<string, unknown>;
       }) =>
         handlers.onRefresh(realtimeRefresh(table, payload));
-    const channel = supabase
-      .channel(`activity:${activityId}:${Math.random().toString(36).slice(2)}`)
+    return supabase
+      .channel(`activity:${eventId}:${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "activities", filter: `id=eq.${activityId}` },
+        {
+          event: "*",
+          schema: "public",
+          table: "tbl_events",
+          filter: `id=eq.${eventId}`,
+        },
         notify("activities"),
       )
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "participants", filter: `activity_id=eq.${activityId}` },
+        {
+          event: "*",
+          schema: "public",
+          table: "tbl_event_participants",
+          filter: `event_id=eq.${eventId}`,
+        },
         notify("participants"),
       )
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "comments", filter: `activity_id=eq.${activityId}` },
+        {
+          event: "*",
+          schema: "public",
+          table: "tbl_event_comments",
+          filter: `event_id=eq.${eventId}`,
+        },
         notify("comments"),
       )
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "comments", filter: `activity_id=eq.${activityId}` },
-        notify("comments"),
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "likes", filter: `activity_id=eq.${activityId}` },
+        {
+          event: "*",
+          schema: "public",
+          table: "tbl_event_likes",
+          filter: `event_id=eq.${eventId}`,
+        },
         notify("likes"),
       )
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "saves", filter: `activity_id=eq.${activityId}` },
+        {
+          event: "*",
+          schema: "public",
+          table: "tbl_event_saves",
+          filter: `event_id=eq.${eventId}`,
+        },
         notify("saves"),
-      );
-    return channel.subscribe((status, error) =>
-      subscribeStatus(handlers, status, error),
-    );
+      )
+      .subscribe((status, error) => subscribeStatus(handlers, status, error));
   },
 
   subscribeToDiscovery(handlers: ActivityRealtimeHandlers): RealtimeChannel {
     requireBackend();
-    const channel = supabase
+    return supabase
       .channel(`activity-discovery:${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "activities" },
+        { event: "*", schema: "public", table: "tbl_events" },
         (payload) =>
           handlers.onRefresh(
             realtimeRefresh("activities", {
@@ -931,10 +1238,8 @@ export const activitiesProductionService = {
               old: payload.old,
             }),
           ),
-      );
-    return channel.subscribe((status, error) =>
-      subscribeStatus(handlers, status, error),
-    );
+      )
+      .subscribe((status, error) => subscribeStatus(handlers, status, error));
   },
 
   unsubscribe(channel: RealtimeChannel) {
