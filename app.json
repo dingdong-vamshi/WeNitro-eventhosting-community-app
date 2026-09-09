@@ -5,7 +5,7 @@
     "scheme": "wenitro",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/wenitro-logo-transparent.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
@@ -19,10 +19,8 @@
       "package": "com.wenitro.app",
       "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#6860F2",
+        "foregroundImage": "./assets/wenitro-logo-transparent.png"
       },
       "predictiveBackGestureEnabled": true
     },
@@ -39,7 +37,16 @@
         }
       ],
       "expo-secure-store",
-      "expo-video"
+      "expo-video",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#6860F2",
+          "image": "./assets/wenitro-logo-transparent.png",
+          "imageWidth": 144
+        }
+      ]
     ]
   }
 }
