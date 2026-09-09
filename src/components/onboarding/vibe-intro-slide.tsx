@@ -32,7 +32,7 @@ export function VibeIntroSlide({ width, height, reducedMotion, onNext, onSkip }:
     <View style={[s.header, { top: height * .057, left: width * .052, right: width * .048 }]}>
       <View style={s.brand}>
         <Image source={logo} style={{ width: 27 * scale, height: 27 * scale }} resizeMode="contain" />
-        <Text style={[s.brandText, { fontSize: 22 * scale }]}><Text style={{ color: accent }}>We</Text>Nitro</Text>
+        <Text style={[s.brandText, { fontSize: 20 * scale }]}><Text style={{ color: accent }}>We</Text>Nitro</Text>
       </View>
       <Pressable accessibilityRole="button" onPress={onSkip} hitSlop={8} style={[s.skip, { width: 57 * scale, height: 30 * scale }]}>
         <Text style={[s.skipText, { fontSize: 14 * scale }]}>Skip</Text>
@@ -47,8 +47,8 @@ export function VibeIntroSlide({ width, height, reducedMotion, onNext, onSkip }:
       <LinearGradient colors={['transparent', background]} style={s.heroFade} />
     </Animated.View>
     <Animated.View style={[s.copy, { top: height * .64, left: width * .07, right: width * .06 }, reveal(copy, 8)]}>
-      <Text testID="vibe-intro-headline" style={[s.headline, { fontSize: 36 * scale, lineHeight: 41 * scale }]}>Share Your Vibe{'\n'}<Text style={{ color: accent }}>With the World</Text></Text>
-      <Text testID="vibe-intro-description" style={[s.description, { marginTop: 15 * scale, fontSize: 15.1 * scale, lineHeight: 22 * scale }]}>Post videos, pictures, and check out what your{'\n'}<Text style={{ color: accent, fontWeight: '700' }}>squad</Text> is hosting and participating in.</Text>
+      <Text testID="vibe-intro-headline" style={[s.headline, { fontSize: 32 * scale, lineHeight: 40 * scale }]}>Share Your Vibe{'\n'}<Text style={{ color: accent }}>With the World</Text></Text>
+      <Text testID="vibe-intro-description" style={[s.description, { position: 'absolute', top: height * .103, left: 0, right: 0, fontSize: 15.1 * scale, lineHeight: 22 * scale }]}>Post videos, pictures, and check out what your{'\n'}<Text style={{ color: accent, fontWeight: '700' }}>squad</Text> is hosting and participating in.</Text>
     </Animated.View>
     <Animated.View style={[s.footer, { left: width * .052, right: width * .048, bottom: height * .052 }, reveal(footer, 5)]}>
       <Text testID="vibe-intro-swipe" style={[s.swipe, { fontSize: 15 * scale, marginBottom: 19 * scale }]}>⤺  Swipe to explore  ⟶</Text>
