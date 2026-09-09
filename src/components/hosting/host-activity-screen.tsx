@@ -10,7 +10,7 @@ import { activityLocationService } from '../../services/activity-location';
 import { AGE_PRESETS, GENDER_OPTIONS, HOST_CATEGORIES, ageError, hostStepError, localDateTime, newHostDraft, type HostDraft, type HostLocation } from '../../domain/host-activity';
 import CoverEditor from './cover-editor';
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from '../mobile-app-shell';
-import { usePalette as useReferencePalette } from '../reconstruction/ui';
+import { BrandBar, usePalette as useReferencePalette } from '../reconstruction/ui';
 type HostColors = {
   isDark: boolean; bg: string; input: string; border: string; muted: string; text: string;
   purple: string; overlay: string; danger: string;
@@ -102,14 +102,14 @@ function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => 
     <Text onPress={() => void Linking.openURL('https://www.openstreetmap.org/copyright')} style={[s.small, { textAlign: 'center', padding: 12 }]}>Location data © OpenStreetMap contributors · Photon</Text>
   </SafeAreaView></MobileOverlayFrame></Modal>;
 }
-export function HostLanding({ onActivity, onVibe, onCommunity }: { onActivity: () => void; onVibe: () => void; onCommunity: () => void }) {
+export function HostLanding({ onActivity, onVibe, onCommunity, go }: { onActivity: () => void; onVibe: () => void; onCommunity: () => void; go?: (screen: any) => void }) {
   const palette = useReferencePalette(); const { c, s } = useHostTheme(); const light = !palette.isDark;
-  return <SafeAreaView edges={['top']} style={[s.root, { backgroundColor: palette.bg }]}><ScrollView contentContainerStyle={{ padding: 20, paddingTop: 32, gap: 18 }}><View style={{ gap: 8, marginBottom: 12 }}><Text style={[s.heading, { color: palette.text }]}>Create &amp; Share</Text><Text style={[s.subtitle, { color: palette.muted }]}>Plan an activity, capture your experiences, or build group communities</Text></View>
+  return <SafeAreaView edges={['top']} style={[s.root, { backgroundColor: palette.bg }]}><BrandBar go={go} location="Create together" /><ScrollView contentContainerStyle={{ padding: 18, paddingTop: 28, gap: 16 }}><View style={{ gap: 8, marginBottom: 10 }}><Text style={[s.heading, { color: palette.text, fontSize: 30, lineHeight: 36 }]}>Create &amp; Share</Text><Text style={[s.subtitle, { color: palette.muted, fontSize: 14, lineHeight: 21 }]}>Plan an activity, capture your experiences, or build group communities.</Text></View>
     {([
       ['calendar-outline', 'Host an Activity', 'Plan a meet-up, sports gathering, match, or custom event with others.', '#6857F1', light ? '#F6F5FF' : '#222A3C', onActivity],
       ['film-outline', 'Post a Vibe', 'Share photos and video highlights of active experiences in real-time.', '#EB258E', light ? '#FFF4F9' : '#352338', onVibe],
       ['people-outline', 'Create a Community', 'Start a new group chat room for your interests, vibe, or events.', '#0EC1C7', light ? '#F0FBFC' : '#1C3944', onCommunity],
-    ] as const).map(([icon, title, description, color, bg, action]) => <Pressable accessibilityRole="button" accessibilityLabel={title} key={title} onPress={action} style={[s.landingCard, { backgroundColor: bg, borderWidth: light ? 1 : 0, borderColor: palette.border }]}><View style={[s.landingIcon, { backgroundColor: color }]}><Glyph name={icon} color="white" size={26} /></View><View style={{ flex: 1, gap: 6 }}><Text style={[s.settingTitle, { color: palette.text }]}>{title}</Text><Text style={[s.small, { color: palette.muted }]}>{description}</Text></View><View style={[s.roundArrow, { backgroundColor: light ? palette.inset : '#FFFFFF13' }]}><Glyph name="chevron-forward" size={14} color={palette.text} /></View></Pressable>)}
+    ] as const).map(([icon, title, description, color, bg, action]) => <Pressable accessibilityRole="button" accessibilityLabel={title} key={title} onPress={action} style={[s.landingCard, { minHeight: 150, borderRadius: 22, backgroundColor: bg, borderWidth: 1, borderColor: palette.border }]}><View style={[s.landingIcon, { width: 58, height: 58, borderRadius: 17, backgroundColor: color }]}><Glyph name={icon} color="white" size={30} /></View><View style={{ flex: 1, gap: 8 }}><Text style={[s.settingTitle, { color: palette.text, fontSize: 17 }]}>{title}</Text><Text style={[s.small, { color: palette.muted, fontSize: 12, lineHeight: 18 }]}>{description}</Text></View><View style={[s.roundArrow, { width: 34, height: 34, borderRadius: 18, backgroundColor: light ? palette.inset : '#FFFFFF13' }]}><Glyph name="chevron-forward" size={17} color={palette.text} /></View></Pressable>)}
   </ScrollView></SafeAreaView>;
 }
 export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDrafted }: { userId: string; isPartner: boolean; onBack: () => void; onCreated: (activity: Awaited<ReturnType<typeof activityService.create>>) => void; onDrafted?: (activity: Awaited<ReturnType<typeof activityService.createDraft>>) => void }) {
