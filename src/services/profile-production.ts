@@ -1,4 +1,8 @@
+import type { User } from "@supabase/supabase-js";
+import type { AccountType } from "./auth-production";
+
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { INTEREST_CATEGORIES } from "../domain/interest-categories";
 
 const AVATAR_BUCKET = "avatars";
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
@@ -6,11 +10,13 @@ const DEFAULT_PAGE_SIZE = 25;
 const MAX_PAGE_SIZE = 100;
 
 export type Profile = {
-  id: string;
+  account_type: AccountType;
+  id: number;
   username: string;
   full_name: string | null;
   avatar_url: string | null;
   bio: string | null;
+  about: string | null;
   website: string | null;
   location: string | null;
   date_of_birth: string | null;
@@ -23,17 +29,21 @@ export type Profile = {
   updated_at: string;
   last_active_at: string;
   deleted_at: string | null;
+  nationality: string | null;
+  occupation: string | null;
+  is_verified: boolean;
+  onboarding_completed: boolean;
 };
 
 export type Interest = {
-  id: string;
+  id: number;
   slug: string;
   name: string;
   icon: string | null;
 };
 
 export type VerificationBadge = {
-  id: string;
+  id: number;
   slug: string;
   name: string;
   description: string | null;
@@ -53,16 +63,24 @@ export type ProfileEditInput = Partial<
     | "username"
     | "full_name"
     | "bio"
+    | "about"
     | "website"
     | "location"
     | "date_of_birth"
     | "gender"
     | "is_private"
+    | "nationality"
+    | "occupation"
   >
 >;
 
 export type PrivacyPreferences = {
-  user_id: string;
+  user_id: number;
+  profile_visibility: "public" | "friends" | "private";
+  email_visibility: "public" | "friends" | "private";
+  phone_visibility: "public" | "friends" | "private";
+  message_visibility: "everyone" | "friends" | "none";
+  show_online_status: boolean;
   discoverable: boolean;
   allow_message_requests: boolean;
   show_distance: boolean;
@@ -88,7 +106,7 @@ export type ConsentPurpose =
 
 export type ConsentRecord = {
   id: number;
-  user_id: string;
+  user_id: number;
   purpose: ConsentPurpose;
   granted: boolean;
   policy_version: string;
@@ -103,8 +121,8 @@ export type DataSubjectRequestType =
   | "grievance";
 
 export type DataSubjectRequest = {
-  id: string;
-  user_id: string;
+  id: number;
+  user_id: number;
   request_type: DataSubjectRequestType;
   details: string;
   status: "submitted" | "in_review" | "completed" | "rejected";
@@ -125,18 +143,18 @@ export type ReportReason =
   | "other";
 
 export type ReportTarget =
-  | { type: "user"; id: string }
-  | { type: "vibe"; id: string }
-  | { type: "community_post"; id: string }
-  | { type: "message"; id: string };
+  | { type: "user"; id: number }
+  | { type: "vibe"; id: number }
+  | { type: "community_post"; id: number }
+  | { type: "message"; id: number };
 
 export type ContentReport = {
-  id: string;
-  reporter_id: string;
-  subject_user_id: string | null;
-  vibe_id: string | null;
-  community_post_id: string | null;
-  message_id: string | null;
+  id: number;
+  reporter_id: number;
+  subject_user_id: number | null;
+  vibe_id: number | null;
+  community_post_id: number | null;
+  message_id: number | null;
   reason: ReportReason;
   details: string;
   status: "open" | "reviewing" | "actioned" | "dismissed";
@@ -144,7 +162,7 @@ export type ContentReport = {
 };
 
 export type ContentListItem = {
-  id: string;
+  id: number;
   type: "activity" | "vibe";
   createdAt: string;
   content: Record<string, unknown>;
@@ -169,10 +187,25 @@ export type VerificationState = {
   phoneVerified: boolean;
   profileComplete: boolean;
   badges: VerificationBadge[];
+  status:
+    | "unsubmitted"
+    | "draft"
+    | "submitted"
+    | "reviewing"
+    | "approved"
+    | "rejected";
+  latestRequestId: number | null;
+  reviewNotes: string;
 };
 
 type CursorOptions = { limit?: number; before?: string };
-type ContentTable = "saves" | "likes";
+type LegacyContentTable = "tbl_event_saves" | "tbl_event_likes";
+type Row = Record<string, unknown>;
+
+export const privacyBridgeRpc = {
+  get: "get_user_privacy_settings",
+  update: "update_user_privacy_settings",
+} as const;
 
 const requireBackend = () => {
   if (!isSupabaseConfigured) {
@@ -180,12 +213,27 @@ const requireBackend = () => {
   }
 };
 
-const currentUser = async () => {
+const currentUser = async (): Promise<User> => {
   requireBackend();
   const { data, error } = await supabase.auth.getUser();
   if (error) throw error;
   if (!data.user) throw new Error("Authentication required.");
   return data.user;
+};
+
+const positiveInteger = (value: unknown, field: string): number => {
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed <= 0) {
+    throw new Error(`Invalid ${field}.`);
+  }
+  return parsed;
+};
+
+const currentLegacyUserId = async (): Promise<number> => {
+  await currentUser();
+  const { data, error } = await supabase.rpc("get_current_legacy_user_id");
+  if (error) throw error;
+  return positiveInteger(data, "legacy user id");
 };
 
 const pageSize = (requested?: number) => {
@@ -203,6 +251,22 @@ const validatedCursor = (before?: string) => {
   return date.toISOString();
 };
 
+const asRecord = (value: unknown): Row =>
+  value && typeof value === "object" ? (value as Row) : {};
+
+const relationRecord = (value: unknown): Row =>
+  Array.isArray(value) ? asRecord(value[0]) : asRecord(value);
+
+const nullableText = (value: unknown): string | null =>
+  typeof value === "string" && value.length > 0 ? value : null;
+
+const slugify = (name: string) =>
+  name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
 const cleanText = (
   value: string | null | undefined,
   field: string,
@@ -215,34 +279,6 @@ const cleanText = (
   }
   return cleaned || null;
 };
-
-const asRecord = (value: unknown): Record<string, unknown> =>
-  value && typeof value === "object"
-    ? (value as Record<string, unknown>)
-    : {};
-
-const relationRecord = (value: unknown) => {
-  if (Array.isArray(value)) return asRecord(value[0]);
-  return asRecord(value);
-};
-
-const mapBadges = (rows: unknown[]): VerificationBadge[] =>
-  rows.flatMap((row) => {
-    const record = asRecord(row);
-    const badge = relationRecord(record.badges);
-    if (typeof badge.id !== "string") return [];
-    return [
-      {
-        id: badge.id,
-        slug: String(badge.slug ?? ""),
-        name: String(badge.name ?? ""),
-        description:
-          typeof badge.description === "string" ? badge.description : null,
-        icon: typeof badge.icon === "string" ? badge.icon : null,
-        awardedAt: String(record.awarded_at ?? ""),
-      },
-    ];
-  });
 
 const validateAdultDate = (dateOfBirth: string) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
@@ -267,57 +303,152 @@ const validateAdultDate = (dateOfBirth: string) => {
   if (age < 18) throw new Error("WeNitro profiles require a minimum age of 18.");
 };
 
-const prepareProfileEdit = (input: ProfileEditInput) => {
-  const update: Record<string, string | boolean | null> = {};
-  if (input.username !== undefined) {
-    const username = input.username.trim().replace(/^@/, "");
-    if (!/^[A-Za-z0-9_]{3,30}$/.test(username)) {
-      throw new Error(
-        "Username must be 3-30 letters, numbers, or underscores.",
-      );
-    }
-    update.username = username;
+const mapPrivacy = (value: unknown): PrivacyPreferences => {
+  const row = relationRecord(value);
+  const profile = String(
+    row.profile_visibility ?? "public",
+  ) as PrivacyPreferences["profile_visibility"];
+  const email = String(
+    row.email_visibility === "everyone" ? "public" : row.email_visibility === "none" ? "private" : row.email_visibility ?? "friends",
+  ) as PrivacyPreferences["email_visibility"];
+  const phone = String(
+    row.phone_visibility === "everyone" ? "public" : row.phone_visibility === "none" ? "private" : row.phone_visibility ?? "friends",
+  ) as PrivacyPreferences["phone_visibility"];
+  const message = String(
+    row.message_visibility ?? "everyone",
+  ) as PrivacyPreferences["message_visibility"];
+  if (!["public", "friends", "private"].includes(profile)) {
+    throw new Error("Privacy settings returned an invalid profile visibility.");
   }
-  if (input.full_name !== undefined) {
-    update.full_name = cleanText(input.full_name, "Full name", 100) ?? null;
+  if (!["public", "friends", "private"].includes(email)) {
+    throw new Error("Privacy settings returned an invalid email visibility.");
   }
-  if (input.bio !== undefined) {
-    update.bio = cleanText(input.bio, "Bio", 500) ?? null;
+  if (!["public", "friends", "private"].includes(phone)) {
+    throw new Error("Privacy settings returned an invalid phone visibility.");
   }
-  if (input.website !== undefined) {
-    const website = cleanText(input.website, "Website", 300);
-    if (website) {
-      let parsed: URL;
-      try {
-        parsed = new URL(website);
-      } catch {
-        throw new Error("Website must be a valid HTTPS URL.");
-      }
-      if (parsed.protocol !== "https:") {
-        throw new Error("Website must be a valid HTTPS URL.");
-      }
-    }
-    update.website = website ?? null;
+  if (!["everyone", "friends", "none"].includes(message)) {
+    throw new Error("Privacy settings returned an invalid message visibility.");
   }
-  if (input.location !== undefined) {
-    update.location = cleanText(input.location, "Location", 120) ?? null;
-  }
-  if (input.gender !== undefined) {
-    update.gender = cleanText(input.gender, "Gender", 80) ?? null;
-  }
-  if (input.date_of_birth !== undefined) {
-    if (input.date_of_birth) validateAdultDate(input.date_of_birth);
-    update.date_of_birth = input.date_of_birth || null;
-  }
-  if (input.is_private !== undefined) update.is_private = input.is_private;
-  if (!Object.keys(update).length) throw new Error("No profile changes supplied.");
-  update.last_active_at = new Date().toISOString();
-  return update;
+  return {
+    user_id: positiveInteger(row.user_id, "privacy user id"),
+    profile_visibility: profile,
+    email_visibility: email,
+    phone_visibility: phone,
+    message_visibility: message,
+    show_online_status: row.show_online_status !== false,
+    discoverable: profile === "public",
+    allow_message_requests: message !== "none",
+    show_distance: false,
+    follower_approval: profile !== "public",
+    analytics: false,
+    personalization: false,
+    marketing: false,
+    updated_at: String(row.updated_at ?? ""),
+  };
 };
 
+const readPrivacy = async (): Promise<PrivacyPreferences> => {
+  const { data, error } = await supabase.rpc(privacyBridgeRpc.get);
+  if (error) throw error;
+  return mapPrivacy(data);
+};
+
+const writePrivacy = async (
+  input: PrivacyPreferenceInput,
+): Promise<PrivacyPreferences> => {
+  if (!Object.keys(input).length) throw new Error("No privacy changes supplied.");
+  const profileVisibility =
+    input.profile_visibility ??
+    (input.discoverable === undefined
+      ? null
+      : input.discoverable
+        ? "public"
+        : "private");
+  const messageVisibility =
+    input.message_visibility ??
+    (input.allow_message_requests === undefined
+      ? null
+      : input.allow_message_requests
+        ? "everyone"
+        : "none");
+  const { data, error } = await supabase.rpc(privacyBridgeRpc.update, {
+    p_profile_visibility: profileVisibility === "private" ? "friends" : profileVisibility,
+    p_email_visibility: input.email_visibility ?? null,
+    p_phone_visibility: input.phone_visibility ?? null,
+    p_message_visibility: messageVisibility,
+    p_show_online_status: input.show_online_status ?? null,
+  });
+  if (error) throw error;
+  return mapPrivacy(data);
+};
+
+const mapProfile = (value: unknown, privacy?: PrivacyPreferences): Profile => {
+  const row = asRecord(value);
+  const createdAt = String(row.create_at ?? "");
+  const rating = Number(row.rating ?? 0);
+  return {
+    id: positiveInteger(row.id, "profile id"),
+    account_type: row.account_type === "partner" ? "partner" : "individual",
+    username: String(row.username ?? ""),
+    full_name: nullableText(row.fullname),
+    avatar_url: nullableText(row.profile_image),
+    bio: nullableText(row.bio),
+    about: nullableText(row.about),
+    website: null,
+    location: nullableText(row.nationality),
+    date_of_birth: nullableText(row.dob),
+    gender: nullableText(row.gender),
+    trust_score: Number.isFinite(rating) ? rating : 0,
+    karma: 0,
+    nitro_points: Number(row.points ?? 0),
+    is_private: privacy?.profile_visibility === "private",
+    created_at: createdAt,
+    updated_at: createdAt,
+    last_active_at: createdAt,
+    deleted_at: Number(row.is_delete ?? 0) === 1 ? createdAt : null,
+    nationality: nullableText(row.nationality),
+    occupation: nullableText(row.occupation),
+    is_verified: Number(row.isverified ?? 0) === 1,
+    onboarding_completed: Boolean(row.onboarding_completed),
+  };
+};
+
+const mapInterest = (value: unknown): Interest => {
+  const row = relationRecord(value);
+  const name = String(row.name ?? "");
+  return {
+    id: positiveInteger(row.id, "interest id"),
+    slug: slugify(name),
+    name,
+    icon: null,
+  };
+};
+
+const mapBadges = (rows: unknown[]): VerificationBadge[] =>
+  rows.flatMap((value) => {
+    const row = asRecord(value);
+    const badge = relationRecord(row.badge ?? row.tbl_badges);
+    if (badge.id === undefined || badge.id === null) return [];
+    return [
+      {
+        id: positiveInteger(badge.id, "badge id"),
+        slug: String(badge.slug ?? ""),
+        name: String(badge.name ?? ""),
+        description: nullableText(badge.description),
+        icon: nullableText(badge.icon),
+        awardedAt: String(row.awarded_at ?? ""),
+      },
+    ];
+  });
+
 const detectImage = (bytes: Uint8Array) => {
-  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
-    return { contentType: "image/jpeg", extension: "jpg" };
+  if (
+    bytes.length >= 3 &&
+    bytes[0] === 0xff &&
+    bytes[1] === 0xd8 &&
+    bytes[2] === 0xff
+  ) {
+    return { contentType: "image/jpeg", extension: "jpg" } as const;
   }
   if (
     bytes.length >= 8 &&
@@ -330,14 +461,14 @@ const detectImage = (bytes: Uint8Array) => {
     bytes[6] === 0x1a &&
     bytes[7] === 0x0a
   ) {
-    return { contentType: "image/png", extension: "png" };
+    return { contentType: "image/png", extension: "png" } as const;
   }
   if (
     bytes.length >= 12 &&
     String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" &&
     String.fromCharCode(...bytes.slice(8, 12)) === "WEBP"
   ) {
-    return { contentType: "image/webp", extension: "webp" };
+    return { contentType: "image/webp", extension: "webp" } as const;
   }
   throw new Error("Avatar must be a JPEG, PNG, or WebP image.");
 };
@@ -348,45 +479,44 @@ const randomUuid = () => {
   return randomUUID.call(globalThis.crypto);
 };
 
-const ownedAvatarPath = (publicUrl: string | null, userId: string) => {
+const ownedAvatarPath = (publicUrl: string | null, authUserId: string) => {
   if (!publicUrl) return null;
   const marker = "/storage/v1/object/public/avatars/";
-  const markerIndex = publicUrl.indexOf(marker);
-  if (markerIndex < 0) return null;
-  const path = decodeURIComponent(publicUrl.slice(markerIndex + marker.length));
-  return path.startsWith(`${userId}/`) ? path : null;
+  const index = publicUrl.indexOf(marker);
+  if (index < 0) return null;
+  const path = decodeURIComponent(publicUrl.slice(index + marker.length));
+  return path.startsWith(`${authUserId}/`) ? path : null;
 };
 
 const listContent = async (
-  table: ContentTable,
+  table: LegacyContentTable,
   options: CursorOptions = {},
 ): Promise<CursorPage<ContentListItem>> => {
-  const user = await currentUser();
+  const userId = await currentLegacyUserId();
   const limit = pageSize(options.limit);
   const before = validatedCursor(options.before);
   let query = supabase
     .from(table)
     .select(
-      "id,activity_id,vibe_id,created_at,activity:activities(id,title,description,category,cover_url,location_name,starts_at,ends_at,status),vibe:vibes(id,caption,media_url,media_type,created_at,user_id,author:profiles!vibes_user_id_fkey(id,username,full_name,avatar_url))",
+      "id,event_id,created_at,event:tbl_events(id,title,description,event_start_time,event_end_time,display_location,location,status,media)",
     )
-    .eq("user_id", user.id)
+    .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(limit + 1);
   if (before) query = query.lt("created_at", before);
   const { data, error } = await query;
   if (error) throw error;
   const rows = data ?? [];
-  const items = rows.slice(0, limit).flatMap((row) => {
-    const record = asRecord(row);
-    const isActivity = typeof record.activity_id === "string";
-    const content = relationRecord(isActivity ? record.activity : record.vibe);
-    if (typeof content.id !== "string") return [];
+  const items = rows.slice(0, limit).flatMap((value) => {
+    const row = asRecord(value);
+    const event = relationRecord(row.event);
+    if (event.id === undefined || event.id === null) return [];
     return [
       {
-        id: String(record.id),
-        type: isActivity ? ("activity" as const) : ("vibe" as const),
-        createdAt: String(record.created_at),
-        content,
+        id: positiveInteger(row.id, "saved content id"),
+        type: "activity" as const,
+        createdAt: String(row.created_at ?? ""),
+        content: event,
       },
     ];
   });
@@ -396,275 +526,345 @@ const listContent = async (
   };
 };
 
-const preferenceConsentPurposes: Partial<
-  Record<ConsentPurpose, keyof PrivacyPreferenceInput>
-> = {
-  analytics: "analytics",
-  personalization: "personalization",
-  marketing: "marketing",
-};
-
-const updatePreferencesForUser = async (
-  userId: string,
-  input: PrivacyPreferenceInput,
-): Promise<PrivacyPreferences> => {
-  if (!Object.keys(input).length) throw new Error("No privacy changes supplied.");
-  const { data, error } = await supabase
-    .from("privacy_preferences")
-    .upsert({ user_id: userId, ...input }, { onConflict: "user_id" })
-    .select("*")
-    .single();
-  if (error) throw error;
-  return data as PrivacyPreferences;
+const unsupported = (feature: string): never => {
+  throw new Error(`${feature} is not available in the legacy WeNitro backend.`);
 };
 
 export const profileProductionService = {
   async loadProfile(): Promise<ProfileDetails> {
-    const user = await currentUser();
-    const [profileResult, interestsResult, badgesResult] = await Promise.all([
-      supabase.from("profiles").select("*").eq("id", user.id).single(),
+    const userId = await currentLegacyUserId();
+    const [profile, privacy, interests, badges] = await Promise.all([
       supabase
-        .from("profile_interests")
-        .select("interests(id,slug,name,icon)")
-        .eq("profile_id", user.id)
+        .from("tbl_users")
+        .select(
+          "id,account_type,username,fullname,profile_image,bio,about,dob,gender,rating,points,nationality,occupation,isverified,is_delete,onboarding_completed,create_at",
+        )
+        .eq("id", userId)
+        .single(),
+      readPrivacy(),
+      supabase
+        .from("tbl_user_interests")
+        .select(
+          "created_at,category:tbl_categories!tbl_user_interests_category_id_fkey(id,name)",
+        )
+        .eq("user_id", userId)
         .order("created_at", { ascending: true }),
       supabase
-        .from("user_badges")
-        .select("awarded_at,badges(id,slug,name,description,icon)")
-        .eq("user_id", user.id)
+        .from("tbl_user_badges")
+        .select(
+          "awarded_at,badge:tbl_badges!tbl_user_badges_badge_id_fkey(id,slug,name,description,icon)",
+        )
+        .eq("user_id", userId)
         .order("awarded_at", { ascending: false }),
     ]);
-    const error =
-      profileResult.error ?? interestsResult.error ?? badgesResult.error;
+    const error = profile.error ?? interests.error ?? badges.error;
     if (error) throw error;
-    const interests = (interestsResult.data ?? []).flatMap((row) => {
-      const interest = relationRecord(asRecord(row).interests);
-      if (typeof interest.id !== "string") return [];
-      return [interest as Interest];
-    });
     return {
-      profile: profileResult.data as Profile,
-      interests,
-      badges: mapBadges(badgesResult.data ?? []),
+      profile: mapProfile(profile.data, privacy),
+      interests: (interests.data ?? []).map((row) =>
+        mapInterest(asRecord(row).category),
+      ),
+      badges: mapBadges(badges.data ?? []),
     };
   },
 
   async editProfile(input: ProfileEditInput): Promise<Profile> {
-    const user = await currentUser();
+    const userId = await currentLegacyUserId();
+    const update: Row = {};
+    if (input.username !== undefined) {
+      const username = input.username.trim().replace(/^@/, "");
+      if (!/^[A-Za-z0-9_]{3,30}$/.test(username)) {
+        throw new Error(
+          "Username must be 3-30 letters, numbers, or underscores.",
+        );
+      }
+      update.username = username;
+    }
+    if (input.full_name !== undefined) {
+      const fullName = cleanText(input.full_name, "Full name", 255);
+      if (!fullName) throw new Error("Full name is required.");
+      update.fullname = fullName;
+    }
+    if (input.bio !== undefined) {
+      update.bio = cleanText(input.bio, "Bio", 40) ?? null;
+    }
+    if (input.about !== undefined) {
+      update.about = cleanText(input.about, "About You", 500) ?? null;
+    }
+    if (input.date_of_birth !== undefined) {
+      if (input.date_of_birth) validateAdultDate(input.date_of_birth);
+      update.dob = input.date_of_birth || null;
+    }
+    if (input.gender !== undefined) {
+      update.gender = cleanText(input.gender, "Gender", 20) ?? null;
+    }
+    if (input.full_name && input.username && input.date_of_birth) {
+      update.onboarding_completed = true;
+    }
+    const nationality = input.nationality !== undefined ? input.nationality : input.location;
+    if (nationality !== undefined) {
+      update.nationality =
+        cleanText(nationality, "Nationality or location", 100) ?? null;
+    }
+    if (input.occupation !== undefined) {
+      update.occupation =
+        cleanText(input.occupation, "Occupation", 100) ?? null;
+    }
+    if (
+      input.website !== undefined &&
+      input.website !== null &&
+      input.website.trim()
+    ) {
+      throw new Error("Website is not supported by the legacy profile schema.");
+    }
+    if (!Object.keys(update).length && input.is_private === undefined) {
+      throw new Error("No profile changes supplied.");
+    }
+    if (Object.keys(update).length) {
+      const { error } = await supabase
+        .from("tbl_users")
+        .update(update)
+        .eq("id", userId);
+      if (error) throw error;
+    }
+    const privacy =
+      input.is_private === undefined
+        ? await readPrivacy()
+        : await writePrivacy({
+            profile_visibility: input.is_private ? "private" : "public",
+          });
     const { data, error } = await supabase
-      .from("profiles")
-      .update(prepareProfileEdit(input))
-      .eq("id", user.id)
-      .select("*")
+      .from("tbl_users")
+      .select(
+        "id,account_type,username,fullname,profile_image,bio,about,dob,gender,rating,points,nationality,occupation,isverified,is_delete,onboarding_completed,create_at",
+      )
+      .eq("id", userId)
       .single();
     if (error) throw error;
-    return data as Profile;
+    return mapProfile(data, privacy);
   },
 
-  async uploadAvatar(uri: string): Promise<string> {
+  async uploadAvatar(uri: string, expectedAuthUserId?: string): Promise<string> {
     if (!uri.trim()) throw new Error("Avatar URI is required.");
-    const user = await currentUser();
-    const profileResult = await supabase
-      .from("profiles")
-      .select("avatar_url")
-      .eq("id", user.id)
-      .single();
-    if (profileResult.error) throw profileResult.error;
+    const authUser = await currentUser();
+    const assertIdentity = async () => {
+      const current = await currentUser();
+      if (current.id !== authUser.id || (expectedAuthUserId && current.id !== expectedAuthUserId)) {
+        throw new Error("Your signed-in account changed. Choose your profile photo again.");
+      }
+    };
+    if (expectedAuthUserId && authUser.id !== expectedAuthUserId) {
+      throw new Error("Your signed-in account changed. Choose your profile photo again.");
+    }
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (!sessionData.session || sessionData.session.user.id !== authUser.id) {
+      throw new Error("Your signed-in account changed. Choose your profile photo again.");
+    }
+    // Pin only this operation's row mapping/write to the validated identity. The
+    // shared client's session may change while an image is being downloaded.
+    const authorization = `Bearer ${sessionData.session.access_token}`;
+    const mapped = await supabase.rpc("get_current_legacy_user_id").setHeader("Authorization", authorization);
+    if (mapped.error) throw mapped.error;
+    const userId = positiveInteger(mapped.data, "legacy user id");
+    await assertIdentity();
+    const existing = await supabase
+      .from("tbl_users")
+      .select("profile_image")
+      .eq("id", userId)
+      .single()
+      .setHeader("Authorization", authorization);
+    if (existing.error) throw existing.error;
 
     const response = await fetch(uri);
     if (!response.ok) throw new Error("Could not read the selected avatar.");
     const buffer = await response.arrayBuffer();
-    if (buffer.byteLength > MAX_AVATAR_BYTES) {
-      throw new Error("Avatar must be 5 MB or smaller.");
+    if (buffer.byteLength <= 0 || buffer.byteLength > MAX_AVATAR_BYTES) {
+      throw new Error("Avatar must be a non-empty image no larger than 5 MB.");
     }
     const image = detectImage(new Uint8Array(buffer));
-    const path = `${user.id}/${randomUuid()}.${image.extension}`;
-    const uploadResult = await supabase.storage
-      .from(AVATAR_BUCKET)
-      .upload(path, buffer, {
-        contentType: image.contentType,
-        cacheControl: "31536000",
-        upsert: false,
-      });
-    if (uploadResult.error) throw uploadResult.error;
+    const path = `${authUser.id}/${randomUuid()}.${image.extension}`;
+    await assertIdentity();
+    const upload = await supabase.storage.from(AVATAR_BUCKET).upload(path, buffer, {
+      contentType: image.contentType,
+      cacheControl: "31536000",
+      upsert: false,
+    });
+    if (upload.error) throw upload.error;
 
-    const { data: publicData } = supabase.storage
+    const publicUrl = supabase.storage
       .from(AVATAR_BUCKET)
-      .getPublicUrl(path);
-    const updateResult = await supabase
-      .from("profiles")
-      .update({
-        avatar_url: publicData.publicUrl,
-        last_active_at: new Date().toISOString(),
-      })
-      .eq("id", user.id);
-    if (updateResult.error) {
+      .getPublicUrl(path).data.publicUrl;
+    await assertIdentity();
+    const updated = await supabase
+      .from("tbl_users")
+      .update({ profile_image: publicUrl })
+      .eq("id", userId)
+      .select("id")
+      .single()
+      .setHeader("Authorization", authorization);
+    if (updated.error) {
+      await assertIdentity();
       await supabase.storage.from(AVATAR_BUCKET).remove([path]);
-      throw updateResult.error;
+      throw updated.error;
     }
 
-    const oldPath = ownedAvatarPath(profileResult.data.avatar_url, user.id);
+    const oldPath = ownedAvatarPath(
+      nullableText(existing.data?.profile_image),
+      authUser.id,
+    );
     if (oldPath && oldPath !== path) {
+      await assertIdentity();
       await supabase.storage.from(AVATAR_BUCKET).remove([oldPath]);
     }
-    return publicData.publicUrl;
+    return publicUrl;
   },
 
   async listAvailableInterests(): Promise<Interest[]> {
     requireBackend();
     const { data, error } = await supabase
-      .from("interests")
-      .select("id,slug,name,icon")
+      .from("tbl_categories")
+      .select("id,name")
       .order("name", { ascending: true });
     if (error) throw error;
-    return (data ?? []) as Interest[];
+    return (data ?? []).map(mapInterest).map(item => ({ ...item, name: item.name.trim() }))
+      .filter(item => INTEREST_CATEGORIES.some(name => name === item.name));
   },
 
-  async setInterests(interestIds: string[]): Promise<Interest[]> {
-    const user = await currentUser();
-    const selected = [...new Set(interestIds)];
+  async setInterests(interestIds: Array<number | string>): Promise<Interest[]> {
+    const userId = await currentLegacyUserId();
+    const selected = [
+      ...new Set(interestIds.map((id) => positiveInteger(id, "interest id"))),
+    ];
     if (selected.length > 50) throw new Error("Select no more than 50 interests.");
 
-    const [catalogResult, currentResult] = await Promise.all([
-      selected.length
-        ? supabase
-            .from("interests")
-            .select("id,slug,name,icon")
-            .in("id", selected)
-        : Promise.resolve({ data: [] as Interest[], error: null }),
-      supabase
-        .from("profile_interests")
-        .select("interest_id")
-        .eq("profile_id", user.id),
-    ]);
-    const readError = catalogResult.error ?? currentResult.error;
-    if (readError) throw readError;
-    if ((catalogResult.data ?? []).length !== selected.length) {
+    const { data: catalog, error: catalogError } = selected.length
+      ? await supabase.from("tbl_categories").select("id,name").in("id", selected)
+      : { data: [], error: null };
+    if (catalogError) throw catalogError;
+    if ((catalog ?? []).length !== selected.length) {
       throw new Error("One or more interests are unavailable.");
     }
-
+    const { data: currentRows, error: currentError } = await supabase
+      .from("tbl_user_interests")
+      .select("category_id")
+      .eq("user_id", userId);
+    if (currentError) throw currentError;
     const current = new Set(
-      (currentResult.data ?? []).map((row) => row.interest_id as string),
+      (currentRows ?? []).map((row) => Number(row.category_id)),
     );
     const additions = selected.filter((id) => !current.has(id));
     const removals = [...current].filter((id) => !selected.includes(id));
+
+    if (removals.length) {
+      const { error } = await supabase
+        .from("tbl_user_interests")
+        .delete()
+        .eq("user_id", userId)
+        .in("category_id", removals);
+      if (error) throw error;
+    }
     if (additions.length) {
-      const { error } = await supabase.from("profile_interests").insert(
-        additions.map((interestId) => ({
-          profile_id: user.id,
-          interest_id: interestId,
+      const { error } = await supabase.from("tbl_user_interests").insert(
+        additions.map((categoryId) => ({
+          user_id: userId,
+          category_id: categoryId,
         })),
       );
       if (error) throw error;
     }
-    if (removals.length) {
-      const { error } = await supabase
-        .from("profile_interests")
-        .delete()
-        .eq("profile_id", user.id)
-        .in("interest_id", removals);
-      if (error) {
-        if (additions.length) {
-          await supabase
-            .from("profile_interests")
-            .delete()
-            .eq("profile_id", user.id)
-            .in("interest_id", additions);
-        }
-        throw error;
-      }
-    }
-    return (catalogResult.data ?? []) as Interest[];
+    return (catalog ?? [])
+      .map(mapInterest)
+      .sort((a, b) => a.name.localeCompare(b.name));
   },
 
   listSaved(options?: CursorOptions) {
-    return listContent("saves", options);
+    return listContent("tbl_event_saves", options);
   },
 
   listLiked(options?: CursorOptions) {
-    return listContent("likes", options);
+    return listContent("tbl_event_likes", options);
   },
 
   async listHistory(
     options: CursorOptions = {},
   ): Promise<CursorPage<HistoryItem>> {
-    const user = await currentUser();
+    const userId = await currentLegacyUserId();
     const limit = pageSize(options.limit);
     const before = validatedCursor(options.before);
     const queryLimit = limit + 1;
 
-    let activitiesQuery = supabase
-      .from("participants")
+    let hostedQuery = supabase
+      .from("tbl_events")
       .select(
-        "activity_id,status,role,created_at,updated_at,activity:activities(id,title,description,category,cover_url,location_name,starts_at,ends_at,status)",
+        "id,title,description,event_start_time,event_end_time,display_location,location,status,created_at,updated_at",
       )
-      .eq("user_id", user.id)
+      .eq("created_by", userId)
       .order("updated_at", { ascending: false })
       .limit(queryLimit);
-    let storiesQuery = supabase
-      .from("story_views")
+    let joinedQuery = supabase
+      .from("tbl_event_participants")
       .select(
-        "story_id,viewed_at,story:stories(id,owner_id,media_url,media_type,caption,created_at,expires_at)",
+        "id,event_id,status,created_at,joined_at,event:tbl_events(id,title,description,event_start_time,event_end_time,display_location,location,status)",
       )
-      .eq("viewer_id", user.id)
-      .order("viewed_at", { ascending: false })
-      .limit(queryLimit);
-    let sharesQuery = supabase
-      .from("content_shares")
-      .select(
-        "id,channel,created_at,vibe:vibes(id,caption,media_url,media_type),community_post:community_posts(id,title,body,media_url,media_type)",
-      )
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(queryLimit);
+    let storiesQuery = supabase
+      .from("tbl_story_views")
+      .select(
+        "story_id,viewed_at,story:tbl_stories(id,user_id,media_url,media_type,caption,created_at,expires_at)",
+      )
+      .eq("viewer_id", userId)
+      .order("viewed_at", { ascending: false })
+      .limit(queryLimit);
     if (before) {
-      activitiesQuery = activitiesQuery.lt("updated_at", before);
+      hostedQuery = hostedQuery.lt("updated_at", before);
+      joinedQuery = joinedQuery.lt("created_at", before);
       storiesQuery = storiesQuery.lt("viewed_at", before);
-      sharesQuery = sharesQuery.lt("created_at", before);
     }
-    const [activities, stories, shares] = await Promise.all([
-      activitiesQuery,
+
+    const [hosted, joined, stories] = await Promise.all([
+      hostedQuery,
+      joinedQuery,
       storiesQuery,
-      sharesQuery,
     ]);
-    const error = activities.error ?? stories.error ?? shares.error;
+    const error = hosted.error ?? joined.error ?? stories.error;
     if (error) throw error;
 
     const history: HistoryItem[] = [];
-    for (const row of activities.data ?? []) {
-      const record = asRecord(row);
-      const content = relationRecord(record.activity);
-      if (typeof content.id !== "string") continue;
+    for (const value of hosted.data ?? []) {
+      const row = asRecord(value);
       history.push({
-        id: `activity:${String(record.activity_id)}`,
+        id: `hosted:${positiveInteger(row.id, "event id")}`,
         type: "activity",
-        occurredAt: String(record.updated_at),
-        action: String(record.status ?? "participated"),
-        content,
+        occurredAt: String(row.updated_at ?? row.created_at ?? ""),
+        action: "hosted",
+        content: row,
       });
     }
-    for (const row of stories.data ?? []) {
-      const record = asRecord(row);
-      const content = relationRecord(record.story);
-      if (typeof content.id !== "string") continue;
+    for (const value of joined.data ?? []) {
+      const row = asRecord(value);
+      const event = relationRecord(row.event);
+      if (event.id === undefined || event.id === null) continue;
       history.push({
-        id: `story:${String(record.story_id)}`,
+        id: `joined:${positiveInteger(row.id, "participant id")}`,
+        type: "activity",
+        occurredAt: String(row.joined_at ?? row.created_at ?? ""),
+        action: `joined:${String(row.status ?? "pending")}`,
+        content: event,
+      });
+    }
+    for (const value of stories.data ?? []) {
+      const row = asRecord(value);
+      const story = relationRecord(row.story);
+      if (story.id === undefined || story.id === null) continue;
+      history.push({
+        id: `story:${positiveInteger(row.story_id, "story id")}`,
         type: "story",
-        occurredAt: String(record.viewed_at),
+        occurredAt: String(row.viewed_at ?? ""),
         action: "viewed",
-        content,
-      });
-    }
-    for (const row of shares.data ?? []) {
-      const record = asRecord(row);
-      const content = relationRecord(record.vibe ?? record.community_post);
-      if (typeof content.id !== "string") continue;
-      history.push({
-        id: `share:${String(record.id)}`,
-        type: "share",
-        occurredAt: String(record.created_at),
-        action: `shared:${String(record.channel)}`,
-        content,
+        content: story,
       });
     }
     history.sort((a, b) => b.occurredAt.localeCompare(a.occurredAt));
@@ -676,298 +876,130 @@ export const profileProductionService = {
   },
 
   async getPrivacyPreferences(): Promise<PrivacyPreferences> {
-    const user = await currentUser();
-    const existing = await supabase
-      .from("privacy_preferences")
-      .select("*")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (existing.error) throw existing.error;
-    if (existing.data) return existing.data as PrivacyPreferences;
-    const created = await supabase
-      .from("privacy_preferences")
-      .insert({ user_id: user.id })
-      .select("*")
-      .single();
-    if (created.error) throw created.error;
-    return created.data as PrivacyPreferences;
+    await currentUser();
+    return readPrivacy();
   },
 
   async updatePrivacyPreferences(
     input: PrivacyPreferenceInput,
   ): Promise<PrivacyPreferences> {
-    const user = await currentUser();
-    return updatePreferencesForUser(user.id, input);
+    await currentUser();
+    return writePrivacy(input);
+  },
+
+  async getVerificationState(): Promise<VerificationState> {
+    const authUser = await currentUser();
+    const userId = await currentLegacyUserId();
+    const [profile, badges, verifications] = await Promise.all([
+      supabase
+        .from("tbl_users")
+        .select("fullname,profile_image,bio,about,dob,rating,isverified")
+        .eq("id", userId)
+        .single(),
+      supabase
+        .from("tbl_user_badges")
+        .select(
+          "awarded_at,badge:tbl_badges!tbl_user_badges_badge_id_fkey(id,slug,name,description,icon)",
+        )
+        .eq("user_id", userId)
+        .order("awarded_at", { ascending: false }),
+      supabase.rpc("list_user_verifications"),
+    ]);
+    const error = profile.error ?? badges.error ?? verifications.error;
+    if (error) throw error;
+
+    const profileRow = asRecord(profile.data);
+    const requests = Array.isArray(verifications.data)
+      ? verifications.data.map(asRecord)
+      : [];
+    const latest = requests[0];
+    const status = latest
+      ? (String(latest.status ?? "draft") as VerificationState["status"])
+      : Number(profileRow.isverified ?? 0) === 1
+        ? "approved"
+        : "unsubmitted";
+
+    return {
+      trustScore: Number(profileRow.rating ?? 0),
+      emailVerified: Boolean(authUser.email_confirmed_at),
+      phoneVerified:
+        Boolean(authUser.phone_confirmed_at) ||
+        requests.some((row) => row.phone_verified === true),
+      profileComplete: Boolean(
+        profileRow.fullname &&
+          profileRow.profile_image &&
+          (profileRow.bio || profileRow.about) &&
+          profileRow.dob,
+      ),
+      badges: mapBadges(badges.data ?? []),
+      status,
+      latestRequestId: latest
+        ? positiveInteger(latest.id, "verification request id")
+        : null,
+      reviewNotes: latest ? String(latest.review_notes ?? "") : "",
+    };
   },
 
   async listConsentHistory(
-    purpose?: ConsentPurpose,
-    options: CursorOptions = {},
+    _purpose?: ConsentPurpose,
+    _options: CursorOptions = {},
   ): Promise<CursorPage<ConsentRecord>> {
-    const user = await currentUser();
-    const limit = pageSize(options.limit);
-    const before = validatedCursor(options.before);
-    let query = supabase
-      .from("user_consents")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(limit + 1);
-    if (purpose) query = query.eq("purpose", purpose);
-    if (before) query = query.lt("created_at", before);
-    const { data, error } = await query;
-    if (error) throw error;
-    const rows = (data ?? []) as ConsentRecord[];
-    const items = rows.slice(0, limit);
-    return {
-      items,
-      nextCursor: rows.length > limit ? items.at(-1)?.created_at ?? null : null,
-    };
+    return unsupported("Consent history");
   },
 
   async getCurrentConsents(): Promise<
     Partial<Record<ConsentPurpose, ConsentRecord>>
   > {
-    const user = await currentUser();
-    const { data, error } = await supabase
-      .from("user_consents")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    const current: Partial<Record<ConsentPurpose, ConsentRecord>> = {};
-    for (const consent of (data ?? []) as ConsentRecord[]) {
-      if (!current[consent.purpose]) current[consent.purpose] = consent;
-    }
-    return current;
+    return unsupported("Consent records");
   },
 
   async recordConsent(
-    purpose: ConsentPurpose,
-    granted: boolean,
-    policyVersion: string,
+    _purpose: ConsentPurpose,
+    _granted: boolean,
+    _policyVersion: string,
   ): Promise<ConsentRecord> {
-    const user = await currentUser();
-    const version = policyVersion.trim();
-    if (!version || version.length > 100) {
-      throw new Error("A valid policy version is required.");
-    }
-    const preference = preferenceConsentPurposes[purpose];
-
-    // Withdrawals stop optional processing before the append-only audit write.
-    if (!granted && preference) {
-      await updatePreferencesForUser(user.id, { [preference]: false });
-    }
-    const { data, error } = await supabase
-      .from("user_consents")
-      .insert({
-        user_id: user.id,
-        purpose,
-        granted,
-        policy_version: version,
-        source: "app",
-      })
-      .select("*")
-      .single();
-    if (error) throw error;
-
-    // Grants only enable optional processing after the audit write succeeds.
-    if (granted && preference) {
-      await updatePreferencesForUser(user.id, { [preference]: true });
-    }
-    return data as ConsentRecord;
+    return unsupported("Consent recording");
   },
 
   async listBlockedUsers(): Promise<
     Array<{ blockedAt: string; profile: Record<string, unknown> }>
   > {
-    const user = await currentUser();
-    const { data, error } = await supabase
-      .from("user_blocks")
-      .select(
-        "created_at,profile:profiles!user_blocks_blocked_id_fkey(id,username,full_name,avatar_url)",
-      )
-      .eq("blocker_id", user.id)
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    return (data ?? []).map((row) => {
-      const record = asRecord(row);
-      return {
-        blockedAt: String(record.created_at),
-        profile: relationRecord(record.profile),
-      };
-    });
+    return unsupported("Blocked users");
   },
 
-  async blockUser(blockedUserId: string): Promise<void> {
-    const user = await currentUser();
-    if (!blockedUserId || blockedUserId === user.id) {
-      throw new Error("Select another user to block.");
-    }
-    const { error } = await supabase.from("user_blocks").upsert(
-      { blocker_id: user.id, blocked_id: blockedUserId },
-      { onConflict: "blocker_id,blocked_id", ignoreDuplicates: true },
-    );
-    if (error) throw error;
+  async blockUser(_blockedUserId: number | string): Promise<void> {
+    return unsupported("User blocking");
   },
 
-  async unblockUser(blockedUserId: string): Promise<void> {
-    const user = await currentUser();
-    const { error } = await supabase
-      .from("user_blocks")
-      .delete()
-      .eq("blocker_id", user.id)
-      .eq("blocked_id", blockedUserId);
-    if (error) throw error;
+  async unblockUser(_blockedUserId: number | string): Promise<void> {
+    return unsupported("User unblocking");
   },
 
-  async reportContent(input: {
+  async reportContent(_input: {
     target: ReportTarget;
     reason: ReportReason;
     details?: string;
   }): Promise<ContentReport> {
-    const user = await currentUser();
-    if (!input.target.id) throw new Error("A report target is required.");
-    if (input.target.type === "user" && input.target.id === user.id) {
-      throw new Error("You cannot report your own profile.");
-    }
-    const details = cleanText(input.details, "Report details", 2000) ?? "";
-    if (input.reason === "other" && !details) {
-      throw new Error("Please add details for this report.");
-    }
-    const targetColumn = {
-      user: "subject_user_id",
-      vibe: "vibe_id",
-      community_post: "community_post_id",
-      message: "message_id",
-    }[input.target.type];
-    const { data, error } = await supabase
-      .from("content_reports")
-      .insert({
-        reporter_id: user.id,
-        [targetColumn]: input.target.id,
-        reason: input.reason,
-        details,
-      })
-      .select("*")
-      .single();
-    if (error) throw error;
-    return data as ContentReport;
+    return unsupported("Content reporting");
   },
 
-  async listReports(options: CursorOptions = {}): Promise<CursorPage<ContentReport>> {
-    const user = await currentUser();
-    const limit = pageSize(options.limit);
-    const before = validatedCursor(options.before);
-    let query = supabase
-      .from("content_reports")
-      .select("*")
-      .eq("reporter_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(limit + 1);
-    if (before) query = query.lt("created_at", before);
-    const { data, error } = await query;
-    if (error) throw error;
-    const rows = (data ?? []) as ContentReport[];
-    const items = rows.slice(0, limit);
-    return {
-      items,
-      nextCursor: rows.length > limit ? items.at(-1)?.created_at ?? null : null,
-    };
-  },
-
-  async getVerificationState(): Promise<VerificationState> {
-    const user = await currentUser();
-    const [profileResult, badgesResult] = await Promise.all([
-      supabase
-        .from("profiles")
-        .select("full_name,avatar_url,bio,date_of_birth,trust_score")
-        .eq("id", user.id)
-        .single(),
-      supabase
-        .from("user_badges")
-        .select("awarded_at,badges(id,slug,name,description,icon)")
-        .eq("user_id", user.id)
-        .order("awarded_at", { ascending: false }),
-    ]);
-    const error = profileResult.error ?? badgesResult.error;
-    if (error) throw error;
-    const profile = profileResult.data;
-    if (!profile) throw new Error("Profile not found.");
-    return {
-      trustScore: Number(profile.trust_score),
-      emailVerified: Boolean(user.email_confirmed_at),
-      phoneVerified: Boolean(user.phone_confirmed_at),
-      profileComplete: Boolean(
-        profile.full_name &&
-          profile.avatar_url &&
-          profile.bio &&
-          profile.date_of_birth,
-      ),
-      badges: mapBadges(badgesResult.data ?? []),
-    };
+  async listReports(
+    _options: CursorOptions = {},
+  ): Promise<CursorPage<ContentReport>> {
+    return unsupported("Content report history");
   },
 
   async submitDataSubjectRequest(
-    requestType: DataSubjectRequestType,
-    details = "",
+    _requestType: DataSubjectRequestType,
+    _details = "",
   ): Promise<DataSubjectRequest> {
-    const user = await currentUser();
-    const cleanedDetails = cleanText(details, "Request details", 4000) ?? "";
-    if (
-      (requestType === "correction" || requestType === "grievance") &&
-      !cleanedDetails
-    ) {
-      throw new Error("Please describe the correction or grievance.");
-    }
-    const active = await supabase
-      .from("data_subject_requests")
-      .select("id,status")
-      .eq("user_id", user.id)
-      .eq("request_type", requestType)
-      .in("status", ["submitted", "in_review"])
-      .limit(1)
-      .maybeSingle();
-    if (active.error) throw active.error;
-    if (active.data) {
-      throw new Error(`An active ${requestType} request already exists.`);
-    }
-
-    // Erasure is deliberately a reviewable request, never an immediate client delete.
-    const { data, error } = await supabase
-      .from("data_subject_requests")
-      .insert({
-        user_id: user.id,
-        request_type: requestType,
-        details: cleanedDetails,
-      })
-      .select("*")
-      .single();
-    if (error) throw error;
-    return data as DataSubjectRequest;
+    return unsupported("Data-subject requests");
   },
 
   async listDataSubjectRequests(
-    options: CursorOptions = {},
+    _options: CursorOptions = {},
   ): Promise<CursorPage<DataSubjectRequest>> {
-    const user = await currentUser();
-    const limit = pageSize(options.limit);
-    const before = validatedCursor(options.before);
-    let query = supabase
-      .from("data_subject_requests")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(limit + 1);
-    if (before) query = query.lt("created_at", before);
-    const { data, error } = await query;
-    if (error) throw error;
-    const rows = (data ?? []) as DataSubjectRequest[];
-    const items = rows.slice(0, limit);
-    return {
-      items,
-      nextCursor: rows.length > limit ? items.at(-1)?.created_at ?? null : null,
-    };
+    return unsupported("Data-subject request history");
   },
 };
 
