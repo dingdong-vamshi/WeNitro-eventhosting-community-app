@@ -1,3 +1,4 @@
+import { VibeIntroSlide } from "./vibe-intro-slide";
 import React, { useEffect, useRef, useState } from "react";
 import { AccessibilityInfo, ActivityIndicator, Animated, Image, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -93,36 +94,6 @@ function IntroArtwork() {
   </View>;
 }
 
-function VibeIntroArtwork() {
-  const float = useRef(new Animated.Value(0)).current;
-  const reduced = useReducedMotion();
-  useEffect(() => {
-    if (reduced) { float.setValue(0); return; }
-    const loop = Animated.loop(Animated.sequence([
-      Animated.timing(float, { toValue: 1, duration: 2400, useNativeDriver: Platform.OS !== "web" }),
-      Animated.timing(float, { toValue: 0, duration: 2400, useNativeDriver: Platform.OS !== "web" }),
-    ]));
-    loop.start();
-    return () => loop.stop();
-  }, [float, reduced]);
-  return <View style={s.vibeArtwork} accessibilityLabel="Illustration of a phone showing stacked WeNitro Vibes">
-    <View style={s.vibeGlowPurple} /><View style={s.vibeGlowCyan} />
-    <Animated.View style={[s.vibePhone, { transform: [{ rotate: "-16deg" }, { translateY: float.interpolate({ inputRange: [0, 1], outputRange: [0, -7] }) }] }]}>
-      <View style={s.vibePhoneTop}><Text style={s.vibeClock}>11:10</Text><View style={s.vibeSpeaker} /><Ionicons name="settings-outline" size={16} color="#A8ADBA" /></View>
-      <Text style={s.vibeWordmark}>Vibes</Text>
-      <View style={[s.vibeCard, { borderColor: "#27C4D9", transform: [{ translateX: 30 }, { rotate: "7deg" }] }]}>
-        <Image source={photos.workout} style={s.vibeMedia} />
-        <View style={s.vibeCardCopy}><Text style={s.vibeUser}>@UrbanGroove</Text><Text style={s.vibeCaption}>🔥 Night Rhythms…</Text><Text style={s.vibeTags}>#vibes  #reels</Text></View>
-        <View style={s.vibeControls}><Ionicons name="play" size={12} color="white" /><View style={s.vibeProgress}><View style={s.vibeProgressFill} /></View><Ionicons name="volume-high" size={13} color="white" /></View>
-      </View>
-      <View style={[s.vibeCard, s.vibeCardBack, { borderColor: "#705FF5" }]}><Image source={photos.cycling} style={s.vibeMedia} /><Text style={s.vibeUser}>@StreetBeats</Text></View>
-      <View style={[s.vibeCard, s.vibeCardFar, { borderColor: "#2D5867" }]}><Image source={photos.travel} style={s.vibeMedia} /><Text style={s.vibeUser}>@SynthFlow</Text></View>
-      <View style={s.vibePhoneNav}>{["home-outline", "search-outline", "add-circle-outline", "people-outline", "radio-outline"].map((name, index) => <Ionicons key={name} name={name as keyof typeof Ionicons.glyphMap} color={index === 4 ? "#20D4E2" : "#756BFA"} size={19} />)}</View>
-    </Animated.View>
-    <LinearGradient colors={["transparent", "#090C12"]} style={s.artFade} />
-  </View>;
-}
-
 export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   const { width, height } = useWindowDimensions();
   const pageWidth = Math.min(width, MOBILE_APP_MAX_WIDTH);
@@ -140,14 +111,14 @@ export function IntroScreen({ onContinue }: { onContinue: () => void }) {
     }
     finish();
   };
-  const pageContent = (slide: 0 | 1) => <View style={[s.introContent, { width: pageWidth, minHeight: height }]}> 
+  const pageContent = (slide: 0 | 1) => slide === 0 ? <VibeIntroSlide width={pageWidth} height={height} reducedMotion={reduced} onNext={next} onSkip={finish} /> : <View style={[s.introContent, { width: pageWidth, minHeight: height }]}>
     <View style={s.introHeader}><View style={s.brandRow}><Image source={logo} style={{ width: 31, height: 31 }} /><Text style={s.introBrand}><Text style={{ color: purple }}>We</Text>Nitro</Text></View><Pressable onPress={finish} accessibilityRole="button" style={s.skip}><Text style={s.skipText}>Skip</Text></Pressable></View>
-    {slide === 0 ? <VibeIntroArtwork /> : <IntroArtwork />}
-    <View style={s.introCopy}>{slide === 0 ? <><Text style={s.introHeadline}>Share Your Vibe{"\n"}<Text style={{ color: purple }}>With the World</Text></Text><Text style={s.introDescription}>Post videos, pictures, and check out what your <Text style={{ color: purple, fontWeight: "700" }}>squad</Text> is hosting and participating in.</Text></> : <><Text style={s.introHeadline}>Real Connections{"\n"}<Text style={{ color: purple }}>Start Here</Text></Text><Text style={s.introDescription}>Join activities, meet amazing people, and create <Text style={{ color: purple, fontWeight: "700" }}>unforgettable memories.</Text></Text></>}</View>
+    <IntroArtwork />
+    <View style={s.introCopy}><Text style={s.introHeadline}>Real Connections{"\n"}<Text style={{ color: purple }}>Start Here</Text></Text><Text style={s.introDescription}>Join activities, meet amazing people, and create <Text style={{ color: purple, fontWeight: "700" }}>unforgettable memories.</Text></Text></View>
     <View style={s.introFooter}><Text style={s.swipe}>⤺  Swipe to explore  ⟶</Text><GradientButton label="Next" onPress={next} arrow /></View>
   </View>;
   return <Animated.View style={{ flex: 1, opacity: exit.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }), transform: [{ translateX: exit.interpolate({ inputRange: [0, 1], outputRange: [0, -22] }) }] }}><SafeAreaView style={[s.full, { backgroundColor: "#090C12" }]} edges={["top", "bottom"]}>
-    <ScrollView ref={pager} horizontal pagingEnabled showsHorizontalScrollIndicator={false} bounces={false} scrollEventThrottle={16} onMomentumScrollEnd={event => setPage(Math.round(event.nativeEvent.contentOffset.x / pageWidth))} style={{ width: pageWidth, alignSelf: "center" }} testID="intro-pager">
+    <ScrollView ref={pager} horizontal pagingEnabled showsHorizontalScrollIndicator={false} bounces={false} scrollEventThrottle={16} onScroll={event => setPage(Math.max(0, Math.min(1, Math.round(event.nativeEvent.contentOffset.x / pageWidth))))} onMomentumScrollEnd={event => setPage(Math.round(event.nativeEvent.contentOffset.x / pageWidth))} style={{ width: pageWidth, alignSelf: "center" }} testID="intro-pager">
       {pageContent(0)}
       {pageContent(1)}
     </ScrollView>
@@ -283,7 +254,6 @@ const s = StyleSheet.create({
   splashDots: { position: "absolute", bottom: 55, alignSelf: "center", flexDirection: "row", gap: 9 }, dot: { width: 9, height: 9, borderRadius: 6, backgroundColor: "#BBB5F8" },
   introContent: { paddingHorizontal: 23, paddingTop: 23, paddingBottom: 24 }, introHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", zIndex: 2 }, brandRow: { flexDirection: "row", alignItems: "center", gap: 7 }, introBrand: { color: "white", fontSize: 23, fontWeight: "800" }, skip: { paddingVertical: 9, paddingHorizontal: 17, borderRadius: 24, backgroundColor: "#1B1C20", borderWidth: 1, borderColor: "#35363A" }, skipText: { color: "white", fontSize: 14, fontWeight: "600" },
   artwork: { height: 445, marginHorizontal: -23, marginTop: 14, overflow: "hidden" }, artGlowPurple: { position: "absolute", backgroundColor: "#4234A7", boxShadow: "0 0 65px 30px #4234A7", opacity: .08, width: 320, height: 360, borderRadius: 180, left: -30, top: 60 }, artGlowCyan: { position: "absolute", backgroundColor: "#1C7582", boxShadow: "0 0 65px 30px #1C7582", opacity: .08, width: 270, height: 380, borderRadius: 180, right: -55, top: 20 }, artBoard: { width: 430, left: -15, top: 110, padding: 12, borderRadius: 18, backgroundColor: "#151D26", borderWidth: 1, borderColor: "#253F4B" }, artHeader: { flexDirection: "row", alignItems: "center", gap: 7, paddingBottom: 14 }, artLogo: { color: "#6474FF", fontSize: 28, fontWeight: "900" }, artBrand: { color: "#ECECF5", fontSize: 17, fontWeight: "700", flex: 1 }, artRow: { zIndex: 1, flexDirection: "row", gap: 9 }, artCard: { width: 195, padding: 10, borderRadius: 14, borderWidth: 1, backgroundColor: "#111820" }, artUser: { color: "#BDC1CC", fontSize: 10, fontWeight: "600" }, artTitle: { color: "#F0F1F5", fontSize: 13, fontWeight: "700", marginVertical: 6 }, artPhoto: { width: "100%", height: 106, borderRadius: 10, marginBottom: 7 }, artMuted: { color: "#7F858F", fontSize: 10 }, artStats: { flexDirection: "row", justifyContent: "space-between", marginTop: 10 }, artLike: { color: "#7662F7", fontSize: 11 }, artDetails: { backgroundColor: "#282D33", borderColor: "#444951", borderWidth: 1, borderRadius: 16, padding: 7, marginTop: 9, alignItems: "center", flexDirection: "row", justifyContent: "space-evenly" }, artSmall: { zIndex: 1, marginTop: -18, marginLeft: 110, width: 195, borderColor: "#333243" }, artNav: { flexDirection: "row", justifyContent: "space-evenly", paddingVertical: 13 }, artFade: { height: 60, bottom: 0, left: 0, right: 0, position: "absolute" },
-  vibeArtwork: { height: 445, marginHorizontal: -23, marginTop: 14, overflow: "hidden" }, vibeGlowPurple: { position: "absolute", left: 42, top: 40, width: 280, height: 330, borderRadius: 150, backgroundColor: "#5B4DE8", opacity: .1, boxShadow: "0 0 70px 35px #5B4DE8" }, vibeGlowCyan: { position: "absolute", right: -65, top: 70, width: 230, height: 300, borderRadius: 140, backgroundColor: "#18C9DE", opacity: .1, boxShadow: "0 0 65px 28px #18C9DE" }, vibePhone: { width: 337, height: 430, left: 66, top: 52, borderRadius: 39, padding: 20, backgroundColor: "#101720", borderWidth: 2, borderColor: "#242D39", boxShadow: "0 24px 55px #000000AA" }, vibePhoneTop: { height: 30, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }, vibeClock: { color: "#D7DAE2", fontSize: 9, fontWeight: "700" }, vibeSpeaker: { width: 54, height: 8, borderRadius: 5, backgroundColor: "#05070A" }, vibeWordmark: { color: "#7060EF", fontSize: 29, fontWeight: "900", marginBottom: 8 }, vibeCard: { position: "absolute", left: 48, top: 92, width: 232, height: 256, borderRadius: 22, borderWidth: 1.5, backgroundColor: "#151D27", padding: 9, overflow: "hidden", zIndex: 3 }, vibeCardBack: { left: 24, top: 118, zIndex: 2, transform: [{ rotate: "-2deg" }] }, vibeCardFar: { left: 2, top: 144, zIndex: 1, transform: [{ rotate: "-8deg" }] }, vibeMedia: { width: "100%", height: 148, borderRadius: 16 }, vibeCardCopy: { paddingTop: 8, gap: 2 }, vibeUser: { color: "#D7DAE2", fontSize: 10, fontWeight: "700", paddingTop: 5 }, vibeCaption: { color: "#F4F5F7", fontSize: 11 }, vibeTags: { color: "#8F80FF", fontSize: 9 }, vibeControls: { marginTop: 7, flexDirection: "row", alignItems: "center", gap: 6 }, vibeProgress: { flex: 1, height: 3, borderRadius: 2, backgroundColor: "#3A4250" }, vibeProgressFill: { width: "55%", height: 3, borderRadius: 2, backgroundColor: "#22D1E3" }, vibePhoneNav: { position: "absolute", left: 20, right: 20, bottom: 17, flexDirection: "row", justifyContent: "space-between" },
   introCopy: { marginHorizontal: 7, marginTop: -3 }, introHeadline: { color: "#FFF", fontSize: 35, fontWeight: "800", lineHeight: 42, letterSpacing: -1 }, introDescription: { fontSize: 15, lineHeight: 23, color: "#AEB0B7", marginTop: 14 }, introFooter: { marginTop: "auto", paddingTop: 28 }, swipe: { color: "#756BFA", textAlign: "center", fontSize: 14, fontWeight: "600", fontStyle: "italic", marginBottom: 22 },
   welcomeOrb: { position: "absolute", width: 288, height: 288, top: -65, left: -51, borderRadius: 170, backgroundColor: "#211B53", opacity: .65 }, welcomeContent: { alignItems: "center", paddingHorizontal: 21 }, welcomeBrand: { color: "#F9F9FC", fontSize: 31, fontWeight: "800", marginTop: 31 }, welcomeSubtitle: { fontSize: 13, color: "#9CA0AB", fontWeight: "700", letterSpacing: 1.4, marginTop: 5 }, welcomeCard: { width: "100%", backgroundColor: "#181927", borderRadius: 30, borderWidth: 1.5, borderColor: "#30313F", paddingHorizontal: 30, paddingTop: 32, paddingBottom: 32, marginTop: 40 }, welcomeTitle: { textAlign: "center", color: "white", fontSize: 27, fontWeight: "700" }, welcomeSupport: { color: "#AAACB8", textAlign: "center", fontSize: 13, lineHeight: 21, marginTop: 10, marginHorizontal: -12 }, googleSlot: { marginTop: 39, minHeight: 54 }, legalText: { color: "#AAADBA", fontSize: 10, lineHeight: 16, textAlign: "center", marginTop: 26, marginHorizontal: -5 }, legalLink: { color: "#8981FA", textDecorationLine: "underline", fontWeight: "600" },
   gradientButton: { borderRadius: 30, overflow: "hidden", minHeight: 51 }, gradientFill: { minHeight: 51, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 12, paddingHorizontal: 15, paddingVertical: 12 }, gradientLabel: { fontSize: 17, color: "white", fontWeight: "700" },
