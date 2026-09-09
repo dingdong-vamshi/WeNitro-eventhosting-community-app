@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import ts from 'typescript';
+// Exercise the existing production mapper against actual legacy enum values.
+const source = fs.readFileSync('src/services/profile-production.ts', 'utf8');
+const js = ts.transpile(source, { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 });
+const calls = [];
+let row = { user_id: 44, profile_visibility: 'public', email_visibility: 'everyone', phone_visibility: 'none', message_visibility: 'friends', show_online_status: false };
+const backend = { rpc: async (name, args) => { calls.push({ name, args }); return { data: row, error: null }; }, auth: { getUser: async () => ({ data: { user: { id: 'fake-test-identity' } } }) } };
+const exports = {};
+new Function('exports', 'require', js)(exports, name => { if (name === '../domain/interest-categories') return { INTEREST_CATEGORIES: [] }; assert.equal(name, '../lib/supabase'); return { isSupabaseConfigured: true, supabase: backend }; });
+const service = exports.profileProductionService;
+const mapped = await service.getPrivacyPreferences();
+assert.equal(mapped.email_visibility, 'public');
+assert.equal(mapped.phone_visibility, 'private');
+assert.equal(mapped.message_visibility, 'friends');
+assert.equal(mapped.show_online_status, false);
+assert.equal(mapped.marketing, false);
+await service.updatePrivacyPreferences({ email_visibility: 'private', phone_visibility: 'public', profile_visibility: 'friends', show_online_status: true });
+assert.deepEqual(calls.at(-1).args, { p_profile_visibility: 'friends', p_email_visibility: 'private', p_phone_visibility: 'public', p_message_visibility: null, p_show_online_status: true });
+row = { ...row, email_visibility: 'friends', phone_visibility: 'everyone' };
+assert.equal((await service.getPrivacyPreferences()).phone_visibility, 'public');
+row = { ...row, email_visibility: 'not-an-audience' };
+await assert.rejects(() => service.getPrivacyPreferences(), /invalid email visibility/);
+console.log('PASS: legacy contact audiences, private defaults, server update payload, invalid audience rejection. No remote requests.');

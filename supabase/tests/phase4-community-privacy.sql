@@ -1,0 +1,57 @@
+-- One existing designated QA community, one poll and one text message; ALL changes roll back.
+begin;
+set local role authenticated;
+select set_config('request.jwt.claims','{"sub":"3eaa15aa-2a8e-49b3-ae37-aef126239680","role":"authenticated"}',true);
+do $$
+declare rid integer:=132; poll jsonb; pid integer; cid uuid:=gen_random_uuid(); options jsonb; mid bigint; result jsonb; denied boolean; before_count integer;
+begin
+ if not exists(select 1 from public.tbl_chat_rooms where id=rid and title like '[QA] WeNitro Community%' and created_by=35) then raise exception 'QA guard failed'; end if;
+ perform public.community_manage(rid,'preferences','{"verified_only":false,"requires_approval":true,"admins_only":true}');
+ perform public.community_manage(rid,'edit','{"name":"[QA] WeNitro Community permission check","description":"Temporary transaction-only permission check.","category":"Career"}');
+ if (select category_id from public.tbl_chat_rooms where id=rid)<>(select id from public.tbl_categories where trim(name)='Career' order by id limit 1) then raise exception 'Category normalization failed'; end if;
+ poll:=public.community_poll('create',rid,jsonb_build_object('question','[QA] Phase 4 poll','options',jsonb_build_array('Morning','Evening'),'client_id',cid));
+ pid:=(poll->0->>'id')::integer; options:=poll->0->'options'; mid:=(poll->0->>'message_id')::bigint;
+ if pid is null or mid is null or jsonb_array_length(options)<>2 then raise exception 'Poll persistence failed'; end if;
+ result:=public.community_poll('create',rid,jsonb_build_object('question','[QA] Phase 4 poll','options',jsonb_build_array('Morning','Evening'),'client_id',cid));
+ if (result->0->>'id')::integer<>pid then raise exception 'Duplicate submission guard failed'; end if;
+ denied:=false; begin perform public.community_poll('create',rid,jsonb_build_object('question','','options',jsonb_build_array('One','Two'),'client_id',gen_random_uuid())); exception when others then denied:=true; end; if not denied then raise exception 'Blank poll accepted'; end if;
+ denied:=false; begin perform public.community_poll('create',rid,jsonb_build_object('question','Too many','options',jsonb_build_array('1','2','3','4','5','6','7'),'client_id',gen_random_uuid())); exception when others then denied:=true; end; if not denied then raise exception 'Seven options accepted'; end if;
+ perform public.send_chat_message(rid,gen_random_uuid(),'[QA] Phase 4 transaction-only text');
+ perform set_config('request.jwt.claims','{"sub":"1f7afcc7-b00a-48f1-9945-f8cb8c215d08","role":"authenticated"}',true);
+ denied:=false; begin perform public.community_poll('list',rid,jsonb_build_object('poll_ids',jsonb_build_array(pid))); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Outsider read poll'; end if;
+ result:=public.community_join(rid); if result->>'status'<>'pending' or public.is_chat_member(rid) then raise exception 'Approval join bypass'; end if;
+ perform set_config('request.jwt.claims','{"sub":"3eaa15aa-2a8e-49b3-ae37-aef126239680","role":"authenticated"}',true);
+ perform public.community_manage(rid,'preferences','{"verified_only":true}');
+ denied:=false; begin perform public.community_manage(rid,'approve','{"user_id":47}'); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Unverified approval allowed'; end if;
+ perform set_config('request.jwt.claims','{"sub":"1f7afcc7-b00a-48f1-9945-f8cb8c215d08","role":"authenticated"}',true);
+ denied:=false; begin perform public.community_join(rid); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Unverified join allowed'; end if;
+ perform set_config('request.jwt.claims','{"sub":"3eaa15aa-2a8e-49b3-ae37-aef126239680","role":"authenticated"}',true);
+ perform public.community_manage(rid,'preferences','{"verified_only":false}'); perform public.community_manage(rid,'approve','{"user_id":47}');
+ perform set_config('request.jwt.claims','{"sub":"1f7afcc7-b00a-48f1-9945-f8cb8c215d08","role":"authenticated"}',true);
+ if not public.is_chat_member(rid) then raise exception 'Approved membership missing'; end if;
+ denied:=false; begin perform public.send_chat_message(rid,gen_random_uuid(),'must fail'); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Member posted in announcements'; end if;
+ denied:=false; begin perform public.send_chat_message(rid,gen_random_uuid(),'','video','forbidden.mp4'); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Member shared video in announcements'; end if;
+ denied:=false; begin perform public.community_poll('create',rid,jsonb_build_object('question','forbidden','options',jsonb_build_array('One','Two'),'client_id',gen_random_uuid())); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Member created announcements poll'; end if;
+ denied:=false; begin perform public.community_manage(rid,'delete','{"confirmed":true}'); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Member deleted community'; end if;
+ denied:=false; begin insert into public.tbl_chat_poll_votes(poll_id,option_id,user_id) values(pid,(options->0->>'id')::integer,35); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Vote identity spoof accepted'; end if;
+ result:=public.community_poll('vote',rid,jsonb_build_object('poll_id',pid,'option_id',(options->0->>'id')::integer));
+ result:=public.community_poll('vote',rid,jsonb_build_object('poll_id',pid,'option_id',(options->1->>'id')::integer));
+ if (result->0->>'total_votes')::integer<>1 or (result->0->'options'->1->>'percentage')::numeric<>100 or (result->0->'options'->0->>'votes')::integer<>0 then raise exception 'Vote change/count failed'; end if;
+ denied:=false; begin perform public.community_poll('vote',rid,jsonb_build_object('poll_id',pid,'option_id',-1)); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Cross-poll option accepted'; end if;
+ perform public.update_user_privacy_settings('friends','private','private','none',false);
+ if array_length(public.visible_online_users(array[47]),1) is not null then raise exception 'Hidden presence exposed'; end if;
+ perform set_config('request.jwt.claims','{"sub":"3eaa15aa-2a8e-49b3-ae37-aef126239680","role":"authenticated"}',true);
+ if exists(select 1 from public.tbl_users where id=47) then raise exception 'Private profile exposed in table'; end if;
+ denied:=false; begin perform public.profile_contact(47); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Private contact exposed'; end if;
+ denied:=false; begin perform public.create_direct_chat_room(47); exception when insufficient_privilege then denied:=true; end; if not denied then raise exception 'Messaging privacy bypass'; end if;
+ perform set_config('request.jwt.claims','{"sub":"1f7afcc7-b00a-48f1-9945-f8cb8c215d08","role":"authenticated"}',true);
+ perform public.update_user_privacy_settings('public','private','private','everyone',false);
+ perform set_config('request.jwt.claims','{"sub":"3eaa15aa-2a8e-49b3-ae37-aef126239680","role":"authenticated"}',true);
+ result:=public.profile_contact(47); if result->>'email' is not null or result->>'phone' is not null then raise exception 'Private contact columns not masked'; end if;
+ denied:=false; begin perform public.community_manage(rid,'delete','{"confirmed":false}'); exception when others then denied:=true; end; if not denied then raise exception 'Deletion confirmation bypass'; end if;
+ -- Deletion itself is tested only on the designated QA room and rolled back by a subtransaction.
+ begin perform public.community_manage(rid,'delete','{"confirmed":true}'); if exists(select 1 from public.tbl_chat_rooms where id=rid) then raise exception 'Delete did not delete'; end if; raise exception 'ROLLBACK_QA_DELETE' using errcode='P0002'; exception when no_data_found then null; end;
+ raise notice 'PASS: 25 community/poll/privacy assertions; transaction will roll back';
+end $$;
+select 'PASS: community, polls, approval, contact masking, messaging privacy and presence assertions' as result;
+rollback;

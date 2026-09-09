@@ -1,0 +1,40 @@
+-- Run while the single temporary UI QA community exists; all test mutations roll back.
+begin;
+do $$
+declare rid integer; mid integer; cid uuid; eid integer; empty_uid uuid; joined_uid uuid; joined_eid integer; checks integer := 0; response jsonb;
+begin
+ select id into strict rid from public.tbl_chat_rooms where title='[QA] September 8 Community flow' and created_by=44;
+ select id,client_id into strict mid,cid from public.tbl_messages where room_id=rid and sender_id=44;
+ select id into strict eid from public.tbl_events e where created_by=44 and status='published' and not coalesce(is_deleted,false) and not coalesce(is_cancelled,false) and not exists(select 1 from public.tbl_event_participants p where p.event_id=e.id and p.user_id=47 and p.status in ('approved','going')) order by id desc limit 1;
+ select u.auth_user_id into empty_uid from public.tbl_users u where u.auth_user_id is not null and u.is_active=1 and not exists(select 1 from public.tbl_events e where e.status in ('published','completed') and not coalesce(e.is_deleted,false) and not coalesce(e.is_cancelled,false) and (e.created_by=u.id or exists(select 1 from public.tbl_event_participants p where p.event_id=e.id and p.user_id=u.id and p.status in ('approved','going')))) limit 1;
+ select u.auth_user_id,e.id into joined_uid,joined_eid from public.tbl_event_participants p join public.tbl_users u on u.id=p.user_id join public.tbl_events e on e.id=p.event_id where u.auth_user_id is not null and u.is_active=1 and p.status in ('approved','going') and e.created_by<>u.id and e.status in ('published','completed') and not coalesce(e.is_deleted,false) and not coalesce(e.is_cancelled,false) limit 1;
+ assert rid is not null and mid is not null and eid is not null and empty_uid is not null and joined_uid is not null; checks:=checks+1;
+ assert (select count(*)=1 from public.tbl_chat_participants where room_id=rid and user_id=44 and role='admin'); checks:=checks+1;
+ update public.tbl_chat_rooms set visibility='private',join_type='approval' where id=rid;
+ execute 'set local role authenticated';
+ perform set_config('request.jwt.claims','{"sub":"f034763a-7b42-4e58-8fee-8ba4f3bdd59b","role":"authenticated"}',true);
+ assert exists(select 1 from public.list_chat_inbox(1) x where (x->>'id')::integer=rid); checks:=checks+1;
+ assert private.viewer_can_post_activity_vibe(eid); checks:=checks+1;
+ assert exists(select 1 from public.list_eligible_vibe_activities(null,51) where id=eid); checks:=checks+1;
+ response:=public.send_chat_message(rid,cid,'QA: verifying community message persistence.','text',null);
+ assert (select count(*)=1 from public.tbl_messages where room_id=rid and client_id=cid); checks:=checks+1;
+ assert exists(select 1 from public.tbl_messages where id=mid and sender_id=44 and is_delivered); checks:=checks+1;
+ begin insert into public.tbl_messages(room_id,sender_id,content) values(rid,47,'spoof'); raise exception 'Sender spoof allowed'; exception when insufficient_privilege then checks:=checks+1; end;
+ perform set_config('request.jwt.claims','{"sub":"1f7afcc7-b00a-48f1-9945-f8cb8c215d08","role":"authenticated"}',true);
+ assert not exists(select 1 from public.tbl_chat_rooms where id=rid); checks:=checks+1;
+ assert not exists(select 1 from public.tbl_messages where room_id=rid); checks:=checks+1;
+ assert not exists(select 1 from public.list_chat_inbox(1) x where (x->>'id')::integer=rid); checks:=checks+1;
+ begin perform public.send_chat_message(rid,gen_random_uuid(),'blocked','text',null); raise exception 'Nonmember sent message'; exception when insufficient_privilege then checks:=checks+1; end;
+ assert not private.viewer_can_post_activity_vibe(eid); checks:=checks+1;
+ begin perform public.vibe_create(eid::bigint,'test-not-uploaded','photo','blocked','{}'::text[],'activity'); raise exception 'Outsider published highlight'; exception when insufficient_privilege then checks:=checks+1; end;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',joined_uid,'role','authenticated')::text,true);
+ assert private.viewer_can_post_activity_vibe(joined_eid); checks:=checks+1;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',empty_uid,'role','authenticated')::text,true);
+ assert not exists(select 1 from public.list_eligible_vibe_activities(null,51)); checks:=checks+1;
+ execute 'reset role';
+ assert (select bool_and(relrowsecurity) from pg_class where oid in ('public.tbl_chat_rooms'::regclass,'public.tbl_chat_participants'::regclass,'public.tbl_messages'::regclass,'public.tbl_activity_vibes'::regclass)); checks:=checks+1;
+ assert not has_function_privilege('anon','public.list_eligible_vibe_activities(integer,integer)','execute'); checks:=checks+1;
+ raise notice 'Phase 3 assertions passed: %',checks;
+end $$;
+select 'PASS: 18 Community/Chat/Vibe assertions; test mutations rolled back' result;
+rollback;

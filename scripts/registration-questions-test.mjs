@@ -1,0 +1,34 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import ts from "typescript";
+
+// Exercise the same pure validation used by the form, without loading React Native.
+const source = readFileSync(new URL("../src/domain/registration-questions.ts", import.meta.url), "utf8");
+const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+const { validateRegistrationQuestions: questionsValid, validateRegistrationAnswers: answersValid, normalizeRegistrationQuestions } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+const question = (id, type, required = true, options = []) => ({ id, label: `Question ${id}`, type, required, display_order: id - 1, options });
+const questions = [question(1, "short_text"), question(2, "single_choice", true, ["Morning", "Evening"]), question(3, "checkbox", false), question(4, "long_text", false), question(5, "multiple_choice", false, ["A", "B"])];
+assert.equal(questionsValid(questions), null);
+assert.match(questionsValid([{ ...questions[0], label: " " }]), /enter a question/);
+assert.match(questionsValid([question(1, "single_choice", true, ["A", "A"])]), /unique/);
+assert.match(questionsValid([question(1, "single_choice", true, ["A"])]), /2–30/);
+assert.match(questionsValid(Array.from({ length: 21 }, (_, index) => question(index + 1, "short_text"))), /no more than 20/);
+assert.match(questionsValid([questions[0], questions[0]]), /duplicate/);
+const valid = [{ question_id: 1, value: "Participant name" }, { question_id: 2, value: "Morning" }];
+assert.equal(answersValid(questions, valid), null);
+assert.match(answersValid(questions, []), /Please answer/);
+assert.match(answersValid(questions, [{ question_id: 1, value: "  " }]), /Please answer/);
+assert.match(answersValid(questions, [...valid, { question_id: 99, value: "Unknown" }]), /form changed/);
+assert.match(answersValid(questions, [...valid, valid[0]]), /form changed/);
+assert.match(answersValid(questions, [valid[0], { question_id: 2, value: "Invalid" }]), /Choose an option/);
+assert.match(answersValid(questions, [{ question_id: 1, value: "x".repeat(501) }, valid[1]]), /500/);
+assert.match(answersValid(questions, [...valid, { question_id: 4, value: "x".repeat(4001) }]), /4000/);
+assert.equal(answersValid(questions, [...valid, { question_id: 3, value: false }]), null);
+assert.match(answersValid([question(3, "checkbox")], [{ question_id: 3, value: false }]), /Please agree/);
+assert.match(answersValid([question(3, "checkbox")], [{ question_id: 3, value: "true" }]), /Choose an answer/);
+assert.equal(answersValid(questions, [...valid, { question_id: 5, value: ["A", "B"] }]), null);
+assert.match(answersValid(questions, [...valid, { question_id: 5, value: ["A", "A"] }]), /valid options/);
+assert.match(answersValid(questions, [...valid, { question_id: 5, value: ["C"] }]), /valid options/);
+const reordered = normalizeRegistrationQuestions([questions[1], questions[0]]);
+assert.deepEqual(reordered.map(item => [item.id, item.display_order]), [[2, 0], [1, 1]]);
+console.log("Registration question validation: 21 assertions passed (required fields, all five types, invalid choices, limits, duplicate isolation, ordering).");
