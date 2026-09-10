@@ -29,6 +29,7 @@ export type ActivityProfile = {
   username: string;
   fullName: string | null;
   isPartner?: boolean;
+  isVerified?: boolean;
   avatarUrl: string | null;
 };
 
@@ -51,6 +52,8 @@ export type Activity = {
   latitude: number | null;
   longitude: number | null;
   priceInr: number;
+  costsMayApply?: boolean;
+  entryFeeRequired?: boolean;
   capacity: number;
   matchScore: number | null;
   activityType: ActivityType;
@@ -153,6 +156,8 @@ export type CreateActivityInput = {
   latitude?: number | null;
   longitude?: number | null;
   priceInr?: number;
+  costsMayApply?: boolean;
+  entryFeeRequired?: boolean;
   capacity?: number | null;
   locationInstruction?: string; verifiedOnly?: boolean; ageMin?: number | null; ageMax?: number | null; genderPreference?: string | null;
   matchScore?: number | null;
@@ -194,7 +199,7 @@ export type ActivityRealtimeHandlers = {
 type DbRecord = Record<string, unknown>;
 
 const EVENT_SELECT =
-  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,currency,intent,status,latitude,longitude,display_location,location_instruction,verified_only,age_min,age_max,gender_preference";
+  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,costs_may_apply,entry_fee_required,currency,intent,status,latitude,longitude,display_location,location_instruction,verified_only,age_min,age_max,gender_preference";
 const FEEDBACK_SELECT = "id,event_id,created_by,reaction,comment,created_at";
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
@@ -334,6 +339,7 @@ const profileFromDb = (row?: DbRecord): ActivityProfile | null =>
         username: String(row.username ?? ""),
         fullName: nullableString(row.fullname),
         isPartner: row.account_type === "partner",
+        isVerified: row.isverified === 1 || row.isverified === true,
         avatarUrl: nullableString(row.profile_image),
       }
     : null;
@@ -404,6 +410,8 @@ const activityFromDb = (
     latitude: row.latitude == null ? null : Number(row.latitude),
     longitude: row.longitude == null ? null : Number(row.longitude),
     priceInr: Number.isFinite(price) ? price : 0,
+    costsMayApply: row.costs_may_apply === true || price > 0,
+    entryFeeRequired: row.entry_fee_required === true || price > 0,
     capacity: Number.isFinite(capacity) ? capacity : 0,
     matchScore:
       matchScore != null && Number.isFinite(matchScore) ? matchScore : null,
@@ -527,6 +535,8 @@ const buildPayload = (
     payload.longitude =
       input.longitude === null ? null : finite(input.longitude, "Longitude");
   }
+  if (input.costsMayApply !== undefined) payload.costs_may_apply = input.costsMayApply;
+  if (input.entryFeeRequired !== undefined) payload.entry_fee_required = input.entryFeeRequired;
   if (input.priceInr !== undefined) {
     const price = finite(input.priceInr, "Price");
     if (price < 0) throw new Error("Price cannot be negative.");
@@ -584,7 +594,7 @@ const loadProfiles = async (ids: number[]) => {
   if (!unique.length) return profiles;
   const { data, error } = await supabase
     .from("tbl_users")
-    .select("id,username,fullname,profile_image,account_type")
+    .select("id,username,fullname,profile_image,account_type,isverified")
     .in("id", unique);
   if (error) throw error;
   for (const row of (data ?? []) as DbRecord[]) {

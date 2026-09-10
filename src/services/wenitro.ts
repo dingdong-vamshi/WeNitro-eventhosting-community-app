@@ -386,6 +386,8 @@ export async function loadRemoteWorkspace() {
       location_name: item.locationName,
       latitude: item.latitude, longitude: item.longitude,
       price_inr: item.priceInr,
+      costs_may_apply: item.costsMayApply,
+      entry_fee_required: item.entryFeeRequired,
       capacity: item.capacity,
       match_score: item.matchScore,
       starts_at: item.startsAt,
@@ -395,6 +397,7 @@ export async function loadRemoteWorkspace() {
         ? {
             full_name: item.owner.fullName,
             is_partner: item.owner.isPartner,
+            is_verified: item.owner.isVerified,
             username: item.owner.username,
             avatar_url: item.owner.avatarUrl,
           }
@@ -631,6 +634,7 @@ export const chatService = {
     return {
       items: page.items.map((message) => ({
         id: String(message.id),
+        senderId: String(message.sender_id),
         sender:
           message.sender_id === ownId
             ? "You"
@@ -739,6 +743,8 @@ export type ActivityWriteInput = {
   location: string;
   description: string;
   priceInr: number;
+  costsMayApply?: boolean;
+  entryFeeRequired?: boolean;
   capacity: number | null;
   latitude?: number | null; longitude?: number | null;
   locationInstruction?: string; verifiedOnly?: boolean; ageMin?: number | null; ageMax?: number | null; genderPreference?: string | null;
@@ -775,6 +781,8 @@ const activityForWorkspace = async (
   location_name: activity.locationName,
   latitude: activity.latitude, longitude: activity.longitude,
   price_inr: activity.priceInr,
+      costs_may_apply: activity.costsMayApply,
+      entry_fee_required: activity.entryFeeRequired,
   capacity: activity.capacity,
   match_score: activity.matchScore,
   starts_at: activity.startsAt,
@@ -793,6 +801,7 @@ const activityForWorkspace = async (
     ? {
         full_name: activity.owner.fullName,
         is_partner: activity.owner.isPartner,
+        is_verified: activity.owner.isVerified,
         username: activity.owner.username,
         avatar_url: activity.owner.avatarUrl,
       }
@@ -859,6 +868,8 @@ const writeActivityFromUi = async (
         latitude: input.latitude, longitude: input.longitude, location_instruction: input.locationInstruction,
         verified_only: input.verifiedOnly, age_min: input.ageMin, age_max: input.ageMax, gender_preference: input.genderPreference,
         price_inr: input.priceInr,
+        costs_may_apply: input.costsMayApply ?? false,
+        entry_fee_required: input.entryFeeRequired ?? false,
         is_paid: input.priceInr > 0,
         max_participants: input.capacity,
         activity_type: input.activityType,
@@ -945,6 +956,8 @@ export const activityService = {
         latitude: input.latitude, longitude: input.longitude, locationInstruction: input.locationInstruction,
         verifiedOnly: input.verifiedOnly, ageMin: input.ageMin, ageMax: input.ageMax, genderPreference: input.genderPreference,
         priceInr: input.priceInr,
+        costsMayApply: input.costsMayApply,
+        entryFeeRequired: input.entryFeeRequired,
         capacity: input.capacity,
         activityType: input.activityType,
         visibility: input.visibility,
@@ -1042,6 +1055,7 @@ export const activityService = {
       comments: details.comments.items.map((item) => ({
         id: item.id,
         author: item.author?.fullName ?? item.author?.username ?? "Member",
+        authorId: item.author?.id,
         body: item.body,
         createdAt: item.createdAt,
       })),
@@ -1129,11 +1143,13 @@ export const activityService = {
     if (existing.error) throw existing.error;
     const ended = activity.data.status === "completed" || Boolean(activity.data.event_end_time && Date.parse(activity.data.event_end_time) <= Date.now());
     if (!ended || !["approved", "going", "paid"].includes(String(participation.data?.status))) throw new Error("Feedback is available after an Activity you joined has ended.");
-    if (existing.data) throw new Error("You already shared feedback for this Activity.");
-    const allowed = ["great", "good", "okay", "poor"];
+    const allowed = ["great", "good", "poor"];
     if (!allowed.includes(reaction)) throw new Error("Choose a feedback reaction.");
     const cleanComment = comment.trim().slice(0, 1000);
-    const result = await supabase.from("tbl_event_feedback").insert({ event_id: Number(activityId), created_by: userId, reaction, comment: cleanComment || null }).select("id,reaction,comment,created_at,created_by").single();
+    const write = existing.data
+      ? supabase.from("tbl_event_feedback").update({ reaction, comment: cleanComment || null }).eq("id", existing.data.id).eq("created_by", userId)
+      : supabase.from("tbl_event_feedback").insert({ event_id: Number(activityId), created_by: userId, reaction, comment: cleanComment || null });
+    const result = await write.select("id,reaction,comment,created_at,created_by").single();
     if (result.error) throw result.error;
     return result.data;
   },

@@ -168,7 +168,9 @@ export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDra
     startsAt: draft.dateLater ? null : new Date(draft.start).toISOString(),
     endsAt: draft.dateLater ? null : new Date(draft.end).toISOString(),
     registrationClosesAt: draft.dateLater ? null : new Date(draft.deadline).toISOString(),
-    priceInr: draft.paid ? Number(draft.price) : 0,
+    priceInr: 0,
+    costsMayApply: draft.costsMayApply,
+    entryFeeRequired: draft.entryFeeRequired,
     activityType: 'meetup',
     visibility: draft.visibility,
     joinType: draft.approval ? 'approval' : 'direct',
@@ -239,8 +241,8 @@ export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDra
         <View style={{ marginTop: 14 }}><ChoiceRow label="Age Restriction" value={draft.ageLabel} onPress={() => setDialog('age')} />
         {draft.ageLabel === 'Custom range' ? <View style={[s.inline, { alignItems: 'flex-start' }]}>{(['ageMin', 'ageMax'] as const).map((key, i) => <View key={key} style={{ flex: 1, gap: 8 }}><Text style={s.small}>{i ? 'Maximum Age' : 'Minimum Age'}</Text><Control label={i ? 'Maximum Age' : 'Minimum Age'} value={draft[key]} keyboardType="number-pad" onChangeText={value => patch({ [key]: value })} /></View>)}</View> : null}
         <ChoiceRow label="Gender Preference" value={GENDER_OPTIONS.find(o => o.value === draft.gender)?.label || 'Open to All'} onPress={() => setDialog('gender')} /></View>
-        <Toggle label="Paid Activity" description="This activity requires payment to join" value={draft.paid} onChange={() => patch({ paid: !draft.paid })} />
-        {draft.paid ? <View style={{ marginTop: 18, gap: 12 }}><Text style={s.body}>Price (INR)</Text><Control label="Price in INR" keyboardType="decimal-pad" value={draft.price} onChangeText={price => patch({ price })} placeholder="0.00" />{!isPartner ? <Text style={s.error}>Paid hosting requires an active Partner account. Free hosting remains available.</Text> : null}</View> : null}
+        <Toggle label={draft.costsMayApply ? "Costs may apply" : "Free activity"} description="Participants may spend money at the venue or during the activity." value={draft.costsMayApply} onChange={() => patch({ costsMayApply: !draft.costsMayApply })} />
+        <Toggle label={draft.entryFeeRequired ? "Entry fee required" : "Free to join"} description="An entry or attendance fee is required separately. This does not create an in-app checkout." value={draft.entryFeeRequired} onChange={() => patch({ entryFeeRequired: !draft.entryFeeRequired })} />
       </View>}
       {step === 2 && <View style={{ marginTop: 30, gap: 28 }}>
         <Pressable accessibilityRole="button" accessibilityLabel="Choose category" onPress={() => setCategoryOpen(v => !v)} style={[s.inputShell, categoryOpen && { borderColor: c.purple }]}><Text style={[s.body, { flex: 1 }, !draft.category && { color: c.muted }]}>{draft.category || 'Search and select categories...'}</Text><Glyph name="chevron-down" size={16} color={c.muted} /></Pressable>

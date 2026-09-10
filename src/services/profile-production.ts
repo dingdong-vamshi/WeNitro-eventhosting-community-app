@@ -922,9 +922,7 @@ export const profileProductionService = {
     return {
       trustScore: Number(profileRow.rating ?? 0),
       emailVerified: Boolean(authUser.email_confirmed_at),
-      phoneVerified:
-        Boolean(authUser.phone_confirmed_at) ||
-        requests.some((row) => row.phone_verified === true),
+      phoneVerified: Boolean(authUser.phone_confirmed_at),
       profileComplete: Boolean(
         profileRow.fullname &&
           profileRow.profile_image &&

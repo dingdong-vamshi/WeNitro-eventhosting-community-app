@@ -1,3 +1,5 @@
+import { VerifiedBadge } from './src/components/verified-badge';
+import { UserAvatar } from './src/components/user-avatar';
 import { ReferenceEditProfile } from './src/components/reconstruction/edit-profile';
 import { ReferenceInviteSquad } from './src/components/reconstruction/invite-squad';
 import { captureReferral } from './src/services/referrals';
@@ -11,7 +13,7 @@ import { ReferenceSquad } from "./src/components/reconstruction/squad";
 import { ReferenceSettings, ReferencePrivacy, ReferenceUtility, ReferenceStore } from "./src/components/reconstruction/settings";
 import { ReferenceActivityHistory, ReferenceEmergencyContact, ReferenceNitroHistory, ReferenceVerification } from "./src/components/reconstruction/profile-utilities";
 import { ReferenceTheme, ReferenceNavigation, Sheet as ReferenceSheet, usePalette } from "./src/components/reconstruction/ui";
-import { referenceDeltaService, type ParticipantRating } from "./src/services/reference-delta";
+import { referenceDeltaService } from "./src/services/reference-delta";
 import { CreateCommunitySheet, CommunityConversation, PollComposer, VibeEntryState } from "./src/components/community/reference-community";
 import { HostActivityScreen, HostLanding, HostNavigation } from "./src/components/hosting/host-activity-screen";
 import { PartnerAccountScreen } from "./src/components/partner-account-screen";
@@ -206,6 +208,8 @@ export type Activity = {
   when: string;
   where: string;
   price: string;
+  costsMayApply?: boolean;
+  entryFeeRequired?: boolean;
   seats: number;
   joined: number;
   image: any;
@@ -246,6 +250,7 @@ export type Activity = {
   joinType?: "direct" | "approval";
   communityId?: string | null;
   hostAvatar?: string;
+  hostVerified?: boolean;
   isPartner?: boolean;
 };
 
@@ -264,6 +269,7 @@ type ActivityParticipantView = {
 type ActivityCommentView = {
   id: string;
   author: string;
+  authorId?: string;
   body: string;
   createdAt: string;
 };
@@ -273,11 +279,12 @@ type Vibe = {
   text: string;
   event: string;
   author: string;
+  authorId?: string;
   likes: number;
   saved: boolean;
   mediaUrl?: string;
   mediaType?: "image" | "video";
-  comments?: { id: string; author: string; body: string; avatar?: string; createdAt?: string }[];
+  comments?: { id: string; author: string; authorId?: string; body: string; avatar?: string; createdAt?: string }[];
   mine?: boolean;
   authorAvatar?: string;
   hashtags?: string[];
@@ -286,6 +293,7 @@ type Vibe = {
 type CommunityPost = {
   id: string;
   author: string;
+  authorId?: string;
   title: string;
   body: string;
   category: string;
@@ -294,7 +302,7 @@ type CommunityPost = {
   liked: boolean;
   image?: string;
   mediaType?: "image" | "video";
-  commentItems?: { id: string; author: string; body: string }[];
+  commentItems?: { id: string; author: string; authorId?: string; body: string }[];
   authorAvatar?: string;
   createdAt?: string;
 };
@@ -319,6 +327,7 @@ export type Community = {
 type ChatMessage = {
   id: string;
   sender: string;
+  senderId?: string;
   text: string;
   time: string;
   mine: boolean;
@@ -560,11 +569,14 @@ const activityFromRemote = (item: any): Activity => ({
   genderPreference: item.gender_preference ?? null,
   likeCount: Number(item.like_count ?? 0),
   where: item.location_name,
-  price: Number(item.price_inr) ? `₹${item.price_inr}` : "Free",
+  price: Number(item.price_inr) ? `₹${item.price_inr}` : item.costs_may_apply ? "Costs may apply" : "Free",
+  costsMayApply: item.costs_may_apply === true || Number(item.price_inr) > 0,
+  entryFeeRequired: item.entry_fee_required === true || Number(item.price_inr) > 0,
   seats: item.capacity,
   joined: item.participants?.[0]?.count ?? 0,
   host: item.profiles?.full_name ?? item.profiles?.username ?? "",
   hostAvatar: runtimeString(item.profiles, ["profile_image", "avatar_url", "avatar"]) ?? runtimeString(item, ["hostAvatar", "host_avatar"]),
+  hostVerified: item.profiles?.is_verified === true || item.profiles?.isverified === 1,
   match: item.match_score ?? 0,
   description: item.description ?? "",
   image:
@@ -602,6 +614,7 @@ const chatMessageFromRemote = (message: any, userId: string | undefined): ChatMe
     : null;
   return {
   id: String(message.id),
+  senderId: String(message.sender_id),
   sender:
     String(message.sender_id) === String(userId)
       ? "You"
@@ -623,6 +636,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
   const vibes: Vibe[] = remote.vibes.map((item: any) => ({
     id: item.id,
     author: item.profiles?.username || item.profiles?.full_name || "",
+    authorId: item.owner_id ? String(item.owner_id) : undefined,
     authorAvatar: runtimeString(item.profiles, ["profile_image", "avatar_url", "avatar"]),
     event: runtimeString(item, ["activity_title", "event_title"]) || "",
     text: item.caption,
@@ -676,6 +690,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
     posts: (item.community_posts || []).map((post: any) => ({
       id: post.id,
       author: post.profiles?.full_name || post.profiles?.username || "",
+      authorId: post.author_id ? String(post.author_id) : undefined,
       authorAvatar: runtimeString(post.profiles, ["profile_image", "avatar_url", "avatar"]),
       createdAt: runtimeString(post, ["createdAt", "created_at"]),
       title: post.title,
@@ -2285,7 +2300,7 @@ function FeedScreen({
             </Text>
             <Text style={[styles.meta, dark && styles.subtitleDark]}>
               More friends, more fun!{" "}
-              <Text style={styles.inviteReward}>Earn 10 Nitro Points</Text>
+              <Text style={styles.inviteReward}>Referral link ready</Text>
             </Text>
           </View>
           <Pressable style={styles.inviteButton}>
@@ -2322,7 +2337,7 @@ function FeedScreen({
             </Pressable>
           ))}
         </ScrollView>
-        <SectionTitle title="Earn Nitro Points" action="How it works?" />
+        <SectionTitle title="V-Nitro Points" action="How it works?" />
         <View style={styles.nitroRow}>
           {[
             ["star-outline", "Rate Participants", "2 Points"],
@@ -2703,7 +2718,7 @@ function VibesScreen({
           ...current,
           vibes: current.vibes.map((item) => item.id === vibe.id ? {
             ...item,
-            comments: comments.map((entry) => ({ id: entry.id, author: entry.profiles?.full_name || entry.profiles?.username || "Member", body: entry.body, avatar: entry.profiles?.avatar_url || undefined, createdAt: entry.created_at })),
+            comments: comments.map((entry) => ({ id: entry.id, authorId: String(entry.author_id ?? ""), author: entry.profiles?.full_name || entry.profiles?.username || "Member", body: entry.body, avatar: entry.profiles?.avatar_url || undefined, createdAt: entry.created_at })),
           } : item),
         }));
       }).catch(() => undefined);
@@ -2730,6 +2745,7 @@ function VibesScreen({
                   ...item,
                   comments: comments.map((entry) => ({
                     id: entry.id,
+                    authorId: String(entry.author_id ?? ""),
                     author:
                       entry.profiles?.full_name ||
                       entry.profiles?.username ||
@@ -2938,9 +2954,6 @@ function VibesScreen({
           >
             <Icon name="chevron-up" color="#fff" />
           </Pressable>
-          <Text style={styles.reelCounter}>
-            {vibeIndex + 1}/{availableVibes.length}
-          </Text>
           <Pressable
             accessibilityLabel="Next vibe"
             onPress={() => moveVibe(1)}
@@ -2984,7 +2997,7 @@ function VibesScreen({
             />
             <View>
               <View style={styles.row}>
-                <Text style={styles.vibeUser}>{vibe.author}</Text>
+                <Text style={styles.vibeUser}>{vibe.author} <VerifiedBadge userId={vibe.authorId} /></Text>
               </View>
               {vibe.event ? <View style={styles.row}><Text style={styles.vibeMood}>{vibe.event}</Text></View> : null}
             </View>
@@ -3009,7 +3022,7 @@ function VibesScreen({
                     </Text>
                   </View>}
                   <View style={styles.messageBody}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Text style={[styles.vibeCommentAuthor, { color: palette.text }]}>{item.author}</Text>{item.createdAt ? <Text style={{ color: palette.muted, fontSize: 8 }}>{new Date(item.createdAt).toLocaleDateString()}</Text> : null}</View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Text style={[styles.vibeCommentAuthor, { color: palette.text }]}>{item.author} <VerifiedBadge userId={item.authorId} /></Text>{item.createdAt ? <Text style={{ color: palette.muted, fontSize: 8 }}>{new Date(item.createdAt).toLocaleDateString()}</Text> : null}</View>
                     <Text style={[styles.vibeCommentBody, { color: palette.muted }]}>{item.body}</Text>
                   </View>
                 </View>
@@ -3326,7 +3339,6 @@ function CreateActivityScreen({
           next,
           ...d.activities.filter((item) => item.id !== draftId),
         ],
-        nitro: status === "published" ? d.nitro + 50 : d.nitro,
       }));
       if (status === "draft") {
         setDraftSaved(true);
@@ -3569,17 +3581,22 @@ function PostVibeScreen({
   setData,
   go,
   back,
+  initialActivityId,
+  initialMedia,
 }: {
   data: AppData;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
   go: (s: Screen) => void;
   back: () => void;
+  initialActivityId?: string | null;
+  initialMedia?: ImagePicker.ImagePickerAsset | null;
 }) {
   const [text, setText] = useState("");
-  const [mediaUri, setMediaUri] = useState("");
-  const [mediaType, setMediaType] = useState<"image" | "video">("image");
+  const [activityQuery, setActivityQuery] = useState("");
+  const [mediaUri, setMediaUri] = useState(initialMedia?.uri || "");
+  const [mediaType, setMediaType] = useState<"image" | "video">(initialMedia && (initialMedia.type === 'video' || initialMedia.mimeType?.startsWith('video/')) ? 'video' : 'image');
   const [selectedActivityId, setSelectedActivityId] = useState(
-    data.activities[0]?.id || "",
+    initialActivityId && data.activities.some(item => item.id === initialActivityId) ? initialActivityId : data.activities[0]?.id || "",
   );
   const [posting, setPosting] = useState(false);
   const postLock = useRef(false);
@@ -3587,11 +3604,13 @@ function PostVibeScreen({
   const selectedActivity =
     data.activities.find((item) => item.id === selectedActivityId) ||
     data.activities[0];
+  const visibleActivities = data.activities.filter(activity => activity.title.toLowerCase().includes(activityQuery.trim().toLowerCase()));
   const pickMedia = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) return;
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images", "videos"],
+      allowsMultipleSelection: false,
       quality: 0.85,
       videoMaxDuration: 60,
     });
@@ -3655,7 +3674,6 @@ function PostVibeScreen({
           },
           ...d.vibes,
         ],
-        nitro: d.nitro + 15,
       }));
       go("vibes");
     } catch (caught) {
@@ -3677,9 +3695,9 @@ function PostVibeScreen({
       {!hasEvents ? (
         <View style={styles.empty}>
           <Icon name="calendar-clear" size={40} />
-          <Text style={styles.cardTitle}>No joined or hosted events yet</Text>
+          <Text style={styles.cardTitle}>No joined or hosted activities yet</Text>
           <Text style={styles.meta}>
-            Create or join an activity before posting event-linked vibes.
+            Create or join an activity before posting activity-linked vibes.
           </Text>
           <Button
             label="Create Activity"
@@ -3691,9 +3709,15 @@ function PostVibeScreen({
         <>
           <View style={styles.card}>
             <Text style={styles.label}>Choose an activity</Text>
+            <Field
+              label="Search Activities"
+              value={activityQuery}
+              onChangeText={setActivityQuery}
+              placeholder="Search your joined or hosted activities"
+            />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.activityPickerRow}>
-                {data.activities.map((activity) => (
+                {visibleActivities.map((activity) => (
                   <Pressable
                     key={activity.id}
                     onPress={() => setSelectedActivityId(activity.id)}
@@ -3721,6 +3745,7 @@ function PostVibeScreen({
                 ))}
               </View>
             </ScrollView>
+            {!visibleActivities.length ? <Text style={styles.meta}>No eligible activities match your search.</Text> : null}
             <Text style={styles.meta}>
               {selectedActivity.when} · {selectedActivity.where}
             </Text>
@@ -3774,6 +3799,7 @@ export function ActivityDetailScreen({
   onOpenVibe,
   onMessageHost,
   onOpenGroupChat,
+  onAddVibes,
   onManagePartner,
 }: {
   activity: Activity;
@@ -3786,6 +3812,7 @@ export function ActivityDetailScreen({
   onOpenVibe: (id: string) => void;
   onMessageHost: (id: string, name: string, avatar?: string) => Promise<void>;
   onOpenGroupChat: (activityId: string) => Promise<void>;
+  onAddVibes: (activityId: string) => Promise<void>;
   onManagePartner: () => void;
 }) {
   const palette = usePalette();
@@ -3803,6 +3830,7 @@ export function ActivityDetailScreen({
   const [joining, setJoining] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<ActivityCommentView[]>([]);
+  const [commentsExpanded, setCommentsExpanded] = useState(false);
   const [participants, setParticipants] = useState<ActivityParticipantView[]>(
     [],
   );
@@ -3828,10 +3856,6 @@ export function ActivityDetailScreen({
   const [feedbackComment, setFeedbackComment] = useState("");
   const [feedbackBusy, setFeedbackBusy] = useState(false);
   const [participantTab, setParticipantTab] = useState('All');
-  const [participantRatings, setParticipantRatings] = useState<ParticipantRating[]>([]);
-  const [ratingTarget, setRatingTarget] = useState<ActivityParticipantView | null>(null);
-  const [ratingDraft, setRatingDraft] = useState({ behaviour: 0, friendly: 0, communication: 0, comment: '' });
-  const [ratingBusy, setRatingBusy] = useState(false);
   const reactionId = activityReactionId(activity.id);
   const liked = data.likedIds.includes(reactionId);
   const saved = data.savedIds.includes(reactionId);
@@ -3858,10 +3882,6 @@ export function ActivityDetailScreen({
       setFeedback(details.feedback ?? []);
       setActivityVibes(details.activityVibes ?? []);
       setFeedbackSubmitted(Boolean(details.feedbackSubmittedByViewer));
-      const persistedRatings = details.isHost
-        ? await referenceDeltaService.listParticipantRatings(Number(activity.id)).catch(() => [])
-        : [];
-      setParticipantRatings(persistedRatings);
       setData((current) => ({
         ...current,
         likedIds: details.liked
@@ -4079,6 +4099,7 @@ export function ActivityDetailScreen({
           ...current,
           {
             id: created.id,
+            authorId: String(created.author?.id ?? data.userId),
             author:
               created.author?.fullName ??
               created.author?.username ??
@@ -4193,10 +4214,10 @@ export function ActivityDetailScreen({
     if (!feedbackReaction || feedbackBusy) return;
     setFeedbackBusy(true);
     try {
-      await activityService.submitFeedback(activity.id, feedbackReaction, feedbackComment);
+      const saved = await activityService.submitFeedback(activity.id, feedbackReaction, feedbackComment);
+      setFeedback(current => [{ id: String(saved.id), reaction: String(saved.reaction), comment: String(saved.comment || ''), createdAt: String(saved.created_at), createdBy: String(saved.created_by) }, ...current.filter(item => item.createdBy !== String(saved.created_by))]);
       setFeedbackComment("");
       setFeedbackSubmitted(true);
-      await refreshDetails();
     } catch (caught) {
       Alert.alert("Feedback not submitted", caught instanceof Error ? caught.message : "Please try again.");
     } finally { setFeedbackBusy(false); }
@@ -4205,16 +4226,13 @@ export function ActivityDetailScreen({
     const key = item.reaction || "Feedback"; counts[key] = (counts[key] || 0) + 1; return counts;
   }, {});
   const filteredParticipants = (isHost ? participants : joinedParticipants).filter(participant => participantTab === 'All' || participantTab === 'Approved' && ['approved','going','paid'].includes(participant.status) || participantTab === 'Pending' && ['pending','waitlist','payment_required','payment_pending','approved_pending_payment'].includes(participant.status) || participantTab === 'Rejected' && participant.status === 'rejected');
-  const openRating = (participant: ActivityParticipantView) => { const savedRating=participantRatings.find(item=>String(item.rated_user_id)===participant.userId); setRatingTarget(participant); setRatingDraft(savedRating ? { behaviour:savedRating.behaviour_rating,friendly:savedRating.friendly_rating,communication:savedRating.communication_rating,comment:savedRating.comment } : { behaviour:0,friendly:0,communication:0,comment:'' }); };
-  const saveRating = async () => { if(!ratingTarget || ratingBusy) return; setRatingBusy(true); try { const saved=await referenceDeltaService.rateParticipant({ eventId:Number(activity.id),userId:Number(ratingTarget.userId),...ratingDraft }); setParticipantRatings(current=>[saved,...current.filter(item=>item.rated_user_id!==saved.rated_user_id)]); setRatingTarget(null); await refreshDetails(); } catch(caught) { Alert.alert('Rating not saved',caught instanceof Error?caught.message:'Please try again.'); } finally { setRatingBusy(false); } };
   if (participantsOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}>
     <View style={{ maxWidth, width:'100%', alignSelf:'center', minHeight:61, borderBottomWidth:1, borderColor:palette.border, flexDirection:'row', alignItems:'center' }}><Pressable accessibilityRole="button" accessibilityLabel="Back to Activity" onPress={() => setParticipantsOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text} /></Pressable><Text style={{ color:palette.text,fontSize:20,fontWeight:'800',flex:1 }}>Manage Participants</Text></View>
     <View style={{ maxWidth,width:'100%',alignSelf:'center' }}><View style={{ flexDirection:'row',gap:7,padding:14 }}>{['All','Pending','Approved','Rejected'].map(tab=><Pressable accessibilityRole="tab" accessibilityState={{selected:participantTab===tab}} key={tab} onPress={()=>setParticipantTab(tab)} style={{ flex:1,minHeight:42,borderRadius:21,backgroundColor:participantTab===tab?'#5948EA':palette.card,alignItems:'center',justifyContent:'center' }}><Text style={{ color:participantTab===tab?'#FFF':palette.muted,fontSize:11,fontWeight:'700' }}>{tab}</Text></Pressable>)}</View></View>
     <ScrollView contentContainerStyle={{ width: "100%", maxWidth, alignSelf: "center", padding: 16, paddingBottom: 36, gap: 14 }}>
-      {filteredParticipants.map(participant => { const approved=['approved','going','paid'].includes(participant.status); const savedRating=participantRatings.find(item=>String(item.rated_user_id)===participant.userId); return <View key={participant.id} style={{ borderRadius:18,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,padding:16,gap:13 }}><Pressable accessibilityRole="button" accessibilityLabel={`Open ${participant.name}'s profile`} onPress={()=>openProfile(participant.userId)} style={{ flexDirection:'row',alignItems:'center',gap:12 }}>{participant.avatarUrl?<Image source={{uri:participant.avatarUrl}} style={{width:54,height:54,borderRadius:27}}/>:<Icon name="person-circle-outline" size={54} color={palette.muted}/>}<View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:17,fontWeight:'800'}}>{participant.name}</Text><Text style={{color:palette.muted,fontSize:12}}>@{participant.username}</Text></View><View style={{paddingHorizontal:10,paddingVertical:7,borderRadius:8,backgroundColor:approved?'#D7F8E6':participant.status==='rejected'?'#FDE5E8':palette.inset}}><Text style={{color:approved?'#187A56':participant.status==='rejected'?'#C93D51':'#9A771A',fontSize:9,fontWeight:'800'}}>{participantStatus(participant.status)}</Text></View></Pressable><View style={{height:1,backgroundColor:palette.border}}/><View style={{flexDirection:'row',gap:16}}><Text style={{color:palette.text,fontSize:11}}>⭐ {participant.rating==null?'—':participant.rating.toFixed(1)} Global</Text><Text style={{color:palette.muted,fontSize:11}}>{new Date(participant.joinedAt).toLocaleDateString([],{day:'numeric',month:'short'})} Joined</Text></View>{isHost&&participant.status==='pending'?<View style={{flexDirection:'row',gap:10}}><View style={{flex:1}}><Button label="Approve" onPress={()=>void respondToParticipant(participant,'approved')}/></View><View style={{flex:1}}><Button label="Reject" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')}/></View></View>:null}{isHost&&activityEnded&&approved?<Button label={savedRating?'Edit Rating':'Rate Performance'} onPress={()=>openRating(participant)}/>:null}</View>; })}
+      {filteredParticipants.map(participant => { const approved=['approved','going','paid'].includes(participant.status); return <View key={participant.id} style={{ borderRadius:18,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,padding:16,gap:13 }}><Pressable accessibilityRole="button" accessibilityLabel={`Open ${participant.name}'s profile`} onPress={()=>openProfile(participant.userId)} style={{ flexDirection:'row',alignItems:'center',gap:12 }}>{participant.avatarUrl?<Image source={{uri:participant.avatarUrl}} style={{width:54,height:54,borderRadius:27}}/>:<Icon name="person-circle-outline" size={54} color={palette.muted}/>}<View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:17,fontWeight:'800'}}>{participant.name} <VerifiedBadge userId={participant.userId} /></Text><Text style={{color:palette.muted,fontSize:12}}>@{participant.username}</Text></View><View style={{paddingHorizontal:10,paddingVertical:7,borderRadius:8,backgroundColor:approved?'#D7F8E6':participant.status==='rejected'?'#FDE5E8':palette.inset}}><Text style={{color:approved?'#187A56':participant.status==='rejected'?'#C93D51':'#9A771A',fontSize:9,fontWeight:'800'}}>{participantStatus(participant.status)}</Text></View></Pressable><View style={{height:1,backgroundColor:palette.border}}/><View style={{flexDirection:'row',gap:16}}><Text style={{color:palette.text,fontSize:11}}>⭐ {participant.rating==null?'—':participant.rating.toFixed(1)} Global</Text><Text style={{color:palette.muted,fontSize:11}}>{new Date(participant.joinedAt).toLocaleDateString([],{day:'numeric',month:'short'})} Joined</Text></View>{isHost&&participant.status==='pending'?<View style={{flexDirection:'row',gap:10}}><View style={{flex:1}}><Button label="Approve" onPress={()=>void respondToParticipant(participant,'approved')}/></View><View style={{flex:1}}><Button label="Reject" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')}/></View></View>:null}</View>; })}
       {!filteredParticipants.length?<View style={{alignItems:'center',paddingTop:80,gap:10}}><Icon name="people-outline" color={palette.muted} size={48}/><Text style={{color:palette.text,fontWeight:'700'}}>No participants in this tab</Text></View>:null}
     </ScrollView>
-    {ratingTarget?<ReferenceSheet title={participantRatings.some(item=>String(item.rated_user_id)===ratingTarget.userId)?'Edit Rating':'Rate Performance'} close={()=>{if(!ratingBusy)setRatingTarget(null)}}>{(['behaviour','friendly','communication'] as const).map(key=><View key={key} style={{flexDirection:'row',alignItems:'center'}}><Text style={{color:palette.text,fontSize:13,flex:1}}>{key[0].toUpperCase()+key.slice(1)}</Text><View style={{flexDirection:'row'}}>{[1,2,3,4,5].map(value=><Pressable accessibilityRole="radio" accessibilityState={{checked:ratingDraft[key]===value}} key={value} onPress={()=>setRatingDraft(current=>({...current,[key]:value}))} style={{padding:5}}><Icon name={value<=ratingDraft[key]?'star':'star-outline'} color="#F5A000" size={27}/></Pressable>)}</View></View>)}<TextInput accessibilityLabel="Participant feedback" value={ratingDraft.comment} onChangeText={comment=>setRatingDraft(current=>({...current,comment}))} multiline maxLength={1000} placeholder="Write feedback..." placeholderTextColor={palette.muted} style={{minHeight:110,borderWidth:1,borderColor:palette.border,borderRadius:12,padding:13,color:palette.text,textAlignVertical:'top'} as any}/><Button label={ratingBusy?'Saving...':participantRatings.some(item=>String(item.rated_user_id)===ratingTarget.userId)?'Edit Rating':'Submit Rating'} disabled={ratingBusy||!ratingDraft.behaviour||!ratingDraft.friendly||!ratingDraft.communication} onPress={()=>void saveRating()}/></ReferenceSheet>:null}
   </SafeAreaView>;
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}>
@@ -4274,6 +4292,7 @@ export function ActivityDetailScreen({
         </View>
         <View style={styles.detailContent}>
           {joinError ? <Text style={styles.error}>{joinError}</Text> : null}
+          <View style={{ padding: 14, gap: 5, borderRadius: 12, backgroundColor: palette.card }}><Text style={{ color: palette.text, fontWeight: "700" }}>{activity.costsMayApply ? "Costs may apply" : "Free activity"} · {activity.entryFeeRequired ? "Entry fee required" : "Free to join"}</Text>{(activity.costsMayApply || activity.entryFeeRequired) && !isPaidActivity ? <Text style={{ color: palette.muted, fontSize: 12 }}>Any venue or entry costs are arranged separately. No payment is collected in WeNitro for this activity.</Text> : null}</View>
           {registrationForm ? <RegistrationAnswerForm key={activity.id} questions={registrationForm.questions} busy={joining} initialAnswers={registrationForm.answers} onSubmit={submitRegistration} submitLabel={isPaidActivity && joinType === "direct" ? "Continue to payment" : joinType === "approval" ? "Submit request" : "Confirm registration"} onCancel={() => setRegistrationForm(null)} dark={data.theme === "dark"} /> : null}
           <View style={styles.rowBetween}>
             <View style={styles.detailTitleWrap}>
@@ -4343,7 +4362,7 @@ export function ActivityDetailScreen({
             >
               <Text style={styles.scheduleLabel}>ACTIVITY HOST</Text>
               <View style={styles.row}>
-                <Text style={[styles.detailHostName, { color: palette.text }]}>{activity.host}</Text>
+                <Text style={[styles.detailHostName, { color: palette.text }]}>{activity.host}</Text><VerifiedBadge userId={activity.ownerId} size={17} />
               </View>
               <Text style={[styles.detailCardMuted, { color: palette.muted }]}>Tap the profile to view host details</Text>
             </Pressable>
@@ -4374,7 +4393,7 @@ export function ActivityDetailScreen({
                     style={styles.commentAvatar}
                   />
                   <View>
-                    <Text style={[styles.detailCardTitle, { color: palette.text }]}>{participant.name}</Text>
+                    <Text style={[styles.detailCardTitle, { color: palette.text }]}>{participant.name} <VerifiedBadge userId={participant.userId} /></Text>
                     <Text style={[styles.detailCardMuted, { color: palette.muted }]}>
                       @{participant.username} · {participant.status}
                     </Text>
@@ -4439,25 +4458,26 @@ export function ActivityDetailScreen({
                 style={[styles.commentInput, { color: palette.text }]}
               />
               <Pressable onPress={submitComment}>
-                <Icon name="send" />
+                <Icon name="send" color={palette.accent} />
               </Pressable>
             </View>
-            {comments.map((item) => (
+            {comments.slice(0, commentsExpanded ? comments.length : 3).map((item) => (
               <View key={item.id} style={styles.vibeComment}>
                 <View style={styles.messageBody}>
-                  <Text style={[styles.detailCardTitle, { color: palette.text }]}>{item.author}</Text>
+                  <Text style={[styles.detailCardTitle, { color: palette.text }]}>{item.author} <VerifiedBadge userId={item.authorId} /></Text>
                   <Text style={[styles.detailBody, { color: palette.muted }]}>{item.body}</Text>
                 </View>
               </View>
             ))}
+            {comments.length > 3 ? <Pressable accessibilityRole="button" accessibilityState={{ expanded: commentsExpanded }} onPress={() => setCommentsExpanded(current => !current)} style={{ alignSelf: 'flex-start', paddingVertical: 8 }}><Text style={styles.link}>{commentsExpanded ? 'Show fewer comments' : `View more comments (${comments.length - 3})`}</Text></Pressable> : null}
           </View>
           {activityEnded ? <View style={[styles.feedbackSection, { backgroundColor: palette.card, borderColor: palette.border }]}>
             <View style={styles.rowBetween}><Text style={[styles.detailSectionTitle, { color: palette.text }]}>Activity Feedback</Text><Text style={[styles.detailCardMuted, { color: palette.muted }]}>Reviews ({feedback.filter(item => item.comment).length})</Text></View>
             {Object.keys(reactionCounts).length ? <View style={styles.detailChipRow}>{Object.entries(reactionCounts).map(([reaction, count]) => <View key={reaction} style={[styles.feedbackReaction, { backgroundColor: palette.inset, borderColor: palette.border }]}><Text style={{ color: palette.text, fontSize: 10 }}>{reaction.replace(/_/g, " ")} · {count}</Text></View>)}</View> : null}
             {feedback.filter(item => item.comment).slice(0, 3).map(item => <View key={item.id} style={[styles.feedbackReview, { backgroundColor: palette.inset }]}><Text style={[styles.detailBody, { color: palette.text }]}>{item.comment}</Text></View>)}
             {!feedback.length ? <Text style={[styles.detailCardMuted, { color: palette.muted }]}>No reviews yet. Be the first to share your experience!</Text> : null}
-            {feedbackEligible && !feedbackSubmitted ? <View style={{ gap: 11, borderTopWidth: 1, borderColor: palette.border, paddingTop: 13 }}><Text style={[styles.detailCardTitle, { color: palette.text }]}>How was the activity?</Text><View style={[styles.detailChipRow, { justifyContent: 'space-between' }]}>{[["great", "🔥", "Hot"], ["poor", "❄️", "Cold"], ["good", "🌡️", "Warm"]].map(([value, emoji, label]) => <Pressable accessibilityRole="radio" accessibilityState={{ checked: feedbackReaction === value }} key={value} onPress={() => setFeedbackReaction(value)} style={{ minWidth: 82, alignItems: 'center', gap: 5, padding: 9, borderRadius: 12, backgroundColor: feedbackReaction === value ? '#6654DA22' : 'transparent' }}><Text style={{ fontSize: 26 }}>{emoji}</Text><Text style={{ color: feedbackReaction === value ? '#7060EF' : palette.muted, fontSize: 10 }}>{label}</Text></Pressable>)}</View><TextInput value={feedbackComment} onChangeText={setFeedbackComment} maxLength={1000} multiline placeholder="Share a short review (optional)" placeholderTextColor={palette.muted} style={[styles.reportInput, { backgroundColor: palette.bg, borderColor: palette.border, color: palette.text }]} /><Button label={feedbackBusy ? "Submitting..." : "Submit Feedback"} disabled={!feedbackReaction || feedbackBusy} onPress={() => void submitActivityFeedback()} /></View> : null}
-            {feedbackSubmitted ? <View style={{ flexDirection: "row", alignItems: "center", gap: 7 }}><Icon name="checkmark-circle" color="#62D2A2" /><Text style={{ color: "#62D2A2", fontSize: 11 }}>Your feedback has been submitted.</Text></View> : null}
+            {feedbackEligible && !loadingDetails && !feedbackSubmitted ? <View style={{ gap: 11, borderTopWidth: 1, borderColor: palette.border, paddingTop: 13 }}><Text style={[styles.detailCardTitle, { color: palette.text }]}>How was the activity?</Text><View style={[styles.detailChipRow, { justifyContent: 'space-between' }]}>{[["great", "🔥", "Hot"], ["poor", "❄️", "Cold"], ["good", "🌡️", "Warm"]].map(([value, emoji, label]) => <Pressable accessibilityRole="radio" accessibilityState={{ checked: feedbackReaction === value }} key={value} onPress={() => setFeedbackReaction(value)} style={{ minWidth: 82, alignItems: 'center', gap: 5, padding: 9, borderRadius: 12, backgroundColor: feedbackReaction === value ? '#6654DA22' : 'transparent' }}><Text style={{ fontSize: 26 }}>{emoji}</Text><Text style={{ color: feedbackReaction === value ? '#7060EF' : palette.muted, fontSize: 10 }}>{label}</Text></Pressable>)}</View><TextInput value={feedbackComment} onChangeText={setFeedbackComment} maxLength={1000} multiline placeholder="Share a short review (optional)" placeholderTextColor={palette.muted} style={[styles.reportInput, { backgroundColor: palette.bg, borderColor: palette.border, color: palette.text }]} /><Button label={feedbackBusy ? "Submitting..." : feedback.some(item => item.createdBy === data.userId) ? "Update Feedback" : "Submit Feedback"} disabled={!feedbackReaction || feedbackBusy} onPress={() => void submitActivityFeedback()} /></View> : null}
+            {feedbackSubmitted ? <View style={{ gap: 10 }}><View style={{ flexDirection: "row", alignItems: "center", gap: 7 }}><Icon name="checkmark-circle" color="#62D2A2" /><Text style={{ color: "#62D2A2", fontSize: 11 }}>Your feedback has been submitted.</Text></View>{feedbackEligible ? <Pressable accessibilityRole="button" onPress={() => { const own = feedback.find(item => item.createdBy === data.userId); setFeedbackReaction(own?.reaction || ""); setFeedbackComment(own?.comment || ""); setFeedbackSubmitted(false); }}><Text style={{ color: palette.isDark ? "#B4A7FF" : "#5140BD", fontSize: 12, fontWeight: "700" }}>Edit your feedback</Text></Pressable> : null}</View> : null}
           </View> : null}
           <View style={[styles.vibeAddCard, { flexDirection: "column", alignItems: "stretch", backgroundColor: palette.card, borderWidth: 1, borderColor: palette.border }]}>
             <View style={styles.rowBetween}><Text style={[styles.detailSectionTitle, { color: palette.text }]}>Activity Vibes</Text><Text style={[styles.detailCardMuted, { color: palette.muted }]}>{activityVibes.length} {activityVibes.length === 1 ? "Upload" : "Uploads"}</Text></View>
@@ -4467,11 +4487,11 @@ export function ActivityDetailScreen({
               <Icon name="people" color="#fff" />
             </View>
             <View style={styles.messageBody}>
-              <Text style={[styles.detailSectionTitle, { color: palette.text }]}>Add Vibe</Text>
+              <Text style={[styles.detailSectionTitle, { color: palette.text }]}>Add Vibes</Text>
               <Text style={[styles.detailCardMuted, { color: palette.muted }]}>Max 25MB · Share moments from this activity</Text>
             </View>
-            <Pressable style={styles.smallPrimary} onPress={() => go("postVibe")}>
-              <Text style={styles.smallPrimaryText}>Add Vibe</Text>
+            <Pressable style={styles.smallPrimary} onPress={() => void onAddVibes(activity.id)}>
+              <Text style={styles.smallPrimaryText}>Add Vibes</Text>
             </Pressable>
             </View>
           </View>
@@ -4500,14 +4520,14 @@ export function ActivityDetailScreen({
       </ScrollView>
       <View style={[styles.detailBottomActions, { backgroundColor: palette.bg, borderTopColor: palette.border }]}>
             <Pressable
-              style={[styles.likeButton, liked && styles.likeButtonActive]}
+              style={[styles.likeButton, { borderColor: palette.accent, backgroundColor: liked ? palette.inset : 'transparent' }]}
               onPress={toggleLike}
               onLongPress={() => void showLikers()}
               delayLongPress={450}
               accessibilityHint="Long-Press to see who liked"
             >
-              <Icon name={liked ? "heart" : "heart-outline"} />
-              <Text style={styles.likeButtonText}>Like</Text>
+              <Icon name={liked ? "heart" : "heart-outline"} color={palette.accent} />
+              <Text style={[styles.likeButtonText, { color: palette.accent }]}>Like</Text>
             </Pressable>
             {isHost ? (
               <View style={styles.joinButtonLarge}>
@@ -4604,6 +4624,9 @@ export function ChatScreen({
     Record<string, { createdAt: string; id: number } | null | undefined>
   >({});
   const [loadingOlder, setLoadingOlder] = useState(false);
+  const threadScroll = useRef<ScrollView>(null);
+  const followLatest = useRef(true);
+  useEffect(() => { followLatest.current = true; }, [selectedConversationId]);
   const [groupInfoOpen, setGroupInfoOpen] = useState(false);
   const [groupInfoLoading, setGroupInfoLoading] = useState(false);
   const [groupInfoError, setGroupInfoError] = useState('');
@@ -4804,6 +4827,7 @@ export function ChatScreen({
     cursor?: { createdAt: string; id: number } | null,
   ) => {
     if (!isSupabaseConfigured || !isBackendId(id)) return;
+    if (cursor) followLatest.current = false;
     setLoadingOlder(true);
     try {
       const page = await chatService.loadMessagesPage(id, cursor);
@@ -4880,6 +4904,7 @@ export function ChatScreen({
   };
   const sendMessage = async (image?: string, mediaType: "image" | "video" = "image", contentType?: string) => {
     if (!selected || (!draft.trim() && !image)) return;
+    followLatest.current = true;
     const body = draft.trim();
     const message: ChatMessage = {
       id: `m${Date.now()}`,
@@ -5148,7 +5173,7 @@ export function ChatScreen({
     return () => { active = false; };
   }, [groupInfoOpen, selected?.id]);
 
-  if (selected && groupInfoOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}><View style={{ width:'100%',maxWidth,alignSelf:'center',flex:1 }}><View style={{minHeight:61,borderBottomWidth:1,borderColor:palette.border,flexDirection:'row',alignItems:'center'}}><Pressable accessibilityRole="button" accessibilityLabel="Back to group chat" onPress={()=>setGroupInfoOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text}/></Pressable><Text style={{color:palette.text,fontSize:18,fontWeight:'800'}}>Group Info</Text></View>{groupInfoLoading?<ActivityIndicator color="#7060EF" style={{marginTop:80}}/>:<ScrollView contentContainerStyle={{padding:18,gap:16,paddingBottom:38}}><View style={{alignItems:'center',gap:10,paddingVertical:9}}>{selected.avatar?<Image source={{uri:selected.avatar}} style={{width:86,height:86,borderRadius:43}}/>:<View style={{width:86,height:86,borderRadius:43,backgroundColor:palette.card,alignItems:'center',justifyContent:'center'}}><Icon name="people" color="#7060EF" size={36}/></View>}<Text style={{color:palette.text,fontSize:20,fontWeight:'800'}}>{selected.name}</Text><Text style={{color:palette.muted,fontSize:11}}>{groupInfo?.members.length ?? selected.memberCount} participants</Text></View><View style={{backgroundColor:palette.card,borderRadius:14,borderWidth:1,borderColor:palette.border,padding:15,gap:14}}><View style={{flexDirection:'row',gap:10}}><Icon name="calendar-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>DATE</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.date}</Text></View></View><View style={{flexDirection:'row',gap:10}}><Icon name="location-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>LOCATION</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.location}</Text></View></View>{groupInfo?.eventId&&onOpenActivity?<Button label="View Activity Page" onPress={()=>onOpenActivity(groupInfo.eventId!)}/>:null}</View><TextInput accessibilityLabel="Search participants" value={groupInfoQuery} onChangeText={setGroupInfoQuery} placeholder="Search participants..." placeholderTextColor={palette.muted} style={{minHeight:46,borderRadius:12,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,color:palette.text,paddingHorizontal:13} as any}/>{groupInfo?.members.filter(member=>`${member.profiles?.full_name||''} ${member.profiles?.username||''}`.toLowerCase().includes(groupInfoQuery.toLowerCase())).map(member=><Pressable accessibilityRole="button" key={member.user_id} disabled={!onOpenProfile} onPress={()=>onOpenProfile?.(String(member.user_id))} style={{minHeight:64,flexDirection:'row',alignItems:'center',gap:12,borderBottomWidth:1,borderColor:palette.border}}>{member.profiles?.avatar_url?<Image source={{uri:member.profiles.avatar_url}} style={{width:44,height:44,borderRadius:22}}/>:<Icon name="person-circle-outline" color={palette.muted} size={44}/>}<View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:13,fontWeight:'700'}}>{member.profiles?.full_name||member.profiles?.username||'Member'}</Text><Text style={{color:palette.muted,fontSize:10}}>@{member.profiles?.username||'member'}</Text></View><Text style={{color:'#8E7CFF',fontSize:9}}>{member.role||'member'}</Text></Pressable>)}{groupInfoError?<Text style={{color:'#F47786',fontSize:12}}>{groupInfoError}</Text>:null}</ScrollView>}</View></SafeAreaView>;
+  if (selected && groupInfoOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}><View style={{ width:'100%',maxWidth,alignSelf:'center',flex:1 }}><View style={{minHeight:61,borderBottomWidth:1,borderColor:palette.border,flexDirection:'row',alignItems:'center'}}><Pressable accessibilityRole="button" accessibilityLabel="Back to group chat" onPress={()=>setGroupInfoOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text}/></Pressable><Text style={{color:palette.text,fontSize:18,fontWeight:'800'}}>Group Info</Text></View>{groupInfoLoading?<ActivityIndicator color="#7060EF" style={{marginTop:80}}/>:<ScrollView contentContainerStyle={{padding:18,gap:16,paddingBottom:38}}><View style={{alignItems:'center',gap:10,paddingVertical:9}}>{selected.avatar?<Image source={{uri:selected.avatar}} style={{width:86,height:86,borderRadius:43}}/>:<View style={{width:86,height:86,borderRadius:43,backgroundColor:palette.card,alignItems:'center',justifyContent:'center'}}><Icon name="people" color="#7060EF" size={36}/></View>}<Text style={{color:palette.text,fontSize:20,fontWeight:'800'}}>{selected.name}</Text><Text style={{color:palette.muted,fontSize:11}}>{groupInfo?.members.length ?? selected.memberCount} participants</Text></View><View style={{backgroundColor:palette.card,borderRadius:14,borderWidth:1,borderColor:palette.border,padding:15,gap:14}}><View style={{flexDirection:'row',gap:10}}><Icon name="calendar-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>DATE</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.date}</Text></View></View><View style={{flexDirection:'row',gap:10}}><Icon name="location-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>LOCATION</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.location}</Text></View></View>{groupInfo?.eventId&&onOpenActivity?<Button label="View Activity Page" onPress={()=>onOpenActivity(groupInfo.eventId!)}/>:null}</View><TextInput accessibilityLabel="Search participants" value={groupInfoQuery} onChangeText={setGroupInfoQuery} placeholder="Search participants..." placeholderTextColor={palette.muted} style={{minHeight:46,borderRadius:12,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,color:palette.text,paddingHorizontal:13} as any}/>{groupInfo?.members.filter(member=>`${member.profiles?.full_name||''} ${member.profiles?.username||''}`.toLowerCase().includes(groupInfoQuery.toLowerCase())).map(member=><Pressable accessibilityRole="button" key={member.user_id} disabled={!onOpenProfile} onPress={()=>onOpenProfile?.(String(member.user_id))} style={{minHeight:64,flexDirection:'row',alignItems:'center',gap:12,borderBottomWidth:1,borderColor:palette.border}}>{member.profiles?.avatar_url?<Image source={{uri:member.profiles.avatar_url}} style={{width:44,height:44,borderRadius:22}}/>:<Icon name="person-circle-outline" color={palette.muted} size={44}/>}<View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:13,fontWeight:'700'}}>{member.profiles?.full_name||member.profiles?.username||'Member'} <VerifiedBadge userId={member.user_id} /></Text><Text style={{color:palette.muted,fontSize:10}}>@{member.profiles?.username||'member'}</Text></View><Text style={{color:'#8E7CFF',fontSize:9}}>{member.role||'member'}</Text></Pressable>)}{groupInfoError?<Text style={{color:'#F47786',fontSize:12}}>{groupInfoError}</Text>:null}</ScrollView>}</View></SafeAreaView>;
 
   if (selected)
     return (
@@ -5164,11 +5189,11 @@ export function ChatScreen({
             <Icon name="arrow-back" color={palette.icon} />
           </Pressable>
           <Pressable accessibilityRole="button" accessibilityLabel={`Open ${selected.name}'s profile`} disabled={!selected.userId || !onOpenProfile} onPress={() => selected.userId && onOpenProfile?.(selected.userId)}>
-            {selected.avatar ? <Image source={{ uri: selected.avatar }} style={styles.chatThreadAvatar} /> : <Icon name="person-circle-outline" color={palette.iconMuted} size={42} />}
+            <UserAvatar uri={selected.avatar} name={selected.name} size={42} />
           </Pressable>
           <Pressable accessibilityRole="button" accessibilityLabel={selected.type === 'Groups' ? `Open ${selected.name} group info` : `Open ${selected.name}'s profile`} disabled={selected.type !== 'Groups' && (!selected.userId || !onOpenProfile)} onPress={() => selected.type === 'Groups' ? setGroupInfoOpen(true) : selected.userId && onOpenProfile?.(selected.userId)} style={styles.messageBody}>
             <Text style={[styles.chatThreadName, { color: palette.text }]} numberOfLines={1}>
-              {selected.name}
+              {selected.name} {selected.type === "People" && <VerifiedBadge userId={selected.userId} />}
             </Text>
             <Text style={styles.chatThreadStatus}>
               {typing
@@ -5179,12 +5204,16 @@ export function ChatScreen({
                 ? `${selected.memberCount} members · ${selected.online ? "active now" : "quiet"}`
                 : selected.online
                   ? "online"
-                  : "last active recently"}
+                  : "offline"}
             </Text>
           </Pressable>
           {selected.type === 'Groups' ? <Pressable accessibilityRole="button" accessibilityLabel="Group Info" onPress={()=>setGroupInfoOpen(true)} style={styles.chatHeaderButton}><Icon name="information-circle-outline" color={palette.icon}/></Pressable> : null}
         </View>
         <ScrollView
+          ref={threadScroll}
+          onScroll={({ nativeEvent }) => { const { contentOffset, layoutMeasurement, contentSize } = nativeEvent; followLatest.current = contentSize.height - layoutMeasurement.height - contentOffset.y < 100; }}
+          scrollEventThrottle={100}
+          onContentSizeChange={() => { if (followLatest.current) threadScroll.current?.scrollToEnd({ animated: false }); }}
           style={[styles.chatThreadScroll, { backgroundColor: palette.bg }]}
           contentContainerStyle={styles.chatThreadContent}
         >
@@ -5214,7 +5243,7 @@ export function ChatScreen({
               ]}
             >
               {selected.type === "Groups" && !message.mine ? (
-                <Text style={[styles.dynamicSender, { color: palette.accent }]}>{message.sender}</Text>
+                <Text style={[styles.dynamicSender, { color: palette.accent }]}>{message.sender} <VerifiedBadge userId={message.senderId} /></Text>
               ) : null}
               {message.image ? message.messageType === "video" ? <ChatMessageVideo uri={message.image} /> : <Image source={{ uri: message.image }} style={styles.dynamicMessageImage} /> : null}
               {message.share ? (
@@ -5679,7 +5708,7 @@ export function ChatScreen({
                       style={styles.groupContactAvatar}
                     />
                     <View style={styles.messageBody}>
-                      <Text style={styles.groupContactName}>{person.name}</Text>
+                      <Text style={styles.groupContactName}>{person.name} <VerifiedBadge userId={person.id} /></Text>
                       <Text style={styles.groupContactStatus}>
                         {person.online
                           ? "Online"
@@ -5738,7 +5767,7 @@ function PublicProfileScreen({
               {person.online ? <View style={styles.profileOnline} /> : null}
             </View>
             <View style={styles.profileIdentityCopy}>
-              <Text style={styles.profileNameRef}>{person.name}</Text>
+              <Text style={styles.profileNameRef}>{person.name} <VerifiedBadge userId={person.id} /></Text>
               <Text style={styles.profileHandle}>@{person.username.replace(/^@/, "")}</Text>
               {person.location ? (
                 <View style={styles.brandLocation}>
@@ -5998,7 +6027,7 @@ function ProfileScreen({
             [
               "flash-outline",
               data.nitro.toLocaleString(),
-              "Nitro Points",
+              "V-Nitro Points",
               "#29C66D",
             ],
           ].map(([icon, value, label, color]) => (
@@ -6358,7 +6387,7 @@ function SearchScreen({
               style={styles.searchPersonAvatar}
             />
             <View style={styles.messageBody}>
-              <Text style={styles.cardTitle}>{person.name}</Text>
+              <Text style={styles.cardTitle}>{person.name} <VerifiedBadge userId={person.id} /></Text>
               <Text style={styles.meta}>
                 {person.bio} · {person.location}
               </Text>
@@ -6404,7 +6433,7 @@ function SearchScreen({
                 style={styles.searchPersonAvatar}
               />
               <View style={styles.messageBody}>
-                <Text style={styles.cardTitle}>{item.author}</Text>
+                <Text style={styles.cardTitle}>{item.author} <VerifiedBadge userId={item.authorId} /></Text>
                 <Text style={styles.meta} numberOfLines={2}>
                   {item.text}
                 </Text>
@@ -6719,6 +6748,7 @@ export function CommunitiesScreen({
                   style={[
                     styles.communityJoinText,
                     item.membership === "joined" && styles.communityJoinedText,
+                    item.membership === "created" && { color: "#D7E9FF" },
                   ]}
                 >
                   {item.membership === "joined"
@@ -6795,6 +6825,7 @@ export function CommunityDetailScreen({
           ...item,
           posts: feed.items.map((post) => ({
             id: post.id,
+            authorId: String(post.author?.id ?? ""),
             author:
               post.author?.fullName || post.author?.username || "WeNitro member",
             title: post.title,
@@ -6831,7 +6862,7 @@ export function CommunityDetailScreen({
           if (!active) return;
           update((item) => ({
             ...item,
-            posts: feed.items.map((post) => ({ id: post.id, author: post.author?.fullName || post.author?.username || "WeNitro member", title: post.title, body: post.body, category: post.mediaType === "video" ? "Videos" : post.mediaUrl ? "Photos" : "Text", reactions: post.reactionCount, comments: post.commentCount, liked: Boolean(post.myReaction), image: post.mediaUrl || undefined, mediaType: post.mediaType || undefined })),
+            posts: feed.items.map((post) => ({ id: post.id, authorId: String(post.author?.id ?? ""), author: post.author?.fullName || post.author?.username || "WeNitro member", title: post.title, body: post.body, category: post.mediaType === "video" ? "Videos" : post.mediaUrl ? "Photos" : "Text", reactions: post.reactionCount, comments: post.commentCount, liked: Boolean(post.myReaction), image: post.mediaUrl || undefined, mediaType: post.mediaType || undefined })),
           }));
         }).catch(() => undefined);
       }, 180);
@@ -6953,6 +6984,7 @@ export function CommunityDetailScreen({
                 ...post,
                 commentItems: page.items.map((entry) => ({
                   id: entry.id,
+                  authorId: String(entry.author?.id ?? ""),
                   author: entry.author?.fullName || entry.author?.username || "Member",
                   body: entry.body,
                 })),
@@ -7115,19 +7147,19 @@ export function CommunityDetailScreen({
               style={[styles.communityComposerInput, { color: palette.text }]}
             />
             <Pressable onPress={() => void pickPostMedia("image")} accessibilityLabel="Attach photo">
-              <Icon name="image-outline" color="#1910C2" />
+              <Icon name="image-outline" color={palette.accent} />
             </Pressable>
             <Pressable onPress={() => void pickPostMedia("video")} accessibilityLabel="Attach video">
-              <Icon name="videocam-outline" color="#1910C2" />
+              <Icon name="videocam-outline" color={palette.accent} />
             </Pressable>
             <Pressable onPress={() => setPostPollOpen(true)} accessibilityLabel="Create poll">
-              <Icon name="stats-chart-outline" color="#1910C2" />
+              <Icon name="stats-chart-outline" color={palette.accent} />
             </Pressable>
             <Pressable onPress={publish} disabled={publishing}>
               {publishing ? (
-                <ActivityIndicator size="small" color="#1910C2" />
+                <ActivityIndicator size="small" color={palette.accent} />
               ) : (
-                <Icon name="send" color="#1910C2" />
+                <Icon name="send" color={palette.accent} />
               )}
             </Pressable>
           </View>
@@ -7144,6 +7176,7 @@ export function CommunityDetailScreen({
             </View>
           ) : null}
         </View>
+        {!visible.length ? <Text style={{ color: palette.muted, textAlign: 'center', padding: 22 }}>No posts to show in this category yet.</Text> : null}
         {visible.map((post) => (
           <View key={post.id} style={[styles.communityPost, { backgroundColor: palette.card, borderColor: palette.border }]}>
             <View style={styles.postHeader}>
@@ -7153,7 +7186,7 @@ export function CommunityDetailScreen({
               />
               <View style={styles.messageBody}>
                 <Text style={[styles.postAuthor, { color: palette.text }]}>
-                  {post.author}{" "}
+                  {post.author} <VerifiedBadge userId={post.authorId} />{" "}
                   <Text style={[styles.postTime, { color: palette.muted }]}>{formatRuntimeTime(post.createdAt) || "Recently"}</Text>
                 </Text>
               </View>
@@ -7214,7 +7247,7 @@ export function CommunityDetailScreen({
                 ) : (post.commentItems || []).length ? (
                   (post.commentItems || []).map((item) => (
                     <View key={item.id} style={[styles.communityCommentRow, { backgroundColor: palette.inset }]}>
-                      <Text style={[styles.communityCommentAuthor, { color: palette.text }]}>{item.author}</Text>
+                      <Text style={[styles.communityCommentAuthor, { color: palette.text }]}>{item.author} <VerifiedBadge userId={item.authorId} /></Text>
                       <Text style={[styles.communityCommentBody, { color: palette.muted }]}>{item.body}</Text>
                     </View>
                   ))
@@ -8154,7 +8187,7 @@ function ShopScreen({ back }: { back: () => void }) {
     >
       <LinearGradient colors={["#1910C2", "#4E46E5"]} style={styles.shopHero}>
         <View>
-          <Text style={styles.shopKicker}>NITRO BALANCE</Text>
+          <Text style={styles.shopKicker}>V-NITRO BALANCE</Text>
           <Text style={styles.shopBalance}>1,240</Text>
           <Text style={styles.profileSub}>Use points for boosts and perks</Text>
         </View>
@@ -8227,8 +8260,8 @@ function HistoryScreen({
 function NitroHistory({ nitro, back }: { nitro: number; back: () => void }) {
   return (
     <ScreenFrame
-      title="Nitro History"
-      subtitle="Ledger of earned and spent Nitro points."
+      title="V-Nitro History"
+      subtitle="Ledger of earned and spent V-Nitro Points."
       onBack={back}
     >
       <View style={styles.balance}>
@@ -8508,6 +8541,7 @@ export default function App() {
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(
     initialWebRoute?.screen === "activityDetail" ? initialWebRoute.entityId ?? null : null,
   );
+  const [postVibeDraft, setPostVibeDraft] = useState<{ activityId: string; asset: ImagePicker.ImagePickerAsset } | null>(null);
   const [selectedCommunityId, setSelectedCommunityId] = useState<string | null>(
     initialWebRoute?.screen === "communityDetail" ? initialWebRoute.entityId ?? null : null,
   );
@@ -8765,10 +8799,19 @@ export default function App() {
     window.history[method]({ wenitro: true }, "", webHashFor(next, entityId));
   };
 
+  useEffect(() => {
+    if (Platform.OS !== 'web' || data.mode !== 'authenticated' || !data.onboarded || screen !== 'feed') return;
+    const route = readWebRoute();
+    if (route && ['authFallback', 'authSignup', 'login', 'signup', 'intro', 'onboarding'].includes(route.screen)) {
+      window.history.replaceState({ wenitro: true }, '', webHashFor('feed'));
+    }
+  }, [data.mode, data.onboarded, screen]);
+
   const go = (next: Screen, entityId?: string) => {
     setHistory((items) => [...items, screen]);
     if (next === "chat") setLegacyMessages(false);
     if (next !== "activityDetail") setSelectedActivityId(null);
+    if (next !== "postVibe") setPostVibeDraft(null);
     if (next !== "communityDetail") setSelectedCommunityId(null);
     if (next !== "profile") setSelectedProfileId(null);
     if (next !== "squad") setSelectedSquadOwnerId(null);
@@ -8888,6 +8931,9 @@ export default function App() {
           setData={setData}
           go={go}
           openActivity={openActivity}
+          openCommunity={openCommunity}
+          openProfile={openProfile}
+          openVibe={id => { setSelectedVibeId(id); go("vibes", id); }}
         />
       );
     if (screen === "activities")
@@ -8981,7 +9027,7 @@ export default function App() {
       <PartnerDashboard userId={data.userId} dark={data.theme === "dark"} initialActivityId={partnerActivityId} onBack={() => { setPartnerActivityId(undefined); go("profile"); }} onOpenActivity={openActivity} onCreateActivity={() => go("createActivity")} onEditRegistrationForm={(id) => { setPartnerActivityId(id); go("partnerRegistrationForm", id); }} />
     ) : <ScreenFrame title="Partner Dashboard" onBack={back}><Text>Partner account required.</Text></ScreenFrame>;
     if (screen === "partnerRegistrationForm" && partnerActivityId) return data.accountType === "partner" ? <PartnerRegistrationFormScreen activityId={partnerActivityId} dark={data.theme === "dark"} onBack={() => go("partnerDashboard")} /> : <ScreenFrame title="Registration Form" onBack={back}><Text>Partner account required.</Text></ScreenFrame>;
-    if (screen === "createActivity" && data.accountType !== "partner") return <HostActivityScreen key={data.userId} userId={data.userId!} isPartner={false} onBack={() => go("host")} onDrafted={created => { const next = activityFromRemote(created); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); }} onCreated={created => { const next = activityFromRemote(created); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); openActivity(next.id); }} />;
+    if (screen === "createActivity" && data.accountType !== "partner") return <HostActivityScreen key={data.userId} userId={data.userId!} isPartner={false} onBack={() => go("host")} onDrafted={created => { const next = activityFromRemote(created); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); }} onCreated={created => { const next = activityFromRemote(created); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); setHistory(items => [...items, 'activities']); setSelectedActivityId(next.id); setScreen('activityDetail'); pushWebRoute('activityDetail', next.id); }} />;
     if (screen === "createActivity") return <CreateActivityScreen {...props} initialDraft={partnerHostingDraft?.userId === data.userId ? partnerHostingDraft : null} onDraftConsumed={() => setPartnerHostingDraft(null)} onBecomePartner={draft => { setPartnerHostingDraft(draft); go("partnerAccount"); }} />;
     if (screen === "activityDetail" && selectedActivityId) {
       const selectedActivity = data.activities.find(
@@ -9021,11 +9067,24 @@ export default function App() {
               setSelectedConversationId(roomId);
               go('chat', roomId);
             }}
+            onAddVibes={async activityId => {
+              try {
+                const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (!permission.granted) { Alert.alert('Media access needed', 'Photo and video access is required to add Activity Vibes.'); return; }
+                const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images', 'videos'], allowsMultipleSelection: false, quality: .85, videoMaxDuration: 60 });
+                const asset = result.canceled ? null : result.assets[0];
+                if (!asset?.uri) return;
+                setPostVibeDraft({ activityId, asset });
+                go('postVibe', activityId);
+              } catch (caught) {
+                Alert.alert('Could not choose media', caught instanceof Error ? caught.message : 'Please try again.');
+              }
+            }}
             onManagePartner={() => { setPartnerActivityId(selectedActivityId); go("partnerDashboard", selectedActivityId); }}
           />
         );
     }
-    if (screen === "postVibe") return <PostVibeEntry {...props} />;
+    if (screen === "postVibe") return <PostVibeEntry {...props} initialActivityId={postVibeDraft?.activityId} initialMedia={postVibeDraft?.asset} />;
     if (screen === "createCommunity") return <>
       <HostLanding go={go} onActivity={() => go("createActivity")} onVibe={() => go("postVibe")} onCommunity={() => undefined} />
       <CreateCommunitySheet onClose={() => go("host")} onCreated={created => {

@@ -12,7 +12,7 @@ export type HostDraft = {
   title: string; description: string; coverUri: string; coverContentType: string;
   visibility: 'public' | 'squad' | 'private'; approval: boolean; verifiedOnly: boolean;
   capacity: string; ageLabel: string; ageMin: string; ageMax: string; gender: string;
-  paid: boolean; price: string; category: string; location: HostLocation | null;
+  costsMayApply: boolean; entryFeeRequired: boolean; category: string; location: HostLocation | null;
   locationInstruction: string; dateLater: boolean; start: string; end: string; deadline: string;
 };
 export function localDateTime(date: Date) {
@@ -21,8 +21,8 @@ export function localDateTime(date: Date) {
 export function newHostDraft(now = new Date()): HostDraft {
   const start = new Date(now.getTime() + 86400000);
   return { title: '', description: '', coverUri: '', coverContentType: 'image/jpeg', visibility: 'public', approval: false,
-    verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', paid: false,
-    price: '', category: '', location: null, locationInstruction: '', dateLater: false,
+    verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', costsMayApply: false,
+    entryFeeRequired: false, category: '', location: null, locationInstruction: '', dateLater: false,
     start: localDateTime(start), end: localDateTime(new Date(start.getTime() + 3600000)), deadline: localDateTime(start) };
 }
 export function ageError(min: string, max: string) {
@@ -39,8 +39,6 @@ export function hostStepError(d: HostDraft, step: number, isPartner: boolean, no
     if (d.capacity && (!/^\d+$/.test(d.capacity) || Number(d.capacity) < 1 || Number(d.capacity) > 2147483647)) return 'Enter a positive participant limit, or leave it empty for no limit.';
     const age = ageError(d.ageMin, d.ageMax); if (age) return age;
     if (!GENDER_OPTIONS.some(o => o.value === d.gender)) return 'Choose a gender preference.';
-    if (d.paid && !isPartner) return 'Paid hosting requires an active Partner account. You can continue with a free activity.';
-    if (d.paid && (!/^\d+(\.\d{1,2})?$/.test(d.price) || Number(d.price) <= 0)) return 'Enter a positive price with at most two decimal places.';
   }
   if (step === 2) {
     if (!d.category) return 'Select a category.';

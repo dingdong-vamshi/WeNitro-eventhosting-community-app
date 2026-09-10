@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import type { Activity, AppData, Screen } from '../../../App';
 import { activitiesProductionService } from '../../services/activities-production';
@@ -7,6 +7,8 @@ import { activityService } from '../../services/wenitro';
 import { INTEREST_CATEGORIES } from '../../domain/interest-categories';
 import { BrandBar, ErrorLine, Icon, Page, Pills, SearchField, usePalette } from '../reconstruction/ui';
 import { prepareReferenceActivities } from '../reconstruction/feed-search';
+import { UserAvatar } from '../user-avatar';
+import { VerifiedBadge } from '../verified-badge';
 
 type Filter = 'All' | 'Popular' | 'Nearby' | 'Today' | 'Tomorrow';
 const distanceKm = (a: number, b: number, c: number, d: number) => { const r = Math.PI / 180; const x = Math.sin((c - a) * r / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin((d - b) * r / 2) ** 2; return 6371 * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(Math.max(0, 1 - x))); };
@@ -24,14 +26,41 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
   const [position, setPosition] = useState<{ latitude: number; longitude: number } | null>(null);
   const [loading, setLoading] = useState(data.activities.length === 0);
   const [error, setError] = useState('');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const searchGeneration = useRef(0);
 
-  useEffect(() => { const controller = new AbortController(); let active = true; setLoading(true); setError(''); void activitiesProductionService.discover({ pageSize: 30, upcomingOnly: false, sort: 'soonest', signal: controller.signal }).then(async result => { const rows = await prepareReferenceActivities(result.items); if (active) setData(current => ({ ...current, activities: rows })); }).catch(e => { if (active && !controller.signal.aborted) setError(e.message); }).finally(() => { if (active) setLoading(false); }); return () => { active = false; controller.abort(); }; }, []);
+  useEffect(() => {
+    const controller = new AbortController(); let active = true;
+    searchGeneration.current += 1;
+    setLoading(true); setLoadingMore(false); setError(''); setPage(1); setHasMore(false);
+    const timer = setTimeout(() => {
+      void activitiesProductionService.discover({ pageSize: 30, search: query, upcomingOnly: false, sort: 'newest', signal: controller.signal })
+        .then(async result => { const rows = await prepareReferenceActivities(result.items); if (active) { setData(current => ({ ...current, activities: rows })); setHasMore(result.hasMore); } })
+        .catch(e => { if (active && !controller.signal.aborted) setError(e.message); })
+        .finally(() => { if (active) setLoading(false); });
+    }, 250);
+    return () => { active = false; searchGeneration.current += 1; clearTimeout(timer); controller.abort(); };
+  }, [query]);
+  const loadMore = async () => {
+    if (loadingMore || loading) return;
+    const generation = searchGeneration.current;
+    setLoadingMore(true); setError('');
+    try {
+      const result = await activitiesProductionService.discover({ page: page + 1, pageSize: 30, search: query, upcomingOnly: false, sort: 'newest' });
+      const next = await prepareReferenceActivities(result.items);
+      if (generation !== searchGeneration.current) return;
+      setData(current => ({ ...current, activities: [...current.activities, ...next.filter(row => !current.activities.some(existing => existing.id === row.id))] }));
+      setPage(result.page); setHasMore(result.hasMore);
+    } catch (e: any) { if (generation === searchGeneration.current) setError(e.message); } finally { if (generation === searchGeneration.current) setLoadingMore(false); }
+  };
   const chooseFilter = async (next: Filter) => { setFilter(next); if (next !== 'Nearby' || position) return; setLoading(true); setError(''); try { setPosition(await activityLocationService.current()); } catch (e: any) { setError(e.message); } finally { setLoading(false); } };
   const rows = useMemo(() => {
     let result = data.activities.filter(item => item.status !== 'draft' && item.status !== 'cancelled');
     if (query.trim()) { const q = query.trim().toLowerCase(); result = result.filter(item => `${item.title} ${item.description || ''} ${item.where} ${item.category}`.toLowerCase().includes(q)); }
     if (category !== 'All') result = result.filter(item => item.category === category);
-    if (freeOnly) result = result.filter(item => item.price === 'Free' || Number(item.price.replace(/[^0-9.]/g, '')) === 0);
+    if (freeOnly) result = result.filter(item => !item.costsMayApply && !item.entryFeeRequired && item.price === 'Free');
     if (filter === 'Popular') result = [...result].sort((a, b) => (b.likeCount || 0) + b.joined - ((a.likeCount || 0) + a.joined));
     if (filter === 'Nearby') result = position ? result.filter(item => item.latitude != null && item.longitude != null && distanceKm(position.latitude, position.longitude, item.latitude, item.longitude) <= 25) : [];
     if (filter === 'Today' || filter === 'Tomorrow') { const target = new Date(); if (filter === 'Tomorrow') target.setDate(target.getDate() + 1); result = result.filter(item => item.startsAt && new Date(item.startsAt).toDateString() === target.toDateString()); }
@@ -51,7 +80,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
           <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} resizeMode="cover" style={{ width: '100%', height: '100%', backgroundColor: c.inset }} />
           <View style={{ position: 'absolute', inset: 0, backgroundColor: '#06101D14' }} />
           <View style={{ position: 'absolute', top: 9, left: 9, flexDirection: 'row', alignItems: 'center', gap: 6 }}><View style={{ borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#FFFFFFEE' }}><Text style={{ color: '#392CC3', fontSize: 8, fontWeight: '800' }}>{item.category || 'Activity'}</Text></View>{participation ? <View style={{ borderRadius: 13, paddingHorizontal: 8, paddingVertical: 5, backgroundColor: participation === 'Joined' ? '#159B67E8' : '#E08B27E8' }}><Text style={{ color: '#FFF', fontSize: 8, fontWeight: '800' }}>{participation}</Text></View> : null}</View>
-          <View style={{ position: 'absolute', right: 9, bottom: 9, borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#07111FD9' }}><Text style={{ color: '#FFF', fontSize: 8, fontWeight: '800' }}>{item.price || 'Free'}</Text></View>
+          <View style={{ position: 'absolute', right: 9, bottom: 9, borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#07111FD9' }}><Text style={{ color: '#FFF', fontSize: 8, fontWeight: '800' }}>{item.price || 'Free'} · {item.entryFeeRequired ? 'Entry fee required' : 'Free to join'}</Text></View>
         </Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel={saved ? `Unsave ${item.title}` : `Save ${item.title}`} onPress={() => void save(item)} style={{ position: 'absolute', top: 8, right: 8, width: 34, height: 34, borderRadius: 18, backgroundColor: '#07111FCC', alignItems: 'center', justifyContent: 'center' }}><Icon name={saved ? 'bookmark' : 'bookmark-outline'} color="#FFF" size={17} /></Pressable>
       </View>
@@ -60,9 +89,10 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}><Icon name="calendar-outline" color={c.accent} size={13} /><Text numberOfLines={1} style={{ color: c.accent, fontSize: 9, fontWeight: '700', flex: 1 }}>{time(item.startsAt)}</Text></View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}><Icon name="location-outline" color={c.muted} size={13} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 9, flex: 1 }}>{item.where || 'Location to be decided'}</Text></View>
         {item.description ? <Text style={{ color: c.muted, fontSize: 10, lineHeight: 15 }} numberOfLines={1}>{item.description}</Text> : null}
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 1, gap: 7 }}>{item.hostAvatar ? <Image source={{ uri: item.hostAvatar }} style={{ width: 26, height: 26, borderRadius: 14, backgroundColor: c.inset }} /> : <Icon name="person-circle" color={c.muted} size={26} />}<Text numberOfLines={1} style={{ color: c.text, fontSize: 10, fontWeight: '700', flex: 1 }}>{item.host}</Text>{item.likeCount ? <><Icon name="heart-outline" size={13} color={c.muted} /><Text style={{ color: c.muted, fontSize: 9 }}>{item.likeCount}</Text></> : null}<Icon name="people-outline" size={14} color={c.muted} /><Text style={{ color: c.muted, fontSize: 9 }}>{item.joined}{item.seats ? ` / ${item.seats}` : ''}</Text></View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 1, gap: 7 }}><UserAvatar uri={item.hostAvatar} name={item.host} size={26} /><Text numberOfLines={1} style={{ color: c.text, fontSize: 10, fontWeight: '700', flexShrink: 1 }}>{item.host}</Text><VerifiedBadge userId={item.ownerId} size={14} /><View style={{ flex: 1 }} />{item.likeCount ? <><Icon name="heart-outline" size={13} color={c.muted} /><Text style={{ color: c.muted, fontSize: 9 }}>{item.likeCount}</Text></> : null}<Icon name="people-outline" size={14} color={c.muted} /><Text style={{ color: c.muted, fontSize: 9 }}>{item.joined}{item.seats ? ` / ${item.seats}` : ''}</Text></View>
       </Pressable>
     </View>; })}
+    {hasMore && !loading ? <Pressable accessibilityRole="button" disabled={loadingMore} onPress={() => void loadMore()} style={{ padding: 16, alignItems: 'center' }}><Text style={{ color: c.accent, fontWeight: '700' }}>{loadingMore ? 'Loading…' : 'Load more activities'}</Text></Pressable> : null}
     {!loading && !rows.length ? <View style={{ alignItems: 'center', gap: 9, paddingVertical: 42 }}><Icon name="compass-outline" size={40} color={c.muted} /><Text style={{ color: c.text, fontWeight: '800' }}>No activities found</Text><Text style={{ color: c.muted, fontSize: 11, textAlign: 'center' }}>Try another filter or explore a different category.</Text></View> : null}
   </ScrollView></Page>;
 }

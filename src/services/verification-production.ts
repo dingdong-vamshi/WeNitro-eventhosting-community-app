@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { refreshVerifiedUsers } from './verified-users';
 
 export type VerificationStatus =
   | "draft"
@@ -24,6 +25,14 @@ export type VerificationDocument = {
   path: string;
   contentType: "image/jpeg" | "image/png" | "application/pdf";
   size: number;
+};
+export type VerificationMethods = {
+  email_verified: boolean;
+  phone_verified: boolean;
+  live_photo_verified: boolean;
+  is_verified: boolean;
+  verification_points: number;
+  points_awarded: number;
 };
 export const verificationBridgeRpc = {
   list: "list_user_verifications",
@@ -139,6 +148,29 @@ async function discard(draftId: number) {
 }
 
 export const verificationService = {
+  async syncMethods(): Promise<VerificationMethods> {
+    const { data, error } = await supabase.rpc('sync_my_verification');
+    if (error) throw error;
+    refreshVerifiedUsers();
+    return data as VerificationMethods;
+  },
+
+  async submitLivePhoto(uri: string, requestedMime?: string): Promise<VerificationMethods> {
+    const authId = await authUserId();
+    const document = await readDocument(uri, requestedMime);
+    if (document.contentType === 'application/pdf') throw new Error('Choose a JPEG or PNG photo.');
+    const path = `${authId}/live-photo/${crypto.randomUUID()}.${extension(document.contentType)}`;
+    const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, document.body, {
+      contentType: document.contentType, cacheControl: '0', upsert: false,
+    });
+    if (uploadError) throw uploadError;
+    // Never publish this path or use it as the user's avatar. A retry cannot grant another reward.
+    const { data, error } = await supabase.rpc('submit_my_live_photo', { p_path: path });
+    if (error) throw error;
+    refreshVerifiedUsers();
+    return data as VerificationMethods;
+  },
+
   async list(): Promise<VerificationRequest[]> {
     await authUserId();
     const { data, error } = await supabase.rpc(verificationBridgeRpc.list);

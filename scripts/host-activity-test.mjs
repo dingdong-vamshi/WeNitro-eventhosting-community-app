@@ -16,9 +16,7 @@ for(const capacity of ['0','-1','1.5','NaN','2147483648'])assert.ok(hostStepErro
 for(const capacity of ['','1','100'])assert.equal(hostStepError({...valid,capacity},1,false,+now),'');
 assert.equal(ageError('20','45'),'');assert.ok(ageError('45','20'));assert.ok(ageError('-1','20'));assert.ok(ageError('20','121'));assert.equal(ageError('0',''),'');
 assert.equal(HOST_CATEGORIES.length,21);assert.ok(!HOST_CATEGORIES.some(c => c.startsWith('[QA]')));assert.equal(GENDER_OPTIONS.length,4);
-assert.ok(hostStepError({...valid,paid:true,price:'100'},1,false,+now));
-for(const price of ['','0','-1','1.234','abc'])assert.ok(hostStepError({...valid,paid:true,price},1,true,+now));
-assert.equal(hostStepError({...valid,paid:true,price:'100.50'},1,true,+now),'');
+for (const costsMayApply of [false,true]) for (const entryFeeRequired of [false,true]) assert.equal(hostStepError({...valid,costsMayApply,entryFeeRequired},1,false,+now),'');
 assert.ok(hostStepError({...valid,category:''},2,false,+now));assert.ok(hostStepError({...valid,location:null},2,false,+now));
 assert.ok(hostStepError({...valid,end:localDateTime(now)},2,false,+now));
 assert.ok(hostStepError({...valid,deadline:valid.end},2,false,+now));
