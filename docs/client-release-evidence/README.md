@@ -2,7 +2,17 @@
 
 ## Status and boundaries
 
-Local visual and representative functional checks: PASS. Production checks: pending deployment.
+Local visual and representative functional checks: PASS. Production deployment: PASS. Final signed-in production checks: awaiting the user's Google interaction, not yet passed.
+
+## Production deployment
+
+- App source revision: `813741b` (application changes in `1dc6a05`).
+- Vercel project: `wenitro-app`, `prj_umhBEgnTnm2NNrkmPdNFYpSFOsa6`.
+- Deployment: `dpl_EuBcdKZU96J1aCb1AtkWKuhGsLTr`, READY and aliased to `https://wenitro-app.vercel.app/`.
+- The production DOM loaded `index-a363e9a5a6b8adb39a6b85f25d93ad48.js`, matching the validated local and Vercel build output.
+- Real production intro Next navigation and the signed-out `#/profile` authentication guard passed. Production Admin dashboard and verification records loaded under the existing authorized admin session.
+- Production Google was attempted once: no configuration error or stuck spinner appeared, but automation did not expose a chooser. The user has been asked to complete the Google interaction; success is not yet claimed.
+- `production-onboarding-slide-1.png`, `production-onboarding-slide-2.png` and `production-admin.png` are production captures.
 
 Screenshots are real in-app-browser captures. `local-onboarding-*` and `local-welcome-component.png` use the existing isolated component preview, not an authenticated session. Other `local-*` files show the real app backed by the configured Supabase project. No screenshot proves an untested backend operation.
 
@@ -42,5 +52,6 @@ Home viewport sizes were read from the browser: 390 × 844, 430 × 932, 1440 × 
 - Correct Supabase project: `klyjzbisgycegkkacbjw`; active/healthy. Applied verification rewards, independent activity cost flags and owner-only feedback update changes. Local migration versions match the remote history.
 - Non-public local environment values and high-confidence secret patterns were checked against source and generated web JavaScript; no leaks found. Public client configuration is intentionally present.
 - Pre-existing Supabase advisor findings were not broadly remediated in this product pass. “Supabase PASS” refers to access, scoped changes and targeted authorization/idempotency checks, not a clean bill of health for the entire legacy database.
+- Dependency audit reported 20 moderate findings, with no high or critical findings. Dependencies and lockfile were not changed; these findings need a separate dependency-maintenance pass.
 
 No new Cashfree or SMS transaction was initiated. Native SOS, native camera/Google behavior, Partner work and every-platform exhaustive testing are outside this web-release verification.

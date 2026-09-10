@@ -4,7 +4,7 @@
 
 ## Release status
 
-Local checks passed. Production deployment and final production checks are pending. Admin needs no source changes.
+Local checks passed and the App is deployed. Final signed-in production checks are waiting for the user's Google interaction in the in-app browser; this is not yet a full release sign-off. Admin needs no source changes and its existing production workspace is accessible.
 
 ## Implemented changes
 
@@ -29,7 +29,7 @@ The QA account retained 20 verification points after uploading and replacing its
 
 ## Testing
 
-Local in-app browser checks covered representative signed-in flows and Light, Dark and System appearance. Home was checked at 390 × 844, 430 × 932 and a centered mobile shell at 1440 × 900. Both intro slides and Welcome were also reviewed in an isolated component preview; Google authentication was tested separately in the real app.
+Local in-app browser checks covered representative signed-in flows and Light, Dark and System appearance. Home was checked at 390 × 844, 430 × 932 and a centered mobile shell at 1440 × 900. Both intro slides were verified again on production at 390 × 844. Welcome was reviewed in a component preview and in the real app; Google authentication was tested separately.
 
 App type checks, web production build, eight isolated regression suites, Admin build and targeted secret checks passed. Existing Admin users, activities, communities, verification records and payment records loaded. No new payment or SMS was triggered in this release pass. These checks do not certify every device, permission prompt or payment-provider outcome.
 
@@ -39,6 +39,7 @@ App type checks, web production build, eight isolated regression suites, Admin b
 - Partner work remains paused. Native Google/camera behavior still needs device-build testing.
 - Store, achievements and NitroBot remain clearly marked as unavailable; no new eligibility or reward rules are implied.
 - Live SMS and new payment processing were not rerun. Existing behavior was preserved.
+- A separate dependency-maintenance pass remains: the dependency audit reports 20 moderate findings and no high or critical findings.
 
 ## Production links and test access
 
@@ -48,4 +49,4 @@ Use the existing QA accounts shared privately. Passwords and tokens are intentio
 
 ## Evidence
 
-[Screenshot index and check boundaries](client-release-evidence/README.md). Files prefixed `local-` were captured locally; production evidence will be identified separately after deployment.
+[Screenshot index and check boundaries](client-release-evidence/README.md). Files prefixed `local-` were captured locally; `production-` files were captured from the actual deployed URLs.
