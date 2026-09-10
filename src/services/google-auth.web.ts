@@ -6,7 +6,7 @@ export type { GoogleIdentityOptions, GoogleIdentityResult } from './google-auth.
 
 type GoogleIdentitySdk = {
   initialize(options: { client_id: string; nonce: string; callback: (response: { credential: string }) => void; auto_select: boolean; ux_mode: 'popup'; use_fedcm_for_button: boolean; button_auto_select: boolean }): void;
-  renderButton(container: HTMLElement, options: { type: 'standard'; theme: 'outline'; size: 'large'; text: 'continue_with'; shape: 'pill'; width: number; logo_alignment: 'left'; click_listener: () => void }): void;
+  renderButton(container: HTMLElement, options: { type: 'standard'; theme: 'outline'; size: 'large'; text: 'continue_with'; shape: 'pill'; width: number; logo_alignment: 'left' }): void;
   cancel(): void;
 };
 type GoogleWindow = Window & { google?: { accounts?: { id?: GoogleIdentitySdk } } };
@@ -61,24 +61,15 @@ export async function mountGoogleIdentityButton(container: HTMLElement, callback
   let exchanging = false;
   let authenticated = false;
   let active = true;
-  let pendingTimer: ReturnType<typeof setTimeout> | undefined;
-  let focusTimer: ReturnType<typeof setTimeout> | undefined;
-  const clearBusy = () => {
-    if (!active || exchanging || authenticated) return;
-    callbacks.onBusyChange(false);
-    if (pendingTimer) clearTimeout(pendingTimer);
-  };
-  // GIS does not expose popup-close callbacks. Returning focus restores the button
-  // if the chooser was dismissed; credential exchange keeps the loading state.
-  const onFocus = () => { focusTimer = setTimeout(clearBusy, 1500); };
-  window.addEventListener('focus', onFocus);
   sdk.initialize({
     client_id: clientId, nonce: hashedNonce, auto_select: false,
-    ux_mode: 'popup', use_fedcm_for_button: true, button_auto_select: false,
+    // The in-app browser currently rejects the opt-in FedCM request before GIS can
+    // return a credential or cancellation signal. Google's popup flow remains the
+    // compatible default and keeps its own button usable when the chooser closes.
+    ux_mode: 'popup', use_fedcm_for_button: false, button_auto_select: false,
     callback: (response) => {
       if (!active || signal.aborted || exchanging || authenticated) return;
       exchanging = true;
-      if (pendingTimer) clearTimeout(pendingTimer);
       callbacks.onBusyChange(true);
       void exchangeGoogleIdentity(response.credential, nonce, signal).then((result) => {
         if (active && !signal.aborted && result.status === 'authenticated') {
@@ -97,18 +88,9 @@ export async function mountGoogleIdentityButton(container: HTMLElement, callback
     type: 'standard', theme: 'outline', size: 'large', text: 'continue_with',
     shape: 'pill', width: Math.max(200, Math.min(400, Math.round(container.getBoundingClientRect().width))),
     logo_alignment: 'left',
-    click_listener: () => {
-      if (!active || signal.aborted || exchanging || authenticated) return;
-      callbacks.onBusyChange(true);
-      if (pendingTimer) clearTimeout(pendingTimer);
-      pendingTimer = setTimeout(clearBusy, 60000);
-    },
   });
   return () => {
     active = false;
-    if (pendingTimer) clearTimeout(pendingTimer);
-    if (focusTimer) clearTimeout(focusTimer);
-    window.removeEventListener('focus', onFocus);
     container.replaceChildren();
   };
 }
