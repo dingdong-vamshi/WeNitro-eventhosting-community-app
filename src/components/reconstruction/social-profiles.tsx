@@ -25,7 +25,10 @@ export function SocialProfilesScreen({ userId, back, onSaved }: { userId: string
       const [me, links] = await Promise.all([supabase.rpc('get_current_app_user_id'), supabase.rpc('my_social_links')]);
       if (me.error || String(me.data) !== userId) throw new Error('Your account changed. Reopen Social Profiles.');
       if (links.error) throw links.error;
-      if (active) { identity.current = auth.data.user.id; setValues(links.data || {}); }
+      if (active) {
+        identity.current = auth.data.user.id;
+        setValues(Object.fromEntries(SOCIAL_PLATFORMS.map(({ key }) => [key, typeof links.data?.[key] === 'string' ? links.data[key] : ''])) as SocialLinks);
+      }
     })().catch(e => active && setError(e.message)).finally(() => active && setLoading(false));
     return () => { active = false; };
   }, [userId]);
