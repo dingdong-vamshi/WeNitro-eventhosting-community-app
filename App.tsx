@@ -1,6 +1,7 @@
 import { VerifiedBadge } from './src/components/verified-badge';
 import { UserAvatar } from './src/components/user-avatar';
 import { ReferenceEditProfile } from './src/components/reconstruction/edit-profile';
+import { SocialProfilesScreen } from './src/components/reconstruction/social-profiles';
 import { ReferenceInviteSquad } from './src/components/reconstruction/invite-squad';
 import { captureReferral } from './src/services/referrals';
 import { ReferenceCollection } from "./src/components/reconstruction/collections";
@@ -8988,7 +8989,8 @@ export default function App() {
     if (screen === 'verification') return <ReferenceVerification back={back} />;
     if (screen === 'emergency') return <ReferenceEmergencyContact back={back} />;
     if (screen === 'saved' || screen === 'liked') return <ReferenceCollection kind={screen} data={data} setData={setData} back={back} openActivity={openActivity} openVibe={id => { setSelectedVibeId(id); go('vibes', id); }} />;
-    if (screen === 'editProfile') return <ReferenceEditProfile key={data.userId} data={data} setData={setData} back={back} />;
+    if (screen === 'socialLinks') return <SocialProfilesScreen key={data.userId} userId={data.userId!} back={back} onSaved={() => go('profile')} />;
+    if (screen === 'editProfile') return <ReferenceEditProfile key={data.userId} data={data} setData={setData} back={back} onSocialProfiles={() => go('socialLinks')} />;
     if (screen === 'inviteSquad') return <ReferenceInviteSquad userId={data.userId || ""} back={back} />;
     if (screen === 'settings') return <ReferenceSettings {...props} />;
     if (screen === 'privacy') return <ReferencePrivacy back={back} />;
@@ -9124,6 +9126,7 @@ export default function App() {
 
   const communityChatOpen = screen === "chat" && Boolean(selectedConversationId) && (data.conversations.some(c => c.id === selectedConversationId && c.roomType === "community") || data.communities.some(c => c.id === selectedConversationId));
   const showTabs = !communityChatOpen && ![
+    "socialLinks",
     "login",
     "signup",
     "authFallback",
@@ -12054,14 +12057,14 @@ const styles = StyleSheet.create({
     maxWidth,
     alignSelf: "center",
     minHeight: "100%",
-    padding: 18,
-    paddingTop: 24,
-    paddingBottom: 110,
-    gap: 15,
+    padding: 14,
+    paddingTop: 4,
+    paddingBottom: 24,
+    gap: 10,
     backgroundColor: "#07111F",
   },
   dynamicChatHeader: {
-    minHeight: 62,
+    minHeight: 52,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -12069,7 +12072,7 @@ const styles = StyleSheet.create({
   dynamicChatTitle: {
     fontFamily: "Manrope_800ExtraBold",
     color: "#fff",
-    fontSize: 27,
+    fontSize: 22,
   },
   dynamicChatSubtitle: {
     fontFamily: "Manrope_400Regular",
@@ -12099,7 +12102,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   dynamicChatSearch: {
-    minHeight: 54,
+    minHeight: 44,
     borderRadius: 17,
     backgroundColor: "#142238",
     paddingHorizontal: 15,
@@ -12109,7 +12112,7 @@ const styles = StyleSheet.create({
   },
   dynamicChatSearchInput: {
     flex: 1,
-    minHeight: 50,
+    minHeight: 42,
     color: "#fff",
     fontFamily: "Manrope_500Medium",
     fontSize: 13,
@@ -12309,8 +12312,8 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth,
     alignSelf: "center",
-    minHeight: 70,
-    paddingHorizontal: 12,
+    minHeight: 58,
+    paddingHorizontal: 6,
     borderBottomWidth: 1,
     borderBottomColor: "#1D2D43",
     backgroundColor: "#0B1829",
@@ -12325,7 +12328,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  chatThreadAvatar: { width: 43, height: 43, borderRadius: 15 },
+  chatThreadAvatar: { width: 38, height: 38, borderRadius: 13 },
   chatThreadName: {
     maxWidth: 155,
     fontFamily: "Manrope_800ExtraBold",
@@ -12347,9 +12350,9 @@ const styles = StyleSheet.create({
   },
   chatThreadContent: {
     minHeight: "100%",
-    padding: 16,
-    paddingBottom: 28,
-    gap: 10,
+    padding: 12,
+    paddingBottom: 14,
+    gap: 8,
   },
   chatDayPill: {
     alignSelf: "center",
@@ -12357,7 +12360,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#142338",
     paddingHorizontal: 11,
     paddingVertical: 5,
-    marginBottom: 8,
+    marginBottom: 3,
   },
   chatDayText: {
     fontFamily: "Manrope_600SemiBold",

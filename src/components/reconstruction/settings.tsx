@@ -9,7 +9,7 @@ import { Button, ErrorLine, Field, Header, Icon, Page, Sheet, Skeleton, ui, useP
 export function ReferenceSettings({ data, setData, back, go }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; back: () => void; go: (screen: Screen) => void }) {
  const c = usePalette(); const [confirm, setConfirm] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState('');
  const groups: [string, [string, string, () => void][]][] = [
- ['PROFILE & SAFETY', [['Verify Your Account', 'shield-checkmark-outline', () => go('verification')], ['Emergency Contact', 'alert-circle-outline', () => go('emergency')], ['Activity History', 'calendar-outline', () => go('activityHistory')], ['V-Nitro History', 'flash-outline', () => go('nitroHistory')]]],
+ ['PROFILE & SAFETY', [['Social Profiles', 'share-social-outline', () => go('socialLinks')], ['Verify Your Account', 'shield-checkmark-outline', () => go('verification')], ['Emergency Contact', 'alert-circle-outline', () => go('emergency')], ['Activity History', 'calendar-outline', () => go('activityHistory')], ['V-Nitro History', 'flash-outline', () => go('nitroHistory')]]],
  ['SECURITY & PRIVACY', [['Privacy Settings', 'shield-checkmark-outline', () => go('privacy')], ['Cookie & Storage Preferences', 'finger-print-outline', () => go('cookies')]]],
  ['SQUAD REFERRALS', [['Invite Squad', 'person-add-outline', () => go('inviteSquad')], ['My Saved Items', 'bookmark-outline', () => go('saved')], ['My Liked Items', 'heart-outline', () => go('liked')]]],
  ['SUPPORT', [['Ask NitroBot (AI Help)', 'hardware-chip-outline', () => go('help')], ['Send Query', 'chatbox-outline', () => go('feedback')]]],
