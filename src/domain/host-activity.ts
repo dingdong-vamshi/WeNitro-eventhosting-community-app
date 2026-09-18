@@ -19,11 +19,59 @@ export function localDateTime(date: Date) {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 }
 export function newHostDraft(now = new Date()): HostDraft {
-  const start = new Date(now.getTime() + 86400000);
+  const start = new Date(now.getTime() + 10 * 60 * 1000);
   return { title: '', description: '', coverUri: '', coverContentType: 'image/jpeg', visibility: 'public', approval: false,
     verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', costsMayApply: false,
     entryFeeRequired: false, category: '', location: null, locationInstruction: '', dateLater: false,
     start: localDateTime(start), end: localDateTime(new Date(start.getTime() + 3600000)), deadline: localDateTime(start) };
+}
+export type HostActivitySource = {
+  id: string; title: string; description?: string; image?: string; status?: string;
+  visibility?: 'public' | 'community' | 'private' | 'squad'; joinType?: 'direct' | 'approval';
+  verifiedOnly?: boolean; seats?: number; ageMin?: number | null; ageMax?: number | null;
+  genderPreference?: string | null; costsMayApply?: boolean; entryFeeRequired?: boolean;
+  category?: string; where?: string; latitude?: number | null; longitude?: number | null;
+  locationInstruction?: string; startsAt?: string; endsAt?: string; registrationClosesAt?: string;
+};
+export function draftFromActivity(activity: HostActivitySource, now = new Date()): HostDraft {
+  const fresh = newHostDraft(now);
+  const start = activity.startsAt ? localDateTime(new Date(activity.startsAt)) : fresh.start;
+  const end = activity.endsAt ? localDateTime(new Date(activity.endsAt)) : localDateTime(new Date(Date.parse(start) + 3600000));
+  const deadline = activity.registrationClosesAt ? localDateTime(new Date(activity.registrationClosesAt)) : start;
+  const ageMin = activity.ageMin == null ? '15' : String(activity.ageMin);
+  const ageMax = activity.ageMax == null ? '' : String(activity.ageMax);
+  const agePreset = AGE_PRESETS.find(p => p.min === ageMin && p.max === ageMax);
+  const visibility = activity.visibility === 'squad' || activity.visibility === 'private' ? activity.visibility : 'public';
+  return {
+    ...fresh,
+    title: activity.title || '',
+    description: activity.description || '',
+    coverUri: activity.image || '',
+    visibility,
+    approval: activity.joinType === 'approval',
+    verifiedOnly: Boolean(activity.verifiedOnly),
+    capacity: activity.seats ? String(activity.seats) : '',
+    ageLabel: agePreset?.label || (activity.ageMin == null && activity.ageMax == null ? '15+ only' : 'Custom range'),
+    ageMin, ageMax,
+    gender: activity.genderPreference || '',
+    costsMayApply: Boolean(activity.costsMayApply),
+    entryFeeRequired: Boolean(activity.entryFeeRequired),
+    category: activity.category || '',
+    location: activity.where && activity.latitude != null && activity.longitude != null
+      ? { label: activity.where, latitude: activity.latitude, longitude: activity.longitude } : null,
+    locationInstruction: activity.locationInstruction || '',
+    dateLater: !activity.startsAt,
+    start, end, deadline,
+  };
+}
+export function scheduleFieldErrors(d: HostDraft, now = Date.now()) {
+  if (d.dateLater) return { start: '', end: '', deadline: '' };
+  const start = Date.parse(d.start), end = Date.parse(d.end), deadline = Date.parse(d.deadline);
+  return {
+    start: !Number.isFinite(start) ? 'Choose a start time.' : start <= now ? 'Start time cannot be in the past.' : '',
+    end: !Number.isFinite(end) ? 'Choose an end time.' : Number.isFinite(start) && end < start + 3600000 ? 'End time must be at least 1 hour after start.' : '',
+    deadline: !Number.isFinite(deadline) ? 'Choose a registration close time.' : deadline <= now ? 'Registration close cannot be before the current date and time.' : Number.isFinite(start) && deadline > start ? 'Registration close cannot be after start time.' : '',
+  };
 }
 export function ageError(min: string, max: string) {
   if (!/^\d+$/.test(min) || Number(min) < 0 || Number(min) > 120) return 'Minimum age must be between 0 and 120.';
@@ -44,11 +92,8 @@ export function hostStepError(d: HostDraft, step: number, isPartner: boolean, no
     if (!d.category) return 'Select a category.';
     if (!d.location || !Number.isFinite(d.location.latitude) || !Number.isFinite(d.location.longitude)) return 'Select an actual location.';
     if (!d.dateLater) {
-      const start = Date.parse(d.start), end = Date.parse(d.end), deadline = Date.parse(d.deadline);
-      if (![start, end, deadline].every(Number.isFinite)) return 'Choose the start, end and join deadline.';
-      if (start <= now) return 'Choose a future start time.';
-      if (end < start) return 'Wrap-up time cannot be before kickoff.';
-      if (deadline > start || deadline <= now) return 'Join deadline must be in the future and no later than kickoff.';
+      const fields = scheduleFieldErrors(d, now);
+      return fields.start || fields.end || fields.deadline;
     }
   }
   return '';

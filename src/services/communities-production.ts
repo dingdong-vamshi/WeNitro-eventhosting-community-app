@@ -743,7 +743,7 @@ export const communitiesProductionService = {
 
 export default communitiesProductionService;
 
-export async function manageCommunity(id: string, action: 'edit' | 'preferences' | 'approve' | 'reject' | 'delete', patch: Record<string, unknown>) {
+export async function manageCommunity(id: string, action: 'edit' | 'preferences' | 'approve' | 'reject' | 'delete' | 'set_role', patch: Record<string, unknown>) {
   const { data, error } = await supabase.rpc('community_manage', { p_room_id: integerId(id, 'community'), p_action: action, p_patch: patch });
   if (error) throw error;
   return data;

@@ -18,7 +18,10 @@ assert.equal(ageError('20','45'),'');assert.ok(ageError('45','20'));assert.ok(ag
 assert.equal(HOST_CATEGORIES.length,21);assert.ok(!HOST_CATEGORIES.some(c => c.startsWith('[QA]')));assert.equal(GENDER_OPTIONS.length,4);
 for (const costsMayApply of [false,true]) for (const entryFeeRequired of [false,true]) assert.equal(hostStepError({...valid,costsMayApply,entryFeeRequired},1,false,+now),'');
 assert.ok(hostStepError({...valid,category:''},2,false,+now));assert.ok(hostStepError({...valid,location:null},2,false,+now));
-assert.ok(hostStepError({...valid,end:localDateTime(now)},2,false,+now));
+assert.equal(Date.parse(valid.start) - +now, 10 * 60 * 1000);
+assert.equal(Date.parse(valid.end) - Date.parse(valid.start), 3600000);
+assert.equal(valid.deadline, valid.start);
+assert.ok(hostStepError({...valid,end:localDateTime(new Date(Date.parse(valid.start)+30*60*1000))},2,false,+now));
 assert.ok(hostStepError({...valid,deadline:valid.end},2,false,+now));
 assert.ok(hostStepError({...valid,start:localDateTime(now)},2,false,+now));
 assert.equal(hostStepError({...valid,dateLater:true,start:'',end:'',deadline:''},2,false,+now),'');

@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { activityService } from '../../services/wenitro';
 import { activityLocationService } from '../../services/activity-location';
-import { AGE_PRESETS, GENDER_OPTIONS, HOST_CATEGORIES, ageError, hostStepError, localDateTime, newHostDraft, type HostDraft, type HostLocation } from '../../domain/host-activity';
+import { AGE_PRESETS, GENDER_OPTIONS, HOST_CATEGORIES, ageError, draftFromActivity, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, type HostActivitySource, type HostDraft, type HostLocation } from '../../domain/host-activity';
 import CoverEditor from './cover-editor';
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from '../mobile-app-shell';
 import { BrandBar, usePalette as useReferencePalette } from '../reconstruction/ui';
@@ -63,12 +63,13 @@ function Dialog({ title, children, onClose }: { title: string; children: React.R
   </KeyboardAvoidingView></MobileOverlayFrame></Modal>;
 }
 function Option({ label, subtitle, selected, onPress }: { label: string; subtitle?: string; selected: boolean; onPress: () => void }) { const { c, s } = useHostTheme(); return <Pressable accessibilityRole="radio" accessibilityState={{ checked: selected }} aria-checked={selected} accessibilityLabel={label} onPress={onPress} style={s.option}><View style={{ flex: 1, gap: 4 }}><Text style={[s.body, selected && { color: c.purple }]}>{label}</Text>{subtitle && <Text style={s.small}>{subtitle}</Text>}</View>{selected && <Glyph name="checkmark" size={18} />}</Pressable>; }
-function ScheduleField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function ScheduleField({ label, value, onChange, error }: { label: string; value: string; onChange: (v: string) => void; error?: string }) {
   const { c, s } = useHostTheme();
   const [mode, setMode] = useState<'date' | 'time' | null>(null);
   const current = Number.isFinite(Date.parse(value)) ? new Date(value) : new Date();
-  return <View style={{ flex: 1, gap: 10 }}><Text style={s.scheduleLabel}>{label}</Text>
-    {Platform.OS === 'web' ? React.createElement('input', { type: 'datetime-local', 'aria-label': label, value, onInput: (e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value), onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value), style: { width: '100%', minWidth: 0, boxSizing: 'border-box', border: 0, borderBottom: `1px solid ${c.border}`, color: c.text, colorScheme: c.isDark ? 'dark' : 'light', background: 'transparent', padding: '5px 0 12px', fontSize: 13, fontFamily: 'inherit' } }) : <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={() => setMode('date')} style={s.dateButton}><Text style={s.body}>{current.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</Text></Pressable>}
+  return <View style={[{ flex: 1, gap: 10 }, error ? s.scheduleError : null]}><Text style={s.scheduleLabel}>{label}</Text>
+    {Platform.OS === 'web' ? React.createElement('input', { type: 'datetime-local', 'aria-label': label, value, onInput: (e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value), onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value), style: { width: '100%', minWidth: 0, boxSizing: 'border-box', border: 0, borderBottom: `1px solid ${error ? c.danger : c.border}`, color: c.text, colorScheme: c.isDark ? 'dark' : 'light', background: 'transparent', padding: '5px 0 12px', fontSize: 13, fontFamily: 'inherit' } }) : <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={() => setMode('date')} style={[s.dateButton, error && { borderBottomColor: c.danger }]}><Text style={s.body}>{current.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</Text></Pressable>}
+    {error ? <Text accessibilityRole="alert" style={s.error}>{error}</Text> : null}
     {mode && Platform.OS !== 'web' ? <DateTimePicker value={current} mode={mode} onChange={(event, next) => { if (event.type !== 'set' || !next) { setMode(null); return; } onChange(localDateTime(next)); setMode(mode === 'date' ? 'time' : null); }} /> : null}
   </View>;
 }
@@ -81,11 +82,11 @@ function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => 
     const id = ++generation.current; const controller = new AbortController(); currentRequest.current?.abort(); currentRequest.current = controller;
     setResults([]); setError(''); setBusy(false);
     const timer = setTimeout(async () => {
-      if (search.trim().length < 3 || id !== generation.current) return; setBusy(true);
+      if (search.trim().length < 2 || id !== generation.current) return; setBusy(true);
       try { const rows = await activityLocationService.search(search, controller.signal); if (id === generation.current) setResults(rows); }
       catch (e) { if (!controller.signal.aborted && id === generation.current) setError(e instanceof Error ? e.message : 'Could not search locations.'); }
       finally { if (id === generation.current) setBusy(false); }
-    }, 650);
+    }, 280);
     return () => { clearTimeout(timer); controller.abort(); generation.current++; };
   }, [search]);
   useEffect(() => () => currentRequest.current?.abort(), []);
@@ -96,10 +97,10 @@ function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => 
     finally { if (id === generation.current) setBusy(false); }
   };
   return <Modal transparent visible animationType="slide" onRequestClose={onClose}><MobileOverlayFrame><SafeAreaView style={s.root} edges={['top', 'bottom']}><View style={s.header}><Pressable accessibilityRole="button" accessibilityLabel="Close location search" onPress={onClose} style={s.back}><Glyph name="close" color={c.text} /></Pressable><Text style={[s.headerTitle, { textAlign: 'center' }]}>Search Location</Text><View style={{ width: 40 }} /></View>
-    <View style={{ padding: 18 }}><Control label="Search Location" icon="search-outline" value={search} onChangeText={setSearch} placeholder="Enter address or place..." autoCapitalize="none" /><Pressable accessibilityRole="button" disabled={busy} onPress={() => void current()} style={[s.inline, { minHeight: 56 }]}><Glyph name="locate-outline" size={18} /><Text style={s.settingTitle}>Use Current Location</Text></Pressable></View>
+    <View style={{ padding: 18 }}><Control label="Search Location" icon="search-outline" value={search} onChangeText={setSearch} placeholder="Venue, street, landmark, or area..." autoCapitalize="none" /><Pressable accessibilityRole="button" disabled={busy} onPress={() => void current()} style={[s.inline, { minHeight: 56 }]}><Glyph name="locate-outline" size={18} /><Text style={s.settingTitle}>Use Current Location</Text></Pressable></View>
     {busy && <ActivityIndicator color={c.purple} />}{error ? <Text accessibilityRole="alert" style={s.error}>{error}</Text> : null}
-    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 18 }}>{results.map((r, i) => <Pressable key={`${r.latitude}:${r.longitude}:${i}`} accessibilityRole="button" onPress={() => onSelect(r)} style={[s.option, { paddingHorizontal: 0 }]}><Glyph name="navigate-outline" size={18} /><View style={{ flex: 1, gap: 5, marginLeft: 9 }}><Text style={s.settingTitle}>{r.label}</Text><Text style={s.small}>{r.latitude.toFixed(4)}, {r.longitude.toFixed(4)}</Text></View></Pressable>)}{!busy && !error && search.trim().length >= 3 && !results.length ? <Text style={s.small}>No results found</Text> : null}</ScrollView>
-    <Text onPress={() => void Linking.openURL('https://www.openstreetmap.org/copyright')} style={[s.small, { textAlign: 'center', padding: 12 }]}>Location data © OpenStreetMap contributors · Photon</Text>
+    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 24 }}>{results.map((r, i) => <Pressable key={`${r.label}:${r.latitude}:${r.longitude}:${i}`} accessibilityRole="button" onPress={() => onSelect(r)} style={[s.option, { paddingHorizontal: 0, alignItems: 'flex-start' }]}><Glyph name="navigate-outline" size={18} /><View style={{ flex: 1, gap: 5, marginLeft: 9 }}><Text style={s.settingTitle}>{r.label}</Text><Text style={s.small}>{r.latitude.toFixed(6)}, {r.longitude.toFixed(6)}</Text></View></Pressable>)}{!busy && !error && search.trim().length >= 2 && !results.length ? <Text style={s.small}>No matching venues or addresses. Try a landmark, street, or PIN code.</Text> : null}</ScrollView>
+    <Text onPress={() => void Linking.openURL('https://www.openstreetmap.org/copyright')} style={[s.small, { textAlign: 'center', padding: 12 }]}>Location data © OpenStreetMap contributors</Text>
   </SafeAreaView></MobileOverlayFrame></Modal>;
 }
 export function HostLanding({ onActivity, onVibe, onCommunity, go }: { onActivity: () => void; onVibe: () => void; onCommunity: () => void; go?: (screen: any) => void }) {
@@ -112,9 +113,9 @@ export function HostLanding({ onActivity, onVibe, onCommunity, go }: { onActivit
     ] as const).map(([icon, title, description, color, bg, action]) => <Pressable accessibilityRole="button" accessibilityLabel={title} key={title} onPress={action} style={[s.landingCard, { minHeight: 150, borderRadius: 22, backgroundColor: bg, borderWidth: 1, borderColor: palette.border }]}><View style={[s.landingIcon, { width: 58, height: 58, borderRadius: 17, backgroundColor: color }]}><Glyph name={icon} color="white" size={30} /></View><View style={{ flex: 1, gap: 8 }}><Text style={[s.settingTitle, { color: palette.text, fontSize: 17 }]}>{title}</Text><Text style={[s.small, { color: palette.muted, fontSize: 12, lineHeight: 18 }]}>{description}</Text></View><View style={[s.roundArrow, { width: 34, height: 34, borderRadius: 18, backgroundColor: light ? palette.inset : '#FFFFFF13' }]}><Glyph name="chevron-forward" size={17} color={palette.text} /></View></Pressable>)}
   </ScrollView></SafeAreaView>;
 }
-export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDrafted }: { userId: string; isPartner: boolean; onBack: () => void; onCreated: (activity: Awaited<ReturnType<typeof activityService.create>>) => void; onDrafted?: (activity: Awaited<ReturnType<typeof activityService.createDraft>>) => void }) {
+export function HostActivityScreen({ userId, isPartner, existing, onBack, onCreated, onDrafted }: { userId: string; isPartner: boolean; existing?: HostActivitySource | null; onBack: () => void; onCreated: (activity: Awaited<ReturnType<typeof activityService.create>>) => void; onDrafted?: (activity: Awaited<ReturnType<typeof activityService.createDraft>>) => void }) {
   const { c, s } = useHostTheme();
-  const [draft, setDraft] = useState<HostDraft>(() => newHostDraft()), [step, setStep] = useState(0), [loaded, setLoaded] = useState(false);
+  const [draft, setDraft] = useState<HostDraft>(() => existing ? draftFromActivity(existing) : newHostDraft()), [step, setStep] = useState(0), [loaded, setLoaded] = useState(false);
   const [dialog, setDialog] = useState<'visibility' | 'age' | 'gender' | 'exit' | 'customAge' | null>(null);
   const [categoryOpen, setCategoryOpen] = useState(false), [categorySearch, setCategorySearch] = useState('');
   const [locationOpen, setLocationOpen] = useState(false), [cropUri, setCropUri] = useState('');
@@ -128,21 +129,30 @@ export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDra
   const opacity = useRef(new Animated.Value(1)).current;
   const draftRef = useRef(draft); draftRef.current = draft; const storageKey = `wenitro:host-draft:v2:${userId}`;
   const patch = (p: Partial<HostDraft>) => { setDraft(d => ({ ...d, ...p })); setError(''); setDraftNotice(''); };
-  useEffect(() => { alive.current = true; let active = true; void AsyncStorage.getItem(storageKey).then(raw => {
+  useEffect(() => { alive.current = true; let active = true;
+    if (existing) {
+      committedId.current = existing.id;
+      committedStatus.current = existing.status === 'draft' ? 'draft' : 'published';
+      persistedCoverUri.current = existing.image || '';
+      setDraft(draftFromActivity(existing));
+      draftLoaded.current = true; setLoaded(true);
+      return () => { active = false; alive.current = false; };
+    }
+    void AsyncStorage.getItem(storageKey).then(raw => {
     if (raw && active) { const saved = JSON.parse(raw); if (saved.version === 2 && saved.draft && typeof saved.draft.title === 'string') { setDraft({ ...newHostDraft(), ...saved.draft }); if (typeof saved.createdId === 'string') { committedId.current = saved.createdId; committedStatus.current = saved.createdStatus === 'draft' ? 'draft' : 'published'; persistedCoverUri.current = typeof saved.persistedCoverUri === 'string' ? saved.persistedCoverUri : ''; setCreatedId(saved.createdId); setStep(2); } setDraftNotice('Your saved draft has been restored.'); } }
-  }).catch(() => { if (active) setDraftNotice('Could not restore the local draft.'); }).finally(() => { if (active) { draftLoaded.current = true; setLoaded(true); } }); return () => { active = false; alive.current = false; if (draftLoaded.current && !completed.current) void store().catch(() => undefined); }; }, [storageKey]);
+  }).catch(() => { if (active) setDraftNotice('Could not restore the local draft.'); }).finally(() => { if (active) { draftLoaded.current = true; setLoaded(true); } }); return () => { active = false; alive.current = false; if (draftLoaded.current && !completed.current) void store().catch(() => undefined); }; }, [storageKey, existing?.id]);
   const store = (d = draftRef.current) => {
     const serialized = JSON.stringify({ version: 2, draft: d, createdId: committedId.current, createdStatus: committedStatus.current, persistedCoverUri: persistedCoverUri.current });
     pendingStorage.current = pendingStorage.current.catch(() => undefined).then(() => AsyncStorage.setItem(storageKey, serialized)); return pendingStorage.current;
   };
-  useEffect(() => { if (!loaded || lock.current) return; const timer = setTimeout(() => { void store().catch(() => { if (alive.current) setDraftNotice('Draft could not be saved on this device. Keep this screen open.'); }); }, 350); return () => clearTimeout(timer); }, [draft, loaded]);
+  useEffect(() => { if (!loaded || lock.current || existing) return; const timer = setTimeout(() => { void store().catch(() => { if (alive.current) setDraftNotice('Draft could not be saved on this device. Keep this screen open.'); }); }, 350); return () => clearTimeout(timer); }, [draft, loaded, existing]);
   useEffect(() => {
     if (Platform.OS !== 'web') return;
     const unload = (e: BeforeUnloadEvent) => { if (draftRef.current.title || draftRef.current.description) { e.preventDefault(); e.returnValue = ''; } };
     window.addEventListener('beforeunload', unload); return () => window.removeEventListener('beforeunload', unload);
   }, []);
   const transition = (next: number) => { Keyboard.dismiss(); setCategoryOpen(false); setError(''); setStep(next); scroll.current?.scrollTo({ y: 0, animated: false }); opacity.setValue(.55); Animated.timing(opacity, { toValue: 1, duration: 160, useNativeDriver: true }).start(); };
-  const back = () => { if (lock.current) return; if (step) transition(step - 1); else if (draft.title || draft.description || draft.coverUri) setDialog('exit'); else onBack(); };
+  const back = () => { if (lock.current) return; if (step) transition(step - 1); else if (existing) onBack(); else if (draft.title || draft.description || draft.coverUri) setDialog('exit'); else onBack(); };
   useEffect(() => { const handler = BackHandler.addEventListener('hardwareBackPress', () => { back(); return true; }); return () => handler.remove(); }, [step, draft]);
   const pick = async () => {
     try { const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], allowsEditing: Platform.OS !== 'web', aspect: [1080, 600], quality: .85 });
@@ -211,9 +221,7 @@ export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDra
     try {
       const input = activityInput(async id => { committedId.current = id; committedStatus.current = 'published'; persistedCoverUri.current = draft.coverUri; setCreatedId(id); await store(); });
       const created = committedId.current
-        ? committedStatus.current === 'draft'
-          ? await activityService.update(committedId.current, { ...input, status: 'published' })
-          : (await activityService.getDetails(committedId.current)).activity
+        ? await activityService.update(committedId.current, { ...input, status: 'published' })
         : await activityService.create(input);
       committedStatus.current = 'published';
       completed.current = true; await pendingStorage.current.catch(() => undefined); await AsyncStorage.removeItem(storageKey).catch(() => undefined);
@@ -222,9 +230,15 @@ export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDra
     finally { lock.current = false; if (alive.current) setSaving(false); }
   };
   if (!loaded) return <View style={[s.root, { justifyContent: 'center' }]}><ActivityIndicator color={c.purple} /></View>;
-  const invalid = createdId ? '' : hostStepError(draft, step, isPartner);
+  const invalid = createdId && !existing ? '' : hostStepError(draft, step, isPartner);
+  const timeErrors = scheduleFieldErrors(draft);
+  const applyStart = (start: string) => {
+    const parsed = Date.parse(start);
+    if (!Number.isFinite(parsed) || existing) { patch({ start }); return; }
+    patch({ start, end: localDateTime(new Date(parsed + 3600000)), deadline: start });
+  };
   return <SafeAreaView style={s.root} edges={['top']}><KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <View style={s.header}><Pressable accessibilityRole="button" accessibilityLabel="Back" disabled={saving} onPress={back} style={s.back}><Glyph name="arrow-back" color={c.text} /></Pressable><Text style={s.headerTitle}>Host Activity</Text><Pressable accessibilityRole="button" accessibilityLabel="Save Draft" disabled={saving} onPress={() => { void saveDraft(); }} style={{ padding: 10 }}><Text style={{ color: c.purple, fontWeight: '700', fontSize: 14 }}>Draft</Text></Pressable></View>
+    <View style={s.header}><Pressable accessibilityRole="button" accessibilityLabel="Back" disabled={saving} onPress={back} style={s.back}><Glyph name="arrow-back" color={c.text} /></Pressable><Text style={s.headerTitle}>{existing ? 'Edit Activity' : 'Host Activity'}</Text>{existing ? <View style={{ width: 52 }} /> : <Pressable accessibilityRole="button" accessibilityLabel="Save Draft" disabled={saving} onPress={() => { void saveDraft(); }} style={{ padding: 10 }}><Text style={{ color: c.purple, fontWeight: '700', fontSize: 14 }}>Draft</Text></Pressable>}</View>
     <View style={s.progress} accessibilityLabel={`Step ${step + 1} of 3`}>{[0, 1, 2].map(i => <View key={i} style={{ height: 5, width: i === step ? 20 : 5, borderRadius: 4, backgroundColor: i <= step ? c.purple : '#343E4A' }} />)}</View>
     <ScrollView ref={scroll} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
       <Animated.View style={{ opacity }}><Text style={s.heading}>{['Find a Partner', 'Access & Privacy', 'Categories & Venue'][step]}</Text><Text style={s.subtitle}>{['Explain what kind of partner you are looking for.', 'Control who can see and join your circle.', 'Define the categories, setting and schedule for your upcoming meetup.'][step]}</Text>
@@ -241,8 +255,7 @@ export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDra
         <View style={{ marginTop: 14 }}><ChoiceRow label="Age Restriction" value={draft.ageLabel} onPress={() => setDialog('age')} />
         {draft.ageLabel === 'Custom range' ? <View style={[s.inline, { alignItems: 'flex-start' }]}>{(['ageMin', 'ageMax'] as const).map((key, i) => <View key={key} style={{ flex: 1, gap: 8 }}><Text style={s.small}>{i ? 'Maximum Age' : 'Minimum Age'}</Text><Control label={i ? 'Maximum Age' : 'Minimum Age'} value={draft[key]} keyboardType="number-pad" onChangeText={value => patch({ [key]: value })} /></View>)}</View> : null}
         <ChoiceRow label="Gender Preference" value={GENDER_OPTIONS.find(o => o.value === draft.gender)?.label || 'Open to All'} onPress={() => setDialog('gender')} /></View>
-        <Toggle label={draft.costsMayApply ? "Costs may apply" : "Free activity"} description={draft.costsMayApply ? "Participants may spend money at the venue or during the activity." : "No activity or venue spending is expected."} value={draft.costsMayApply} onChange={() => patch({ costsMayApply: !draft.costsMayApply })} />
-        <Toggle label={draft.entryFeeRequired ? "Entry fee required" : "Free to join"} description={draft.entryFeeRequired ? "An entry or attendance fee is arranged separately. This does not create an in-app checkout." : "No entry or attendance fee is required to join."} value={draft.entryFeeRequired} onChange={() => patch({ entryFeeRequired: !draft.entryFeeRequired })} />
+        <Toggle label="Paid Activity" description={draft.costsMayApply || draft.entryFeeRequired ? "This activity has a cost or entry fee." : "This activity is free to join."} value={draft.costsMayApply || draft.entryFeeRequired} onChange={() => { const next = !(draft.costsMayApply || draft.entryFeeRequired); patch({ costsMayApply: next, entryFeeRequired: next }); }} />
       </View>}
       {step === 2 && <View style={{ marginTop: 30, gap: 28 }}>
         <Pressable accessibilityRole="button" accessibilityLabel="Choose category" onPress={() => setCategoryOpen(v => !v)} style={[s.inputShell, categoryOpen && { borderColor: c.purple }]}><Text style={[s.body, { flex: 1 }, !draft.category && { color: c.muted }]}>{draft.category || 'Search and select categories...'}</Text><Glyph name="chevron-down" size={16} color={c.muted} /></Pressable>
@@ -250,13 +263,13 @@ export function HostActivityScreen({ userId, isPartner, onBack, onCreated, onDra
         <Pressable accessibilityRole="button" accessibilityLabel={draft.location ? 'Change location' : 'Add Location'} onPress={() => setLocationOpen(true)} style={s.location}><View style={s.locationIcon}><Glyph name="location-outline" size={24} /></View><View style={{ flex: 1, gap: 4 }}><Text style={s.settingTitle}>{draft.location?.label || 'Add Location'}</Text><Text style={s.small}>{draft.location ? 'Tap to change location' : 'Where is this meetup happening?'}</Text></View><Glyph name="chevron-forward" size={17} color={c.muted} /></Pressable>
         <View style={{ gap: 12 }}><Text style={[s.body, { fontSize: 12 }]}>Location Instructions</Text><TextInput accessibilityLabel="Location Instructions" value={draft.locationInstruction} onChangeText={locationInstruction => patch({ locationInstruction })} multiline maxLength={1000} placeholder="e.g., Meet near the red bench, Room 404..." placeholderTextColor={c.muted} style={s.instructions} /></View>
         <Pressable accessibilityRole="checkbox" accessibilityLabel="Decide Date Later" accessibilityState={{ checked: draft.dateLater }} aria-checked={draft.dateLater} onPress={() => patch({ dateLater: !draft.dateLater })} style={s.later}><Text style={s.value}>📅 {draft.dateLater ? 'Add Date Now' : 'Decide Date Later'}</Text></Pressable>
-        {draft.dateLater ? <View style={{ gap: 24 }}><View style={s.location}><Text style={s.subtitle}>📅 Date and time will be decided later. You can discuss with participants after they join!</Text></View><View><Text style={s.scheduleLabel}>JOIN DEADLINE</Text><Text style={[s.small, { marginTop: 12 }]}>Not set</Text></View></View> : <><View style={[s.inline, { alignItems: 'flex-start', gap: 16 }]}><ScheduleField label="KICKS OFF AT" value={draft.start} onChange={start => patch({ start })} /><ScheduleField label="WRAPS UP AT" value={draft.end} onChange={end => patch({ end })} /></View><ScheduleField label="JOIN DEADLINE" value={draft.deadline} onChange={deadline => patch({ deadline })} /></>}
+        {draft.dateLater ? <View style={{ gap: 24 }}><View style={s.location}><Text style={s.subtitle}>📅 Date and time will be decided later. You can discuss with participants after they join!</Text></View><View><Text style={s.scheduleLabel}>JOIN DEADLINE</Text><Text style={[s.small, { marginTop: 12 }]}>Not set</Text></View></View> : <><View style={[s.inline, { alignItems: 'flex-start', gap: 16 }]}><ScheduleField label="KICKS OFF AT" value={draft.start} error={timeErrors.start} onChange={applyStart} /><ScheduleField label="WRAPS UP AT" value={draft.end} error={timeErrors.end} onChange={end => patch({ end })} /></View><ScheduleField label="JOIN DEADLINE" value={draft.deadline} error={timeErrors.deadline} onChange={deadline => patch({ deadline })} /></>}
       </View>}
       {draftNotice ? <Text accessibilityLiveRegion="polite" style={[s.small, { marginTop: 20 }]}>{draftNotice}</Text> : null}
       {(error || invalid) ? <Text accessibilityRole={error ? 'alert' : undefined} style={[error ? s.error : s.small, { marginTop: 20 }]}>{error || invalid}</Text> : null}
       </Animated.View>
     </ScrollView>
-    <View style={s.footer}><Pressable accessibilityRole="button" accessibilityLabel={createdId && committedStatus.current === 'published' ? 'Open Activity' : step === 2 ? 'Host Now' : 'Continue'} accessibilityState={{ disabled: !!invalid || saving, busy: saving }} disabled={!!invalid || saving} onPress={() => step < 2 && committedStatus.current !== 'published' ? transition(step + 1) : void submit()} style={[s.cta, (!!invalid || saving) && { opacity: .5 }]}>{saving ? <ActivityIndicator color="white" /> : <><Text style={s.ctaText}>{createdId && committedStatus.current === 'published' ? 'Open Activity' : step === 2 ? 'Host Now' : 'Continue'}</Text><Glyph name="arrow-forward" color="white" /></>}</Pressable></View>
+    <View style={s.footer}><Pressable accessibilityRole="button" accessibilityLabel={createdId && committedStatus.current === 'published' && !existing ? 'Open Activity' : step === 2 ? existing ? 'Save Changes' : 'Host Now' : 'Continue'} accessibilityState={{ disabled: !!invalid || saving, busy: saving }} disabled={!!invalid || saving} onPress={() => step < 2 ? transition(step + 1) : void submit()} style={[s.cta, (!!invalid || saving) && { opacity: .5 }]}>{saving ? <ActivityIndicator color="white" /> : <><Text style={s.ctaText}>{createdId && committedStatus.current === 'published' && !existing ? 'Open Activity' : step === 2 ? existing ? 'Save Changes' : 'Host Now' : 'Continue'}</Text><Glyph name="arrow-forward" color="white" /></>}</Pressable></View>
   </KeyboardAvoidingView>
     {dialog && <Dialog title={dialog === 'visibility' ? 'Visibility' : dialog === 'age' ? 'Age Restriction' : dialog === 'customAge' ? 'Custom Age Range' : dialog === 'gender' ? 'Gender Preference' : 'Keep your draft?'} onClose={() => setDialog(null)}>
       {dialog === 'visibility' && ([['public', 'Public', 'Anyone can find it'], ['squad', 'Squad', 'Limited to your network'], ['private', 'Private', 'Participants/invite-only']] as const).map(([value, label, subtitle]) => <Option key={value} label={label} subtitle={subtitle} selected={draft.visibility === value} onPress={() => { patch({ visibility: value }); setDialog(null); }} />)}
@@ -277,7 +290,7 @@ const createStyles = (c: HostColors) => StyleSheet.create({
   toggleRow: { minHeight: 88, paddingVertical: 16, borderBottomWidth: 1, borderColor: c.border, flexDirection: 'row', alignItems: 'center', gap: 20 }, settingTitle: { color: c.text, fontSize: 14, fontWeight: '600' }, settingDescription: { color: c.muted, fontSize: 12, lineHeight: 21 }, track: { width: 30, height: 15, borderRadius: 10, backgroundColor: c.isDark ? '#384252' : '#D7DBE5', marginHorizontal: 9 }, thumb: { width: 19, height: 19, borderRadius: 11, top: -2, left: -2 }, choice: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 52, gap: 8 },
   footer: { paddingHorizontal: 18, paddingVertical: 14, borderTopWidth: 1, borderColor: c.border, backgroundColor: c.bg }, cta: { backgroundColor: '#6958EB', minHeight: 48, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }, ctaText: { color: '#FFF', fontSize: 15, fontWeight: '500' },
   scrim: { flex: 1, backgroundColor: c.overlay, justifyContent: 'center', padding: 20 }, dialog: { width: '100%', maxWidth: MOBILE_APP_MAX_WIDTH - 40, maxHeight: '90%', alignSelf: 'center', borderRadius: 18, backgroundColor: c.bg, overflow: 'hidden' }, dialogTitle: { color: c.text, fontSize: 15, fontWeight: '700', textAlign: 'center', padding: 20, borderBottomWidth: 1, borderColor: c.border }, option: { flexDirection: 'row', alignItems: 'center', minHeight: 52, padding: 16, borderBottomWidth: 1, borderColor: c.border }, cancel: { backgroundColor: c.input, borderRadius: 12, margin: 14, minHeight: 46, alignItems: 'center', justifyContent: 'center' },
-  categories: { backgroundColor: c.input, borderWidth: 1, borderColor: c.border, borderRadius: 12, overflow: 'hidden', marginTop: -18 }, location: { padding: 16, minHeight: 72, backgroundColor: c.input, borderRadius: 16, borderWidth: 1, borderColor: c.border, flexDirection: 'row', gap: 12, alignItems: 'center' }, locationIcon: { padding: 6, backgroundColor: c.isDark ? '#25263F' : '#E9E6FF', borderRadius: 12 }, instructions: { fontSize: 14, lineHeight: 21, color: c.text, borderBottomWidth: 1, borderColor: c.border, minHeight: 46, paddingVertical: 12 }, later: { borderColor: c.purple, borderWidth: 1.5, borderRadius: 7, minHeight: 48, justifyContent: 'center', alignItems: 'center' }, scheduleLabel: { color: c.muted, fontSize: 10, fontWeight: '600', letterSpacing: .4 }, dateButton: { borderBottomWidth: 1, borderColor: c.border, paddingBottom: 12, minHeight: 44 }, error: { color: c.danger, fontSize: 12, lineHeight: 18, paddingHorizontal: 2 },
+  categories: { backgroundColor: c.input, borderWidth: 1, borderColor: c.border, borderRadius: 12, overflow: 'hidden', marginTop: -18 }, location: { padding: 16, minHeight: 72, backgroundColor: c.input, borderRadius: 16, borderWidth: 1, borderColor: c.border, flexDirection: 'row', gap: 12, alignItems: 'center' }, locationIcon: { padding: 6, backgroundColor: c.isDark ? '#25263F' : '#E9E6FF', borderRadius: 12 }, instructions: { fontSize: 14, lineHeight: 21, color: c.text, borderBottomWidth: 1, borderColor: c.border, minHeight: 46, paddingVertical: 12 }, later: { borderColor: c.purple, borderWidth: 1.5, borderRadius: 7, minHeight: 48, justifyContent: 'center', alignItems: 'center' }, scheduleLabel: { color: c.muted, fontSize: 10, fontWeight: '600', letterSpacing: .4 }, dateButton: { borderBottomWidth: 1, borderColor: c.border, paddingBottom: 12, minHeight: 44 }, scheduleError: { borderWidth: 1.5, borderColor: c.danger, borderRadius: 10, padding: 8 }, error: { color: c.danger, fontSize: 12, lineHeight: 18, paddingHorizontal: 2 },
   landingCard: { padding: 18, minHeight: 110, borderRadius: 16, flexDirection: 'row', alignItems: 'center', gap: 14 }, landingIcon: { width: 48, height: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center' }, roundArrow: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#FFFFFF13', alignItems: 'center', justifyContent: 'center' },
 });
 

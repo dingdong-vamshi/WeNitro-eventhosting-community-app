@@ -22,10 +22,18 @@ export type ChatProfile = {
   full_name: string | null;
   avatar_url: string | null;
 };
+export type CommunityMemberRole = "member" | "moderator" | "admin";
+export type CommunityMemberPermissions = {
+  can_approve: boolean;
+  can_post: boolean;
+  can_edit: boolean;
+  can_manage_roles: boolean;
+};
 export type ChatMember = {
   conversation_id: number;
   user_id: number;
-  role: "member" | "admin";
+  role: CommunityMemberRole;
+  permissions: CommunityMemberPermissions;
   last_read_at: string | null;
   muted: boolean;
   joined_at: string;
@@ -259,12 +267,29 @@ function mapMessage(value: unknown): ChatMessage {
     profiles: mapProfile(row.sender ?? row.profile ?? row.profiles),
   };
 }
+function memberPermissions(role: CommunityMemberRole, raw: unknown): CommunityMemberPermissions {
+  const row = raw && typeof raw === "object" ? record(raw) : {};
+  const fallback = {
+    can_approve: role === "admin" || role === "moderator",
+    can_post: role === "admin" || role === "moderator",
+    can_edit: role === "admin",
+    can_manage_roles: role === "admin",
+  };
+  return {
+    can_approve: row.can_approve == null ? fallback.can_approve : Boolean(row.can_approve),
+    can_post: row.can_post == null ? fallback.can_post : Boolean(row.can_post),
+    can_edit: row.can_edit == null ? fallback.can_edit : Boolean(row.can_edit),
+    can_manage_roles: row.can_manage_roles == null ? fallback.can_manage_roles : Boolean(row.can_manage_roles),
+  };
+}
 function mapMember(value: unknown): ChatMember {
   const row = record(value);
+  const role: CommunityMemberRole = row.role === "admin" || row.role === "creator" ? "admin" : row.role === "moderator" ? "moderator" : "member";
   return {
     conversation_id: id(row.room_id ?? row.conversation_id, "room id"),
     user_id: id(row.user_id, "user id"),
-    role: row.role === "admin" ? "admin" : "member",
+    role,
+    permissions: memberPermissions(role, row.permissions),
     last_read_at: nullableString(row.last_read_at),
     muted: Boolean(row.muted),
     joined_at: String(row.joined_at),

@@ -11,7 +11,7 @@ import { supabase } from '../../lib/supabase';
 import { communityService, uploadMedia } from '../../services/wenitro';
 import { communitiesProductionService, editCommunity, communityPoll, type CommunityDetail, type CommunityPoll } from '../../services/communities-production';
 import { createMessageClientId, realtimeChatService, type ChatMessage, type MessageCursor, type RealtimeChatSubscription } from '../../services/realtime-chat';
-import { Sheet, Button, Field, ErrorLine, usePalette, type ReferencePalette } from '../reconstruction/ui';
+import { Sheet, Button, Field, ErrorLine, Header, Page, usePalette, type ReferencePalette } from '../reconstruction/ui';
 import CoverEditor from '../hosting/cover-editor';
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from '../mobile-app-shell';
 
@@ -181,8 +181,8 @@ export function CommunityConversation({ id, userId, name, avatar, success, onDis
 }
 
 export function VibeEntryState({ loading, error, onBack, onRetry }: { loading: boolean; error?: string; onBack: () => void; onRetry: () => void }) {
-  const { s } = useCommunityStyles();
-  return <SafeAreaView style={s.chat} edges={['top']}><View style={s.chatHeader}><Pressable accessibilityRole="button" accessibilityLabel="Back to Host" onPress={onBack} style={s.iconButton}><Icon name="arrow-back" /></Pressable><Text style={s.title}>Post a Vibe</Text></View><View style={s.vibeEmpty}>{loading ? <><ActivityIndicator color="#8A83FE" /><Text style={s.muted}>Loading active events...</Text></> : error ? <><Text style={s.body}>Could not load activities</Text><Text style={s.muted}>{error}</Text><Pressable accessibilityRole="button" onPress={onRetry} style={s.earlier}><Text style={s.body}>Retry</Text></Pressable></> : <><Icon name="calendar-outline" size={40} color="#727D91" /><Text style={s.noEvents}>No events found</Text><Text style={s.vibeHint}>You must join or host an activity first before you can post a vibe highlights!</Text></>}</View></SafeAreaView>;
+  const c = usePalette();
+  return <Page><Header title="Post Vibe" back={onBack} /><View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32, gap: 12 }}>{loading ? <><ActivityIndicator color={c.accent} /><Text style={{ color: c.muted, fontSize: 14, fontWeight: '600' }}>Loading active events...</Text></> : error ? <><Text style={{ color: c.text, fontSize: 16, fontWeight: '800' }}>Could not load activities</Text><Text style={{ color: c.muted, fontSize: 14, textAlign: 'center' }}>{error}</Text><Pressable accessibilityRole="button" onPress={onRetry}><Text style={{ color: c.accent, fontSize: 14, fontWeight: '800' }}>Retry</Text></Pressable></> : <><Ionicons name="calendar-outline" size={40} color={c.muted} /><Text style={{ color: c.text, fontSize: 18, fontWeight: '800' }}>No events found</Text><Text style={{ color: c.muted, fontSize: 14, lineHeight: 21, textAlign: 'center' }}>You must join or host an activity first before you can post a vibe highlights!</Text></>}</View></Page>;
 }
 const createStyles = (c: ReferencePalette) => StyleSheet.create({
   overlay: { flex: 1, backgroundColor: c.overlay, justifyContent: 'flex-end' },

@@ -5,6 +5,7 @@ import { activitiesProductionService } from '../../services/activities-productio
 import { activityLocationService } from '../../services/activity-location';
 import { activityService } from '../../services/wenitro';
 import { INTEREST_CATEGORIES } from '../../domain/interest-categories';
+import { viewerCanListActivity } from '../../domain/activity-visibility';
 import { Button, ErrorLine, Header, Icon, Page, Pills, SearchField, Sheet, usePalette, purple } from '../reconstruction/ui';
 import { prepareReferenceActivities } from '../reconstruction/feed-search';
 import { UserAvatar } from '../user-avatar';
@@ -67,7 +68,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
   };
   const chooseFilter = async (next: Filter) => { setFilter(next); if (next !== 'Nearby' || position) return; setLoading(true); setError(''); try { setPosition(await activityLocationService.current()); } catch (e: any) { setError(e.message); } finally { setLoading(false); } };
   const rows = useMemo(() => {
-    let result = data.activities.filter(item => item.status !== 'draft' && item.status !== 'cancelled');
+    let result = data.activities.filter(item => item.status !== 'draft' && item.status !== 'cancelled' && viewerCanListActivity(item, data.userId));
     if (query.trim()) { const q = query.trim().toLowerCase(); result = result.filter(item => `${item.title} ${item.description || ''} ${item.where} ${item.category}`.toLowerCase().includes(q)); }
     if (categories.length) result = result.filter(item => categories.includes(item.category));
     if (dateFrom) result = result.filter(item => item.startsAt && Date.parse(item.startsAt) >= Date.parse(`${dateFrom}T00:00:00`));

@@ -1120,6 +1120,21 @@ export const activitiesProductionService = {
     return participationFromDb(row);
   },
 
+  async setCohost(activityId: string, userId: string, cohost: boolean) {
+    const eventId = parseId(activityId, "Activity ID");
+    const participantUserId = parseId(userId, "Participant user ID");
+    await currentUserId();
+    const row = firstRecord(
+      await callRpc<unknown>("set_activity_cohost", {
+        p_event_id: eventId,
+        p_user_id: participantUserId,
+        p_cohost: cohost,
+      }),
+    );
+    if (!row) throw new Error("Co-host could not be updated.");
+    return participationFromDb(row);
+  },
+
   async addComment(activityId: string, body: string, parentId?: string) {
     const eventId = parseId(activityId, "Activity ID");
     const row = firstRecord(

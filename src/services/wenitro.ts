@@ -433,6 +433,7 @@ export async function loadRemoteWorkspace() {
     vibes: vibePage.reels.map((reel) => ({
       id: reel.id,
       owner_id: reel.userId,
+      event_id: reel.activityId,
       caption: reel.caption || "WeNitro Vibe",
       media_url: reel.mediaUrl,
       media_type: reel.mediaType,
@@ -984,7 +985,7 @@ export const activityService = {
         }),
         supabase
           .from("tbl_event_participants")
-          .select("id,event_id,user_id,status,created_at,responded_at")
+          .select("id,event_id,user_id,status,created_at,responded_at,role")
           .eq("event_id", Number(activityId))
           .neq("status", "left")
           .order("created_at", { ascending: true }),
@@ -1006,9 +1007,21 @@ export const activityService = {
           .eq("event_id", Number(activityId)),
         vibesProductionService.listReels({ activityId, pageSize: 50 }),
       ]);
-    if (participantRows.error) throw participantRows.error;
+    let participantResult = participantRows;
+    if (participantResult.error) {
+      const missingRole = /role/i.test(participantResult.error.message || "");
+      if (!missingRole) throw participantResult.error;
+      const fallback = await supabase
+        .from("tbl_event_participants")
+        .select("id,event_id,user_id,status,created_at,responded_at")
+        .eq("event_id", Number(activityId))
+        .neq("status", "left")
+        .order("created_at", { ascending: true });
+      if (fallback.error) throw fallback.error;
+      participantResult = fallback;
+    }
     if (eventResult.error) throw eventResult.error;
-    const rows = (participantRows.data ?? []) as Row[];
+    const rows = (participantResult.data ?? []) as Row[];
     const userIds = [...new Set(rows.map((row) => Number(row.user_id)))];
     const profilesResult = userIds.length
       ? await supabase
@@ -1036,6 +1049,7 @@ export const activityService = {
       liked: details.viewerState.liked,
       saved: details.viewerState.saved,
       isHost: Number(eventResult.data.created_by) === legacyUserId,
+      isCohost: rows.some((row) => Number(row.user_id) === legacyUserId && String(row.role) === "cohost"),
       joinType:
         eventResult.data.join_type === "approval" ? "approval" : "direct",
       participants: rows.map((row) => {
@@ -1047,6 +1061,7 @@ export const activityService = {
           username: profile?.username ?? "member",
           avatarUrl: profile?.profile_image ?? null,
           status: String(row.status),
+          role: String(row.role || "participant"),
           joinedAt: String(row.created_at),
           respondedAt: row.responded_at ? String(row.responded_at) : null,
           rating: profile?.rating == null ? null : Number(profile.rating),
@@ -1088,6 +1103,9 @@ export const activityService = {
     status: "approved" | "rejected" | "waitlist",
   ) {
     return activitiesProductionService.respondJoin(activityId, userId, status);
+  },
+  setCohost(activityId: string, userId: string, cohost: boolean) {
+    return activitiesProductionService.setCohost(activityId, userId, cohost);
   },
   setLiked(activityId: string, liked: boolean) {
     return activitiesProductionService.setLiked(activityId, liked);
@@ -1159,6 +1177,10 @@ export const activityService = {
 };
 
 export const privacyService = {
+  async blockUser(userId: string) {
+    const { error } = await supabase.rpc("block_chat_user", { p_user_id: Number(userId) });
+    if (error) throw error;
+  },
   saveConsent(purpose: string, granted: boolean, policyVersion: string) {
     return profileProductionService.recordConsent(
       purpose as Parameters<typeof profileProductionService.recordConsent>[0],
