@@ -59,18 +59,26 @@ function ProfileLayout({ identity, metrics, links, gallery, linksAvailable = tru
   </View>
   <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.body}>
    <LinearGradient colors={['#4F3BEE', '#7A5BFF', '#9B6CFF']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.hero}>
-    <View style={s.photoRow}>
-     {photos.length ? photos.map((photo, index) => (
-      <Pressable key={`${photo.position}-${photo.uri}`} accessibilityRole="button" accessibilityLabel={owner ? `Manage photo ${index + 1}` : `View photo ${index + 1}`} onPress={() => onPhoto?.(photo)} style={[s.heroPhotoWrap, index === 0 && s.heroPhotoPrimary, { zIndex: 3 - index, marginLeft: index ? -12 : 0 }]}>
-       <Image source={{ uri: photo.uri }} style={s.heroPhoto} />
-       {owner && index === 0 ? <View style={s.primaryDot}><Text style={s.primaryDotText}>1</Text></View> : null}
-      </Pressable>
-     )) : <LinearGradient colors={['#FFA350', '#DB6B3D']} style={[s.heroPhoto, s.center]}><Text style={s.initials}>{initials}</Text></LinearGradient>}
-     {owner && photos.length < 3 ? <Pressable accessibilityRole="button" accessibilityLabel="Add profile photo" onPress={() => onPhoto?.({ uri: '', position: photos.length + 1 })} style={s.addPhoto}><Icon name="add" color="#FFF" size={22} /></Pressable> : null}
+    <View style={s.heroTop}>
+     <View style={s.photoRow}>
+      {photos.length ? photos.map((photo, index) => (
+       <Pressable key={`${photo.position}-${photo.uri}`} accessibilityRole="button" accessibilityLabel={owner ? `Manage photo ${index + 1}` : `View photo ${index + 1}`} onPress={() => onPhoto?.(photo)} style={[s.heroPhotoWrap, index === 0 && s.heroPhotoPrimary, { zIndex: 3 - index, marginLeft: index ? -16 : 0 }]}>
+        <Image source={{ uri: photo.uri }} style={s.heroPhoto} resizeMode="cover" />
+        {owner && index === 0 ? <View style={s.primaryDot}><Text style={s.primaryDotText}>1</Text></View> : null}
+       </Pressable>
+      )) : <View style={[s.heroPhotoWrap, s.heroPhotoPrimary]}><LinearGradient colors={['#FFA350', '#DB6B3D']} style={[s.heroPhoto, s.center]}><Text style={s.initials}>{initials}</Text></LinearGradient></View>}
+      {owner && photos.length < 3 ? <Pressable accessibilityRole="button" accessibilityLabel="Add profile photo" onPress={() => onPhoto?.({ uri: '', position: photos.length + 1 })} style={[s.addPhoto, { marginLeft: photos.length ? -10 : 8 }]}><Icon name="add" color="#FFF" size={18} /></Pressable> : null}
+     </View>
+     <View style={s.heroIdentity}>
+      <View style={s.nameRow}><Text numberOfLines={1} style={s.heroName}>{identity.name || identity.username}</Text><VerifiedBadge userId={identity.id} size={15} /></View>
+      <Text numberOfLines={1} style={s.heroHandle}>@{identity.username.replace(/^@/, '')}</Text>
+      {identity.bio ? <Text numberOfLines={1} style={s.heroBio}>{identity.bio}</Text> : null}
+     </View>
+     <View style={s.heroTrust} accessibilityLabel={`Trust Score ${score} out of 100`}>
+      <Text style={s.heroTrustLabel}>Trust Score</Text>
+      <Text style={s.heroTrustValue}>{score}<Text style={s.heroTrustMax}>/100</Text></Text>
+     </View>
     </View>
-    <View style={s.nameRow}><Text numberOfLines={2} style={s.heroName}>{identity.name || identity.username}</Text><VerifiedBadge userId={identity.id} size={17} /></View>
-    {identity.bio ? <Text numberOfLines={2} style={s.heroBio}>{identity.bio}</Text> : null}
-    <View style={s.trustChip}><Icon name="shield-checkmark" color="#FFE28A" size={14} /><Text style={s.trustChipText}>Trust Score {score}</Text></View>
    </LinearGradient>
    <View style={s.socials}>{socials.map(item => {
     const url = safeSocialUrl(item.key, links[item.key]);
@@ -208,19 +216,24 @@ export function ReferenceMemberProfile({ id, back, onConversation, onOpenActivit
 const s = StyleSheet.create({
  header: { height: 52, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1 }, headerAction: { width: 38, height: 44, justifyContent: 'center', alignItems: 'center' }, username: { flex: 1, fontSize: 17, fontWeight: '700', paddingLeft: 2 },
  body: { paddingHorizontal: 14, paddingTop: 14, paddingBottom: 24, gap: 12 },
- hero: { borderRadius: 22, padding: 16, gap: 8 },
- photoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
- heroPhotoWrap: { width: 54, height: 54, borderRadius: 27, borderWidth: 2, borderColor: '#FFF', overflow: 'hidden' },
- heroPhotoPrimary: { width: 72, height: 72, borderRadius: 36 },
+ hero: { borderRadius: 22, paddingVertical: 16, paddingHorizontal: 14, overflow: 'hidden' },
+ heroTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+ photoRow: { flexDirection: 'row', alignItems: 'center' },
+ heroPhotoWrap: { width: 48, height: 48, borderRadius: 24, borderWidth: 2, borderColor: '#FFF', overflow: 'hidden' },
+ heroPhotoPrimary: { width: 64, height: 64, borderRadius: 32 },
  heroPhoto: { width: '100%', height: '100%' },
- addPhoto: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, borderColor: '#FFFFFF88', borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center', marginLeft: 8 },
- primaryDot: { position: 'absolute', right: -2, bottom: -2, width: 18, height: 18, borderRadius: 9, backgroundColor: '#FFE28A', alignItems: 'center', justifyContent: 'center' },
- primaryDotText: { fontSize: 10, fontWeight: '800', color: '#4F3BEE' },
- heroName: { color: '#FFF', fontSize: 20, fontWeight: '800', flexShrink: 1 },
- heroBio: { color: '#EDE7FF', fontSize: 12, lineHeight: 17 },
- trustChip: { alignSelf: 'flex-start', marginTop: 4, backgroundColor: '#FFFFFF22', borderRadius: 14, paddingHorizontal: 10, paddingVertical: 5, flexDirection: 'row', alignItems: 'center', gap: 6 },
- trustChipText: { color: '#FFF', fontSize: 11, fontWeight: '700' },
- identity: { flexDirection: 'row', alignItems: 'center', gap: 14 }, avatar: { width: 61, height: 61, borderRadius: 31 }, center: { alignItems: 'center', justifyContent: 'center' }, initials: { fontSize: 25, fontWeight: '500', color: '#FFF' }, nameRow: { flexDirection: 'row', alignItems: 'center', gap: 6 }, name: { fontSize: 17, fontWeight: '700', flexShrink: 1 }, secondary: { fontSize: 11, lineHeight: 16 },
+ addPhoto: { width: 36, height: 36, borderRadius: 18, borderWidth: 1, borderColor: '#FFFFFF88', borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center' },
+ primaryDot: { position: 'absolute', right: 0, bottom: 0, width: 16, height: 16, borderRadius: 8, backgroundColor: '#FFE28A', alignItems: 'center', justifyContent: 'center' },
+ primaryDotText: { fontSize: 9, fontWeight: '800', color: '#4F3BEE' },
+ heroIdentity: { flex: 1, minWidth: 0, gap: 2 },
+ heroName: { color: '#FFF', fontSize: 16, fontWeight: '800', flexShrink: 1 },
+ heroHandle: { color: '#E4DCFF', fontSize: 12, fontWeight: '600' },
+ heroBio: { color: '#EDE7FF', fontSize: 11, lineHeight: 15 },
+ heroTrust: { alignItems: 'flex-end', gap: 1 },
+ heroTrustLabel: { color: '#E4DCFF', fontSize: 10, fontWeight: '600' },
+ heroTrustValue: { color: '#FFF', fontSize: 20, fontWeight: '800' },
+ heroTrustMax: { color: '#E4DCFF', fontSize: 11, fontWeight: '600' },
+ identity: { flexDirection: 'row', alignItems: 'center', gap: 14 }, avatar: { width: 61, height: 61, borderRadius: 31 }, center: { alignItems: 'center', justifyContent: 'center' }, initials: { fontSize: 22, fontWeight: '600', color: '#FFF' }, nameRow: { flexDirection: 'row', alignItems: 'center', gap: 6 }, name: { fontSize: 17, fontWeight: '700', flexShrink: 1 }, secondary: { fontSize: 11, lineHeight: 16 },
  socials: { flexDirection: 'row', gap: 8, alignItems: 'center', marginTop: -2 }, social: { width: 31, height: 31, borderWidth: 1, borderRadius: 16, alignItems: 'center', justifyContent: 'center' }, notice: { padding: 10, borderRadius: 10, gap: 5 },
  verification: { minHeight: 51, borderWidth: 1, borderRadius: 11, paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', gap: 7 }, trustShield: { width: 33, height: 33, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }, verificationTitle: { flex: 1, fontSize: 12, fontWeight: '700' },
  metrics: { flexDirection: 'row', gap: 7 }, metric: { height: 91, borderRadius: 12, borderWidth: 1, alignItems: 'center', justifyContent: 'center', gap: 4 }, metricIcon: { width: 28, height: 28, borderRadius: 9, alignItems: 'center', justifyContent: 'center' }, metricValue: { fontSize: 16, fontWeight: '800' }, metricLabel: { fontSize: 7, fontWeight: '700', letterSpacing: .2 },
