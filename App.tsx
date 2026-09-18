@@ -51,6 +51,7 @@ import { VideoView, useVideoPlayer } from "expo-video";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
+  FlatList,
   Linking,
   useColorScheme,
   ActivityIndicator,
@@ -59,7 +60,6 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
-  Share,
   ScrollView,
   StyleSheet,
   Switch,
@@ -67,6 +67,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import * as Clipboard from "expo-clipboard";
 import { isSupabaseConfigured, supabase } from "./src/lib/supabase";
 import {
   activityService,
@@ -109,6 +110,7 @@ import { subscribeToAppForeground } from "./src/services/app-freshness";
 import {
   openSharedContent,
   requestInternalShare,
+  shareEntityExternally,
   subscribeToInternalShareRequests,
   subscribeToSharedContentNavigation,
   type InternalShareEntity,
@@ -290,6 +292,7 @@ type Vibe = {
   saved: boolean;
   mediaUrl?: string;
   mediaType?: "image" | "video";
+  createdAt?: string;
   comments?: { id: string; author: string; authorId?: string; body: string; avatar?: string; createdAt?: string }[];
   mine?: boolean;
   authorAvatar?: string;
@@ -655,6 +658,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
     saved: false,
     mediaUrl: item.media_url,
     mediaType: item.media_type === "video" ? "video" : "image",
+    createdAt: item.created_at || item.createdAt,
     mine: item.owner_id === userId,
     comments: (item.vibe_comments || []).map((comment: any) => ({
       id: comment.id,
@@ -664,7 +668,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
       avatar: runtimeString(comment.profiles, ["profile_image", "avatar_url", "avatar"]),
       createdAt: comment.created_at,
     })),
-  }));
+  })).sort((a: Vibe, b: Vibe) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
   const people: DiscoverablePerson[] = remote.people.map((item: any) => ({
     id: item.id,
     name: item.full_name || item.username || "",
@@ -756,7 +760,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
     mediaType: item.media_type === "video" ? "video" : "image",
     text: item.caption,
     viewed: (item.story_views || []).some(
-      (view: any) => view.viewer_id === userId,
+      (view: any) => String(view.viewer_id) === String(userId),
     ),
     mine: item.owner_id === userId,
     createdAt: item.created_at,
@@ -2715,18 +2719,19 @@ function ActivitiesScreen({
   );
 }
 
-function ReelVideo({ uri, muted }: { uri: string; muted: boolean }) {
+function ReelVideo({ uri, muted, active }: { uri: string; muted: boolean; active: boolean }) {
   const player = useVideoPlayer(uri, (instance) => {
     instance.loop = true;
     instance.muted = muted;
-    instance.play();
+    if (active) instance.play();
   });
 
   useEffect(() => {
     player.muted = muted;
-    player.play();
+    if (active) player.play();
+    else player.pause();
     return () => player.pause();
-  }, [muted, player]);
+  }, [muted, active, player]);
 
   return (
     <VideoView
@@ -2734,15 +2739,16 @@ function ReelVideo({ uri, muted }: { uri: string; muted: boolean }) {
       style={styles.fullReelImage}
       contentFit="cover"
       nativeControls={false}
+      pointerEvents="none"
     />
   );
 }
 
-function ReelMedia({ vibe, muted }: { vibe: Vibe; muted: boolean }) {
+function ReelMedia({ vibe, muted, active }: { vibe: Vibe; muted: boolean; active: boolean }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [vibe.id, vibe.mediaUrl]);
   if (vibe.mediaType === "video" && vibe.mediaUrl && !failed) {
-    return <ReelVideo uri={vibe.mediaUrl} muted={muted} />;
+    return <ReelVideo uri={vibe.mediaUrl} muted={muted} active={active} />;
   }
   const media = failed || !vibe.mediaUrl ? photoAssets.friends : vibe.mediaUrl;
   if (Platform.OS === "web") {
@@ -2814,14 +2820,19 @@ function VibesScreen({
   openActivity: (id: string) => void;
 }) {
   const palette = usePalette();
+  const listRef = useRef<FlatList<Vibe>>(null);
   const [vibeIndex, setVibeIndex] = useState(0);
-  const [touchStartY, setTouchStartY] = useState(0);
+  const [reelHeight, setReelHeight] = useState(0);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [muted, setMuted] = useState(true);
-  const availableVibes = data.vibes;
+  const availableVibes = useMemo(
+    () => [...data.vibes].sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || ""))),
+    [data.vibes],
+  );
   const vibe = availableVibes.length
-    ? availableVibes[vibeIndex % availableVibes.length]
+    ? availableVibes[Math.min(vibeIndex, availableVibes.length - 1)]
     : undefined;
   useEffect(() => {
     if (!initialVibeId) return;
@@ -2906,15 +2917,6 @@ function VibesScreen({
       </SafeAreaView>
     );
   }
-  const moveVibe = (direction: 1 | -1) => {
-    setCommentsOpen(false);
-    setComment("");
-    setVibeIndex(
-      (current) =>
-        (current + direction + availableVibes.length) % availableVibes.length,
-    );
-    playClickSound();
-  };
   const reactionId = vibeReactionId(vibe.id);
   const liked = data.likedIds.includes(reactionId);
   const toggleLike = async () => {
@@ -2974,8 +2976,14 @@ function VibesScreen({
     }));
     setComment("");
   };
-  const shareVibe = async () => {
-    requestInternalShare({ kind: "vibe", id: vibe.id, title: vibe.event || "WeNitro Vibe", preview: vibe.text });
+  const shareVibe = (item = vibe) => {
+    requestInternalShare({
+      kind: "vibe",
+      id: item.id,
+      title: item.event || "WeNitro Vibe",
+      preview: item.text || "Shared a WeNitro Vibe",
+      thumbnailUrl: item.mediaUrl,
+    });
   };
   const deleteVibe = async () => {
     const remove = async () => {
@@ -3016,100 +3024,96 @@ function VibesScreen({
   const actions: [IconName, string, () => void][] = [
     [liked ? "heart" : "heart-outline", String(vibe.likes), toggleLike],
     ["chatbubble-outline", String(commentCount), () => setCommentsOpen(true)],
-    ["paper-plane-outline", "Share", shareVibe],
+    ["paper-plane-outline", "Share", () => shareVibe()],
   ];
+  const copyVibeLink = async () => {
+    const link = `https://wenitro-app.vercel.app/#/vibe/${vibe.id}`;
+    await Clipboard.setStringAsync(link);
+    setMenuOpen(false);
+    Alert.alert("Link copied", "Share this Vibe with the copied link.");
+  };
   return (
     <SafeAreaView style={styles.vibesSafe}>
-      <View
-        style={styles.fullReel}
-        onTouchStart={(event) => setTouchStartY(event.nativeEvent.pageY)}
-        onTouchEnd={(event) => {
-          const distance = touchStartY - event.nativeEvent.pageY;
-          if (Math.abs(distance) > 55) moveVibe(distance > 0 ? 1 : -1);
-        }}
-      >
-        <ReelMedia key={vibe.id} vibe={vibe} muted={muted} />
-        <LinearGradient
-          colors={["rgba(0,0,0,0.02)", "rgba(4,5,12,0.9)"]}
-          style={styles.fullReelShade}
-        />
-        <View style={styles.reelNavigator}>
-          <Pressable
-            accessibilityLabel={muted ? "Turn reel sound on" : "Mute reel"}
-            onPress={() => setMuted((current) => !current)}
-            style={styles.reelNavButton}
-          >
+      <View style={styles.fullReel} onLayout={(event) => setReelHeight(event.nativeEvent.layout.height)}>
+        {reelHeight > 0 ? (
+          <FlatList
+            ref={listRef}
+            data={availableVibes}
+            keyExtractor={(item) => item.id}
+            pagingEnabled
+            showsVerticalScrollIndicator={false}
+            snapToInterval={reelHeight}
+            snapToAlignment="start"
+            decelerationRate="fast"
+            disableIntervalMomentum
+            getItemLayout={(_, index) => ({ length: reelHeight, offset: reelHeight * index, index })}
+            initialScrollIndex={Math.min(vibeIndex, Math.max(0, availableVibes.length - 1))}
+            onMomentumScrollEnd={(event) => {
+              const next = Math.round(event.nativeEvent.contentOffset.y / reelHeight);
+              if (next !== vibeIndex && next >= 0 && next < availableVibes.length) {
+                setVibeIndex(next);
+                setCommentsOpen(false);
+                setMenuOpen(false);
+                setComment("");
+              }
+            }}
+            renderItem={({ item, index }) => (
+              <View style={{ height: reelHeight, backgroundColor: "#06070A" }}>
+                <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+                  <ReelMedia vibe={item} muted={muted} active={index === vibeIndex} />
+                </View>
+                <LinearGradient colors={["rgba(0,0,0,0.02)", "rgba(4,5,12,0.9)"]} style={styles.fullReelShade} pointerEvents="none" />
+                <View style={styles.fullReelCopy} pointerEvents="box-none">
+                  <View style={styles.vibeIdentity}>
+                    <Pressable accessibilityRole="button" accessibilityLabel={`Open ${item.author}'s profile`} disabled={!item.authorId} onPress={() => item.authorId && openProfile(item.authorId)}>
+                      <Image source={mediaSource(item.authorAvatar || neutralAvatar)} style={styles.vibeAvatar} />
+                    </Pressable>
+                    <View>
+                      <Pressable accessibilityRole="button" disabled={!item.authorId} onPress={() => item.authorId && openProfile(item.authorId)}>
+                        <View style={styles.row}><Text style={styles.vibeUser}>{item.author} <VerifiedBadge userId={item.authorId} /></Text></View>
+                      </Pressable>
+                      {item.event || item.activityId ? (
+                        <Pressable onPress={() => { const activityId = item.activityId || data.activities.find(row => row.title === item.event)?.id; if (activityId) openActivity(activityId); }}>
+                          <View style={styles.row}><Text style={styles.vibeMood}>{item.event || "View activity"}</Text></View>
+                        </Pressable>
+                      ) : null}
+                    </View>
+                  </View>
+                  <Text style={styles.vibeCaption}>{item.text}</Text>
+                  {item.hashtags?.length ? <Text style={styles.vibeHashtags}>{item.hashtags.map(tag => `#${tag.replace(/^#/, "")}`).join(" ")}</Text> : null}
+                </View>
+              </View>
+            )}
+          />
+        ) : null}
+        <View style={styles.reelNavigator} pointerEvents="box-none">
+          <Pressable accessibilityLabel="Post a vibe" onPress={() => go("postVibe")} style={styles.reelNavButton}>
+            <Icon name="add" color="#fff" />
+          </Pressable>
+          <Pressable accessibilityLabel={muted ? "Turn reel sound on" : "Mute reel"} onPress={() => setMuted((current) => !current)} style={styles.reelNavButton}>
             <Icon name={muted ? "volume-mute" : "volume-high"} color="#fff" />
           </Pressable>
         </View>
         <View style={styles.fullReelActions}>
           {actions.map(([icon, label, onPress], index) => (
-            <Pressable
-              key={`${icon}-${label}`}
-              onPress={onPress}
-              style={styles.fullReelAction}
-            >
-              <Icon
-                name={icon}
-                color={index === 0 && liked ? "#FF4D8D" : "#fff"}
-                size={29}
-              />
+            <Pressable key={`${icon}-${label}`} onPress={onPress} style={styles.fullReelAction}>
+              <Icon name={icon} color={index === 0 && liked ? "#FF4D8D" : "#fff"} size={29} />
               <Text style={styles.fullReelActionText}>{label}</Text>
             </Pressable>
           ))}
-          <Pressable
-            accessibilityLabel={vibe.mine ? "Delete this vibe" : "More vibe options"}
-            disabled={!vibe.mine}
-            onPress={vibe.mine ? deleteVibe : undefined}
-            style={styles.moreVibe}
-          >
-            <Icon
-              name={vibe.mine ? "trash-outline" : "ellipsis-horizontal"}
-              color="#fff"
-            />
+          <Pressable accessibilityLabel="More vibe options" onPress={() => setMenuOpen(true)} style={styles.moreVibe}>
+            <Icon name="ellipsis-horizontal" color="#fff" />
           </Pressable>
         </View>
-        <View style={styles.fullReelCopy}>
-          <View style={styles.vibeIdentity}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`Open ${vibe.author}'s profile`}
-              disabled={!vibe.authorId}
-              onPress={() => vibe.authorId && openProfile(vibe.authorId)}
-            >
-              <Image
-                source={mediaSource(vibe.authorAvatar || neutralAvatar)}
-                style={styles.vibeAvatar}
-              />
-            </Pressable>
-            <View>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={`Open ${vibe.author}'s profile`}
-                disabled={!vibe.authorId}
-                onPress={() => vibe.authorId && openProfile(vibe.authorId)}
-              >
-                <View style={styles.row}>
-                  <Text style={styles.vibeUser}>{vibe.author} <VerifiedBadge userId={vibe.authorId} /></Text>
-                </View>
-              </Pressable>
-              {vibe.event || vibe.activityId ? (
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={`Open activity ${vibe.event || "details"}`}
-                  onPress={() => {
-                    const activityId = vibe.activityId || data.activities.find(item => item.title === vibe.event)?.id;
-                    if (activityId) openActivity(activityId);
-                  }}
-                >
-                  <View style={styles.row}><Text style={styles.vibeMood}>{vibe.event || "View activity"}</Text></View>
-                </Pressable>
-              ) : null}
-            </View>
-          </View>
-          <Text style={styles.vibeCaption}>{vibe.text}</Text>
-          {vibe.hashtags?.length ? <Text style={styles.vibeHashtags}>{vibe.hashtags.map(tag => `#${tag.replace(/^#/, '')}`).join(' ')}</Text> : null}
-        </View>
+        {menuOpen ? (
+          <ReferenceSheet title="Vibe options" close={() => setMenuOpen(false)}>
+            <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); shareVibe(); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="chatbubble-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Share to Chat</Text></Pressable>
+            <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void shareEntityExternally({ kind: "vibe", id: vibe.id, title: vibe.event || "WeNitro Vibe", preview: vibe.text || "Shared a WeNitro Vibe", thumbnailUrl: vibe.mediaUrl }).catch((error) => Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.")); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="share-social-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Share externally</Text></Pressable>
+            <Pressable accessibilityRole="button" onPress={() => void copyVibeLink()} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="link-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Copy link</Text></Pressable>
+            {vibe.activityId || vibe.event ? <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); const activityId = vibe.activityId || data.activities.find(item => item.title === vibe.event)?.id; if (activityId) openActivity(activityId); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="calendar-outline" /><Text style={[styles.optionText, { color: palette.text }]}>View activity</Text></Pressable> : null}
+            {vibe.mine ? <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void deleteVibe(); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="trash-outline" color="#F47786" /><Text style={[styles.optionText, { color: "#F47786" }]}>Delete vibe</Text></Pressable> : <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); Alert.alert("Report submitted", "Thanks. Our team will review this vibe."); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="flag-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Report vibe</Text></Pressable>}
+          </ReferenceSheet>
+        ) : null}
         {commentsOpen ? (
           <View style={[styles.vibeCommentsSheet, { backgroundColor: palette.card }]}>
             <View style={styles.rowBetween}>
@@ -3782,6 +3786,7 @@ function PostVibeScreen({
             saved: false,
             mediaUrl: remoteMedia,
             mediaType,
+            createdAt: new Date().toISOString(),
             comments: [],
             mine: true,
           },
@@ -4789,6 +4794,7 @@ export function ChatScreen({
   const [creatingGroup, setCreatingGroup] = useState(false);
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
+  const [groupPhoto, setGroupPhoto] = useState<string | null>(null);
   const [groupMembers, setGroupMembers] = useState<string[]>([]);
   const [chatStatus, setChatStatus] = useState("offline");
   const [typing, setTyping] = useState(false);
@@ -4849,7 +4855,9 @@ export function ChatScreen({
     .filter(
       (conversation) =>
         (activeSegment === "All" || conversation.type === activeSegment) &&
-        conversation.name.toLowerCase().includes(query.toLowerCase()),
+        (!query.trim()
+          || conversation.name.toLowerCase().startsWith(query.trim().toLowerCase())
+          || conversation.name.toLowerCase().split(/[\s@._-]+/).some((part) => part.startsWith(query.trim().toLowerCase()))),
     )
     .sort((a, b) =>
       String(b.lastMessageAt || "").localeCompare(String(a.lastMessageAt || "")),
@@ -5205,26 +5213,23 @@ export function ChatScreen({
       );
   };
   const markAllStoriesSeen = async () => {
-    const unseen = data.stories.filter(
-      (story) => !story.viewed && isBackendId(story.id),
-    );
-    if (data.mode === "authenticated" && isSupabaseConfigured) {
-      try {
-        await Promise.all(
-          unseen.map((story) => storyService.markViewed(story.id)),
-        );
-      } catch (caught) {
-        Alert.alert(
-          "Stories not updated",
-          caught instanceof Error ? caught.message : "Please try again.",
-        );
-        return;
-      }
-    }
     setData((current) => ({
       ...current,
       stories: current.stories.map((story) => ({ ...story, viewed: true })),
     }));
+    const unseen = data.stories.filter(
+      (story) => !story.viewed && isBackendId(story.id),
+    );
+    if (data.mode !== "authenticated" || !isSupabaseConfigured || !unseen.length) return;
+    const failed = await Promise.all(
+      unseen.map((story) => storyService.markViewed(story.id).then(() => null, (error: unknown) => error)),
+    );
+    if (failed.some(Boolean)) {
+      Alert.alert(
+        "Stories marked seen on this device",
+        "Some views could not be saved to the server.",
+      );
+    }
   };
   const nextStory = () => {
     if (!activeStoryGroup || activeStoryIndex < 0) return setActiveStoryId(null);
@@ -5273,12 +5278,15 @@ export function ChatScreen({
     ]);
   };
   const createGroup = async () => {
+    if (!groupPhoto)
+      return Alert.alert("Add a group photo", "Choose a profile picture so this group is easy to recognize.");
     if (groupName.trim().length < 3 || groupMembers.length < 2)
       return Alert.alert(
         "Add group details",
         "Enter a group name and select at least two people.",
       );
     let groupId = `group-${Date.now()}`;
+    let avatar = groupPhoto;
     if (isSupabaseConfigured) {
       const memberIds = data.people
         .filter(
@@ -5292,12 +5300,15 @@ export function ChatScreen({
           "Select at least two discoverable WeNitro members.",
         );
       try {
+        const imagePath = await realtimeChatService.uploadGroupPhoto(groupPhoto);
         groupId = String(
           await realtimeChatService.createGroupConversation(
             groupName.trim(),
             memberIds.map(Number),
+            imagePath,
           ),
         );
+        avatar = (await realtimeChatService.signedRoomImage(imagePath)) || groupPhoto;
       } catch (caught) {
         return Alert.alert(
           "Could not create group",
@@ -5309,7 +5320,8 @@ export function ChatScreen({
       id: groupId,
       name: groupName.trim(),
       type: "Groups",
-      avatar: neutralMediaPlaceholder,
+      roomType: "group",
+      avatar,
       memberCount: groupMembers.length + 1,
       online: true,
       unread: 0,
@@ -5329,6 +5341,7 @@ export function ChatScreen({
     }));
     setCreatingGroup(false);
     setGroupName("");
+    setGroupPhoto(null);
     setGroupMembers([]);
     setActiveSegment("Groups");
     openConversation(group.id);
@@ -5398,10 +5411,10 @@ export function ChatScreen({
                 : chatStatus !== "SUBSCRIBED" && data.mode === "authenticated"
                   ? "connecting securely..."
                   : selected.type === "Groups"
-                ? `${selected.memberCount} members · ${selected.online ? "active now" : "quiet"}`
+                ? `${selected.memberCount} members${selected.online ? " · active now" : ""}`
                 : selected.online
                   ? "online"
-                  : "offline"}
+                  : ""}
             </Text>
           </Pressable>
           {selected.type === 'Groups' ? <Pressable accessibilityRole="button" accessibilityLabel="Open activity page" onPress={() => {
@@ -5456,7 +5469,7 @@ export function ChatScreen({
               {message.pollId ? polls[message.pollId] ? <PollCard poll={polls[message.pollId]} roomId={selected.id} onUpdated={poll => setPolls(current => ({ ...current, [poll.id]: poll }))} /> : <Text style={[styles.dynamicMessageText, { color: palette.muted }]}>Poll</Text> : null}
               {message.share ? (
                 <Pressable onPress={() => openSharedContent(message.share!)} style={{ width: 250, overflow: "hidden", borderRadius: 16, backgroundColor: message.mine ? "rgba(255,255,255,.14)" : palette.inset }}>
-                  {message.share.thumbnailUrl ? <Image source={{ uri: message.share.thumbnailUrl }} style={{ width: "100%", height: 112 }} /> : null}
+              {message.share.thumbnailUrl || (message.share.kind === "vibe" ? data.vibes.find(item => item.id === message.share?.entityId)?.mediaUrl : undefined) ? <Image source={{ uri: message.share.thumbnailUrl || data.vibes.find(item => item.id === message.share?.entityId)?.mediaUrl }} style={{ width: "100%", height: 148, backgroundColor: "#1B2434" }} /> : <View style={{ width: "100%", height: 84, backgroundColor: "#1B2434", alignItems: "center", justifyContent: "center" }}><Text style={{ color: "#8FB7FF", fontFamily: "Manrope_800ExtraBold" }}>W</Text></View>}
                   <View style={{ padding: 13, gap: 4 }}>
                     <Text style={{ fontFamily: "Manrope_800ExtraBold", fontSize: 11, textTransform: "uppercase", color: "#8FB7FF" }}>{message.share.kind.replaceAll("_", " ")}</Text>
                     <Text style={{ fontFamily: "Manrope_700Bold", fontSize: 16, color: message.mine ? "#fff" : palette.text }}>{message.share.title}</Text>
@@ -5631,11 +5644,8 @@ export function ChatScreen({
               </Text>
               <Text style={styles.dynamicChatTabCount}>
                 {tab === "All"
-                  ? data.conversations.length
-                  : tab === "People"
-                    ? data.people.length
-                    : data.conversations.filter((item) => item.type === tab)
-                        .length}
+                  ? data.conversations.filter((item) => item.type === "People" || item.type === "Groups").length
+                  : data.conversations.filter((item) => item.type === tab).length}
               </Text>
             </Pressable>
           ))}
@@ -5643,7 +5653,7 @@ export function ChatScreen({
         <View style={styles.dynamicSectionHeader}>
           <Text style={[styles.dynamicSectionTitle, { color: palette.text }]}>Stories</Text>
           <Pressable
-            onPress={markAllStoriesSeen}
+            onPress={() => void markAllStoriesSeen()}
           >
             <Text style={styles.dynamicSectionAction}>Mark all seen</Text>
           </Pressable>
@@ -5756,10 +5766,7 @@ export function ChatScreen({
             onPress={() => openConversation(conversation.id)}
           >
             <View>
-              <Image
-                source={{ uri: conversation.avatar }}
-                style={styles.dynamicConversationAvatar}
-              />
+              <UserAvatar uri={conversation.avatar} name={conversation.name} size={48} />
               {conversation.online ? (
                 <View style={styles.dynamicOnline} />
               ) : null}
@@ -5909,10 +5916,35 @@ export function ChatScreen({
                   Choose at least two people
                 </Text>
               </View>
-              <Pressable onPress={() => setCreatingGroup(false)}>
+              <Pressable onPress={() => { setCreatingGroup(false); setGroupPhoto(null); }}>
                 <Icon name="close" color="#fff" size={25} />
               </Pressable>
             </View>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Add group photo"
+              onPress={() => {
+                void (async () => {
+                  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                  if (!permission.granted) {
+                    Alert.alert("Photo access needed", "Allow photos to set a group profile picture.");
+                    return;
+                  }
+                  const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 0.85, allowsEditing: true, aspect: [1, 1] });
+                  if (!result.canceled && result.assets[0]?.uri) setGroupPhoto(result.assets[0].uri);
+                })();
+              }}
+              style={{ alignSelf: "center", alignItems: "center", gap: 8 }}
+            >
+              {groupPhoto ? (
+                <Image source={{ uri: groupPhoto }} style={{ width: 84, height: 84, borderRadius: 42 }} />
+              ) : (
+                <View style={{ width: 84, height: 84, borderRadius: 42, backgroundColor: "#1B2A44", alignItems: "center", justifyContent: "center" }}>
+                  <Icon name="camera-outline" color="#9CB8FF" size={28} />
+                </View>
+              )}
+              <Text style={{ color: "#9CB8FF", fontSize: 12, fontWeight: "700" }}>{groupPhoto ? "Change photo" : "Add group photo"}</Text>
+            </Pressable>
             <TextInput
               value={groupName}
               onChangeText={setGroupName}
@@ -9399,7 +9431,13 @@ export default function App() {
           people={data.people}
           onClose={() => setShareEntity(null)}
           onSent={(roomIds, messages) => {
-            const mapped = messages.map((message) => chatMessageFromRemote(message, data.userId));
+            const mapped = messages.map((message) => {
+              const item = chatMessageFromRemote(message, data.userId);
+              if (item.share && !item.share.thumbnailUrl && shareEntity?.thumbnailUrl) {
+                item.share = { ...item.share, thumbnailUrl: shareEntity.thumbnailUrl, thumbnailPath: shareEntity.thumbnailUrl };
+              }
+              return item;
+            });
             setData((current) => ({
               ...current,
               conversations: current.conversations.map((conversation) => {

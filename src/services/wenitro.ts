@@ -29,6 +29,13 @@ export type CommunityInput = {
 
 type Row = Record<string, any>;
 
+const publicAvatar = (value: unknown) => {
+  if (typeof value !== "string" || !value.trim()) return null;
+  const path = value.trim();
+  if (/^(https?:|data:|blob:|file:)/i.test(path)) return path;
+  return supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+};
+
 const requireBackend = () => {
   if (!isSupabaseConfigured)
     throw new Error("Supabase is not configured for this build.");
@@ -333,10 +340,7 @@ export async function loadRemoteWorkspace() {
               id: String(sender.id),
               username: String(sender.username ?? ""),
               full_name: sender.fullname == null ? null : String(sender.fullname),
-              avatar_url:
-                sender.profile_image == null
-                  ? null
-                  : String(sender.profile_image),
+              avatar_url: publicAvatar(sender.profile_image),
             }
           : null,
       };
@@ -350,7 +354,10 @@ export async function loadRemoteWorkspace() {
       event_id: room.event_id == null ? null : String(room.event_id),
       kind: room.room_type === "personal" ? "direct" : "group",
       room_type: room.room_type,
-      avatar_url: directProfile?.profile_image ?? communityPage.items.find(c => c.id === String(room.id))?.imageUrl ?? null,
+      avatar_url: publicAvatar(directProfile?.profile_image)
+        ?? (typeof room.image_url === "string" && /^https?:\/\//i.test(room.image_url) ? room.image_url : null)
+        ?? communityPage.items.find(c => c.id === String(room.id))?.imageUrl
+        ?? null,
       last_message_at:
         room.last_message_at == null ? null : String(room.last_message_at),
       unread_count: Math.max(0, Number(room.unread_count) || 0),
@@ -371,10 +378,7 @@ export async function loadRemoteWorkspace() {
                 username: String(profile.username ?? ""),
                 full_name:
                   profile.fullname == null ? null : String(profile.fullname),
-                avatar_url:
-                  profile.profile_image == null
-                    ? null
-                    : String(profile.profile_image),
+                avatar_url: publicAvatar(profile.profile_image),
               }
             : null,
         };
@@ -383,6 +387,28 @@ export async function loadRemoteWorkspace() {
       last_message: chatMessages.at(-1) ?? null,
     };
   });
+  const roomImagePaths = [
+    ...new Set(
+      inboxRows
+        .map((room) => (typeof room.image_url === "string" ? room.image_url : ""))
+        .filter((path) => path.length > 0 && !/^https?:\/\//i.test(path)),
+    ),
+  ];
+  if (roomImagePaths.length) {
+    const signedRoomImages = new Map<string, string>();
+    await Promise.all(
+      roomImagePaths.map(async (path) => {
+        const url = await realtimeChatService.signedRoomImage(path);
+        if (url) signedRoomImages.set(path, url);
+      }),
+    );
+    for (const row of conversationRows) {
+      if (row.avatar_url) continue;
+      const source = inboxRows.find((room) => String(room.id) === row.id);
+      const path = typeof source?.image_url === "string" ? source.image_url : "";
+      if (path && signedRoomImages.has(path)) row.avatar_url = signedRoomImages.get(path);
+    }
+  }
 
   const activities = await loadStage(
     "activity media",
@@ -456,6 +482,7 @@ export async function loadRemoteWorkspace() {
         : null,
       likes: [{ count: reel.likeCount }],
       vibe_comments: [],
+      created_at: reel.createdAt,
     })),
     communities: communityRows,
     memberships: communityPage.items

@@ -7,7 +7,6 @@ import {
   Modal,
   Pressable,
   ScrollView,
-  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -15,7 +14,7 @@ import {
 } from "react-native";
 
 import { chatService } from "../services/wenitro";
-import type { InternalShareEntity } from "../services/internal-share";
+import { shareEntityExternally, type InternalShareEntity } from "../services/internal-share";
 import type { ChatMessage } from "../services/realtime-chat";
 import { MobileOverlayFrame } from "./mobile-app-shell";
 import { usePalette } from "./reconstruction/ui";
@@ -119,10 +118,11 @@ export function ShareToChatModal({
 
   const shareExternally = async () => {
     if (!entity) return;
-    await Share.share({
-      title: entity.title,
-      message: `${entity.title}\n\n${entity.preview}\n\nShared from WeNitro`,
-    });
+    try {
+      await shareEntityExternally(entity);
+    } catch (error) {
+      Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.");
+    }
   };
 
   return (
@@ -130,18 +130,24 @@ export function ShareToChatModal({
       <MobileOverlayFrame style={[styles.backdrop, { backgroundColor: c.overlay }]}>
         <View style={[styles.sheet, { backgroundColor: c.sheet }]}>
           <View style={styles.header}>
-            <View>
-              <Text style={styles.eyebrow}>WENITRO</Text>
-              <Text style={[styles.title, { color: c.text }]}>Share to Chat</Text>
+            <View style={styles.brandRow}>
+              <View style={styles.logo}><Text style={styles.logoMark}>W</Text></View>
+              <View>
+                <Text style={styles.eyebrow}>WENITRO</Text>
+                <Text style={[styles.title, { color: c.text }]}>Share to Chat</Text>
+              </View>
             </View>
             <Pressable accessibilityRole="button" accessibilityLabel="Close share" style={[styles.close, { backgroundColor: c.inset }]} onPress={onClose}>
               <Ionicons name="close" size={24} color={c.icon} />
             </Pressable>
           </View>
           <View style={styles.preview}>
-            <Text style={styles.previewKind}>{entity?.kind.replaceAll("_", " ")}</Text>
-            <Text numberOfLines={1} style={styles.previewTitle}>{entity?.title}</Text>
-            <Text numberOfLines={2} style={styles.previewText}>{entity?.preview}</Text>
+            {entity?.thumbnailUrl ? <Image source={{ uri: entity.thumbnailUrl }} style={styles.previewImage} /> : <View style={styles.previewFallback}><Text style={styles.logoMark}>W</Text></View>}
+            <View style={styles.previewCopy}>
+              <Text style={styles.previewKind}>{entity?.kind.replaceAll("_", " ")}</Text>
+              <Text numberOfLines={1} style={styles.previewTitle}>{entity?.title}</Text>
+              <Text numberOfLines={2} style={styles.previewText}>{entity?.preview}</Text>
+            </View>
           </View>
           <View style={[styles.search, { borderColor: c.border, backgroundColor: c.input }]}>
             <Ionicons name="search" size={20} color={c.iconMuted} />
@@ -187,10 +193,16 @@ const styles = StyleSheet.create({
   backdrop: { flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(5,10,22,.58)" },
   sheet: { width: "100%", maxHeight: "88%", borderTopLeftRadius: 28, borderTopRightRadius: 28, backgroundColor: "#F7F8FC", padding: 20, gap: 14 },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  brandRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  logo: { width: 36, height: 36, borderRadius: 11, backgroundColor: "#1D16CE", alignItems: "center", justifyContent: "center" },
+  logoMark: { color: "#FFF", fontWeight: "900", fontSize: 18 },
   eyebrow: { fontFamily: "Manrope_800ExtraBold", fontSize: 11, letterSpacing: 1.8, color: "#1D16CE" },
   title: { fontFamily: "Manrope_800ExtraBold", fontSize: 25, color: "#111827" },
   close: { width: 42, height: 42, borderRadius: 21, alignItems: "center", justifyContent: "center", backgroundColor: "#E9EAF4" },
-  preview: { borderRadius: 18, padding: 14, backgroundColor: "#101D31" },
+  preview: { borderRadius: 18, overflow: "hidden", backgroundColor: "#101D31" },
+  previewImage: { width: "100%", height: 148, backgroundColor: "#1B2434" },
+  previewFallback: { width: "100%", height: 88, alignItems: "center", justifyContent: "center", backgroundColor: "#1B2434" },
+  previewCopy: { padding: 14 },
   previewKind: { fontFamily: "Manrope_800ExtraBold", fontSize: 11, textTransform: "uppercase", color: "#8FB7FF" },
   previewTitle: { marginTop: 4, fontFamily: "Manrope_700Bold", fontSize: 17, color: "#fff" },
   previewText: { marginTop: 3, fontFamily: "Manrope_400Regular", fontSize: 13, color: "#C3CDDA" },

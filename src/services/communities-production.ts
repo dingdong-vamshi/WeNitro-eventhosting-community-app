@@ -257,10 +257,10 @@ async function uploadCommunityImage(
 async function signedMediaUrl(path: string | null) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path)) return path;
-  if (path.startsWith("media/communities/")) return null;
+  const objectPath = path.replace(/^media\/communities\//, "");
   const { data, error } = await supabase.storage
     .from(COMMUNITY_BUCKET)
-    .createSignedUrl(path, SIGNED_URL_TTL_SECONDS);
+    .createSignedUrl(objectPath, SIGNED_URL_TTL_SECONDS);
   if (error) return null;
   return data.signedUrl;
 }

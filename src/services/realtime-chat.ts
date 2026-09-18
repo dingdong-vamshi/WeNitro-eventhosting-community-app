@@ -431,7 +431,44 @@ export async function createDirectConversation(otherUserId: number) {
     throw chatError(error, operation);
   }
 }
-export async function createGroupConversation(name: string, memberIds: number[]) {
+export async function signedRoomImage(path: string | null | undefined) {
+  if (!path) return null;
+  if (/^(https?:|data:|blob:|file:)/i.test(path)) return path;
+  for (const bucket of ["community", "communities", "avatars"] as const) {
+    const signed = await supabase.storage.from(bucket).createSignedUrl(path, 3_600);
+    if (!signed.error && signed.data?.signedUrl) return signed.data.signedUrl;
+  }
+  return supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+}
+
+export async function uploadGroupPhoto(localUri: string) {
+  const operation = "upload a group photo";
+  try {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) throw error ?? new Error("Authentication required.");
+    const response = await fetch(localUri);
+    if (!response.ok) throw new Error("Could not read the selected photo.");
+    const body = await response.arrayBuffer();
+    if (!body.byteLength || body.byteLength > 5 * 1024 * 1024) {
+      throw new Error("Choose a photo smaller than 5 MB.");
+    }
+    const path = `${data.user.id}/group/${Date.now()}.jpg`;
+    const uploaded = await supabase.storage.from("community").upload(path, body, {
+      contentType: "image/jpeg",
+      upsert: false,
+    });
+    if (uploaded.error) throw uploaded.error;
+    return path;
+  } catch (error) {
+    throw chatError(error, operation);
+  }
+}
+
+export async function createGroupConversation(
+  name: string,
+  memberIds: number[],
+  imagePath?: string | null,
+) {
   const operation = "create a group conversation";
   try {
     const ownId = await currentUserId(operation);
@@ -448,7 +485,17 @@ export async function createGroupConversation(name: string, memberIds: number[])
     );
     if (error) throw error;
     const row = first(data);
-    return id(row.room_id ?? row.id ?? data, "room id");
+    const roomId = id(row.room_id ?? row.id ?? data, "room id");
+    if (imagePath) {
+      const saved = await supabase
+        .from("tbl_chat_rooms")
+        .update({ image_url: imagePath })
+        .eq("id", roomId);
+      if (saved.error) {
+        /* Room is still created; the local photo is shown until image_url can be saved. */
+      }
+    }
+    return roomId;
   } catch (error) {
     throw chatError(error, operation);
   }
@@ -854,6 +901,8 @@ export async function subscribeToInbox(
 export const realtimeChatService = {
   createDirectConversation,
   createGroupConversation,
+  uploadGroupPhoto,
+  signedRoomImage,
   loadConversationMembers,
   loadMessagesPage,
   loadMessages,
