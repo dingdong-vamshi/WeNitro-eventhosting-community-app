@@ -268,6 +268,12 @@ export async function loadRemoteWorkspace() {
   }));
 
   const inboxRows = inboxResult.data ?? [];
+  const activityEventIds = [...new Set(inboxRows.map((room) => Number(room.event_id)).filter((id) => Number.isInteger(id) && id > 0))];
+  const eventTitleResult = activityEventIds.length
+    ? await supabase.from("tbl_events").select("id,title").in("id", activityEventIds)
+    : { data: [] as Row[], error: null };
+  if (eventTitleResult.error) throw workspaceError("activity chat titles", eventTitleResult.error);
+  const eventTitles = new Map(((eventTitleResult.data ?? []) as Row[]).map((row) => [Number(row.id), String(row.title || "").trim()]));
   const inboxMessages = inboxRows.flatMap((room) =>
     Array.isArray(room.chat_messages) ? (room.chat_messages as Row[]) : [],
   );
@@ -335,9 +341,13 @@ export async function loadRemoteWorkspace() {
           : null,
       };
     });
+    const eventTitle = eventTitles.get(Number(room.event_id)) || "";
+    const fallbackTitle = String(room.title ?? room.name ?? room.room_name ?? "").trim();
+    const genericTitle = !fallbackTitle || /^wenitro chat$/i.test(fallbackTitle);
     return {
       id: String(room.id),
-      name: directProfile?.fullname ?? directProfile?.username ?? room.title ?? room.name ?? room.room_name ?? "WeNitro chat",
+      name: directProfile?.fullname ?? directProfile?.username ?? ((genericTitle ? eventTitle : fallbackTitle) || eventTitle || "Activity chat"),
+      event_id: room.event_id == null ? null : String(room.event_id),
       kind: room.room_type === "personal" ? "direct" : "group",
       room_type: room.room_type,
       avatar_url: directProfile?.profile_image ?? communityPage.items.find(c => c.id === String(room.id))?.imageUrl ?? null,

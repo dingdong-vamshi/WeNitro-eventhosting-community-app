@@ -5,8 +5,12 @@ const load = (file, dependencies = {}) => { const exports = {}; new Function('ex
 const signals = load('src/domain/profile-signals.ts');
 for (const [balance, expected] of [[0,false],[499,false],[500,true],[501,true],[NaN,false],[Infinity,false]]) assert.equal(signals.storeEligible(balance), expected);
 assert.equal(signals.derivedTrustScore({phone_verified:false,aadhaar_verified:false,social_linked:false,rating:0}),0);
-assert.equal(signals.derivedTrustScore({phone_verified:true,aadhaar_verified:false,social_linked:false,rating:3.9}),20);
-assert.equal(signals.derivedTrustScore({phone_verified:true,aadhaar_verified:true,social_linked:true,rating:4}),60);
+assert.equal(signals.derivedTrustScore({phone_verified:true,aadhaar_verified:false,social_linked:false,rating:3.9}),10);
+assert.equal(signals.derivedTrustScore({email_verified:true,phone_verified:true,selfie_verified:true,aadhaar_verified:true,social_linked:true,rating:4,activities_joined:20}),100);
+assert.equal(signals.derivedTrustScore({email_verified:true,phone_verified:true,selfie_verified:true,aadhaar_verified:true,social_linked:true,rating:3.9,activities_joined:10}),80);
+assert.equal(signals.derivedTrustScore({activities_joined:9}),0);
+assert.equal(signals.derivedTrustScore({activities_joined:10}),20);
+assert.equal(signals.derivedTrustScore({activities_joined:20}),30);
 const countries=load('src/domain/countries.ts'); assert.equal(countries.COUNTRIES.length,249); assert.equal(new Set(countries.COUNTRIES.map(c=>c.code)).size,249); assert.match(countries.countryLabel('FR'),/France/); assert.equal(countries.countryLabel(null),'Select nationality');
 const taxonomy=load('src/domain/interest-categories.ts');
 const updates=[]; const reads=[];

@@ -756,8 +756,83 @@ export async function editCommunity(id: string, input: { name: string; descripti
   } catch (error) { if (path) await removeUploadedImages([path]).catch(() => undefined); throw error; }
 }
 export type CommunityPoll = { id: number; message_id: number; question: string; created_by: number; created_at: string; my_option_id: number | null; total_votes: number; options: { id: number; text: string; votes: number; percentage: number }[] };
+async function assemblePolls(roomId: number, pollIds: number[], me: number): Promise<CommunityPoll[]> {
+  if (!pollIds.length) return [];
+  const [{ data: polls, error: pollsError }, { data: options, error: optionsError }, { data: votes, error: votesError }, { data: messages, error: messagesError }] = await Promise.all([
+    supabase.from('tbl_chat_polls').select('id,question,created_by,created_at').eq('room_id', roomId).in('id', pollIds),
+    supabase.from('tbl_chat_poll_options').select('id,poll_id,option_text').in('poll_id', pollIds).order('id'),
+    supabase.from('tbl_chat_poll_votes').select('poll_id,option_id,user_id').in('poll_id', pollIds),
+    supabase.from('tbl_messages').select('id,poll_id').eq('room_id', roomId).in('poll_id', pollIds),
+  ]);
+  if (pollsError) throw pollsError;
+  if (optionsError) throw optionsError;
+  if (votesError) throw votesError;
+  if (messagesError) throw messagesError;
+  const optionRows = options ?? [];
+  const voteRows = votes ?? [];
+  const messageRows = messages ?? [];
+  return (polls ?? []).map((poll) => {
+    const pollVotes = voteRows.filter((vote) => vote.poll_id === poll.id);
+    const total = pollVotes.length;
+    return {
+      id: poll.id,
+      message_id: Number(messageRows.find((message) => message.poll_id === poll.id)?.id || 0),
+      question: poll.question,
+      created_by: poll.created_by,
+      created_at: String(poll.created_at || ''),
+      my_option_id: pollVotes.find((vote) => vote.user_id === me)?.option_id ?? null,
+      total_votes: total,
+      options: optionRows.filter((option) => option.poll_id === poll.id).map((option) => {
+        const votesForOption = pollVotes.filter((vote) => vote.option_id === option.id).length;
+        return { id: option.id, text: option.option_text, votes: votesForOption, percentage: total ? Math.round((1000 * votesForOption) / total) / 10 : 0 };
+      }),
+    };
+  });
+}
+
+async function chatRoomPoll(action: 'create' | 'vote' | 'list', roomId: number, payload: Record<string, unknown>): Promise<CommunityPoll[]> {
+  const { data: meRaw, error: meError } = await supabase.rpc('get_current_app_user_id');
+  if (meError) throw meError;
+  const me = Number(meRaw);
+  if (!Number.isInteger(me) || me <= 0) throw new Error('Authentication required.');
+  if (action === 'list') {
+    const ids = Array.isArray(payload.poll_ids) ? payload.poll_ids.map(Number).filter((id) => Number.isInteger(id) && id > 0) : [];
+    return assemblePolls(roomId, ids.slice(-100), me);
+  }
+  if (action === 'vote') {
+    const pollId = Number(payload.poll_id);
+    const optionId = Number(payload.option_id);
+    const { error } = await supabase.from('tbl_chat_poll_votes').upsert({ poll_id: pollId, option_id: optionId, user_id: me }, { onConflict: 'poll_id,user_id' });
+    if (error) throw error;
+    await supabase.from('tbl_messages').update({ edited_at: new Date().toISOString() }).eq('poll_id', pollId);
+    return assemblePolls(roomId, [pollId], me);
+  }
+  if (action !== 'create') throw new Error('Unsupported poll action');
+  const question = String(payload.question || '').trim();
+  const optionTexts = Array.isArray(payload.options) ? payload.options.map((option) => String(option || '').trim()).filter(Boolean) : [];
+  if (!question || optionTexts.length < 2 || optionTexts.length > 6) throw new Error('Enter a question and 2 to 6 options');
+  const clientId = String(payload.client_id || '');
+  const existing = clientId ? await supabase.from('tbl_chat_polls').select('id').eq('created_by', me).eq('client_id', clientId).eq('room_id', roomId).maybeSingle() : { data: null, error: null };
+  if (existing.error) throw existing.error;
+  let pollId = existing.data?.id;
+  if (!pollId) {
+    const inserted = await supabase.from('tbl_chat_polls').insert({ room_id: roomId, question, created_by: me, client_id: clientId || null }).select('id').single();
+    if (inserted.error) throw inserted.error;
+    pollId = inserted.data.id;
+    const optionsInsert = await supabase.from('tbl_chat_poll_options').insert(optionTexts.map((text) => ({ poll_id: pollId, option_text: text })));
+    if (optionsInsert.error) throw optionsInsert.error;
+    const messageInsert = await supabase.from('tbl_messages').insert({ room_id: roomId, sender_id: me, content: question, message_type: 'poll', poll_id: pollId, client_id: clientId || null, is_delivered: true });
+    if (messageInsert.error) throw messageInsert.error;
+  }
+  return assemblePolls(roomId, [pollId], me);
+}
+
 export async function communityPoll(action: 'create' | 'vote' | 'list', roomId: string, payload: Record<string, unknown>): Promise<CommunityPoll[]> {
-  const { data, error } = await supabase.rpc('community_poll', { p_action: action, p_room_id: integerId(roomId, 'community'), p_payload: payload });
+  const roomIdNum = integerId(roomId, 'room');
+  const { data: room, error: roomError } = await supabase.from('tbl_chat_rooms').select('room_type').eq('id', roomIdNum).maybeSingle();
+  if (roomError) throw roomError;
+  if (room?.room_type !== 'community') return chatRoomPoll(action, roomIdNum, payload);
+  const { data, error } = await supabase.rpc('community_poll', { p_action: action, p_room_id: roomIdNum, p_payload: payload });
   if (error) throw error;
   return data as CommunityPoll[];
 }

@@ -115,7 +115,7 @@ export const referenceDeltaService = {
   },
   async uploadProfilePhoto(position: number, uri: string, mimeType?: string | null) {
     if (position === 1) return { public_url: await profileProductionService.uploadAvatar(uri), position };
-    if (!Number.isInteger(position) || position < 2 || position > 6) throw new Error('Choose a photo slot from 2 to 6.');
+    if (!Number.isInteger(position) || position < 2 || position > 3) throw new Error('You can add up to 3 profile photos.');
     const { auth, legacyId } = await currentIdentity();
     const response = await fetch(uri);
     if (!response.ok) throw new Error('Could not read the selected photo.');
@@ -149,5 +149,20 @@ export const referenceDeltaService = {
     const url = existing.data.profile_image || '';
     const path = url.includes(marker) ? decodeURIComponent(url.split(marker)[1].split('?')[0]) : '';
     if (path.startsWith(`${auth.id}/`)) await supabase.storage.from('avatars').remove([path]);
+  },
+  async listPublicProfilePhotos(userId: number): Promise<ProfilePhoto[]> {
+    const images = await (supabase as any).from('tbl_user_profile_images').select('id,user_id,image_url,slot_index').eq('user_id', userId).order('slot_index');
+    if (!images.error && Array.isArray(images.data) && images.data.length) {
+      return images.data.map((row: any) => ({ id: Number(row.id), user_id: Number(row.user_id), storage_path: String(row.image_url), public_url: String(row.image_url), position: Number(row.slot_index) || 2 }));
+    }
+    const photos = await (supabase as any).from('tbl_user_profile_photos').select('id,user_id,storage_path,public_url,position').eq('user_id', userId).lte('position', 3).order('position');
+    if (photos.error) return [];
+    return (photos.data || []) as ProfilePhoto[];
+  },
+  async setPrimaryProfilePhoto(position: number, extraUri: string, currentPrimaryUri?: string) {
+    if (position === 1) return extraUri;
+    const primary = await this.uploadProfilePhoto(1, extraUri);
+    if (currentPrimaryUri) await this.uploadProfilePhoto(position, currentPrimaryUri);
+    return primary.public_url;
   },
 };

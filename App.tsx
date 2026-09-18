@@ -15,7 +15,8 @@ import { ReferenceSettings, ReferencePrivacy, ReferenceUtility, ReferenceStore }
 import { ReferenceActivityHistory, ReferenceEmergencyContact, ReferenceNitroHistory, ReferenceVerification } from "./src/components/reconstruction/profile-utilities";
 import { ReferenceTheme, ReferenceNavigation, Sheet as ReferenceSheet, usePalette, Page, Header as ReferenceHeader, Field as ReferenceField, Button as ReconstructionButton, ErrorLine, SearchField } from "./src/components/reconstruction/ui";
 import { referenceDeltaService } from "./src/services/reference-delta";
-import { CreateCommunitySheet, CommunityConversation, PollComposer, VibeEntryState } from "./src/components/community/reference-community";
+import { CreateCommunitySheet, CommunityConversation, PollComposer, PollCard, VibeEntryState } from "./src/components/community/reference-community";
+import { communityPoll, type CommunityPoll } from "./src/services/communities-production";
 import { HostActivityScreen, HostLanding, HostNavigation } from "./src/components/hosting/host-activity-screen";
 import { viewerCanListActivity } from "./src/domain/activity-visibility";
 import { PartnerAccountScreen } from "./src/components/partner-account-screen";
@@ -339,11 +340,13 @@ type ChatMessage = {
   image?: string;
   createdAt?: string;
   messageType?: string;
+  pollId?: number | null;
   share?: ChatSharePayload | null;
 };
 
 export type ChatConversation = {
   roomType?: string;
+  activityId?: string;
   id: string;
   name: string;
   type: "People" | "Groups";
@@ -630,6 +633,7 @@ const chatMessageFromRemote = (message: any, userId: string | undefined): ChatMe
   image: message.media_signed_url || message.media_url || undefined,
   createdAt: String(message.created_at),
   messageType: String(message.message_type ?? "text"),
+  pollId: message.poll_id == null ? null : Number(message.poll_id),
   share,
   };
 };
@@ -723,6 +727,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
               "WeNitro member",
         type: item.kind === "group" ? "Groups" : "People",
         roomType: item.room_type,
+        activityId: item.event_id ? String(item.event_id) : undefined,
         avatar:
           item.avatar_url || other?.profiles?.avatar_url || neutralAvatar,
         memberCount: members.length,
@@ -4799,6 +4804,8 @@ export function ChatScreen({
   const [groupInfoError, setGroupInfoError] = useState('');
   const [groupInfoQuery, setGroupInfoQuery] = useState('');
   const [groupInfo, setGroupInfo] = useState<{ eventId: string | null; date: string; location: string; members: Awaited<ReturnType<typeof realtimeChatService.loadConversationMembers>> } | null>(null);
+  const [pollOpen, setPollOpen] = useState(false);
+  const [polls, setPolls] = useState<Record<number, CommunityPoll>>({});
   const chatSubscription = useRef<Awaited<
     ReturnType<typeof realtimeChatService.subscribeToConversation>
   > | null>(null);
@@ -5339,6 +5346,15 @@ export function ChatScreen({
     })().catch(e => active && setGroupInfoError(e.message)).finally(() => active && setGroupInfoLoading(false));
     return () => { active = false; };
   }, [groupInfoOpen, selected?.id]);
+  useEffect(() => {
+    const ids = (selected?.messages || []).flatMap(message => message.pollId ? [message.pollId] : []);
+    if (!selected || !ids.length || !isBackendId(selected.id)) return;
+    let active = true;
+    void communityPoll('list', selected.id, { poll_ids: ids.slice(-100) }).then(items => {
+      if (active) setPolls(Object.fromEntries(items.map(item => [item.id, item])));
+    }).catch(() => undefined);
+    return () => { active = false; };
+  }, [selected?.id, selected?.messages]);
 
   if (selected && groupInfoOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}><View style={{ width:'100%',maxWidth,alignSelf:'center',flex:1 }}><View style={{minHeight:61,borderBottomWidth:1,borderColor:palette.border,flexDirection:'row',alignItems:'center'}}><Pressable accessibilityRole="button" accessibilityLabel="Back to group chat" onPress={()=>setGroupInfoOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text}/></Pressable><Text style={{color:palette.text,fontSize:18,fontWeight:'800'}}>Group Info</Text></View>{groupInfoLoading?<ActivityIndicator color="#7060EF" style={{marginTop:80}}/>:<ScrollView contentContainerStyle={{padding:18,gap:16,paddingBottom:38}}><View style={{alignItems:'center',gap:10,paddingVertical:9}}>{selected.avatar?<Image source={{uri:selected.avatar}} style={{width:86,height:86,borderRadius:43}}/>:<View style={{width:86,height:86,borderRadius:43,backgroundColor:palette.card,alignItems:'center',justifyContent:'center'}}><Icon name="people" color="#7060EF" size={36}/></View>}<Text style={{color:palette.text,fontSize:20,fontWeight:'800'}}>{selected.name}</Text><Text style={{color:palette.muted,fontSize:11}}>{groupInfo?.members.length ?? selected.memberCount} participants</Text></View><View style={{backgroundColor:palette.card,borderRadius:14,borderWidth:1,borderColor:palette.border,padding:15,gap:14}}><View style={{flexDirection:'row',gap:10}}><Icon name="calendar-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>DATE</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.date}</Text></View></View><View style={{flexDirection:'row',gap:10}}><Icon name="location-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>LOCATION</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.location}</Text></View></View>{groupInfo?.eventId&&onOpenActivity?<Button label="View Activity Page" onPress={()=>onOpenActivity(groupInfo.eventId!)}/>:null}</View><TextInput accessibilityLabel="Search participants" value={groupInfoQuery} onChangeText={setGroupInfoQuery} placeholder="Search participants..." placeholderTextColor={palette.muted} style={{minHeight:46,borderRadius:12,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,color:palette.text,paddingHorizontal:13} as any}/>{groupInfo?.members.filter(member=>`${member.profiles?.full_name||''} ${member.profiles?.username||''}`.toLowerCase().includes(groupInfoQuery.toLowerCase())).map(member=><Pressable accessibilityRole="button" key={member.user_id} disabled={!onOpenProfile} onPress={()=>onOpenProfile?.(String(member.user_id))} style={{minHeight:64,flexDirection:'row',alignItems:'center',gap:12,borderBottomWidth:1,borderColor:palette.border}}>{member.profiles?.avatar_url?<Image source={{uri:member.profiles.avatar_url}} style={{width:44,height:44,borderRadius:22}}/>:<Icon name="person-circle-outline" color={palette.muted} size={44}/>}<View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:13,fontWeight:'700'}}>{member.profiles?.full_name||member.profiles?.username||'Member'} <VerifiedBadge userId={member.user_id} /></Text><Text style={{color:palette.muted,fontSize:10}}>@{member.profiles?.username||'member'}</Text></View><Text style={{color:'#8E7CFF',fontSize:9}}>{member.role||'member'}</Text></Pressable>)}{groupInfoError?<Text style={{color:'#F47786',fontSize:12}}>{groupInfoError}</Text>:null}</ScrollView>}</View></SafeAreaView>;
 
@@ -5361,7 +5377,18 @@ export function ChatScreen({
           <Pressable accessibilityRole="button" accessibilityLabel={`Open ${selected.name}'s profile`} disabled={!selected.userId || !onOpenProfile} onPress={() => selected.userId && onOpenProfile?.(selected.userId)}>
             <UserAvatar uri={selected.avatar} name={selected.name} size={42} />
           </Pressable>
-          <Pressable accessibilityRole="button" accessibilityLabel={selected.type === 'Groups' ? `Open ${selected.name} group info` : `Open ${selected.name}'s profile`} disabled={selected.type !== 'Groups' && (!selected.userId || !onOpenProfile)} onPress={() => selected.type === 'Groups' ? setGroupInfoOpen(true) : selected.userId && onOpenProfile?.(selected.userId)} style={styles.messageBody}>
+          <Pressable accessibilityRole="button" accessibilityLabel={selected.type === 'Groups' ? `Open ${selected.name} activity` : `Open ${selected.name}'s profile`} disabled={selected.type !== 'Groups' && (!selected.userId || !onOpenProfile)} onPress={() => {
+            if (selected.type !== 'Groups') { if (selected.userId) onOpenProfile?.(selected.userId); return; }
+            const openLinkedActivity = async () => {
+              if (selected.activityId && onOpenActivity) { onOpenActivity(selected.activityId); return; }
+              if (isBackendId(selected.id)) {
+                const room = await supabase.from('tbl_chat_rooms').select('event_id').eq('id', Number(selected.id)).maybeSingle();
+                if (room.data?.event_id && onOpenActivity) { onOpenActivity(String(room.data.event_id)); return; }
+              }
+              setGroupInfoOpen(true);
+            };
+            void openLinkedActivity().catch(() => setGroupInfoOpen(true));
+          }} style={styles.messageBody}>
             <Text style={[styles.chatThreadName, { color: palette.text }]} numberOfLines={1}>
               {selected.name} {selected.type === "People" && <VerifiedBadge userId={selected.userId} />}
             </Text>
@@ -5377,7 +5404,17 @@ export function ChatScreen({
                   : "offline"}
             </Text>
           </Pressable>
-          {selected.type === 'Groups' ? <Pressable accessibilityRole="button" accessibilityLabel="Group Info" onPress={()=>setGroupInfoOpen(true)} style={styles.chatHeaderButton}><Icon name="information-circle-outline" color={palette.icon}/></Pressable> : null}
+          {selected.type === 'Groups' ? <Pressable accessibilityRole="button" accessibilityLabel="Open activity page" onPress={() => {
+            const openLinkedActivity = async () => {
+              if (selected.activityId && onOpenActivity) { onOpenActivity(selected.activityId); return; }
+              if (isBackendId(selected.id)) {
+                const room = await supabase.from('tbl_chat_rooms').select('event_id').eq('id', Number(selected.id)).maybeSingle();
+                if (room.data?.event_id && onOpenActivity) { onOpenActivity(String(room.data.event_id)); return; }
+              }
+              setGroupInfoOpen(true);
+            };
+            void openLinkedActivity().catch(() => setGroupInfoOpen(true));
+          }} style={styles.chatHeaderButton}><Icon name="information-circle-outline" color={palette.icon}/></Pressable> : null}
         </View>
         <ScrollView
           ref={threadScroll}
@@ -5416,6 +5453,7 @@ export function ChatScreen({
                 <Text style={[styles.dynamicSender, { color: palette.accent }]}>{message.sender} <VerifiedBadge userId={message.senderId} /></Text>
               ) : null}
               {message.image ? message.messageType === "video" ? <ChatMessageVideo uri={message.image} /> : <Image source={{ uri: message.image }} style={styles.dynamicMessageImage} /> : null}
+              {message.pollId ? polls[message.pollId] ? <PollCard poll={polls[message.pollId]} roomId={selected.id} onUpdated={poll => setPolls(current => ({ ...current, [poll.id]: poll }))} /> : <Text style={[styles.dynamicMessageText, { color: palette.muted }]}>Poll</Text> : null}
               {message.share ? (
                 <Pressable onPress={() => openSharedContent(message.share!)} style={{ width: 250, overflow: "hidden", borderRadius: 16, backgroundColor: message.mine ? "rgba(255,255,255,.14)" : palette.inset }}>
                   {message.share.thumbnailUrl ? <Image source={{ uri: message.share.thumbnailUrl }} style={{ width: "100%", height: 112 }} /> : null}
@@ -5427,7 +5465,7 @@ export function ChatScreen({
                   </View>
                 </Pressable>
               ) : null}
-              {message.text && !message.share ? (
+              {message.text && !message.share && !message.pollId ? (
                 <Text
                   style={[
                     styles.dynamicMessageText,
@@ -5459,6 +5497,7 @@ export function ChatScreen({
         {attachmentsOpen ? <ReferenceSheet title="Chat Options" close={() => setAttachmentsOpen(false)}>
           <Pressable accessibilityRole="button" onPress={() => void pickMessageMedia("images")} style={styles.optionRow}><Icon name="image-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Share Photo</Text></Pressable>
           <Pressable accessibilityRole="button" onPress={() => void pickMessageMedia("videos")} style={styles.optionRow}><Icon name="videocam-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Share Video</Text></Pressable>
+          {selected.type === "Groups" ? <Pressable accessibilityRole="button" onPress={() => { setAttachmentsOpen(false); setPollOpen(true); }} style={styles.optionRow}><Icon name="stats-chart-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Create Poll</Text></Pressable> : null}
           {selected.type === "People" && selected.userId ? <Pressable accessibilityRole="button" onPress={() => {
             const block = async () => {
               try {
@@ -5477,6 +5516,13 @@ export function ChatScreen({
           }} style={styles.optionRow}><Icon name="ban-outline" color="#F47786" size={24} /><Text style={[styles.optionText, { color: "#F47786" }]}>Block Chat</Text></Pressable> : null}
           <Pressable accessibilityRole="button" onPress={() => setAttachmentsOpen(false)} style={styles.optionCancel}><Text style={styles.optionText}>Cancel</Text></Pressable>
         </ReferenceSheet> : null}
+        {pollOpen ? <PollComposer roomId={selected.id} close={() => setPollOpen(false)} onPosted={async () => {
+          setPollOpen(false);
+          if (!isBackendId(selected.id)) return;
+          const page = await realtimeChatService.loadMessagesPage(Number(selected.id));
+          const mapped = page.items.map(item => chatMessageFromRemote(item, data.userId));
+          updateConversation(selected.id, conversation => ({ ...conversation, messages: mapped, lastMessageAt: mapped.at(-1)?.createdAt }));
+        }} /> : null}
         <View style={[styles.dynamicComposer, { backgroundColor: palette.nav, borderTopColor: palette.border }]}>
           <Pressable
             onPress={() => setAttachmentsOpen((current) => !current)}
@@ -5890,7 +5936,7 @@ export function ChatScreen({
                     }
                   >
                     <Image
-                      source={{ uri: person.avatar }}
+                      source={{ uri: person.avatar || neutralAvatar }}
                       style={styles.groupContactAvatar}
                     />
                     <View style={styles.messageBody}>
@@ -6987,7 +7033,6 @@ export function CommunityDetailScreen({
   const [draft, setDraft] = useState("");
   const [postImageUri, setPostImageUri] = useState<string | null>(null);
   const [postMediaType, setPostMediaType] = useState<"image" | "video">("image");
-  const [postPollOpen, setPostPollOpen] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [commentDraft, setCommentDraft] = useState("");
@@ -7338,9 +7383,6 @@ export function CommunityDetailScreen({
             <Pressable onPress={() => void pickPostMedia("video")} accessibilityLabel="Attach video">
               <Icon name="videocam-outline" color={palette.accent} />
             </Pressable>
-            <Pressable onPress={() => setPostPollOpen(true)} accessibilityLabel="Create poll">
-              <Icon name="stats-chart-outline" color={palette.accent} />
-            </Pressable>
             <Pressable onPress={publish} disabled={publishing}>
               {publishing ? (
                 <ActivityIndicator size="small" color={palette.accent} />
@@ -7461,7 +7503,6 @@ export function CommunityDetailScreen({
           </View>
         ))}
       </ScrollView>
-      {postPollOpen ? <PollComposer roomId={community.id} close={() => setPostPollOpen(false)} onPosted={async () => { setPostPollOpen(false); onConversation(); }} /> : null}
     </SafeAreaView>
   );
 }
@@ -8825,14 +8866,19 @@ export default function App() {
     const refreshInbox = (change: import("./src/services/realtime-chat").InboxMessageChange) => {
       if (!active || change.eventType !== "INSERT" || !change.message) return;
       const incoming = chatMessageFromRemote(change.message, data.userId);
+      const roomId = String(change.conversationId);
       setData((current) => ({
         ...current,
         conversations: current.conversations.map((conversation) =>
-          conversation.id !== String(change.conversationId) || conversation.messages.some((message) => message.id === incoming.id)
+          conversation.id !== roomId || conversation.messages.some((message) => message.id === incoming.id)
             ? conversation
             : { ...conversation, messages: [...conversation.messages, incoming], lastMessageAt: incoming.createdAt, unread: incoming.mine || selectedConversationId === conversation.id ? conversation.unread : conversation.unread + 1 },
         ),
       }));
+      if (!incoming.mine && selectedConversationId !== roomId) {
+        const roomName = data.conversations.find(item => item.id === roomId)?.name || "New message";
+        Alert.alert(roomName, incoming.text || (incoming.messageType === "image" ? "Photo" : incoming.messageType === "video" ? "Video" : "New message"));
+      }
     };
     const subscribe = () => {
       realtimeChatService
@@ -9144,7 +9190,7 @@ export default function App() {
         setData(current => ({ ...current, conversations: current.conversations.map(c => c.id !== selectedConversationId ? c : { ...c, unread: 0, lastMessageAt: message.created_at, messages: [...c.messages.filter(m => m.id !== String(message.id)), chatMessageFromRemote(message, current.userId || "")] }) }));
       }} />;
     }
-    if (screen === 'chat' && !selectedConversationId && !legacyMessages) return <ReferenceMessages data={data} tab={messagesTab} setTab={setMessagesTab} filter={messagesFilter} setFilter={setMessagesFilter} openProfile={openProfile} openConversation={openConversation} startConversation={async person => {
+    if (screen === 'chat' && !selectedConversationId && !legacyMessages) return <ReferenceMessages data={data} tab={messagesTab} setTab={setMessagesTab} filter={messagesFilter} setFilter={setMessagesFilter} setData={setData} openProfile={openProfile} openConversation={openConversation} startConversation={async person => {
       const existing = data.conversations.find(conversation => conversation.type === 'People' && conversation.userId === String(person.id));
       if (existing) { openConversation(existing.id); return; }
       try {
@@ -9152,7 +9198,7 @@ export default function App() {
         setData(current => ({ ...current, conversations: current.conversations.some(conversation => conversation.id === id) ? current.conversations : [{ id, name: person.fullname || person.username, type: 'People', roomType: 'personal', avatar: person.profile_image || '', memberCount: 2, online: false, unread: 0, userId: String(person.id), messages: [] }, ...current.conversations] }));
         openConversation(id);
       } catch (caught) { Alert.alert('Could not start chat', caught instanceof Error ? caught.message : 'Please try again.'); }
-    }} createCommunity={() => go('createCommunity')} openLegacy={() => setLegacyMessages(true)} openCommunity={room => {
+    }} createCommunity={() => go('createCommunity')} openCommunity={room => {
       setData(current => ({ ...current, communities: [{ id: room.id, name: room.name, tagline: room.description, category: room.category, tags: room.tags, memberCount: room.memberCount || 0, onlineCount: 0, visibility: room.visibility === 'private' ? 'Private' : 'Public', membership: room.membership, image: room.imageUrl || '', cover: room.coverUrl || '', rules: [], posts: [] }, ...current.communities.filter(r => r.id !== room.id)], conversations: room.membership === 'joined' || room.membership === 'created' ? current.conversations.some(r => r.id === room.id) ? current.conversations : [...current.conversations, { id: room.id, name: room.name, type: 'Groups', roomType: 'community', avatar: room.imageUrl || '', memberCount: room.memberCount || 0, online: false, unread: 0, messages: [] }] : current.conversations }));
       if (room.membership === 'joined' || room.membership === 'created') openConversation(room.id); else openCommunity(room.id);
     }} />;
@@ -12857,7 +12903,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#233249",
   },
-  groupContactAvatar: { width: 43, height: 43, borderRadius: 14 },
+  groupContactAvatar: { width: 43, height: 43, borderRadius: 22 },
   groupContactName: {
     fontFamily: "Manrope_700Bold",
     color: "#fff",

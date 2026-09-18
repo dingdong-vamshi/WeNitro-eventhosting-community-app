@@ -171,6 +171,17 @@ export const verificationService = {
     return data as VerificationMethods;
   },
 
+  async previewLivePhoto(): Promise<string | null> {
+    const { data: userId, error: userError } = await supabase.rpc('get_current_app_user_id');
+    if (userError) throw userError;
+    const { data, error } = await (supabase as any).from('tbl_user_verification').select('live_photo_path,live_photo_verified').eq('user_id', Number(userId)).maybeSingle();
+    if (error) throw error;
+    if (!data?.live_photo_verified || !data.live_photo_path) return null;
+    const signed = await supabase.storage.from(BUCKET).createSignedUrl(data.live_photo_path, 3600);
+    if (signed.error) return null;
+    return signed.data.signedUrl;
+  },
+
   async list(): Promise<VerificationRequest[]> {
     await authUserId();
     const { data, error } = await supabase.rpc(verificationBridgeRpc.list);

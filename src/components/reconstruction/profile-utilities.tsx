@@ -7,6 +7,7 @@ import { profileProductionService } from '../../services/profile-production';
 import { referenceDeltaService, type EmergencyContact, type NitroLedgerRow } from '../../services/reference-delta';
 import { supabase } from '../../lib/supabase';
 import { verificationService, type VerificationMethods } from '../../services/verification-production';
+import { derivedTrustScore, trustScoreParts } from '../../domain/profile-signals';
 import { prepareReferenceActivities } from './feed-search';
 import { Button, ErrorLine, Field, Header, Icon, Page, Pills, Sheet, Skeleton, usePalette, purple } from './ui';
 
@@ -22,7 +23,9 @@ export function ReferenceVerification({ back }: { back: () => void }) {
   const [email, setEmail] = useState('');
   const [methods, setMethods] = useState<VerificationMethods | null>(null);
   const [identityPhoto, setIdentityPhoto] = useState<ImagePicker.ImagePickerAsset | null>(null);
+  const [selfiePreview, setSelfiePreview] = useState<string | null>(null);
   const [trustScore, setTrustScore] = useState<number | null>(null);
+  const [metrics, setMetrics] = useState<any>(null);
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -36,34 +39,56 @@ export function ReferenceVerification({ back }: { back: () => void }) {
     setEmailVerified(state.email_verified);
     setEmail(auth.data.user?.email || '');
     setMethods(state);
-    setTrustScore(typeof (metrics.data as any)?.trust_score === 'number' ? Number((metrics.data as any).trust_score) : null);
+    setMetrics(metrics.data);
+    const score = derivedTrustScore({
+      email_verified: state.email_verified,
+      phone_verified: state.phone_verified,
+      selfie_verified: state.live_photo_verified,
+      aadhaar_verified: Boolean((metrics.data as any)?.aadhaar_verified),
+      social_linked: Boolean((metrics.data as any)?.social_linked),
+      rating: Number((metrics.data as any)?.rating ?? 0),
+      activities_joined: Number((metrics.data as any)?.activities ?? 0),
+    });
+    setTrustScore(score);
     setPhone(auth.data.user?.phone?.replace(/^\+91/, '') || '');
+    if (state.live_photo_verified) setSelfiePreview(await verificationService.previewLivePhoto().catch(() => null));
   };
   useEffect(() => { let active = true; void load().catch(e => active && setError(e.message)).finally(() => active && setLoading(false)); return () => { active = false; }; }, []);
   const run = async (action: () => Promise<unknown>) => { if (lock.current) return; lock.current = true; setBusy(true); setError(''); try { await action(); } catch (e: any) { setError(e.message || 'Verification could not continue.'); } finally { lock.current = false; setBusy(false); } };
-  const pickIdentityPhoto = async (camera: boolean) => {
-    const permission = camera ? await ImagePicker.requestCameraPermissionsAsync() : await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permission.granted) { setError(camera ? 'Camera access is required to take a live verification photo.' : 'Photo access is required to choose a verification image.'); return; }
-    const options: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], allowsEditing: false, allowsMultipleSelection: false, quality: .9 };
-    const result = await (camera ? ImagePicker.launchCameraAsync(options) : ImagePicker.launchImageLibraryAsync(options));
+  const openCamera = async () => {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permission.granted) { setError('Camera access is required to take a selfie.'); return; }
+    const result = await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], allowsEditing: false, allowsMultipleSelection: false, quality: .9, cameraType: ImagePicker.CameraType.front });
     if (!result.canceled && result.assets[0]?.uri) { setIdentityPhoto(result.assets[0]); setError(''); }
   };
   const photoVerified = methods?.live_photo_verified === true;
+  const shownSelfie = identityPhoto?.uri || selfiePreview;
+  const parts = trustScoreParts({
+    email_verified: emailVerified,
+    phone_verified: phoneVerified,
+    selfie_verified: photoVerified,
+    aadhaar_verified: Boolean(metrics?.aadhaar_verified),
+    social_linked: Boolean(metrics?.social_linked),
+    rating: Number(metrics?.rating ?? 0),
+    activities_joined: Number(metrics?.activities ?? 0),
+  });
   return <Page><Header title="Verify Your Account" back={back} />{loading ? <Skeleton /> : <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 18, gap: 18, paddingBottom: 40 }}>
-    <View style={{ borderRadius: 18, padding: 18, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, flexDirection: 'row', alignItems: 'center', gap: 16 }}><View style={{ width: 70, height: 70, borderRadius: 36, borderWidth: 6, borderColor: phoneVerified ? '#52BE86' : c.border, alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: c.text, fontSize: 22, fontWeight: '800' }}>{trustScore ?? '—'}</Text><Text style={{ color: c.muted, fontSize: 8 }}>/100</Text></View><View style={{ flex: 1, gap: 5 }}><Text style={{ color: c.text, fontSize: 17, fontWeight: '700' }}>Trust Score</Text><Text style={{ color: c.muted, fontSize: 11, lineHeight: 17 }}>{trustScore === null ? 'A Trust Score has not been calculated for this account.' : 'This is your current account Trust Score.'}</Text></View></View>
-    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 8 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: emailVerified ? '#D8F7E7' : c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name={emailVerified ? 'checkmark' : 'mail-outline'} color={emailVerified ? '#198457' : c.muted} size={17} /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{emailVerified ? 'Email Verified' : 'Email Not Verified'}</Text><Text numberOfLines={1} style={{ color: c.muted, fontSize: 10 }}>{email || 'No email address is attached to this account.'}</Text></View></View></View>
-    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 13 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: phoneVerified ? '#D8F7E7' : '#ECE9FF', alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: phoneVerified ? '#198457' : purple, fontWeight: '800' }}>{phoneVerified ? '✓' : '1'}</Text></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{phoneVerified ? 'Number Verified' : 'Number Not Verified'}</Text><Text style={{ color: c.muted, fontSize: 10 }}>{phoneVerified ? 'Verified · +10 V-Nitro Points awarded once.' : 'Verify with a one-time password'}</Text></View></View>
+    <View style={{ borderRadius: 18, padding: 18, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, flexDirection: 'row', alignItems: 'center', gap: 16 }}><View style={{ width: 70, height: 70, borderRadius: 36, borderWidth: 6, borderColor: phoneVerified ? '#52BE86' : c.border, alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: c.text, fontSize: 22, fontWeight: '800' }}>{trustScore ?? 0}</Text><Text style={{ color: c.muted, fontSize: 8 }}>/100</Text></View><View style={{ flex: 1, gap: 5 }}><Text style={{ color: c.text, fontSize: 17, fontWeight: '700' }}>Trust Score</Text><Text style={{ color: c.muted, fontSize: 11, lineHeight: 17 }}>Verification stages + 4+ rating + activities joined. Rating below 4 gives 0 for that part.</Text></View></View>
+    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 8 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: emailVerified ? '#D8F7E7' : c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name={emailVerified ? 'checkmark' : 'mail-outline'} color={emailVerified ? '#198457' : c.muted} size={17} /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{emailVerified ? 'Email Verified' : 'Email Not Verified'}</Text><Text numberOfLines={1} style={{ color: c.muted, fontSize: 10 }}>{email || 'No email address is attached to this account.'}</Text></View><Text style={{ color: emailVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View></View>
+    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 13 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: phoneVerified ? '#D8F7E7' : '#ECE9FF', alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: phoneVerified ? '#198457' : purple, fontWeight: '800' }}>{phoneVerified ? '✓' : '1'}</Text></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{phoneVerified ? 'Number Verified' : 'Number Not Verified'}</Text><Text style={{ color: c.muted, fontSize: 10 }}>{phoneVerified ? 'Verified · +10 Trust / V-Nitro Points awarded once.' : 'Verify with a one-time password · +10 points'}</Text></View><Text style={{ color: phoneVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View>
       {!phoneVerified && <><View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><View style={{ minHeight: 46, justifyContent: 'center', paddingHorizontal: 13, borderWidth: 1, borderColor: c.border, borderRadius: 9, backgroundColor: c.bg }}><Text style={{ color: c.text }}>+91</Text></View><Field accessibilityLabel="Phone number" keyboardType="phone-pad" maxLength={10} value={phone} onChangeText={value => setPhone(value.replace(/\D/g, '').slice(0, 10))} placeholder="10-digit mobile number" style={{ flex: 1 }} /></View>{otpSent && <Field accessibilityLabel="Phone OTP" keyboardType="number-pad" maxLength={6} value={otp} onChangeText={value => setOtp(value.replace(/\D/g, '').slice(0, 6))} placeholder="6-digit OTP" />}
       <Button label={otpSent ? 'Verify Phone' : 'Add & Verify Phone'} busy={busy} disabled={otpSent ? otp.length !== 6 : phone.length !== 10} onPress={() => void run(async () => { if (!otpSent) { await referenceDeltaService.requestPhoneChange(phone); setOtpSent(true); } else { await referenceDeltaService.verifyPhoneChange(phone, otp); setOtpSent(false); setOtp(''); await load(); } })} /></>}
     </View>
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 13 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><Icon name={photoVerified ? 'checkmark-circle' : 'camera-outline'} color={photoVerified ? '#2D9666' : c.accent} /><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{photoVerified ? 'Live Photo Verified' : 'Live Photo Verification'}</Text><Text style={{ color: c.muted, fontSize: 11, marginTop: 4 }}>{photoVerified ? '+10 V-Nitro Points awarded once.' : 'Complete verification with a private photo.'}</Text></View></View>
-      <Text style={{ color: c.muted, fontSize: 11, lineHeight: 17 }}>Your photo stays private and is never used as your avatar or posted publicly. A successful upload completes this verification automatically; no manual review is needed.</Text>
-      {identityPhoto ? <View style={{ gap: 9 }}><Image source={{ uri: identityPhoto.uri }} style={{ width: '100%', height: 190, borderRadius: 12, backgroundColor: c.inset }} resizeMode="cover" /><Button label="Choose a Different Photo" disabled={busy} onPress={() => void pickIdentityPhoto(false)} /></View> : <View style={{ flexDirection: 'row', gap: 9 }}><View style={{ flex: 1 }}><Button label="Take Live Photo" disabled={busy} onPress={() => void pickIdentityPhoto(true)} /></View><View style={{ flex: 1 }}><Button label={photoVerified ? 'Replace Photo' : 'Choose Photo'} disabled={busy} onPress={() => void pickIdentityPhoto(false)} /></View></View>}
-      {identityPhoto ? <Button label={photoVerified ? 'Update Private Photo' : 'Upload & Verify'} busy={busy} onPress={() => void run(async () => { await verificationService.submitLivePhoto(identityPhoto.uri, identityPhoto.mimeType); setIdentityPhoto(null); await load(); })} /> : null}
-      {photoVerified && <Text style={{ color: c.muted, fontSize: 11 }}>Replacing your photo does not award additional points.</Text>}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><Icon name={photoVerified ? 'checkmark-circle' : 'camera-outline'} color={photoVerified ? '#2D9666' : c.accent} /><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{photoVerified ? 'Selfie Uploaded' : 'Upload Selfie'}</Text><Text style={{ color: c.muted, fontSize: 11, marginTop: 4 }}>{photoVerified ? '+10 Trust / V-Nitro Points awarded once.' : 'Take a selfie with the camera · +10 points'}</Text></View><Text style={{ color: photoVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View>
+      <Text style={{ color: c.muted, fontSize: 11, lineHeight: 17 }}>Your selfie stays private and is never used as your avatar or posted publicly. Open Camera only — gallery upload is not allowed.</Text>
+      {shownSelfie ? <Image source={{ uri: shownSelfie }} style={{ width: '100%', height: 190, borderRadius: 12, backgroundColor: c.inset }} resizeMode="cover" /> : null}
+      <Button label={shownSelfie ? 'Retake with Camera' : 'Open Camera'} disabled={busy} onPress={() => void openCamera()} />
+      {identityPhoto ? <Button label={photoVerified ? 'Update Private Selfie' : 'Upload & Verify'} busy={busy} onPress={() => void run(async () => { await verificationService.submitLivePhoto(identityPhoto.uri, identityPhoto.mimeType); setIdentityPhoto(null); await load(); })} /> : null}
+      {photoVerified && <Text style={{ color: c.muted, fontSize: 11 }}>Replacing your selfie does not award additional points.</Text>}
     </View>
-    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, gap: 8, borderWidth: 1, borderColor: c.border }}><Text style={{ color: c.text, fontWeight: '700', fontSize: 15 }}>Verification rewards: {methods?.verification_points ?? 0} / 30</Text><Text style={{ color: c.muted, fontSize: 11, lineHeight: 17 }}>Earn +10 V-Nitro Points once for each: confirmed email, confirmed phone, and Live Photo. Any one completed method gives you the public verified badge.</Text></View>
+    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 8 }}><View style={{ flexDirection: 'row' }}><Text style={{ color: c.text, fontWeight: '700', fontSize: 15, flex: 1 }}>Aadhaar Verification</Text><Text style={{ color: metrics?.aadhaar_verified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+20</Text></View><Text style={{ color: c.muted, fontSize: 11, lineHeight: 17 }}>{metrics?.aadhaar_verified ? 'Aadhaar verified · +20 points.' : 'Aadhaar verification is not available in this build yet. Completing it will add +20 to Trust Score.'}</Text></View>
+    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, gap: 8, borderWidth: 1, borderColor: c.border }}><Text style={{ color: c.text, fontWeight: '700', fontSize: 15 }}>Trust Score breakdown</Text>{parts.parts.map(part => <View key={part.key} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Icon name={part.done ? 'checkmark-circle' : 'ellipse-outline'} color={part.done ? '#2D9666' : c.iconMuted} size={16} /><Text style={{ color: c.text, fontSize: 12, flex: 1 }}>{part.label}</Text><Text style={{ color: part.done ? '#2D9666' : c.muted, fontSize: 12 }}>{part.earned}/{part.points}</Text></View>)}<Text style={{ color: c.muted, fontSize: 11, lineHeight: 17 }}>Email (Google or confirmed email) +10, phone OTP +10, selfie +10, Aadhaar +20, 1+ social profile +10, 4+ karma rating +10 (0 if rating drops below 4), 10 activities joined +20, 20+ joined +30.</Text></View>
     <ErrorLine text={error} />
   </ScrollView>}</Page>;
 }
