@@ -1245,28 +1245,14 @@ function AuthCard({ children }: { children: React.ReactNode }) {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[styles.authWrap, { backgroundColor: palette.bg }]}>
-        <LinearGradient
-          colors={["#1910C2", "#4E46E5"]}
-          style={styles.authBrandPanel}
-        >
+        <View style={styles.authBrandPanel}>
           <Image
-            source={require("./assets/wenitro-auth-illustration.png")}
+            source={require("./assets/wenitro-auth-illustration.jpeg")}
+            accessibilityLabel="WeNitro community activities banner"
             style={styles.authIllustration}
             resizeMode="cover"
           />
-          <View style={styles.authIllustrationShade} />
-          <View style={styles.authBrandCopy}>
-            <Image
-              source={require("./assets/wenitro-logo-transparent.png")}
-              style={styles.authLogo}
-              resizeMode="contain"
-            />
-            <Text style={styles.brand}>WeNitro</Text>
-            <Text style={styles.authSub}>
-              Meet with intent. Make real plans.
-            </Text>
-          </View>
-        </LinearGradient>
+        </View>
         <View style={[styles.authCard, { backgroundColor: palette.card }]}>{children}</View>
       </ScrollView>
     </SafeAreaView>
@@ -9510,33 +9496,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bg,
   },
   authBrandPanel: {
-    minHeight: 330,
-    paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: 28,
-    justifyContent: "space-between",
+    width: "100%",
+    aspectRatio: 1448 / 599,
+    backgroundColor: "#4A2FA8",
     overflow: "hidden",
   },
   authIllustration: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
     width: "100%",
     height: "100%",
-    opacity: 0.72,
   },
-  authIllustrationShade: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: "rgba(59, 22, 112, 0.32)",
-  },
-  authBrandCopy: { gap: 6, zIndex: 1, alignItems: "center" },
-  authLogo: { width: 82, height: 82, marginBottom: 2 },
   loginHeading: { alignItems: "center", gap: 9, marginBottom: 5 },
   logoBadge: {
     width: 48,
