@@ -1,6 +1,6 @@
 import { VibeIntroSlide } from "./vibe-intro-slide";
 import React, { useEffect, useRef, useState } from "react";
-import { AccessibilityInfo, ActivityIndicator, Animated, Image, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { AccessibilityInfo, ActivityIndicator, Animated, Image, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from "../mobile-app-shell";
 import { LinearGradient } from "expo-linear-gradient";
@@ -8,6 +8,11 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { usePalette } from "../reconstruction/ui";
+
+export const WENITRO_LEGAL_URLS = {
+  terms: "https://wenitro.com/terms-and-conditions.html",
+  privacyPolicy: "https://wenitro.com/privacy-policy.html",
+} as const;
 
 export const ONBOARDING_BACKGROUND = "#101827";
 const purple = "#6860F2";
@@ -125,11 +130,18 @@ export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   </SafeAreaView></Animated.View>;
 }
 
-export function WelcomeScreen({ googleButton, onLegal, error, onFallback }: { onFallback?: () => void; googleButton: React.ReactNode; onLegal: (kind: "terms" | "privacyPolicy") => void; error?: string }) {
+export function WelcomeScreen({ googleButton, onLegal, error, onFallback }: { onFallback?: () => void; googleButton: React.ReactNode; onLegal?: (kind: "terms" | "privacyPolicy") => void; error?: string }) {
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const c = usePalette();
   const background = c.isDark ? ["#0B0D18", "#11101D", "#03070A"] : ["#F7F7FB", "#F1F0FA", "#FFFFFF"];
+
+  const openLegal = (kind: "terms" | "privacyPolicy") => {
+    void Linking.openURL(WENITRO_LEGAL_URLS[kind]).catch(() => {
+      onLegal?.(kind);
+    });
+  };
+
   return <LinearGradient colors={background as [string, string, ...string[]]} locations={[0, .55, 1]} style={s.full}>
     <View style={[s.welcomeOrb, !c.isDark && { backgroundColor: "#DCD8FF", opacity: .7 }]} />
     <ScrollView contentContainerStyle={[s.welcomeContent, { minHeight: height, paddingTop: Math.max(insets.top + 95, height * .22), paddingBottom: Math.max(insets.bottom, 24) + 50 }]} showsVerticalScrollIndicator={false}>
@@ -138,9 +150,9 @@ export function WelcomeScreen({ googleButton, onLegal, error, onFallback }: { on
         <Text style={[s.welcomeTitle, { color: c.text }]}>Welcome 👋</Text>
         <Text style={[s.welcomeSupport, { color: c.muted }]}>Join communities, discover trending activities,{"\n"}and connect with your squad securely.</Text>
         <View style={s.googleSlot}>{googleButton}</View>
-        {onFallback ? <Pressable accessibilityRole="button" onPress={onFallback} style={{ minHeight: 44, justifyContent: "center", marginTop: 6 }}><Text style={{ textAlign: "center", color: c.accent, fontSize: 12 }}>Use email or phone instead</Text></Pressable> : null}
+        {onFallback ? <Pressable accessibilityRole="button" onPress={onFallback} style={{ minHeight: 44, justifyContent: "center", marginTop: 6 }}><Text style={{ textAlign: "center", color: c.isDark ? "#A5B4FC" : c.accent, fontSize: 13, fontWeight: "600" }}>Use email or phone instead</Text></Pressable> : null}
         {error ? <Text accessibilityRole="alert" style={[s.error, { color: c.danger }]}>{error}</Text> : null}
-        <Text style={[s.legalText, { color: c.muted }]}>By continuing, you agree to our <Text accessibilityRole="link" onPress={() => onLegal("terms")} style={s.legalLink}>Terms &amp; Conditions</Text> and <Text accessibilityRole="link" onPress={() => onLegal("privacyPolicy")} style={s.legalLink}>Privacy Policy</Text></Text>
+        <Text style={[s.legalText, { color: c.muted }]}>By continuing, you agree to our <Text accessibilityRole="link" onPress={() => openLegal("terms")} style={s.legalLink}>Terms &amp; Conditions</Text> and <Text accessibilityRole="link" onPress={() => openLegal("privacyPolicy")} style={s.legalLink}>Privacy Policy</Text></Text>
       </View>
     </ScrollView>
   </LinearGradient>;
@@ -255,7 +267,7 @@ const s = StyleSheet.create({
   introContent: { paddingHorizontal: 23, paddingTop: 23, paddingBottom: 24 }, introHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", zIndex: 2 }, brandRow: { flexDirection: "row", alignItems: "center", gap: 7 }, introBrand: { color: "white", fontSize: 23, fontWeight: "800" }, skip: { paddingVertical: 9, paddingHorizontal: 17, borderRadius: 24, backgroundColor: "#1B1C20", borderWidth: 1, borderColor: "#35363A" }, skipText: { color: "white", fontSize: 14, fontWeight: "600" },
   artwork: { height: 445, marginHorizontal: -23, marginTop: 14, overflow: "hidden" }, artGlowPurple: { position: "absolute", backgroundColor: "#4234A7", boxShadow: "0 0 65px 30px #4234A7", opacity: .08, width: 320, height: 360, borderRadius: 180, left: -30, top: 60 }, artGlowCyan: { position: "absolute", backgroundColor: "#1C7582", boxShadow: "0 0 65px 30px #1C7582", opacity: .08, width: 270, height: 380, borderRadius: 180, right: -55, top: 20 }, artBoard: { width: 430, left: -15, top: 110, padding: 12, borderRadius: 18, backgroundColor: "#151D26", borderWidth: 1, borderColor: "#253F4B" }, artHeader: { flexDirection: "row", alignItems: "center", gap: 7, paddingBottom: 14 }, artLogo: { color: "#6474FF", fontSize: 28, fontWeight: "900" }, artBrand: { color: "#ECECF5", fontSize: 17, fontWeight: "700", flex: 1 }, artRow: { zIndex: 1, flexDirection: "row", gap: 9 }, artCard: { width: 195, padding: 10, borderRadius: 14, borderWidth: 1, backgroundColor: "#111820" }, artUser: { color: "#BDC1CC", fontSize: 10, fontWeight: "600" }, artTitle: { color: "#F0F1F5", fontSize: 13, fontWeight: "700", marginVertical: 6 }, artPhoto: { width: "100%", height: 106, borderRadius: 10, marginBottom: 7 }, artMuted: { color: "#7F858F", fontSize: 10 }, artStats: { flexDirection: "row", justifyContent: "space-between", marginTop: 10 }, artLike: { color: "#7662F7", fontSize: 11 }, artDetails: { backgroundColor: "#282D33", borderColor: "#444951", borderWidth: 1, borderRadius: 16, padding: 7, marginTop: 9, alignItems: "center", flexDirection: "row", justifyContent: "space-evenly" }, artSmall: { zIndex: 1, marginTop: -18, marginLeft: 110, width: 195, borderColor: "#333243" }, artNav: { flexDirection: "row", justifyContent: "space-evenly", paddingVertical: 13 }, artFade: { height: 60, bottom: 0, left: 0, right: 0, position: "absolute" },
   introCopy: { marginHorizontal: 7, marginTop: -3 }, introHeadline: { color: "#FFF", fontSize: 35, fontWeight: "800", lineHeight: 42, letterSpacing: -1 }, introDescription: { fontSize: 15, lineHeight: 23, color: "#AEB0B7", marginTop: 14 }, introFooter: { marginTop: "auto", paddingTop: 28 }, swipe: { color: "#756BFA", textAlign: "center", fontSize: 14, fontWeight: "600", fontStyle: "italic", marginBottom: 22 },
-  welcomeOrb: { position: "absolute", width: 288, height: 288, top: -65, left: -51, borderRadius: 170, backgroundColor: "#211B53", opacity: .65 }, welcomeContent: { alignItems: "center", paddingHorizontal: 21 }, welcomeBrand: { color: "#F9F9FC", fontSize: 31, fontWeight: "800", marginTop: 31 }, welcomeSubtitle: { fontSize: 13, color: "#9CA0AB", fontWeight: "700", letterSpacing: 1.4, marginTop: 5 }, welcomeCard: { width: "100%", backgroundColor: "#181927", borderRadius: 30, borderWidth: 1.5, borderColor: "#30313F", paddingHorizontal: 30, paddingTop: 32, paddingBottom: 32, marginTop: 40 }, welcomeTitle: { textAlign: "center", color: "white", fontSize: 27, fontWeight: "700" }, welcomeSupport: { color: "#AAACB8", textAlign: "center", fontSize: 13, lineHeight: 21, marginTop: 10, marginHorizontal: -12 }, googleSlot: { marginTop: 39, minHeight: 54 }, legalText: { color: "#AAADBA", fontSize: 10, lineHeight: 16, textAlign: "center", marginTop: 26, marginHorizontal: -5 }, legalLink: { color: "#8981FA", textDecorationLine: "underline", fontWeight: "600" },
+  welcomeOrb: { position: "absolute", width: 288, height: 288, top: -65, left: -51, borderRadius: 170, backgroundColor: "#211B53", opacity: .65 }, welcomeContent: { alignItems: "center", paddingHorizontal: 21 }, welcomeBrand: { color: "#F9F9FC", fontSize: 31, fontWeight: "800", marginTop: 31 }, welcomeSubtitle: { fontSize: 13, color: "#9CA0AB", fontWeight: "700", letterSpacing: 1.4, marginTop: 5 }, welcomeCard: { width: "100%", backgroundColor: "#181927", borderRadius: 30, borderWidth: 1.5, borderColor: "#30313F", paddingHorizontal: 30, paddingTop: 32, paddingBottom: 32, marginTop: 40 }, welcomeTitle: { textAlign: "center", color: "white", fontSize: 27, fontWeight: "700" }, welcomeSupport: { color: "#AAACB8", textAlign: "center", fontSize: 13, lineHeight: 21, marginTop: 10, marginHorizontal: -12 }, googleSlot: { marginTop: 39, minHeight: 54 }, legalText: { color: "#AAADBA", fontSize: 10, lineHeight: 16, textAlign: "center", marginTop: 26, marginHorizontal: -5 }, legalLink: { color: "#A5B4FC", textDecorationLine: "underline", fontWeight: "700" },
   gradientButton: { borderRadius: 30, overflow: "hidden", minHeight: 51 }, gradientFill: { minHeight: 51, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 12, paddingHorizontal: 15, paddingVertical: 12 }, gradientLabel: { fontSize: 17, color: "white", fontWeight: "700" },
   profileContent: { paddingHorizontal: 23, paddingBottom: 50, alignItems: "center" }, avatarCircle: { width: 91, height: 91, borderRadius: 48, backgroundColor: "#202938", borderWidth: 1.5, borderColor: "#39414F", alignItems: "center", justifyContent: "center" }, avatarImage: { width: "100%", height: "100%", borderRadius: 48 }, cameraBadge: { width: 27, height: 27, borderRadius: 16, borderWidth: 1.5, borderColor: "white", backgroundColor: purple, position: "absolute", right: -2, bottom: -2, alignItems: "center", justifyContent: "center" }, profileTitle: { color: "#F9FAFB", fontSize: 26, fontWeight: "700", marginTop: 13, textAlign: "center" }, profileSupport: { fontSize: 14, lineHeight: 19, color: "#969CA8", textAlign: "center", marginTop: 6 }, profileFields: { width: "100%", marginTop: 29 }, fieldLabel: { color: "#F0F2F6", fontSize: 12, fontWeight: "500", marginTop: 7, marginBottom: 9 }, inputShell: { flexDirection: "row", alignItems: "center", backgroundColor: "#202A39", borderWidth: 1, borderColor: "#3A4352", borderRadius: 12, minHeight: 48, paddingHorizontal: 11, gap: 9, marginBottom: 17 }, input: { color: "#F7F8FC", fontSize: 14, flex: 1, minHeight: 46, paddingVertical: 8 }, availability: { fontSize: 11, marginTop: -10, marginBottom: 8 }, genderLabel: { color: "#8E96A3", fontSize: 12, letterSpacing: .6, marginTop: 15, marginBottom: 11 }, genderRow: { flexDirection: "row", flexWrap: "wrap", gap: 10 }, genderPill: { minHeight: 42, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 24, borderWidth: 1, borderColor: "#414B5B", justifyContent: "center" }, genderSelected: { borderColor: purple, backgroundColor: "#302A65" }, genderText: { color: "#F3F4F7", fontSize: 12 }, getStarted: { width: "100%", backgroundColor: purple, borderRadius: 13, minHeight: 44, justifyContent: "center", alignItems: "center", marginTop: 26, paddingVertical: 12 }, getStartedLabel: { fontSize: 14, fontWeight: "700", color: "white" }, error: { color: "#FDA4AF", fontSize: 12, lineHeight: 18, marginTop: 12 },
   modalShade: { flex: 1, backgroundColor: "rgba(0,0,0,.65)", alignItems: "center", justifyContent: "center", padding: 25 }, modalCard: { width: "100%", maxWidth: 360, backgroundColor: "#192233", borderRadius: 20, padding: 22, gap: 12 }, modalTitle: { fontSize: 20, color: "white", fontWeight: "600" }, modalAction: { minHeight: 45, alignItems: "center", justifyContent: "center" },

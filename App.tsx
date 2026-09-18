@@ -22,7 +22,8 @@ import type { PartnerBusinessProfile } from "./src/services/partner-account";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoogleSignInButton from "./src/components/onboarding/GoogleSignInButton";
-import { SplashScreen, IntroScreen, WelcomeScreen, ProfileCompletionScreen, FirstFeedWelcome, FeedLoadingScreen, type ProfileSetupValues } from "./src/components/onboarding/reference-screens";
+import { SplashScreen, IntroScreen, WelcomeScreen, ProfileCompletionScreen, FirstFeedWelcome, FeedLoadingScreen, WENITRO_LEGAL_URLS, type ProfileSetupValues } from "./src/components/onboarding/reference-screens";
+import { validateEmail, validateFullName } from "./src/utils/validation";
 import { profileOnboardingService, type ProfileOnboardingState } from "./src/services/profile-onboarding";
 import { validateOnboardingGender } from "./src/utils/onboarding";
 import { PartnerDashboard } from "./src/components/partner-dashboard";
@@ -1048,10 +1049,14 @@ function Button({
       ]}
     >
       {icon ? (
-        <DepthIcon
-          name={icon}
-          color={variant === "primary" ? "#fff" : colors.purple600}
-        />
+        variant === "primary" ? (
+          <Icon name={icon} size={20} color="#fff" />
+        ) : (
+          <DepthIcon
+            name={icon}
+            color={palette.isDark ? "#A5B4FC" : colors.purple600}
+          />
+        )
       ) : null}
       <Text
         style={[
@@ -1086,6 +1091,15 @@ function Field({
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const palette = usePalette();
+
+  const isFieldValid =
+    isValid !== undefined
+      ? isValid
+      : label.toLowerCase().includes("email")
+        ? validateEmail(value).valid
+        : label.toLowerCase().includes("name")
+          ? validateFullName(value).valid
+          : false;
 
   return (
     <View style={styles.field}>
@@ -1148,7 +1162,7 @@ function Field({
               color={palette.iconMuted}
             />
           </Pressable>
-        ) : !multiline && (isValid ?? Boolean(value)) ? (
+        ) : !multiline && isFieldValid ? (
           <Icon name="checkmark-circle" size={18} color={colors.mint} />
         ) : null}
       </View>
@@ -1270,7 +1284,7 @@ function AuthMethodTabs({
         >
           <Text
             style={{
-              color: method === item ? "#fff" : palette.accent,
+              color: method === item ? "#fff" : palette.isDark ? "#A5B4FC" : palette.accent,
               fontWeight: "800",
             }}
           >
@@ -1316,6 +1330,13 @@ function PhoneOtpForm({
 
   const sendOtp = async () => {
     if (submitting || (sentPhone && cooldown > 0)) return;
+    if (createAccount) {
+      const nameValidation = validateFullName(fullName);
+      if (!nameValidation.valid) {
+        setError(nameValidation.error || "Please enter a valid full name.");
+        return;
+      }
+    }
     setSubmitting(true);
     setError("");
     try {
@@ -1381,7 +1402,7 @@ function PhoneOtpForm({
           onPress={verify}
         />
         <Pressable onPress={sendOtp} disabled={cooldown > 0 || submitting}>
-          <Text style={styles.centerLink}>
+          <Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600 }]}>
             {cooldown > 0 ? `Resend OTP in ${cooldown}s` : "Resend OTP"}
           </Text>
         </Pressable>
@@ -1393,7 +1414,7 @@ function PhoneOtpForm({
             setError("");
           }}
         >
-          <Text style={styles.centerLink}>Edit phone number</Text>
+          <Text style={[styles.centerLink, { color: palette.isDark ? "#93C5FD" : colors.purple600 }]}>Edit phone number</Text>
         </Pressable>
       </>
     );
@@ -1408,6 +1429,7 @@ function PhoneOtpForm({
           value={fullName}
           onChangeText={setFullName}
           placeholder="Your name"
+          isValid={validateFullName(fullName).valid}
         />
       ) : null}
       <Field
@@ -1448,8 +1470,9 @@ function LoginScreen({ go, setData }: {
   };
   const passwordLogin = async () => {
     if (submitting) return;
-    if (!email.includes("@") || password.length < 8) {
-      setError("Enter a valid email and a password of at least 8 characters.");
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid || password.length < 8) {
+      setError(emailValidation.error || "Enter a valid email and a password of at least 8 characters.");
       return;
     }
     setSubmitting(true);
@@ -1483,18 +1506,57 @@ function LoginScreen({ go, setData }: {
       ) : (
         <>
           {error ? <Text style={styles.error}>{error}</Text> : null}
-          <Field label="Email" value={email} onChangeText={setEmail} placeholder="you@example.com" />
+          <Field label="Email" value={email} onChangeText={setEmail} placeholder="you@example.com" isValid={validateEmail(email).valid} />
           <Field label="Password" value={password} onChangeText={setPassword} placeholder="Your password" secureTextEntry />
-            <Button label={submitting ? "Signing in..." : "Sign in"} icon="log-in" onPress={passwordLogin} />
-            {verificationPending ? <Pressable onPress={() => void resend()}><Text style={styles.centerLink}>Resend verification email</Text></Pressable> : null}
-            {resendStatus ? <Text style={[styles.meta, { color: palette.muted }]}>{resendStatus}</Text> : null}
+          <Button label={submitting ? "Signing in..." : "Sign in"} icon="arrow-forward" onPress={passwordLogin} />
+          {verificationPending ? <Pressable onPress={() => void resend()}><Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600 }]}>Resend verification email</Text></Pressable> : null}
+          {resendStatus ? <Text style={[styles.meta, { color: palette.muted }]}>{resendStatus}</Text> : null}
         </>
       )}
-      <Pressable onPress={() => go("signup")}>
-        <Text style={styles.centerLink}>New to WeNitro? Create an account</Text>
+      <Pressable onPress={() => go("signup")} style={{ marginTop: 8 }}>
+        <Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600 }]}>New to WeNitro? Create an account</Text>
       </Pressable>
-      <Pressable accessibilityRole="button" onPress={() => go("login")}><Text style={styles.centerLink}>Back to Google Welcome</Text></Pressable>
-      <Text style={[styles.legal, { color: palette.muted }]}>By continuing, you agree to our Terms of Service and Privacy Policy.</Text>
+      <View style={{ marginTop: 14, width: "100%", gap: 10 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <View style={{ height: 1, backgroundColor: palette.border, flex: 1 }} />
+          <Text style={{ color: palette.muted, fontSize: 11, fontWeight: "700" }}>OR</Text>
+          <View style={{ height: 1, backgroundColor: palette.border, flex: 1 }} />
+        </View>
+        <GoogleSignInButton
+          onSuccess={async () => {
+            setError("");
+            const remote = await loadRemoteWorkspace();
+            if (remote) {
+              setData((current) => hydrateRemoteData(remote, current));
+              go(remote.profile.onboarding_completed ? "feed" : "onboarding");
+            } else {
+              go("login");
+            }
+          }}
+          onError={setError}
+        />
+        <Pressable accessibilityRole="button" onPress={() => go("login")} style={{ minHeight: 38, alignItems: "center", justifyContent: "center" }}>
+          <Text style={[styles.centerLink, { color: palette.isDark ? "#93C5FD" : colors.purple600, fontSize: 13 }]}>Back to Google Welcome</Text>
+        </Pressable>
+      </View>
+      <Text style={[styles.legal, { color: palette.muted, marginTop: 16 }]}>
+        By continuing, you agree to our{" "}
+        <Text
+          accessibilityRole="link"
+          onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.terms)}
+          style={{ color: palette.isDark ? "#A5B4FC" : colors.purple600, textDecorationLine: "underline", fontWeight: "600" }}
+        >
+          Terms of Service
+        </Text>{" "}
+        and{" "}
+        <Text
+          accessibilityRole="link"
+          onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.privacyPolicy)}
+          style={{ color: palette.isDark ? "#A5B4FC" : colors.purple600, textDecorationLine: "underline", fontWeight: "600" }}
+        >
+          Privacy Policy
+        </Text>.
+      </Text>
     </AuthCard>
   );
 }
@@ -1517,8 +1579,18 @@ function SignupScreen({ go, setData }: {
   const [resendStatus, setResendStatus] = useState("");
   const submit = async () => {
     if (submitting) return;
-    if (!name.trim() || !email.includes("@") || password.length < 8) {
-      setError("Enter your name, a valid email, and a password of at least 8 characters.");
+    const nameValidation = validateFullName(name);
+    if (!nameValidation.valid) {
+      setError(nameValidation.error || "Please enter a valid full name.");
+      return;
+    }
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid) {
+      setError(emailValidation.error || "Please enter a valid email address.");
+      return;
+    }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
       return;
     }
     if (password !== confirmPassword) {
@@ -1567,7 +1639,7 @@ function SignupScreen({ go, setData }: {
         </View>
         {resendStatus ? <Text style={[styles.meta, { color: palette.muted }]}>{resendStatus}</Text> : null}
         <Button label="Resend Verification Email" icon="refresh" onPress={() => void resend()} />
-        <Pressable onPress={() => go("login")}><Text style={styles.centerLink}>Back to Sign In</Text></Pressable>
+        <Pressable onPress={() => go("login")}><Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600 }]}>Back to Sign In</Text></Pressable>
       </AuthCard>
     );
   }
@@ -1590,8 +1662,20 @@ function SignupScreen({ go, setData }: {
       ) : (
         <>
           {error ? <Text style={styles.error}>{error}</Text> : null}
-          <Field label={accountType === "partner" ? "Business contact name" : "Full name"} value={name} onChangeText={setName} placeholder="Your name" />
-          <Field label="Email" value={email} onChangeText={setEmail} placeholder="you@example.com" />
+          <Field
+            label={accountType === "partner" ? "Business contact name" : "Full name"}
+            value={name}
+            onChangeText={setName}
+            placeholder="Your name"
+            isValid={validateFullName(name).valid}
+          />
+          <Field
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="you@example.com"
+            isValid={validateEmail(email).valid}
+          />
           <Field label="Password" value={password} onChangeText={setPassword} placeholder="At least 8 characters" secureTextEntry />
           <Field label="Confirm password" value={confirmPassword} onChangeText={setConfirmPassword} placeholder="Repeat password" secureTextEntry />
           <View style={styles.requirements}>
@@ -1605,10 +1689,30 @@ function SignupScreen({ go, setData }: {
           <Button label={submitting ? "Creating account..." : "Sign up"} icon="person-add" onPress={submit} />
         </>
       )}
-      <Pressable onPress={() => go("login")}>
-        <Text style={styles.centerLink}>Already have an account? Sign in</Text>
+      <Pressable onPress={() => go("login")} style={{ marginTop: 8 }}>
+        <Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600 }]}>Already have an account? Sign in</Text>
       </Pressable>
-      <Pressable accessibilityRole="button" onPress={() => go("login")}><Text style={styles.centerLink}>Back to login</Text></Pressable>
+      <Pressable accessibilityRole="button" onPress={() => go("login")} style={{ minHeight: 38, alignItems: "center", justifyContent: "center" }}>
+        <Text style={[styles.centerLink, { color: palette.isDark ? "#93C5FD" : colors.purple600, fontSize: 13 }]}>Back to login</Text>
+      </Pressable>
+      <Text style={[styles.legal, { color: palette.muted, marginTop: 14 }]}>
+        By signing up, you agree to our{" "}
+        <Text
+          accessibilityRole="link"
+          onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.terms)}
+          style={{ color: palette.isDark ? "#A5B4FC" : colors.purple600, textDecorationLine: "underline", fontWeight: "600" }}
+        >
+          Terms &amp; Conditions
+        </Text>{" "}
+        and{" "}
+        <Text
+          accessibilityRole="link"
+          onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.privacyPolicy)}
+          style={{ color: palette.isDark ? "#A5B4FC" : colors.purple600, textDecorationLine: "underline", fontWeight: "600" }}
+        >
+          Privacy Policy
+        </Text>.
+      </Text>
     </AuthCard>
   );
 }
@@ -9391,7 +9495,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 15,
   },
-  buttonTextAlt: { fontFamily: "Manrope_700Bold", color: colors.purple600 },
+  buttonTextAlt: { fontFamily: "Manrope_700Bold", color: "#818CF8" },
   pressed: { opacity: 0.78, transform: [{ scale: 0.99 }] },
   divider: { flexDirection: "row", alignItems: "center", gap: 10 },
   line: { height: 1, backgroundColor: colors.border, flex: 1 },
@@ -9403,7 +9507,7 @@ const styles = StyleSheet.create({
   centerLink: {
     fontFamily: "Manrope_700Bold",
     textAlign: "center",
-    color: colors.purple600,
+    color: "#818CF8",
     fontWeight: "800",
   },
   legal: {

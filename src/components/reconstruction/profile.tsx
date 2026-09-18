@@ -35,7 +35,7 @@ function ProfileLayout({ identity, metrics, links, linksAvailable = true, owner 
   <View style={[s.header, { backgroundColor: c.card, borderColor: c.border }]}>
    {back && <Pressable accessibilityRole="button" accessibilityLabel="Back" onPress={back} style={s.headerAction}><Icon name="arrow-back" size={21} /></Pressable>}
    <Text numberOfLines={1} style={[s.username, { color: c.text }]}>{identity.username.replace(/^@/, '') || 'Profile'}</Text>
-   {store && <Pressable accessibilityRole="button" accessibilityLabel="V-Nitro Store" onPress={store} style={s.headerAction}><Icon name="bag-handle-outline" size={21} /></Pressable>}
+   {store && <Pressable accessibilityRole="button" accessibilityLabel="Nitro Store" onPress={store} style={s.headerAction}><Icon name="bag-handle-outline" size={21} /></Pressable>}
    {settings && <Pressable accessibilityRole="button" accessibilityLabel="Profile settings" onPress={settings} style={s.headerAction}><Icon name="menu-outline" size={25} /></Pressable>}
   </View>
   <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.body}>
