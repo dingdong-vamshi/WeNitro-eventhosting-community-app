@@ -881,6 +881,9 @@ const writeActivityFromUi = async (
   status: "draft" | "published",
 ) => {
   await currentLegacyUserId();
+  if (!Number.isFinite(input.priceInr) || input.priceInr < 0 || input.priceInr > 1000000 || Math.abs(Math.round(input.priceInr * 100) - input.priceInr * 100) > 0.000001) {
+    throw new Error("Activity Price must be a valid INR amount up to ₹10,00,000 with at most two decimal places.");
+  }
   if (input.registrationQuestions) { const error = validateRegistrationQuestions(input.registrationQuestions); if (error) throw new Error(error); }
   let uploadedCoverPath: string | null = null;
   let committed = false;

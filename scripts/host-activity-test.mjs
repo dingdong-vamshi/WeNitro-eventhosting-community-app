@@ -14,6 +14,9 @@ for(const title of ['', ' '.repeat(5), 'x'.repeat(51)])assert.ok(hostStepError({
 assert.ok(hostStepError({...valid,description:''},0,false,+now));
 for(const capacity of ['0','-1','1.5','NaN','2147483648'])assert.ok(hostStepError({...valid,capacity},1,false,+now));
 for(const capacity of ['','1','100'])assert.equal(hostStepError({...valid,capacity},1,false,+now),'');
+for(const price of ['0.01','250','999.99','1000000'])assert.equal(hostStepError({...valid,isPaid:true,price},1,false,+now),'');
+for(const price of ['','0','-1','1.001','1000000.01','abc'])assert.match(hostStepError({...valid,isPaid:true,price},1,false,+now),/Activity Price/);
+assert.equal(hostStepError({...valid,isPaid:false,price:'not-used'},1,false,+now),'');
 assert.equal(ageError('20','45'),'');assert.ok(ageError('45','20'));assert.ok(ageError('-1','20'));assert.ok(ageError('20','121'));assert.equal(ageError('0',''),'');
 assert.equal(HOST_CATEGORIES.length,21);assert.ok(!HOST_CATEGORIES.some(c => c.startsWith('[QA]')));assert.equal(GENDER_OPTIONS.length,4);
 for (const costsMayApply of [false,true]) for (const entryFeeRequired of [false,true]) assert.equal(hostStepError({...valid,costsMayApply,entryFeeRequired},1,false,+now),'');
@@ -35,10 +38,10 @@ async function writeCase(failure){
     uploadMedia:async()=>({path:'qa/cover.jpg'}),supabase:{rpc:async(name,args)=>{calls.push({name,args});return failure==='rpc'?{error:new Error('rejected')}:{data:123,error:null};},storage:{from:()=>({remove:async paths=>{calls.push({removed:paths});}})}},
     activityIdFromRpc:x=>String(x),activitiesProductionService:{getDetails:async()=>{if(failure==='reload')throw new Error('connection lost');return{activity:{joinType:'approval'},viewerState:{participation:null}};}},activityForWorkspace:async activity=>activity};
   const fn=new Function(...Object.keys(deps),compile(writeSource)+';return writeActivityFromUi;')(...Object.values(deps));
-  const input={title:'QA',description:'QA',category:'Education',location:'Pune',startsAt:null,capacity:null,priceInr:0,visibility:'squad',joinType:'approval',verifiedOnly:true,ageMin:20,ageMax:45,genderPreference:'female',latitude:18.52,longitude:73.85,locationInstruction:'Entrance',coverMedia:{uri:'local'},onCommitted:async id=>{receipt=id;}};
+  const input={title:'QA',description:'QA',category:'Education',location:'Pune',startsAt:null,capacity:null,priceInr:250,visibility:'squad',joinType:'approval',verifiedOnly:true,ageMin:20,ageMax:45,genderPreference:'female',latitude:18.52,longitude:73.85,locationInstruction:'Entrance',coverMedia:{uri:'local'},onCommitted:async id=>{receipt=id;}};
   if(failure)await assert.rejects(fn(input,'published'));else await fn(input,'published');
   assert.equal(calls.filter(c=>c.name==='create_activity').length,1);
-  const payload=calls[0].args.p_payload;assert.equal(payload.max_participants,null);assert.equal(payload.event_start_time,null);assert.equal(payload.verified_only,true);assert.equal(payload.age_max,45);assert.equal(payload.location_instruction,'Entrance');
+  const payload=calls[0].args.p_payload;assert.equal(payload.max_participants,null);assert.equal(payload.event_start_time,null);assert.equal(payload.verified_only,true);assert.equal(payload.age_max,45);assert.equal(payload.location_instruction,'Entrance');assert.equal(payload.price_inr,250);assert.equal(payload.is_paid,true);
   assert.equal(receipt,failure==='rpc'?null:'123');
   assert.equal(calls.some(c=>c.removed),failure==='rpc','Committed cover must survive detail-reload failure');
 }
@@ -52,4 +55,4 @@ async function locationCase(granted){
   else {assert.deepEqual(await result.activityLocationService.current(),{label:'A venue, Pune',latitude:18.52,longitude:73.85});assert.equal((await result.activityLocationService.search('Pune')).length,1);}
 }
 await locationCase(false);await locationCase(true);
-console.log('PASS: host validation, nullable scheduling/capacity, field payloads, committed-save recovery, cover cleanup, and GPS permission/provider branches. No remote data written.');
+console.log('PASS: host validation, Free/Paid price rules, onsite price payloads, nullable scheduling/capacity, committed-save recovery, cover cleanup, and GPS permission/provider branches. No remote data written.');

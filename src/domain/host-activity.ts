@@ -12,7 +12,7 @@ export type HostDraft = {
   title: string; description: string; coverUri: string; coverContentType: string;
   visibility: 'public' | 'squad' | 'private'; approval: boolean; verifiedOnly: boolean;
   capacity: string; ageLabel: string; ageMin: string; ageMax: string; gender: string;
-  costsMayApply: boolean; entryFeeRequired: boolean; category: string; location: HostLocation | null;
+  isPaid: boolean; price: string; costsMayApply: boolean; entryFeeRequired: boolean; category: string; location: HostLocation | null;
   locationInstruction: string; dateLater: boolean; start: string; end: string; deadline: string;
 };
 export function localDateTime(date: Date) {
@@ -21,7 +21,7 @@ export function localDateTime(date: Date) {
 export function newHostDraft(now = new Date()): HostDraft {
   const start = new Date(now.getTime() + 10 * 60 * 1000);
   return { title: '', description: '', coverUri: '', coverContentType: 'image/jpeg', visibility: 'public', approval: false,
-    verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', costsMayApply: false,
+    verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', isPaid: false, price: '', costsMayApply: false,
     entryFeeRequired: false, category: '', location: null, locationInstruction: '', dateLater: false,
     start: localDateTime(start), end: localDateTime(new Date(start.getTime() + 3600000)), deadline: localDateTime(start) };
 }
@@ -85,6 +85,7 @@ export function hostStepError(d: HostDraft, step: number, isPartner: boolean, no
   }
   if (step === 1) {
     if (d.capacity && (!/^\d+$/.test(d.capacity) || Number(d.capacity) < 1 || Number(d.capacity) > 2147483647)) return 'Enter a positive participant limit, or leave it empty for no limit.';
+    if (d.isPaid && (!/^\d+(\.\d{1,2})?$/.test(d.price) || Number(d.price) <= 0 || Number(d.price) > 1000000)) return 'Enter a valid Activity Price from ₹0.01 to ₹10,00,000.';
     const age = ageError(d.ageMin, d.ageMax); if (age) return age;
     if (!GENDER_OPTIONS.some(o => o.value === d.gender)) return 'Choose a gender preference.';
   }

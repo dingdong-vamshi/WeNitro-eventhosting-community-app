@@ -93,11 +93,6 @@ import {
   verifyPhoneOtp,
   requestEmailVerification,
 } from "./src/services/auth-production";
-import {
-  createActivityPayment,
-  launchCashfreeCheckout,
-  verifyActivityPayment,
-} from "./src/services/payments";
 import { realtimeChatService, type ChatSharePayload } from "./src/services/realtime-chat";
 import { profileProductionService } from "./src/services/profile-production";
 import { normalizeOnboardingDateOfBirth } from "./src/utils/onboarding";
@@ -1092,6 +1087,7 @@ function Field({
   multiline,
   inputType = "text",
   isValid,
+  keyboardType,
 }: {
   label: string;
   value: string;
@@ -1101,6 +1097,7 @@ function Field({
   multiline?: boolean;
   inputType?: "text" | "datetime-local";
   isValid?: boolean;
+  keyboardType?: React.ComponentProps<typeof TextInput>["keyboardType"];
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const palette = usePalette();
@@ -1159,6 +1156,7 @@ function Field({
                 placeholderTextColor={palette.muted}
                 secureTextEntry={secureTextEntry && !passwordVisible}
                 multiline={multiline}
+                keyboardType={keyboardType}
                 style={[styles.input, { color: palette.text }, multiline && styles.textarea]}
               />
             )}
@@ -3260,7 +3258,7 @@ type PartnerHostingDraft = {
   registrationQuestions: RegistrationQuestionDraft[];
   title: string; category: string; intent: "meetup" | "sport" | "study" | "cowork" | "tournament" | "custom";
   customIntent: string; date: string; endDate: string; closesDate: string;
-  location: string; description: string; price: string; capacity: string;
+  location: string; description: string; isPaid: boolean; price: string; capacity: string;
   visibility: "public" | "community" | "private"; joinType: "direct" | "approval" | null;
   communityId: string | null; coverUri: string; coverContentType: string; draftId: string | null; draftSaved: boolean;
 };
@@ -3272,7 +3270,6 @@ function CreateActivityScreen({
   back,
   initialDraft,
   onDraftConsumed,
-  onBecomePartner,
 }: {
   data: AppData;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
@@ -3280,7 +3277,6 @@ function CreateActivityScreen({
   back: () => void;
   initialDraft: PartnerHostingDraft | null;
   onDraftConsumed: () => void;
-  onBecomePartner: (draft: PartnerHostingDraft) => void;
 }) {
   const [registrationQuestions, setRegistrationQuestions] = useState<RegistrationQuestionDraft[]>(initialDraft?.registrationQuestions ?? []);
   const [saveError, setSaveError] = useState("");
@@ -3301,8 +3297,9 @@ function CreateActivityScreen({
   );
   const [location, setLocation] = useState(initialDraft?.location ?? "");
   const [description, setDescription] = useState(initialDraft?.description ?? "");
-  const [price, setPrice] = useState(initialDraft?.price ?? "Free");
-  const paidHostingBlocked = data.accountType !== "partner" && Number(price.replace(/[^0-9.]/g, "")) > 0;
+  const [isPaid, setIsPaid] = useState(initialDraft?.isPaid ?? Number((initialDraft?.price ?? "").replace(/[^0-9.]/g, "")) > 0);
+  const [price, setPrice] = useState((initialDraft?.price ?? "").replace(/[^0-9.]/g, ""));
+  const activityPriceValid = !isPaid || (/^\d+(\.\d{1,2})?$/.test(price) && Number(price) > 0 && Number(price) <= 1000000);
   const [capacity, setCapacity] = useState(initialDraft?.capacity ?? "20");
   const [visibility, setVisibility] = useState<
     "public" | "community" | "private"
@@ -3333,6 +3330,7 @@ function CreateActivityScreen({
     Number(capacity) > 0 &&
     datesValid &&
     joinType !== null &&
+    activityPriceValid &&
     (intent !== "custom" || customIntent.trim().length > 2) &&
     (visibility !== "community" || Boolean(communityId));
   const pickCover = async () => {
@@ -3351,7 +3349,6 @@ function CreateActivityScreen({
   };
   const save = async (status: "draft" | "published") => {
     if (publishing) return;
-    if (paidHostingBlocked) { setSaveError("Become a Partner to host paid activities."); return; }
     if (!valid) {
       Alert.alert(
         "Continue validation",
@@ -3391,7 +3388,7 @@ function CreateActivityScreen({
               registrationClosesAt: parsedClose.toISOString(),
               location,
               description,
-              priceInr: Number(price.replace(/[^0-9.]/g, "")) || 0,
+              priceInr: isPaid ? Number(price) : 0,
               capacity: Number(capacity),
               activityType: intent === "custom" ? "meetup" : intent,
               visibility,
@@ -3416,7 +3413,7 @@ function CreateActivityScreen({
         end: parsedEnd.toLocaleString(),
         closes: parsedClose.toLocaleString(),
         where: location,
-        price,
+        price: isPaid ? `₹${Number(price).toLocaleString("en-IN", { maximumFractionDigits: 2 })}` : "Free",
         seats: Number(capacity),
         joined: status === "published" ? 1 : 0,
         host: data.name,
@@ -3564,13 +3561,35 @@ function CreateActivityScreen({
         multiline
         placeholder="What will people do, who should join, and what should they bring?"
       />
-      <Field
-        label="Contribution"
-        value={price}
-        onChangeText={setPrice}
-        placeholder="Free or ₹350"
-      />
-      {paidHostingBlocked ? <View style={{ gap: 8, marginVertical: 12 }}><Text style={styles.meta}>Become a Partner to host paid activities. Free hosting is available to everyone.</Text><Button label="Become a Partner" icon="business-outline" onPress={() => onBecomePartner({ userId: data.userId, registrationQuestions, title, category, intent, customIntent, date, endDate, closesDate, location, description, price, capacity, visibility, joinType, communityId, coverUri, coverContentType, draftId, draftSaved })} /></View> : null}
+      <Text style={styles.label}>Activity price</Text>
+      <View style={styles.wrap} accessibilityRole="radiogroup">
+        {([{ label: "Free", paid: false }, { label: "Paid", paid: true }] as const).map((option) => (
+          <Pressable
+            key={option.label}
+            accessibilityRole="radio"
+            accessibilityState={{ checked: isPaid === option.paid }}
+            aria-checked={isPaid === option.paid}
+            onPress={() => {
+              setIsPaid(option.paid);
+              if (!option.paid) setPrice("");
+              setSaveError("");
+            }}
+          >
+            <Pill selected={isPaid === option.paid}>{option.label}</Pill>
+          </Pressable>
+        ))}
+      </View>
+      {isPaid ? <>
+        <Field
+          label="Activity Price"
+          value={price}
+          onChangeText={(value) => setPrice(value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1"))}
+          placeholder="₹ 250"
+          keyboardType="decimal-pad"
+          isValid={activityPriceValid}
+        />
+        <Text style={styles.meta}>Participation cost payable to the organizer at the activity. WeNitro does not collect this payment.</Text>
+      </> : <Text style={styles.meta}>This Activity is free to join.</Text>}
       <Field
         label="Capacity"
         value={capacity}
@@ -3630,7 +3649,7 @@ function CreateActivityScreen({
           icon="document-text"
           variant="outline"
           onPress={() => save("draft")}
-          disabled={!valid || publishing || paidHostingBlocked}
+          disabled={!valid || publishing}
         />
         <Button
           label={
@@ -3638,7 +3657,7 @@ function CreateActivityScreen({
           }
           icon="arrow-forward"
           onPress={() => save("published")}
-          disabled={!valid || publishing || paidHostingBlocked}
+          disabled={!valid || publishing}
         />
       </View>
       {!valid ? (
@@ -3906,12 +3925,8 @@ export function ActivityDetailScreen({
   const palette = usePalette();
   const detailScrollRef = useRef<ScrollView>(null);
   const isPaidActivity = activity.price !== "Free" && Number(activity.price.replace(/[^0-9.]/g, "")) > 0;
-  const [paymentState, setPaymentState] = useState<
-    "idle" | "pending" | "paid" | "failed"
-  >("idle");
   const [joined, setJoined] = useState(
-    ["going", "paid"].includes(String(activity.viewerStatus)) ||
-      (!isPaidActivity && activity.viewerStatus === "approved"),
+    ["going", "approved", "paid"].includes(String(activity.viewerStatus)),
   );
   const [registrationForm, setRegistrationForm] = useState<RegistrationForm | null>(null);
   const [joinError, setJoinError] = useState("");
@@ -3949,11 +3964,6 @@ export function ActivityDetailScreen({
   const liked = data.likedIds.includes(reactionId);
   const saved = data.savedIds.includes(reactionId);
   const requestPending = ["pending", "waitlist"].includes(String(viewerStatus));
-  const paymentRequired =
-    isPaidActivity &&
-    ["payment_required", "approved_pending_payment", "payment_pending", "payment_failed"].includes(
-      String(viewerStatus),
-    );
   const activityEnded = activity.status === "completed" || Boolean(activity.endsAt && Date.parse(activity.endsAt) <= Date.now());
   const registrationClosed = !joined && !requestPending && (activityEnded || Boolean(activity.registrationClosesAt && Date.parse(activity.registrationClosesAt) <= Date.now()));
   const refreshDetails = async () => {
@@ -4009,38 +4019,6 @@ export function ActivityDetailScreen({
       void supabase.removeChannel(channel);
     };
   }, [activity.id]);
-  const completePayment = async () => {
-    setPaymentState("pending");
-    try {
-      const order = await createActivityPayment(activity.id);
-      const paymentSessionId = runtimeString(order, [
-        "paymentSessionId",
-        "payment_session_id",
-      ]);
-      const orderId = runtimeString(order, ["orderId", "order_id"]);
-      if (!paymentSessionId || !orderId) {
-        throw new Error("Payment order did not return the required identifiers.");
-      }
-      const returnUrl =
-        Platform.OS === "web" && typeof window !== "undefined"
-          ? window.location.href
-          : "wenitro://payment-return";
-      await launchCashfreeCheckout(paymentSessionId, returnUrl);
-      const verification = await verifyActivityPayment(orderId);
-      const status = runtimeString(verification, ["status", "paymentStatus", "payment_status"]);
-      if (!status || !["paid", "success", "completed"].includes(status.toLowerCase())) {
-        throw new Error("Cashfree has not verified this payment yet.");
-      }
-      setPaymentState("paid");
-      setViewerStatus("paid");
-      setJoined(true);
-      await refreshDetails();
-      return "paid";
-    } catch (error) {
-      setPaymentState("failed");
-      throw error;
-    }
-  };
   const join = async (leaveConfirmed = false) => {
     if (joining) return;
     if (registrationClosed) {
@@ -4067,20 +4045,17 @@ export function ActivityDetailScreen({
         throw new Error("Supabase is not configured for this build.");
       if (!isBackendId(activity.id))
         throw new Error("This activity is not connected to WeNitro yet.");
-      if (!leaving && !paymentRequired) {
+      if (!leaving) {
         const form = await registrationQuestionService.getForm(activity.id);
         if (form.questions.length) { setRegistrationForm(form); detailScrollRef.current?.scrollTo({ y: 0, animated: true }); return; }
       }
       if (leaving) await activityService.leave(activity.id);
-      else if (isPaidActivity && (joinType === "direct" || paymentRequired)) {
-        nextStatus = await completePayment();
-      } else {
+      else {
         const participation = await activityService.join(activity.id);
         nextStatus = String(participation.status);
       }
       const nextJoined =
-        ["going", "paid"].includes(String(nextStatus)) ||
-        (!isPaidActivity && nextStatus === "approved");
+        ["going", "approved", "paid"].includes(String(nextStatus));
       setViewerStatus(nextStatus);
       setJoined(nextJoined);
       setData((current) => ({
@@ -4120,10 +4095,6 @@ export function ActivityDetailScreen({
     setJoined(["approved", "going", "paid"].includes(result.status));
     setRegistrationForm(null);
     await refreshDetails();
-    if (isPaidActivity && result.status === "payment_required") {
-      try { await completePayment(); }
-      catch (error) { setJoinError(error instanceof Error ? error.message : runtimeString(error, ["message"]) || "Payment could not complete. Your registration answers are saved; try payment again."); }
-    }
     } finally { setJoining(false); }
   };
   const toggleLike = async () => {
@@ -4411,8 +4382,12 @@ export function ActivityDetailScreen({
         </View>
         <View style={styles.detailContent}>
           {joinError ? <Text style={styles.error}>{joinError}</Text> : null}
-          {activity.costsMayApply || activity.entryFeeRequired ? <View style={{ padding: 14, gap: 5, borderRadius: 12, backgroundColor: palette.card }}><Text style={{ color: palette.text, fontWeight: "700", fontSize: 15 }}>{activity.costsMayApply ? "Costs may apply" : "Paid activity"}{activity.entryFeeRequired ? " · Entry fee required" : ""}</Text>{!isPaidActivity ? <Text style={{ color: palette.muted, fontSize: 13 }}>Any venue or entry costs are arranged separately. No payment is collected in WeNitro for this activity.</Text> : null}</View> : null}
-          {registrationForm ? <RegistrationAnswerForm key={activity.id} questions={registrationForm.questions} busy={joining} initialAnswers={registrationForm.answers} onSubmit={submitRegistration} submitLabel={isPaidActivity && joinType === "direct" ? "Continue to payment" : joinType === "approval" ? "Submit request" : "Confirm registration"} onCancel={() => setRegistrationForm(null)} dark={data.theme === "dark"} /> : null}
+          <View style={{ padding: 14, gap: 6, borderRadius: 12, backgroundColor: palette.card, borderWidth: 1, borderColor: palette.border }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Icon name={isPaidActivity ? "cash-outline" : "checkmark-circle-outline"} color={isPaidActivity ? "#6D5CE8" : "#22A874"} /><Text style={{ color: palette.text, fontWeight: "800", fontSize: 16 }}>{isPaidActivity ? `Activity Price ${activity.price}` : "Free Activity"}</Text></View>
+            <Text style={{ color: palette.muted, fontSize: 12 }}>{isPaidActivity ? "Participation cost payable to the organizer at the activity. No payment is collected in WeNitro." : "No participation cost is required for this Activity."}</Text>
+            {(activity.costsMayApply || activity.entryFeeRequired) ? <Text style={{ color: palette.muted, fontSize: 11 }}>{activity.entryFeeRequired ? "A separate venue or entry fee may apply." : "Additional venue costs may apply."}</Text> : null}
+          </View>
+          {registrationForm ? <RegistrationAnswerForm key={activity.id} questions={registrationForm.questions} busy={joining} initialAnswers={registrationForm.answers} onSubmit={submitRegistration} submitLabel={joinType === "approval" ? "Submit request" : "Confirm registration"} onCancel={() => setRegistrationForm(null)} dark={data.theme === "dark"} /> : null}
           <View style={styles.rowBetween}>
             <View style={styles.detailTitleWrap}>
               <Text style={[styles.detailTitle, { color: palette.text }]}>{activity.title}</Text>
@@ -4702,14 +4677,12 @@ export function ActivityDetailScreen({
               <Text style={styles.joinButtonText}>
                 {registrationClosed
                   ? activityEnded ? "Activity Ended" : "Registration Closed"
-                  : joining || paymentState === "pending"
-                  ? isPaidActivity ? "Opening Cashfree..." : "Saving..."
+                  : joining
+                  ? "Saving..."
                   : requestPending
                     ? "Withdraw Request"
                     : joined
                       ? "Leave Activity"
-                      : paymentRequired || (isPaidActivity && joinType === "direct")
-                        ? paymentState === "failed" ? "Retry Payment" : "Pay & Join"
                       : joinType === "approval"
                         ? "Request to Join"
                         : "Join Activity"}
@@ -9291,7 +9264,7 @@ export default function App() {
       const existing = editingActivityId ? data.activities.find(item => item.id === editingActivityId) : undefined;
       return <HostActivityScreen key={existing?.id || data.userId} userId={data.userId!} isPartner={false} existing={existing} onBack={() => existing ? openActivity(existing.id) : go("host")} onDrafted={created => { const next = activityFromRemote(created); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); }} onCreated={created => { const next = activityFromRemote(created); setEditingActivityId(null); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); setHistory(items => [...items, 'activities']); setSelectedActivityId(next.id); setScreen('activityDetail'); pushWebRoute('activityDetail', next.id); }} />;
     }
-    if (screen === "createActivity") return <CreateActivityScreen {...props} initialDraft={partnerHostingDraft?.userId === data.userId ? partnerHostingDraft : null} onDraftConsumed={() => setPartnerHostingDraft(null)} onBecomePartner={draft => { setPartnerHostingDraft(draft); go("partnerAccount"); }} />;
+    if (screen === "createActivity") return <CreateActivityScreen {...props} initialDraft={partnerHostingDraft?.userId === data.userId ? partnerHostingDraft : null} onDraftConsumed={() => setPartnerHostingDraft(null)} />;
     if (screen === "activityDetail" && selectedActivityId) {
       const selectedActivity = data.activities.find(
         (item) => item.id === selectedActivityId,

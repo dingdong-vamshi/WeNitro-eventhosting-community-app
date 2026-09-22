@@ -540,6 +540,8 @@ const buildPayload = (
   if (input.priceInr !== undefined) {
     const price = finite(input.priceInr, "Price");
     if (price < 0) throw new Error("Price cannot be negative.");
+    if (price > 1000000) throw new Error("Price cannot exceed ₹10,00,000.");
+    if (Math.abs(Math.round(price * 100) - price * 100) > 0.000001) throw new Error("Price can have at most two decimal places.");
     payload.price_inr = price;
     payload.is_paid = price > 0;
   }
