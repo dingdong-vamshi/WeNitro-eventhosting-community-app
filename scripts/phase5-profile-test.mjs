@@ -25,10 +25,11 @@ for (const [field,len] of [['bio',41],['about',501],['occupation',101]]) await a
 const result=await service.editProfile({about:'separate about'}); assert.equal(result.bio,'x'.repeat(40)); assert.equal(result.about,'separate about');
 assert.deepEqual((await service.listAvailableInterests()).map(i=>i.name),['Career','Creative']);
 assert.ok(reads.every(r=>!r.columns.split(',').includes('email')));
-const storage=new Map();const referrals=load('src/services/referrals.ts',{'@react-native-async-storage/async-storage':{__esModule:true,default:{getItem:async k=>storage.get(k)||null,setItem:async(k,v)=>{storage.set(k,v);},removeItem:async k=>{storage.delete(k);}}},'react-native':{Platform:{OS:'web'}}});
+const storage=new Map();const referralRpcCalls=[];const referrals=load('src/services/referrals.ts',{'@react-native-async-storage/async-storage':{__esModule:true,default:{getItem:async k=>storage.get(k)||null,setItem:async(k,v)=>{storage.set(k,v);},removeItem:async k=>{storage.delete(k);}}},'react-native':{Platform:{OS:'web'}},'../lib/supabase':{supabase:{rpc:async(name,args)=>{referralRpcCalls.push({name,args});return {data:{awarded:true,points:10},error:null};}}}});
 global.window={location:{origin:'http://localhost:8081',pathname:'/'}};
 assert.equal(referrals.referralLink('44'),'http://localhost:8081/#/invite/44');
 assert.equal(referrals.referralIdFromUrl('wenitro://invite/44'),44); assert.equal(referrals.referralIdFromUrl('https://example.com/#/invite/44'),44);
 for(const url of ['wenitro://invite/0','wenitro://invite/2147483648','javascript:alert(1)','wenitro://invite/44/extra']) assert.equal(referrals.referralIdFromUrl(url),null);
 await referrals.captureReferral('wenitro://invite/44'); await referrals.captureReferral('wenitro://invite/35'); assert.equal((await referrals.readPendingReferral()).referrerId,44);
-console.log('PASS: Store boundary, verified-only score, country IDs, edit limits, null nationality, separate bio/about, no auth email writes, QA-category filtering, referral parsing and first-touch persistence. No remote writes.');
+assert.deepEqual(await referrals.redeemPendingReferral(),{awarded:true,points:10}); assert.deepEqual(referralRpcCalls,[{name:'redeem_referral',args:{p_referrer_id:44}}]); assert.equal(await referrals.readPendingReferral(),null);
+console.log('PASS: Store boundary, verified-only score, country IDs, edit limits, null nationality, separate bio/about, no auth email writes, QA-category filtering, referral parsing, first-touch persistence, and mocked 10-Nitro redemption. No remote writes.');

@@ -5,15 +5,15 @@ const photon = process.env.EXPO_PUBLIC_PHOTON_URL?.trim() || 'https://photon.kom
 const nominatim = process.env.EXPO_PUBLIC_NOMINATIM_URL?.trim() || 'https://nominatim.openstreetmap.org';
 const cache = new Map<string, HostLocation[]>();
 
-function uniqueParts(parts: Array<string | null | undefined>) {
+function uniqueParts(parts: unknown[]) {
   const seen = new Set<string>();
-  return parts.filter((part): part is string => {
+  return parts.flatMap((part) => {
     const value = String(part || '').trim();
-    if (!value) return false;
+    if (!value) return [];
     const key = value.toLowerCase();
-    if (seen.has(key)) return false;
+    if (seen.has(key)) return [];
     seen.add(key);
-    return true;
+    return [value];
   });
 }
 
@@ -52,6 +52,20 @@ function nominatimLabel(row: Record<string, unknown>) {
   const label = locality.join(', ') || String(row.display_name || '');
   if (type && type !== 'yes' && label && !label.toLowerCase().includes(type.toLowerCase())) return `${label} · ${type}`;
   return label;
+}
+
+function deviceLabel(row: Location.LocationGeocodedAddress) {
+  const street = uniqueParts([row.streetNumber, row.street]).join(' ');
+  return uniqueParts([
+    row.name,
+    street,
+    row.district,
+    row.subregion,
+    row.city,
+    row.region,
+    row.postalCode,
+    row.country,
+  ]).join(', ');
 }
 
 function keyFor(place: HostLocation) {
@@ -114,11 +128,12 @@ async function searchNominatim(text: string, signal: AbortSignal) {
     addressdetails: '1',
     namedetails: '1',
     extratags: '1',
+    'accept-language': 'en',
     limit: '20',
   });
   const body = await readJson(`${nominatim.replace(/\/$/, '')}/search?${params.toString()}`, signal, {
     Accept: 'application/json',
-    'User-Agent': 'WeNitro/1.0 (activity venue search)',
+    'Accept-Language': 'en',
   });
   return (Array.isArray(body) ? body : []).flatMap((row: any) => {
     const latitude = Number(row.lat);
@@ -127,6 +142,48 @@ async function searchNominatim(text: string, signal: AbortSignal) {
     const label = nominatimLabel(row);
     return label ? [{ label, latitude, longitude }] : [];
   });
+}
+
+async function reverseNominatim(latitude: number, longitude: number, signal: AbortSignal) {
+  const params = new URLSearchParams({
+    lat: String(latitude),
+    lon: String(longitude),
+    format: 'jsonv2',
+    addressdetails: '1',
+    'accept-language': 'en',
+  });
+  const row = await readJson(`${nominatim.replace(/\/$/, '')}/reverse?${params.toString()}`, signal, {
+    Accept: 'application/json',
+    'Accept-Language': 'en',
+  });
+  if (!row || typeof row !== 'object') return [];
+  const label = nominatimLabel(row as Record<string, unknown>);
+  return label ? [{ label, latitude, longitude }] : [];
+}
+
+async function currentPosition(signal?: AbortSignal) {
+  const permission = await Location.requestForegroundPermissionsAsync();
+  if (signal?.aborted) throw new Error('Location request cancelled.');
+  if (!permission.granted) throw new Error('Location permission was denied. Search for your venue instead.');
+
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error('Current location timed out.')), 12000);
+      }),
+    ]);
+  } catch (currentError) {
+    if (signal?.aborted) throw new Error('Location request cancelled.');
+    const lastKnown = await Location.getLastKnownPositionAsync({ maxAge: 5 * 60 * 1000, requiredAccuracy: 1000 });
+    if (lastKnown) return lastKnown;
+    throw currentError instanceof Error
+      ? new Error(`${currentError.message} Check location permission or search for your venue.`)
+      : new Error('Current location is unavailable. Search for your venue instead.');
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 async function reversePhoton(latitude: number, longitude: number, signal: AbortSignal) {
@@ -143,13 +200,16 @@ let lastBias: { latitude: number; longitude: number } | undefined;
 
 export const activityLocationService = {
   async search(text: string, signal?: AbortSignal) {
-    const key = text.trim().toLowerCase();
-    if (key.length < 2) return [];
+    const query = text.trim();
+    if (query.length < 2) return [];
+    if (signal?.aborted) throw new Error('Location search cancelled.');
+    const biasKey = lastBias ? `@${lastBias.latitude.toFixed(2)},${lastBias.longitude.toFixed(2)}` : '';
+    const key = `${query.toLowerCase()}${biasKey}`;
     if (cache.has(key)) return cache.get(key)!;
     const controller = signal ?? new AbortController().signal;
     const [photonRows, nominatimRows] = await Promise.allSettled([
-      searchPhoton(text.trim(), controller, lastBias),
-      searchNominatim(text.trim(), controller),
+      searchPhoton(query, controller, lastBias),
+      searchNominatim(query, controller),
     ]);
     const rows = mergePlaces([
       photonRows.status === 'fulfilled' ? photonRows.value : [],
@@ -164,21 +224,24 @@ export const activityLocationService = {
     return rows;
   },
   async current(signal?: AbortSignal): Promise<HostLocation> {
-    let expired = false;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const position = await Promise.race([
-      (async () => {
-        const permission = await Location.requestForegroundPermissionsAsync();
-        if (expired || signal?.aborted) throw new Error('Location request cancelled.');
-        if (!permission.granted) throw new Error('Location permission was denied. Search for your venue instead.');
-        return Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
-      })(),
-      new Promise<never>((_, reject) => { timer = setTimeout(() => { expired = true; reject(new Error('Current location timed out. Check location permission or search for your venue.')); }, 15000); }),
-    ]).finally(() => clearTimeout(timer));
+    const position = await currentPosition(signal);
     if (signal?.aborted) throw new Error('Location request cancelled.');
     const { latitude, longitude } = position.coords;
     lastBias = { latitude, longitude };
-    const rows = await reversePhoton(latitude, longitude, signal ?? new AbortController().signal);
-    return { label: rows[0]?.label || `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`, latitude, longitude };
+    const controller = signal ?? new AbortController().signal;
+    const providers = await Promise.allSettled([
+      reversePhoton(latitude, longitude, controller),
+      reverseNominatim(latitude, longitude, controller),
+    ]);
+    const rows = mergePlaces(providers.flatMap(result => result.status === 'fulfilled' ? [result.value] : []));
+    if (rows[0]) return rows[0];
+    try {
+      const deviceRows = await Location.reverseGeocodeAsync({ latitude, longitude });
+      const label = deviceRows[0] ? deviceLabel(deviceRows[0]) : '';
+      if (label) return { label, latitude, longitude };
+    } catch {
+      // Coordinates remain a reliable selectable fallback when reverse geocoding is unavailable.
+    }
+    return { label: `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`, latitude, longitude };
   },
 };

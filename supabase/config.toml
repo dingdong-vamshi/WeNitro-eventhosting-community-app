@@ -1,5 +1,8 @@
 project_id = "klyjzbisgycegkkacbjw"
 
+[functions.share-vibe]
+verify_jwt = false
+
 [functions.cashfree-create-order]
 verify_jwt = true
 

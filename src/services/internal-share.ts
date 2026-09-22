@@ -1,5 +1,4 @@
 import { Platform, Share } from "react-native";
-import * as FileSystem from "expo-file-system/legacy";
 import type { ChatShareKind, ChatSharePayload } from "./realtime-chat";
 
 export type InternalShareEntity = {
@@ -39,21 +38,14 @@ export function subscribeToSharedContentNavigation(listener: NavigationListener)
 }
 
 export async function shareEntityExternally(entity: InternalShareEntity) {
-  const caption = `${entity.title}\n\n${entity.preview}\n\nShared from WeNitro`;
-  let fileUrl = entity.thumbnailUrl || undefined;
-  if (fileUrl && /^https?:\/\//i.test(fileUrl) && FileSystem.cacheDirectory) {
-    try {
-      const video = /video|\.mp4|\.mov/i.test(fileUrl);
-      const dest = `${FileSystem.cacheDirectory}wenitro-share-${entity.id}.${video ? "mp4" : "jpg"}`;
-      const downloaded = await FileSystem.downloadAsync(fileUrl, dest);
-      if (downloaded.status === 200) fileUrl = downloaded.uri;
-    } catch {
-      /* Keep the remote URL so WhatsApp can still open a preview. */
-    }
-  }
+  const base = "https://wenitro-app.vercel.app";
+  const canonicalUrl = entity.kind === "vibe"
+    ? `${base}/share/vibe/${encodeURIComponent(entity.id)}`
+    : `${base}/#/${entity.kind.replace("_", "-")}/${encodeURIComponent(entity.id)}`;
+  const caption = `${entity.title}\n\n${entity.preview}\n\n${canonicalUrl}\n\nShared from WeNitro`;
   await Share.share({
     title: entity.title,
-    url: fileUrl,
-    message: Platform.OS === "ios" ? caption : `${caption}${fileUrl ? `\n\n${fileUrl}` : ""}`,
+    url: canonicalUrl,
+    message: Platform.OS === "ios" ? `${entity.title}\n\n${entity.preview}\n\nShared from WeNitro` : caption,
   });
 }

@@ -1,23 +1,25 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Image, Platform, Pressable, ScrollView, Switch, Text, View } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import type { Activity, AppData, Screen } from '../../../App';
 import { activitiesProductionService } from '../../services/activities-production';
 import { activityLocationService } from '../../services/activity-location';
 import { activityService } from '../../services/wenitro';
 import { INTEREST_CATEGORIES } from '../../domain/interest-categories';
+import { activityDiscoveryInput, activityPriceBadge, dateInputValue, type ActivityGenderFilter, type ActivityPriceFilter, type ActivityQuickFilter } from '../../domain/activity-discovery';
 import { viewerCanListActivity } from '../../domain/activity-visibility';
 import { Button, ErrorLine, Header, Icon, Page, Pills, SearchField, Sheet, usePalette, purple } from '../reconstruction/ui';
 import { prepareReferenceActivities } from '../reconstruction/feed-search';
 import { UserAvatar } from '../user-avatar';
 import { VerifiedBadge } from '../verified-badge';
 
-type Filter = 'All' | 'Popular' | 'Nearby' | 'Today' | 'Tomorrow';
+type Filter = ActivityQuickFilter;
 const distanceKm = (a: number, b: number, c: number, d: number) => { const r = Math.PI / 180; const x = Math.sin((c - a) * r / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin((d - b) * r / 2) ** 2; return 6371 * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(Math.max(0, 1 - x))); };
 const time = (value?: string) => value ? new Date(value).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'Date to be decided';
 const filterIcon: Record<Filter, React.ComponentProps<typeof Icon>['name']> = { All: 'apps-outline', Popular: 'flame-outline', Nearby: 'location-outline', Today: 'time-outline', Tomorrow: 'calendar-outline' };
 const participationLabel = (value?: Activity['viewerStatus']) => ['approved', 'going', 'paid'].includes(String(value)) ? 'Joined' : ['pending', 'waitlist'].includes(String(value)) ? 'Pending' : null;
 const dateLabel = (value?: string) => value ? new Date(`${value}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Select Date';
-const paidActivity = (item: Activity) => item.costsMayApply || item.entryFeeRequired || Number(item.price.replace(/[^0-9.]/g, '')) > 0;
+const paidActivity = (item: Activity) => activityPriceBadge(item) === 'PAID';
 function useDarkColorScheme(c: ReturnType<typeof usePalette>) { return c.isDark ? 'dark' : 'light'; }
 
 export function ClientActivitiesScreen({ data, setData, go, openActivity }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (screen: Screen) => void; openActivity: (id: string) => void }) {
@@ -28,11 +30,12 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
   const [draftCategories, setDraftCategories] = useState<string[]>([]);
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
-  const [price, setPrice] = useState('All');
-  const [gender, setGender] = useState('All');
+  const [price, setPrice] = useState<ActivityPriceFilter>('All');
+  const [gender, setGender] = useState<ActivityGenderFilter>('All');
   const [verifiedOnly, setVerifiedOnly] = useState(false);
-  const [draft, setDraft] = useState({ dateFrom: '', dateTo: '', price: 'All', gender: 'All', verifiedOnly: false });
+  const [draft, setDraft] = useState<{ dateFrom: string; dateTo: string; price: ActivityPriceFilter; gender: ActivityGenderFilter; verifiedOnly: boolean }>({ dateFrom: '', dateTo: '', price: 'All', gender: 'All', verifiedOnly: false });
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [nativeDateField, setNativeDateField] = useState<'dateFrom' | 'dateTo' | null>(null);
   const [position, setPosition] = useState<{ latitude: number; longitude: number } | null>(null);
   const [loading, setLoading] = useState(data.activities.length === 0);
   const [error, setError] = useState('');
@@ -40,32 +43,52 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const searchGeneration = useRef(0);
-  const filtersActive = categories.length || dateFrom || dateTo || price !== 'All' || gender !== 'All' || verifiedOnly;
+  const filtersActive = Boolean(categories.length || dateFrom || dateTo || price !== 'All' || gender !== 'All' || verifiedOnly);
+  const serverFilters = useMemo(() => activityDiscoveryInput({ quickFilter: filter, categories, dateFrom, dateTo, price, gender, verifiedOnly }), [filter, categories, dateFrom, dateTo, price, gender, verifiedOnly]);
+  const nearby = filter === 'Nearby' && position ? { ...position, radiusKm: 25 } : undefined;
+  const requestKey = JSON.stringify({ query: query.trim(), filter, nearby, ...serverFilters });
+  const discoveryRequest = (requestedPage: number, signal?: AbortSignal) => activitiesProductionService.discover({
+    ...serverFilters,
+    nearby,
+    page: requestedPage,
+    pageSize: 30,
+    search: query,
+    upcomingOnly: false,
+    sort: 'newest',
+    signal,
+  });
 
   useEffect(() => {
     const controller = new AbortController(); let active = true;
     searchGeneration.current += 1;
     setLoading(true); setLoadingMore(false); setError(''); setPage(1); setHasMore(false);
     const timer = setTimeout(() => {
-      void activitiesProductionService.discover({ pageSize: 30, search: query, upcomingOnly: false, sort: 'newest', signal: controller.signal })
+      void discoveryRequest(1, controller.signal)
         .then(async result => { const rows = await prepareReferenceActivities(result.items); if (active) { setData(current => ({ ...current, activities: rows })); setHasMore(result.hasMore); } })
         .catch(e => { if (active && !controller.signal.aborted) setError(e.message); })
         .finally(() => { if (active) setLoading(false); });
     }, 250);
     return () => { active = false; searchGeneration.current += 1; clearTimeout(timer); controller.abort(); };
-  }, [query]);
+  }, [requestKey]);
   const loadMore = async () => {
     if (loadingMore || loading) return;
     const generation = searchGeneration.current;
     setLoadingMore(true); setError('');
     try {
-      const result = await activitiesProductionService.discover({ page: page + 1, pageSize: 30, search: query, upcomingOnly: false, sort: 'newest' });
+      const result = await discoveryRequest(page + 1);
       const next = await prepareReferenceActivities(result.items);
       if (generation !== searchGeneration.current) return;
       setData(current => ({ ...current, activities: [...current.activities, ...next.filter(row => !current.activities.some(existing => existing.id === row.id))] }));
       setPage(result.page); setHasMore(result.hasMore);
     } catch (e: any) { if (generation === searchGeneration.current) setError(e.message); } finally { if (generation === searchGeneration.current) setLoadingMore(false); }
   };
+  const updateDraftDate = (key: 'dateFrom' | 'dateTo', value: string) => setDraft(current => {
+    if (!value) return { ...current, [key]: '' };
+    if (key === 'dateFrom' && current.dateTo && value > current.dateTo) return { ...current, dateFrom: value, dateTo: value };
+    if (key === 'dateTo' && current.dateFrom && value < current.dateFrom) return { ...current, dateFrom: value, dateTo: value };
+    return { ...current, [key]: value };
+  });
+  const closeFilters = () => { setNativeDateField(null); setFiltersOpen(false); };
   const chooseFilter = async (next: Filter) => { setFilter(next); if (next !== 'Nearby' || position) return; setLoading(true); setError(''); try { setPosition(await activityLocationService.current()); } catch (e: any) { setError(e.message); } finally { setLoading(false); } };
   const rows = useMemo(() => {
     let result = data.activities.filter(item => item.status !== 'draft' && item.status !== 'cancelled' && viewerCanListActivity(item, data.userId));
@@ -96,7 +119,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
             <Text style={{ color: active ? '#FFF' : c.text, fontSize: 13, fontWeight: '800' }}>{item}</Text>
           </Pressable>;
         })}
-        <Pressable accessibilityRole="button" accessibilityLabel="Open activity filters" accessibilityState={{ expanded: filtersOpen }} onPress={() => { setDraftCategories(categories); setDraft({ dateFrom, dateTo, price, gender, verifiedOnly }); setFiltersOpen(true); }} style={{ minHeight: 40, paddingHorizontal: 14, borderRadius: 20, backgroundColor: filtersActive ? c.accent : c.card, borderWidth: 1, borderColor: filtersActive ? c.accent : c.border, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel="Open activity filters" accessibilityState={{ expanded: filtersOpen }} onPress={() => { setDraftCategories(categories); setDraft({ dateFrom, dateTo, price, gender, verifiedOnly }); setNativeDateField(null); setFiltersOpen(true); }} style={{ minHeight: 40, paddingHorizontal: 14, borderRadius: 20, backgroundColor: filtersActive ? c.accent : c.card, borderWidth: 1, borderColor: filtersActive ? c.accent : c.border, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Icon name="options-outline" size={15} color={filtersActive ? '#FFF' : c.accent} />
           <Text style={{ color: filtersActive ? '#FFF' : c.text, fontSize: 13, fontWeight: '800' }}>Filter</Text>
         </Pressable>
@@ -121,7 +144,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
                 <View style={{ borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#FFFFFFEE' }}><Text style={{ color: '#392CC3', fontSize: 11, fontWeight: '800' }}>{item.category || 'Activity'}</Text></View>
                 {participation ? <View style={{ borderRadius: 13, paddingHorizontal: 8, paddingVertical: 5, backgroundColor: participation === 'Joined' ? '#159B67E8' : '#E08B27E8' }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{participation}</Text></View> : null}
               </View>
-              <View style={{ position: 'absolute', right: 9, bottom: 9, borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#07111FD9' }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{item.price || 'Free'} · {item.entryFeeRequired ? 'Entry fee required' : 'Free to join'}</Text></View>
+              <View style={{ position: 'absolute', right: 9, bottom: 9, borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#07111FD9' }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{activityPriceBadge(item)}</Text></View>
             </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel={saved ? `Unsave ${item.title}` : `Save ${item.title}`} onPress={() => void save(item)} style={{ position: 'absolute', top: 8, right: 8, width: 34, height: 34, borderRadius: 18, backgroundColor: '#07111FCC', alignItems: 'center', justifyContent: 'center' }}><Icon name={saved ? 'bookmark' : 'bookmark-outline'} color="#FFF" size={17} /></Pressable>
           </View>
@@ -145,7 +168,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
       {hasMore && !loading ? <Pressable accessibilityRole="button" disabled={loadingMore} onPress={() => void loadMore()} style={{ padding: 16, alignItems: 'center' }}><Text style={{ color: c.accent, fontWeight: '800', fontSize: 14 }}>{loadingMore ? 'Loading…' : 'Load more activities'}</Text></Pressable> : null}
       {!loading && !rows.length ? <View style={{ alignItems: 'center', gap: 9, paddingVertical: 42 }}><Icon name="compass-outline" size={40} color={c.muted} /><Text style={{ color: c.text, fontWeight: '800', fontSize: 16 }}>No activities found</Text><Text style={{ color: c.muted, fontSize: 13, fontWeight: '600', textAlign: 'center' }}>Try another filter or explore a different category.</Text></View> : null}
     </ScrollView>
-    {filtersOpen && <Sheet title="Filters" close={() => setFiltersOpen(false)} footer={<View style={{ flexDirection: 'row', gap: 10 }}><View style={{ flex: 1 }}><Button label="Reset All" onPress={() => { setDraftCategories([]); setDraft({ dateFrom: '', dateTo: '', price: 'All', gender: 'All', verifiedOnly: false }); }} /></View><View style={{ flex: 1 }}><Button label="Apply Filters" onPress={() => { setCategories(draftCategories); setDateFrom(draft.dateFrom); setDateTo(draft.dateTo); setPrice(draft.price); setGender(draft.gender); setVerifiedOnly(draft.verifiedOnly); setFiltersOpen(false); }} /></View></View>}>
+    {filtersOpen && <Sheet title="Filters" close={closeFilters} footer={<View style={{ flexDirection: 'row', gap: 10 }}><View style={{ flex: 1 }}><Button label="Reset All" onPress={() => { setDraftCategories([]); setDraft({ dateFrom: '', dateTo: '', price: 'All', gender: 'All', verifiedOnly: false }); setNativeDateField(null); }} /></View><View style={{ flex: 1 }}><Button label="Apply Filters" onPress={() => { setCategories(draftCategories); setDateFrom(draft.dateFrom); setDateTo(draft.dateTo); setPrice(draft.price); setGender(draft.gender); setVerifiedOnly(draft.verifiedOnly); closeFilters(); }} /></View></View>}>
       <Text style={{ color: c.text, fontWeight: '800', fontSize: 15 }}>Date Filter</Text>
       <View style={{ flexDirection: 'row', gap: 10 }}>
         {(['dateFrom', 'dateTo'] as const).map((key, index) => (
@@ -155,10 +178,10 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
               <View style={{ minHeight: 48, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, borderRadius: 9, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
                 <Icon name="calendar-outline" color={c.muted} size={16} />
                 <Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>{dateLabel(draft[key])}</Text>
-                {React.createElement('input', { type: 'date', 'aria-label': index ? 'Date to' : 'Date from', value: draft[key], onChange: (e: React.ChangeEvent<HTMLInputElement>) => setDraft(v => ({ ...v, [key]: e.target.value })), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', colorScheme: useDarkColorScheme(c) } })}
+                {React.createElement('input', { type: 'date', 'aria-label': index ? 'Date to' : 'Date from', value: draft[key], min: key === 'dateTo' && draft.dateFrom ? draft.dateFrom : undefined, onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateDraftDate(key, e.target.value), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', colorScheme: useDarkColorScheme(c) } })}
               </View>
             ) : (
-              <Pressable style={{ minHeight: 48, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, borderRadius: 9, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Pressable accessibilityRole="button" accessibilityLabel={index ? 'Date to' : 'Date from'} onPress={() => setNativeDateField(key)} style={{ minHeight: 48, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, borderRadius: 9, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Icon name="calendar-outline" color={c.muted} size={16} />
                 <Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>{dateLabel(draft[key])}</Text>
               </Pressable>
@@ -166,10 +189,19 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
           </View>
         ))}
       </View>
+      {nativeDateField && Platform.OS !== 'web' ? <DateTimePicker
+        value={draft[nativeDateField] ? new Date(`${draft[nativeDateField]}T12:00:00`) : nativeDateField === 'dateTo' && draft.dateFrom ? new Date(`${draft.dateFrom}T12:00:00`) : new Date()}
+        mode="date"
+        minimumDate={nativeDateField === 'dateTo' && draft.dateFrom ? new Date(`${draft.dateFrom}T12:00:00`) : undefined}
+        onChange={(event, value) => {
+          setNativeDateField(null);
+          if (event.type === 'set' && value) updateDraftDate(nativeDateField, dateInputValue(value));
+        }}
+      /> : null}
       <Text style={{ color: c.text, fontWeight: '800', fontSize: 15 }}>Price</Text>
-      <Pills values={['All', 'Free', 'Paid']} selected={draft.price} onChange={value => setDraft(v => ({ ...v, price: value }))} />
+      <Pills values={['All', 'Free', 'Paid']} selected={draft.price} onChange={value => setDraft(v => ({ ...v, price: value as ActivityPriceFilter }))} />
       <Text style={{ color: c.text, fontWeight: '800', fontSize: 15 }}>Gender Preference</Text>
-      <Pills values={['All', 'Male', 'Female']} selected={draft.gender} onChange={value => setDraft(v => ({ ...v, gender: value }))} />
+      <Pills values={['All', 'Male', 'Female']} selected={draft.gender} onChange={value => setDraft(v => ({ ...v, gender: value as ActivityGenderFilter }))} />
       <Pressable accessibilityRole="radio" accessibilityState={{ checked: draft.gender === 'Non-binary' }} onPress={() => setDraft(v => ({ ...v, gender: 'Non-binary' }))} style={{ alignSelf: 'flex-start', backgroundColor: draft.gender === 'Non-binary' ? purple : c.card, borderRadius: 20, paddingHorizontal: 18, paddingVertical: 9 }}>
         <Text style={{ color: draft.gender === 'Non-binary' ? '#FFF' : c.muted, fontSize: 13, fontWeight: '800' }}>Non-binary</Text>
       </Pressable>

@@ -7,6 +7,7 @@ import type { AppData } from '../../../App';
 import { communitiesProductionService, type CommunitySummary } from '../../services/communities-production';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { realtimeChatService } from '../../services/realtime-chat';
+import { storiesProductionService } from '../../services/stories-production';
 import { subscribeToAppForeground } from '../../services/app-freshness';
 import { Action, Button, ErrorLine, Icon, Page, Sheet, Skeleton, ui, usePalette, purple } from './ui';
 
@@ -55,12 +56,17 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   const [groupMembers, setGroupMembers] = useState<string[]>([]);
   const [groupBusy, setGroupBusy] = useState(false);
   const [avatars, setAvatars] = useState<Record<string, string>>({});
+  const [storyPreview, setStoryPreview] = useState<AppData['stories'][number] | null>(null);
+  const [markingStories, setMarkingStories] = useState(false);
 
   useEffect(() => {
     if (!creatingGroup || data.people.length || people.length) return;
-    void supabase.rpc('list_discoverable_people', { p_limit: 50 }).then(({ data: result }) => {
-      if (Array.isArray(result)) setPeople(result.filter((p: any) => String(p.id) !== data.userId).map((p: any) => ({ id: Number(p.id), username: String(p.username || ''), fullname: String(p.fullname || p.username || ''), profile_image: String(p.profile_image || '') })));
-    }).catch(() => undefined);
+    void (async () => {
+      try {
+        const { data: result } = await supabase.rpc('list_discoverable_people', { p_limit: 50 });
+        if (Array.isArray(result)) setPeople(result.filter((p: any) => String(p.id) !== data.userId).map((p: any) => ({ id: Number(p.id), username: String(p.username || ''), fullname: String(p.fullname || p.username || ''), profile_image: String(p.profile_image || '') })));
+      } catch { /* The empty member picker remains a safe fallback. */ }
+    })();
   }, [creatingGroup]);
 
   useEffect(() => { setQuery(''); setPage(1); setFilter('All'); }, [tab]);
@@ -133,6 +139,11 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   );
   const searchPeople = people.filter((person) => !conversations.some((conversation) => conversation.userId === String(person.id)));
   const visibleTab = tab === 'Groups' ? 'Activities' : tab;
+  const tabCounts = {
+    Chats: data.conversations.filter((item) => item.type === 'People').length,
+    Activities: data.conversations.filter((item) => item.type === 'Groups' && item.roomType !== 'community' && !data.communities.some((community) => community.id === item.id)).length,
+    Communities: new Set([...data.communities.map((item) => item.id), ...rows.map((item) => item.id)]).size,
+  };
   const groupPeople = data.people.length
     ? data.people.map((person) => ({ id: person.id, name: person.name, username: person.username, avatar: person.avatar }))
     : people.map((person) => ({ id: String(person.id), name: person.fullname || person.username, username: person.username, avatar: person.profile_image }));
@@ -169,6 +180,27 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
     mediaUri(conv.avatar)
     || (conv.userId ? avatars[conv.userId] : undefined)
     || mediaUri(data.people.find((person) => person.id === conv.userId)?.avatar);
+  const markStorySeen = async (story: AppData['stories'][number]) => {
+    setStoryPreview(story);
+    if (story.viewed) return;
+    try {
+      if (isBackendId(story.id)) await storiesProductionService.markViewed(story.id);
+      setData((current) => ({ ...current, stories: current.stories.map((item) => item.id === story.id ? { ...item, viewed: true } : item) }));
+    } catch (caught) {
+      Alert.alert('Story view not saved', caught instanceof Error ? caught.message : 'Please try again.');
+    }
+  };
+  const markAllStoriesSeen = async () => {
+    if (markingStories) return;
+    const unseen = data.stories.filter((story) => !story.viewed);
+    if (!unseen.length) return;
+    setMarkingStories(true);
+    const results = await Promise.allSettled(unseen.map((story) => isBackendId(story.id) ? storiesProductionService.markViewed(story.id) : Promise.resolve()));
+    const failed = new Set(unseen.filter((_, index) => results[index].status === 'rejected').map((story) => story.id));
+    setData((current) => ({ ...current, stories: current.stories.map((story) => failed.has(story.id) ? story : { ...story, viewed: true }) }));
+    if (failed.size) Alert.alert('Some stories could not be marked seen', 'Please check your connection and try again.');
+    setMarkingStories(false);
+  };
 
   return (
     <Page>
@@ -179,7 +211,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
       <View style={{ height: 42, flexDirection: 'row', borderBottomWidth: 1, borderColor: c.border, paddingHorizontal: 14 }}>
         {['Chats', 'Activities', 'Communities'].map((value) => (
           <Pressable key={value} accessibilityRole="tab" accessibilityState={{ selected: visibleTab === value }} onPress={() => setTab(value === 'Activities' ? 'Groups' : value)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 2, borderBottomColor: visibleTab === value ? c.accent : 'transparent' }}>
-            <Text style={{ color: visibleTab === value ? c.accent : c.muted, fontSize: 12, fontWeight: '600' }}>{value}</Text>
+            <Text style={{ color: visibleTab === value ? c.accent : c.muted, fontSize: 12, fontWeight: '600' }}>{value} {tabCounts[value as keyof typeof tabCounts]}</Text>
           </Pressable>
         ))}
       </View>
@@ -214,6 +246,12 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
           ))}
         </View>
       )}
+      {data.stories.length ? <View style={{ paddingHorizontal: 14, paddingBottom: 8, gap: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}><Text style={{ flex: 1, color: c.text, fontSize: 15, fontWeight: '700' }}>Stories</Text><Pressable accessibilityRole="button" disabled={markingStories || !data.stories.some((story) => !story.viewed)} onPress={() => void markAllStoriesSeen()}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '700', opacity: data.stories.some((story) => !story.viewed) ? 1 : .5 }}>{markingStories ? 'Saving…' : 'Mark all seen'}</Text></Pressable></View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
+          {data.stories.map((story) => <Pressable key={story.id} accessibilityRole="button" accessibilityLabel={`Open ${story.name} story`} onPress={() => void markStorySeen(story)} style={{ alignItems: 'center', gap: 4, width: 58 }}><View style={{ padding: 2, borderWidth: story.viewed ? 1 : 2, borderColor: story.viewed ? c.border : c.accent, borderRadius: 27 }}><UserAvatar uri={story.authorAvatar || story.image} name={story.name} size={46} /></View><Text numberOfLines={1} style={{ color: c.muted, fontSize: 9, width: 58, textAlign: 'center' }}>{story.name}</Text></Pressable>)}
+        </ScrollView>
+      </View> : null}
       <ErrorLine text={error} />
       {tab === 'Communities' && loading && page === 1 ? <Skeleton count={5} /> : (
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 14, paddingBottom: 24 }}>
@@ -333,6 +371,10 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
           <Button label={`Create Group · ${groupMembers.length} selected`} busy={groupBusy} disabled={groupBusy} onPress={() => void createGroup()} />
         </Sheet>
       ) : null}
+      {storyPreview ? <Sheet title={storyPreview.name} close={() => setStoryPreview(null)} centered>
+        <Image source={{ uri: storyPreview.image }} style={{ width: '100%', height: 420, borderRadius: 16, backgroundColor: c.inset }} resizeMode="cover" />
+        {storyPreview.text ? <Text style={{ color: c.text, fontSize: 14, lineHeight: 20 }}>{storyPreview.text}</Text> : null}
+      </Sheet> : null}
     </Page>
   );
 }

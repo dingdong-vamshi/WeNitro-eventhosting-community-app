@@ -6,7 +6,7 @@ const module = {exports:{}};
 const taxonomy = {exports:{}};
 new Function('exports', compile(fs.readFileSync('src/domain/interest-categories.ts','utf8')))(taxonomy.exports);
 new Function('exports', 'require', compile(fs.readFileSync('src/domain/host-activity.ts','utf8')))(module.exports, name => { assert.equal(name, './interest-categories'); return taxonomy.exports; });
-const {newHostDraft,hostStepError,ageError,localDateTime,HOST_CATEGORIES,GENDER_OPTIONS}=module.exports;
+const {newHostDraft,draftFromActivity,scheduleFieldErrors,hostStepError,ageError,localDateTime,HOST_CATEGORIES,GENDER_OPTIONS}=module.exports;
 const now=new Date('2026-09-08T12:00:00Z');
 const valid={...newHostDraft(now),title:'A real meetup',description:'Meet to learn together',category:'Education',location:{label:'Pune, Maharashtra, India',latitude:18.52,longitude:73.85}};
 for(const step of [0,1,2])assert.equal(hostStepError(valid,step,false,+now),'');
@@ -19,16 +19,26 @@ for(const price of ['','0','-1','1.001','1000000.01','abc'])assert.match(hostSte
 assert.equal(hostStepError({...valid,isPaid:false,price:'not-used'},1,false,+now),'');
 assert.equal(ageError('20','45'),'');assert.ok(ageError('45','20'));assert.ok(ageError('-1','20'));assert.ok(ageError('20','121'));assert.equal(ageError('0',''),'');
 assert.equal(HOST_CATEGORIES.length,21);assert.ok(!HOST_CATEGORIES.some(c => c.startsWith('[QA]')));assert.equal(GENDER_OPTIONS.length,4);
-for (const costsMayApply of [false,true]) for (const entryFeeRequired of [false,true]) assert.equal(hostStepError({...valid,costsMayApply,entryFeeRequired},1,false,+now),'');
 assert.ok(hostStepError({...valid,category:''},2,false,+now));assert.ok(hostStepError({...valid,location:null},2,false,+now));
 assert.equal(Date.parse(valid.start) - +now, 10 * 60 * 1000);
 assert.equal(Date.parse(valid.end) - Date.parse(valid.start), 3600000);
 assert.equal(valid.deadline, valid.start);
 assert.ok(hostStepError({...valid,end:localDateTime(new Date(Date.parse(valid.start)+30*60*1000))},2,false,+now));
 assert.ok(hostStepError({...valid,deadline:valid.end},2,false,+now));
-assert.ok(hostStepError({...valid,start:localDateTime(now)},2,false,+now));
+assert.equal(scheduleFieldErrors({...valid,start:localDateTime(now),end:localDateTime(new Date(+now+3600000)),deadline:localDateTime(now)},+now).start,'');
 assert.equal(hostStepError({...valid,dateLater:true,start:'',end:'',deadline:''},2,false,+now),'');
 assert.equal(new Date(localDateTime(now)).getTime(), +now);
+const secondsNow=new Date('2026-09-08T12:00:31Z');const rounded=newHostDraft(secondsNow);
+assert.ok(Date.parse(rounded.start)-+secondsNow>=10*60*1000);assert.ok(Date.parse(rounded.start)-+secondsNow<11*60*1000);
+assert.equal(scheduleFieldErrors({...valid,deadline:localDateTime(now)},+now).deadline,'');
+assert.match(scheduleFieldErrors({...valid,deadline:localDateTime(new Date(+now-60000))},+now).deadline,/before/);
+assert.equal(scheduleFieldErrors({...valid,end:localDateTime(new Date(Date.parse(valid.start)+3600000))},+now).end,'');
+assert.match(scheduleFieldErrors({...valid,end:localDateTime(new Date(Date.parse(valid.start)+3599999))},+now).end,/at least 1 hour/);
+assert.match(scheduleFieldErrors({...valid,start:'not-a-date'},+now).start,/Choose/);
+const paidEdit=draftFromActivity({id:'7',title:'Paid meetup',price:'₹250',costsMayApply:true,entryFeeRequired:true},now);
+assert.equal(paidEdit.isPaid,true);assert.equal(paidEdit.price,'250');
+const freeEdit=draftFromActivity({id:'8',title:'Free meetup',price:'Free'},now);
+assert.equal(freeEdit.isPaid,false);assert.equal(freeEdit.price,'');
 // Execute the actual shared write function with mock transport; no network or uploads.
 const source=fs.readFileSync('src/services/wenitro.ts','utf8');
 const writeSource=source.slice(source.indexOf('const writeActivityFromUi ='),source.indexOf('export const activityService ='));
@@ -46,13 +56,24 @@ async function writeCase(failure){
   assert.equal(calls.some(c=>c.removed),failure==='rpc','Committed cover must survive detail-reload failure');
 }
 await writeCase();await writeCase('rpc');await writeCase('reload');
-// Use the real location service with a controlled GPS/provider boundary.
+// Use the real location service with controlled GPS/provider boundaries.
 const locationSource=compile(fs.readFileSync('src/services/activity-location.ts','utf8'));
-async function locationCase(granted){
-  const result={};const gps={requestForegroundPermissionsAsync:async()=>({granted}),Accuracy:{Balanced:3},getCurrentPositionAsync:async()=>({coords:{latitude:18.52,longitude:73.85}})};
-  new Function('exports','require','fetch','process',locationSource)(result,()=>gps,async()=>({ok:true,json:async()=>({features:[{geometry:{coordinates:[73.85,18.52]},properties:{name:'A venue',city:'Pune'}}]})}),{env:{}});
-  if(!granted)await assert.rejects(result.activityLocationService.current(),/denied/);
-  else {assert.deepEqual(await result.activityLocationService.current(),{label:'A venue, Pune',latitude:18.52,longitude:73.85});assert.equal((await result.activityLocationService.search('Pune')).length,1);}
+function locationService(gps,fetch){
+  const result={};
+  new Function('exports','require','fetch','process',locationSource)(result,name=>{assert.equal(name,'expo-location');return gps;},fetch,{env:{}});
+  return result.activityLocationService;
 }
-await locationCase(false);await locationCase(true);
-console.log('PASS: host validation, Free/Paid price rules, onsite price payloads, nullable scheduling/capacity, committed-save recovery, cover cleanup, and GPS permission/provider branches. No remote data written.');
+const baseGps={Accuracy:{Balanced:3},getLastKnownPositionAsync:async()=>null,reverseGeocodeAsync:async()=>[]};
+await assert.rejects(locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:false}),getCurrentPositionAsync:async()=>null},async()=>{throw new Error('unexpected');}).current(),/denied/);
+const primaryFetch=async url=>({ok:true,json:async()=>url.includes('/reverse?')?{features:[{geometry:{coordinates:[73.85,18.52]},properties:{name:'A venue',city:'Pune'}}]}:url.includes('nominatim')?[]:{features:[{geometry:{coordinates:[73.85,18.52]},properties:{name:'A venue',city:'Pune'}}]}});
+const primary=locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:true}),getCurrentPositionAsync:async()=>({coords:{latitude:18.52,longitude:73.85}})},primaryFetch);
+assert.deepEqual(await primary.current(),{label:'A venue, Pune',latitude:18.52,longitude:73.85});assert.equal((await primary.search('Pune')).length,1);
+let nominatimHeaders;
+const providerFallback=locationService(baseGps,async(url,options)=>{if(url.includes('photon'))return{ok:false,json:async()=>({})};nominatimHeaders=options?.headers;return{ok:true,json:async()=>[{lat:'18.51',lon:'73.84',name:'Fallback Hall',address:{road:'MG Road',city:'Pune',country:'India'}}]};});
+const fallbackRows=await providerFallback.search('Fallback Hall');assert.equal(fallbackRows[0].label,'Fallback Hall, MG Road, Pune, India');assert.equal('User-Agent' in nominatimHeaders,false);
+const lastKnown=locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:true}),getCurrentPositionAsync:async()=>{throw new Error('GPS cold start');},getLastKnownPositionAsync:async()=>({coords:{latitude:12.97,longitude:77.59}}),reverseGeocodeAsync:async()=>[{name:'Town Hall',street:'MG Road',city:'Bengaluru',region:'Karnataka',country:'India'}]},async()=>({ok:false,json:async()=>({})}));
+assert.deepEqual(await lastKnown.current(),{label:'Town Hall, MG Road, Bengaluru, Karnataka, India',latitude:12.97,longitude:77.59});
+const coordinates=locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:true}),getCurrentPositionAsync:async()=>({coords:{latitude:1.23456,longitude:2.34567}}),reverseGeocodeAsync:async()=>{throw new Error('offline');}},async()=>{throw new Error('offline');});
+assert.deepEqual(await coordinates.current(),{label:'1.23456, 2.34567',latitude:1.23456,longitude:2.34567});
+const unavailable=locationService(baseGps,async()=>({ok:false,json:async()=>({})}));await assert.rejects(unavailable.search('Nowhere'),/unavailable/);
+console.log('PASS: host validation/default boundaries, single paid classification payloads, edit hydration, nullable scheduling/capacity, save recovery, and location provider/GPS fallbacks. No remote data written.');

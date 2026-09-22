@@ -481,20 +481,20 @@ export async function createGroupConversation(
     members.forEach((member) => assertId(member, "memberId", operation));
     const { data, error } = await supabase.rpc(
       realtimeChatBridgeRpc.createGroupRoom,
-      { p_title: title, p_member_ids: members },
+      { p_title: title, p_member_ids: members, p_image_path: imagePath ?? null },
     );
-    if (error) throw error;
+    if (error) {
+      if (imagePath) {
+        const auth = await supabase.auth.getUser().catch(() => ({ data: { user: null } }));
+        const ownerPrefix = auth.data.user ? `${auth.data.user.id}/group/` : '';
+        if (ownerPrefix && imagePath.startsWith(ownerPrefix)) {
+          await supabase.storage.from("community").remove([imagePath]).catch(() => undefined);
+        }
+      }
+      throw error;
+    }
     const row = first(data);
     const roomId = id(row.room_id ?? row.id ?? data, "room id");
-    if (imagePath) {
-      const saved = await supabase
-        .from("tbl_chat_rooms")
-        .update({ image_url: imagePath })
-        .eq("id", roomId);
-      if (saved.error) {
-        /* Room is still created; the local photo is shown until image_url can be saved. */
-      }
-    }
     return roomId;
   } catch (error) {
     throw chatError(error, operation);

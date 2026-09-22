@@ -12,17 +12,18 @@ export type HostDraft = {
   title: string; description: string; coverUri: string; coverContentType: string;
   visibility: 'public' | 'squad' | 'private'; approval: boolean; verifiedOnly: boolean;
   capacity: string; ageLabel: string; ageMin: string; ageMax: string; gender: string;
-  isPaid: boolean; price: string; costsMayApply: boolean; entryFeeRequired: boolean; category: string; location: HostLocation | null;
+  isPaid: boolean; price: string; category: string; location: HostLocation | null;
   locationInstruction: string; dateLater: boolean; start: string; end: string; deadline: string;
 };
 export function localDateTime(date: Date) {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 }
 export function newHostDraft(now = new Date()): HostDraft {
-  const start = new Date(now.getTime() + 10 * 60 * 1000);
+  const minimumStart = now.getTime() + 10 * 60 * 1000;
+  const start = new Date(Math.ceil(minimumStart / 60000) * 60000);
   return { title: '', description: '', coverUri: '', coverContentType: 'image/jpeg', visibility: 'public', approval: false,
-    verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', isPaid: false, price: '', costsMayApply: false,
-    entryFeeRequired: false, category: '', location: null, locationInstruction: '', dateLater: false,
+    verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', isPaid: false, price: '',
+    category: '', location: null, locationInstruction: '', dateLater: false,
     start: localDateTime(start), end: localDateTime(new Date(start.getTime() + 3600000)), deadline: localDateTime(start) };
 }
 export type HostActivitySource = {
@@ -30,6 +31,7 @@ export type HostActivitySource = {
   visibility?: 'public' | 'community' | 'private' | 'squad'; joinType?: 'direct' | 'approval';
   verifiedOnly?: boolean; seats?: number; ageMin?: number | null; ageMax?: number | null;
   genderPreference?: string | null; costsMayApply?: boolean; entryFeeRequired?: boolean;
+  price?: string | null;
   category?: string; where?: string; latitude?: number | null; longitude?: number | null;
   locationInstruction?: string; startsAt?: string; endsAt?: string; registrationClosesAt?: string;
 };
@@ -42,6 +44,8 @@ export function draftFromActivity(activity: HostActivitySource, now = new Date()
   const ageMax = activity.ageMax == null ? '' : String(activity.ageMax);
   const agePreset = AGE_PRESETS.find(p => p.min === ageMin && p.max === ageMax);
   const visibility = activity.visibility === 'squad' || activity.visibility === 'private' ? activity.visibility : 'public';
+  const price = Number(String(activity.price || '').replace(/[^0-9.]/g, ''));
+  const isPaid = Boolean(activity.costsMayApply || activity.entryFeeRequired || price > 0);
   return {
     ...fresh,
     title: activity.title || '',
@@ -54,8 +58,8 @@ export function draftFromActivity(activity: HostActivitySource, now = new Date()
     ageLabel: agePreset?.label || (activity.ageMin == null && activity.ageMax == null ? '15+ only' : 'Custom range'),
     ageMin, ageMax,
     gender: activity.genderPreference || '',
-    costsMayApply: Boolean(activity.costsMayApply),
-    entryFeeRequired: Boolean(activity.entryFeeRequired),
+    isPaid,
+    price: isPaid && price > 0 ? String(price) : '',
     category: activity.category || '',
     location: activity.where && activity.latitude != null && activity.longitude != null
       ? { label: activity.where, latitude: activity.latitude, longitude: activity.longitude } : null,
@@ -68,9 +72,9 @@ export function scheduleFieldErrors(d: HostDraft, now = Date.now()) {
   if (d.dateLater) return { start: '', end: '', deadline: '' };
   const start = Date.parse(d.start), end = Date.parse(d.end), deadline = Date.parse(d.deadline);
   return {
-    start: !Number.isFinite(start) ? 'Choose a start time.' : start <= now ? 'Start time cannot be in the past.' : '',
+    start: !Number.isFinite(start) ? 'Choose a start time.' : start < now ? 'Start time cannot be in the past.' : '',
     end: !Number.isFinite(end) ? 'Choose an end time.' : Number.isFinite(start) && end < start + 3600000 ? 'End time must be at least 1 hour after start.' : '',
-    deadline: !Number.isFinite(deadline) ? 'Choose a registration close time.' : deadline <= now ? 'Registration close cannot be before the current date and time.' : Number.isFinite(start) && deadline > start ? 'Registration close cannot be after start time.' : '',
+    deadline: !Number.isFinite(deadline) ? 'Choose a registration close time.' : deadline < now ? 'Registration close cannot be before the current date and time.' : Number.isFinite(start) && deadline > start ? 'Registration close cannot be after start time.' : '',
   };
 }
 export function ageError(min: string, max: string) {

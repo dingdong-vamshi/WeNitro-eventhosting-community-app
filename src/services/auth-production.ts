@@ -6,6 +6,7 @@ import type {
 import * as Linking from "expo-linking";
 import { Platform } from "react-native";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { validateEmail, validateFullName } from "../utils/validation";
 
 export type AccountType = "individual" | "partner";
 
@@ -78,6 +79,20 @@ const requireBackend = () => {
 };
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
+const validEmailOrThrow = (email: string) => {
+  const normalized = normalizeEmail(email);
+  const result = validateEmail(normalized);
+  if (!result.valid) throw new Error(result.error ?? "Enter a valid email address.");
+  return normalized;
+};
+
+const validFullNameOrThrow = (fullName: string) => {
+  const normalized = fullName.normalize("NFKC").trim().replace(/\s+/g, " ");
+  const result = validateFullName(normalized);
+  if (!result.valid) throw new Error(result.error ?? "Enter your full name.");
+  return normalized;
+};
 
 export const normalizeIndianPhone = (phone: string) => {
   let digits = phone.replace(/\D/g, "");
@@ -216,7 +231,8 @@ export async function bootstrapSession(): Promise<SessionBootstrap> {
 
 export async function signUpWithPassword(input: SignUpInput) {
   requireBackend();
-  const email = normalizeEmail(input.email);
+  const email = validEmailOrThrow(input.email);
+  const fullName = validFullNameOrThrow(input.fullName);
   const username = input.username
     ? normalizeUsername(input.username)
     : undefined;
@@ -226,7 +242,7 @@ export async function signUpWithPassword(input: SignUpInput) {
     options: {
       emailRedirectTo: input.emailRedirectTo ?? getAuthRedirectUrl(),
       data: {
-        full_name: input.fullName.trim(),
+        full_name: fullName,
         account_type: input.accountType === "partner" ? "partner" : "individual",
         ...(username ? { username } : {}),
       },
@@ -245,7 +261,7 @@ export async function signUpWithPassword(input: SignUpInput) {
 export async function loginWithPassword(input: PasswordLoginInput) {
   requireBackend();
   const { data, error } = await supabase.auth.signInWithPassword({
-    email: normalizeEmail(input.email),
+    email: validEmailOrThrow(input.email),
     password: input.password,
   });
   if (error) throw error;
@@ -255,10 +271,9 @@ export async function loginWithPassword(input: PasswordLoginInput) {
 export async function requestPhoneOtp(input: PhoneOtpRequestInput) {
   requireBackend();
   const phone = normalizeIndianPhone(input.phone);
-  const fullName = input.fullName?.trim();
-  if (input.createAccount && !fullName) {
-    throw new Error("Full name is required to create an account.");
-  }
+  const fullName = input.createAccount
+    ? validFullNameOrThrow(input.fullName ?? "")
+    : undefined;
   const { data, error } = await supabase.auth.signInWithOtp({
     phone,
     options: {

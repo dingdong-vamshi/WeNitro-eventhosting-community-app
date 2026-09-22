@@ -604,6 +604,20 @@ export async function unsubscribeFromVibeComments(channel: RealtimeChannel) {
   return supabase.removeChannel(channel);
 }
 
+export async function reportVibe(vibeId: string, reason: string, details = "") {
+  requireBackend();
+  const { data, error } = await (supabase.rpc as unknown as (
+    name: string,
+    args: Record<string, unknown>,
+  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>)("report_vibe", {
+    p_vibe_id: integerId(vibeId, "vibeId"),
+    p_reason: reason.trim(),
+    p_details: details.trim(),
+  });
+  if (error) throw error;
+  return data;
+}
+
 export const vibesProductionService = {
   listReels,
   fetchReels: listReels,
@@ -622,6 +636,7 @@ export const vibesProductionService = {
   deleteComment: deleteVibeComment,
   trackShare: trackVibeShare,
   recordShare: trackVibeShare,
+  report: reportVibe,
   subscribeToComments: subscribeToVibeComments,
   unsubscribeFromComments: unsubscribeFromVibeComments,
 };

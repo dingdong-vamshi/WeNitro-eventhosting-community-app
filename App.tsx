@@ -3,7 +3,8 @@ import { UserAvatar } from './src/components/user-avatar';
 import { ReferenceEditProfile } from './src/components/reconstruction/edit-profile';
 import { SocialProfilesScreen } from './src/components/reconstruction/social-profiles';
 import { ReferenceInviteSquad } from './src/components/reconstruction/invite-squad';
-import { captureReferral } from './src/services/referrals';
+import { captureReferral, redeemPendingReferral } from './src/services/referrals';
+import { captureActivityInvite, createActivityInvite, redeemPendingActivityInvite } from './src/services/activity-invites';
 import { ReferenceCollection } from "./src/components/reconstruction/collections";
 import { CommunityInfo } from "./src/components/community/community-info";
 import { ReferenceFeed, ReferenceSearch } from "./src/components/reconstruction/feed-search";
@@ -61,6 +62,7 @@ import {
   Pressable,
   SafeAreaView,
   ScrollView,
+  Share,
   StyleSheet,
   Switch,
   Text,
@@ -100,7 +102,7 @@ import {
   communitiesProductionService,
   createCommunityPost,
 } from "./src/services/communities-production";
-import { vibesProductionService } from "./src/services/vibes-production";
+import { vibesProductionService, type VibeReel } from "./src/services/vibes-production";
 import { subscribeToAppForeground } from "./src/services/app-freshness";
 import {
   openSharedContent,
@@ -802,6 +804,26 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
   };
 }
 
+function vibeFromReel(reel: VibeReel, data: Pick<AppData, "userId" | "activities">): Vibe {
+  return {
+    id: reel.id,
+    author: reel.author?.username || reel.author?.full_name || "WeNitro member",
+    authorId: reel.userId || undefined,
+    authorAvatar: reel.author?.avatar_url || undefined,
+    activityId: reel.activityId || undefined,
+    event: data.activities.find((activity) => activity.id === reel.activityId)?.title || "",
+    text: reel.caption,
+    hashtags: reel.hashtags,
+    likes: reel.likeCount,
+    saved: false,
+    mediaUrl: reel.mediaUrl,
+    mediaType: reel.mediaType,
+    createdAt: reel.createdAt,
+    mine: String(reel.userId) === String(data.userId || ""),
+    comments: [],
+  };
+}
+
 let clickAudioContext: any;
 function playClickSound() {
   if (Platform.OS === "web") {
@@ -1087,6 +1109,7 @@ function Field({
   multiline,
   inputType = "text",
   isValid,
+  errorText,
   keyboardType,
 }: {
   label: string;
@@ -1097,6 +1120,7 @@ function Field({
   multiline?: boolean;
   inputType?: "text" | "datetime-local";
   isValid?: boolean;
+  errorText?: string | null;
   keyboardType?: React.ComponentProps<typeof TextInput>["keyboardType"];
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -1114,7 +1138,7 @@ function Field({
   return (
     <View style={styles.field}>
       <Text style={[styles.label, { color: palette.muted }]}>{label}</Text>
-      <View style={[styles.inputShell, { backgroundColor: palette.input, borderColor: palette.border }, multiline && styles.textareaShell]}>
+      <View style={[styles.inputShell, { backgroundColor: palette.input, borderColor: errorText ? colors.coral : palette.border }, multiline && styles.textareaShell]}>
         {Platform.OS === "web" &&
         (secureTextEntry || inputType === "datetime-local")
           ? React.createElement("input", {
@@ -1177,6 +1201,7 @@ function Field({
           <Icon name="checkmark-circle" size={18} color={colors.mint} />
         ) : null}
       </View>
+      {errorText ? <Text accessibilityRole="alert" style={[styles.meta, { color: colors.coral, marginTop: 6 }]}>{errorText}</Text> : null}
     </View>
   );
 }
@@ -1427,6 +1452,7 @@ function PhoneOtpForm({
           onChangeText={setFullName}
           placeholder="Your name"
           isValid={validateFullName(fullName).valid}
+          errorText={fullName ? validateFullName(fullName).error : null}
         />
       ) : null}
       <Field
@@ -1665,6 +1691,7 @@ function SignupScreen({ go, setData }: {
             onChangeText={setName}
             placeholder="Your name"
             isValid={validateFullName(name).valid}
+            errorText={name ? validateFullName(name).error : null}
           />
           <Field
             label="Email"
@@ -1672,6 +1699,7 @@ function SignupScreen({ go, setData }: {
             onChangeText={setEmail}
             placeholder="you@example.com"
             isValid={validateEmail(email).valid}
+            errorText={email ? validateEmail(email).error : null}
           />
           <Field label="Password" value={password} onChangeText={setPassword} placeholder="At least 8 characters" secureTextEntry />
           <Field label="Confirm password" value={confirmPassword} onChangeText={setConfirmPassword} placeholder="Repeat password" secureTextEntry />
@@ -2809,6 +2837,12 @@ function VibesScreen({
   const [reelHeight, setReelHeight] = useState(0);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("Spam or misleading");
+  const [reportDetails, setReportDetails] = useState("");
+  const [reporting, setReporting] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [comment, setComment] = useState("");
   const [muted, setMuted] = useState(true);
   const availableVibes = useMemo(
@@ -2969,6 +3003,46 @@ function VibesScreen({
       thumbnailUrl: item.mediaUrl,
     });
   };
+  const loadMoreVibes = async () => {
+    if (loadingMore || !hasMore || !availableVibes.length) return;
+    const last = availableVibes.at(-1);
+    if (!last?.createdAt || !isBackendId(last.id)) return setHasMore(false);
+    setLoadingMore(true);
+    try {
+      const cursor = encodeURIComponent(JSON.stringify({ createdAt: new Date(last.createdAt).toISOString(), id: Number(last.id) }));
+      const page = await vibesProductionService.listReels({ cursor, pageSize: 50 });
+      setHasMore(page.hasMore);
+      setData((current) => {
+        const incoming = page.reels.map((reel) => vibeFromReel(reel, current));
+        const incomingIds = new Set(incoming.map((item) => item.id));
+        const liked = page.reels.filter((item) => item.likedByMe).map((item) => vibeReactionId(item.id));
+        return {
+          ...current,
+          vibes: [...current.vibes, ...incoming.filter((item) => !current.vibes.some((existing) => existing.id === item.id))]
+            .filter((item, index, all) => all.findIndex((candidate) => candidate.id === item.id) === index),
+          likedIds: [...new Set([...current.likedIds.filter((id) => !incomingIds.has(id.replace(/^vibe:/, ""))), ...liked])],
+        };
+      });
+    } catch (caught) {
+      Alert.alert("More Vibes could not load", caught instanceof Error ? caught.message : "Please try again.");
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+  const submitVibeReport = async () => {
+    if (reporting) return;
+    setReporting(true);
+    try {
+      await vibesProductionService.report(vibe.id, reportReason, reportDetails);
+      setReportOpen(false);
+      setReportDetails("");
+      Alert.alert("Report submitted", "Thanks. Our safety team will review this Vibe.");
+    } catch (caught) {
+      Alert.alert("Report could not be submitted", caught instanceof Error ? caught.message : "Please try again.");
+    } finally {
+      setReporting(false);
+    }
+  };
   const deleteVibe = async () => {
     const remove = async () => {
       try {
@@ -3011,8 +3085,9 @@ function VibesScreen({
     ["paper-plane-outline", "Share", () => shareVibe()],
   ];
   const copyVibeLink = async () => {
-    const link = `https://wenitro-app.vercel.app/#/vibe/${vibe.id}`;
+    const link = `https://wenitro-app.vercel.app/share/vibe/${vibe.id}`;
     await Clipboard.setStringAsync(link);
+    if (isBackendId(vibe.id)) void vibeService.recordShare(vibe.id, "copy_link").catch(() => undefined);
     setMenuOpen(false);
     Alert.alert("Link copied", "Share this Vibe with the copied link.");
   };
@@ -3041,6 +3116,9 @@ function VibesScreen({
                 setComment("");
               }
             }}
+            onEndReached={() => void loadMoreVibes()}
+            onEndReachedThreshold={0.6}
+            ListFooterComponent={loadingMore ? <ActivityIndicator color="#A899FF" style={{ padding: 18 }} /> : null}
             renderItem={({ item, index }) => (
               <View style={{ height: reelHeight, backgroundColor: "#06070A" }}>
                 <View pointerEvents="none" style={StyleSheet.absoluteFill}>
@@ -3092,12 +3170,18 @@ function VibesScreen({
         {menuOpen ? (
           <ReferenceSheet title="Vibe options" close={() => setMenuOpen(false)}>
             <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); shareVibe(); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="chatbubble-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Share to Chat</Text></Pressable>
-            <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void shareEntityExternally({ kind: "vibe", id: vibe.id, title: vibe.event || "WeNitro Vibe", preview: vibe.text || "Shared a WeNitro Vibe", thumbnailUrl: vibe.mediaUrl }).catch((error) => Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.")); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="share-social-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Share externally</Text></Pressable>
+            <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void shareEntityExternally({ kind: "vibe", id: vibe.id, title: vibe.event || "WeNitro Vibe", preview: vibe.text || "Shared a WeNitro Vibe", thumbnailUrl: vibe.mediaUrl }).then(() => isBackendId(vibe.id) ? vibeService.recordShare(vibe.id, "external") : undefined).catch((error) => Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.")); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="share-social-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Share externally</Text></Pressable>
             <Pressable accessibilityRole="button" onPress={() => void copyVibeLink()} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="link-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Copy link</Text></Pressable>
             {vibe.activityId || vibe.event ? <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); const activityId = vibe.activityId || data.activities.find(item => item.title === vibe.event)?.id; if (activityId) openActivity(activityId); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="calendar-outline" /><Text style={[styles.optionText, { color: palette.text }]}>View activity</Text></Pressable> : null}
-            {vibe.mine ? <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void deleteVibe(); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="trash-outline" color="#F47786" /><Text style={[styles.optionText, { color: "#F47786" }]}>Delete vibe</Text></Pressable> : <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); Alert.alert("Report submitted", "Thanks. Our team will review this vibe."); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="flag-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Report vibe</Text></Pressable>}
+            {vibe.mine ? <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void deleteVibe(); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="trash-outline" color="#F47786" /><Text style={[styles.optionText, { color: "#F47786" }]}>Delete vibe</Text></Pressable> : <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); setReportOpen(true); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="flag-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Report vibe</Text></Pressable>}
           </ReferenceSheet>
         ) : null}
+        {reportOpen ? <ReferenceSheet title="Report Vibe" close={() => { if (!reporting) setReportOpen(false); }}>
+          <Text style={[styles.detailCardMuted, { color: palette.muted }]}>Tell us why this Vibe should be reviewed.</Text>
+          <View style={{ gap: 8 }}>{["Spam or misleading", "Harassment", "Unsafe content", "Inappropriate content", "Other"].map((reason) => <Pressable accessibilityRole="radio" accessibilityState={{ checked: reportReason === reason }} key={reason} onPress={() => setReportReason(reason)} style={[styles.reportReason, { borderColor: reportReason === reason ? palette.accent : palette.border, backgroundColor: reportReason === reason ? palette.accent + "20" : palette.card }]}><Text style={[styles.optionText, { color: palette.text }]}>{reason}</Text></Pressable>)}</View>
+          <TextInput value={reportDetails} onChangeText={setReportDetails} multiline maxLength={1000} placeholder="Additional details (optional)" placeholderTextColor={palette.muted} style={[styles.reportInput, { borderColor: palette.border, backgroundColor: palette.input, color: palette.text }]} />
+          <Button label={reporting ? "Submitting..." : "Submit Report"} disabled={reporting} onPress={() => void submitVibeReport()} />
+        </ReferenceSheet> : null}
         {commentsOpen ? (
           <View style={[styles.vibeCommentsSheet, { backgroundColor: palette.card }]}>
             <View style={styles.rowBetween}>
@@ -3856,7 +3940,7 @@ function PostVibeScreen({
             <Pressable accessibilityRole="button" accessibilityLabel="Add photo or video" onPress={pickMedia} style={{ minHeight: 210, borderRadius: 16, borderWidth: 1, borderColor: palette.border, backgroundColor: palette.card, alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
               {mediaUri ? (
                 mediaType === "video" ? (
-                  <ReelVideo uri={mediaUri} muted />
+                  <ReelVideo uri={mediaUri} muted active />
                 ) : (
                   <Image source={{ uri: mediaUri }} style={{ width: "100%", height: 210 }} />
                 )
@@ -4304,6 +4388,22 @@ export function ActivityDetailScreen({
     const key = item.reaction || "Feedback"; counts[key] = (counts[key] || 0) + 1; return counts;
   }, {});
   const canHost = isHost || isCohost || String(activity.ownerId || "") === String(data.userId || "");
+  const shareActivity = async () => {
+    if (activity.visibility === "private" && !canHost) {
+      Alert.alert("Private Activity", "Only a host or co-host can create an invite link.");
+      return;
+    }
+    if (activity.visibility === "private") {
+      try {
+        const link = await createActivityInvite(activity.id);
+        await Share.share({ title: activity.title, message: `Join my private WeNitro Activity: ${activity.title}\n\n${link}`, url: link });
+      } catch (caught) {
+        Alert.alert("Invite could not be created", caught instanceof Error ? caught.message : "Please try again.");
+      }
+      return;
+    }
+    requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.where}` });
+  };
   const filteredParticipants = (canHost ? participants : joinedParticipants).filter(participant => participantTab === 'All' || participantTab === 'Approved' && ['approved','going','paid'].includes(participant.status) || participantTab === 'Pending' && ['pending','waitlist','payment_required','payment_pending','approved_pending_payment'].includes(participant.status) || participantTab === 'Rejected' && participant.status === 'rejected');
   if (participantsOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}>
     <View style={{ maxWidth, width:'100%', alignSelf:'center', minHeight:61, borderBottomWidth:1, borderColor:palette.border, flexDirection:'row', alignItems:'center' }}><Pressable accessibilityRole="button" accessibilityLabel="Back to Activity" onPress={() => setParticipantsOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text} /></Pressable><Text style={{ color:palette.text,fontSize:20,fontWeight:'800',flex:1 }}>Manage Participants</Text></View>
@@ -4335,7 +4435,7 @@ export function ActivityDetailScreen({
               accessibilityRole="button"
               accessibilityLabel="Share activity"
               style={styles.detailRound}
-              onPress={() => requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.where}` })}
+              onPress={() => void shareActivity()}
             >
               <Icon name="share-social-outline" color="#fff" />
             </Pressable>
@@ -4382,11 +4482,11 @@ export function ActivityDetailScreen({
         </View>
         <View style={styles.detailContent}>
           {joinError ? <Text style={styles.error}>{joinError}</Text> : null}
-          <View style={{ padding: 14, gap: 6, borderRadius: 12, backgroundColor: palette.card, borderWidth: 1, borderColor: palette.border }}>
+          {isPaidActivity ? <View style={{ padding: 14, gap: 6, borderRadius: 12, backgroundColor: palette.card, borderWidth: 1, borderColor: palette.border }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Icon name={isPaidActivity ? "cash-outline" : "checkmark-circle-outline"} color={isPaidActivity ? "#6D5CE8" : "#22A874"} /><Text style={{ color: palette.text, fontWeight: "800", fontSize: 16 }}>{isPaidActivity ? `Activity Price ${activity.price}` : "Free Activity"}</Text></View>
             <Text style={{ color: palette.muted, fontSize: 12 }}>{isPaidActivity ? "Participation cost payable to the organizer at the activity. No payment is collected in WeNitro." : "No participation cost is required for this Activity."}</Text>
             {(activity.costsMayApply || activity.entryFeeRequired) ? <Text style={{ color: palette.muted, fontSize: 11 }}>{activity.entryFeeRequired ? "A separate venue or entry fee may apply." : "Additional venue costs may apply."}</Text> : null}
-          </View>
+          </View> : null}
           {registrationForm ? <RegistrationAnswerForm key={activity.id} questions={registrationForm.questions} busy={joining} initialAnswers={registrationForm.answers} onSubmit={submitRegistration} submitLabel={joinType === "approval" ? "Submit request" : "Confirm registration"} onCancel={() => setRegistrationForm(null)} dark={data.theme === "dark"} /> : null}
           <View style={styles.rowBetween}>
             <View style={styles.detailTitleWrap}>
@@ -4701,7 +4801,7 @@ export function ActivityDetailScreen({
             )}
       </View>
       {optionsOpen ? <ReferenceSheet title="Options" close={() => setOptionsOpen(false)}>
-        <Pressable accessibilityRole="button" onPress={() => { setOptionsOpen(false); requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.where}` }); }} style={[styles.optionRow,{backgroundColor:palette.card}]}><Icon name="share-social-outline" /><Text style={[styles.optionText,{color:palette.text}]}>Share</Text></Pressable>
+        <Pressable accessibilityRole="button" onPress={() => { setOptionsOpen(false); void shareActivity(); }} style={[styles.optionRow,{backgroundColor:palette.card}]}><Icon name="share-social-outline" /><Text style={[styles.optionText,{color:palette.text}]}>{activity.visibility === "private" && canHost ? "Share invite link" : "Share"}</Text></Pressable>
         {canHost || joined ? <Pressable accessibilityRole="button" onPress={() => { setOptionsOpen(false); void onOpenGroupChat(activity.id).catch(caught => Alert.alert('Group Chat unavailable', caught instanceof Error ? caught.message : 'This Activity has no associated group chat.')); }} style={[styles.optionRow,{backgroundColor:palette.card}]}><Icon name="chatbubbles-outline" /><Text style={[styles.optionText,{color:palette.text}]}>Group Chat</Text></Pressable> : null}
         {canHost ? <Pressable accessibilityRole="button" onPress={() => { setOptionsOpen(false); onEdit(); }} style={[styles.optionRow,{backgroundColor:palette.card}]}><Icon name="create-outline" /><Text style={[styles.optionText,{color:palette.text}]}>Edit</Text></Pressable> : null}
         {canHost && activity.status !== "cancelled" ? <Pressable accessibilityRole="button" onPress={() => { setOptionsOpen(false); confirmDeleteActivity(); }} style={[styles.optionRow,{backgroundColor:palette.card}]}><Icon name="trash-outline" color="#F47786" /><Text style={[styles.optionText,{color:"#F47786"}]}>Delete</Text></Pressable> : null}
@@ -7265,38 +7365,12 @@ export function CommunityDetailScreen({
         contentContainerStyle={[styles.communityDetailScreen, { backgroundColor: palette.bg }]}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.communityCover}>
-          <Image
-            source={{ uri: community.cover }}
-            style={styles.communityCoverImage}
-          />
-          <View style={styles.communityCoverShade} />
-          <Pressable style={styles.communityDetailBack} onPress={back}>
-            <Icon name="arrow-back" color="#fff" size={26} />
-          </Pressable>
-          <View style={styles.communityTopActions}>
-            <Pressable style={styles.communityRoundAction} onPress={() => requestInternalShare({ kind: "community", id: community.id, title: community.name, preview: community.tagline })}>
-              <Icon name="share-outline" color="#fff" />
-            </Pressable>
-            <Pressable style={styles.communityRoundAction}>
-              <Icon name="ellipsis-vertical" color="#fff" />
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.communityIdentity}>
-          <Image
-            source={{ uri: community.image }}
-            style={styles.communityIdentityImage}
-          />
-          <View style={styles.messageBody}>
-            <View style={styles.row}>
-              <Text style={[styles.communityDetailName, { color: palette.text }]}>{community.name}</Text>
-            </View>
-            <Text style={[styles.communityDetailStats, { color: palette.muted }]}>
-              {community.memberCount >= 1000
-                ? `${(community.memberCount / 1000).toFixed(1)}K`
-                : community.memberCount}{" "}
-              members • {community.visibility}</Text>
+        <View style={{ minHeight: 72, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 12, borderBottomWidth: 1, borderColor: palette.border, backgroundColor: palette.card }}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Back to community" onPress={back} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text} size={23} /></Pressable>
+          <Image source={{ uri: community.image || community.cover }} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: palette.inset }} />
+          <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
+            <Text numberOfLines={1} style={{ color: palette.text, fontSize: 17, fontWeight: "800" }}>{community.name}</Text>
+            <Text style={{ color: palette.muted, fontSize: 12 }}>{community.memberCount} members · {community.visibility}</Text>
           </View>
           <Pressable
             onPress={join}
@@ -7323,10 +7397,10 @@ export function CommunityDetailScreen({
                   : "Join"}
             </Text>
           </Pressable>
+          {["created", "joined"].includes(community.membership) ? <Pressable accessibilityRole="button" accessibilityLabel="Open community chat" onPress={onConversation} style={styles.hostMessageButton}><Icon name="chatbubble-outline" color="#fff" size={19} /></Pressable> : null}
+          <Pressable accessibilityRole="button" accessibilityLabel="Share community" onPress={() => requestInternalShare({ kind: "community", id: community.id, title: community.name, preview: community.tagline })} style={{ width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: palette.inset }}><Icon name="share-outline" color={palette.accent} size={19} /></Pressable>
         </View>
-        <Text style={[styles.communityDetailTagline, { color: palette.muted }]}>{community.tagline}</Text>
-        {["created", "joined"].includes(community.membership) ? <Button label="Open conversation" icon="chatbubble-outline" onPress={onConversation} /> : null}
-        <View style={[styles.communityLinks, { backgroundColor: palette.inset }]}><Text style={{ color: palette.text, fontWeight: "700" }}>{community.category}</Text><Text style={{ color: palette.muted }}>{community.visibility}</Text></View>
+        <View style={[styles.communityLinks, { backgroundColor: palette.inset }]}><Text style={{ color: palette.text, fontWeight: "700" }}>{community.category}</Text><Text style={{ color: palette.muted }}>Community posts</Text></View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -8775,6 +8849,8 @@ export default function App() {
     initialWebRoute?.screen === "chat" ? initialWebRoute.entityId ?? null : null,
   );
   const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
+  const [linkCaptureVersion, setLinkCaptureVersion] = useState(0);
+  const redemptionRunning = useRef(false);
   const [history, setHistory] = useState<Screen[]>([]);
   const [loaded] = useState(true);
   const [sessionChecked, setSessionChecked] = useState(!isSupabaseConfigured);
@@ -9107,14 +9183,33 @@ export default function App() {
   }), [screen]);
 
   useEffect(() => {
-    const handle = (url: string) => { void captureReferral(url); const community = url.match(/^wenitro:\/\/community\/(?:join\/)?(\d+)/); const profile = url.match(/^wenitro:\/\/profile\/(\d+)/); if (community) openCommunity(community[1]); else if (profile) openProfile(profile[1]); };
-    if (Platform.OS === 'web') { void captureReferral(window.location.href); }
-    const captureWebInvite = () => { if (Platform.OS === 'web') void captureReferral(window.location.href); };
+    const captureLinks = async (url: string) => { await Promise.all([captureReferral(url), captureActivityInvite(url)]); setLinkCaptureVersion((value) => value + 1); };
+    const handle = (url: string) => { void captureLinks(url); const community = url.match(/^wenitro:\/\/community\/(?:join\/)?(\d+)/); const profile = url.match(/^wenitro:\/\/profile\/(\d+)/); if (community) openCommunity(community[1]); else if (profile) openProfile(profile[1]); };
+    if (Platform.OS === 'web') { void captureLinks(window.location.href); }
+    const captureWebInvite = () => { if (Platform.OS === 'web') void captureLinks(window.location.href); };
     if (Platform.OS === 'web') window.addEventListener('hashchange', captureWebInvite);
     const listener = Linking.addEventListener('url', ({ url }) => handle(url));
     void Linking.getInitialURL().then(url => { if (url) handle(url); });
     return () => { listener.remove(); if (Platform.OS === 'web') window.removeEventListener('hashchange', captureWebInvite); };
   }, []);
+  useEffect(() => {
+    if (data.mode !== 'authenticated' || !data.onboarded || redemptionRunning.current) return;
+    redemptionRunning.current = true;
+    void Promise.allSettled([redeemPendingReferral(), redeemPendingActivityInvite()]).then(async ([referral, invitation]) => {
+      if (referral.status === 'rejected') console.warn('Referral redemption deferred', referral.reason);
+      if (invitation.status === 'rejected') console.warn('Activity invitation redemption deferred', invitation.reason);
+      const activityId = invitation.status === 'fulfilled' ? invitation.value : null;
+      if (!activityId) return;
+      try {
+        const details = await activityService.getDetails(activityId);
+        const activity = activityFromRemote(details.activity);
+        setData((current) => ({ ...current, activities: [activity, ...current.activities.filter((item) => item.id !== activity.id)] }));
+        openActivity(activity.id);
+      } catch (caught) {
+        Alert.alert('Activity invite accepted', caught instanceof Error ? caught.message : 'Reopen the invite to view the Activity.');
+      }
+    }).finally(() => { redemptionRunning.current = false; });
+  }, [data.mode, data.onboarded, linkCaptureVersion]);
   const routeScreen = screen;
   const content = useMemo(() => {
     const legal = routeScreen === "terms" || routeScreen === "privacyPolicy";
@@ -9293,13 +9388,13 @@ export default function App() {
               go("chat", conversationId);
             }}
             onOpenGroupChat={async activityId => {
-              const roomResult = await supabase.from('tbl_chat_rooms').select('id,title,room_type,event_id').eq('event_id', Number(activityId)).in('room_type', ['group', 'community']).order('id').limit(1).maybeSingle();
+              const roomResult = await (supabase.rpc as unknown as (name: string, args: Record<string, unknown>) => PromiseLike<{ data: Record<string, unknown> | null; error: { message: string } | null }>)('ensure_activity_chat', { p_event_id: Number(activityId) });
               if (roomResult.error) throw roomResult.error;
-              if (!roomResult.data) throw new Error('This Activity has no associated group chat yet.');
+              if (!roomResult.data) throw new Error('This Activity chat is unavailable.');
               const room = roomResult.data;
               const roomId = String(room.id);
               const members = await realtimeChatService.loadConversationMembers(Number(roomId));
-              setData(current => ({ ...current, conversations: current.conversations.some(item => item.id === roomId) ? current.conversations : [...current.conversations, { id: roomId, name: room.title || selectedActivity.title, type: 'Groups', roomType: room.room_type, avatar: selectedActivity.image, memberCount: members.length, online: false, unread: 0, memberIds: members.map(member => String(member.user_id)), messages: [] }] }));
+              setData(current => ({ ...current, conversations: current.conversations.some(item => item.id === roomId) ? current.conversations : [...current.conversations, { id: roomId, name: String(room.title || selectedActivity.title), type: 'Groups', roomType: room.room_type === 'community' ? 'community' : 'group', avatar: selectedActivity.image, memberCount: members.length, online: false, unread: 0, memberIds: members.map(member => String(member.user_id)), messages: [] }] }));
               setSelectedConversationId(roomId);
               go('chat', roomId);
             }}

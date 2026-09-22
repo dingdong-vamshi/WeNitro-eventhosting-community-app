@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import { supabase } from '../lib/supabase';
 
 const PENDING_REFERRAL_KEY = 'wenitro:pending-referral:v1';
 export type PendingReferral = { referrerId: number; receivedAt: string };
@@ -28,4 +29,15 @@ export async function readPendingReferral(): Promise<PendingReferral | null> {
   if (!Number.isInteger(value.referrerId) || value.referrerId < 1 || value.referrerId > 2147483647 || !Number.isFinite(Date.parse(value.receivedAt)) || Date.now() - Date.parse(value.receivedAt) > 30 * 86400000) { await AsyncStorage.removeItem(PENDING_REFERRAL_KEY); return null; }
   return value;
  } catch { return null; }
+}
+
+/** Redeem once after authentication. The database owns idempotency and the 10-Nitro award. */
+export async function redeemPendingReferral(): Promise<{ awarded: boolean; points: number } | null> {
+ const pending = await readPendingReferral();
+ if (!pending) return null;
+ const { data, error } = await (supabase.rpc as unknown as (name: string, args: Record<string, unknown>) => PromiseLike<{ data: unknown; error: { message: string } | null }>)('redeem_referral', { p_referrer_id: pending.referrerId });
+ if (error) throw error;
+ await AsyncStorage.removeItem(PENDING_REFERRAL_KEY);
+ const value = data && typeof data === 'object' ? data as Record<string, unknown> : {};
+ return { awarded: value.awarded === true, points: Number(value.points) || 0 };
 }

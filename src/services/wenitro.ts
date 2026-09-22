@@ -36,6 +36,35 @@ const publicAvatar = (value: unknown) => {
   return supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl;
 };
 
+const activityCoverFromMedia = (value: unknown): string | null => {
+  if (!value) return null;
+  if (typeof value === "string") {
+    try {
+      return activityCoverFromMedia(JSON.parse(value));
+    } catch {
+      return value.trim() || null;
+    }
+  }
+  const first = Array.isArray(value) ? value[0] : value;
+  if (typeof first === "string") return first.trim() || null;
+  if (!first || typeof first !== "object") return null;
+  const media = first as Row;
+  const bridge = media.wenitro && typeof media.wenitro === "object"
+    ? media.wenitro as Row
+    : media._wenitro && typeof media._wenitro === "object"
+      ? media._wenitro as Row
+      : {};
+  const candidate = bridge.cover_url
+    ?? media.cover_url
+    ?? bridge.url
+    ?? media.url
+    ?? bridge.path
+    ?? media.path
+    ?? bridge.media_url
+    ?? media.media_url;
+  return typeof candidate === "string" && candidate.trim() ? candidate.trim() : null;
+};
+
 const requireBackend = () => {
   if (!isSupabaseConfigured)
     throw new Error("Supabase is not configured for this build.");
@@ -145,7 +174,7 @@ const safeProfile = (profile: Row | null | undefined) =>
         id: String(profile.id),
         username: profile.username ?? "member",
         full_name: profile.fullname ?? profile.full_name ?? null,
-        avatar_url: profile.profile_image ?? profile.avatar_url ?? null,
+        avatar_url: publicAvatar(profile.profile_image ?? profile.avatar_url),
         bio: profile.bio ?? null,
         location: profile.location ?? null,
         last_active_at: profile.updated_at ?? profile.last_login ?? null,
@@ -277,10 +306,17 @@ export async function loadRemoteWorkspace() {
   const inboxRows = inboxResult.data ?? [];
   const activityEventIds = [...new Set(inboxRows.map((room) => Number(room.event_id)).filter((id) => Number.isInteger(id) && id > 0))];
   const eventTitleResult = activityEventIds.length
-    ? await supabase.from("tbl_events").select("id,title").in("id", activityEventIds)
+    ? await supabase.from("tbl_events").select("id,title,media").in("id", activityEventIds)
     : { data: [] as Row[], error: null };
   if (eventTitleResult.error) throw workspaceError("activity chat titles", eventTitleResult.error);
-  const eventTitles = new Map(((eventTitleResult.data ?? []) as Row[]).map((row) => [Number(row.id), String(row.title || "").trim()]));
+  const eventRows = (eventTitleResult.data ?? []) as Row[];
+  const eventTitles = new Map(eventRows.map((row) => [Number(row.id), String(row.title || "").trim()]));
+  const eventCovers = new Map<number, string>();
+  await Promise.all(eventRows.map(async (row) => {
+    const coverPath = activityCoverFromMedia(row.media);
+    const signedCover = await signedActivityCoverUrl(coverPath);
+    if (signedCover) eventCovers.set(Number(row.id), signedCover);
+  }));
   const inboxMessages = inboxRows.flatMap((room) =>
     Array.isArray(room.chat_messages) ? (room.chat_messages as Row[]) : [],
   );
@@ -406,8 +442,14 @@ export async function loadRemoteWorkspace() {
       if (row.avatar_url) continue;
       const source = inboxRows.find((room) => String(room.id) === row.id);
       const path = typeof source?.image_url === "string" ? source.image_url : "";
-      if (path && signedRoomImages.has(path)) row.avatar_url = signedRoomImages.get(path);
+      const signedRoomImage = path ? signedRoomImages.get(path) : undefined;
+      if (signedRoomImage) row.avatar_url = signedRoomImage;
     }
+  }
+  for (const row of conversationRows) {
+    if (row.avatar_url || row.event_id == null) continue;
+    const eventCover = eventCovers.get(Number(row.event_id));
+    if (eventCover) row.avatar_url = eventCover;
   }
 
   const activities = await loadStage(
@@ -1058,7 +1100,13 @@ export const activityService = {
         .neq("status", "left")
         .order("created_at", { ascending: true });
       if (fallback.error) throw fallback.error;
-      participantResult = fallback;
+      participantResult = {
+        ...fallback,
+        data: (fallback.data ?? []).map((participant) => ({
+          ...participant,
+          role: null,
+        })),
+      };
     }
     if (eventResult.error) throw eventResult.error;
     const rows = (participantResult.data ?? []) as Row[];
@@ -1099,7 +1147,7 @@ export const activityService = {
           userId: String(row.user_id),
           name: profile?.fullname ?? profile?.username ?? "WeNitro member",
           username: profile?.username ?? "member",
-          avatarUrl: profile?.profile_image ?? null,
+          avatarUrl: publicAvatar(profile?.profile_image),
           status: String(row.status),
           role: String(row.role || "participant"),
           joinedAt: String(row.created_at),

@@ -25,6 +25,7 @@ copyFiles(join(exportedAssets, '@expo-google-fonts', 'manrope'), publicFonts);
 copyFiles(join(exportedAssets, '@expo', 'vector-icons', 'build', 'vendor', 'react-native-vector-icons', 'Fonts'), publicIcons);
 cpSync(join(root, 'report'), join(output, 'report'), { recursive: true });
 cpSync(join(root, 'public'), output, { recursive: true });
+cpSync(join(root, 'assets', 'wenitro-logo-transparent.png'), join(output, 'wenitro-share.png'));
 
 const bundleDir = join(output, '_expo', 'static', 'js', 'web');
 for (const file of readdirSync(bundleDir).filter((name) => name.endsWith('.js'))) {
@@ -35,4 +36,4 @@ for (const file of readdirSync(bundleDir).filter((name) => name.endsWith('.js'))
   writeFileSync(bundlePath, bundle);
 }
 
-console.log(`Prepared ${relative(root, publicFonts)}, ${relative(root, publicIcons)}, report, privacy, and account-deletion pages for Vercel.`);
+console.log(`Prepared ${relative(root, publicFonts)}, ${relative(root, publicIcons)}, share branding, report, privacy, and account-deletion pages for Vercel.`);

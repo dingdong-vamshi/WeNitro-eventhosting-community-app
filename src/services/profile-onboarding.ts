@@ -65,6 +65,10 @@ function profileError(error: { code?: string; message?: string }): Error {
 export const profileOnboardingService = {
   async load(): Promise<ProfileOnboardingState> {
     const user = await authenticatedUser();
+    // Older Auth identities can predate the profile-creation trigger. The RPC
+    // is idempotent and may only repair the currently authenticated identity.
+    const { error: bootstrapError } = await supabase.rpc("bootstrap_my_profile");
+    if (bootstrapError) throw profileError(bootstrapError);
     const { profile } = await profileProductionService.loadProfile();
     const metadata = user.user_metadata;
     const providerName = typeof metadata.full_name === "string" ? metadata.full_name :

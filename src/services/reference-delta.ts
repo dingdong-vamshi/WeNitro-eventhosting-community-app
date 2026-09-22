@@ -72,6 +72,24 @@ const imageType = (uri: string, mimeType?: string | null) => {
 };
 
 const randomName = () => `${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+const avatarStoragePath = (url?: string | null) => {
+  const marker = '/storage/v1/object/public/avatars/';
+  if (!url?.includes(marker)) return null;
+  try { return decodeURIComponent(url.split(marker)[1].split('?')[0]); }
+  catch { return null; }
+};
+
+export const publicProfileImageUrl = (value?: string | null) => {
+  const path = value?.trim();
+  if (!path) return '';
+  if (/^(https?:|data:|blob:|file:)/i.test(path)) return path;
+  return supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+};
+
+const normalizeProfilePhoto = (photo: ProfilePhoto): ProfilePhoto => ({
+  ...photo,
+  public_url: publicProfileImageUrl(photo.public_url || photo.storage_path),
+});
 
 export const referenceDeltaService = {
   getEmergencyContact: () => rpc<EmergencyContact | Record<string, never>>('get_my_emergency_contact'),
@@ -111,7 +129,7 @@ export const referenceDeltaService = {
     const { legacyId } = await currentIdentity();
     const result = await (supabase as any).from('tbl_user_profile_photos').select('id,user_id,storage_path,public_url,position').eq('user_id', legacyId).order('position');
     if (result.error) throw result.error;
-    return (result.data || []) as ProfilePhoto[];
+    return ((result.data || []) as ProfilePhoto[]).map(normalizeProfilePhoto);
   },
   async uploadProfilePhoto(position: number, uri: string, mimeType?: string | null) {
     if (position === 1) return { public_url: await profileProductionService.uploadAvatar(uri), position };
@@ -128,41 +146,47 @@ export const referenceDeltaService = {
     const upload = await supabase.storage.from('avatars').upload(path, buffer, { contentType: type.mime, cacheControl: '31536000', upsert: false });
     if (upload.error) throw upload.error;
     const publicUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
-    const saved = await (supabase as any).from('tbl_user_profile_photos').upsert({ user_id: legacyId, position, storage_path: path, public_url: publicUrl, updated_at: new Date().toISOString() }, { onConflict: 'user_id,position' }).select('id,user_id,storage_path,public_url,position').single();
-    if (saved.error) { await supabase.storage.from('avatars').remove([path]); throw saved.error; }
+    const saved = await rpc<ProfilePhoto>('save_my_profile_photo', { p_position: position, p_storage_path: path, p_public_url: publicUrl }).catch(async error => {
+      await supabase.storage.from('avatars').remove([path]);
+      throw error;
+    });
     if (existing.data?.storage_path && existing.data.storage_path !== path) await supabase.storage.from('avatars').remove([existing.data.storage_path]);
-    return saved.data as ProfilePhoto;
+    return saved;
   },
   async removeProfilePhoto(photo: ProfilePhoto) {
-    const { legacyId } = await currentIdentity();
-    const removed = await (supabase as any).from('tbl_user_profile_photos').delete().eq('id', photo.id).eq('user_id', legacyId);
-    if (removed.error) throw removed.error;
-    await supabase.storage.from('avatars').remove([photo.storage_path]);
+    await currentIdentity();
+    const removed = await rpc<{ removed_path?: string }>('delete_my_profile_photo', { p_photo_id: photo.id });
+    const path = removed.removed_path || photo.storage_path;
+    if (path) {
+      const cleanup = await supabase.storage.from('avatars').remove([path]);
+      if (cleanup.error) throw new Error('Photo was removed from your profile, but storage cleanup needs to be retried.');
+    }
   },
   async removePrimaryProfilePhoto() {
-    const { auth, legacyId } = await currentIdentity();
-    const existing = await supabase.from('tbl_users').select('profile_image').eq('id', legacyId).single();
-    if (existing.error) throw existing.error;
-    const updated = await supabase.from('tbl_users').update({ profile_image: null }).eq('id', legacyId).select('id').single();
-    if (updated.error) throw updated.error;
-    const marker = '/storage/v1/object/public/avatars/';
-    const url = existing.data.profile_image || '';
-    const path = url.includes(marker) ? decodeURIComponent(url.split(marker)[1].split('?')[0]) : '';
-    if (path.startsWith(`${auth.id}/`)) await supabase.storage.from('avatars').remove([path]);
+    const { auth } = await currentIdentity();
+    const result = await rpc<{ public_url?: string | null; removed_url?: string | null }>('delete_my_primary_profile_photo');
+    const path = avatarStoragePath(result.removed_url);
+    if (path?.startsWith(`${auth.id}/`)) {
+      const cleanup = await supabase.storage.from('avatars').remove([path]);
+      if (cleanup.error) throw new Error('Primary photo changed, but storage cleanup needs to be retried.');
+    }
+    return result.public_url || null;
   },
   async listPublicProfilePhotos(userId: number): Promise<ProfilePhoto[]> {
-    const images = await (supabase as any).from('tbl_user_profile_images').select('id,user_id,image_url,slot_index').eq('user_id', userId).order('slot_index');
-    if (!images.error && Array.isArray(images.data) && images.data.length) {
-      return images.data.map((row: any) => ({ id: Number(row.id), user_id: Number(row.user_id), storage_path: String(row.image_url), public_url: String(row.image_url), position: Number(row.slot_index) || 2 }));
-    }
     const photos = await (supabase as any).from('tbl_user_profile_photos').select('id,user_id,storage_path,public_url,position').eq('user_id', userId).lte('position', 3).order('position');
-    if (photos.error) return [];
-    return (photos.data || []) as ProfilePhoto[];
+    if (!photos.error && Array.isArray(photos.data) && photos.data.length) return (photos.data as ProfilePhoto[]).map(normalizeProfilePhoto);
+    const images = await (supabase as any).from('tbl_user_profile_images').select('id,user_id,image_url,slot_index').eq('user_id', userId).gte('slot_index', 2).lte('slot_index', 3).order('slot_index');
+    if (images.error || !Array.isArray(images.data)) return [];
+    return images.data.map((row: any) => normalizeProfilePhoto({ id: Number(row.id), user_id: Number(row.user_id), storage_path: String(row.image_url), public_url: String(row.image_url), position: Number(row.slot_index) || 2 }));
   },
   async setPrimaryProfilePhoto(position: number, extraUri: string, currentPrimaryUri?: string) {
     if (position === 1) return extraUri;
-    const primary = await this.uploadProfilePhoto(1, extraUri);
-    if (currentPrimaryUri) await this.uploadProfilePhoto(position, currentPrimaryUri);
-    return primary.public_url;
+    const result = await rpc<{ public_url: string }>('promote_my_profile_photo', {
+      p_position: position,
+      p_previous_path: avatarStoragePath(currentPrimaryUri),
+      p_previous_url: currentPrimaryUri || null,
+    });
+    if (!result.public_url) throw new Error('Primary photo could not be updated.');
+    return result.public_url;
   },
 };

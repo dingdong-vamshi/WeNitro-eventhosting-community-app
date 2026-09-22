@@ -127,9 +127,12 @@ export type DiscoverActivitiesInput = {
   communityId?: string;
   ownerId?: string;
   location?: string;
+  nearby?: { latitude: number; longitude: number; radiusKm: number };
   minPriceInr?: number;
   maxPriceInr?: number;
   freeOnly?: boolean;
+  genderPreference?: string;
+  verifiedOnly?: boolean;
   startsAfter?: string;
   startsBefore?: string;
   upcomingOnly?: boolean;
@@ -915,10 +918,31 @@ export const activitiesProductionService = {
         `location.ilike.${pattern},display_location.ilike.${pattern}`,
       );
     }
+    if (input.nearby) {
+      const latitude = finite(input.nearby.latitude, "Nearby latitude");
+      const longitude = finite(input.nearby.longitude, "Nearby longitude");
+      const radiusKm = finite(input.nearby.radiusKm, "Nearby radius");
+      if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180 || radiusKm <= 0 || radiusKm > 500) {
+        throw new Error("Nearby filter coordinates or radius are invalid.");
+      }
+      const latitudeDelta = radiusKm / 110.574;
+      const longitudeDelta = radiusKm / (111.32 * Math.max(0.01, Math.abs(Math.cos(latitude * Math.PI / 180))));
+      query = query
+        .gte("latitude", Math.max(-90, latitude - latitudeDelta))
+        .lte("latitude", Math.min(90, latitude + latitudeDelta))
+        .gte("longitude", Math.max(-180, longitude - longitudeDelta))
+        .lte("longitude", Math.min(180, longitude + longitudeDelta));
+    }
     if (input.freeOnly || input.maxPriceInr === 0) {
       query = query.eq("is_paid", false);
     } else if ((input.minPriceInr ?? 0) > 0) {
       query = query.eq("is_paid", true);
+    }
+    if (input.genderPreference?.trim()) {
+      query = query.eq("gender_preference", input.genderPreference.trim());
+    }
+    if (input.verifiedOnly !== undefined) {
+      query = query.eq("verified_only", input.verifiedOnly);
     }
     if (input.startsAfter) {
       query = query.gte(

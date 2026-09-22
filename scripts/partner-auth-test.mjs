@@ -11,6 +11,10 @@ const mockAuth = Object.fromEntries(['signUp', 'signInWithOtp', 'signInWithPassw
   return { data: { user: { id: 'mock-user' }, session: method === 'signUp' ? null : { user: { id: 'mock-user' } } }, error: null };
 }]));
 const moduleObject = { exports: {} };
+const validationModule = { exports: {} };
+const validationSource = fs.readFileSync(new URL('../src/utils/validation.ts', import.meta.url), 'utf8');
+const validationCompiled = ts.transpileModule(validationSource, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+vm.runInNewContext(validationCompiled, { exports: validationModule.exports, module: validationModule });
 const source = fs.readFileSync(new URL('../src/services/auth-production.ts', import.meta.url), 'utf8');
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
 vm.runInNewContext(compiled, {
@@ -20,6 +24,7 @@ vm.runInNewContext(compiled, {
     if (name === 'expo-linking') return { createURL: () => 'wenitro://auth/callback' };
     if (name === 'react-native') return { Platform: { OS: 'ios' } };
     if (name === '../lib/supabase') return { supabase: { auth: mockAuth }, isSupabaseConfigured: true };
+    if (name === '../utils/validation') return validationModule.exports;
     throw new Error(`Unexpected dependency: ${name}`);
   },
   URL,
@@ -68,6 +73,15 @@ check('email login uses existing identity without classification', () => {
 const requestsBeforeInvalid = calls.length;
 await assert.rejects(() => auth.requestPhoneOtp({ accountType: 'partner', fullName: ' ', phone: '9876543210', createAccount: true }), /Full name/);
 check('invalid signup makes no auth request', () => assert.equal(calls.length, requestsBeforeInvalid));
+for (const invalid of [
+  { fullName: '--', email: 'qa@example.com' },
+  { fullName: 'Contact Name', email: 'suchitkumar@gmail' },
+  { fullName: 'Gamer', email: 'qa@example.com' },
+]) {
+  await assert.rejects(() => auth.signUpWithPassword({ ...invalid, password: 'mock-only-password' }));
+}
+await assert.rejects(() => auth.loginWithPassword({ email: 'qa@gmail', password: 'mock-only-password' }), /valid email/i);
+check('invalid email and full-name values stop at the service boundary', () => assert.equal(calls.length, requestsBeforeInvalid));
 await auth.verifyPhoneOtp({ phone: '9876543210', token: '123456' });
 check('OTP verification uses same phone identity without profile insertion', () => {
   assert.equal(latest().phone, '+919876543210');

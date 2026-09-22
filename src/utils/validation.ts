@@ -2,8 +2,8 @@
  * Input validation utilities for WeNitro
  */
 
-// Basic email RFC regex matching user@domain.tld with at least 2 char TLD
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const EMAIL_LOCAL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/;
+const EMAIL_DOMAIN_LABEL_REGEX = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
 
 // Client-specified prohibited terms and inappropriate words/profanities for Full Name
 const DISALLOWED_NAME_WORDS = new Set([
@@ -59,9 +59,36 @@ const DISALLOWED_NAME_WORDS = new Set([
 export function validateEmail(email: string): { valid: boolean; error?: string } {
   const trimmed = email.trim();
   if (!trimmed) {
-    return { valid: false };
+    return { valid: false, error: 'Email address is required' };
   }
-  if (!EMAIL_REGEX.test(trimmed)) {
+  if (trimmed.length > 254 || /\s/.test(trimmed)) {
+    return { valid: false, error: 'Please enter a valid email address (e.g. name@example.com)' };
+  }
+
+  const parts = trimmed.split('@');
+  if (parts.length !== 2) {
+    return { valid: false, error: 'Please enter a valid email address (e.g. name@example.com)' };
+  }
+  const [local, domain] = parts;
+  if (
+    !local ||
+    local.length > 64 ||
+    !EMAIL_LOCAL_REGEX.test(local) ||
+    local.startsWith('.') ||
+    local.endsWith('.') ||
+    local.includes('..')
+  ) {
+    return { valid: false, error: 'Please enter a valid email address (e.g. name@example.com)' };
+  }
+
+  const labels = domain.split('.');
+  const topLevelDomain = labels.at(-1) ?? '';
+  if (
+    domain.length > 253 ||
+    labels.length < 2 ||
+    labels.some(label => !EMAIL_DOMAIN_LABEL_REGEX.test(label)) ||
+    !/^[a-zA-Z]{2,63}$/.test(topLevelDomain)
+  ) {
     return { valid: false, error: 'Please enter a valid email address (e.g. name@example.com)' };
   }
   return { valid: true };
@@ -75,13 +102,13 @@ export function validateEmail(email: string): { valid: boolean; error?: string }
  * - Must NOT contain profanity or disallowed terms (Playboy, Sex Addict, Gamer, etc.)
  */
 export function validateFullName(name: string): { valid: boolean; error?: string } {
-  const trimmed = name.trim();
+  const trimmed = name.normalize('NFKC').trim().replace(/\s+/g, ' ');
   if (!trimmed) {
-    return { valid: false };
+    return { valid: false, error: 'Full name is required' };
   }
 
   // Check 1: Cannot contain an email address or @ symbol
-  if (trimmed.includes('@') || EMAIL_REGEX.test(trimmed)) {
+  if (trimmed.includes('@') || /(?:https?:\/\/|www\.)/i.test(trimmed)) {
     return { valid: false, error: 'Full name cannot be an email address' };
   }
 
@@ -93,13 +120,16 @@ export function validateFullName(name: string): { valid: boolean; error?: string
     return { valid: false, error: 'Name cannot exceed 60 characters' };
   }
 
-  // Check 3: Allowed characters (letters from any language, spaces, hyphens, periods, apostrophes)
-  // Must contain at least one letter and cannot contain numbers or weird symbols/URLs
-  const validCharsRegex = /^[\p{L}\s'.-]+$/u;
-  if (!validCharsRegex.test(trimmed)) {
+  // Check 3: Human-name shape. Punctuation is allowed only inside a name token,
+  // so values such as "--", "..", "-Name" and "Name__" never look valid.
+  const letterSequence = '(?:\\p{L}\\p{M}*)+';
+  const nameToken = `${letterSequence}(?:['.-]${letterSequence})*\\.?`;
+  const validNameShape = new RegExp(`^${nameToken}(?:\\s+${nameToken})*$`, 'u');
+  const letterCount = trimmed.match(/\p{L}/gu)?.length ?? 0;
+  if (letterCount < 2 || !validNameShape.test(trimmed)) {
     return {
       valid: false,
-      error: 'Please enter a proper name using letters only (no numbers or special characters)',
+      error: 'Please enter your real name using letters, spaces, hyphens, periods, or apostrophes',
     };
   }
 

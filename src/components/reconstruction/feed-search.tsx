@@ -18,26 +18,38 @@ import { Action, BrandBar, Button, ErrorLine, Header, Icon, Page, Pills, SearchF
 const HERO_SLIDES = [
   {
     id: 'activities',
-    image: require('../../../assets/hero/hero-activities.jpeg'),
-    title: 'Host and Discover New Activities - Meet real people offline',
+    image: require('../../../assets/photos/bonfire.jpg'),
+    eyebrow: 'REAL PEOPLE, OFFLINE',
+    title: 'Host and discover new activities',
+    description: 'Make plans around shared interests and meet in real life.',
+    cta: 'Explore activities',
     screen: 'activities' as const,
   },
   {
     id: 'communities',
-    image: require('../../../assets/hero/hero-communities.jpeg'),
-    title: 'Find your community - Join the conversation',
+    image: require('../../../assets/photos/study.jpg'),
+    eyebrow: 'FIND YOUR PEOPLE',
+    title: 'Join a community that feels like yours',
+    description: 'Share ideas, join conversations and build your squad.',
+    cta: 'Explore communities',
     screen: 'communities' as const,
   },
   {
     id: 'friends',
-    image: require('../../../assets/hero/hero-friends.jpeg'),
-    title: 'Bring your friends - Earn Nitro Points',
+    image: require('../../../assets/photos/friends.jpg'),
+    eyebrow: 'BETTER TOGETHER',
+    title: 'Bring your friends. Earn Nitro Points.',
+    description: 'Invite your squad and earn 10 Nitro Points when they join.',
+    cta: 'Invite friends',
     screen: 'inviteSquad' as const,
   },
   {
     id: 'store',
-    image: require('../../../assets/hero/hero-store.jpeg'),
-    title: 'Turn your Nitro Points into rewards - Visit Nitro Store',
+    image: require('../../../assets/photos/food.jpg'),
+    eyebrow: 'NITRO STORE',
+    title: 'Turn Nitro Points into rewards',
+    description: 'See your balance and learn when rewards become available.',
+    cta: 'Visit Nitro Store',
     screen: 'shop' as const,
   },
 ] as const;
@@ -65,14 +77,14 @@ export function ReferenceActivityCard({ activity: a, liked, onLike, onShowLikers
   return <View style={{ backgroundColor: c.card, borderRadius: 18, overflow: 'hidden', marginBottom: 15, borderWidth: 1, borderColor: c.border }}>
     <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${a.title}`} onPress={open}>
       <Image source={typeof a.image === 'string' ? { uri: a.image } : a.image} style={{ width: '100%', height: 194, backgroundColor: c.inset }} resizeMode="cover" />
-      <View style={{ position: 'absolute', left: 10, bottom: 10, flexDirection: 'row', gap: 6 }}>{joined && <View style={{ backgroundColor: '#12B886', paddingHorizontal: 9, paddingVertical: 6, borderRadius: 5 }}><Text style={{ color: '#FFF', fontSize: 9, fontWeight: '700' }}>Joined</Text></View>}<View style={{ backgroundColor: '#FFF', paddingHorizontal: 9, paddingVertical: 6, borderRadius: 5 }}><Text style={{ color: '#1A202C', fontSize: 9, fontWeight: '700' }}>◷ {state}</Text></View></View>
+      <View style={{ position: 'absolute', left: 10, bottom: 10, flexDirection: 'row', gap: 6 }}>{joined && <View style={{ backgroundColor: '#12B886', paddingHorizontal: 9, paddingVertical: 6, borderRadius: 5 }}><Text style={{ color: '#FFF', fontSize: 12, fontWeight: '700' }}>Joined</Text></View>}<View style={{ backgroundColor: '#FFF', paddingHorizontal: 9, paddingVertical: 6, borderRadius: 5 }}><Text style={{ color: '#1A202C', fontSize: 12, fontWeight: '700' }}>◷ {state}</Text></View></View>
       <View style={{ position: 'absolute', right: 9, top: 8, width: 31, height: 31, borderRadius: 16, backgroundColor: '#111827B8', alignItems: 'center', justifyContent: 'center' }}><Icon name="ellipsis-vertical" size={17} color="#FFF" /></View>
     </Pressable>
     <View style={{ padding: 13, gap: 10 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><Pressable accessibilityRole="button" onPress={open} style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }} numberOfLines={2}>{a.title}</Text></Pressable><Pressable accessibilityRole="button" accessibilityLabel={liked ? `Unlike ${a.title}` : `Like ${a.title}`} accessibilityHint="Long-Press to see who liked" onPress={onLike} onLongPress={onShowLikers} delayLongPress={450} style={{ minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}><Icon name={liked ? 'heart' : 'heart-outline'} color={liked ? '#F3285F' : c.muted} size={21} /><Text style={{ color: c.muted, fontSize: 9 }}>{a.likeCount || 0}</Text></Pressable></View>
-      <View style={{ alignSelf: 'flex-start', borderWidth: 1, borderColor: c.border, borderRadius: 7, padding: 9, flexDirection: 'row', gap: 6 }}><Icon name="calendar-outline" size={12} color={purple} /><Text style={{ fontSize: 10, color: c.text }}>{activityTime(a.startsAt)}</Text></View>
-      <View style={{ borderWidth: 1, borderColor: c.border, borderRadius: 7, padding: 9, flexDirection: 'row', gap: 6 }}><Icon name="location-outline" size={12} color="#C95781" /><Text style={{ fontSize: 10, color: c.text, flex: 1 }} numberOfLines={1}>{a.where || 'Location to be decided'}</Text></View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 7 }}>{a.hostAvatar ? <Image source={{ uri: a.hostAvatar }} style={{ width: 29, height: 29, borderRadius: 15 }} /> : <Icon name="person-circle-outline" color={c.muted} size={29} />}<Text style={{ color: c.muted, fontSize: 11, flexShrink: 1 }}>@{a.host || 'host'}</Text><VerifiedBadge userId={a.ownerId} size={14} /><View style={{ flex: 1 }} /><Icon name={a.visibility === 'public' ? 'globe-outline' : 'lock-closed-outline'} color={c.muted} size={14} /><Icon name="people-outline" color={c.muted} size={17} /><Text style={{ color: c.muted, fontSize: 10 }}>{a.joined}</Text></View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><Pressable accessibilityRole="button" onPress={open} style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }} numberOfLines={2}>{a.title}</Text></Pressable><Pressable accessibilityRole="button" accessibilityLabel={liked ? `Unlike ${a.title}` : `Like ${a.title}`} accessibilityHint="Long-Press to see who liked" onPress={onLike} onLongPress={onShowLikers} delayLongPress={450} style={{ minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}><Icon name={liked ? 'heart' : 'heart-outline'} color={liked ? '#F3285F' : c.muted} size={21} /><Text style={{ color: c.muted, fontSize: 12 }}>{a.likeCount || 0}</Text></Pressable></View>
+      <View style={{ alignSelf: 'flex-start', borderWidth: 1, borderColor: c.border, borderRadius: 7, padding: 9, flexDirection: 'row', gap: 6 }}><Icon name="calendar-outline" size={14} color={purple} /><Text style={{ fontSize: 12, color: c.text }}>{activityTime(a.startsAt)}</Text></View>
+      <View style={{ borderWidth: 1, borderColor: c.border, borderRadius: 7, padding: 9, flexDirection: 'row', gap: 6 }}><Icon name="location-outline" size={14} color="#C95781" /><Text style={{ fontSize: 12, color: c.text, flex: 1 }} numberOfLines={1}>{a.where || 'Location to be decided'}</Text></View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 7 }}>{a.hostAvatar ? <Image source={{ uri: a.hostAvatar }} style={{ width: 29, height: 29, borderRadius: 15 }} /> : <Icon name="person-circle-outline" color={c.muted} size={29} />}<Text style={{ color: c.muted, fontSize: 12, flexShrink: 1 }}>@{a.host || 'host'}</Text><VerifiedBadge userId={a.ownerId} size={14} /><View style={{ flex: 1 }} /><Icon name={a.visibility === 'public' ? 'globe-outline' : 'lock-closed-outline'} color={c.muted} size={14} /><Icon name="people-outline" color={c.muted} size={17} /><Text style={{ color: c.muted, fontSize: 12 }}>{a.joined}</Text></View>
     </View>
   </View>;
 }
@@ -94,11 +106,12 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const [draft, setDraft] = useState({ dateFrom: '', dateTo: '', price: 'All', gender: 'All', verifiedOnly: false });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(data.activities.length === 0);
+  const [notificationCount, setNotificationCount] = useState(0);
   const [nearby, setNearby] = useState<{ latitude: number; longitude: number } | null>(null);
   const [locating, setLocating] = useState(false);
   const pageWidth = Math.min(width, MOBILE_APP_MAX_WIDTH);
   const carouselCardWidth = Math.max(pageWidth - 34, 280);
-  const carouselCardHeight = Math.round(carouselCardWidth / 2.4024);
+  const carouselCardHeight = Math.max(214, Math.min(252, Math.round(carouselCardWidth * .62)));
   const carouselStep = carouselCardWidth;
 
   useEffect(() => {
@@ -112,6 +125,33 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
     return () => clearInterval(timer);
   }, [carouselStep]);
 
+  useEffect(() => {
+    const userId = Number(data.userId);
+    if (!Number.isSafeInteger(userId) || userId <= 0) {
+      setNotificationCount(0);
+      return;
+    }
+    let active = true;
+    const refresh = async () => {
+      const { count, error: countError } = await supabase
+        .from('tbl_notifications')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('is_read', false);
+      if (countError) throw countError;
+      if (active) setNotificationCount(count ?? 0);
+    };
+    const channel = supabase
+      .channel(`home-notification-unread:${userId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tbl_notifications', filter: `user_id=eq.${userId}` }, () => { void refresh().catch(() => undefined); })
+      .subscribe(status => { if (status === 'SUBSCRIBED') void refresh().catch(() => undefined); });
+    void refresh().catch(() => undefined);
+    return () => {
+      active = false;
+      void supabase.removeChannel(channel);
+    };
+  }, [data.userId]);
+
   useEffect(() => { if (!refreshOnMount) { setLoading(false); return; } const controller = new AbortController(); let active = true; setLoading(true); void activitiesProductionService.discover({ pageSize: 50, upcomingOnly: false, sort: 'newest', signal: controller.signal }).then(async page => { const prepared = await prepareReferenceActivities(page.items); if (active) setData(current => ({ ...current, activities: prepared })); }).catch(e => { if (active && !controller.signal.aborted) setError(e.message); }).finally(() => { if (active) setLoading(false); }); return () => { active = false; controller.abort(); }; }, [refreshOnMount]);
   const chooseFilter = async (value: string) => { setFilter(value); if (value !== 'Nearby' || nearby || locating) return; setLocating(true); setError(''); try { setNearby(await activityLocationService.current()); } catch (e: any) { setError(e.message); } finally { setLocating(false); } };
   const activities = useMemo(() => { let list = data.activities.filter(a => a.status !== 'draft' && a.status !== 'cancelled' && viewerCanListActivity(a, data.userId)); if (categories.length) list = list.filter(a => categories.includes(a.category)); if (dateFrom) list = list.filter(a => a.startsAt && Date.parse(a.startsAt) >= Date.parse(`${dateFrom}T00:00:00`)); if (dateTo) list = list.filter(a => a.startsAt && Date.parse(a.startsAt) <= Date.parse(`${dateTo}T23:59:59`)); if (price === 'Free') list = list.filter(a => !a.costsMayApply && !a.entryFeeRequired && a.price === 'Free'); if (price === 'Paid') list = list.filter(a => a.costsMayApply || a.entryFeeRequired || Number(a.price.replace(/[^0-9.]/g, '')) > 0); if (gender !== 'All') { const wanted = gender === 'Non-binary' ? 'non_binary' : gender.toLowerCase(); list = list.filter(a => String(a.genderPreference || '').toLowerCase() === wanted); } if (verifiedOnly) list = list.filter(a => a.verifiedOnly); if (filter === 'Trending') list = [...list].sort((a, b) => (b.likeCount || 0) + b.joined - ((a.likeCount || 0) + a.joined)); if (filter === 'Nearby') list = nearby ? list.filter(a => a.latitude != null && a.longitude != null && distanceKm(nearby.latitude, nearby.longitude, a.latitude, a.longitude) <= 25) : []; if (filter === 'Today' || filter === 'Tomorrow') { const day = new Date(); if (filter === 'Tomorrow') day.setDate(day.getDate() + 1); list = list.filter(a => a.startsAt && new Date(a.startsAt).toDateString() === day.toDateString()); } return list; }, [data.activities, nearby, filter, categories, dateFrom, dateTo, price, gender, verifiedOnly]);
@@ -120,7 +160,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const communityCards = data.communities.filter(room => room.membership !== 'created').slice(0, 8);
   return <Page>
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 28 }}>
-      <BrandBar go={go} location={data.location || 'Nearby'} avatarUrl={data.avatarUri}>
+      <BrandBar go={go} location={data.location || 'Nearby'} avatarUrl={data.avatarUri} notificationCount={notificationCount}>
         <View style={{ marginTop: 14, width: carouselCardWidth, height: carouselCardHeight, borderRadius: 18, overflow: 'hidden', backgroundColor: '#0F172A', alignSelf: 'center' }}>
           <ScrollView
             ref={homeCarousel}
@@ -138,11 +178,21 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
               <Pressable
                 key={slide.id}
                 accessibilityRole="button"
-                accessibilityLabel={slide.title}
+                accessibilityLabel={`${slide.cta}: ${slide.title}`}
                 onPress={() => go(slide.screen)}
                 style={({ pressed }) => ({ width: carouselCardWidth, height: carouselCardHeight, opacity: pressed ? 0.88 : 1 })}
               >
-                <Image source={slide.image} style={{ width: carouselCardWidth, height: carouselCardHeight }} resizeMode="cover" />
+                <Image source={slide.image} style={{ position: 'absolute', width: carouselCardWidth, height: carouselCardHeight }} resizeMode="cover" />
+                <LinearGradient colors={['rgba(13, 8, 55, 0.96)', 'rgba(34, 22, 99, 0.72)', 'rgba(15, 23, 42, 0.18)']} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }} />
+                <View style={{ flex: 1, width: '76%', padding: 18, paddingBottom: 25, justifyContent: 'center', gap: 7 }}>
+                  <Text style={{ color: '#C9C3FF', fontSize: 12, lineHeight: 16, fontWeight: '800', letterSpacing: .7 }}>{slide.eyebrow}</Text>
+                  <Text style={{ color: '#FFFFFF', fontSize: 22, lineHeight: 26, fontWeight: '800' }}>{slide.title}</Text>
+                  <Text numberOfLines={2} style={{ color: '#F0EEFF', fontSize: 12, lineHeight: 17 }}>{slide.description}</Text>
+                  <View style={{ alignSelf: 'flex-start', minHeight: 38, borderRadius: 19, backgroundColor: '#FFFFFF', paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center', gap: 7 }}>
+                    <Text style={{ color: '#392CC3', fontSize: 12, fontWeight: '800' }}>{slide.cta}</Text>
+                    <Icon name="arrow-forward" size={14} color="#392CC3" />
+                  </View>
+                </View>
               </Pressable>
             ))}
           </ScrollView>
@@ -187,10 +237,10 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
           <View style={{ height: 112 }}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${a.title}`} onPress={() => openActivity(a.id)} style={({ pressed }) => ({ flex: 1, opacity: pressed ? .8 : 1 })}>
               <Image source={typeof a.image === 'string' ? { uri: a.image } : a.image} style={{ width: '100%', height: '100%', backgroundColor: c.inset }} resizeMode="cover" />
-              <View style={{ position: 'absolute', left: 8, top: 8, borderRadius: 11, backgroundColor: '#FFFFFFEC', paddingHorizontal: 8, paddingVertical: 4 }}><Text style={{ color: '#392CC3', fontSize: 11, fontWeight: '800' }}>{a.category || 'Activity'}</Text></View>
-              {a.price ? <View style={{ position: 'absolute', right: 8, bottom: 8, borderRadius: 11, backgroundColor: '#07111FD2', paddingHorizontal: 8, paddingVertical: 4 }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{a.price}</Text></View> : null}
+              <View style={{ position: 'absolute', left: 8, top: 8, borderRadius: 11, backgroundColor: '#FFFFFFEC', paddingHorizontal: 8, paddingVertical: 4 }}><Text style={{ color: '#392CC3', fontSize: 12, fontWeight: '800' }}>{a.category || 'Activity'}</Text></View>
+              {a.price ? <View style={{ position: 'absolute', right: 8, bottom: 8, borderRadius: 11, backgroundColor: '#07111FD2', paddingHorizontal: 8, paddingVertical: 4 }}><Text style={{ color: '#FFF', fontSize: 12, fontWeight: '800' }}>{a.price}</Text></View> : null}
             </Pressable>
-            <Pressable accessibilityRole="button" accessibilityLabel={liked ? `Unlike ${a.title}` : `Like ${a.title}`} onPress={() => void like(a)} onLongPress={() => void showLikers(a)} style={{ position: 'absolute', top: 7, right: 7, minWidth: 31, height: 31, borderRadius: 16, paddingHorizontal: 7, backgroundColor: '#07111FC7', flexDirection: 'row', gap: 3, alignItems: 'center', justifyContent: 'center' }}><Icon name={liked ? 'heart' : 'heart-outline'} color={liked ? '#FF527E' : '#FFF'} size={14} />{a.likeCount ? <Text style={{ color: '#FFF', fontSize: 10, fontWeight: '700' }}>{a.likeCount}</Text> : null}</Pressable>
+            <Pressable accessibilityRole="button" accessibilityLabel={liked ? `Unlike ${a.title}` : `Like ${a.title}`} onPress={() => void like(a)} onLongPress={() => void showLikers(a)} style={{ position: 'absolute', top: 7, right: 7, minWidth: 34, height: 34, borderRadius: 17, paddingHorizontal: 7, backgroundColor: '#07111FC7', flexDirection: 'row', gap: 3, alignItems: 'center', justifyContent: 'center' }}><Icon name={liked ? 'heart' : 'heart-outline'} color={liked ? '#FF527E' : '#FFF'} size={14} />{a.likeCount ? <Text style={{ color: '#FFF', fontSize: 12, fontWeight: '700' }}>{a.likeCount}</Text> : null}</Pressable>
           </View>
           <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${a.title} details`} onPress={() => openActivity(a.id)} style={({ pressed }) => ({ paddingHorizontal: 10, paddingVertical: 9, gap: 5, opacity: pressed ? .7 : 1 })}>
             <Text style={{ color: c.text, fontWeight: '800', fontSize: 14 }} numberOfLines={1}>{a.title}</Text>
@@ -199,11 +249,11 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
           </Pressable>
         </View>; })}</ScrollView>}
         {!loading && !activities.length ? <Text style={{ color: c.muted, textAlign: 'center', paddingVertical: 20 }}>No activities are available yet.</Text> : null}
-        <Pressable accessibilityRole="button" onPress={() => go('host')} style={{ marginTop: 18, backgroundColor: c.isDark ? '#241D55' : '#F0EDFF', borderRadius: 18, padding: 15, flexDirection: 'row', alignItems: 'center', gap: 13 }}><View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: '#6650F5', alignItems: 'center', justifyContent: 'center' }}><Icon name="calendar" color="#FFF" /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontWeight: '800', fontSize: 14 }}>Host an activity</Text><Text style={{ color: c.muted, fontSize: 10, marginTop: 3 }}>Bring a group together around something you enjoy.</Text></View><Icon name="arrow-forward-circle" color={c.accent} size={26} /></Pressable>
+        <Pressable accessibilityRole="button" onPress={() => go('host')} style={{ marginTop: 18, backgroundColor: c.isDark ? '#241D55' : '#F0EDFF', borderRadius: 18, padding: 15, flexDirection: 'row', alignItems: 'center', gap: 13 }}><View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: '#6650F5', alignItems: 'center', justifyContent: 'center' }}><Icon name="calendar" color="#FFF" /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontWeight: '800', fontSize: 14 }}>Host an activity</Text><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18, marginTop: 3 }}>Bring a group together around something you enjoy.</Text></View><Icon name="arrow-forward-circle" color={c.accent} size={26} /></Pressable>
         {data.people.length ? <><SectionHeading title="People to Discover" action="Find people" onAction={() => go('search')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 16 }}>{data.people.slice(0, 8).map(person => <Pressable accessibilityRole="button" accessibilityLabel={`Open profile ${person.name}`} onPress={() => openProfile?.(person.id)} key={person.id} style={{ width: 70, alignItems: 'center', gap: 6 }}><UserAvatar uri={person.avatar} name={person.name} size={58} /><Text numberOfLines={1} style={{ color: c.text, width: 70, textAlign: 'center', fontSize: 12, fontWeight: '800' }}>{person.name} <VerifiedBadge userId={person.id} size={11} /></Text></Pressable>)}</ScrollView></> : null}
         {communityCards.length ? <><SectionHeading title="Communities" action="Explore all" onAction={() => go('communities')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>{communityCards.map(room => <Pressable accessibilityRole="button" accessibilityLabel={`Open community ${room.name}`} onPress={() => openCommunity ? openCommunity(room.id) : go('communities')} key={room.id} style={{ width: 154, height: 148, borderRadius: 17, overflow: 'hidden', backgroundColor: c.card, borderWidth: 1, borderColor: c.border }}>{room.image ? <Image source={{ uri: room.image }} style={{ height: 86, width: '100%' }} /> : <View style={{ height: 86, backgroundColor: c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name="people" color={c.accent} size={30} /></View>}<View style={{ padding: 9 }}><Text style={{ color: c.text, fontSize: 13, fontWeight: '800' }} numberOfLines={1}>{room.name}</Text><Text style={{ color: c.muted, fontSize: 12, fontWeight: '600', marginTop: 3 }}>{room.memberCount} members</Text></View></Pressable>)}</ScrollView></> : null}
         <SectionHeading title="Discover Your Tribe" />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>{(data.interests.length ? data.interests : INTEREST_CATEGORIES).filter(value => !/qa|automation|test/i.test(value)).slice(0, 7).map((value, index) => <Pressable accessibilityRole="button" onPress={() => go('search')} key={value} style={{ width: 112, minHeight: 58, borderRadius: 15, padding: 11, backgroundColor: ['#6553F5', '#D94C9A', '#2D8FE9', '#ED8D39'][index % 4] }}><Icon name={['book-outline', 'barbell-outline', 'airplane-outline', 'musical-notes-outline'][index % 4] as any} size={17} color="#FFF" /><Text style={{ color: '#FFF', fontSize: 10, fontWeight: '800', marginTop: 5 }} numberOfLines={2}>Find {value}</Text></Pressable>)}</ScrollView>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>{(data.interests.length ? data.interests : INTEREST_CATEGORIES).filter(value => !/qa|automation|test/i.test(value)).slice(0, 7).map((value, index) => <Pressable accessibilityRole="button" onPress={() => go('search')} key={value} style={{ width: 112, minHeight: 66, borderRadius: 15, padding: 11, backgroundColor: ['#6553F5', '#D94C9A', '#2D8FE9', '#ED8D39'][index % 4] }}><Icon name={['book-outline', 'barbell-outline', 'airplane-outline', 'musical-notes-outline'][index % 4] as any} size={17} color="#FFF" /><Text style={{ color: '#FFF', fontSize: 12, lineHeight: 16, fontWeight: '800', marginTop: 5 }} numberOfLines={2}>Find {value}</Text></Pressable>)}</ScrollView>
         <View style={{ marginTop: 18, minHeight: 142, borderRadius: 22, padding: 18, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', gap: 15 }}>
           <LinearGradient pointerEvents="none" colors={['#6954E7', '#167C83']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ position: 'absolute', inset: 0 }} />
           <View style={{ width: 58, height: 58, borderRadius: 19, backgroundColor: '#FFFFFF24', alignItems: 'center', justifyContent: 'center' }}><Icon name="people" color="#FFFFFF" size={29} /></View>
@@ -235,11 +285,11 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
       </View>
     </ScrollView>
     {filterOpen && <Sheet title="Filters" close={() => setFilterOpen(false)} footer={<View style={{ flexDirection: 'row', gap: 10 }}><View style={{ flex: 1 }}><Button label="Reset All" onPress={() => { setDraftCategories([]); setDraft({ dateFrom:'', dateTo:'', price:'All', gender:'All', verifiedOnly:false }); }} /></View><View style={{ flex: 1 }}><Button label="Apply Filters" onPress={() => { setCategories(draftCategories); setDateFrom(draft.dateFrom); setDateTo(draft.dateTo); setPrice(draft.price); setGender(draft.gender); setVerifiedOnly(draft.verifiedOnly); setFilterOpen(false); }} /></View></View>}>
-      <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Date Filter</Text><View style={{ flexDirection:'row',gap:10 }}>{(['dateFrom','dateTo'] as const).map((key,index) => <View key={key} style={{ flex:1,gap:7 }}><Text style={{ color:c.muted,fontSize:10 }}>{index ? 'To' : 'From'}</Text>{Platform.OS==='web' ? <View style={{ minHeight:44,backgroundColor:c.card,borderWidth:1,borderColor:c.border,borderRadius:9,paddingHorizontal:12,flexDirection:'row',alignItems:'center',gap:8,overflow:'hidden' }}><Icon name="calendar-outline" color={c.muted} size={15}/><Text style={{ color:c.text,fontSize:12 }}>{draft[key] ? new Date(`${draft[key]}T12:00:00`).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}) : 'Today'}</Text>{React.createElement('input',{type:'date','aria-label':index?'Date to':'Date from',value:draft[key],onChange:(e:React.ChangeEvent<HTMLInputElement>)=>setDraft(v=>({...v,[key]:e.target.value})),style:{position:'absolute',inset:0,width:'100%',height:'100%',opacity:0,cursor:'pointer',colorScheme:useDarkColorScheme(c)}})}</View> : <Pressable style={{ backgroundColor:c.card,borderWidth:1,borderColor:c.border,borderRadius:9,padding:12 }}><Text style={{ color:c.text }}>{draft[key]||'Today'}</Text></Pressable>}</View>)}</View>
+      <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Date Filter</Text><View style={{ flexDirection:'row',gap:10 }}>{(['dateFrom','dateTo'] as const).map((key,index) => <View key={key} style={{ flex:1,gap:7 }}><Text style={{ color:c.muted,fontSize:12 }}>{index ? 'To' : 'From'}</Text>{Platform.OS==='web' ? <View style={{ minHeight:44,backgroundColor:c.card,borderWidth:1,borderColor:c.border,borderRadius:9,paddingHorizontal:12,flexDirection:'row',alignItems:'center',gap:8,overflow:'hidden' }}><Icon name="calendar-outline" color={c.muted} size={15}/><Text style={{ color:c.text,fontSize:12 }}>{draft[key] ? new Date(`${draft[key]}T12:00:00`).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}) : 'Today'}</Text>{React.createElement('input',{type:'date','aria-label':index?'Date to':'Date from',value:draft[key],onChange:(e:React.ChangeEvent<HTMLInputElement>)=>setDraft(v=>({...v,[key]:e.target.value})),style:{position:'absolute',inset:0,width:'100%',height:'100%',opacity:0,cursor:'pointer',colorScheme:useDarkColorScheme(c)}})}</View> : <Pressable style={{ backgroundColor:c.card,borderWidth:1,borderColor:c.border,borderRadius:9,padding:12 }}><Text style={{ color:c.text }}>{draft[key]||'Today'}</Text></Pressable>}</View>)}</View>
       <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Price</Text><Pills values={['All','Free','Paid']} selected={draft.price} onChange={value=>setDraft(v=>({...v,price:value}))} />
       <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Gender Preference</Text><Pills values={['All','Male','Female']} selected={draft.gender} onChange={value=>setDraft(v=>({...v,gender:value}))} /><Pressable accessibilityRole="radio" accessibilityState={{ checked:draft.gender==='Non-binary' }} onPress={()=>setDraft(v=>({...v,gender:'Non-binary'}))} style={{ alignSelf:'flex-start',backgroundColor:draft.gender==='Non-binary'?purple:c.card,borderRadius:20,paddingHorizontal:18,paddingVertical:9 }}><Text style={{ color:draft.gender==='Non-binary'?'#FFF':c.muted,fontSize:13 }}>Non-binary</Text></Pressable>
-      <View style={{ flexDirection:'row',alignItems:'center',gap:12,paddingVertical:6 }}><View style={{ flex:1,gap:4 }}><Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Exclusive for Verified Users</Text><Text style={{ color:c.muted,fontSize:10 }}>Show activities restricted to verified profiles.</Text></View><Switch accessibilityLabel="Exclusive for Verified Users" value={draft.verifiedOnly} onValueChange={value=>setDraft(v=>({...v,verifiedOnly:value}))} trackColor={{true:purple,false:c.border}} /></View>
-      <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Categories</Text><View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 9 }}>{INTEREST_CATEGORIES.filter(value => !/qa|automation|test/i.test(value)).map(value => { const selected = draftCategories.includes(value); return <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: selected }} key={value} onPress={() => setDraftCategories(current => selected ? current.filter(item => item !== value) : [...current, value])} style={{ width: '47%', minHeight: 58, borderWidth: 1, borderColor: selected ? '#8E7CFF' : c.border, backgroundColor: selected ? '#6D5AEF24' : c.card, borderRadius: 10, padding: 10, justifyContent: 'center' }}><Text style={{ color: selected ? '#A99CFF' : c.text, fontSize: 11, fontWeight: '600' }}>{value}</Text></Pressable>; })}</View>
+      <View style={{ flexDirection:'row',alignItems:'center',gap:12,paddingVertical:6 }}><View style={{ flex:1,gap:4 }}><Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Exclusive for Verified Users</Text><Text style={{ color:c.muted,fontSize:12, lineHeight: 18 }}>Show activities restricted to verified profiles.</Text></View><Switch accessibilityLabel="Exclusive for Verified Users" value={draft.verifiedOnly} onValueChange={value=>setDraft(v=>({...v,verifiedOnly:value}))} trackColor={{true:purple,false:c.border}} /></View>
+      <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Categories</Text><View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 9 }}>{INTEREST_CATEGORIES.filter(value => !/qa|automation|test/i.test(value)).map(value => { const selected = draftCategories.includes(value); return <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: selected }} key={value} onPress={() => setDraftCategories(current => selected ? current.filter(item => item !== value) : [...current, value])} style={{ width: '47%', minHeight: 58, borderWidth: 1, borderColor: selected ? '#8E7CFF' : c.border, backgroundColor: selected ? '#6D5AEF24' : c.card, borderRadius: 10, padding: 10, justifyContent: 'center' }}><Text style={{ color: selected ? '#A99CFF' : c.text, fontSize: 12, fontWeight: '600' }}>{value}</Text></Pressable>; })}</View>
     </Sheet>}
   </Page>;
 }
@@ -299,11 +349,11 @@ function SearchActivityResult({ row, open }: { row: Extract<SearchRow, { kind: '
  return <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${a.title}`} onPress={open} style={({ pressed }) => ({ minHeight: 112, borderRadius: 14, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, overflow: 'hidden', flexDirection: 'row', opacity: pressed ? .76 : 1 })}>
   <Image source={typeof a.image === 'string' ? { uri: a.image } : a.image} style={{ width: 116, alignSelf: 'stretch', backgroundColor: c.inset }} resizeMode="cover" />
   <View style={{ flex: 1, paddingHorizontal: 11, paddingVertical: 9, gap: 4 }}>
-   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><View style={{ backgroundColor: c.isDark ? '#6E5AEF35' : '#EEEAFE', paddingHorizontal: 7, paddingVertical: 3, borderRadius: 9 }}><Text numberOfLines={1} style={{ color: c.accent, fontSize: 8, fontWeight: '800', maxWidth: 92 }}>{a.category || 'Activity'}</Text></View>{a.price ? <Text style={{ color: c.success, fontSize: 9, fontWeight: '800', marginLeft: 'auto' }}>{a.price}</Text> : null}</View>
+   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><View style={{ backgroundColor: c.isDark ? '#6E5AEF35' : '#EEEAFE', paddingHorizontal: 7, paddingVertical: 3, borderRadius: 9 }}><Text numberOfLines={1} style={{ color: c.accent, fontSize: 12, fontWeight: '800', maxWidth: 92 }}>{a.category || 'Activity'}</Text></View>{a.price ? <Text style={{ color: c.success, fontSize: 12, fontWeight: '800', marginLeft: 'auto' }}>{a.price}</Text> : null}</View>
    <Text numberOfLines={2} style={{ color: c.text, fontSize: 13, lineHeight: 17, fontWeight: '800' }}>{a.title}</Text>
-   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}><Icon name="calendar-outline" color={c.accent} size={11} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 9, flex: 1 }}>{compactDate(a.startsAt)}</Text></View>
-   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}><Icon name="location-outline" color={c.muted} size={11} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 9, flex: 1 }}>{a.where || 'Location to be decided'}</Text></View>
-   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 'auto' }}><Icon name="people-outline" color={c.accent} size={12} /><Text style={{ color: c.muted, fontSize: 8 }}>{a.joined}{a.seats > 0 ? ` / ${a.seats} joined` : ' joined'}</Text><View style={{ marginLeft: 'auto' }}><Icon name="chevron-forward" color={c.iconMuted} size={12} /></View></View>
+   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}><Icon name="calendar-outline" color={c.accent} size={13} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 12, flex: 1 }}>{compactDate(a.startsAt)}</Text></View>
+   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}><Icon name="location-outline" color={c.muted} size={13} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 12, flex: 1 }}>{a.where || 'Location to be decided'}</Text></View>
+   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 'auto' }}><Icon name="people-outline" color={c.accent} size={13} /><Text style={{ color: c.muted, fontSize: 12 }}>{a.joined}{a.seats > 0 ? ` / ${a.seats} joined` : ' joined'}</Text><View style={{ marginLeft: 'auto' }}><Icon name="chevron-forward" color={c.iconMuted} size={13} /></View></View>
   </View>
  </Pressable>;
 }
@@ -312,7 +362,7 @@ function SearchPersonResult({ row, open }: { row: Extract<SearchRow, { kind: 'pe
  const c = usePalette();
  return <Pressable accessibilityRole="button" accessibilityLabel={`Open profile ${row.name}`} onPress={open} style={({ pressed }) => ({ minHeight: 76, borderRadius: 14, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, padding: 10, flexDirection: 'row', alignItems: 'center', gap: 11, opacity: pressed ? .76 : 1 })}>
   {row.image ? <Image source={{ uri: row.image }} style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: c.inset }} /> : <Icon name="person-circle-outline" size={50} color={c.muted} />}
-  <View style={{ flex: 1, gap: 4 }}><Text numberOfLines={1} style={{ color: c.text, fontSize: 14, fontWeight: '700' }}>{row.name} <VerifiedBadge userId={row.id} /></Text><Text style={{ color: c.accent, fontSize: 10 }}>{row.username}</Text>{row.bio ? <Text numberOfLines={1} style={{ color: c.muted, fontSize: 10 }}>{row.bio}</Text> : null}</View>
+  <View style={{ flex: 1, gap: 4 }}><Text numberOfLines={1} style={{ color: c.text, fontSize: 14, fontWeight: '700' }}>{row.name} <VerifiedBadge userId={row.id} /></Text><Text style={{ color: c.accent, fontSize: 12 }}>{row.username}</Text>{row.bio ? <Text numberOfLines={1} style={{ color: c.muted, fontSize: 12 }}>{row.bio}</Text> : null}</View>
   <Icon name="chevron-forward" size={17} color={c.muted} />
  </Pressable>;
 }
@@ -322,8 +372,8 @@ function SearchCommunityResult({ row, open }: { row: Extract<SearchRow, { kind: 
  const state = room.membership === 'created' ? 'Created' : room.membership === 'joined' ? 'Joined' : room.membership === 'pending' ? 'Pending' : room.requiresApproval ? 'Request' : 'View';
  return <Pressable accessibilityRole="button" accessibilityLabel={`Open community ${room.name}`} onPress={open} style={({ pressed }) => ({ minHeight: 92, borderRadius: 14, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, padding: 10, flexDirection: 'row', alignItems: 'center', gap: 11, opacity: pressed ? .76 : 1 })}>
   {room.imageUrl ? <Image source={{ uri: room.imageUrl }} style={{ width: 66, height: 66, borderRadius: 12, backgroundColor: c.inset }} resizeMode="cover" /> : <View style={{ width: 66, height: 66, borderRadius: 12, backgroundColor: c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name="people" size={28} color={c.accent} /></View>}
-  <View style={{ flex: 1, gap: 5 }}><Text numberOfLines={1} style={{ color: c.text, fontSize: 14, fontWeight: '700', flexShrink: 1 }}>{room.name}</Text><Text numberOfLines={1} style={{ color: c.muted, fontSize: 10 }}>{room.tagline || room.description || room.category}</Text><Text style={{ color: c.muted, fontSize: 9 }}>{room.memberCount ?? 0} members · {room.visibility === 'private' ? 'Private' : 'Public'}</Text></View>
-  <View style={{ borderRadius: 13, paddingHorizontal: 10, paddingVertical: 7, backgroundColor: room.membership === 'joined' || room.membership === 'created' ? '#167C5530' : '#6E5AEF24' }}><Text style={{ color: room.membership === 'joined' || room.membership === 'created' ? c.success : c.accent, fontSize: 9, fontWeight: '700' }}>{state}</Text></View>
+  <View style={{ flex: 1, gap: 5 }}><Text numberOfLines={1} style={{ color: c.text, fontSize: 14, fontWeight: '700', flexShrink: 1 }}>{room.name}</Text><Text numberOfLines={1} style={{ color: c.muted, fontSize: 12 }}>{room.tagline || room.description || room.category}</Text><Text style={{ color: c.muted, fontSize: 12 }}>{room.memberCount ?? 0} members · {room.visibility === 'private' ? 'Private' : 'Public'}</Text></View>
+  <View style={{ borderRadius: 13, paddingHorizontal: 10, paddingVertical: 7, backgroundColor: room.membership === 'joined' || room.membership === 'created' ? '#167C5530' : '#6E5AEF24' }}><Text style={{ color: room.membership === 'joined' || room.membership === 'created' ? c.success : c.accent, fontSize: 12, fontWeight: '700' }}>{state}</Text></View>
  </Pressable>;
 }
 
@@ -383,7 +433,7 @@ export function ReferenceSearch({ back, openActivity, openProfile, openCommunity
     ? <SearchPersonResult key={`person:${row.id}`} row={row} open={() => openProfile(row.id)} />
     : <SearchCommunityResult key={`community:${row.id}`} row={row} open={() => openCommunity(row.id)} />;
 
- const categoryRail = scope === 'Activities' && (!cleanQuery || categoriesOpen || category !== 'All') ? <View style={{ marginHorizontal: -14, paddingVertical: 7, gap: 9 }}><View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14 }}><Text style={{ color: c.text, fontSize: 12, fontWeight: '800', flex: 1 }}>Browse Categories</Text>{category !== 'All' ? <Pressable accessibilityRole="button" onPress={() => setCategory('All')}><Text style={{ color: c.accent, fontSize: 10, fontWeight: '700' }}>Clear</Text></Pressable> : null}</View><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8 }}>{shownCategories.map((value, index) => <Pressable accessibilityRole="button" accessibilityState={{ selected: category === value }} key={value} onPress={() => setCategory(value)} style={{ minHeight: 38, minWidth: value === 'All' ? 54 : 88, borderRadius: 13, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: category === value ? c.accent : c.card, borderWidth: 1, borderColor: category === value ? c.accent : c.border }}><Icon name={(['apps-outline', 'football-outline', 'trail-sign-outline', 'people-outline', 'musical-notes-outline', 'restaurant-outline'][index % 6]) as any} color={category === value ? '#FFF' : c.accent} size={14} /><Text numberOfLines={1} style={{ color: category === value ? '#FFF' : c.muted, fontSize: 9, fontWeight: category === value ? '800' : '600', marginTop: 3 }}>{value}</Text></Pressable>)}</ScrollView></View> : null;
+ const categoryRail = scope === 'Activities' && (!cleanQuery || categoriesOpen || category !== 'All') ? <View style={{ marginHorizontal: -14, paddingVertical: 7, gap: 9 }}><View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14 }}><Text style={{ color: c.text, fontSize: 13, fontWeight: '800', flex: 1 }}>Browse Categories</Text>{category !== 'All' ? <Pressable accessibilityRole="button" onPress={() => setCategory('All')}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '700' }}>Clear</Text></Pressable> : null}</View><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8 }}>{shownCategories.map((value, index) => <Pressable accessibilityRole="button" accessibilityState={{ selected: category === value }} key={value} onPress={() => setCategory(value)} style={{ minHeight: 44, minWidth: value === 'All' ? 58 : 94, borderRadius: 13, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: category === value ? c.accent : c.card, borderWidth: 1, borderColor: category === value ? c.accent : c.border }}><Icon name={(['apps-outline', 'football-outline', 'trail-sign-outline', 'people-outline', 'musical-notes-outline', 'restaurant-outline'][index % 6]) as any} color={category === value ? '#FFF' : c.accent} size={14} /><Text numberOfLines={1} style={{ color: category === value ? '#FFF' : c.muted, fontSize: 12, fontWeight: category === value ? '800' : '600', marginTop: 3 }}>{value}</Text></Pressable>)}</ScrollView></View> : null;
  const splitRecommendations = scope === 'Activities' && !cleanQuery && !categoriesOpen && category === 'All';
  const leadRows = splitRecommendations ? rows.slice(0, 4) : [];
  const trailingRows = splitRecommendations ? rows.slice(4) : rows;
@@ -393,11 +443,11 @@ export function ReferenceSearch({ back, openActivity, openProfile, openCommunity
   <Pills values={['Activities', 'People', 'Communities']} selected={scope} onChange={value => { setScope(value as SearchScope); setCategory('All'); setCategoriesOpen(false); }} />
   <ErrorLine text={error} />
   {loading && !rows.length ? <Skeleton count={5} /> : <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, paddingTop: 10, paddingBottom: 34, gap: 9 }}>
-   <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '800', flex: 1 }}>{title}</Text><Text style={{ color: c.muted, fontSize: 9 }}>{rows.length}{more ? '+' : ''} shown</Text></View>
+   <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '800', flex: 1 }}>{title}</Text><Text style={{ color: c.muted, fontSize: 12 }}>{rows.length}{more ? '+' : ''} shown</Text></View>
    {leadRows.map(result)}
    {categoryRail}
    {trailingRows.map(result)}
-   {!loading && !rows.length && !error ? <View style={{ alignItems: 'center', paddingVertical: 64, paddingHorizontal: 26, gap: 11 }}><View style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name="search-outline" color={c.accent} size={28} /></View><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>No {scope.toLowerCase()} found</Text><Text style={{ color: c.muted, fontSize: 11, lineHeight: 17, textAlign: 'center' }}>{cleanQuery ? 'Try a broader search or choose another category.' : `There are no discoverable ${scope.toLowerCase()} yet.`}</Text></View> : null}
+   {!loading && !rows.length && !error ? <View style={{ alignItems: 'center', paddingVertical: 64, paddingHorizontal: 26, gap: 11 }}><View style={{ width: 58, height: 58, borderRadius: 29, backgroundColor: c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name="search-outline" color={c.accent} size={28} /></View><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>No {scope.toLowerCase()} found</Text><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18, textAlign: 'center' }}>{cleanQuery ? 'Try a broader search or choose another category.' : `There are no discoverable ${scope.toLowerCase()} yet.`}</Text></View> : null}
    {more ? <Button label="Load more" busy={loading} onPress={() => setPage(value => value + 1)} /> : null}
    {loading && rows.length ? <View style={{ padding: 12 }}><Skeleton count={1} /></View> : null}
   </ScrollView>}
