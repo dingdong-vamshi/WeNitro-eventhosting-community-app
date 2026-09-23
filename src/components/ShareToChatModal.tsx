@@ -25,6 +25,7 @@ type ConversationTarget = {
   type: "People" | "Groups";
   avatar: string;
   userId?: string;
+  roomType?: string;
 };
 
 type PersonTarget = {
@@ -33,6 +34,19 @@ type PersonTarget = {
   username: string;
   avatar: string;
 };
+
+export type ResolvedShareTarget = {
+  roomId: string;
+  name: string;
+  avatar: string;
+  type: "People" | "Groups";
+  userId?: string;
+  roomType: string;
+};
+
+function withTimeout<T>(promise: Promise<T>, milliseconds: number, message: string) {
+  return Promise.race([promise, new Promise<T>((_, reject) => setTimeout(() => reject(new Error(message)), milliseconds))]);
+}
 
 export function ShareToChatModal({
   entity,
@@ -45,17 +59,19 @@ export function ShareToChatModal({
   conversations: ConversationTarget[];
   people: PersonTarget[];
   onClose: () => void;
-  onSent: (roomIds: string[], messages: ChatMessage[]) => void;
+  onSent: (roomIds: string[], messages: ChatMessage[], targets: ResolvedShareTarget[]) => void;
 }) {
   const c = usePalette();
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [sending, setSending] = useState(false);
+  const [feedback, setFeedback] = useState<{ tone: "error" | "success"; text: string } | null>(null);
 
   useEffect(() => {
     setQuery("");
     setSelected([]);
     setSending(false);
+    setFeedback(null);
   }, [entity?.kind, entity?.id]);
 
   const allTargets = useMemo(() => {
@@ -69,6 +85,9 @@ export function ShareToChatModal({
       name: item.name,
       detail: item.type === "Groups" ? "Group" : "Recent conversation",
       avatar: item.avatar,
+      type: item.type,
+      userId: item.userId,
+      roomType: item.roomType || (item.type === "People" ? "personal" : "group"),
     }));
     const peopleWithoutRooms = people
       .filter((person) => !directUserIds.has(person.id))
@@ -79,6 +98,9 @@ export function ShareToChatModal({
         name: person.name,
         detail: `@${person.username}`,
         avatar: person.avatar,
+        type: "People" as const,
+        userId: person.id,
+        roomType: "personal",
       }));
     return [...rooms, ...peopleWithoutRooms];
   }, [conversations, people]);
@@ -90,28 +112,38 @@ export function ShareToChatModal({
     );
   }, [allTargets, query]);
 
-  const toggle = (key: string) =>
-    setSelected((current) =>
-      current.includes(key) ? current.filter((item) => item !== key) : [...current, key],
-    );
+  const toggle = (key: string) => setSelected((current) => {
+    setFeedback(null);
+    if (current.includes(key)) return current.filter((item) => item !== key);
+    if (current.length >= 20) { setFeedback({ tone: "error", text: "You can share with up to 20 recipients at a time." }); return current; }
+    return [...current, key];
+  });
 
   const send = async () => {
     if (!entity || !selected.length || sending) return;
     setSending(true);
+    setFeedback(null);
     try {
       const selectedTargets = allTargets.filter((item) => selected.includes(item.key));
-      const roomIds: string[] = [];
-      for (const target of selectedTargets) {
-        roomIds.push(target.roomId ?? (await chatService.createDirect(String(target.personId))));
-      }
+      if (selectedTargets.length > 20) throw new Error("Select up to 20 recipients.");
+      const resolved = await Promise.all(selectedTargets.map(async (target) => ({
+        roomId: target.roomId ?? await withTimeout(chatService.createDirect(String(target.personId)), 15_000, `Could not open the chat with ${target.name}. Try again.`),
+        name: target.name,
+        avatar: target.avatar,
+        type: target.type,
+        userId: target.userId,
+        roomType: target.roomType,
+      })));
+      const roomIds = resolved.map(target => target.roomId);
       const uniqueRoomIds = [...new Set(roomIds)];
       const messages = await chatService.share(uniqueRoomIds, entity.kind, entity.id);
-      onSent(uniqueRoomIds, messages);
-      onClose();
-      Alert.alert("Shared", `Sent to ${uniqueRoomIds.length} chat${uniqueRoomIds.length === 1 ? "" : "s"}.`);
+      onSent(uniqueRoomIds, messages, resolved.filter((target, index, all) => all.findIndex(item => item.roomId === target.roomId) === index));
+      setSelected([]);
+      setFeedback({ tone: "success", text: `Sent to ${uniqueRoomIds.length} chat${uniqueRoomIds.length === 1 ? "" : "s"}.` });
+      setSending(false);
+      setTimeout(onClose, 800);
     } catch (error) {
-      Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.");
-    } finally {
+      setFeedback({ tone: "error", text: error instanceof Error ? error.message : "Could not share. Please try again." });
       setSending(false);
     }
   };
@@ -137,7 +169,7 @@ export function ShareToChatModal({
                 <Text style={[styles.title, { color: c.text }]}>Share to Chat</Text>
               </View>
             </View>
-            <Pressable accessibilityRole="button" accessibilityLabel="Close share" style={[styles.close, { backgroundColor: c.inset }]} onPress={onClose}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Close share" disabled={sending} style={[styles.close, { backgroundColor: c.inset }, sending && { opacity: .45 }]} onPress={onClose}>
               <Ionicons name="close" size={24} color={c.icon} />
             </Pressable>
           </View>
@@ -175,9 +207,10 @@ export function ShareToChatModal({
             })}
             {!targets.length ? <Text style={[styles.empty, { color: c.muted }]}>No matching WeNitro chats or people.</Text> : null}
           </ScrollView>
+          {feedback ? <View accessibilityRole="alert" style={[styles.feedback, { backgroundColor: feedback.tone === "success" ? (c.isDark ? "#163B2D" : "#E2F7EC") : (c.isDark ? "#4A2229" : "#FDECEF") }]}><Ionicons name={feedback.tone === "success" ? "checkmark-circle" : "alert-circle"} size={19} color={feedback.tone === "success" ? "#23956B" : c.danger} /><Text style={[styles.feedbackText, { color: feedback.tone === "success" ? (c.isDark ? "#9AE6C5" : "#176848") : c.danger }]}>{feedback.text}</Text></View> : null}
           <Pressable accessibilityRole="button" accessibilityLabel="Send shared item" accessibilityState={{ disabled: !selected.length || sending }} onPress={send} disabled={!selected.length || sending} style={[styles.send, (!selected.length || sending) && styles.sendDisabled]}>
-            {sending ? <ActivityIndicator color="#fff" /> : <Ionicons name="send" size={20} color="#fff" />}
-            <Text style={styles.sendText}>{sending ? "Sending..." : `Send${selected.length ? ` (${selected.length})` : ""}`}</Text>
+            {sending ? <ActivityIndicator color="#fff" /> : <Ionicons name={feedback?.tone === "success" ? "checkmark-circle" : "send"} size={20} color="#fff" />}
+            <Text style={styles.sendText}>{sending ? "Sending..." : feedback?.tone === "success" ? "Sent" : `Send${selected.length ? ` (${selected.length})` : ""}`}</Text>
           </Pressable>
           <Pressable accessibilityRole="button" accessibilityLabel="Share externally" style={styles.external} onPress={shareExternally}>
             <Ionicons name="share-outline" size={20} color={c.accent} />
@@ -221,4 +254,6 @@ const styles = StyleSheet.create({
   sendText: { fontFamily: "Manrope_800ExtraBold", fontSize: 16, color: "#fff" },
   external: { minHeight: 44, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
   externalText: { fontFamily: "Manrope_700Bold", color: "#1D16CE" },
+  feedback: { minHeight: 44, borderRadius: 13, paddingHorizontal: 12, flexDirection: "row", alignItems: "center", gap: 8 },
+  feedbackText: { flex: 1, fontFamily: "Manrope_600SemiBold", fontSize: 12, lineHeight: 17 },
 });

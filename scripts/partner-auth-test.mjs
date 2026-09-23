@@ -31,6 +31,7 @@ vm.runInNewContext(compiled, {
   URLSearchParams,
 });
 const auth = moduleObject.exports;
+const appSource = fs.readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
 let passed = 0;
 const check = (label, assertion) => { assertion(); passed += 1; console.log(`PASS ${label}`); };
 const latest = () => calls.at(-1).input;
@@ -63,6 +64,12 @@ await auth.requestPhoneOtp({ accountType: 'partner', fullName: 'Ignored on login
 check('phone login cannot send classification metadata', () => {
   assert.equal(latest().options.shouldCreateUser, false);
   assert.equal(latest().options.data, undefined);
+});
+check('unknown-phone login error is actionable without enabling signup', () => {
+  assert.equal(auth.phoneOtpErrorMessage({ code: 'otp_disabled', message: 'Signups not allowed for otp' }, false), 'No WeNitro account was found for this phone number. Create an account to continue.');
+  assert.equal(auth.phoneOtpErrorMessage({ code: 'otp_disabled', message: 'Signups not allowed for otp' }, true), 'Signups not allowed for otp');
+  assert.ok(appSource.includes('onPhoneSignup={phone => { setPhoneSignupHandoff(phone); go("authSignup"); }}'));
+  assert.ok(appSource.includes('initialPhone={phoneSignupHandoff}'));
 });
 await auth.loginWithPassword({ email: ' QA@EXAMPLE.COM ', password: 'mock-only-password' });
 check('email login uses existing identity without classification', () => {

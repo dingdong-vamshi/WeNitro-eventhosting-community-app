@@ -26,6 +26,18 @@ export function newHostDraft(now = new Date()): HostDraft {
     category: '', location: null, locationInstruction: '', dateLater: false,
     start: localDateTime(start), end: localDateTime(new Date(start.getTime() + 3600000)), deadline: localDateTime(start) };
 }
+export function hasMeaningfulHostDraft(draft: HostDraft) {
+  return Boolean(
+    draft.title.trim() || draft.description.trim() || draft.coverUri || draft.category || draft.location ||
+    draft.locationInstruction.trim() || draft.capacity || draft.price || draft.isPaid || draft.approval ||
+    draft.verifiedOnly || draft.visibility !== 'public' || draft.ageLabel !== '15+ only' ||
+    draft.ageMin !== '15' || draft.ageMax || draft.gender || draft.dateLater
+  );
+}
+export function withFreshHostSchedule(draft: HostDraft, now = new Date()): HostDraft {
+  const fresh = newHostDraft(now);
+  return { ...draft, start: fresh.start, end: fresh.end, deadline: fresh.deadline };
+}
 export type HostActivitySource = {
   id: string; title: string; description?: string; image?: string; status?: string;
   visibility?: 'public' | 'community' | 'private' | 'squad'; joinType?: 'direct' | 'approval';

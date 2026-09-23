@@ -91,6 +91,7 @@ import {
   bootstrapSession,
   loginWithPassword,
   requestPhoneOtp,
+  phoneOtpErrorMessage,
   signUpWithPassword,
   subscribeToAuthRedirects,
   verifyPhoneOtp,
@@ -1341,25 +1342,32 @@ function AuthMethodTabs({
 function PhoneOtpForm({
   createAccount,
   accountType = "individual",
+  initialPhone = "",
+  onCreateAccount,
   onLockedChange,
   go,
   setData,
 }: {
   createAccount: boolean;
   accountType?: AccountType;
+  initialPhone?: string;
+  onCreateAccount?: (phone: string) => void;
   onLockedChange?: (locked: boolean) => void;
   go: (screen: Screen) => void;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
 }) {
   const palette = usePalette();
   const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(initialPhone);
   const [sentPhone, setSentPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [cooldown, setCooldown] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (initialPhone && !sentPhone) setPhone(initialPhone);
+  }, [initialPhone, sentPhone]);
   useEffect(() => { onLockedChange?.(submitting || Boolean(sentPhone)); }, [submitting, sentPhone, onLockedChange]);
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -1393,7 +1401,7 @@ function PhoneOtpForm({
       setCooldown(30);
       setOtp("");
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not send OTP.");
+      setError(phoneOtpErrorMessage(caught, createAccount));
     } finally {
       setSubmitting(false);
     }
@@ -1464,7 +1472,12 @@ function PhoneOtpForm({
 
   return (
     <>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+      {!createAccount && /No WeNitro account was found/.test(error) ? (
+        <Pressable accessibilityRole="button" onPress={() => onCreateAccount ? onCreateAccount(phone) : go("signup")} style={{ minHeight: 42, alignItems: "center", justifyContent: "center" }}>
+          <Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600 }]}>Create an account with this phone</Text>
+        </Pressable>
+      ) : null}
       {createAccount ? (
         <Field
           label="Full name"
@@ -1490,9 +1503,10 @@ function PhoneOtpForm({
   );
 }
 
-function LoginScreen({ go, setData }: {
+function LoginScreen({ go, setData, onPhoneSignup }: {
   go: (s: Screen) => void;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
+  onPhoneSignup?: (phone: string) => void;
 }) {
   const palette = usePalette();
   const [method, setMethod] = useState<"email" | "phone">("email");
@@ -1545,7 +1559,7 @@ function LoginScreen({ go, setData }: {
       </View>
       <AuthMethodTabs method={method} setMethod={setMethod} />
       {method === "phone" ? (
-        <PhoneOtpForm createAccount={false} go={go} setData={setData} />
+        <PhoneOtpForm createAccount={false} onCreateAccount={onPhoneSignup} go={go} setData={setData} />
       ) : (
         <>
           {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -1604,12 +1618,13 @@ function LoginScreen({ go, setData }: {
   );
 }
 
-function SignupScreen({ go, setData }: {
+function SignupScreen({ go, setData, initialPhone = "" }: {
   go: (s: Screen) => void;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
+  initialPhone?: string;
 }) {
   const palette = usePalette();
-  const [method, setMethod] = useState<"email" | "phone">("email");
+  const [method, setMethod] = useState<"email" | "phone">(initialPhone ? "phone" : "email");
   const [phoneLocked, setPhoneLocked] = useState(false);
   const [accountType, setAccountType] = useState<AccountType>("individual");
   const [name, setName] = useState("");
@@ -1701,7 +1716,7 @@ function SignupScreen({ go, setData }: {
       </View>
       <AuthMethodTabs method={method} setMethod={(next) => { if (!phoneLocked && !submitting) setMethod(next); }} />
       {method === "phone" ? (
-        <PhoneOtpForm key={accountType} createAccount onLockedChange={setPhoneLocked} accountType={accountType} go={go} setData={setData} />
+        <PhoneOtpForm key={`${accountType}-${initialPhone}`} createAccount initialPhone={initialPhone} onLockedChange={setPhoneLocked} accountType={accountType} go={go} setData={setData} />
       ) : (
         <>
           {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -2853,6 +2868,7 @@ function VibesScreen({
 }) {
   const palette = usePalette();
   const listRef = useRef<FlatList<Vibe>>(null);
+  const openedTarget = useRef<string | null>(null);
   const [vibeIndex, setVibeIndex] = useState(0);
   const [reelHeight, setReelHeight] = useState(0);
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -2873,10 +2889,22 @@ function VibesScreen({
     ? availableVibes[Math.min(vibeIndex, availableVibes.length - 1)]
     : undefined;
   useEffect(() => {
-    if (!initialVibeId) return;
+    if (!initialVibeId || availableVibes.some(item => item.id === initialVibeId) || !isBackendId(initialVibeId)) return;
+    let active = true;
+    void vibesProductionService.getReel(initialVibeId).then(reel => {
+      if (!active) return;
+      setData(current => current.vibes.some(item => item.id === reel.id) ? current : { ...current, vibes: [...current.vibes, vibeFromReel(reel, current)] });
+    }).catch(error => { if (active) Alert.alert("Vibe unavailable", error instanceof Error ? error.message : "This shared Vibe could not be opened."); });
+    return () => { active = false; };
+  }, [initialVibeId, availableVibes, setData]);
+  useEffect(() => {
+    if (!initialVibeId || reelHeight <= 0 || openedTarget.current === initialVibeId) return;
     const index = availableVibes.findIndex((item) => item.id === initialVibeId);
-    if (index >= 0) setVibeIndex(index);
-  }, [initialVibeId, availableVibes]);
+    if (index < 0) return;
+    openedTarget.current = initialVibeId;
+    setVibeIndex(index);
+    requestAnimationFrame(() => listRef.current?.scrollToIndex({ index, animated: false }));
+  }, [initialVibeId, availableVibes, reelHeight]);
   useEffect(() => {
     if (!isSupabaseConfigured || !vibe || !isBackendId(vibe.id)) return;
     const channel = vibesProductionService.subscribeToComments(vibe.id, () => {
@@ -3126,7 +3154,8 @@ function VibesScreen({
             decelerationRate="fast"
             disableIntervalMomentum
             getItemLayout={(_, index) => ({ length: reelHeight, offset: reelHeight * index, index })}
-            initialScrollIndex={Math.min(vibeIndex, Math.max(0, availableVibes.length - 1))}
+            initialScrollIndex={0}
+            onScrollToIndexFailed={({ index }) => setTimeout(() => listRef.current?.scrollToIndex({ index, animated: false }), 100)}
             onMomentumScrollEnd={(event) => {
               const next = Math.round(event.nativeEvent.contentOffset.y / reelHeight);
               if (next !== vibeIndex && next >= 0 && next < availableVibes.length) {
@@ -8927,6 +8956,7 @@ export default function App() {
   const [messagesFilter, setMessagesFilter] = useState('All');
   const [legacyMessages, setLegacyMessages] = useState(false);
   const [communityPostsOpen, setCommunityPostsOpen] = useState(false);
+  const [phoneSignupHandoff, setPhoneSignupHandoff] = useState("");
   useEffect(() => { let active = true; void AsyncStorage.getItem('wenitro:appearance:v1').then(value => { if (active) setData(current => ({ ...current, themePreference: value === 'light' || value === 'dark' ? value : 'system' })); }).finally(() => { if (active) setAppearanceLoaded(true); }); return () => { active = false; }; }, []);
   useEffect(() => { if (!appearanceLoaded) return; const preference = data.themePreference || 'system'; const resolved = preference === 'system' ? systemTheme === 'dark' ? 'dark' : 'light' : preference; setData(current => current.theme === resolved ? current : { ...current, theme: resolved }); void AsyncStorage.setItem('wenitro:appearance:v1', preference); }, [data.themePreference, systemTheme, appearanceLoaded]);
   const initialWebRoute = useRef(readWebRoute()).current;
@@ -9326,8 +9356,8 @@ export default function App() {
       !legal && !data.onboarded ? "onboarding" : routeScreen;
     const props = { data, setData, go, back };
     if ((screen === "login" || screen === "signup") && !introSeen) return <IntroScreen onContinue={() => { setIntroSeen(true); void AsyncStorage.setItem("wenitro:intro-seen:v1", "seen").catch(() => undefined); }} />;
-    if (screen === "authFallback") return <LoginScreen go={next => go(next === "signup" ? "authSignup" : next)} setData={setData} />;
-    if (screen === "authSignup") return <SignupScreen go={next => go(next === "login" ? "authFallback" : next)} setData={setData} />;
+    if (screen === "authFallback") return <LoginScreen go={next => { if (next === "signup") setPhoneSignupHandoff(""); go(next === "signup" ? "authSignup" : next); }} onPhoneSignup={phone => { setPhoneSignupHandoff(phone); go("authSignup"); }} setData={setData} />;
+    if (screen === "authSignup") return <SignupScreen initialPhone={phoneSignupHandoff} go={next => { if (next === "login") setPhoneSignupHandoff(""); go(next === "login" ? "authFallback" : next); }} setData={setData} />;
     if (screen === "login" || screen === "signup") return <WelcomeScreen onFallback={() => go("authFallback")} error={welcomeError} onLegal={go} googleButton={<GoogleSignInButton onSuccess={() => { setWelcomeError(""); void refreshAuthRef.current(); }} onError={setWelcomeError} />} />;
     if (screen === "onboarding")
       return profileSetup ? <ProfileCompletionScreen key={profileSetup.profile.id} initial={{ fullName: profileSetup.suggestedFullName, username: profileSetup.suggestedUsername, dateOfBirth: profileSetup.profile.date_of_birth ?? "", gender: profileSetup.profile.gender ?? "", avatarUrl: profileSetup.suggestedAvatarUrl ?? undefined }} checkUsername={profileOnboardingService.checkUsername} onSubmit={async (values: ProfileSetupValues) => {
@@ -9556,7 +9586,7 @@ export default function App() {
         go={go}
       />
     );
-  }, [routeScreen, data, history, selectedActivityId, selectedCommunityId, selectedProfileId, selectedSquadOwnerId, selectedConversationId, selectedVibeId, introSeen, welcomeError, profileSetup, communitySuccess, messagesTab, messagesFilter, legacyMessages, communityPostsOpen]);
+  }, [routeScreen, data, history, selectedActivityId, selectedCommunityId, selectedProfileId, selectedSquadOwnerId, selectedConversationId, selectedVibeId, introSeen, welcomeError, profileSetup, communitySuccess, messagesTab, messagesFilter, legacyMessages, communityPostsOpen, phoneSignupHandoff]);
 
   if (splashVisible || !fontsLoaded || !introChecked) return <SafeAreaProvider><View style={{ flex: 1, backgroundColor: "#6860F2" }}><StatusBar style="light" /><SplashScreen /></View></SafeAreaProvider>;
   if (!sessionChecked || authLoading || authError) return <SafeAreaProvider><ReferenceTheme.Provider value={data.theme}><ThemeContext.Provider value={data.theme}><View style={{ flex: 1, backgroundColor: data.theme === "dark" ? "#101824" : "#F7F7FB" }}><StatusBar style={data.theme === "dark" ? "light" : "dark"} /><FeedLoadingScreen error={authError} onRetry={() => void refreshAuthRef.current()} onLogout={() => void authService.signOut()} />{authIdentityRef.current && profileSetup?.profile.onboarding_completed && !authError ? <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"><TabBar active="feed" go={() => undefined} /></View> : null}</View></ThemeContext.Provider></ReferenceTheme.Provider></SafeAreaProvider>;
@@ -9591,7 +9621,7 @@ export default function App() {
           conversations={data.conversations}
           people={data.people}
           onClose={() => setShareEntity(null)}
-          onSent={(roomIds, messages) => {
+          onSent={(roomIds, messages, resolvedTargets) => {
             const mapped = messages.map((message) => {
               const item = chatMessageFromRemote(message, data.userId);
               if (item.share && !item.share.thumbnailUrl && shareEntity?.thumbnailUrl) {
@@ -9599,16 +9629,22 @@ export default function App() {
               }
               return item;
             });
-            setData((current) => ({
-              ...current,
-              conversations: current.conversations.map((conversation) => {
+            setData((current) => {
+              const updated = current.conversations.map((conversation) => {
                 const messageIndex = roomIds.indexOf(conversation.id);
                 const message = messageIndex >= 0 ? mapped[messageIndex] : undefined;
                 return message && !conversation.messages.some((item) => item.id === message.id)
                   ? { ...conversation, messages: [...conversation.messages, message], lastMessageAt: message.createdAt }
                   : conversation;
-              }),
-            }));
+              });
+              const existingIds = new Set(updated.map(item => item.id));
+              const created = resolvedTargets.filter(target => !existingIds.has(target.roomId)).map(target => {
+                const messageIndex = roomIds.indexOf(target.roomId);
+                const message = mapped[messageIndex];
+                return { id: target.roomId, name: target.name, type: target.type, roomType: target.roomType, avatar: target.avatar, memberCount: target.type === "People" ? 2 : 0, online: false, unread: 0, userId: target.userId, messages: message ? [message] : [], lastMessageAt: message?.createdAt } satisfies ChatConversation;
+              });
+              return { ...current, conversations: [...created, ...updated] };
+            });
             if (shareEntity?.kind === "vibe" && isBackendId(shareEntity.id)) vibeService.recordShare(shareEntity.id, "direct").catch(() => undefined);
           }}
         />

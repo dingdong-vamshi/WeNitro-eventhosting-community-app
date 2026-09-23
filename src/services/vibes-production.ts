@@ -444,6 +444,42 @@ export async function listReels(
   };
 }
 
+export async function getReel(vibeId: string): Promise<VibeReel> {
+  requireBackend();
+  const numericVibeId = integerId(vibeId, "vibeId");
+  const legacyUserId = await currentLegacyUserId(false);
+  const { data, error } = await supabase
+    .from("tbl_activity_vibes")
+    .select("id,event_id,user_id,media_url,media_type,caption,hashtags,visibility,created_at,updated_at,likes_count")
+    .eq("id", numericVibeId)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) throw new Error("This Vibe is unavailable or no longer visible to you.");
+  const row = data as LegacyVibe;
+  const [profiles, likedResult, commentsResult] = await Promise.all([
+    profilesFor(row.user_id ? [row.user_id] : []),
+    legacyUserId ? supabase.from("tbl_vibe_likes").select("vibe_id").eq("vibe_id", row.id).eq("user_id", legacyUserId).maybeSingle() : Promise.resolve({ data: null, error: null }),
+    supabase.from("tbl_vibe_comments").select("id", { count: "exact", head: true }).eq("vibe_id", row.id),
+  ]);
+  if (likedResult.error || commentsResult.error) throw likedResult.error || commentsResult.error;
+  return {
+    id: String(row.id),
+    activityId: row.event_id === null ? null : String(row.event_id),
+    userId: row.user_id === null ? "" : String(row.user_id),
+    mediaUrl: await signedMediaUrl(row.media_url),
+    mediaType: row.media_type === "video" ? "video" : "image",
+    caption: row.caption ?? "",
+    hashtags: row.hashtags ?? [],
+    visibility: row.visibility === "private" || row.visibility === "activity" ? row.visibility : "public",
+    createdAt: row.created_at ?? new Date(0).toISOString(),
+    updatedAt: row.updated_at ?? row.created_at ?? new Date(0).toISOString(),
+    author: row.user_id === null ? null : profiles.get(row.user_id) ?? null,
+    likedByMe: Boolean(likedResult.data),
+    likeCount: Math.max(0, Number(row.likes_count ?? 0)),
+    commentCount: commentsResult.count ?? 0,
+  };
+}
+
 export async function createVibe(input: CreateVibeInput) {
   await currentLegacyUserId(true);
   const eventId = input.activityId ? integerId(input.activityId, "activityId") : null;
@@ -572,7 +608,7 @@ export async function trackVibeShare(vibeId: string, channel: VibeShareChannel) 
   await currentLegacyUserId(true);
   const { data, error } = await supabase.rpc("vibe_track_share", {
     p_vibe_id: integerId(vibeId, "vibeId"),
-    p_channel: channel,
+    p_channel: channel === "direct" ? "message" : channel,
   });
   if (error) throw error;
   return data;
@@ -620,6 +656,7 @@ export async function reportVibe(vibeId: string, reason: string, details = "") {
 
 export const vibesProductionService = {
   listReels,
+  getReel,
   fetchReels: listReels,
   uploadMedia: uploadVibeMedia,
   createVibe,

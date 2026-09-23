@@ -36,6 +36,18 @@ export type PhoneOtpVerifyInput = {
   token: string;
 };
 
+export function phoneOtpErrorMessage(error: unknown, createAccount: boolean) {
+  const source = error as { code?: string; message?: string } | null;
+  const message = source?.message?.trim();
+  const existingAccountOnly =
+    !createAccount &&
+    (source?.code === "otp_disabled" || /signups? not allowed for otp/i.test(message ?? ""));
+  if (existingAccountOnly) {
+    return "No WeNitro account was found for this phone number. Create an account to continue.";
+  }
+  return message || "Could not send OTP.";
+}
+
 export type GoogleOAuthOptions = {
   redirectTo?: string;
   queryParams?: Record<string, string>;

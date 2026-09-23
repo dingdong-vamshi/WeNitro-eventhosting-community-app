@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { activityService } from '../../services/wenitro';
 import { activityLocationService } from '../../services/activity-location';
-import { AGE_PRESETS, GENDER_OPTIONS, HOST_CATEGORIES, ageError, draftFromActivity, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, type HostActivitySource, type HostDraft, type HostLocation } from '../../domain/host-activity';
+import { AGE_PRESETS, GENDER_OPTIONS, HOST_CATEGORIES, ageError, draftFromActivity, hasMeaningfulHostDraft, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, withFreshHostSchedule, type HostActivitySource, type HostDraft, type HostLocation } from '../../domain/host-activity';
 import CoverEditor from './cover-editor';
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from '../mobile-app-shell';
 import { BrandBar, usePalette as useReferencePalette } from '../reconstruction/ui';
@@ -121,7 +121,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
   const [locationOpen, setLocationOpen] = useState(false), [cropUri, setCropUri] = useState('');
   const [ageMin, setAgeMin] = useState(''), [ageMax, setAgeMax] = useState('');
   const [error, setError] = useState(''), [saving, setSaving] = useState(false), [draftNotice, setDraftNotice] = useState('');
-  const draftLoaded = useRef(false), completed = useRef(false);
+  const draftLoaded = useRef(false), completed = useRef(false), restoredDraft = useRef(false), scheduleInitialized = useRef(Boolean(existing));
   const committedId = useRef<string | null>(null); const [createdId, setCreatedId] = useState<string | null>(null);
   const committedStatus = useRef<'draft' | 'published' | null>(null);
   const persistedCoverUri = useRef('');
@@ -139,9 +139,12 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
       return () => { active = false; alive.current = false; };
     }
     void AsyncStorage.getItem(storageKey).then(raw => {
-    if (raw && active) { const saved = JSON.parse(raw); if (saved.version === 2 && saved.draft && typeof saved.draft.title === 'string') { setDraft({ ...newHostDraft(), ...saved.draft }); if (typeof saved.createdId === 'string') { committedId.current = saved.createdId; committedStatus.current = saved.createdStatus === 'draft' ? 'draft' : 'published'; persistedCoverUri.current = typeof saved.persistedCoverUri === 'string' ? saved.persistedCoverUri : ''; setCreatedId(saved.createdId); setStep(2); } setDraftNotice('Your saved draft has been restored.'); } }
+    if (raw && active) { const saved = JSON.parse(raw); if (saved.version === 2 && saved.draft && typeof saved.draft.title === 'string') { const candidate = { ...newHostDraft(), ...saved.draft } as HostDraft; const committed = typeof saved.createdId === 'string'; if (committed || hasMeaningfulHostDraft(candidate)) { restoredDraft.current = true; scheduleInitialized.current = true; setDraft(candidate); if (committed) { committedId.current = saved.createdId; committedStatus.current = saved.createdStatus === 'draft' ? 'draft' : 'published'; persistedCoverUri.current = typeof saved.persistedCoverUri === 'string' ? saved.persistedCoverUri : ''; setCreatedId(saved.createdId); setStep(2); } setDraftNotice('Your saved draft has been restored.'); } else { void AsyncStorage.removeItem(storageKey); } } }
   }).catch(() => { if (active) setDraftNotice('Could not restore the local draft.'); }).finally(() => { if (active) { draftLoaded.current = true; setLoaded(true); } }); return () => { active = false; alive.current = false; if (draftLoaded.current && !completed.current) void store().catch(() => undefined); }; }, [storageKey, existing?.id]);
   const store = (d = draftRef.current) => {
+    if (!committedId.current && !hasMeaningfulHostDraft(d)) {
+      pendingStorage.current = pendingStorage.current.catch(() => undefined).then(() => AsyncStorage.removeItem(storageKey)); return pendingStorage.current;
+    }
     const serialized = JSON.stringify({ version: 2, draft: d, createdId: committedId.current, createdStatus: committedStatus.current, persistedCoverUri: persistedCoverUri.current });
     pendingStorage.current = pendingStorage.current.catch(() => undefined).then(() => AsyncStorage.setItem(storageKey, serialized)); return pendingStorage.current;
   };
@@ -151,7 +154,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     const unload = (e: BeforeUnloadEvent) => { if (draftRef.current.title || draftRef.current.description) { e.preventDefault(); e.returnValue = ''; } };
     window.addEventListener('beforeunload', unload); return () => window.removeEventListener('beforeunload', unload);
   }, []);
-  const transition = (next: number) => { Keyboard.dismiss(); setCategoryOpen(false); setError(''); setStep(next); scroll.current?.scrollTo({ y: 0, animated: false }); opacity.setValue(.55); Animated.timing(opacity, { toValue: 1, duration: 160, useNativeDriver: true }).start(); };
+  const transition = (next: number) => { Keyboard.dismiss(); setCategoryOpen(false); setError(''); if (next === 2 && step < 2 && !existing && !restoredDraft.current && !scheduleInitialized.current) { const refreshed = withFreshHostSchedule(draftRef.current, new Date()); scheduleInitialized.current = true; setDraft(refreshed); draftRef.current = refreshed; } setStep(next); scroll.current?.scrollTo({ y: 0, animated: false }); opacity.setValue(.55); Animated.timing(opacity, { toValue: 1, duration: 160, useNativeDriver: true }).start(); };
   const back = () => { if (lock.current) return; if (step) transition(step - 1); else if (existing) onBack(); else if (draft.title || draft.description || draft.coverUri) setDialog('exit'); else onBack(); };
   useEffect(() => { const handler = BackHandler.addEventListener('hardwareBackPress', () => { back(); return true; }); return () => handler.remove(); }, [step, draft]);
   const pick = async () => {
@@ -233,6 +236,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
   const invalid = createdId && !existing ? '' : hostStepError(draft, step, isPartner);
   const timeErrors = scheduleFieldErrors(draft);
   const applyStart = (start: string) => {
+    scheduleInitialized.current = true;
     const parsed = Date.parse(start);
     if (!Number.isFinite(parsed) || existing) { patch({ start }); return; }
     patch({ start, end: localDateTime(new Date(parsed + 3600000)), deadline: start });
@@ -265,8 +269,8 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
         {categoryOpen && <View style={s.categories}><Control label="Search categories" icon="search-outline" value={categorySearch} onChangeText={setCategorySearch} placeholder="Search..." /><ScrollView nestedScrollEnabled style={{ maxHeight: 320 }} keyboardShouldPersistTaps="handled">{HOST_CATEGORIES.filter(v => v.toLowerCase().includes(categorySearch.toLowerCase())).map(cat => <Option key={cat} label={cat} selected={draft.category === cat} onPress={() => { patch({ category: cat }); setCategoryOpen(false); }} />)}{!HOST_CATEGORIES.some(v => v.toLowerCase().includes(categorySearch.toLowerCase())) && <Text style={[s.small, { padding: 18 }]}>No categories found</Text>}</ScrollView></View>}
         <Pressable accessibilityRole="button" accessibilityLabel={draft.location ? 'Change location' : 'Add Location'} onPress={() => setLocationOpen(true)} style={s.location}><View style={s.locationIcon}><Glyph name="location-outline" size={24} /></View><View style={{ flex: 1, gap: 4 }}><Text style={s.settingTitle}>{draft.location?.label || 'Add Location'}</Text><Text style={s.small}>{draft.location ? 'Tap to change location' : 'Where is this meetup happening?'}</Text></View><Glyph name="chevron-forward" size={17} color={c.muted} /></Pressable>
         <View style={{ gap: 12 }}><Text style={[s.body, { fontSize: 12 }]}>Location Instructions</Text><TextInput accessibilityLabel="Location Instructions" value={draft.locationInstruction} onChangeText={locationInstruction => patch({ locationInstruction })} multiline maxLength={1000} placeholder="e.g., Meet near the red bench, Room 404..." placeholderTextColor={c.muted} style={s.instructions} /></View>
-        <Pressable accessibilityRole="checkbox" accessibilityLabel="Decide Date Later" accessibilityState={{ checked: draft.dateLater }} aria-checked={draft.dateLater} onPress={() => patch({ dateLater: !draft.dateLater })} style={s.later}><Text style={s.value}>📅 {draft.dateLater ? 'Add Date Now' : 'Decide Date Later'}</Text></Pressable>
-        {draft.dateLater ? <View style={{ gap: 24 }}><View style={s.location}><Text style={s.subtitle}>📅 Date and time will be decided later. You can discuss with participants after they join!</Text></View><View><Text style={s.scheduleLabel}>JOIN DEADLINE</Text><Text style={[s.small, { marginTop: 12 }]}>Not set</Text></View></View> : <><View style={[s.inline, { alignItems: 'flex-start', gap: 16 }]}><ScheduleField label="KICKS OFF AT" value={draft.start} error={timeErrors.start} onChange={applyStart} /><ScheduleField label="WRAPS UP AT" value={draft.end} error={timeErrors.end} onChange={end => patch({ end })} /></View><ScheduleField label="JOIN DEADLINE" value={draft.deadline} error={timeErrors.deadline} onChange={deadline => patch({ deadline })} /></>}
+        <Pressable accessibilityRole="checkbox" accessibilityLabel="Decide Date Later" accessibilityState={{ checked: draft.dateLater }} aria-checked={draft.dateLater} onPress={() => { scheduleInitialized.current = true; patch({ dateLater: !draft.dateLater }); }} style={s.later}><Text style={s.value}>📅 {draft.dateLater ? 'Add Date Now' : 'Decide Date Later'}</Text></Pressable>
+        {draft.dateLater ? <View style={{ gap: 24 }}><View style={s.location}><Text style={s.subtitle}>📅 Date and time will be decided later. You can discuss with participants after they join!</Text></View><View><Text style={s.scheduleLabel}>JOIN DEADLINE</Text><Text style={[s.small, { marginTop: 12 }]}>Not set</Text></View></View> : <><View style={[s.inline, { alignItems: 'flex-start', gap: 16 }]}><ScheduleField label="KICKS OFF AT" value={draft.start} error={timeErrors.start} onChange={applyStart} /><ScheduleField label="WRAPS UP AT" value={draft.end} error={timeErrors.end} onChange={end => { scheduleInitialized.current = true; patch({ end }); }} /></View><ScheduleField label="JOIN DEADLINE" value={draft.deadline} error={timeErrors.deadline} onChange={deadline => { scheduleInitialized.current = true; patch({ deadline }); }} /></>}
       </View>}
       {draftNotice ? <Text accessibilityLiveRegion="polite" style={[s.small, { marginTop: 20 }]}>{draftNotice}</Text> : null}
       {(error || invalid) ? <Text accessibilityRole={error ? 'alert' : undefined} style={[error ? s.error : s.small, { marginTop: 20 }]}>{error || invalid}</Text> : null}

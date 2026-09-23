@@ -153,7 +153,7 @@ export function WelcomeScreen({ googleButton, onLegal, error, onFallback }: { on
         <View style={s.googleSlot}>{googleButton}</View>
         {onFallback ? <Pressable accessibilityRole="button" onPress={onFallback} style={{ minHeight: 44, justifyContent: "center", marginTop: 6 }}><Text style={{ textAlign: "center", color: c.isDark ? "#A5B4FC" : c.accent, fontSize: 13, fontWeight: "600" }}>Use email or phone instead</Text></Pressable> : null}
         {error ? <Text accessibilityRole="alert" style={[s.error, { color: c.danger }]}>{error}</Text> : null}
-        <Text style={[s.legalText, { color: c.muted }]}>By continuing, you agree to our <Text accessibilityRole="link" onPress={() => openLegal("terms")} style={s.legalLink}>Terms &amp; Conditions</Text> and <Text accessibilityRole="link" onPress={() => openLegal("privacyPolicy")} style={s.legalLink}>Privacy Policy</Text></Text>
+        <Text style={[s.legalText, { color: c.muted }]}>By continuing, you agree to our <Text accessibilityRole="link" onPress={() => openLegal("terms")} style={[s.legalLink, { color: c.isDark ? "#A5B4FC" : c.accent }]}>Terms &amp; Conditions</Text> and <Text accessibilityRole="link" onPress={() => openLegal("privacyPolicy")} style={[s.legalLink, { color: c.isDark ? "#A5B4FC" : c.accent }]}>Privacy Policy</Text></Text>
       </View>
     </ScrollView>
   </LinearGradient>;
