@@ -36,6 +36,7 @@ assert.doesNotMatch(profile, /configured\.length \? configured : SOCIAL_PLATFORM
 assert.match(profile, /my_trust_score/);
 assert.match(profile, /profile_trust_score/);
 assert.match(profile, /Public signals only/);
+assert.match(profile, /const displayedTotal = owner \? total : metrics\?\.trust_score \?\? null/);
 assert.match(profile, /\+\{check\.earned\}/);
 assert.doesNotMatch(profile, /check\.earned \|\| check\.points/);
 assert.match(profile, /summary=\{\{ location: person\.location, about: person\.about \|\| person\.bio, interests:/);
