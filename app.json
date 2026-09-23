@@ -5,7 +5,7 @@
     "scheme": "wenitro",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/wenitro-logo-transparent.png",
+    "icon": "./assets/brand/wenitro-app-icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
@@ -19,8 +19,8 @@
       "package": "com.wenitro.app",
       "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#6860F2",
-        "foregroundImage": "./assets/wenitro-logo-transparent.png"
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/brand/wenitro-app-icon.png"
       },
       "predictiveBackGestureEnabled": true
     },
@@ -43,7 +43,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#6860F2",
-          "image": "./assets/wenitro-logo-transparent.png",
+          "image": "./assets/brand/wenitro-mark-white.png",
           "imageWidth": 144
         }
       ]

@@ -70,7 +70,7 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
 
   useEffect(() => { setDashboard(null); setRegistrations([]); setTransactions([]); }, [userId]);
 
-  const selected = dashboard?.activities.find((activity) => activity.event_id === selectedId);
+  const selected = dashboard?.activities.find((activity) => activity.id === selectedId);
   const reload = () => setRevision((value) => value + 1);
   const button = (label: string, action: () => void, secondary = false, disabled = false) => (
     <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled }} disabled={disabled} onPress={action}
@@ -127,29 +127,29 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
       {tab === "Overview" && summary ? <>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
           {selected ? metric("Capacity", selected.capacity ?? "No limit") : null}
-          {selected ? metric("Remaining slots", selected.remaining_slots ?? "No limit") : null}
           {selected ? metric("Registrations", selected.registration_count) : metric("Hosted Activities", summary.hosted_activities)}
           {!selected ? metric("Total Registrations", summary.total_registrations) : null}
-          {metric("Paid Registrations", selected?.paid_registration_count ?? summary.paid_registrations)}
           {metric("Pending", selected?.pending_count ?? summary.pending_registrations)}
           {metric("Approved", selected?.approved_count ?? summary.approved_registrations)}
           {metric("Rejected", selected?.rejected_count ?? summary.rejected_registrations)}
           {metric("Gross Collection", formatPartnerMoney(earnings?.gross_paisa ?? 0))}
           {metric("Platform Fee", formatPartnerMoney(earnings?.platform_fee_paisa ?? 0))}
-          {metric("Net Earnings", formatPartnerMoney(earnings?.net_paisa ?? 0))}
+          {metric("GST", formatPartnerMoney(earnings?.gst_paisa ?? 0))}
+          {metric("Refunds", formatPartnerMoney(earnings?.refund_paisa ?? 0))}
+          {metric("Expected Net", formatPartnerMoney(earnings?.expected_net_paisa ?? 0))}
         </View>
         {!selected && onCreateActivity ? button("Host an Activity", onCreateActivity) : null}
       </> : null}
       {tab === "My Activities" && dashboard ? <>
         {!shownActivities.length ? <Text style={labelStyle}>No hosted activities yet. Your activities and registrations will appear here.</Text> : null}
-        {shownActivities.map((activity) => <View key={activity.event_id} style={cardStyle}>
+        {shownActivities.map((activity) => <View key={activity.id} style={cardStyle}>
           <Text selectable style={[theme.typography.title, { color: c.textPrimary }]}>{activity.title}</Text>
-          <Text style={labelStyle}>{dateLabel(activity.starts_at)}</Text>
-          <Text style={labelStyle}>{activity.price_inr ? formatPartnerMoney(activity.price_inr * 100) : "Free"} · {statusLabel(activity.visibility)} · {statusLabel(activity.status)}</Text>
-          <Text selectable style={labelStyle}>Capacity: {activity.capacity ?? "No limit"} · Remaining slots: {activity.remaining_slots ?? "No limit"}</Text>
-          <Text style={labelStyle}>{activity.registration_count} registrations · {activity.paid_registration_count} paid</Text>
-          <Text selectable style={labelStyle}>Gross {formatPartnerMoney(activity.gross_paisa)} · Net {formatPartnerMoney(activity.net_paisa)}</Text>
-          {button("Manage " + activity.title, () => { setSelectedId(activity.event_id); setTab("Overview"); })}
+          <Text style={labelStyle}>{dateLabel(activity.event_start_time)}</Text>
+          <Text style={labelStyle}>{activity.price ? formatPartnerMoney(activity.price * 100) : "Free"} · {statusLabel(activity.visibility_type)} · {statusLabel(activity.status)}</Text>
+          <Text selectable style={labelStyle}>Capacity: {activity.capacity ?? "No limit"} · {activity.registration_count} registrations</Text>
+          <Text selectable style={labelStyle}>Gross {formatPartnerMoney(activity.gross_paisa)} · Expected net {formatPartnerMoney(activity.expected_net_paisa)}</Text>
+          <Text selectable style={labelStyle}>Settlement: {statusLabel(activity.settlement_status ?? "not scheduled")}{activity.due_at ? ` · Due ${dateLabel(activity.due_at)}` : ""}</Text>
+          {button("Manage " + activity.title, () => { setSelectedId(activity.id); setTab("Overview"); })}
         </View>)}
         {onCreateActivity ? button("Host an Activity", onCreateActivity) : null}
       </> : null}
@@ -166,7 +166,7 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
             <Text selectable style={[theme.typography.body, { color: c.textPrimary }]}>{typeof answer.value === "boolean" ? answer.value ? "Agreed" : "Not selected" : Array.isArray(answer.value) ? answer.value.join(", ") || "No response" : answer.value || "No response"}</Text>
           </View>) : <Text style={labelStyle}>No submitted registration responses.</Text>}
           {row.status === "pending" ? <View style={{ flexDirection: "row", gap: 8 }}>
-            {button(busy === row.participant_id ? "Updating…" : "Approve", () => void respond(row, "approved"), false, busy !== null)}
+            {button(busy === row.participant_id ? "Updating…" : (dashboard.activities.find(activity => activity.id === row.event_id)?.price ?? 0) > 0 ? "Approve for payment" : "Approve", () => void respond(row, "approved"), false, busy !== null)}
             {button("Reject", () => void respond(row, "rejected"), true, busy !== null)}
           </View> : null}
         </View>)}
@@ -175,17 +175,20 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
           {metric("Gross Collection", formatPartnerMoney(earnings.gross_paisa))}
           {metric(`Platform Fee (${summary.platform_fee_bps / 100}%)`, formatPartnerMoney(earnings.platform_fee_paisa))}
-          {metric("Net Earnings", formatPartnerMoney(earnings.net_paisa))}
+          {metric("GST", formatPartnerMoney(earnings.gst_paisa))}
+          {metric("Refunds", formatPartnerMoney(earnings.refund_paisa))}
+          {metric("Expected Net", formatPartnerMoney(earnings.expected_net_paisa))}
         </View>
-        <Text style={labelStyle}>Net after WeNitro platform fee. Earnings shown here have not been paid out.</Text>
+        <Text style={labelStyle}>Expected net reflects verified provider payments, platform fees, configured GST, and completed refunds. A settlement is paid only when a payout reference is recorded.</Text>
         <Text accessibilityRole="header" style={[theme.typography.title, { color: c.textPrimary }]}>By activity</Text>
         {!shownActivities.length ? <Text style={labelStyle}>No activity earnings yet.</Text> : null}
-        {shownActivities.map((activity) => <View key={activity.event_id} style={cardStyle}>
+        {shownActivities.map((activity) => <View key={activity.id} style={cardStyle}>
           <Text selectable style={[theme.typography.title, { color: c.textPrimary }]}>{activity.title}</Text>
           <Text selectable style={labelStyle}>Gross {formatPartnerMoney(activity.gross_paisa)}</Text>
           <Text selectable style={labelStyle}>Platform fee {formatPartnerMoney(activity.platform_fee_paisa)}</Text>
-          <Text selectable style={[theme.typography.bodyMedium, { color: c.textPrimary }]}>Net {formatPartnerMoney(activity.net_paisa)}</Text>
-          <Text style={labelStyle}>{activity.paid_registration_count} paid registrations</Text>
+          <Text selectable style={labelStyle}>GST {formatPartnerMoney(activity.gst_paisa)} · Refunds {formatPartnerMoney(activity.refund_paisa)}</Text>
+          <Text selectable style={[theme.typography.bodyMedium, { color: c.textPrimary }]}>Expected net {formatPartnerMoney(activity.expected_net_paisa)}</Text>
+          <Text style={labelStyle}>Settlement: {statusLabel(activity.settlement_status ?? "not scheduled")}</Text>
         </View>)}
         <Text accessibilityRole="header" style={[theme.typography.title, { color: c.textPrimary }]}>Successful transactions</Text>
         {!transactions.length && !loading ? <Text style={labelStyle}>No successful transactions yet.</Text> : null}
@@ -195,7 +198,9 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
           <Text selectable style={labelStyle}>Payment reference: {payment.payment_id}</Text>
           <Text selectable style={labelStyle}>Amount collected {formatPartnerMoney(payment.amount_paisa)}</Text>
           <Text selectable style={labelStyle}>Platform fee ({payment.platform_fee_bps / 100}%) {formatPartnerMoney(payment.platform_fee_paisa)}</Text>
+          <Text selectable style={labelStyle}>GST {formatPartnerMoney(payment.gst_paisa)} · Financial status: {statusLabel(payment.financial_status)}</Text>
           <Text selectable style={[theme.typography.bodyMedium, { color: c.textPrimary }]}>Net earnings {formatPartnerMoney(payment.partner_net_paisa)}</Text>
+          <Text selectable style={labelStyle}>Settlement: {statusLabel(payment.settlement_status ?? "not scheduled")}{payment.payout_reference ? ` · ${payment.payout_reference}` : ""}</Text>
         </View>)}
       </> : null}
     </ScrollView>

@@ -304,6 +304,57 @@ export type Database = {
         }
         Relationships: []
       }
+      tbl_activity_invites: {
+        Row: {
+          created_at: string
+          created_by: number
+          event_id: number
+          expires_at: string
+          id: number
+          max_uses: number | null
+          revoked_at: string | null
+          token_hash: string
+          uses_count: number
+        }
+        Insert: {
+          created_at?: string
+          created_by: number
+          event_id: number
+          expires_at: string
+          id?: number
+          max_uses?: number | null
+          revoked_at?: string | null
+          token_hash: string
+          uses_count?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: number
+          event_id?: number
+          expires_at?: string
+          id?: number
+          max_uses?: number | null
+          revoked_at?: string | null
+          token_hash?: string
+          uses_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_activity_invites_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_activity_invites_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tbl_activity_payments: {
         Row: {
           amount_paisa: number
@@ -311,11 +362,16 @@ export type Database = {
           created_at: string
           currency: string
           event_id: number
+          financial_status: string
+          gst_basis: string | null
+          gst_bps: number | null
+          gst_paisa: number | null
           id: number
           idempotency_key: string
           last_verified_at: string | null
           paid_at: string | null
           partner_net_paisa: number | null
+          partner_user_id: number | null
           payment_session_id: string | null
           platform_fee_bps: number | null
           platform_fee_paisa: number | null
@@ -334,11 +390,16 @@ export type Database = {
           created_at?: string
           currency?: string
           event_id: number
+          financial_status?: string
+          gst_basis?: string | null
+          gst_bps?: number | null
+          gst_paisa?: number | null
           id?: number
           idempotency_key?: string
           last_verified_at?: string | null
           paid_at?: string | null
           partner_net_paisa?: number | null
+          partner_user_id?: number | null
           payment_session_id?: string | null
           platform_fee_bps?: number | null
           platform_fee_paisa?: number | null
@@ -357,11 +418,16 @@ export type Database = {
           created_at?: string
           currency?: string
           event_id?: number
+          financial_status?: string
+          gst_basis?: string | null
+          gst_bps?: number | null
+          gst_paisa?: number | null
           id?: number
           idempotency_key?: string
           last_verified_at?: string | null
           paid_at?: string | null
           partner_net_paisa?: number | null
+          partner_user_id?: number | null
           payment_session_id?: string | null
           platform_fee_bps?: number | null
           platform_fee_paisa?: number | null
@@ -380,6 +446,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "tbl_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_activity_payments_partner_user_id_fkey"
+            columns: ["partner_user_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
             referencedColumns: ["id"]
           },
           {
@@ -561,6 +634,42 @@ export type Database = {
         }
         Relationships: []
       }
+      tbl_cashfree_webhook_events: {
+        Row: {
+          delivery_key: string
+          error_message: string | null
+          event_type: string
+          id: number
+          payload_hash: string
+          processed_at: string | null
+          provider_order_id: string | null
+          received_at: string
+          status: string
+        }
+        Insert: {
+          delivery_key: string
+          error_message?: string | null
+          event_type: string
+          id?: number
+          payload_hash: string
+          processed_at?: string | null
+          provider_order_id?: string | null
+          received_at?: string
+          status?: string
+        }
+        Update: {
+          delivery_key?: string
+          error_message?: string | null
+          event_type?: string
+          id?: number
+          payload_hash?: string
+          processed_at?: string | null
+          provider_order_id?: string | null
+          received_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       tbl_categories: {
         Row: {
           created_at: string | null
@@ -585,6 +694,7 @@ export type Database = {
           joined_at: string | null
           last_read_at: string | null
           muted: boolean
+          permissions: Json
           role: string | null
           room_id: number | null
           user_id: number | null
@@ -594,6 +704,7 @@ export type Database = {
           joined_at?: string | null
           last_read_at?: string | null
           muted?: boolean
+          permissions?: Json
           role?: string | null
           room_id?: number | null
           user_id?: number | null
@@ -603,6 +714,7 @@ export type Database = {
           joined_at?: string | null
           last_read_at?: string | null
           muted?: boolean
+          permissions?: Json
           role?: string | null
           room_id?: number | null
           user_id?: number | null
@@ -1260,6 +1372,7 @@ export type Database = {
           invited_by: number | null
           joined_at: string | null
           responded_at: string | null
+          role: string
           status: string
           user_id: number
         }
@@ -1270,6 +1383,7 @@ export type Database = {
           invited_by?: number | null
           joined_at?: string | null
           responded_at?: string | null
+          role?: string
           status: string
           user_id: number
         }
@@ -1280,6 +1394,7 @@ export type Database = {
           invited_by?: number | null
           joined_at?: string | null
           responded_at?: string | null
+          role?: string
           status?: string
           user_id?: number
         }
@@ -1389,11 +1504,13 @@ export type Database = {
         Row: {
           age_max: number | null
           age_min: number | null
+          costs_may_apply: boolean
           created_at: string | null
           created_by: number
           currency: string
           description: string | null
           display_location: string | null
+          entry_fee_required: boolean
           event_end_time: string | null
           event_start_time: string | null
           gender_preference: string | null
@@ -1409,6 +1526,7 @@ export type Database = {
           longitude: number | null
           max_participants: number | null
           media: Json | null
+          payment_collection_mode: string
           price: number
           registration_close_time: string | null
           status: string
@@ -1421,11 +1539,13 @@ export type Database = {
         Insert: {
           age_max?: number | null
           age_min?: number | null
+          costs_may_apply?: boolean
           created_at?: string | null
           created_by: number
           currency?: string
           description?: string | null
           display_location?: string | null
+          entry_fee_required?: boolean
           event_end_time?: string | null
           event_start_time?: string | null
           gender_preference?: string | null
@@ -1441,6 +1561,7 @@ export type Database = {
           longitude?: number | null
           max_participants?: number | null
           media?: Json | null
+          payment_collection_mode?: string
           price?: number
           registration_close_time?: string | null
           status?: string
@@ -1453,11 +1574,13 @@ export type Database = {
         Update: {
           age_max?: number | null
           age_min?: number | null
+          costs_may_apply?: boolean
           created_at?: string | null
           created_by?: number
           currency?: string
           description?: string | null
           display_location?: string | null
+          entry_fee_required?: boolean
           event_end_time?: string | null
           event_start_time?: string | null
           gender_preference?: string | null
@@ -1473,6 +1596,7 @@ export type Database = {
           longitude?: number | null
           max_participants?: number | null
           media?: Json | null
+          payment_collection_mode?: string
           price?: number
           registration_close_time?: string | null
           status?: string
@@ -1750,9 +1874,12 @@ export type Database = {
       }
       tbl_participant_ratings: {
         Row: {
+          behaviour_rating: number | null
           comment: string | null
+          communication_rating: number | null
           created_at: string | null
           event_id: number | null
+          friendly_rating: number | null
           id: number
           is_no_show: boolean | null
           overall_rating: number | null
@@ -1761,9 +1888,12 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          behaviour_rating?: number | null
           comment?: string | null
+          communication_rating?: number | null
           created_at?: string | null
           event_id?: number | null
+          friendly_rating?: number | null
           id?: number
           is_no_show?: boolean | null
           overall_rating?: number | null
@@ -1772,9 +1902,12 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          behaviour_rating?: number | null
           comment?: string | null
+          communication_rating?: number | null
           created_at?: string | null
           event_id?: number | null
+          friendly_rating?: number | null
           id?: number
           is_no_show?: boolean | null
           overall_rating?: number | null
@@ -1806,39 +1939,500 @@ export type Database = {
           },
         ]
       }
+      tbl_partner_application_history: {
+        Row: {
+          actor_auth_user_id: string | null
+          actor_user_id: number | null
+          created_at: string
+          from_status: string | null
+          id: number
+          reason: string | null
+          snapshot: Json
+          to_status: string
+          user_id: number
+        }
+        Insert: {
+          actor_auth_user_id?: string | null
+          actor_user_id?: number | null
+          created_at?: string
+          from_status?: string | null
+          id?: number
+          reason?: string | null
+          snapshot?: Json
+          to_status: string
+          user_id: number
+        }
+        Update: {
+          actor_auth_user_id?: string | null
+          actor_user_id?: number | null
+          created_at?: string
+          from_status?: string | null
+          id?: number
+          reason?: string | null
+          snapshot?: Json
+          to_status?: string
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_partner_application_history_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_partner_application_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tbl_partner_finance_audit: {
+        Row: {
+          action: string
+          actor_auth_user_id: string | null
+          actor_user_id: number | null
+          after_data: Json | null
+          before_data: Json | null
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: number
+          reason: string | null
+        }
+        Insert: {
+          action: string
+          actor_auth_user_id?: string | null
+          actor_user_id?: number | null
+          after_data?: Json | null
+          before_data?: Json | null
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: number
+          reason?: string | null
+        }
+        Update: {
+          action?: string
+          actor_auth_user_id?: string | null
+          actor_user_id?: number | null
+          after_data?: Json | null
+          before_data?: Json | null
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: number
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_partner_finance_audit_actor_user_id_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tbl_partner_finance_config: {
+        Row: {
+          gst_basis: string
+          gst_bps: number
+          gst_enabled: boolean
+          platform_fee_bps: number
+          settlement_days: number
+          singleton: boolean
+          updated_at: string
+          updated_by: number | null
+          updated_by_auth_user_id: string | null
+        }
+        Insert: {
+          gst_basis?: string
+          gst_bps?: number
+          gst_enabled?: boolean
+          platform_fee_bps?: number
+          settlement_days?: number
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: number | null
+          updated_by_auth_user_id?: string | null
+        }
+        Update: {
+          gst_basis?: string
+          gst_bps?: number
+          gst_enabled?: boolean
+          platform_fee_bps?: number
+          settlement_days?: number
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: number | null
+          updated_by_auth_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_partner_finance_config_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tbl_partner_finance_config_history: {
+        Row: {
+          changed_by: number | null
+          changed_by_auth_user_id: string | null
+          created_at: string
+          gst_basis: string
+          gst_bps: number
+          gst_enabled: boolean
+          id: number
+          platform_fee_bps: number
+          reason: string
+          settlement_days: number
+        }
+        Insert: {
+          changed_by?: number | null
+          changed_by_auth_user_id?: string | null
+          created_at?: string
+          gst_basis: string
+          gst_bps: number
+          gst_enabled: boolean
+          id?: number
+          platform_fee_bps: number
+          reason: string
+          settlement_days: number
+        }
+        Update: {
+          changed_by?: number | null
+          changed_by_auth_user_id?: string | null
+          created_at?: string
+          gst_basis?: string
+          gst_bps?: number
+          gst_enabled?: boolean
+          id?: number
+          platform_fee_bps?: number
+          reason?: string
+          settlement_days?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_partner_finance_config_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tbl_partner_financial_events: {
+        Row: {
+          amount_paisa: number
+          created_at: string
+          created_by: number | null
+          created_by_auth_user_id: string | null
+          currency: string
+          event_id: number
+          id: number
+          idempotency_key: string
+          kind: string
+          metadata: Json
+          participant_user_id: number | null
+          partner_user_id: number
+          payment_id: number | null
+          provider_reference: string | null
+          reason: string | null
+          status: string
+        }
+        Insert: {
+          amount_paisa: number
+          created_at?: string
+          created_by?: number | null
+          created_by_auth_user_id?: string | null
+          currency?: string
+          event_id: number
+          id?: number
+          idempotency_key: string
+          kind: string
+          metadata?: Json
+          participant_user_id?: number | null
+          partner_user_id: number
+          payment_id?: number | null
+          provider_reference?: string | null
+          reason?: string | null
+          status: string
+        }
+        Update: {
+          amount_paisa?: number
+          created_at?: string
+          created_by?: number | null
+          created_by_auth_user_id?: string | null
+          currency?: string
+          event_id?: number
+          id?: number
+          idempotency_key?: string
+          kind?: string
+          metadata?: Json
+          participant_user_id?: number | null
+          partner_user_id?: number
+          payment_id?: number | null
+          provider_reference?: string | null
+          reason?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_partner_financial_events_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_partner_financial_events_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_partner_financial_events_participant_user_id_fkey"
+            columns: ["participant_user_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_partner_financial_events_partner_user_id_fkey"
+            columns: ["partner_user_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_partner_financial_events_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_activity_payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tbl_partner_payout_accounts: {
+        Row: {
+          account_holder_name: string
+          account_number: string
+          bank_name: string
+          created_at: string
+          ifsc: string
+          review_reason: string | null
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: number | null
+          reviewed_by_auth_user_id: string | null
+          updated_at: string
+          upi_id: string
+          user_id: number
+        }
+        Insert: {
+          account_holder_name?: string
+          account_number?: string
+          bank_name?: string
+          created_at?: string
+          ifsc?: string
+          review_reason?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: number | null
+          reviewed_by_auth_user_id?: string | null
+          updated_at?: string
+          upi_id?: string
+          user_id: number
+        }
+        Update: {
+          account_holder_name?: string
+          account_number?: string
+          bank_name?: string
+          created_at?: string
+          ifsc?: string
+          review_reason?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: number | null
+          reviewed_by_auth_user_id?: string | null
+          updated_at?: string
+          upi_id?: string
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_partner_payout_accounts_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_partner_payout_accounts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tbl_partner_profiles: {
         Row: {
+          activity_location: string
+          activity_types: string[]
+          age_category: string
           business_name: string
           city: string
           created_at: string
+          decision_reason: string | null
           description: string
+          reviewed_at: string | null
+          reviewed_by: number | null
+          reviewed_by_auth_user_id: string | null
           status: string
+          submitted_at: string | null
           updated_at: string
           user_id: number
         }
         Insert: {
+          activity_location?: string
+          activity_types?: string[]
+          age_category?: string
           business_name?: string
           city?: string
           created_at?: string
+          decision_reason?: string | null
           description?: string
+          reviewed_at?: string | null
+          reviewed_by?: number | null
+          reviewed_by_auth_user_id?: string | null
           status?: string
+          submitted_at?: string | null
           updated_at?: string
           user_id: number
         }
         Update: {
+          activity_location?: string
+          activity_types?: string[]
+          age_category?: string
           business_name?: string
           city?: string
           created_at?: string
+          decision_reason?: string | null
           description?: string
+          reviewed_at?: string | null
+          reviewed_by?: number | null
+          reviewed_by_auth_user_id?: string | null
           status?: string
+          submitted_at?: string | null
           updated_at?: string
           user_id?: number
         }
         Relationships: [
           {
+            foreignKeyName: "tbl_partner_profiles_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "tbl_partner_profiles_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tbl_partner_settlements: {
+        Row: {
+          created_at: string
+          due_at: string | null
+          eligible_at: string | null
+          event_id: number
+          expected_net_paisa: number
+          gross_paisa: number
+          gst_paisa: number
+          id: number
+          note: string | null
+          paid_at: string | null
+          partner_user_id: number
+          payout_reference: string | null
+          platform_fee_paisa: number
+          refund_paisa: number
+          status: string
+          updated_at: string
+          updated_by: number | null
+          updated_by_auth_user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          due_at?: string | null
+          eligible_at?: string | null
+          event_id: number
+          expected_net_paisa?: number
+          gross_paisa?: number
+          gst_paisa?: number
+          id?: number
+          note?: string | null
+          paid_at?: string | null
+          partner_user_id: number
+          payout_reference?: string | null
+          platform_fee_paisa?: number
+          refund_paisa?: number
+          status?: string
+          updated_at?: string
+          updated_by?: number | null
+          updated_by_auth_user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          due_at?: string | null
+          eligible_at?: string | null
+          event_id?: number
+          expected_net_paisa?: number
+          gross_paisa?: number
+          gst_paisa?: number
+          id?: number
+          note?: string | null
+          paid_at?: string | null
+          partner_user_id?: number
+          payout_reference?: string | null
+          platform_fee_paisa?: number
+          refund_paisa?: number
+          status?: string
+          updated_at?: string
+          updated_by?: number | null
+          updated_by_auth_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_partner_settlements_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: true
+            referencedRelation: "tbl_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_partner_settlements_partner_user_id_fkey"
+            columns: ["partner_user_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_partner_settlements_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
             referencedRelation: "tbl_users"
             referencedColumns: ["id"]
           },
@@ -2082,6 +2676,39 @@ export type Database = {
           },
         ]
       }
+      tbl_user_blocks: {
+        Row: {
+          blocked_id: number
+          blocker_id: number
+          created_at: string
+        }
+        Insert: {
+          blocked_id: number
+          blocker_id: number
+          created_at?: string
+        }
+        Update: {
+          blocked_id?: number
+          blocker_id?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_user_blocks_blocked_id_fkey"
+            columns: ["blocked_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_user_blocks_blocker_id_fkey"
+            columns: ["blocker_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tbl_user_feedbacks: {
         Row: {
           created_at: string
@@ -2158,22 +2785,25 @@ export type Database = {
           created_at: string
           id: number
           points_earned: number | null
-          rating_id: number
+          rating_id: number | null
           user_id: number
+          verification_method: string | null
         }
         Insert: {
           created_at?: string
           id?: number
           points_earned?: number | null
-          rating_id: number
+          rating_id?: number | null
           user_id: number
+          verification_method?: string | null
         }
         Update: {
           created_at?: string
           id?: number
           points_earned?: number | null
-          rating_id?: number
+          rating_id?: number | null
           user_id?: number
+          verification_method?: string | null
         }
         Relationships: [
           {
@@ -2258,6 +2888,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "tbl_user_profile_images_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tbl_user_profile_photos: {
+        Row: {
+          created_at: string
+          id: number
+          position: number
+          public_url: string
+          storage_path: string
+          updated_at: string
+          user_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          position: number
+          public_url: string
+          storage_path: string
+          updated_at?: string
+          user_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          position?: number
+          public_url?: string
+          storage_path?: string
+          updated_at?: string
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_user_profile_photos_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "tbl_users"
@@ -2363,6 +3031,9 @@ export type Database = {
           document_path: string | null
           document_size: number | null
           id: number
+          live_photo_path: string | null
+          live_photo_verified: boolean
+          live_photo_verified_at: string | null
           phone_verified: boolean
           review_notes: string
           reviewed_at: string | null
@@ -2383,6 +3054,9 @@ export type Database = {
           document_path?: string | null
           document_size?: number | null
           id?: number
+          live_photo_path?: string | null
+          live_photo_verified?: boolean
+          live_photo_verified_at?: string | null
           phone_verified?: boolean
           review_notes?: string
           reviewed_at?: string | null
@@ -2403,6 +3077,9 @@ export type Database = {
           document_path?: string | null
           document_size?: number | null
           id?: number
+          live_photo_path?: string | null
+          live_photo_verified?: boolean
+          live_photo_verified_at?: string | null
           phone_verified?: boolean
           review_notes?: string
           reviewed_at?: string | null
@@ -2597,6 +3274,54 @@ export type Database = {
           },
         ]
       }
+      tbl_vibe_reports: {
+        Row: {
+          created_at: string
+          details: string
+          id: number
+          reason: string
+          reported_by: number
+          status: string
+          updated_at: string
+          vibe_id: number
+        }
+        Insert: {
+          created_at?: string
+          details?: string
+          id?: number
+          reason: string
+          reported_by: number
+          status?: string
+          updated_at?: string
+          vibe_id: number
+        }
+        Update: {
+          created_at?: string
+          details?: string
+          id?: number
+          reason?: string
+          reported_by?: number
+          status?: string
+          updated_at?: string
+          vibe_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_vibe_reports_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "tbl_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tbl_vibe_reports_vibe_id_fkey"
+            columns: ["vibe_id"]
+            isOneToOne: false
+            referencedRelation: "tbl_activity_vibes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tbl_vibe_shares: {
         Row: {
           channel: string
@@ -2641,10 +3366,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_get_partner_finance_config: { Args: never; Returns: Json }
+      admin_list_partner_applications: {
+        Args: { p_status?: string }
+        Returns: Json
+      }
+      admin_list_partner_finance: { Args: { p_status?: string }; Returns: Json }
       admin_list_users: { Args: never; Returns: Json[] }
       admin_list_verifications: {
         Args: { p_before_id?: number; p_limit?: number; p_status?: string }
         Returns: Json[]
+      }
+      admin_record_partner_financial_event: {
+        Args: {
+          p_amount_paisa: number
+          p_idempotency_key: string
+          p_kind: string
+          p_metadata?: Json
+          p_payment_id: number
+          p_provider_reference: string
+          p_reason: string
+          p_status: string
+        }
+        Returns: Json
+      }
+      admin_review_partner_application: {
+        Args: { p_reason?: string; p_status: string; p_user_id: number }
+        Returns: Json
       }
       admin_review_verification: {
         Args: {
@@ -2654,7 +3402,39 @@ export type Database = {
         }
         Returns: Json
       }
+      admin_search_partner_applications: {
+        Args: {
+          p_category?: string
+          p_city?: string
+          p_status?: string
+          p_submitted_from?: string
+          p_submitted_to?: string
+        }
+        Returns: Json
+      }
+      admin_update_partner_finance_config: {
+        Args: {
+          p_gst_basis: string
+          p_gst_bps: number
+          p_gst_enabled: boolean
+          p_platform_fee_bps: number
+          p_reason: string
+          p_settlement_days: number
+        }
+        Returns: Json
+      }
+      admin_update_partner_settlement: {
+        Args: {
+          p_note?: string
+          p_payout_reference?: string
+          p_settlement_id: number
+          p_status: string
+        }
+        Returns: Json
+      }
       assert_chat_membership: { Args: { p_room_id: number }; Returns: boolean }
+      block_chat_user: { Args: { p_user_id: number }; Returns: undefined }
+      bootstrap_my_profile: { Args: never; Returns: number }
       can_read_event: { Args: { p_event_id: number }; Returns: boolean }
       cancel_activity: { Args: { p_event_id: number }; Returns: undefined }
       check_onboarding_username: {
@@ -2727,14 +3507,24 @@ export type Database = {
         Args: { p_body: string; p_event_id: number; p_parent_id?: number }
         Returns: Json
       }
+      create_activity_invite: {
+        Args: { p_event_id: number; p_expires_at?: string; p_max_uses?: number }
+        Returns: Json
+      }
       create_direct_chat_room: {
         Args: { p_other_user_id: number }
         Returns: number
       }
-      create_group_chat_room: {
-        Args: { p_member_ids: number[]; p_title: string }
-        Returns: number
-      }
+      create_group_chat_room:
+        | { Args: { p_member_ids: number[]; p_title: string }; Returns: number }
+        | {
+            Args: {
+              p_image_path: string
+              p_member_ids: number[]
+              p_title: string
+            }
+            Returns: number
+          }
       create_story: {
         Args: {
           p_caption?: string
@@ -2757,6 +3547,9 @@ export type Database = {
           document_path: string | null
           document_size: number | null
           id: number
+          live_photo_path: string | null
+          live_photo_verified: boolean
+          live_photo_verified_at: string | null
           phone_verified: boolean
           review_notes: string
           reviewed_at: string | null
@@ -2779,11 +3572,14 @@ export type Database = {
         Returns: undefined
       }
       delete_activity_comment: { Args: { p_comment_id: number }; Returns: Json }
+      delete_my_primary_profile_photo: { Args: never; Returns: Json }
+      delete_my_profile_photo: { Args: { p_photo_id: number }; Returns: Json }
       delete_story: { Args: { p_story_id: number }; Returns: Json }
       discard_verification_draft: {
         Args: { p_verification_id: number }
         Returns: undefined
       }
+      ensure_activity_chat: { Args: { p_event_id: number }; Returns: Json }
       finalize_activity_payment: {
         Args: {
           p_amount_paisa: number
@@ -2799,11 +3595,16 @@ export type Database = {
           created_at: string
           currency: string
           event_id: number
+          financial_status: string
+          gst_basis: string | null
+          gst_bps: number | null
+          gst_paisa: number | null
           id: number
           idempotency_key: string
           last_verified_at: string | null
           paid_at: string | null
           partner_net_paisa: number | null
+          partner_user_id: number | null
           payment_session_id: string | null
           platform_fee_bps: number | null
           platform_fee_paisa: number | null
@@ -2841,6 +3642,9 @@ export type Database = {
           document_path: string | null
           document_size: number | null
           id: number
+          live_photo_path: string | null
+          live_photo_verified: boolean
+          live_photo_verified_at: string | null
           phone_verified: boolean
           review_notes: string
           reviewed_at: string | null
@@ -2863,6 +3667,7 @@ export type Database = {
       }
       get_current_app_user_id: { Args: never; Returns: number }
       get_current_legacy_user_id: { Args: never; Returns: number }
+      get_my_emergency_contact: { Args: never; Returns: Json }
       get_my_partner_profile: { Args: never; Returns: Json }
       get_my_profile: { Args: never; Returns: Json }
       get_partner_dashboard: { Args: never; Returns: Json }
@@ -2905,6 +3710,10 @@ export type Database = {
         Args: { p_event_id: number; p_page?: number; p_page_size?: number }
         Returns: Json
       }
+      list_activity_participant_ratings: {
+        Args: { p_event_id: number }
+        Returns: Json
+      }
       list_badge_catalog: { Args: never; Returns: Json[] }
       list_chat_inbox: { Args: { p_message_limit?: number }; Returns: Json[] }
       list_chat_messages: {
@@ -2924,11 +3733,13 @@ export type Database = {
         Returns: {
           age_max: number | null
           age_min: number | null
+          costs_may_apply: boolean
           created_at: string | null
           created_by: number
           currency: string
           description: string | null
           display_location: string | null
+          entry_fee_required: boolean
           event_end_time: string | null
           event_start_time: string | null
           gender_preference: string | null
@@ -2944,6 +3755,7 @@ export type Database = {
           longitude: number | null
           max_participants: number | null
           media: Json | null
+          payment_collection_mode: string
           price: number
           registration_close_time: string | null
           status: string
@@ -2962,7 +3774,10 @@ export type Database = {
       }
       list_interest_catalog: { Args: never; Returns: Json[] }
       list_my_badges: { Args: never; Returns: Json[] }
+      list_my_blocked_users: { Args: never; Returns: Json }
       list_my_interests: { Args: never; Returns: Json[] }
+      list_my_nitro_history: { Args: never; Returns: Json }
+      list_my_squad: { Args: never; Returns: Json }
       list_my_stories: {
         Args: { p_include_expired?: boolean }
         Returns: Json[]
@@ -3002,6 +3817,9 @@ export type Database = {
           document_path: string | null
           document_size: number | null
           id: number
+          live_photo_path: string | null
+          live_photo_verified: boolean
+          live_photo_verified_at: string | null
           phone_verified: boolean
           review_notes: string
           reviewed_at: string | null
@@ -3030,6 +3848,7 @@ export type Database = {
       mark_story_viewed: { Args: { p_story_id: number }; Returns: Json }
       my_profile_metrics: { Args: never; Returns: Json }
       my_social_links: { Args: { p_patch?: Json }; Returns: Json }
+      my_trust_score: { Args: never; Returns: Json }
       prepare_activity_payment: {
         Args: { p_event_id: number }
         Returns: {
@@ -3038,11 +3857,16 @@ export type Database = {
           created_at: string
           currency: string
           event_id: number
+          financial_status: string
+          gst_basis: string | null
+          gst_bps: number | null
+          gst_paisa: number | null
           id: number
           idempotency_key: string
           last_verified_at: string | null
           paid_at: string | null
           partner_net_paisa: number | null
+          partner_user_id: number | null
           payment_session_id: string | null
           platform_fee_bps: number | null
           platform_fee_paisa: number | null
@@ -3063,6 +3887,27 @@ export type Database = {
         }
       }
       profile_contact: { Args: { p_user_id: number }; Returns: Json }
+      profile_reviews: { Args: { p_user_id: number }; Returns: Json }
+      profile_trust_score: { Args: { p_user_id: number }; Returns: Json }
+      promote_my_profile_photo: {
+        Args: {
+          p_position: number
+          p_previous_path?: string
+          p_previous_url?: string
+        }
+        Returns: Json
+      }
+      rate_activity_participant: {
+        Args: {
+          p_behaviour: number
+          p_comment?: string
+          p_communication: number
+          p_event_id: number
+          p_friendly: number
+          p_user_id: number
+        }
+        Returns: Json
+      }
       record_activity_payment_provider_state: {
         Args: {
           p_order_id: string
@@ -3077,11 +3922,16 @@ export type Database = {
           created_at: string
           currency: string
           event_id: number
+          financial_status: string
+          gst_basis: string | null
+          gst_bps: number | null
+          gst_paisa: number | null
           id: number
           idempotency_key: string
           last_verified_at: string | null
           paid_at: string | null
           partner_net_paisa: number | null
+          partner_user_id: number | null
           payment_session_id: string | null
           platform_fee_bps: number | null
           platform_fee_paisa: number | null
@@ -3115,11 +3965,16 @@ export type Database = {
           created_at: string
           currency: string
           event_id: number
+          financial_status: string
+          gst_basis: string | null
+          gst_bps: number | null
+          gst_paisa: number | null
           id: number
           idempotency_key: string
           last_verified_at: string | null
           paid_at: string | null
           partner_net_paisa: number | null
+          partner_user_id: number | null
           payment_session_id: string | null
           platform_fee_bps: number | null
           platform_fee_paisa: number | null
@@ -3139,6 +3994,16 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      redeem_activity_invite: { Args: { p_token: string }; Returns: Json }
+      redeem_referral: { Args: { p_referrer_id: number }; Returns: Json }
+      remove_my_squad_member: {
+        Args: { p_member_id: number }
+        Returns: undefined
+      }
+      report_vibe: {
+        Args: { p_details?: string; p_reason: string; p_vibe_id: number }
+        Returns: Json
+      }
       request_join_activity: {
         Args: { p_event_id: number; p_status?: string }
         Returns: {
@@ -3148,6 +4013,7 @@ export type Database = {
           invited_by: number | null
           joined_at: string | null
           responded_at: string | null
+          role: string
           status: string
           user_id: number
         }
@@ -3167,6 +4033,7 @@ export type Database = {
           invited_by: number | null
           joined_at: string | null
           responded_at: string | null
+          role: string
           status: string
           user_id: number
         }
@@ -3181,6 +4048,14 @@ export type Database = {
         Args: { p_event_id: number; p_questions: Json }
         Returns: Json
       }
+      save_my_emergency_contact: {
+        Args: {
+          p_contact_name: string
+          p_phone_number: string
+          p_relation: string
+        }
+        Returns: Json
+      }
       save_my_partner_profile: {
         Args: {
           p_business_name: string
@@ -3188,6 +4063,28 @@ export type Database = {
           p_description?: string
         }
         Returns: Json
+      }
+      save_my_profile_photo: {
+        Args: {
+          p_position: number
+          p_public_url: string
+          p_storage_path: string
+        }
+        Returns: {
+          created_at: string
+          id: number
+          position: number
+          public_url: string
+          storage_path: string
+          updated_at: string
+          user_id: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tbl_user_profile_photos"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       send_chat_message: {
         Args: {
@@ -3208,9 +4105,8 @@ export type Database = {
         }
         Returns: Json[]
       }
-      set_my_interests: { Args: { p_category_ids: number[] }; Returns: Json }
-      submit_activity_registration: {
-        Args: { p_answers: Json; p_event_id: number; p_status?: string }
+      set_activity_cohost: {
+        Args: { p_cohost: boolean; p_event_id: number; p_user_id: number }
         Returns: {
           created_at: string
           event_id: number
@@ -3218,6 +4114,7 @@ export type Database = {
           invited_by: number | null
           joined_at: string | null
           responded_at: string | null
+          role: string
           status: string
           user_id: number
         }
@@ -3228,7 +4125,36 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      set_my_interests: { Args: { p_category_ids: number[] }; Returns: Json }
+      submit_activity_registration: {
+        Args: { p_answers: Json; p_event_id: number; p_status?: string }
+        Returns: {
+          created_at: string
+          event_id: number
+          id: number
+          invited_by: number | null
+          joined_at: string | null
+          responded_at: string | null
+          role: string
+          status: string
+          user_id: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tbl_event_participants"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      submit_my_live_photo: { Args: { p_path: string }; Returns: Json }
+      submit_partner_application: {
+        Args: { p_application: Json }
+        Returns: Json
+      }
       submit_support_query: { Args: { p_message: string }; Returns: number }
+      sync_my_phone_verification: { Args: never; Returns: Json }
+      sync_my_verification: { Args: never; Returns: Json }
+      unblock_chat_user: { Args: { p_user_id: number }; Returns: undefined }
       update_activity: {
         Args: { p_event_id: number; p_patch: Json }
         Returns: number

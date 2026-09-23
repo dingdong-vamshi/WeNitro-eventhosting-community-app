@@ -14,8 +14,9 @@ for(const title of ['', ' '.repeat(5), 'x'.repeat(51)])assert.ok(hostStepError({
 assert.ok(hostStepError({...valid,description:''},0,false,+now));
 for(const capacity of ['0','-1','1.5','NaN','2147483648'])assert.ok(hostStepError({...valid,capacity},1,false,+now));
 for(const capacity of ['','1','100'])assert.equal(hostStepError({...valid,capacity},1,false,+now),'');
-for(const price of ['0.01','250','999.99','1000000'])assert.equal(hostStepError({...valid,isPaid:true,price},1,false,+now),'');
-for(const price of ['','0','-1','1.001','1000000.01','abc'])assert.match(hostStepError({...valid,isPaid:true,price},1,false,+now),/Activity Price/);
+for(const price of ['0.01','250','999.99','1000000'])assert.equal(hostStepError({...valid,isPaid:true,price},1,true,+now),'');
+for(const price of ['','0','-1','1.001','1000000.01','abc'])assert.match(hostStepError({...valid,isPaid:true,price},1,true,+now),/Activity Price/);
+assert.match(hostStepError({...valid,isPaid:true,price:'250'},1,false,+now),/approved Partner/);
 assert.equal(hostStepError({...valid,isPaid:false,price:'not-used'},1,false,+now),'');
 assert.equal(ageError('20','45'),'');assert.ok(ageError('45','20'));assert.ok(ageError('-1','20'));assert.ok(ageError('20','121'));assert.equal(ageError('0',''),'');
 assert.equal(HOST_CATEGORIES.length,21);assert.ok(!HOST_CATEGORIES.some(c => c.startsWith('[QA]')));assert.equal(GENDER_OPTIONS.length,4);

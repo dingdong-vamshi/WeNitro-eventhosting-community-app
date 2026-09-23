@@ -3,7 +3,7 @@ import { UserAvatar } from '../user-avatar';
 import { VerifiedBadge } from '../verified-badge';
 import { Asset } from 'expo-asset';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Image, Platform, Pressable, ScrollView, Switch, Text, useWindowDimensions, View } from 'react-native';
+import { AccessibilityInfo, Alert, AppState, Image, Platform, Pressable, ScrollView, Switch, Text, useWindowDimensions, View } from 'react-native';
 import type { Activity, AppData, Screen } from '../../../App';
 import { activitiesProductionService, type ActivityListItem } from '../../services/activities-production';
 import { communitiesProductionService, type CommunitySummary } from '../../services/communities-production';
@@ -18,7 +18,7 @@ import { Action, BrandBar, Button, ErrorLine, Header, Icon, Page, Pills, SearchF
 const HERO_SLIDES = [
   {
     id: 'activities',
-    image: require('../../../assets/photos/bonfire.jpg'),
+    image: require('../../../assets/hero/hero-activities.jpeg'),
     eyebrow: 'REAL PEOPLE, OFFLINE',
     title: 'Host and discover new activities',
     description: 'Make plans around shared interests and meet in real life.',
@@ -27,7 +27,7 @@ const HERO_SLIDES = [
   },
   {
     id: 'communities',
-    image: require('../../../assets/photos/study.jpg'),
+    image: require('../../../assets/hero/hero-communities.jpeg'),
     eyebrow: 'FIND YOUR PEOPLE',
     title: 'Join a community that feels like yours',
     description: 'Share ideas, join conversations and build your squad.',
@@ -36,7 +36,8 @@ const HERO_SLIDES = [
   },
   {
     id: 'friends',
-    image: require('../../../assets/photos/friends.jpg'),
+    image: require('../../../assets/hero/hero-friends.jpeg'),
+    maskFalseRewardClaims: true,
     eyebrow: 'BETTER TOGETHER',
     title: 'Bring your friends. Earn Nitro Points.',
     description: 'Invite your squad and earn 10 Nitro Points when they join.',
@@ -45,7 +46,7 @@ const HERO_SLIDES = [
   },
   {
     id: 'store',
-    image: require('../../../assets/photos/food.jpg'),
+    image: require('../../../assets/hero/hero-store.jpeg'),
     eyebrow: 'NITRO STORE',
     title: 'Turn Nitro Points into rewards',
     description: 'See your balance and learn when rewards become available.',
@@ -53,6 +54,7 @@ const HERO_SLIDES = [
     screen: 'shop' as const,
   },
 ] as const;
+const HERO_AUTO_ADVANCE_MS = 4500;
 const displayableMedia = (value?: string) => Boolean(value && /^(https?:|data:|blob:|file:)/i.test(value));
 function activityState(a: Activity) {
   const ended = a.status === 'completed' || Boolean(a.endsAt && Date.parse(a.endsAt) <= Date.now());
@@ -94,6 +96,10 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const { width } = useWindowDimensions();
   const homeCarousel = useRef<ScrollView>(null);
   const [homeSlide, setHomeSlide] = useState(0);
+  const [carouselDragging, setCarouselDragging] = useState(false);
+  const [carouselPressed, setCarouselPressed] = useState(false);
+  const [appActive, setAppActive] = useState(AppState.currentState === 'active');
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [filter, setFilter] = useState('All');
   const [categories, setCategories] = useState<string[]>([]);
   const [draftCategories, setDraftCategories] = useState<string[]>([]);
@@ -115,15 +121,29 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const carouselStep = carouselCardWidth;
 
   useEffect(() => {
+    let mounted = true;
+    void AccessibilityInfo.isReduceMotionEnabled().then(value => { if (mounted) setReduceMotion(value); });
+    const motionSubscription = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduceMotion);
+    const appStateSubscription = AppState.addEventListener('change', state => setAppActive(state === 'active'));
+    return () => {
+      mounted = false;
+      motionSubscription.remove();
+      appStateSubscription.remove();
+    };
+  }, []);
+
+  const carouselPaused = carouselDragging || carouselPressed || !appActive || reduceMotion;
+  useEffect(() => {
+    if (carouselPaused) return;
     const timer = setInterval(() => {
       setHomeSlide(current => {
         const next = (current + 1) % HERO_SLIDES.length;
         homeCarousel.current?.scrollTo({ x: next * carouselStep, animated: true });
         return next;
       });
-    }, 4500);
+    }, HERO_AUTO_ADVANCE_MS);
     return () => clearInterval(timer);
-  }, [carouselStep]);
+  }, [carouselPaused, carouselStep]);
 
   useEffect(() => {
     const userId = Number(data.userId);
@@ -171,7 +191,13 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
             snapToAlignment="start"
             decelerationRate="fast"
             disableIntervalMomentum
-            onMomentumScrollEnd={event => setHomeSlide(Math.max(0, Math.min(HERO_SLIDES.length - 1, Math.round(event.nativeEvent.contentOffset.x / carouselStep))))}
+            onScrollBeginDrag={() => setCarouselDragging(true)}
+            onScrollEndDrag={() => setCarouselDragging(false)}
+            onMomentumScrollBegin={() => setCarouselDragging(true)}
+            onMomentumScrollEnd={event => {
+              setHomeSlide(Math.max(0, Math.min(HERO_SLIDES.length - 1, Math.round(event.nativeEvent.contentOffset.x / carouselStep))));
+              setCarouselDragging(false);
+            }}
             style={{ width: carouselCardWidth, height: carouselCardHeight }}
           >
             {HERO_SLIDES.map(slide => (
@@ -179,11 +205,19 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
                 key={slide.id}
                 accessibilityRole="button"
                 accessibilityLabel={`${slide.cta}: ${slide.title}`}
+                accessibilityHint="Opens the featured WeNitro destination"
+                onPressIn={() => setCarouselPressed(true)}
+                onPressOut={() => setCarouselPressed(false)}
                 onPress={() => go(slide.screen)}
                 style={({ pressed }) => ({ width: carouselCardWidth, height: carouselCardHeight, opacity: pressed ? 0.88 : 1 })}
               >
-                <Image source={slide.image} style={{ position: 'absolute', width: carouselCardWidth, height: carouselCardHeight }} resizeMode="cover" />
-                <LinearGradient colors={['rgba(13, 8, 55, 0.96)', 'rgba(34, 22, 99, 0.72)', 'rgba(15, 23, 42, 0.18)']} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }} />
+                <Image source={slide.image} accessible={false} accessibilityIgnoresInvertColors style={{ position: 'absolute', width: carouselCardWidth, height: carouselCardHeight }} resizeMode="cover" />
+                <View pointerEvents="none" style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '48%', backgroundColor: '#21105C' }} />
+                <LinearGradient pointerEvents="none" colors={['#21105C', 'rgba(33, 16, 92, 0.96)', 'rgba(25, 18, 76, 0.62)', 'rgba(15, 23, 42, 0.12)']} locations={[0, .34, .72, 1]} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: '35%' }} />
+                {'maskFalseRewardClaims' in slide ? <>
+                  <View testID="hero-reward-claim-top-mask" pointerEvents="none" style={{ position: 'absolute', left: '45%', top: 0, width: '30%', height: '27%', borderBottomLeftRadius: 18, borderBottomRightRadius: 18, backgroundColor: '#281263' }} />
+                  <View testID="hero-reward-claim-edge-mask" pointerEvents="none" style={{ position: 'absolute', right: 0, top: '31%', width: '18%', height: '45%', borderTopLeftRadius: 18, borderBottomLeftRadius: 18, backgroundColor: '#2A155E' }} />
+                </> : null}
                 <View style={{ flex: 1, width: '76%', padding: 18, paddingBottom: 25, justifyContent: 'center', gap: 7 }}>
                   <Text style={{ color: '#C9C3FF', fontSize: 12, lineHeight: 16, fontWeight: '800', letterSpacing: .7 }}>{slide.eyebrow}</Text>
                   <Text style={{ color: '#FFFFFF', fontSize: 22, lineHeight: 26, fontWeight: '800' }}>{slide.title}</Text>
@@ -202,6 +236,8 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
                 key={index}
                 accessibilityRole="button"
                 accessibilityLabel={`Show carousel slide ${index + 1}`}
+                onPressIn={() => setCarouselPressed(true)}
+                onPressOut={() => setCarouselPressed(false)}
                 onPress={() => {
                   setHomeSlide(index);
                   homeCarousel.current?.scrollTo({ x: index * carouselStep, animated: true });

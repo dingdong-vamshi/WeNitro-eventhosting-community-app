@@ -5,7 +5,6 @@ import {
 } from "npm:@supabase/supabase-js@2.112.4";
 
 export const CASHFREE_API_VERSION = "2025-01-01";
-export const CASHFREE_BASE_URL = "https://sandbox.cashfree.com";
 
 export const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -99,12 +98,20 @@ export const amountToPaisa = (value: unknown) => {
 
 const cashfreeCredentials = () => {
   const environment = requiredEnv("CASHFREE_ENV").toLowerCase();
-  if (environment !== "test" && environment !== "sandbox") {
-    throw new Error("Cashfree is locked to TEST/SANDBOX mode.");
+  const sandbox = environment === "test" || environment === "sandbox";
+  const production = environment === "production" || environment === "live";
+  if (!sandbox && !production) {
+    throw new Error(
+      "CASHFREE_ENV must be test/sandbox or production/live.",
+    );
   }
   return {
     appId: requiredEnv("CASHFREE_APP_ID"),
     secret: requiredEnv("CASHFREE_SECRET_KEY"),
+    environment: sandbox ? "sandbox" : "production",
+    baseUrl: sandbox
+      ? "https://sandbox.cashfree.com"
+      : "https://api.cashfree.com",
   };
 };
 
@@ -114,7 +121,7 @@ export const cashfreeRequest = async (
   idempotencyKey?: string,
 ) => {
   const credentials = cashfreeCredentials();
-  const response = await fetch(CASHFREE_BASE_URL + path, {
+  const response = await fetch(credentials.baseUrl + path, {
     ...init,
     headers: {
       Accept: "application/json",

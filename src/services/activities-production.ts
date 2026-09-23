@@ -52,6 +52,8 @@ export type Activity = {
   latitude: number | null;
   longitude: number | null;
   priceInr: number;
+  isPaid: boolean;
+  paymentCollectionMode: "cashfree" | "onsite";
   costsMayApply?: boolean;
   entryFeeRequired?: boolean;
   capacity: number;
@@ -202,7 +204,7 @@ export type ActivityRealtimeHandlers = {
 type DbRecord = Record<string, unknown>;
 
 const EVENT_SELECT =
-  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,costs_may_apply,entry_fee_required,currency,intent,status,latitude,longitude,display_location,location_instruction,verified_only,age_min,age_max,gender_preference";
+  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,payment_collection_mode,costs_may_apply,entry_fee_required,currency,intent,status,latitude,longitude,display_location,location_instruction,verified_only,age_min,age_max,gender_preference";
 const FEEDBACK_SELECT = "id,event_id,created_by,reaction,comment,created_at";
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
@@ -413,6 +415,8 @@ const activityFromDb = (
     latitude: row.latitude == null ? null : Number(row.latitude),
     longitude: row.longitude == null ? null : Number(row.longitude),
     priceInr: Number.isFinite(price) ? price : 0,
+    isPaid: row.is_paid === true && price > 0,
+    paymentCollectionMode: row.payment_collection_mode === "onsite" ? "onsite" : "cashfree",
     costsMayApply: row.costs_may_apply === true || price > 0,
     entryFeeRequired: row.entry_fee_required === true || price > 0,
     capacity: Number.isFinite(capacity) ? capacity : 0,

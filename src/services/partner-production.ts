@@ -3,32 +3,39 @@ import { supabase } from "../lib/supabase";
 export type PartnerTotals = {
   hosted_activities: number;
   total_registrations: number;
-  paid_registrations: number;
   pending_registrations: number;
   approved_registrations: number;
   rejected_registrations: number;
   gross_paisa: number;
   platform_fee_paisa: number;
-  net_paisa: number;
+  gst_paisa: number;
+  refund_paisa: number;
+  expected_net_paisa: number;
   platform_fee_bps: number;
 };
 export type PartnerActivity = {
-  event_id: number;
+  id: number;
   title: string;
-  starts_at: string;
-  price_inr: number;
+  event_start_time: string;
+  event_end_time: string | null;
+  price: number;
   status: string;
-  visibility: string;
+  visibility_type: string;
   capacity: number | null;
-  remaining_slots: number | null;
   registration_count: number;
-  paid_registration_count: number;
   pending_count: number;
   approved_count: number;
   rejected_count: number;
   gross_paisa: number;
   platform_fee_paisa: number;
-  net_paisa: number;
+  gst_paisa: number;
+  refund_paisa: number;
+  expected_net_paisa: number;
+  settlement_status: "PENDING" | "PROCESSING" | "PAID" | "FAILED" | "ON_HOLD" | null;
+  eligible_at: string | null;
+  due_at: string | null;
+  settlement_paid_at: string | null;
+  payout_reference: string | null;
 };
 export type PartnerDashboardData = { summary: PartnerTotals; activities: PartnerActivity[] };
 export type PartnerRegistration = {
@@ -53,7 +60,14 @@ export type PartnerTransaction = {
   amount_paisa: number;
   platform_fee_bps: number;
   platform_fee_paisa: number;
+  gst_bps: number;
+  gst_paisa: number;
+  gst_basis: string;
   partner_net_paisa: number;
+  financial_status: string;
+  settlement_status: string | null;
+  settlement_due_at: string | null;
+  payout_reference: string | null;
 };
 
 export const formatPartnerMoney = (paisa: number) =>

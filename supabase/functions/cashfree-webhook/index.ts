@@ -10,6 +10,16 @@ import {
 
 type JsonRecord = Record<string, unknown>;
 
+const sha256 = async (value: string) => {
+  const bytes = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(value),
+  );
+  return Array.from(new Uint8Array(bytes))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+};
+
 const objectValue = (value: unknown): JsonRecord =>
   value && typeof value === "object" ? (value as JsonRecord) : {};
 
@@ -25,6 +35,8 @@ Deno.serve(async (request) => {
     return jsonResponse({ error: "Method not allowed." }, 405);
   }
 
+  let deliveryKey = "";
+  let admin: ReturnType<typeof adminClient> | null = null;
   try {
     const rawBody = await request.text();
     const signature = request.headers.get("x-webhook-signature");
@@ -61,11 +73,32 @@ Deno.serve(async (request) => {
     const paymentStatus = String(
       providerPayment.payment_status ?? "",
     ).toUpperCase();
+    deliveryKey = await sha256((timestamp ?? "") + rawBody);
+    admin = adminClient();
+    const claim = await admin.rpc("claim_cashfree_webhook_event", {
+      p_delivery_key: deliveryKey,
+      p_event_type: String(payload.type ?? payload.event ?? "unknown").slice(0, 160),
+      p_provider_order_id: orderId || null,
+      p_payload_hash: await sha256(rawBody),
+    });
+    if (claim.error) throw claim.error;
+    if (claim.data === "TERMINAL") {
+      return jsonResponse({ received: true, replayed: true });
+    }
+    if (claim.data === "IN_PROGRESS") {
+      return jsonResponse({ received: false, retryable: true }, 409);
+    }
+    if (claim.data !== "CLAIMED") {
+      throw new Error("Webhook delivery could not be claimed.");
+    }
     if (!orderId || !paymentStatus) {
-      return jsonResponse({ received: true });
+      await admin.from("tbl_cashfree_webhook_events").update({
+        status: "IGNORED",
+        processed_at: new Date().toISOString(),
+      }).eq("delivery_key", deliveryKey);
+      return jsonResponse({ received: true, ignored: true });
     }
 
-    const admin = adminClient();
     if (paymentStatus === "SUCCESS") {
       const amountPaisa = amountToPaisa(providerPayment.payment_amount);
       const finalized = await admin.rpc("finalize_activity_payment", {
@@ -101,8 +134,23 @@ Deno.serve(async (request) => {
       if (recorded.error) throw recorded.error;
     }
 
+    const processed = await admin.from("tbl_cashfree_webhook_events").update({
+      status: "PROCESSED",
+      processed_at: new Date().toISOString(),
+    }).eq("delivery_key", deliveryKey);
+    if (processed.error) throw processed.error;
+
     return jsonResponse({ received: true });
   } catch (error) {
+    if (admin && deliveryKey) {
+      await admin.from("tbl_cashfree_webhook_events").update({
+        status: "FAILED",
+        error_message: error instanceof Error
+          ? error.message.slice(0, 1000)
+          : "Webhook processing failed.",
+        processed_at: new Date().toISOString(),
+      }).eq("delivery_key", deliveryKey);
+    }
     return errorResponse(error);
   }
 });

@@ -233,7 +233,7 @@ export async function loadRemoteWorkspace() {
         communitiesProductionService.discover({ pageSize: 30 }),
       ),
       loadStage("profile", profileProductionService.loadProfile()),
-      loadStage("partner profile", partnerAccountService.get()).catch(() => ({ profile: null, eligible: false, unavailable: true })),
+      loadStage("partner profile", partnerAccountService.get()).catch(() => ({ profile: null, payout_account: null, eligible: false, can_host_paid: false, unavailable: true })),
       loadStage(
         "people",
         (supabase.rpc as unknown as (
@@ -464,6 +464,8 @@ export async function loadRemoteWorkspace() {
       location_name: item.locationName,
       latitude: item.latitude, longitude: item.longitude,
       price_inr: item.priceInr,
+      is_paid: item.isPaid,
+      payment_collection_mode: item.paymentCollectionMode,
       costs_may_apply: item.costsMayApply,
       entry_fee_required: item.entryFeeRequired,
       capacity: item.capacity,
@@ -487,7 +489,7 @@ export async function loadRemoteWorkspace() {
   const profile = profileDetails.profile;
   const normalizedProfile = {
     id: String(profile.id),
-    account_type: partnerAccount.eligible && partnerAccount.profile?.status === "active" ? "partner" : "individual",
+    account_type: partnerAccount.can_host_paid ? "partner" : "individual",
     partner_profile: partnerAccount.profile,
     partner_eligible: partnerAccount.eligible,
     partner_unavailable: "unavailable" in partnerAccount,
@@ -861,6 +863,8 @@ const activityForWorkspace = async (
   location_name: activity.locationName,
   latitude: activity.latitude, longitude: activity.longitude,
   price_inr: activity.priceInr,
+  is_paid: activity.isPaid,
+  payment_collection_mode: activity.paymentCollectionMode,
       costs_may_apply: activity.costsMayApply,
       entry_fee_required: activity.entryFeeRequired,
   capacity: activity.capacity,

@@ -3,27 +3,24 @@ import fs from 'node:fs';
 
 const app = fs.readFileSync('App.tsx', 'utf8');
 const host = fs.readFileSync('src/components/hosting/host-activity-screen.tsx', 'utf8');
-const cards = fs.readFileSync('src/components/reconstruction/feed-search.tsx', 'utf8');
-const migration = fs.readFileSync('supabase/migrations/20260911112102_activity_price_onsite_information.sql', 'utf8');
+const domain = fs.readFileSync('src/domain/host-activity.ts', 'utf8');
+const payments = fs.readFileSync('src/services/payments.ts', 'utf8');
+const stateMigration = fs.readFileSync('supabase/migrations/20260922192635_partner_paid_registration_state.sql', 'utf8');
 const detail = app.slice(app.indexOf('export function ActivityDetailScreen'), app.indexOf('function ChatMessageVideo'));
 
 assert.equal((host.match(/label="Paid Activity"/g) || []).length, 1);
-assert.doesNotMatch(host, /label: 'Free', paid: false/);
-assert.doesNotMatch(host, /label: 'Paid', paid: true/);
-assert.match(host, /label="Activity Price"/);
-assert.match(host, /priceInr: draft\.isPaid \? Number\(draft\.price\) : 0/);
-assert.match(host, /costsMayApply: draft\.isPaid/);
-assert.match(host, /entryFeeRequired: draft\.isPaid/);
-assert.match(cards, /a\.price/);
+assert.match(host, /isPartner \? <View[\s\S]*label="Paid Activity"/);
+assert.match(host, /priceInr: isPartner && draft\.isPaid/);
+assert.match(host, /secure Cashfree checkout/i);
+assert.doesNotMatch(host, /payable to the organizer at the activity/i);
+assert.match(domain, /d\.isPaid && !isPartner/);
 
-for (const forbidden of ['Pay & Join', 'Opening Cashfree', 'Continue to payment', 'createActivityPayment', 'launchCashfreeCheckout', 'verifyActivityPayment']) {
-  assert.equal(detail.includes(forbidden), false, `Activity details must not contain ${forbidden}`);
+for (const required of ['createActivityPayment', 'launchCashfreeCheckout', 'verifyActivityPayment', 'payment_required', 'Required registration questions']) {
+  assert.equal(detail.includes(required), true, `Activity details must contain ${required}`);
 }
+assert.match(payments, /EXPO_PUBLIC_CASHFREE_MODE/);
+assert.match(payments, /Platform\.OS === "web"/);
+assert.match(stateMigration, /when event_row\.is_paid then 'payment_required'/);
+assert.match(stateMigration, /when p_status='approved' and event_row\.is_paid then 'payment_required'/);
 
-assert.match(migration, /drop trigger if exists enforce_partner_paid_hosting/);
-assert.match(migration, /when event_row\.join_type = 'direct'[\s\S]*then 'approved'/);
-assert.doesNotMatch(migration, /then 'payment_required'/);
-assert.match(migration, /respond_activity_join/);
-assert.match(migration, /Informational participation price in INR/);
-
-console.log('PASS: single Paid Activity control, onsite-only price payload, card price data, direct/approval SQL, and Cashfree isolation verified.');
+console.log('PASS: Partner-only paid hosting, Cashfree web checkout, provider verification, and payment-required registration states verified.');

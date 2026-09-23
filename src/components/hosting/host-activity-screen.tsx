@@ -178,9 +178,9 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     startsAt: draft.dateLater ? null : new Date(draft.start).toISOString(),
     endsAt: draft.dateLater ? null : new Date(draft.end).toISOString(),
     registrationClosesAt: draft.dateLater ? null : new Date(draft.deadline).toISOString(),
-    priceInr: draft.isPaid ? Number(draft.price) : 0,
-    costsMayApply: draft.isPaid,
-    entryFeeRequired: draft.isPaid,
+    priceInr: isPartner && draft.isPaid ? Number(draft.price) : 0,
+    costsMayApply: isPartner && draft.isPaid,
+    entryFeeRequired: isPartner && draft.isPaid,
     activityType: 'meetup',
     visibility: draft.visibility,
     joinType: draft.approval ? 'approval' : 'direct',
@@ -252,10 +252,10 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
         <Toggle label="Verified Membership" icon="person-add-outline" description="Restrict participation to verified profiles only" value={draft.verifiedOnly} onChange={() => patch({ verifiedOnly: !draft.verifiedOnly })} />
       </View><Text style={[s.label, { marginTop: 28, marginBottom: 24 }]}>PARTICIPATION DETAILS</Text>
         <Text style={[s.body, { fontSize: 12, marginBottom: 10 }]}>Participant Limit</Text><Control label="Participant Limit" keyboardType="number-pad" value={draft.capacity} onChangeText={capacity => patch({ capacity })} placeholder="No limit" />
-        <View style={{ marginTop: 24 }}>
-          <Toggle label="Paid Activity" icon="cash-outline" description="Classify whether the organizer charges an onsite participation price." value={draft.isPaid} onChange={() => patch({ isPaid: !draft.isPaid, price: draft.isPaid ? '' : draft.price })} />
-          {draft.isPaid ? <View style={{ gap: 12, paddingTop: 16 }}><Text style={[s.body, { fontSize: 12 }]}>Activity Price</Text><Control label="Activity Price" icon="cash-outline" keyboardType="decimal-pad" inputMode="decimal" value={draft.price} maxLength={10} onChangeText={value => patch({ price: value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') })} placeholder="₹ 250" /><Text style={s.small}>Participation cost is payable to the organizer at the activity. WeNitro does not collect this payment.</Text></View> : null}
-        </View>
+        {isPartner ? <View style={{ marginTop: 24 }}>
+          <Toggle label="Paid Activity" icon="cash-outline" description="Collect the activity price through secure Cashfree checkout." value={draft.isPaid} onChange={() => patch({ isPaid: !draft.isPaid, price: draft.isPaid ? '' : draft.price })} />
+          {draft.isPaid ? <View style={{ gap: 12, paddingTop: 16 }}><Text style={[s.body, { fontSize: 12 }]}>Activity Price</Text><Control label="Activity Price" icon="cash-outline" keyboardType="decimal-pad" inputMode="decimal" value={draft.price} maxLength={10} onChangeText={value => patch({ price: value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') })} placeholder="₹ 250" /><Text style={s.small}>Participants complete required registration questions and host approval, when enabled, before secure payment.</Text></View> : null}
+        </View> : null}
         <View style={{ marginTop: 14 }}><ChoiceRow label="Age Restriction" value={draft.ageLabel} onPress={() => setDialog('age')} />
         {draft.ageLabel === 'Custom range' ? <View style={[s.inline, { alignItems: 'flex-start' }]}>{(['ageMin', 'ageMax'] as const).map((key, i) => <View key={key} style={{ flex: 1, gap: 8 }}><Text style={s.small}>{i ? 'Maximum Age' : 'Minimum Age'}</Text><Control label={i ? 'Maximum Age' : 'Minimum Age'} value={draft[key]} keyboardType="number-pad" onChangeText={value => patch({ [key]: value })} /></View>)}</View> : null}
         <ChoiceRow label="Gender Preference" value={GENDER_OPTIONS.find(o => o.value === draft.gender)?.label || 'Open to All'} onPress={() => setDialog('gender')} /></View>

@@ -4,6 +4,12 @@ import { chromium } from 'playwright';
 const outputDir = 'artifacts/walkthrough';
 mkdirSync(outputDir, { recursive: true });
 
+const email = process.env.WENITRO_E2E_EMAIL?.trim();
+const password = process.env.WENITRO_E2E_PASSWORD;
+if (!email || !password) {
+  throw new Error('WENITRO_E2E_EMAIL and WENITRO_E2E_PASSWORD are required.');
+}
+
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({
   viewport: { width: 390, height: 844 },
@@ -13,8 +19,8 @@ const page = await context.newPage();
 const pause = (ms = 1800) => page.waitForTimeout(ms);
 
 await page.goto('http://127.0.0.1:8090', { waitUntil: 'networkidle' });
-await page.getByPlaceholder('you@example.com').fill('suchit.demo@wenitro.app');
-await page.getByPlaceholder('Minimum 6 characters').fill('WeNitro!2026Demo');
+await page.getByPlaceholder('you@example.com').fill(email);
+await page.getByPlaceholder('Minimum 6 characters').fill(password);
 await page.getByText('Continue', { exact: true }).click();
 await page.getByText('Study buddy for a focused two-hour sprint', { exact: true }).waitFor();
 await pause(6000);

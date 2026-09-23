@@ -7,7 +7,7 @@ const background = '#090C12';
 const accent = '#6860F2';
 const serif = Platform.OS === 'android' ? 'serif' : 'Georgia';
 const artwork = require('../../../assets/onboarding/vibes-phone-reference.png');
-const logo = require('../../../assets/onboarding/vibes-brand-mark.png');
+const logo = require('../../../assets/brand/wenitro-mark-white.png');
 
 /** Slide 1 owns its composition so shared onboarding/Slide 2 styles cannot drift. */
 export function VibeIntroSlide({ width, height, reducedMotion, onNext, onSkip }: {
@@ -31,7 +31,7 @@ export function VibeIntroSlide({ width, height, reducedMotion, onNext, onSkip }:
   return <View testID="vibe-intro-slide" style={{ width, height, overflow: 'hidden', backgroundColor: background }}>
     <View style={[s.header, { top: height * .057, left: width * .052, right: width * .048 }]}>
       <View style={s.brand}>
-        <Image source={logo} style={{ width: 27 * scale, height: 27 * scale }} resizeMode="contain" />
+        <Image source={logo} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors style={{ width: 27 * scale, height: 27 * scale }} resizeMode="contain" />
         <Text style={[s.brandText, { fontSize: 20 * scale }]}><Text style={{ color: accent }}>We</Text>Nitro</Text>
       </View>
       <Pressable accessibilityRole="button" onPress={onSkip} hitSlop={8} style={[s.skip, { width: 57 * scale, height: 30 * scale }]}>

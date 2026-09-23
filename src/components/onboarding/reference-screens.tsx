@@ -16,7 +16,8 @@ export const WENITRO_LEGAL_URLS = {
 
 export const ONBOARDING_BACKGROUND = "#101827";
 const purple = "#6860F2";
-const logo = require("../../../assets/wenitro-logo-transparent.png");
+const logoBlue = require("../../../assets/brand/wenitro-mark-blue.png");
+const logoWhite = require("../../../assets/brand/wenitro-mark-white.png");
 const photos = {
   ride: require("../../../assets/onboarding/reference-motorcycle.png"),
   cycling: require("../../../assets/onboarding/reference-skate.png"),
@@ -41,7 +42,7 @@ function useReducedMotion() {
 
 export function BrandIcon({ size = 86 }: { size?: number }) {
   const c = usePalette();
-  return <View style={{ width: size, height: size, borderRadius: size * .27, backgroundColor: c.inset, borderWidth: 1, borderColor: c.border, padding: size * .045 }}><Image source={logo} accessibilityLabel="WeNitro" style={{ width: "100%", height: "100%" }} resizeMode="contain" /></View>;
+  return <View style={{ width: size, height: size, borderRadius: size * .27, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: c.border, padding: size * .09 }}><Image source={logoBlue} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors style={{ width: "100%", height: "100%" }} resizeMode="contain" /></View>;
 }
 
 export function SplashScreen() {
@@ -59,7 +60,7 @@ export function SplashScreen() {
     <View style={[s.splashOrb, { top: -125, right: -120, width: 385, height: 385 }]} />
     <View style={[s.splashOrb, { bottom: -45, left: -80, width: 270, height: 270 }]} />
     <Animated.View style={[s.splashCenter, { opacity: enter, transform: [{ scale: reduced ? 1 : enter.interpolate({ inputRange: [0, 1], outputRange: [.94, 1] }) }] }]}>
-      <Image source={logo} accessibilityLabel="WeNitro" style={s.splashLogo} />
+      <Image source={logoWhite} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors style={s.splashLogo} resizeMode="contain" />
       <Text style={s.splashName}>WeNitro</Text>
       <Text style={s.splashTagline}>Find your perfect partner for every{"\n"}passion</Text>
     </Animated.View>
@@ -117,7 +118,7 @@ export function IntroScreen({ onContinue }: { onContinue: () => void }) {
     finish();
   };
   const pageContent = (slide: 0 | 1) => slide === 0 ? <VibeIntroSlide width={pageWidth} height={height} reducedMotion={reduced} onNext={next} onSkip={finish} /> : <View style={[s.introContent, { width: pageWidth, minHeight: height }]}>
-    <View style={s.introHeader}><View style={s.brandRow}><Image source={logo} style={{ width: 31, height: 31 }} /><Text style={s.introBrand}><Text style={{ color: purple }}>We</Text>Nitro</Text></View><Pressable onPress={finish} accessibilityRole="button" style={s.skip}><Text style={s.skipText}>Skip</Text></Pressable></View>
+    <View style={s.introHeader}><View style={s.brandRow}><Image source={logoWhite} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors style={{ width: 31, height: 31 }} resizeMode="contain" /><Text style={s.introBrand}><Text style={{ color: purple }}>We</Text>Nitro</Text></View><Pressable onPress={finish} accessibilityRole="button" style={s.skip}><Text style={s.skipText}>Skip</Text></Pressable></View>
     <IntroArtwork />
     <View style={s.introCopy}><Text style={s.introHeadline}>Real Connections{"\n"}<Text style={{ color: purple }}>Start Here</Text></Text><Text style={s.introDescription}>Join activities, meet amazing people, and create <Text style={{ color: purple, fontWeight: "700" }}>unforgettable memories.</Text></Text></View>
     <View style={s.introFooter}><Text style={s.swipe}>⤺  Swipe to explore  ⟶</Text><GradientButton label="Next" onPress={next} arrow /></View>
@@ -255,7 +256,7 @@ export function FeedLoadingScreen({ error, onRetry, onLogout }: { error?: string
   const reduced = useReducedMotion();
   const c = usePalette();
   useEffect(() => { if (reduced) return; const loop = Animated.loop(Animated.sequence([Animated.timing(fade, { toValue: .9, duration: 700, useNativeDriver: Platform.OS !== "web" }), Animated.timing(fade, { toValue: .45, duration: 700, useNativeDriver: Platform.OS !== "web" })])); loop.start(); return () => loop.stop(); }, [fade, reduced]);
-  return <SafeAreaView style={[s.full, { backgroundColor: c.bg }]} edges={["top", "bottom"]}><View style={s.skeletonContent} accessibilityLabel={error ? "Feed unavailable" : "Loading your Feed"} accessibilityState={{ busy: !error }}><View style={s.brandRow}><Image source={logo} style={{ width: 28, height: 28 }} /><Text style={[s.artBrand, { color: c.text }]}>WeNitro</Text></View>{error ? <><Text style={[s.error, { color: c.danger }]}>{error}</Text><GradientButton label="Try again" onPress={() => onRetry?.()} /><Pressable onPress={onLogout} accessibilityRole="button"><Text style={[s.legalLink, { color: c.accent }]}>Return to Welcome</Text></Pressable></> : <Animated.View style={{ opacity: reduced ? .65 : fade, gap: 16 }}>{[0, 1].map(i => <View key={i} style={{ gap: 10 }}><View style={[s.skeletonImage, { backgroundColor: c.card }]} /><View style={[s.skeletonLine, { width: "75%", backgroundColor: c.card }]} /><View style={[s.skeletonLine, { width: "42%", backgroundColor: c.card }]} /><View style={[s.skeletonLine, { width: "55%", backgroundColor: c.card }]} /></View>)}</Animated.View>}</View></SafeAreaView>;
+  return <SafeAreaView style={[s.full, { backgroundColor: c.bg }]} edges={["top", "bottom"]}><View style={s.skeletonContent} accessibilityLabel={error ? "Feed unavailable" : "Loading your Feed"} accessibilityState={{ busy: !error }}><View style={s.brandRow}><Image source={c.isDark ? logoWhite : logoBlue} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors style={{ width: 28, height: 28 }} resizeMode="contain" /><Text style={[s.artBrand, { color: c.text }]}>WeNitro</Text></View>{error ? <><Text style={[s.error, { color: c.danger }]}>{error}</Text><GradientButton label="Try again" onPress={() => onRetry?.()} /><Pressable onPress={onLogout} accessibilityRole="button"><Text style={[s.legalLink, { color: c.accent }]}>Return to Welcome</Text></Pressable></> : <Animated.View style={{ opacity: reduced ? .65 : fade, gap: 16 }}>{[0, 1].map(i => <View key={i} style={{ gap: 10 }}><View style={[s.skeletonImage, { backgroundColor: c.card }]} /><View style={[s.skeletonLine, { width: "75%", backgroundColor: c.card }]} /><View style={[s.skeletonLine, { width: "42%", backgroundColor: c.card }]} /><View style={[s.skeletonLine, { width: "55%", backgroundColor: c.card }]} /></View>)}</Animated.View>}</View></SafeAreaView>;
 }
 
 const s = StyleSheet.create({

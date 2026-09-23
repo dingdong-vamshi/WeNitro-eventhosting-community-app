@@ -33,6 +33,7 @@ import { PartnerDashboard } from "./src/components/partner-dashboard";
 import { PartnerRegistrationFormScreen } from "./src/components/partner-registration-form-screen";
 import { RegistrationQuestionEditor, RegistrationAnswerForm } from "./src/components/registration-questions";
 import { registrationQuestionService, validateRegistrationQuestions, type RegistrationQuestionDraft, type RegistrationForm, type RegistrationAnswer } from "./src/services/registration-questions";
+import { cashfreeCheckoutAvailability, createActivityPayment, launchCashfreeCheckout, verifyActivityPayment } from "./src/services/payments";
 import type { AccountType } from "./src/services/auth-production";
 import {
   Manrope_400Regular,
@@ -177,7 +178,8 @@ const routableScreens = new Set<Screen>([
 
 const readWebRoute = (): WebRoute | null => {
   if (Platform.OS !== "web" || typeof window === "undefined") return null;
-  const [name, routeId, joinId] = window.location.hash.replace(/^#\/?/, "").split("/");
+  const routePath = window.location.hash.replace(/^#\/?/, "").split("?", 1)[0];
+  const [name, routeId, joinId] = routePath.split("/");
   const encodedId = name === "community" && routeId === "join" ? joinId : routeId;
   const entityId = encodedId ? decodeURIComponent(encodedId) : undefined;
   if (name === "invite" && entityId && /^[1-9]\d*$/.test(entityId)) return { screen: "login" };
@@ -190,6 +192,20 @@ const readWebRoute = (): WebRoute | null => {
   if (name === "chat") return { screen: "chat", entityId };
   if (routableScreens.has(name as Screen)) return { screen: name as Screen };
   return null;
+};
+
+const readCashfreeReturnOrderId = (activityId: string): string | null => {
+  if (Platform.OS !== "web" || typeof window === "undefined") return null;
+  const [path, query = ""] = window.location.hash.replace(/^#\/?/, "").split("?", 2);
+  if (path !== `activity/${activityId}`) return null;
+  const orderId = new URLSearchParams(query).get("cashfree_order_id")?.trim() ?? "";
+  return /^wn_[A-Za-z0-9_]+$/.test(orderId) && orderId.length <= 45 ? orderId : null;
+};
+
+const clearCashfreeReturnOrderId = () => {
+  if (Platform.OS !== "web" || typeof window === "undefined" || !window.location.hash.includes("?cashfree_order_id=")) return;
+  const cleanHash = window.location.hash.split("?", 1)[0];
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${cleanHash}`);
 };
 
 const webHashFor = (screen: Screen, entityId?: string) => {
@@ -255,6 +271,8 @@ export type Activity = {
   hostAvatar?: string;
   hostVerified?: boolean;
   isPartner?: boolean;
+  isPaid?: boolean;
+  paymentCollectionMode?: "cashfree" | "onsite";
 };
 
 type ActivityParticipantView = {
@@ -578,6 +596,8 @@ const activityFromRemote = (item: any): Activity => ({
   likeCount: Number(item.like_count ?? 0),
   where: item.location_name,
   price: Number(item.price_inr) ? `₹${item.price_inr}` : item.costs_may_apply ? "Costs may apply" : "Free",
+  isPaid: item.is_paid === true && Number(item.price_inr) > 0,
+  paymentCollectionMode: item.payment_collection_mode === "onsite" ? "onsite" : "cashfree",
   costsMayApply: item.costs_may_apply === true || Number(item.price_inr) > 0,
   entryFeeRequired: item.entry_fee_required === true || Number(item.price_inr) > 0,
   seats: item.capacity,
@@ -2467,7 +2487,7 @@ function FeedScreen({
             </Pressable>
           ))}
         </ScrollView>
-        <SectionTitle title="V-Nitro Points" action="How it works?" />
+        <SectionTitle title="Nitro Points" action="How it works?" />
         <View style={styles.nitroRow}>
           {[
             ["star-outline", "Rate Participants", "2 Points"],
@@ -4008,13 +4028,16 @@ export function ActivityDetailScreen({
 }) {
   const palette = usePalette();
   const detailScrollRef = useRef<ScrollView>(null);
-  const isPaidActivity = activity.price !== "Free" && Number(activity.price.replace(/[^0-9.]/g, "")) > 0;
+  const isPaidActivity = activity.isPaid ?? (activity.price !== "Free" && Number(activity.price.replace(/[^0-9.]/g, "")) > 0);
   const [joined, setJoined] = useState(
     ["going", "approved", "paid"].includes(String(activity.viewerStatus)),
   );
   const [registrationForm, setRegistrationForm] = useState<RegistrationForm | null>(null);
   const [joinError, setJoinError] = useState("");
   const [joining, setJoining] = useState(false);
+  const [paymentBusy, setPaymentBusy] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState("");
+  const returnVerificationRef = useRef<string | null>(null);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<ActivityCommentView[]>([]);
   const [commentsExpanded, setCommentsExpanded] = useState(false);
@@ -4048,6 +4071,7 @@ export function ActivityDetailScreen({
   const liked = data.likedIds.includes(reactionId);
   const saved = data.savedIds.includes(reactionId);
   const requestPending = ["pending", "waitlist"].includes(String(viewerStatus));
+  const paymentRequired = viewerStatus === "payment_required" || viewerStatus === "payment_pending" || viewerStatus === "approved_pending_payment" || viewerStatus === "payment_failed";
   const activityEnded = activity.status === "completed" || Boolean(activity.endsAt && Date.parse(activity.endsAt) <= Date.now());
   const registrationClosed = !joined && !requestPending && (activityEnded || Boolean(activity.registrationClosesAt && Date.parse(activity.registrationClosesAt) <= Date.now()));
   const refreshDetails = async () => {
@@ -4087,9 +4111,56 @@ export function ActivityDetailScreen({
       setLoadingDetails(false);
     }
   };
+  const verifyPayment = async (orderId: string) => {
+    setPaymentBusy(true); setJoinError(""); setPaymentMessage("Checking payment with Cashfree…");
+    try {
+      const verification = await verifyActivityPayment(orderId);
+      if (verification.paid) {
+        setViewerStatus("paid"); setJoined(true);
+        setPaymentMessage("Payment confirmed. Your place is secured.");
+        clearCashfreeReturnOrderId();
+        await refreshDetails();
+        return;
+      }
+      setPaymentMessage(verification.status === "pending" ? "Cashfree has not confirmed payment yet. You can check again from this activity." : `Payment status: ${verification.status.replace(/_/g, " ")}.`);
+      clearCashfreeReturnOrderId();
+      await refreshDetails();
+    } catch (caught) {
+      const text = caught instanceof Error ? caught.message : "Payment could not be verified.";
+      setJoinError(text); setPaymentMessage("");
+    } finally { setPaymentBusy(false); }
+  };
+  const startPayment = async () => {
+    if (paymentBusy) return;
+    const availability = cashfreeCheckoutAvailability();
+    if (!availability.available) {
+      const text = availability.message ?? "Secure checkout is unavailable on this build.";
+      setJoinError(text); Alert.alert("Payment unavailable", text); return;
+    }
+    setPaymentBusy(true); setJoinError(""); setPaymentMessage("Preparing secure checkout…");
+    try {
+      const order = await createActivityPayment(activity.id);
+      setViewerStatus("payment_pending");
+      const returnUrl = typeof window === "undefined" ? "" : `${window.location.origin}${window.location.pathname}${window.location.search}#/activity/${encodeURIComponent(activity.id)}?cashfree_order_id=${encodeURIComponent(order.orderId)}`;
+      const checkout = await launchCashfreeCheckout(order.paymentSessionId, returnUrl);
+      if (checkout.errorMessage) throw new Error(checkout.errorMessage);
+      if (checkout.redirected) setPaymentMessage("Cashfree checkout opened. Return here after completing payment.");
+      else if (!checkout.completed) setPaymentMessage("Checkout was closed before Cashfree confirmed payment. Tap Pay to try again.");
+    } catch (caught) {
+      const text = caught instanceof Error ? caught.message : "Secure checkout could not start.";
+      setJoinError(text); setPaymentMessage("");
+      await refreshDetails().catch(() => undefined);
+    } finally { setPaymentBusy(false); }
+  };
   useEffect(() => {
     setHeroLoadFailed(false);
     void refreshDetails();
+  }, [activity.id]);
+  useEffect(() => {
+    const orderId = readCashfreeReturnOrderId(activity.id);
+    if (!orderId || returnVerificationRef.current === orderId) return;
+    returnVerificationRef.current = orderId;
+    void verifyPayment(orderId);
   }, [activity.id]);
   useEffect(() => {
     if (!isSupabaseConfigured || !isBackendId(activity.id)) return;
@@ -4123,12 +4194,23 @@ export function ActivityDetailScreen({
     setJoining(true);
     setJoinError("");
     try {
-      const leaving = joined || requestPending;
+      const leaving = joined || requestPending || (leaveConfirmed && paymentRequired);
       let nextStatus: string | null = null;
       if (!isSupabaseConfigured)
         throw new Error("Supabase is not configured for this build.");
       if (!isBackendId(activity.id))
         throw new Error("This activity is not connected to WeNitro yet.");
+      if (!leaving && isPaidActivity) {
+        const availability = cashfreeCheckoutAvailability();
+        if (!availability.available) {
+          const text = availability.message ?? "Secure checkout is unavailable on this build.";
+          setJoinError(text); Alert.alert("Payment unavailable", text); return;
+        }
+      }
+      if (!leaving && isPaidActivity && paymentRequired) {
+        await startPayment();
+        return;
+      }
       if (!leaving) {
         const form = await registrationQuestionService.getForm(activity.id);
         if (form.questions.length) { setRegistrationForm(form); detailScrollRef.current?.scrollTo({ y: 0, animated: true }); return; }
@@ -4158,6 +4240,7 @@ export function ActivityDetailScreen({
             : item,
         ),
       }));
+      if (!leaving && isPaidActivity && nextStatus === "payment_required") await startPayment();
       if (isSupabaseConfigured) void refreshDetails();
     } catch (caught) {
       setJoinError(caught instanceof Error ? caught.message : runtimeString(caught, ["message"]) || "Could not join activity.");
@@ -4171,14 +4254,29 @@ export function ActivityDetailScreen({
       setJoining(false);
     }
   };
+  const withdrawPaymentReservation = () => {
+    const confirm = () => void join(true);
+    if (Platform.OS === "web") {
+      if (window.confirm("Withdraw from this paid Activity and release your reserved place?")) confirm();
+      return;
+    }
+    Alert.alert("Withdraw from Activity?", "Your unpaid reservation will be released. You can request to join again while registration is open.", [
+      { text: "Keep reservation", style: "cancel" },
+      { text: "Withdraw", style: "destructive", onPress: confirm },
+    ]);
+  };
   const submitRegistration = async (answers: RegistrationAnswer[]) => {
-    setJoining(true);
+    setJoining(true); setJoinError("");
     try {
-    const result = await registrationQuestionService.submit(activity.id, answers);
-    setViewerStatus(result.status);
-    setJoined(["approved", "going", "paid"].includes(result.status));
-    setRegistrationForm(null);
-    await refreshDetails();
+      const result = await registrationQuestionService.submit(activity.id, answers);
+      setViewerStatus(result.status);
+      setJoined(["approved", "going", "paid"].includes(result.status));
+      setRegistrationForm(null);
+      if (isPaidActivity && result.status === "payment_required") await startPayment();
+      await refreshDetails();
+    } catch (caught) {
+      const text = caught instanceof Error ? caught.message : "Registration could not be submitted.";
+      setJoinError(text); Alert.alert("Registration not submitted", text);
     } finally { setJoining(false); }
   };
   const toggleLike = async () => {
@@ -4477,14 +4575,17 @@ export function ActivityDetailScreen({
               <View style={[styles.detailHeroChip, styles.detailHeroJoined]}><Text style={styles.detailHeroChipText}>JOINED</Text></View>
             ) : !isPaidActivity ? (
               <View style={[styles.detailHeroChip, styles.detailHeroFree]}><Text style={styles.detailHeroChipText}>FREE</Text></View>
-            ) : null}
+            ) : (
+              <View style={styles.detailHeroChip}><Text style={styles.detailHeroChipText}>PAID</Text></View>
+            )}
           </View>
         </View>
         <View style={styles.detailContent}>
           {joinError ? <Text style={styles.error}>{joinError}</Text> : null}
+          {paymentMessage ? <Text accessibilityRole="alert" style={{ color: palette.accent, fontSize: 13, fontWeight: "700" }}>{paymentMessage}</Text> : null}
           {isPaidActivity ? <View style={{ padding: 14, gap: 6, borderRadius: 12, backgroundColor: palette.card, borderWidth: 1, borderColor: palette.border }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Icon name={isPaidActivity ? "cash-outline" : "checkmark-circle-outline"} color={isPaidActivity ? "#6D5CE8" : "#22A874"} /><Text style={{ color: palette.text, fontWeight: "800", fontSize: 16 }}>{isPaidActivity ? `Activity Price ${activity.price}` : "Free Activity"}</Text></View>
-            <Text style={{ color: palette.muted, fontSize: 12 }}>{isPaidActivity ? "Participation cost payable to the organizer at the activity. No payment is collected in WeNitro." : "No participation cost is required for this Activity."}</Text>
+            <Text style={{ color: palette.muted, fontSize: 12 }}>Secure online payment is required to confirm your place. Required registration questions and host approval, when applicable, come before checkout.</Text>
             {(activity.costsMayApply || activity.entryFeeRequired) ? <Text style={{ color: palette.muted, fontSize: 11 }}>{activity.entryFeeRequired ? "A separate venue or entry fee may apply." : "Additional venue costs may apply."}</Text> : null}
           </View> : null}
           {registrationForm ? <RegistrationAnswerForm key={activity.id} questions={registrationForm.questions} busy={joining} initialAnswers={registrationForm.answers} onSubmit={submitRegistration} submitLabel={joinType === "approval" ? "Submit request" : "Confirm registration"} onCancel={() => setRegistrationForm(null)} dark={data.theme === "dark"} /> : null}
@@ -4492,6 +4593,7 @@ export function ActivityDetailScreen({
             <View style={styles.detailTitleWrap}>
               <Text style={[styles.detailTitle, { color: palette.text }]}>{activity.title}</Text>
               <Text style={[styles.detailVisibility, { color: palette.accent }]}>{activity.visibility === "private" ? "Private" : activity.visibility === "squad" ? "Squad" : "Public"}</Text>
+              {activity.isPartner ? <Text style={[styles.detailVisibility, { color: palette.accent }]}>Partner activity</Text> : null}
               <View style={styles.detailTags}>
                 <Text style={styles.detailTagText}>{activity.category}</Text>
                 <Text style={styles.detailTagText}>
@@ -4769,35 +4871,40 @@ export function ActivityDetailScreen({
                 <Icon name="shield-checkmark" color="#fff" />
               </View>
             ) : (
-              <Pressable
-                style={styles.joinButtonLarge}
-                onPress={() => void join()}
-                disabled={joining || registrationClosed || Boolean(registrationForm)}
-              >
-              <Text style={styles.joinButtonText}>
-                {registrationClosed
-                  ? activityEnded ? "Activity Ended" : "Registration Closed"
-                  : joining
-                  ? "Saving..."
-                  : requestPending
-                    ? "Withdraw Request"
-                    : joined
-                      ? "Leave Activity"
-                      : joinType === "approval"
-                        ? "Request to Join"
-                        : "Join Activity"}
-              </Text>
-              <Icon
-                name={
-                  requestPending
-                    ? "time-outline"
-                    : joined
-                      ? "checkmark-circle"
-                      : "arrow-forward-circle-outline"
-                }
-                color="#fff"
-              />
-              </Pressable>
+              <View style={{ flex: 1, gap: 6 }}>
+                <Pressable
+                  style={styles.joinButtonLarge}
+                  onPress={() => void join()}
+                  disabled={joining || paymentBusy || registrationClosed || Boolean(registrationForm)}
+                >
+                <Text style={styles.joinButtonText}>
+                  {registrationClosed
+                    ? activityEnded ? "Activity Ended" : "Registration Closed"
+                    : joining || paymentBusy
+                    ? paymentBusy ? "Opening payment…" : "Saving..."
+                    : requestPending
+                      ? "Withdraw Request"
+                      : joined
+                        ? "Leave Activity"
+                        : paymentRequired
+                          ? `Pay ${activity.price}`
+                        : joinType === "approval"
+                          ? "Request to Join"
+                          : "Join Activity"}
+                </Text>
+                <Icon
+                  name={
+                    requestPending
+                      ? "time-outline"
+                      : joined
+                        ? "checkmark-circle"
+                        : "arrow-forward-circle-outline"
+                  }
+                  color="#fff"
+                />
+                </Pressable>
+                {paymentRequired && !registrationClosed ? <Pressable accessibilityRole="button" accessibilityLabel="Withdraw unpaid reservation" onPress={withdrawPaymentReservation} disabled={joining || paymentBusy} style={{ minHeight: 32, alignItems: "center", justifyContent: "center" }}><Text style={{ color: palette.muted, fontSize: 12, fontFamily: "Manrope_700Bold" }}>Withdraw unpaid reservation</Text></Pressable> : null}
+              </View>
             )}
       </View>
       {optionsOpen ? <ReferenceSheet title="Options" close={() => setOptionsOpen(false)}>
@@ -6317,7 +6424,7 @@ function ProfileScreen({
         </LinearGradient>
         <View style={{ padding: 16, gap: 10 }}>
           {data.accountType === "partner" ? <Button label="Partner Dashboard" icon="business-outline" onPress={() => go("partnerDashboard")} /> : null}
-          {data.partnerEligible || data.partnerProfile || data.partnerUnavailable ? <Button label={data.partnerProfile ? data.partnerProfile.status === "draft" ? "Complete Partner Profile" : "Partner Account · Edit Business Details" : data.partnerUnavailable ? "Partner Account" : "Become a Partner"} variant="outline" icon="business-outline" onPress={() => go("partnerAccount")} /> : null}
+          <Button label={data.partnerProfile ? data.partnerProfile.status === "DRAFT" ? "Complete Partner Application" : data.partnerProfile.status === "UNDER_REVIEW" ? "Partner Application · Under Review" : "Partner Account · View Details" : data.partnerUnavailable ? "Partner Account" : "Become a Partner"} variant="outline" icon="business-outline" onPress={() => go("partnerAccount")} />
         </View>
         <View style={styles.profileActionRow}>
           <Pressable
@@ -6350,7 +6457,7 @@ function ProfileScreen({
             [
               "flash-outline",
               data.nitro.toLocaleString(),
-              "V-Nitro Points",
+              "Nitro Points",
               "#29C66D",
             ],
           ].map(([icon, value, label, color]) => (
@@ -8479,7 +8586,7 @@ function ShopScreen({ back }: { back: () => void }) {
     >
       <LinearGradient colors={["#1910C2", "#4E46E5"]} style={styles.shopHero}>
         <View>
-          <Text style={styles.shopKicker}>V-NITRO BALANCE</Text>
+          <Text style={styles.shopKicker}>NITRO POINTS BALANCE</Text>
           <Text style={styles.shopBalance}>1,240</Text>
           <Text style={styles.profileSub}>Use points for boosts and perks</Text>
         </View>
@@ -8552,8 +8659,8 @@ function HistoryScreen({
 function NitroHistory({ nitro, back }: { nitro: number; back: () => void }) {
   return (
     <ScreenFrame
-      title="V-Nitro History"
-      subtitle="Ledger of earned and spent V-Nitro Points."
+      title="Nitro Points History"
+      subtitle="Ledger of earned and spent Nitro Points."
       onBack={back}
     >
       <View style={styles.balance}>
@@ -9038,7 +9145,8 @@ export default function App() {
           if (!remote) throw new Error("Your session is no longer available. Please sign in again.");
           setData(current => hydrateRemoteData(remote, { ...initialData, theme: current.theme, themePreference: current.themePreference }));
           setScreen(currentScreen => ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"].includes(currentScreen) ? "feed" : currentScreen);
-        } catch {
+        } catch (error) {
+          console.warn("Workspace bootstrap failed", error);
           if (active && currentGeneration === authGenerationRef.current) {
             setData(current => ({ ...initialData, theme: current.theme, themePreference: current.themePreference }));
             setAuthError("We couldn't load your account. Check your connection and try again.");
@@ -9345,21 +9453,20 @@ export default function App() {
         />
       );
     if (screen === "partnerAccount") return <PartnerAccountScreen dark={data.theme === "dark"} onBack={back} onSaved={async (result) => {
-      setData(current => ({ ...current, partnerProfile: result.profile, partnerEligible: result.eligible, accountType: result.eligible && result.profile?.status === "active" ? "partner" : "individual" }));
+      setData(current => ({ ...current, partnerProfile: result.profile, partnerEligible: result.eligible, accountType: result.can_host_paid ? "partner" : "individual" }));
       const remote = await loadRemoteWorkspace();
       if (remote) setData(current => hydrateRemoteData(remote, current));
       setPartnerActivityId(undefined);
-      go(partnerHostingDraft?.userId === data.userId ? "createActivity" : "partnerDashboard");
+      go(result.can_host_paid ? (partnerHostingDraft?.userId === data.userId ? "createActivity" : "partnerDashboard") : "profile");
     }} />;
     if (screen === "partnerDashboard") return data.accountType === "partner" && data.userId ? (
       <PartnerDashboard userId={data.userId} dark={data.theme === "dark"} initialActivityId={partnerActivityId} onBack={() => { setPartnerActivityId(undefined); go("profile"); }} onOpenActivity={openActivity} onCreateActivity={() => go("createActivity")} onEditRegistrationForm={(id) => { setPartnerActivityId(id); go("partnerRegistrationForm", id); }} />
     ) : <ScreenFrame title="Partner Dashboard" onBack={back}><Text>Partner account required.</Text></ScreenFrame>;
     if (screen === "partnerRegistrationForm" && partnerActivityId) return data.accountType === "partner" ? <PartnerRegistrationFormScreen activityId={partnerActivityId} dark={data.theme === "dark"} onBack={() => go("partnerDashboard")} /> : <ScreenFrame title="Registration Form" onBack={back}><Text>Partner account required.</Text></ScreenFrame>;
-    if (screen === "createActivity" && data.accountType !== "partner") {
+    if (screen === "createActivity") {
       const existing = editingActivityId ? data.activities.find(item => item.id === editingActivityId) : undefined;
-      return <HostActivityScreen key={existing?.id || data.userId} userId={data.userId!} isPartner={false} existing={existing} onBack={() => existing ? openActivity(existing.id) : go("host")} onDrafted={created => { const next = activityFromRemote(created); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); }} onCreated={created => { const next = activityFromRemote(created); setEditingActivityId(null); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); setHistory(items => [...items, 'activities']); setSelectedActivityId(next.id); setScreen('activityDetail'); pushWebRoute('activityDetail', next.id); }} />;
+      return <HostActivityScreen key={existing?.id || data.userId} userId={data.userId!} isPartner={data.accountType === "partner"} existing={existing} onBack={() => existing ? openActivity(existing.id) : go("host")} onDrafted={created => { const next = activityFromRemote(created); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); }} onCreated={created => { const next = activityFromRemote(created); setEditingActivityId(null); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); setHistory(items => [...items, 'activities']); setSelectedActivityId(next.id); setScreen('activityDetail'); pushWebRoute('activityDetail', next.id); }} />;
     }
-    if (screen === "createActivity") return <CreateActivityScreen {...props} initialDraft={partnerHostingDraft?.userId === data.userId ? partnerHostingDraft : null} onDraftConsumed={() => setPartnerHostingDraft(null)} />;
     if (screen === "activityDetail" && selectedActivityId) {
       const selectedActivity = data.activities.find(
         (item) => item.id === selectedActivityId,
