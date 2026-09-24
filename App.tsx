@@ -20,6 +20,9 @@ import { CreateCommunitySheet, CommunityConversation, PollComposer, PollCard, Vi
 import { communityPoll, type CommunityPoll } from "./src/services/communities-production";
 import { HostActivityScreen, HostLanding, HostNavigation } from "./src/components/hosting/host-activity-screen";
 import { viewerCanListActivity } from "./src/domain/activity-visibility";
+import { mergeInboxPreview } from "./src/domain/chat-inbox";
+import { foregroundWorkspaceSections, mergeWorkspaceRefresh } from "./src/domain/workspace-refresh";
+import { withRequestDeadline } from "./src/services/request-deadline";
 import { PartnerAccountScreen } from "./src/components/partner-account-screen";
 import type { PartnerBusinessProfile } from "./src/services/partner-account";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -599,8 +602,8 @@ const activityFromRemote = (item: any): Activity => ({
   price: Number(item.price_inr) ? `₹${item.price_inr}` : item.costs_may_apply ? "Costs may apply" : "Free",
   isPaid: item.is_paid === true && Number(item.price_inr) > 0,
   paymentCollectionMode: item.payment_collection_mode === "onsite" ? "onsite" : "cashfree",
-  costsMayApply: item.costs_may_apply === true || Number(item.price_inr) > 0,
-  entryFeeRequired: item.entry_fee_required === true || Number(item.price_inr) > 0,
+  costsMayApply: item.costs_may_apply === true,
+  entryFeeRequired: item.entry_fee_required === true,
   seats: item.capacity,
   joined: item.participants?.[0]?.count ?? 0,
   host: item.profiles?.full_name ?? item.profiles?.username ?? "",
@@ -633,6 +636,8 @@ const chatMessageFromRemote = (message: any, userId: string | undefined): ChatMe
         preview: String(rawShare.preview ?? ""),
         deepLink: String(rawShare.deepLink ?? rawShare.deep_link ?? ""),
         sharedBy: Number(rawShare.sharedBy ?? rawShare.shared_by) || 0,
+        creatorId: rawShare.creatorId ?? rawShare.creator_id ?? null,
+        creatorName: rawShare.creatorName ?? rawShare.creator_name ?? null,
         thumbnailBucket: rawShare.thumbnailBucket ?? rawShare.thumbnail_bucket ?? null,
         thumbnailPath: rawShare.thumbnailPath ?? rawShare.thumbnail_path ?? null,
         thumbnailUrl:
@@ -759,9 +764,14 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
           item.last_message_at || item.updated_at || item.created_at,
         memberIds: members.map((member: any) => member.user_id),
         userId: other?.user_id,
-        messages: (item.chat_messages || [])
-          .sort((a: any, b: any) => a.created_at.localeCompare(b.created_at))
-          .map((message: any) => chatMessageFromRemote(message, userId)),
+        messages: mergeInboxPreview(
+          fallback.mode === "authenticated" && String(fallback.userId) === String(userId)
+            ? fallback.conversations.find(conversation => conversation.id === item.id)?.messages ?? []
+            : [],
+          (item.chat_messages || []).filter((message: any) => !message.deleted_at)
+            .map((message: any) => chatMessageFromRemote(message, userId)),
+          (item.chat_messages || []).filter((message: any) => message.deleted_at).map((message: any) => String(message.id)),
+        ),
       };
     },
   );
@@ -3049,6 +3059,7 @@ function VibesScreen({
       title: item.event || "WeNitro Vibe",
       preview: item.text || "Shared a WeNitro Vibe",
       thumbnailUrl: item.mediaUrl,
+      creatorName: item.author,
     });
   };
   const loadMoreVibes = async () => {
@@ -4058,12 +4069,14 @@ export function ActivityDetailScreen({
   const palette = usePalette();
   const detailScrollRef = useRef<ScrollView>(null);
   const isPaidActivity = activity.isPaid ?? (activity.price !== "Free" && Number(activity.price.replace(/[^0-9.]/g, "")) > 0);
+  const requiresPlatformPayment = isPaidActivity && activity.paymentCollectionMode === "cashfree";
   const [joined, setJoined] = useState(
     ["going", "approved", "paid"].includes(String(activity.viewerStatus)),
   );
   const [registrationForm, setRegistrationForm] = useState<RegistrationForm | null>(null);
   const [joinError, setJoinError] = useState("");
   const [joining, setJoining] = useState(false);
+  const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [paymentBusy, setPaymentBusy] = useState(false);
   const [paymentMessage, setPaymentMessage] = useState("");
   const returnVerificationRef = useRef<string | null>(null);
@@ -4100,7 +4113,7 @@ export function ActivityDetailScreen({
   const liked = data.likedIds.includes(reactionId);
   const saved = data.savedIds.includes(reactionId);
   const requestPending = ["pending", "waitlist"].includes(String(viewerStatus));
-  const paymentRequired = viewerStatus === "payment_required" || viewerStatus === "payment_pending" || viewerStatus === "approved_pending_payment" || viewerStatus === "payment_failed";
+  const paymentRequired = requiresPlatformPayment && ["payment_required", "payment_pending", "approved_pending_payment", "payment_failed"].includes(String(viewerStatus));
   const activityEnded = activity.status === "completed" || Boolean(activity.endsAt && Date.parse(activity.endsAt) <= Date.now());
   const registrationClosed = !joined && !requestPending && (activityEnded || Boolean(activity.registrationClosesAt && Date.parse(activity.registrationClosesAt) <= Date.now()));
   const refreshDetails = async () => {
@@ -4210,16 +4223,10 @@ export function ActivityDetailScreen({
       return;
     }
     if ((joined || requestPending) && !leaveConfirmed) {
-      if (Platform.OS === "web") {
-        if (window.confirm(requestPending ? "Withdraw your registration request?" : "Leave this Activity?")) void join(true);
-      } else {
-        Alert.alert(requestPending ? "Withdraw request?" : "Leave Activity?", "Are you sure?", [
-          { text: "Cancel", style: "cancel" },
-          { text: "Confirm", style: "destructive", onPress: () => void join(true) },
-        ]);
-      }
+      setLeaveConfirmOpen(true);
       return;
     }
+    setLeaveConfirmOpen(false);
     setJoining(true);
     setJoinError("");
     try {
@@ -4229,14 +4236,14 @@ export function ActivityDetailScreen({
         throw new Error("Supabase is not configured for this build.");
       if (!isBackendId(activity.id))
         throw new Error("This activity is not connected to WeNitro yet.");
-      if (!leaving && isPaidActivity) {
+      if (!leaving && requiresPlatformPayment) {
         const availability = cashfreeCheckoutAvailability();
         if (!availability.available) {
           const text = availability.message ?? "Secure checkout is unavailable on this build.";
           setJoinError(text); Alert.alert("Payment unavailable", text); return;
         }
       }
-      if (!leaving && isPaidActivity && paymentRequired) {
+      if (!leaving && requiresPlatformPayment && paymentRequired) {
         await startPayment();
         return;
       }
@@ -4269,7 +4276,7 @@ export function ActivityDetailScreen({
             : item,
         ),
       }));
-      if (!leaving && isPaidActivity && nextStatus === "payment_required") await startPayment();
+      if (!leaving && requiresPlatformPayment && nextStatus === "payment_required") await startPayment();
       if (isSupabaseConfigured) void refreshDetails();
     } catch (caught) {
       setJoinError(caught instanceof Error ? caught.message : runtimeString(caught, ["message"]) || "Could not join activity.");
@@ -4301,7 +4308,7 @@ export function ActivityDetailScreen({
       setViewerStatus(result.status);
       setJoined(["approved", "going", "paid"].includes(result.status));
       setRegistrationForm(null);
-      if (isPaidActivity && result.status === "payment_required") await startPayment();
+      if (requiresPlatformPayment && result.status === "payment_required") await startPayment();
       await refreshDetails();
     } catch (caught) {
       const text = caught instanceof Error ? caught.message : "Registration could not be submitted.";
@@ -4602,10 +4609,11 @@ export function ActivityDetailScreen({
             {activity.ageMin != null ? <View style={styles.detailHeroChip}><Text style={styles.detailHeroChipText}>{activity.ageMin}+</Text></View> : null}
             {joined ? (
               <View style={[styles.detailHeroChip, styles.detailHeroJoined]}><Text style={styles.detailHeroChipText}>JOINED</Text></View>
-            ) : !isPaidActivity ? (
+            ) : null}
+            {!isPaidActivity ? (
               <View style={[styles.detailHeroChip, styles.detailHeroFree]}><Text style={styles.detailHeroChipText}>FREE</Text></View>
             ) : (
-              <View style={styles.detailHeroChip}><Text style={styles.detailHeroChipText}>PAID</Text></View>
+              <View style={styles.detailHeroChip}><Text style={styles.detailHeroChipText}>PAID · {activity.price}</Text></View>
             )}
           </View>
         </View>
@@ -4614,7 +4622,7 @@ export function ActivityDetailScreen({
           {paymentMessage ? <Text accessibilityRole="alert" style={{ color: palette.accent, fontSize: 13, fontWeight: "700" }}>{paymentMessage}</Text> : null}
           {isPaidActivity ? <View style={{ padding: 14, gap: 6, borderRadius: 12, backgroundColor: palette.card, borderWidth: 1, borderColor: palette.border }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Icon name={isPaidActivity ? "cash-outline" : "checkmark-circle-outline"} color={isPaidActivity ? "#6D5CE8" : "#22A874"} /><Text style={{ color: palette.text, fontWeight: "800", fontSize: 16 }}>{isPaidActivity ? `Activity Price ${activity.price}` : "Free Activity"}</Text></View>
-            <Text style={{ color: palette.muted, fontSize: 12 }}>Secure online payment is required to confirm your place. Required registration questions and host approval, when applicable, come before checkout.</Text>
+            <Text style={{ color: palette.muted, fontSize: 12 }}>{requiresPlatformPayment ? 'Secure online payment is required to confirm your place. Required registration questions and host approval, when applicable, come before checkout.' : 'Payment handled directly with the host at the venue. Join normally; no payment is collected by WeNitro.'}</Text>
             {(activity.costsMayApply || activity.entryFeeRequired) ? <Text style={{ color: palette.muted, fontSize: 11 }}>{activity.entryFeeRequired ? "A separate venue or entry fee may apply." : "Additional venue costs may apply."}</Text> : null}
           </View> : null}
           {registrationForm ? <RegistrationAnswerForm key={activity.id} questions={registrationForm.questions} busy={joining} initialAnswers={registrationForm.answers} onSubmit={submitRegistration} submitLabel={joinType === "approval" ? "Submit request" : "Confirm registration"} onCancel={() => setRegistrationForm(null)} dark={data.theme === "dark"} /> : null}
@@ -4623,12 +4631,6 @@ export function ActivityDetailScreen({
               <Text style={[styles.detailTitle, { color: palette.text }]}>{activity.title}</Text>
               <Text style={[styles.detailVisibility, { color: palette.accent }]}>{activity.visibility === "private" ? "Private" : activity.visibility === "squad" ? "Squad" : "Public"}</Text>
               {activity.isPartner ? <Text style={[styles.detailVisibility, { color: palette.accent }]}>Partner activity</Text> : null}
-              <View style={styles.detailTags}>
-                <Text style={styles.detailTagText}>{activity.category}</Text>
-                <Text style={styles.detailTagText}>
-                  • {activity.activityType || "meetup"}
-                </Text>
-              </View>
             </View>
             <View style={{ alignItems: "flex-end", gap: 5 }}><Text style={{ color: activityEnded || joined ? "#6DD4A0" : "#E7B85C", fontSize: 12, fontFamily: "Manrope_700Bold", textTransform: "uppercase" }}>{activityEnded ? "Completed" : joined ? "Joined" : requestPending ? "Pending" : registrationClosed ? "Registration Closed" : "Upcoming"}</Text>{activity.verifiedOnly ? <Icon name="shield-checkmark-outline" size={16} color="#9A8AFF" /> : null}</View>
           </View>
@@ -4944,6 +4946,11 @@ export function ActivityDetailScreen({
         {!canHost && !loadingDetails ? <Pressable accessibilityRole="button" onPress={() => { setOptionsOpen(false); setReportOpen(true); }} style={[styles.optionRow,{backgroundColor:palette.card}]}><Icon name="flag-outline" color="#F47786" /><Text style={[styles.optionText,{color:palette.text}]}>Report</Text></Pressable> : null}
         <Pressable accessibilityRole="button" onPress={() => setOptionsOpen(false)} style={[styles.optionCancel,{backgroundColor:palette.inset}]}><Text style={[styles.optionText,{color:palette.text}]}>Cancel</Text></Pressable>
       </ReferenceSheet> : null}
+      {leaveConfirmOpen ? <ReferenceSheet title={requestPending ? "Withdraw request?" : "Leave Activity?"} close={() => { if (!joining) setLeaveConfirmOpen(false); }}>
+        <Text style={[styles.detailBody, { color: palette.muted }]}>{requestPending ? "Your pending registration request will be withdrawn." : "You can rejoin later while registration remains open."}</Text>
+        <Button label={joining ? "Saving..." : requestPending ? "Withdraw request" : "Leave Activity"} disabled={joining} onPress={() => void join(true)} />
+        <Button label="Keep my place" variant="outline" disabled={joining} onPress={() => setLeaveConfirmOpen(false)} />
+      </ReferenceSheet> : null}
       {reportOpen ? <ReferenceSheet title="Report Activity" close={() => { if (!reporting) setReportOpen(false); }}>
         <Text style={[styles.detailCardMuted, { color: palette.muted }]}>Tell us what is wrong with this Activity.</Text>
         <View style={{ gap: 8 }}>{["Spam or misleading", "Harassment", "Unsafe activity", "Inappropriate content", "Other"].map(reason => <Pressable accessibilityRole="radio" accessibilityState={{ checked: reportReason === reason }} key={reason} onPress={() => setReportReason(reason)} style={[styles.reportReason, { borderColor: reportReason === reason ? palette.accent : palette.border, backgroundColor: reportReason === reason ? palette.accent + "20" : palette.card }]}><Text style={[styles.optionText, { color: palette.text }]}>{reason}</Text></Pressable>)}</View>
@@ -5007,6 +5014,9 @@ export function ChatScreen({
   const [groupInfo, setGroupInfo] = useState<{ eventId: string | null; date: string; location: string; members: Awaited<ReturnType<typeof realtimeChatService.loadConversationMembers>> } | null>(null);
   const [pollOpen, setPollOpen] = useState(false);
   const [polls, setPolls] = useState<Record<number, CommunityPoll>>({});
+  const [pollRevision, setPollRevision] = useState(0);
+  const chatViewerRef = useRef(data.userId);
+  chatViewerRef.current = data.userId;
   const chatSubscription = useRef<Awaited<
     ReturnType<typeof realtimeChatService.subscribeToConversation>
   > | null>(null);
@@ -5083,17 +5093,16 @@ export function ChatScreen({
     }
   };
   useEffect(() => {
-    setSelectedConversationId(initialConversationId ?? null);
-  }, [initialConversationId]);
-  useEffect(() => {
     if (
       !selectedConversationId ||
+      !data.userId || data.mode !== "authenticated" ||
       !isSupabaseConfigured ||
       !isBackendId(selectedConversationId)
     )
       return;
     void persistConversationRead(selectedConversationId).catch(() => undefined);
     let cancelled = false;
+    const viewerId = data.userId;
     realtimeChatService
       .subscribeToConversation({
         conversationId: Number(selectedConversationId),
@@ -5105,6 +5114,7 @@ export function ChatScreen({
             online: participants.length > 1,
           })),
         onMessageChange: async ({ eventType, message: record, old }) => {
+          if (cancelled || chatViewerRef.current !== viewerId) return;
           if (eventType === "DELETE") {
             updateConversation(selectedConversationId, (conversation) => ({
               ...conversation,
@@ -5115,34 +5125,10 @@ export function ChatScreen({
             return;
           }
           if (!record) return;
-          const { data: auth } = await supabase.auth.getUser();
-          let currentLegacyUserId: number | null = null;
-          if (auth.user) {
-            const { data: profile } = await supabase
-              .from("tbl_users")
-              .select("id")
-              .eq("auth_user_id", auth.user.id)
-              .maybeSingle();
-            currentLegacyUserId = profile?.id ?? null;
-          }
-          const mine = Number(record.sender_id) === currentLegacyUserId;
-          const message: ChatMessage = {
-            id: String(record.id),
-            sender: mine ? "You" : "Member",
-            text: String(record.body || ""),
-            time: new Date(String(record.created_at)).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            mine,
-            image: record.media_signed_url || undefined,
-            createdAt: String(record.created_at),
-            messageType: record.message_type,
-            share: record.share_payload,
-          };
+          const message = chatMessageFromRemote(record, viewerId);
           updateConversation(selectedConversationId, (conversation) =>
             conversation.messages.some((item) => item.id === message.id)
-              ? conversation
+              ? { ...conversation, messages: conversation.messages.map(item => item.id === message.id ? { ...item, ...message } : item) }
               : {
                   ...conversation,
                   messages: [...conversation.messages, message],
@@ -5150,7 +5136,10 @@ export function ChatScreen({
                   lastMessageAt: message.createdAt,
                 },
           );
-          if (!mine) {
+          // Poll RPC votes update the owning message's edited_at. Preserve that
+          // UPDATE and refresh totals; no extra vote-table subscription needed.
+          if (record.poll_id && eventType === "UPDATE") setPollRevision(value => value + 1);
+          if (!message.mine && eventType === "INSERT") {
             await persistConversationRead(selectedConversationId).catch(
               () => undefined,
             );
@@ -5174,7 +5163,7 @@ export function ChatScreen({
       chatSubscription.current = null;
       subscription?.cleanup().catch(() => undefined);
     };
-  }, [selectedConversationId]);
+  }, [selectedConversationId, data.userId, data.mode]);
   useEffect(() => {
     if (data.mode !== "authenticated" || !isSupabaseConfigured) return;
     let active = true;
@@ -5235,6 +5224,14 @@ export function ChatScreen({
       setLoadingOlder(false);
     }
   };
+  useEffect(() => {
+    const id = initialConversationId ?? null;
+    setSelectedConversationId(id);
+    // The reconstructed inbox owns room selection. Its workspace payload keeps
+    // only one preview message per room, so a routed thread must hydrate its
+    // complete first page just like a thread opened inside this component.
+    if (id && messageCursors[id] === undefined) void loadMessagePage(id);
+  }, [initialConversationId]);
   const openConversation = (id: string) => {
     setSelectedConversationId(id);
     onConversationChange?.(id);
@@ -5554,6 +5551,7 @@ export function ChatScreen({
     })().catch(e => active && setGroupInfoError(e.message)).finally(() => active && setGroupInfoLoading(false));
     return () => { active = false; };
   }, [groupInfoOpen, selected?.id]);
+  const selectedPollKey = (selected?.messages || []).flatMap(message => message.pollId ? [message.pollId] : []).join(',');
   useEffect(() => {
     const ids = (selected?.messages || []).flatMap(message => message.pollId ? [message.pollId] : []);
     if (!selected || !ids.length || !isBackendId(selected.id)) return;
@@ -5562,7 +5560,7 @@ export function ChatScreen({
       if (active) setPolls(Object.fromEntries(items.map(item => [item.id, item])));
     }).catch(() => undefined);
     return () => { active = false; };
-  }, [selected?.id, selected?.messages]);
+  }, [selected?.id, selectedPollKey, pollRevision]);
 
   if (selected && groupInfoOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}><View style={{ width:'100%',maxWidth,alignSelf:'center',flex:1 }}><View style={{minHeight:61,borderBottomWidth:1,borderColor:palette.border,flexDirection:'row',alignItems:'center'}}><Pressable accessibilityRole="button" accessibilityLabel="Back to group chat" onPress={()=>setGroupInfoOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text}/></Pressable><Text style={{color:palette.text,fontSize:18,fontWeight:'800'}}>Group Info</Text></View>{groupInfoLoading?<ActivityIndicator color="#7060EF" style={{marginTop:80}}/>:<ScrollView contentContainerStyle={{padding:18,gap:16,paddingBottom:38}}><View style={{alignItems:'center',gap:10,paddingVertical:9}}>{selected.avatar?<Image source={{uri:selected.avatar}} style={{width:86,height:86,borderRadius:43}}/>:<View style={{width:86,height:86,borderRadius:43,backgroundColor:palette.card,alignItems:'center',justifyContent:'center'}}><Icon name="people" color="#7060EF" size={36}/></View>}<Text style={{color:palette.text,fontSize:20,fontWeight:'800'}}>{selected.name}</Text><Text style={{color:palette.muted,fontSize:11}}>{groupInfo?.members.length ?? selected.memberCount} participants</Text></View><View style={{backgroundColor:palette.card,borderRadius:14,borderWidth:1,borderColor:palette.border,padding:15,gap:14}}><View style={{flexDirection:'row',gap:10}}><Icon name="calendar-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>DATE</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.date}</Text></View></View><View style={{flexDirection:'row',gap:10}}><Icon name="location-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>LOCATION</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.location}</Text></View></View>{groupInfo?.eventId&&onOpenActivity?<Button label="View Activity Page" onPress={()=>onOpenActivity(groupInfo.eventId!)}/>:null}</View><TextInput accessibilityLabel="Search participants" value={groupInfoQuery} onChangeText={setGroupInfoQuery} placeholder="Search participants..." placeholderTextColor={palette.muted} style={{minHeight:46,borderRadius:12,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,color:palette.text,paddingHorizontal:13} as any}/>{groupInfo?.members.filter(member=>`${member.profiles?.full_name||''} ${member.profiles?.username||''}`.toLowerCase().includes(groupInfoQuery.toLowerCase())).map(member=><Pressable accessibilityRole="button" key={member.user_id} disabled={!onOpenProfile} onPress={()=>onOpenProfile?.(String(member.user_id))} style={{minHeight:64,flexDirection:'row',alignItems:'center',gap:12,borderBottomWidth:1,borderColor:palette.border}}>{member.profiles?.avatar_url?<Image source={{uri:member.profiles.avatar_url}} style={{width:44,height:44,borderRadius:22}}/>:<Icon name="person-circle-outline" color={palette.muted} size={44}/>}<View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:13,fontWeight:'700'}}>{member.profiles?.full_name||member.profiles?.username||'Member'} <VerifiedBadge userId={member.user_id} /></Text><Text style={{color:palette.muted,fontSize:10}}>@{member.profiles?.username||'member'}</Text></View><Text style={{color:'#8E7CFF',fontSize:9}}>{member.role||'member'}</Text></Pressable>)}{groupInfoError?<Text style={{color:'#F47786',fontSize:12}}>{groupInfoError}</Text>:null}</ScrollView>}</View></SafeAreaView>;
 
@@ -5669,6 +5667,7 @@ export function ChatScreen({
                     <Text style={{ fontFamily: "Manrope_800ExtraBold", fontSize: 11, textTransform: "uppercase", color: "#8FB7FF" }}>{message.share.kind.replaceAll("_", " ")}</Text>
                     <Text style={{ fontFamily: "Manrope_700Bold", fontSize: 16, color: message.mine ? "#fff" : palette.text }}>{message.share.title}</Text>
                     {message.share.preview ? <Text numberOfLines={2} style={{ fontFamily: "Manrope_400Regular", fontSize: 12, color: message.mine ? "#CFD8E4" : palette.muted }}>{message.share.preview}</Text> : null}
+                    {message.share.creatorName ? <Text numberOfLines={1} style={{ fontFamily: "Manrope_400Regular", fontSize: 12, color: message.mine ? "#CFD8E4" : palette.muted }}>Created by {message.share.creatorName}</Text> : null}
                     <Text style={{ marginTop: 5, fontFamily: "Manrope_700Bold", fontSize: 13, color: "#9CB8FF" }}>View in WeNitro</Text>
                   </View>
                 </Pressable>
@@ -7245,12 +7244,14 @@ function CommunityPostMedia({ uri, type }: { uri: string; type?: "image" | "vide
 export function CommunityDetailScreen({
   community,
   authorName,
+  authorAvatar,
   setData,
   back,
   onConversation,
 }: {
   community: Community;
   authorName: string;
+  authorAvatar?: string;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
   back: () => void;
   onConversation: () => void;
@@ -7284,6 +7285,8 @@ export function CommunityDetailScreen({
           posts: feed.items.map((post) => ({
             id: post.id,
             authorId: String(post.author?.id ?? ""),
+            authorAvatar: post.author?.avatarUrl || undefined,
+            createdAt: post.createdAt,
             author:
               post.author?.fullName || post.author?.username || "WeNitro member",
             title: post.title,
@@ -7320,7 +7323,7 @@ export function CommunityDetailScreen({
           if (!active) return;
           update((item) => ({
             ...item,
-            posts: feed.items.map((post) => ({ id: post.id, authorId: String(post.author?.id ?? ""), author: post.author?.fullName || post.author?.username || "WeNitro member", title: post.title, body: post.body, category: post.mediaType === "video" ? "Videos" : post.mediaUrl ? "Photos" : "Text", reactions: post.reactionCount, comments: post.commentCount, liked: Boolean(post.myReaction), image: post.mediaUrl || undefined, mediaType: post.mediaType || undefined })),
+            posts: feed.items.map((post) => ({ id: post.id, authorId: String(post.author?.id ?? ""), authorAvatar: post.author?.avatarUrl || undefined, createdAt: post.createdAt, author: post.author?.fullName || post.author?.username || "WeNitro member", title: post.title, body: post.body, category: post.mediaType === "video" ? "Videos" : post.mediaUrl ? "Photos" : "Text", reactions: post.reactionCount, comments: post.commentCount, liked: Boolean(post.myReaction), image: post.mediaUrl || undefined, mediaType: post.mediaType || undefined })),
           }));
         }).catch(() => undefined);
       }, 180);
@@ -7569,7 +7572,7 @@ export function CommunityDetailScreen({
         </ScrollView>
         <View style={[styles.communityComposer, { backgroundColor: palette.card, borderColor: palette.border }]}>
           <View style={styles.communityComposerTop}>
-            <Image source={{ uri: neutralAvatar }} style={styles.composerAvatar} />
+            <UserAvatar uri={authorAvatar} name={authorName} size={40} />
             <TextInput
               value={draft}
               onChangeText={setDraft}
@@ -8996,6 +8999,8 @@ export default function App() {
   const [introSeen, setIntroSeen] = useState(true);
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [workspaceError, setWorkspaceError] = useState("");
+  const [workspaceLoading, setWorkspaceLoading] = useState(false);
   const [welcomeError, setWelcomeError] = useState("");
   const [profileSetup, setProfileSetup] = useState<ProfileOnboardingState | null>(null);
   const refreshAuthRef = useRef<() => Promise<void>>(async () => undefined);
@@ -9059,6 +9064,8 @@ export default function App() {
     };
   }, [data.mode, data.userId]);
 
+  const inboxViewRef = useRef({ selectedConversationId, conversations: data.conversations });
+  inboxViewRef.current = { selectedConversationId, conversations: data.conversations };
   useEffect(() => {
     if (data.mode !== "authenticated" || !isSupabaseConfigured) return;
     let active = true;
@@ -9071,16 +9078,16 @@ export default function App() {
       if (!active || change.eventType !== "INSERT" || !change.message) return;
       const incoming = chatMessageFromRemote(change.message, data.userId);
       const roomId = String(change.conversationId);
-      setData((current) => ({
+      setData((current) => current.mode !== "authenticated" || current.userId !== data.userId ? current : ({
         ...current,
         conversations: current.conversations.map((conversation) =>
           conversation.id !== roomId || conversation.messages.some((message) => message.id === incoming.id)
             ? conversation
-            : { ...conversation, messages: [...conversation.messages, incoming], lastMessageAt: incoming.createdAt, unread: incoming.mine || selectedConversationId === conversation.id ? conversation.unread : conversation.unread + 1 },
+            : { ...conversation, messages: [...conversation.messages, incoming], lastMessageAt: incoming.createdAt, unread: incoming.mine || inboxViewRef.current.selectedConversationId === conversation.id ? conversation.unread : conversation.unread + 1 },
         ),
       }));
-      if (!incoming.mine && selectedConversationId !== roomId) {
-        const roomName = data.conversations.find(item => item.id === roomId)?.name || "New message";
+      if (!incoming.mine && inboxViewRef.current.selectedConversationId !== roomId) {
+        const roomName = inboxViewRef.current.conversations.find(item => item.id === roomId)?.name || "New message";
         Alert.alert(roomName, incoming.text || (incoming.messageType === "image" ? "Photo" : incoming.messageType === "video" ? "Video" : "New message"));
       }
     };
@@ -9112,26 +9119,30 @@ export default function App() {
       if (retryTimer) clearTimeout(retryTimer);
       void subscription?.cleanup();
     };
-  }, [data.mode, data.userId, selectedConversationId]);
+  }, [data.mode, data.userId]);
 
   useEffect(() => {
     if (data.mode !== "authenticated" || !isSupabaseConfigured) return;
+    // Community chat owns its discovery and raw inbox preview refresh already.
+    const sections = screen === "chat" && !selectedConversationId && !legacyMessages && messagesTab === "Communities"
+      ? [] : foregroundWorkspaceSections(screen);
+    if (!sections.length || !data.userId) return;
+    const appUserId = data.userId;
+    const authUserId = authIdentityRef.current;
+    const generation = authGenerationRef.current;
+    if (!authUserId) return;
     let active = true;
     let refreshing = false;
     const unsubscribe = subscribeToAppForeground(async () => {
       if (!active || refreshing) return;
       refreshing = true;
       try {
-        const remote = await loadRemoteWorkspace();
-        if (!active || !remote) return;
+        const remote = await loadRemoteWorkspace(undefined, { sections, viewer: { authUserId, appUserId } });
+        if (!active || !remote || generation !== authGenerationRef.current || authUserId !== authIdentityRef.current) return;
         setData((current) => {
+          if (current.mode !== "authenticated" || current.userId !== appUserId || remote.profile.id !== appUserId) return current;
           const next = hydrateRemoteData(remote, current);
-          if (screen === "activities" || screen === "activityDetail") return { ...current, activities: next.activities, likedIds: next.likedIds, savedIds: next.savedIds };
-          if (screen === "communities" || screen === "communityDetail") return { ...current, communities: next.communities };
-          if (screen === "vibes") return { ...current, vibes: next.vibes, likedIds: next.likedIds };
-          if (screen === "chat") return { ...current, conversations: next.conversations, stories: next.stories, people: next.people };
-          if (screen === "feed") return { ...current, activities: next.activities, vibes: next.vibes, stories: next.stories };
-          return next;
+          return mergeWorkspaceRefresh(current, next, sections);
         });
       } catch (error) {
         console.warn("Foreground refresh failed", error);
@@ -9140,70 +9151,121 @@ export default function App() {
       }
     });
     return () => { active = false; unsubscribe(); };
-  }, [data.mode, data.userId, screen]);
+  }, [data.mode, data.userId, screen, selectedConversationId, legacyMessages, messagesTab]);
 
   useEffect(() => {
     if (!loaded || !isSupabaseConfigured) return;
     let active = true;
-    let running: Promise<void> | null = null;
+    let readyIdentity: string | null = null;
+    let attemptedIdentity: string | null = null;
+    let running: { promise: Promise<void>; controller: AbortController } | null = null;
+    let restoring: Promise<void> | null = null;
+    const bootstrapController = new AbortController();
     const acceptIdentity = (id: string | null) => {
       if (authIdentityRef.current === id) return;
+      running?.controller.abort();
       authIdentityRef.current = id;
       authGenerationRef.current += 1;
       running = null;
+      readyIdentity = null;
+      attemptedIdentity = null;
       setData(current => ({ ...initialData, theme: current.theme, themePreference: current.themePreference }));
       setProfileSetup(null);
+      setWorkspaceError("");
+      setWorkspaceLoading(false);
     };
-    const refresh = async () => {
-      if (running) return running;
+    const refresh = async (validatedUser?: import('@supabase/supabase-js').User) => {
+      if (running) return running.promise;
       const currentGeneration = authGenerationRef.current;
-      setAuthError(""); setAuthLoading(true);
-      running = (async () => {
+      const identity = authIdentityRef.current;
+      if (!identity) return;
+      attemptedIdentity = identity;
+      const request = { promise: Promise.resolve(), controller: new AbortController() };
+      running = request;
+      const isCurrent = () => active && running === request && currentGeneration === authGenerationRef.current && identity === authIdentityRef.current;
+      setAuthError(""); setWorkspaceError("");
+      setWorkspaceLoading(true);
+      // Refocus/session confirmation must never hide a working account behind
+      // the global auth spinner. Explicit retries also preserve its navigation.
+      if (readyIdentity !== identity) setAuthLoading(true);
+      request.promise = (async () => {
         try {
           // Resolve the authenticated profile before loading social data. An incomplete
           // profile must be able to finish setup even when a Feed request is slow.
-          const setup = await profileOnboardingService.load();
-          if (!active || currentGeneration !== authGenerationRef.current) return;
+          const setup = await withRequestDeadline(
+            signal => profileOnboardingService.load(signal, validatedUser?.id === identity ? validatedUser : undefined), 30_000,
+            "Your profile took too long to load. Check your connection and try again.", request.controller.signal,
+          );
+          if (!isCurrent()) return;
+          readyIdentity = identity;
           setProfileSetup(setup);
           if (!setup.profile.onboarding_completed) {
             setData(current => ({ ...initialData, theme: current.theme, themePreference: current.themePreference, mode: "authenticated", userId: String(setup.profile.id), name: setup.suggestedFullName, username: `@${setup.suggestedUsername}`, avatarUri: setup.suggestedAvatarUrl ?? undefined, onboarded: false }));
             setScreen("onboarding");
             return;
           }
-          const remote = await loadRemoteWorkspace();
-          if (!active || currentGeneration !== authGenerationRef.current) return;
+          // Identity and onboarding are sufficient to render navigation. Social
+          // data loads in the background instead of blocking the entire app.
+          setData(current => ({ ...current, mode: "authenticated", userId: String(setup.profile.id), name: setup.suggestedFullName, username: `@${setup.suggestedUsername}`, avatarUri: setup.suggestedAvatarUrl ?? undefined, bio: setup.profile.bio || '', location: setup.profile.location || '', onboarded: true }));
+          setScreen(currentScreen => ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"].includes(currentScreen) ? "feed" : currentScreen);
+          setAuthLoading(false);
+          setSessionChecked(true);
+          const remote = await withRequestDeadline(
+            () => loadRemoteWorkspace(setup.workspaceProfile), 30_000,
+            "Your Feed took too long to load. Your account is still signed in. Try again.", request.controller.signal,
+          );
+          if (!isCurrent()) return;
           if (!remote) throw new Error("Your session is no longer available. Please sign in again.");
-          setData(current => hydrateRemoteData(remote, { ...initialData, theme: current.theme, themePreference: current.themePreference }));
+          if (remote.profile.id !== String(setup.profile.id)) throw new Error("Your account changed while loading. Please try again.");
+          setData(current => current.mode === "authenticated" && current.userId === String(setup.profile.id) ? hydrateRemoteData(remote, current) : current);
           setScreen(currentScreen => ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"].includes(currentScreen) ? "feed" : currentScreen);
         } catch (error) {
           console.warn("Workspace bootstrap failed", error);
-          if (active && currentGeneration === authGenerationRef.current) {
-            setData(current => ({ ...initialData, theme: current.theme, themePreference: current.themePreference }));
-            setAuthError("We couldn't load your account. Check your connection and try again.");
+          if (isCurrent()) {
+            if (readyIdentity === identity) {
+              // Discovery/inbox failures are not authentication failures.
+              setWorkspaceError(error instanceof Error ? error.message : "Your Feed could not be loaded. Try again.");
+            } else {
+              setAuthError(error instanceof Error ? error.message : "We couldn't load your account. Check your connection and try again.");
+            }
           }
         } finally {
-          if (active && currentGeneration === authGenerationRef.current) { setAuthLoading(false); setSessionChecked(true); running = null; }
+          if (isCurrent()) { setAuthLoading(false); setWorkspaceLoading(false); setSessionChecked(true); running = null; }
         }
       })();
-      return running;
+      return request.promise;
     };
-    refreshAuthRef.current = refresh;
-    const bootstrapGeneration = authGenerationRef.current;
-    bootstrapSession()
-      .then(async (result) => {
-        if (!active || bootstrapGeneration !== authGenerationRef.current) return;
-        if (result.status === "authenticated") { acceptIdentity(result.user.id); await refresh(); }
+    const restore = (): Promise<void> => {
+      if (restoring) return restoring;
+      setAuthError("");
+      setSessionChecked(false);
+      restoring = (async () => {
+      const generation = authGenerationRef.current;
+      try {
+        const result = await withRequestDeadline(() => bootstrapSession(), 30_000,
+          "Your session took too long to restore. Check your connection and try again.", bootstrapController.signal);
+        if (!active || generation !== authGenerationRef.current) return;
+        if (result.status === "authenticated") { acceptIdentity(result.user.id); await refresh(result.user); }
         else if (initialWebRoute && !["authFallback", "authSignup", "login", "signup"].includes(initialWebRoute.screen)) {
           setScreen("login");
           if (Platform.OS === "web" && typeof window !== "undefined")
             window.history.replaceState({ wenitro: true }, "", webHashFor("login"));
         }
-      })
-      .catch(() => { if (active && bootstrapGeneration === authGenerationRef.current) { setScreen("login"); setAuthError("Your session could not be restored. Check your connection and try again."); } })
-      .finally(() => {
-        if (active) setSessionChecked(true);
-      });
-    const unsubscribeRedirects = subscribeToAuthRedirects(() => void refresh(), () => setWelcomeError("Sign-in could not be completed. Please try again."));
+      } catch (error) {
+        if (active && generation === authGenerationRef.current) {
+          setScreen("login");
+          setAuthError(error instanceof Error ? error.message : "Your session could not be restored. Check your connection and try again.");
+        }
+      } finally { if (active) setSessionChecked(true); }
+      })().finally(() => { restoring = null; });
+      return restoring;
+    };
+    refreshAuthRef.current = () => authIdentityRef.current ? refresh() : restore();
+    void restore();
+    const unsubscribeRedirects = subscribeToAuthRedirects(session => {
+      acceptIdentity(session.user.id);
+      if (attemptedIdentity !== session.user.id) void refresh();
+    }, () => setWelcomeError("Sign-in could not be completed. Please try again."));
     const { data: listener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (event === "SIGNED_OUT") {
@@ -9218,13 +9280,20 @@ export default function App() {
           setIntroSeen(true);
         } else if (event === "SIGNED_IN" && session) {
           acceptIdentity(session.user.id);
+          // Supabase also emits SIGNED_IN when the same session is confirmed
+          // on tab focus or by another tab. Screen-specific foreground refresh
+          // already handles freshness; do not bootstrap the account again.
+          if (attemptedIdentity === session.user.id) return;
           // Leave the Supabase callback before making further auth requests.
-          setTimeout(() => { if (active) void refresh(); }, 0);
+          const generation = authGenerationRef.current;
+          setTimeout(() => { if (active && generation === authGenerationRef.current) void refresh(); }, 0);
         }
       },
     );
     return () => {
       active = false;
+      bootstrapController.abort();
+      running?.controller.abort();
       authGenerationRef.current += 1;
       unsubscribeRedirects();
       listener.subscription.unsubscribe();
@@ -9385,6 +9454,9 @@ export default function App() {
     if (screen === "feed")
       return (
         <ReferenceFeed
+          refreshOnMount={false}
+          workspaceLoading={workspaceLoading}
+          workspaceError={workspaceError}
           data={data}
           setData={setData}
           go={go}
@@ -9445,7 +9517,7 @@ export default function App() {
         />
       );
     if (screen === 'squad') return <ReferenceSquad ownerId={selectedSquadOwnerId || data.userId || ''} back={back} openProfile={openProfile} />;
-    if (screen === 'profile') return selectedProfileId ? <ReferenceMemberProfile key={selectedProfileId} id={selectedProfileId} back={back} onOpenActivity={activity => { setData(current => ({ ...current, activities: [activity, ...current.activities.filter(a => a.id !== activity.id)] })); openActivity(activity.id); }} onOpenVibe={id => { setSelectedVibeId(id); go('vibes', id); }} onOpenSquad={openSquad} onConversation={(id, person) => { setData(current => ({ ...current, conversations: current.conversations.some(c => c.id === id) ? current.conversations : [...current.conversations, { id, name: person.fullname || person.username, type: 'People', roomType: 'personal', avatar: person.profile_image || '', memberCount: 2, online: false, unread: 0, userId: String(person.id), messages: [] }] })); setSelectedConversationId(id); go('chat', id); }} /> : <ReferenceProfile data={data} setData={setData} go={go} openActivity={openActivity} openDraft={() => go('createActivity')} openVibe={id => { setSelectedVibeId(id); go('vibes', id); }} openSquad={() => openSquad(data.userId || '')} />;
+    if (screen === 'profile') return selectedProfileId ? <ReferenceMemberProfile key={selectedProfileId} id={selectedProfileId} back={back} onOpenCommunity={openCommunity} onOpenActivity={activity => { setData(current => ({ ...current, activities: [activity, ...current.activities.filter(a => a.id !== activity.id)] })); openActivity(activity.id); }} onOpenVibe={id => { setSelectedVibeId(id); go('vibes', id); }} onOpenSquad={openSquad} onConversation={(id, person) => { setData(current => ({ ...current, conversations: current.conversations.some(c => c.id === id) ? current.conversations : [...current.conversations, { id, name: person.fullname || person.username, type: 'People', roomType: 'personal', avatar: person.profile_image || '', memberCount: 2, online: false, unread: 0, userId: String(person.id), messages: [] }] })); setSelectedConversationId(id); go('chat', id); }} /> : <ReferenceProfile openCommunity={openCommunity} data={data} setData={setData} go={go} openActivity={openActivity} openDraft={() => go('createActivity')} openVibe={id => { setSelectedVibeId(id); go('vibes', id); }} openSquad={() => openSquad(data.userId || '')} />;
     if (screen === 'search') return <ReferenceSearch back={back} setData={setData} openActivity={openActivity} openProfile={openProfile} openCommunity={openCommunity} />;
     if (screen === 'shop') return <ReferenceStore points={data.nitro} back={back} />;
     if (screen === 'nitroHistory') return <ReferenceNitroHistory back={back} />;
@@ -9572,6 +9644,7 @@ export default function App() {
             community={selectedCommunity}
             onConversation={() => { setSelectedConversationId(selectedCommunity.id); go("chat", selectedCommunity.id); }}
             authorName={data.name || data.username}
+            authorAvatar={data.avatarUri}
             setData={setData}
             back={back}
           />
@@ -9615,6 +9688,10 @@ export default function App() {
       >
       <View style={[styles.app, data.theme === "dark" && styles.appDark, brandedAuthSurface && { backgroundColor: "#101827" }]}>
         <StatusBar style={brandedAuthSurface || data.theme === "dark" ? "light" : "dark"} />
+        {workspaceError && data.mode === "authenticated" ? <View accessibilityRole="alert" style={{ padding: 12, gap: 8, backgroundColor: data.theme === "dark" ? "#241D35" : "#F1EEFF" }}>
+          <Text style={{ color: data.theme === "dark" ? "#F4F1FF" : "#30214F" }}>{workspaceError}</Text>
+          <Pressable accessibilityRole="button" accessibilityLabel="Retry loading Feed" onPress={() => void refreshAuthRef.current()} style={{ alignSelf: "flex-start", paddingVertical: 8, paddingHorizontal: 12 }}><Text style={{ color: data.theme === "dark" ? "#C7BAFF" : "#3524C9", fontWeight: "700" }}>Retry</Text></Pressable>
+        </View> : null}
         {content}
         <ShareToChatModal
           entity={shareEntity}

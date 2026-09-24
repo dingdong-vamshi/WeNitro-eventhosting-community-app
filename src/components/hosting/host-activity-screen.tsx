@@ -68,7 +68,7 @@ function ScheduleField({ label, value, onChange, error }: { label: string; value
   const [mode, setMode] = useState<'date' | 'time' | null>(null);
   const current = Number.isFinite(Date.parse(value)) ? new Date(value) : new Date();
   return <View style={[{ flex: 1, gap: 10 }, error ? s.scheduleError : null]}><Text style={s.scheduleLabel}>{label}</Text>
-    {Platform.OS === 'web' ? React.createElement('input', { type: 'datetime-local', 'aria-label': label, value, onInput: (e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value), onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value), style: { width: '100%', minWidth: 0, boxSizing: 'border-box', border: 0, borderBottom: `1px solid ${error ? c.danger : c.border}`, color: c.text, colorScheme: c.isDark ? 'dark' : 'light', background: 'transparent', padding: '5px 0 12px', fontSize: 13, fontFamily: 'inherit' } }) : <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={() => setMode('date')} style={[s.dateButton, error && { borderBottomColor: c.danger }]}><Text style={s.body}>{current.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</Text></Pressable>}
+    {Platform.OS === 'web' ? React.createElement('input', { type: 'datetime-local', step: 1, 'aria-label': label, value, onInput: (e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value), onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value), style: { width: '100%', minWidth: 0, boxSizing: 'border-box', border: 0, borderBottom: `1px solid ${error ? c.danger : c.border}`, color: c.text, colorScheme: c.isDark ? 'dark' : 'light', background: 'transparent', padding: '5px 0 12px', fontSize: 13, fontFamily: 'inherit' } }) : <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={() => setMode('date')} style={[s.dateButton, error && { borderBottomColor: c.danger }]}><Text style={s.body}>{current.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</Text></Pressable>}
     {error ? <Text accessibilityRole="alert" style={s.error}>{error}</Text> : null}
     {mode && Platform.OS !== 'web' ? <DateTimePicker value={current} mode={mode} onChange={(event, next) => { if (event.type !== 'set' || !next) { setMode(null); return; } onChange(localDateTime(next)); setMode(mode === 'date' ? 'time' : null); }} /> : null}
   </View>;
@@ -113,8 +113,15 @@ export function HostLanding({ onActivity, onVibe, onCommunity, go }: { onActivit
     ] as const).map(([icon, title, description, color, bg, action]) => <Pressable accessibilityRole="button" accessibilityLabel={title} key={title} onPress={action} style={[s.landingCard, { minHeight: 150, borderRadius: 22, backgroundColor: bg, borderWidth: 1, borderColor: palette.border }]}><View style={[s.landingIcon, { width: 58, height: 58, borderRadius: 17, backgroundColor: color }]}><Glyph name={icon} color="white" size={30} /></View><View style={{ flex: 1, gap: 8 }}><Text style={[s.settingTitle, { color: palette.text, fontSize: 17 }]}>{title}</Text><Text style={[s.small, { color: palette.muted, fontSize: 12, lineHeight: 18 }]}>{description}</Text></View><View style={[s.roundArrow, { width: 34, height: 34, borderRadius: 18, backgroundColor: light ? palette.inset : '#FFFFFF13' }]}><Glyph name="chevron-forward" size={17} color={palette.text} /></View></Pressable>)}
   </ScrollView></SafeAreaView>;
 }
-export function HostActivityScreen({ userId, isPartner, existing, onBack, onCreated, onDrafted }: { userId: string; isPartner: boolean; existing?: HostActivitySource | null; onBack: () => void; onCreated: (activity: Awaited<ReturnType<typeof activityService.create>>) => void; onDrafted?: (activity: Awaited<ReturnType<typeof activityService.createDraft>>) => void }) {
+type HostPaymentSource = HostActivitySource & { isPaid?: boolean; paymentCollectionMode?: 'cashfree' | 'onsite' };
+export function hostPaymentCollectionMode(existing: HostPaymentSource | null | undefined, isPartner: boolean): 'cashfree' | 'onsite' {
+  const alreadyPaid = existing?.isPaid ?? (Number(existing?.price?.replace(/[^0-9.]/g, '') || 0) > 0);
+  // Publication fixes collection mode; later Partner approval must not change its meaning.
+  return alreadyPaid && existing?.paymentCollectionMode ? existing.paymentCollectionMode : isPartner ? 'cashfree' : 'onsite';
+}
+export function HostActivityScreen({ userId, isPartner, existing, onBack, onCreated, onDrafted }: { userId: string; isPartner: boolean; existing?: HostPaymentSource | null; onBack: () => void; onCreated: (activity: Awaited<ReturnType<typeof activityService.create>>) => void; onDrafted?: (activity: Awaited<ReturnType<typeof activityService.createDraft>>) => void }) {
   const { c, s } = useHostTheme();
+  const platformPayment = hostPaymentCollectionMode(existing, isPartner) === 'cashfree';
   const [draft, setDraft] = useState<HostDraft>(() => existing ? draftFromActivity(existing) : newHostDraft()), [step, setStep] = useState(0), [loaded, setLoaded] = useState(false);
   const [dialog, setDialog] = useState<'visibility' | 'age' | 'gender' | 'exit' | 'customAge' | null>(null);
   const [categoryOpen, setCategoryOpen] = useState(false), [categorySearch, setCategorySearch] = useState('');
@@ -181,9 +188,9 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     startsAt: draft.dateLater ? null : new Date(draft.start).toISOString(),
     endsAt: draft.dateLater ? null : new Date(draft.end).toISOString(),
     registrationClosesAt: draft.dateLater ? null : new Date(draft.deadline).toISOString(),
-    priceInr: isPartner && draft.isPaid ? Number(draft.price) : 0,
-    costsMayApply: isPartner && draft.isPaid,
-    entryFeeRequired: isPartner && draft.isPaid,
+    priceInr: draft.isPaid ? Number(draft.price) : 0,
+    costsMayApply: false,
+    entryFeeRequired: false,
     activityType: 'meetup',
     visibility: draft.visibility,
     joinType: draft.approval ? 'approval' : 'direct',
@@ -256,10 +263,11 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
         <Toggle label="Verified Membership" icon="person-add-outline" description="Restrict participation to verified profiles only" value={draft.verifiedOnly} onChange={() => patch({ verifiedOnly: !draft.verifiedOnly })} />
       </View><Text style={[s.label, { marginTop: 28, marginBottom: 24 }]}>PARTICIPATION DETAILS</Text>
         <Text style={[s.body, { fontSize: 12, marginBottom: 10 }]}>Participant Limit</Text><Control label="Participant Limit" keyboardType="number-pad" value={draft.capacity} onChangeText={capacity => patch({ capacity })} placeholder="No limit" />
-        {isPartner ? <View style={{ marginTop: 24 }}>
-          <Toggle label="Paid Activity" icon="cash-outline" description="Collect the activity price through secure Cashfree checkout." value={draft.isPaid} onChange={() => patch({ isPaid: !draft.isPaid, price: draft.isPaid ? '' : draft.price })} />
-          {draft.isPaid ? <View style={{ gap: 12, paddingTop: 16 }}><Text style={[s.body, { fontSize: 12 }]}>Activity Price</Text><Control label="Activity Price" icon="cash-outline" keyboardType="decimal-pad" inputMode="decimal" value={draft.price} maxLength={10} onChangeText={value => patch({ price: value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') })} placeholder="₹ 250" /><Text style={s.small}>Participants complete required registration questions and host approval, when enabled, before secure payment.</Text></View> : null}
-        </View> : null}
+        <View style={{ marginTop: 24 }}>
+          <Text style={[s.label, { marginBottom: 8 }]}>{draft.isPaid ? 'PAID' : 'FREE'}</Text>
+          <Toggle label="Paid Activity" icon="cash-outline" description={platformPayment ? 'Collect the activity price through secure Cashfree checkout.' : 'Participants pay the host directly at the venue. WeNitro does not collect this payment.'} value={draft.isPaid} onChange={() => patch({ isPaid: !draft.isPaid, price: draft.isPaid ? '' : draft.price })} />
+          {draft.isPaid ? <View style={{ gap: 12, paddingTop: 16 }}><Text style={[s.body, { fontSize: 12 }]}>Activity Price</Text><Control label="Activity Price" icon="cash-outline" keyboardType="decimal-pad" inputMode="decimal" value={draft.price} maxLength={10} onChangeText={value => patch({ price: value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') })} placeholder="₹ 250" /><Text style={s.small}>{platformPayment ? 'Participants complete required registration questions and host approval, when enabled, before secure payment.' : 'This price is informational. Participants join normally and settle directly with you at the venue.'}</Text></View> : null}
+        </View>
         <View style={{ marginTop: 14 }}><ChoiceRow label="Age Restriction" value={draft.ageLabel} onPress={() => setDialog('age')} />
         {draft.ageLabel === 'Custom range' ? <View style={[s.inline, { alignItems: 'flex-start' }]}>{(['ageMin', 'ageMax'] as const).map((key, i) => <View key={key} style={{ flex: 1, gap: 8 }}><Text style={s.small}>{i ? 'Maximum Age' : 'Minimum Age'}</Text><Control label={i ? 'Maximum Age' : 'Minimum Age'} value={draft[key]} keyboardType="number-pad" onChangeText={value => patch({ [key]: value })} /></View>)}</View> : null}
         <ChoiceRow label="Gender Preference" value={GENDER_OPTIONS.find(o => o.value === draft.gender)?.label || 'Open to All'} onPress={() => setDialog('gender')} /></View>

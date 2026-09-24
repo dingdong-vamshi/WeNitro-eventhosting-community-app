@@ -229,9 +229,16 @@ const positiveInteger = (value: unknown, field: string): number => {
   return parsed;
 };
 
-const currentLegacyUserId = async (): Promise<number> => {
+const profileRead = <T extends { abortSignal(signal: AbortSignal): unknown }>(request: T, signal?: AbortSignal): T => {
+  if (signal?.aborted) throw new Error("Profile request cancelled.");
+  if (signal) request.abortSignal(signal);
+  return request;
+};
+
+const currentLegacyUserId = async (signal?: AbortSignal): Promise<number> => {
+  if (signal?.aborted) throw new Error("Profile request cancelled.");
   await currentUser();
-  const { data, error } = await supabase.rpc("get_current_legacy_user_id");
+  const { data, error } = await profileRead(supabase.rpc("get_current_legacy_user_id"), signal);
   if (error) throw error;
   return positiveInteger(data, "legacy user id");
 };
@@ -347,8 +354,8 @@ const mapPrivacy = (value: unknown): PrivacyPreferences => {
   };
 };
 
-const readPrivacy = async (): Promise<PrivacyPreferences> => {
-  const { data, error } = await supabase.rpc(privacyBridgeRpc.get);
+const readPrivacy = async (signal?: AbortSignal): Promise<PrivacyPreferences> => {
+  const { data, error } = await profileRead(supabase.rpc(privacyBridgeRpc.get), signal);
   if (error) throw error;
   return mapPrivacy(data);
 };
@@ -531,31 +538,37 @@ const unsupported = (feature: string): never => {
 };
 
 export const profileProductionService = {
-  async loadProfile(): Promise<ProfileDetails> {
-    const userId = await currentLegacyUserId();
+  async loadProfile(signal?: AbortSignal, validatedIdentity?: { user: User; appUserId: number }): Promise<ProfileDetails> {
+    let userId: number;
+    if (validatedIdentity) {
+      if (signal?.aborted) throw new Error("Profile request cancelled.");
+      const current = await supabase.auth.getSession();
+      if (current.error) throw current.error;
+      if (current.data.session?.user.id !== validatedIdentity.user.id) throw new Error("Your signed-in account changed. Please try again.");
+      userId = positiveInteger(validatedIdentity.appUserId, "legacy user id");
+    } else userId = await currentLegacyUserId(signal);
     const [profile, privacy, interests, badges] = await Promise.all([
-      supabase
+      profileRead(supabase
         .from("tbl_users")
         .select(
           "id,account_type,username,fullname,profile_image,bio,about,dob,gender,rating,points,nationality,occupation,isverified,is_delete,onboarding_completed,create_at",
         )
-        .eq("id", userId)
-        .single(),
-      readPrivacy(),
-      supabase
+        .eq("id", userId), signal).single(),
+      readPrivacy(signal),
+      profileRead(supabase
         .from("tbl_user_interests")
         .select(
           "created_at,category:tbl_categories!tbl_user_interests_category_id_fkey(id,name)",
         )
         .eq("user_id", userId)
-        .order("created_at", { ascending: true }),
-      supabase
+        .order("created_at", { ascending: true }), signal),
+      profileRead(supabase
         .from("tbl_user_badges")
         .select(
           "awarded_at,badge:tbl_badges!tbl_user_badges_badge_id_fkey(id,slug,name,description,icon)",
         )
         .eq("user_id", userId)
-        .order("awarded_at", { ascending: false }),
+        .order("awarded_at", { ascending: false }), signal),
     ]);
     const error = profile.error ?? interests.error ?? badges.error;
     if (error) throw error;

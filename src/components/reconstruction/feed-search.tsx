@@ -56,6 +56,10 @@ const HERO_SLIDES = [
 ] as const;
 const HERO_AUTO_ADVANCE_MS = 4500;
 const displayableMedia = (value?: string) => Boolean(value && /^(https?:|data:|blob:|file:)/i.test(value));
+function activityPriceLabel(activity: Pick<Activity, 'price' | 'isPaid'>) {
+  if (activity.isPaid) return `PAID · ${activity.price}`;
+  return activity.price === 'Free' ? 'FREE' : activity.price;
+}
 function activityState(a: Activity) {
   const ended = a.status === 'completed' || Boolean(a.endsAt && Date.parse(a.endsAt) <= Date.now());
   if (ended) return 'Completed';
@@ -91,7 +95,13 @@ export function ReferenceActivityCard({ activity: a, liked, onLike, onShowLikers
   </View>;
 }
 
-export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, openVibe, openProfile, refreshOnMount = true }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (s: Screen) => void; openActivity: (id: string) => void; openCommunity?: (id: string) => void; openVibe?: (id: string) => void; openProfile?: (id: string) => void; refreshOnMount?: boolean }) {
+export function feedActivityLoadState(pending: boolean, activityCount: number, error: string): 'loading' | 'ready' | 'empty' | 'error' {
+  if (activityCount > 0) return 'ready';
+  if (pending) return 'loading';
+  return error ? 'error' : 'empty';
+}
+
+export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, openVibe, openProfile, refreshOnMount = true, workspaceLoading = false, workspaceError = '' }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (s: Screen) => void; openActivity: (id: string) => void; openCommunity?: (id: string) => void; openVibe?: (id: string) => void; openProfile?: (id: string) => void; refreshOnMount?: boolean; workspaceLoading?: boolean; workspaceError?: string }) {
   const c = usePalette();
   const { width } = useWindowDimensions();
   const homeCarousel = useRef<ScrollView>(null);
@@ -112,6 +122,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const [draft, setDraft] = useState({ dateFrom: '', dateTo: '', price: 'All', gender: 'All', verifiedOnly: false });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(data.activities.length === 0);
+  const activityLoadState = feedActivityLoadState(loading || workspaceLoading, data.activities.length, error || workspaceError);
   const [notificationCount, setNotificationCount] = useState(0);
   const [nearby, setNearby] = useState<{ latitude: number; longitude: number } | null>(null);
   const [locating, setLocating] = useState(false);
@@ -269,12 +280,12 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
           </Pressable>
         </ScrollView>
         <SectionHeading title="Discover Activities" action="Explore all" onAction={() => go('activities')} />
-        {loading ? <View style={{ height: 184, borderRadius: 17, backgroundColor: c.card, marginTop: 10 }} /> : <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -14, marginTop: 10 }} contentContainerStyle={{ paddingHorizontal: 14, gap: 10 }}>{activities.slice(0, 6).map(a => { const liked = data.likedIds.includes(`activity:${a.id}`); return <View key={a.id} style={{ width: 220, height: 198, borderRadius: 17, overflow: 'hidden', backgroundColor: c.card, borderWidth: 1, borderColor: c.border }}>
+        {activityLoadState === 'loading' ? <View accessibilityLabel="Loading activities" style={{ height: 184, borderRadius: 17, backgroundColor: c.card, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}><Text style={{ color: c.muted }}>Loading activities…</Text></View> : <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -14, marginTop: 10 }} contentContainerStyle={{ paddingHorizontal: 14, gap: 10 }}>{activities.slice(0, 6).map(a => { const liked = data.likedIds.includes(`activity:${a.id}`); return <View key={a.id} style={{ width: 220, height: 198, borderRadius: 17, overflow: 'hidden', backgroundColor: c.card, borderWidth: 1, borderColor: c.border }}>
           <View style={{ height: 112 }}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${a.title}`} onPress={() => openActivity(a.id)} style={({ pressed }) => ({ flex: 1, opacity: pressed ? .8 : 1 })}>
               <Image source={typeof a.image === 'string' ? { uri: a.image } : a.image} style={{ width: '100%', height: '100%', backgroundColor: c.inset }} resizeMode="cover" />
               <View style={{ position: 'absolute', left: 8, top: 8, borderRadius: 11, backgroundColor: '#FFFFFFEC', paddingHorizontal: 8, paddingVertical: 4 }}><Text style={{ color: '#392CC3', fontSize: 12, fontWeight: '800' }}>{a.category || 'Activity'}</Text></View>
-              {a.price ? <View style={{ position: 'absolute', right: 8, bottom: 8, borderRadius: 11, backgroundColor: '#07111FD2', paddingHorizontal: 8, paddingVertical: 4 }}><Text style={{ color: '#FFF', fontSize: 12, fontWeight: '800' }}>{a.price}</Text></View> : null}
+              {a.price ? <View style={{ position: 'absolute', right: 8, bottom: 8, borderRadius: 11, backgroundColor: '#07111FD2', paddingHorizontal: 8, paddingVertical: 4 }}><Text style={{ color: '#FFF', fontSize: 12, fontWeight: '800' }}>{activityPriceLabel(a)}</Text></View> : null}
             </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel={liked ? `Unlike ${a.title}` : `Like ${a.title}`} onPress={() => void like(a)} onLongPress={() => void showLikers(a)} style={{ position: 'absolute', top: 7, right: 7, minWidth: 34, height: 34, borderRadius: 17, paddingHorizontal: 7, backgroundColor: '#07111FC7', flexDirection: 'row', gap: 3, alignItems: 'center', justifyContent: 'center' }}><Icon name={liked ? 'heart' : 'heart-outline'} color={liked ? '#FF527E' : '#FFF'} size={14} />{a.likeCount ? <Text style={{ color: '#FFF', fontSize: 12, fontWeight: '700' }}>{a.likeCount}</Text> : null}</Pressable>
           </View>
@@ -284,7 +295,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
             <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}><Icon name="location-outline" color={c.muted} size={14} /><Text style={{ color: c.muted, fontSize: 12, fontWeight: '600', flex: 1 }} numberOfLines={1}>{a.where || 'Location to be decided'}</Text></View>
           </Pressable>
         </View>; })}</ScrollView>}
-        {!loading && !activities.length ? <Text style={{ color: c.muted, textAlign: 'center', paddingVertical: 20 }}>No activities are available yet.</Text> : null}
+        {activityLoadState !== 'loading' && activityLoadState !== 'error' && !activities.length ? <Text style={{ color: c.muted, textAlign: 'center', paddingVertical: 20 }}>No activities are available yet.</Text> : null}
         <Pressable accessibilityRole="button" onPress={() => go('host')} style={{ marginTop: 18, backgroundColor: c.isDark ? '#241D55' : '#F0EDFF', borderRadius: 18, padding: 15, flexDirection: 'row', alignItems: 'center', gap: 13 }}><View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: '#6650F5', alignItems: 'center', justifyContent: 'center' }}><Icon name="calendar" color="#FFF" /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontWeight: '800', fontSize: 14 }}>Host an activity</Text><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18, marginTop: 3 }}>Bring a group together around something you enjoy.</Text></View><Icon name="arrow-forward-circle" color={c.accent} size={26} /></Pressable>
         {data.people.length ? <><SectionHeading title="People to Discover" action="Find people" onAction={() => go('search')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 16 }}>{data.people.slice(0, 8).map(person => <Pressable accessibilityRole="button" accessibilityLabel={`Open profile ${person.name}`} onPress={() => openProfile?.(person.id)} key={person.id} style={{ width: 70, alignItems: 'center', gap: 6 }}><UserAvatar uri={person.avatar} name={person.name} size={58} /><Text numberOfLines={1} style={{ color: c.text, width: 70, textAlign: 'center', fontSize: 12, fontWeight: '800' }}>{person.name} <VerifiedBadge userId={person.id} size={11} /></Text></Pressable>)}</ScrollView></> : null}
         {communityCards.length ? <><SectionHeading title="Communities" action="Explore all" onAction={() => go('communities')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>{communityCards.map(room => <Pressable accessibilityRole="button" accessibilityLabel={`Open community ${room.name}`} onPress={() => openCommunity ? openCommunity(room.id) : go('communities')} key={room.id} style={{ width: 154, height: 148, borderRadius: 17, overflow: 'hidden', backgroundColor: c.card, borderWidth: 1, borderColor: c.border }}>{room.image ? <Image source={{ uri: room.image }} style={{ height: 86, width: '100%' }} /> : <View style={{ height: 86, backgroundColor: c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name="people" color={c.accent} size={30} /></View>}<View style={{ padding: 9 }}><Text style={{ color: c.text, fontSize: 13, fontWeight: '800' }} numberOfLines={1}>{room.name}</Text><Text style={{ color: c.muted, fontSize: 12, fontWeight: '600', marginTop: 3 }}>{room.memberCount} members</Text></View></Pressable>)}</ScrollView></> : null}
@@ -330,7 +341,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   </Page>;
 }
 function useDarkColorScheme(c: ReturnType<typeof usePalette>) { return c.bg === '#101824' ? 'dark' : 'light'; }
-export function productionActivity(a: Omit<ActivityListItem, 'viewerState'> & { viewerState?: ActivityListItem['viewerState'] }): Activity { return { id: a.id, title: a.title, category: a.category, when: activityTime(a.startsAt || undefined), where: a.locationName, latitude: a.latitude, longitude: a.longitude, price: a.priceInr ? `₹${a.priceInr}` : a.costsMayApply ? 'Costs may apply' : 'Free', costsMayApply: a.costsMayApply, entryFeeRequired: a.entryFeeRequired, seats: a.capacity || 0, joined: 0, image: a.coverUrl || Asset.fromModule(require('../../../assets/wenitro-logo-transparent.png')).uri, host: a.owner?.username || a.owner?.fullName || 'Host', hostAvatar: a.owner?.avatarUrl || undefined, hostVerified: a.owner?.isVerified, ownerId: a.ownerId, startsAt: a.startsAt || undefined, end: a.endsAt || undefined, endsAt: a.endsAt || undefined, closes: a.registrationClosesAt || undefined, registrationClosesAt: a.registrationClosesAt || undefined, status: a.status, description: a.description || '', visibility: a.visibility, activityType: a.activityType, joinType: a.joinType, communityId: a.communityId, locationInstruction: a.locationInstruction || undefined, verifiedOnly: a.verifiedOnly, ageMin: a.ageMin, ageMax: a.ageMax, genderPreference: a.genderPreference, viewerStatus: a.viewerState?.participation?.status === 'going' ? 'going' : a.viewerState?.participation?.status || null }; }
+export function productionActivity(a: Omit<ActivityListItem, 'viewerState'> & { viewerState?: ActivityListItem['viewerState'] }): Activity { return { id: a.id, title: a.title, category: a.category, when: activityTime(a.startsAt || undefined), where: a.locationName, latitude: a.latitude, longitude: a.longitude, price: a.priceInr ? `₹${a.priceInr}` : a.costsMayApply ? 'Costs may apply' : 'Free', isPaid: a.isPaid, paymentCollectionMode: a.paymentCollectionMode, costsMayApply: a.costsMayApply, entryFeeRequired: a.entryFeeRequired, seats: a.capacity || 0, joined: 0, image: a.coverUrl || Asset.fromModule(require('../../../assets/wenitro-logo-transparent.png')).uri, host: a.owner?.username || a.owner?.fullName || 'Host', hostAvatar: a.owner?.avatarUrl || undefined, hostVerified: a.owner?.isVerified, ownerId: a.ownerId, startsAt: a.startsAt || undefined, end: a.endsAt || undefined, endsAt: a.endsAt || undefined, closes: a.registrationClosesAt || undefined, registrationClosesAt: a.registrationClosesAt || undefined, status: a.status, description: a.description || '', visibility: a.visibility, activityType: a.activityType, joinType: a.joinType, communityId: a.communityId, locationInstruction: a.locationInstruction || undefined, verifiedOnly: a.verifiedOnly, ageMin: a.ageMin, ageMax: a.ageMax, genderPreference: a.genderPreference, viewerStatus: a.viewerState?.participation?.status === 'going' ? 'going' : a.viewerState?.participation?.status || null }; }
 type SearchScope = 'Activities' | 'People' | 'Communities';
 type SearchRow =
  | { kind: 'activity'; id: string; activity: Activity }
@@ -385,7 +396,7 @@ function SearchActivityResult({ row, open }: { row: Extract<SearchRow, { kind: '
  return <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${a.title}`} onPress={open} style={({ pressed }) => ({ minHeight: 112, borderRadius: 14, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, overflow: 'hidden', flexDirection: 'row', opacity: pressed ? .76 : 1 })}>
   <Image source={typeof a.image === 'string' ? { uri: a.image } : a.image} style={{ width: 116, alignSelf: 'stretch', backgroundColor: c.inset }} resizeMode="cover" />
   <View style={{ flex: 1, paddingHorizontal: 11, paddingVertical: 9, gap: 4 }}>
-   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><View style={{ backgroundColor: c.isDark ? '#6E5AEF35' : '#EEEAFE', paddingHorizontal: 7, paddingVertical: 3, borderRadius: 9 }}><Text numberOfLines={1} style={{ color: c.accent, fontSize: 12, fontWeight: '800', maxWidth: 92 }}>{a.category || 'Activity'}</Text></View>{a.price ? <Text style={{ color: c.success, fontSize: 12, fontWeight: '800', marginLeft: 'auto' }}>{a.price}</Text> : null}</View>
+   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><View style={{ backgroundColor: c.isDark ? '#6E5AEF35' : '#EEEAFE', paddingHorizontal: 7, paddingVertical: 3, borderRadius: 9 }}><Text numberOfLines={1} style={{ color: c.accent, fontSize: 12, fontWeight: '800', maxWidth: 92 }}>{a.category || 'Activity'}</Text></View>{a.price ? <Text style={{ color: c.success, fontSize: 12, fontWeight: '800', marginLeft: 'auto' }}>{activityPriceLabel(a)}</Text> : null}</View>
    <Text numberOfLines={2} style={{ color: c.text, fontSize: 13, lineHeight: 17, fontWeight: '800' }}>{a.title}</Text>
    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}><Icon name="calendar-outline" color={c.accent} size={13} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 12, flex: 1 }}>{compactDate(a.startsAt)}</Text></View>
    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}><Icon name="location-outline" color={c.muted} size={13} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 12, flex: 1 }}>{a.where || 'Location to be decided'}</Text></View>

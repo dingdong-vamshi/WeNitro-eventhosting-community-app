@@ -52,9 +52,12 @@ assert.ok(!communityService.includes("from('tbl_chat_poll_votes')"));
 const workspace = fs.readFileSync('src/services/wenitro.ts', 'utf8');
 assert.match(workspace, /select\("id,title,media"\)/);
 assert.match(workspace, /eventCovers\.get/);
+const app = fs.readFileSync('App.tsx', 'utf8');
+assert.match(app, /if \(id && messageCursors\[id\] === undefined\) void loadMessagePage\(id\)/,
+  'Opening a routed inbox thread must hydrate its full first page, not leave the one-message preview as history');
 const migration = fs.readFileSync('supabase/migrations/20260922184236_community_chat_contract_recovery.sql', 'utf8');
 const postFunction = migration.slice(migration.indexOf('create or replace function private.community_create_post'), migration.indexOf('create or replace function public.community_create_post'));
 assert.ok(!postFunction.includes('tbl_messages'));
 assert.match(migration, /room_type in \('community', 'group'\)/);
 assert.match(migration, /create_group_chat_room_secure/);
-console.log('PASS: chat guards/pagination, RPC-only polls, atomic group image contract/cleanup, activity-cover hydration, post-chat separation, and compact UI invariants. In-memory only; no live writes.');
+console.log('PASS: chat guards/pagination, routed-thread history hydration, RPC-only polls, atomic group image contract/cleanup, activity-cover hydration, post-chat separation, and compact UI invariants. In-memory only; no live writes.');

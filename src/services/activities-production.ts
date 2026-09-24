@@ -81,6 +81,8 @@ export type ActivityParticipation = {
   userId: string;
   role: ParticipationRole;
   status: ParticipationStatus;
+  /** Exact stored status for history labels; preserves pending-payment/left states. */
+  rawStatus?: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -417,8 +419,8 @@ const activityFromDb = (
     priceInr: Number.isFinite(price) ? price : 0,
     isPaid: row.is_paid === true && price > 0,
     paymentCollectionMode: row.payment_collection_mode === "onsite" ? "onsite" : "cashfree",
-    costsMayApply: row.costs_may_apply === true || price > 0,
-    entryFeeRequired: row.entry_fee_required === true || price > 0,
+    costsMayApply: row.costs_may_apply === true,
+    entryFeeRequired: row.entry_fee_required === true,
     capacity: Number.isFinite(capacity) ? capacity : 0,
     matchScore:
       matchScore != null && Number.isFinite(matchScore) ? matchScore : null,
@@ -442,7 +444,7 @@ const activityFromDb = (
 };
 
 const participationStatusFromDb = (value: unknown): ParticipationStatus => {
-  if (value === "approved" || value === "going") return "going";
+  if (value === "approved" || value === "going" || value === "paid") return "going";
   if (
     value === "rejected" ||
     value === "declined" ||
@@ -452,7 +454,7 @@ const participationStatusFromDb = (value: unknown): ParticipationStatus => {
     return "declined";
   }
   if (value === "pending") return "pending";
-  if (value === "payment_required") return "payment_required";
+  if (value === "payment_required" || value === "approved_pending_payment" || value === "payment_pending" || value === "payment_failed") return "payment_required";
   if (value === "waitlist") return "waitlist";
   return "interested";
 };
@@ -1040,6 +1042,67 @@ export const activitiesProductionService = {
       total,
       hasMore: window.from + activities.length < total,
     };
+  },
+
+  /** Public-profile hosted history uses normal event RLS, including completed rows. */
+  async listPublicHosted(
+    ownerId: string,
+    input: { page?: number; pageSize?: number; signal?: AbortSignal } = {},
+  ): Promise<Page<ActivityListItem>> {
+    requireBackend();
+    const owner = parseId(ownerId, "Profile owner ID");
+    const window = pagination(input.page, input.pageSize);
+    let query = supabase.from("tbl_events").select(EVENT_SELECT, { count: "exact" })
+      .eq("created_by", owner).eq("is_deleted", false).eq("is_cancelled", false)
+      .in("status", ["published", "completed"])
+      .order("event_start_time", { ascending: false }).order("id", { ascending: true })
+      .range(window.from, window.to);
+    if (input.signal) query = query.abortSignal(input.signal);
+    const { data, error, count } = await query;
+    if (error) throw error;
+    const activities = await hydrateActivities((data ?? []) as DbRecord[]);
+    const states = await getViewerStates(activities.map(activity => activity.id));
+    const total = count ?? 0;
+    return { items: activities.map(activity => ({ ...activity, viewerState: states[activity.id] ?? emptyViewerState() })),
+      page: window.page, pageSize: window.pageSize, total, hasMore: window.from + activities.length < total };
+  },
+
+  /** Page the viewer's own memberships, then fetch only those events.
+   * Discovery is deliberately not used: old/private/completed joins are history too.
+   */
+  async listJoined(
+    input: { page?: number; pageSize?: number; signal?: AbortSignal } = {},
+  ): Promise<Page<ActivityListItem>> {
+    const userId = await currentUserId();
+    const window = pagination(input.page, input.pageSize);
+    let memberships = supabase
+      .from("tbl_event_participants")
+      .select("event_id,user_id,status,created_at,joined_at,responded_at", { count: "exact" })
+      .eq("user_id", userId)
+      .order("id", { ascending: false })
+      .range(window.from, window.to);
+    if (input.signal) memberships = memberships.abortSignal(input.signal);
+    const { data, error, count } = await memberships;
+    if (error) throw error;
+    const rows = (data ?? []) as DbRecord[];
+    const ids = [...new Set(rows.map(row => Number(row.event_id)))];
+    const total = count ?? 0;
+    // Advance by memberships read, not visible events: deleted or owner events
+    // may leave a sparse page, and must never hide later eligible memberships.
+    const page = { page: window.page, pageSize: window.pageSize, total, hasMore: window.from + rows.length < total };
+    if (!ids.length) return { ...page, items: [] };
+    let events = supabase.from("tbl_events").select(EVENT_SELECT)
+      .in("id", ids).neq("created_by", userId).eq("is_deleted", false).neq("status", "draft")
+      .order("event_start_time", { ascending: false }).order("id", { ascending: true });
+    if (input.signal) events = events.abortSignal(input.signal);
+    const result = await events;
+    if (result.error) throw result.error;
+    const activities = await hydrateActivities((result.data ?? []) as DbRecord[]);
+    const participation = new Map(rows.map(row => [String(row.event_id), { ...participationFromDb(row), rawStatus: String(row.status ?? '') }]));
+    return { ...page, items: activities.map(activity => ({
+      ...activity,
+      viewerState: { ...emptyViewerState(), participation: participation.get(activity.id) ?? null },
+    })) };
   },
 
   async getDetails(

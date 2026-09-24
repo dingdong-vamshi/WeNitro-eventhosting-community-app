@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import type { Activity } from '../../../App';
 import { activitiesProductionService } from '../../services/activities-production';
@@ -8,6 +8,7 @@ import { referenceDeltaService, type EmergencyContact, type NitroLedgerRow } fro
 import { supabase } from '../../lib/supabase';
 import { verificationService, type VerificationMethods } from '../../services/verification-production';
 import { derivedTrustScore, trustScoreParts } from '../../domain/profile-signals';
+import { activityHistoryParticipationLabel, confirmedActivityParticipation } from '../../domain/profile-activity-history';
 import { prepareReferenceActivities } from './feed-search';
 import { Button, ErrorLine, Field, Header, Icon, Page, Pills, Sheet, Skeleton, usePalette, purple } from './ui';
 
@@ -117,10 +118,54 @@ export function ReferenceEmergencyContact({ back }: { back: () => void }) {
 }
 
 export function ReferenceActivityHistory({ userId, back, openActivity }: { userId: string; back: () => void; openActivity: (id: string) => void }) {
-  const c = usePalette(); const [rows, setRows] = useState<Array<Activity & { historyRole: 'Hosted' | 'Joined' }>>([]); const [loading, setLoading] = useState(true), [error, setError] = useState(''), [filterOpen, setFilterOpen] = useState(false); const [role, setRole] = useState('All'), [status, setStatus] = useState('All'), [draftRole, setDraftRole] = useState('All'), [draftStatus, setDraftStatus] = useState('All');
-  useEffect(() => { let active = true; void Promise.all([activitiesProductionService.listHosted({ pageSize: 100 }), activitiesProductionService.discover({ pageSize: 100, upcomingOnly: false, sort: 'latest' })]).then(async ([hosted, discovered]) => { const hostedRows = await prepareReferenceActivities(hosted.items); const joinedSource = discovered.items.filter(item => item.viewerState.participation && item.ownerId !== userId); const joinedRows = await prepareReferenceActivities(joinedSource); const map = new Map<string, Activity & { historyRole: 'Hosted' | 'Joined' }>(); hostedRows.forEach(row => map.set(row.id, { ...row, historyRole: 'Hosted' })); joinedRows.forEach(row => map.set(row.id, { ...row, historyRole: 'Joined' })); if (active) setRows([...map.values()].sort((a,b) => Date.parse(b.startsAt || '1970-01-01') - Date.parse(a.startsAt || '1970-01-01'))); }).catch(e => active && setError(e.message)).finally(() => active && setLoading(false)); return () => { active = false; }; }, [userId]);
-  const shown = useMemo(() => rows.filter(row => (role === 'All' || row.historyRole === role) && (status === 'All' || (status === 'Completed') === ended(row))), [rows, role, status]);
-  return <Page><Header title="Activity History" back={back}><Pressable accessibilityRole="button" accessibilityLabel="Filter Activity History" onPress={() => { setDraftRole(role); setDraftStatus(status); setFilterOpen(true); }} style={{ padding: 12 }}><Icon name="options-outline" /></Pressable></Header><ErrorLine text={error} />{loading ? <Skeleton /> : <ScrollView contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 34 }}>{shown.map(row => <Pressable accessibilityRole="button" accessibilityLabel={`Open ${row.title}`} key={row.id} onPress={() => openActivity(row.id)} style={{ backgroundColor: c.card, borderRadius: 14, overflow: 'hidden', borderWidth: 1, borderColor: c.border }}><Image source={{ uri: row.image }} style={{ width: '100%', height: 122, backgroundColor: c.inset }} /><View style={{ padding: 13, gap: 7 }}><View style={{ flexDirection: 'row', alignItems: 'center' }}><Text style={{ color: c.text, fontSize: 14, fontWeight: '700', flex: 1 }}>{row.title}</Text><Text style={{ color: ended(row) ? '#64748B' : '#2E9B69', fontSize: 12, fontWeight: '700' }}>{ended(row) ? 'COMPLETED' : 'UPCOMING'}</Text></View><Text style={{ color: purple, fontSize: 12 }}>{row.historyRole}</Text><Text style={{ color: c.muted, fontSize: 12 }}>{row.when} · {row.where}</Text></View></Pressable>)}{!shown.length && <Text style={{ color: c.muted, textAlign: 'center', paddingTop: 70 }}>No activities match these filters.</Text>}</ScrollView>}{filterOpen && <Sheet title="Filter Activity History" centered close={() => setFilterOpen(false)}><Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>Role</Text><Pills values={['All','Hosted','Joined']} selected={draftRole} onChange={setDraftRole} /><Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>Status</Text><Pills values={['All','Upcoming','Completed']} selected={draftStatus} onChange={setDraftStatus} /><View style={{ flexDirection: 'row', gap: 10 }}><View style={{ flex: 1 }}><Button label="Reset" onPress={() => { setDraftRole('All'); setDraftStatus('All'); }} /></View><View style={{ flex: 1 }}><Button label="Apply" onPress={() => { setRole(draftRole); setStatus(draftStatus); setFilterOpen(false); }} /></View></View></Sheet>}</Page>;
+  const c = usePalette();
+  type HistoryRow = Activity & { historyRole: 'Hosted' | 'Joined'; participationStatus?: string };
+  const [rows, setRows] = useState<HistoryRow[]>([]), [loading, setLoading] = useState(true), [error, setError] = useState('');
+  const [filterOpen, setFilterOpen] = useState(false), [role, setRole] = useState('All'), [status, setStatus] = useState('All'), [draftRole, setDraftRole] = useState('All'), [draftStatus, setDraftStatus] = useState('All');
+  const [hasMore, setHasMore] = useState(true);
+  const nextPages = useRef({ hosted: 1 as number | null, joined: 1 as number | null });
+  const inFlight = useRef(false), generation = useRef(0);
+  const load = async () => {
+    if (inFlight.current) return;
+    inFlight.current = true; const token = generation.current; setLoading(true); setError('');
+    const pages = nextPages.current;
+    try {
+      const [hosted, joined] = await Promise.all([
+        pages.hosted == null ? null : activitiesProductionService.listHosted({ page: pages.hosted, pageSize: 20, statuses: ['published', 'completed', 'cancelled'] }),
+        pages.joined == null ? null : activitiesProductionService.listJoined({ page: pages.joined, pageSize: 20 }),
+      ]);
+      const [hostedRows, joinedRows] = await Promise.all([
+        prepareReferenceActivities(hosted?.items ?? []),
+        prepareReferenceActivities(joined?.items ?? []),
+      ]);
+      if (token !== generation.current) return;
+      setRows(previous => {
+        const merged = new Map<string, HistoryRow>(previous.map(row => [row.id, row]));
+        hostedRows.forEach(row => merged.set(row.id, { ...row, historyRole: 'Hosted' }));
+        const participation = new Map((joined?.items ?? []).map(item => [item.id, item.viewerState.participation?.rawStatus ?? item.viewerState.participation?.status]));
+        joinedRows.forEach(row => { if (!merged.has(row.id)) merged.set(row.id, { ...row, historyRole: 'Joined', participationStatus: participation.get(row.id) }); });
+        return [...merged.values()].sort((a, b) => Date.parse(b.startsAt || '1970-01-01') - Date.parse(a.startsAt || '1970-01-01'));
+      });
+      nextPages.current = { hosted: hosted?.hasMore ? hosted.page + 1 : null, joined: joined?.hasMore ? joined.page + 1 : null };
+      setHasMore(nextPages.current.hosted != null || nextPages.current.joined != null);
+    } catch (caught: any) { if (token === generation.current) setError(caught.message || 'Could not load activity history.'); }
+    finally { if (token === generation.current) { inFlight.current = false; setLoading(false); } }
+  };
+  useEffect(() => {
+    generation.current++; inFlight.current = false; nextPages.current = { hosted: 1, joined: 1 };
+    setRows([]); setHasMore(true); void load();
+    return () => { generation.current++; };
+  }, [userId]);
+  const shown = useMemo(() => rows.filter(row => (role === 'All' || row.historyRole === role && (role !== 'Joined' || confirmedActivityParticipation(row.participationStatus))) && (status === 'All' || (status === 'Completed') === ended(row))), [rows, role, status]);
+  return <Page>
+    <Header title="Activity History" back={back}><Pressable accessibilityRole="button" accessibilityLabel="Filter Activity History" onPress={() => { setDraftRole(role); setDraftStatus(status); setFilterOpen(true); }} style={{ padding: 12 }}><Icon name="options-outline" /></Pressable></Header>
+    <ErrorLine text={error} />
+    {loading && !rows.length ? <Skeleton /> : <FlatList data={shown} keyExtractor={row => row.id} contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 34 }} renderItem={({ item: row }) => <Pressable accessibilityRole="button" accessibilityLabel={`Open ${row.title}`} onPress={() => openActivity(row.id)} style={{ backgroundColor: c.card, borderRadius: 14, overflow: 'hidden', borderWidth: 1, borderColor: c.border }}>
+      <Image source={{ uri: row.image }} style={{ width: '100%', height: 122, backgroundColor: c.inset }} />
+      <View style={{ padding: 13, gap: 7 }}><View style={{ flexDirection: 'row', alignItems: 'center' }}><Text style={{ color: c.text, fontSize: 14, fontWeight: '700', flex: 1 }}>{row.title}</Text><Text style={{ color: ended(row) ? '#64748B' : '#2E9B69', fontSize: 12, fontWeight: '700' }}>{row.status === 'cancelled' ? 'CANCELLED' : ended(row) ? 'COMPLETED' : 'UPCOMING'}</Text></View><Text style={{ color: purple, fontSize: 12 }}>{row.historyRole === 'Hosted' ? 'Hosted' : activityHistoryParticipationLabel(row.participationStatus)}</Text><Text style={{ color: c.muted, fontSize: 12 }}>{row.when} · {row.where}</Text></View>
+    </Pressable>} ListEmptyComponent={<Text style={{ color: c.muted, textAlign: 'center', paddingVertical: 32 }}>{error ? 'Activity history could not be loaded.' : hasMore ? 'No matching activities on this page. Load more history below.' : 'No activities match these filters.'}</Text>} ListFooterComponent={hasMore || error ? <Button label={error ? 'Retry activity history' : 'Load more history'} busy={loading} onPress={() => void load()} /> : null} />}
+    {filterOpen && <Sheet title="Filter Activity History" centered close={() => setFilterOpen(false)}><Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>Role</Text><Pills values={['All', 'Hosted', 'Joined']} selected={draftRole} onChange={setDraftRole} /><Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>Status</Text><Pills values={['All', 'Upcoming', 'Completed']} selected={draftStatus} onChange={setDraftStatus} /><View style={{ flexDirection: 'row', gap: 10 }}><View style={{ flex: 1 }}><Button label="Reset" onPress={() => { setDraftRole('All'); setDraftStatus('All'); }} /></View><View style={{ flex: 1 }}><Button label="Apply" onPress={() => { setRole(draftRole); setStatus(draftStatus); setFilterOpen(false); }} /></View></View></Sheet>}
+  </Page>;
 }
 
 export function ReferenceNitroHistory({ back }: { back: () => void }) {

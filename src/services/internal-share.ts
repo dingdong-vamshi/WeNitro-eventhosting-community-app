@@ -7,6 +7,7 @@ export type InternalShareEntity = {
   title: string;
   preview: string;
   thumbnailUrl?: string | null;
+  creatorName?: string | null;
 };
 
 type ShareRequestListener = (entity: InternalShareEntity) => void;

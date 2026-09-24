@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import ts from 'typescript';
+
+const file = 'src/components/reconstruction/feed-search.tsx';
+const source = fs.readFileSync(file, 'utf8');
+const ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+const declaration = ast.statements.find(node => ts.isFunctionDeclaration(node) && node.name?.text === 'feedActivityLoadState');
+assert.ok(declaration);
+const exports = {};
+new Function('exports', ts.transpile(declaration.getText(ast), { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }))(exports);
+const state = exports.feedActivityLoadState;
+assert.equal(state(true, 0, ''), 'loading', 'Pending workspace is not an empty feed');
+assert.equal(state(true, 16, ''), 'ready', 'Refresh does not hide already loaded activities');
+assert.equal(state(false, 0, ''), 'empty', 'Only a completed successful empty result is empty');
+assert.equal(state(false, 0, 'Network unavailable'), 'error', 'Failed loading is not no activities');
+assert.equal(state(false, 16, 'Refresh unavailable'), 'ready', 'Keep previously loaded cards after a failed refresh');
+assert.match(source, /feedActivityLoadState\(loading \|\| workspaceLoading, data\.activities\.length, error \|\| workspaceError\)/);
+assert.match(source, /accessibilityLabel="Loading activities"/);
+assert.match(fs.readFileSync('App.tsx', 'utf8'), /workspaceLoading=\{workspaceLoading\}/);
+console.log('PASS: pending, loaded, true empty and failed Feed states stay distinct; refresh/error preserves existing content. Offline only.');

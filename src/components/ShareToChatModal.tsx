@@ -48,6 +48,11 @@ function withTimeout<T>(promise: Promise<T>, milliseconds: number, message: stri
   return Promise.race([promise, new Promise<T>((_, reject) => setTimeout(() => reject(new Error(message)), milliseconds))]);
 }
 
+export function shareRecipientHandle(username: string) {
+  const handle = username.trim().replace(/^@+/, '');
+  return handle ? `@${handle}` : '';
+}
+
 export function ShareToChatModal({
   entity,
   conversations,
@@ -96,7 +101,7 @@ export function ShareToChatModal({
         roomId: undefined as string | undefined,
         personId: person.id,
         name: person.name,
-        detail: `@${person.username}`,
+        detail: shareRecipientHandle(person.username),
         avatar: person.avatar,
         type: "People" as const,
         userId: person.id,
@@ -179,6 +184,7 @@ export function ShareToChatModal({
               <Text style={styles.previewKind}>{entity?.kind.replaceAll("_", " ")}</Text>
               <Text numberOfLines={1} style={styles.previewTitle}>{entity?.title}</Text>
               <Text numberOfLines={2} style={styles.previewText}>{entity?.preview}</Text>
+              {entity?.creatorName ? <Text numberOfLines={1} style={styles.previewText}>Created by {entity.creatorName}</Text> : null}
             </View>
           </View>
           <View style={[styles.search, { borderColor: c.border, backgroundColor: c.input }]}>

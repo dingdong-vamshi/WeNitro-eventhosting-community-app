@@ -50,6 +50,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   const [version, setVersion] = useState(0);
   const [people, setPeople] = useState<{ id: number; username: string; fullname: string; profile_image: string }[]>([]);
   const [inbox, setInbox] = useState<Record<string, any>>({});
+  const [inboxError, setInboxError] = useState('');
   const [creatingGroup, setCreatingGroup] = useState(false);
   const [groupName, setGroupName] = useState('');
   const [groupPhoto, setGroupPhoto] = useState<string | null>(null);
@@ -70,7 +71,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   }, [creatingGroup]);
 
   useEffect(() => { setQuery(''); setPage(1); setFilter('All'); }, [tab]);
-  useEffect(() => { setPage(1); }, [query, filter]);
+  useEffect(() => { setPage(1); }, [query, filter, version, data.userId]);
   useEffect(() => subscribeToAppForeground(() => setVersion((v) => v + 1)), []);
 
   useEffect(() => {
@@ -96,22 +97,37 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   useEffect(() => {
     if (tab !== 'Communities') return;
     let active = true;
+    const controller = new AbortController();
+    // Last-message previews are stable while a user searches or pages communities.
+    // Refresh on tab entry/foreground/account change, not on every search keystroke.
+    void Promise.resolve(supabase.rpc('list_chat_inbox', { p_message_limit: 1 }).abortSignal(controller.signal)).then(result => {
+      if (!active) return;
+      if (result.error) throw result.error;
+      setInbox(Object.fromEntries((result.data || []).map((row: any) => [String(row.id || row.room_id), row])));
+      setInboxError('');
+    }).catch(caught => { if (active && !controller.signal.aborted) setInboxError(caught.message || 'Could not refresh message previews.'); });
+    return () => { active = false; controller.abort(); };
+  }, [tab, version, data.userId]);
+
+  useEffect(() => {
+    // Clear private preview state when the authenticated account changes.
+    setInbox({}); setInboxError(''); setRows([]); setAvatars({});
+  }, [data.userId]);
+
+  useEffect(() => {
+    if (tab !== 'Communities') return;
+    let active = true;
     setLoading(true);
     const timer = setTimeout(() => {
-      void Promise.all([
-        communitiesProductionService.discover({ query, membership: filter.toLowerCase() as 'all' | 'joined' | 'created', page, pageSize: 25 }),
-        supabase.rpc('list_chat_inbox', { p_message_limit: 1 }),
-      ]).then(([communities, inboxResult]) => {
+      void communitiesProductionService.discover({ query, membership: filter.toLowerCase() as 'all' | 'joined' | 'created', page, pageSize: 25 }).then(communities => {
         if (!active) return;
-        if (inboxResult.error) throw inboxResult.error;
-        setRows((current) => page === 1 ? communities.items : [...current, ...communities.items]);
+        setRows((current) => page === 1 ? communities.items : [...new Map([...current, ...communities.items].map(room => [room.id, room])).values()]);
         setMore(communities.hasMore);
-        setInbox(Object.fromEntries((inboxResult.data || []).map((r: any) => [String(r.id || r.room_id), r])));
         setError('');
       }).catch((e) => { if (active) setError(e.message); }).finally(() => { if (active) setLoading(false); });
     }, query ? 300 : 0);
     return () => { active = false; clearTimeout(timer); };
-  }, [tab, query, filter, page, version]);
+  }, [tab, query, filter, page, version, data.userId]);
 
   useEffect(() => {
     let active = true;
@@ -137,7 +153,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
     && startsWithQuery(r.name, query)
     && (tab !== 'Groups' || filter !== 'Unread' || r.unread > 0),
   );
-  const searchPeople = people.filter((person) => !conversations.some((conversation) => conversation.userId === String(person.id)));
+  const searchPeople = people.filter((person) => startsWithQuery(`${person.fullname || ''} ${person.username || ''}`, query) && !conversations.some((conversation) => conversation.userId === String(person.id)));
   const visibleTab = tab === 'Groups' ? 'Activities' : tab;
   const tabCounts = {
     Chats: data.conversations.filter((item) => item.type === 'People').length,
@@ -253,6 +269,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
         </ScrollView>
       </View> : null}
       <ErrorLine text={error} />
+      {tab === 'Communities' && inboxError ? <View style={{ paddingHorizontal: 14, paddingBottom: 8 }}><ErrorLine text={inboxError} /><Pressable accessibilityRole="button" onPress={() => setVersion(value => value + 1)}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '600' }}>Retry message previews</Text></Pressable></View> : null}
       {tab === 'Communities' && loading && page === 1 ? <Skeleton count={5} /> : (
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 14, paddingBottom: 24 }}>
           {tab === 'Communities' ? rows.map((room) => {

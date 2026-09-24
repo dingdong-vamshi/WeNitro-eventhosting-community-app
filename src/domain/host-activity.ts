@@ -16,11 +16,11 @@ export type HostDraft = {
   locationInstruction: string; dateLater: boolean; start: string; end: string; deadline: string;
 };
 export function localDateTime(date: Date) {
-  return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
 }
 export function newHostDraft(now = new Date()): HostDraft {
   const minimumStart = now.getTime() + 10 * 60 * 1000;
-  const start = new Date(Math.ceil(minimumStart / 60000) * 60000);
+  const start = new Date(minimumStart);
   return { title: '', description: '', coverUri: '', coverContentType: 'image/jpeg', visibility: 'public', approval: false,
     verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', isPaid: false, price: '',
     category: '', location: null, locationInstruction: '', dateLater: false,
@@ -101,7 +101,6 @@ export function hostStepError(d: HostDraft, step: number, isPartner: boolean, no
   }
   if (step === 1) {
     if (d.capacity && (!/^\d+$/.test(d.capacity) || Number(d.capacity) < 1 || Number(d.capacity) > 2147483647)) return 'Enter a positive participant limit, or leave it empty for no limit.';
-    if (d.isPaid && !isPartner) return 'Only an approved Partner can host a paid activity.';
     if (d.isPaid && (!/^\d+(\.\d{1,2})?$/.test(d.price) || Number(d.price) <= 0 || Number(d.price) > 1000000)) return 'Enter a valid Activity Price from ₹0.01 to ₹10,00,000.';
     const age = ageError(d.ageMin, d.ageMax); if (age) return age;
     if (!GENDER_OPTIONS.some(o => o.value === d.gender)) return 'Choose a gender preference.';

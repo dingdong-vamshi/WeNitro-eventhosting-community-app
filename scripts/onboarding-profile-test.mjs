@@ -39,6 +39,7 @@ function serviceHarness(switchDuring, uploadError) {
   const calls = [];
   const fakeProfile = { id: 1, onboarding_completed: true };
   const dependencies = {
+    './auth-production': { getValidatedUser: async () => ({ id: identity }) },
     '../lib/supabase': { isSupabaseConfigured: true, supabase: {
       auth: { getUser: async () => { authChecks += 1; return { data: { user: { id: identity } } }; } },
       rpc: async (name, args) => {

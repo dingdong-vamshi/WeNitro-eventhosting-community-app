@@ -25,6 +25,7 @@ vm.runInNewContext(compiled, {
     if (name === 'react-native') return { Platform: { OS: 'ios' } };
     if (name === '../lib/supabase') return { supabase: { auth: mockAuth }, isSupabaseConfigured: true };
     if (name === '../utils/validation') return validationModule.exports;
+    if (name === './request-deadline') return { withRequestDeadline: task => task() };
     throw new Error(`Unexpected dependency: ${name}`);
   },
   URL,

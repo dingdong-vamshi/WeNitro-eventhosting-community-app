@@ -7,6 +7,7 @@ import * as Linking from "expo-linking";
 import { Platform } from "react-native";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 import { validateEmail, validateFullName } from "../utils/validation";
+import { withRequestDeadline } from "./request-deadline";
 
 export type AccountType = "individual" | "partner";
 
@@ -153,12 +154,32 @@ const clearWebAuthParameters = () => {
   );
 };
 
-const getValidatedUser = async () => {
+const pendingUserValidations = new Map<string, Promise<User>>();
+export const getValidatedUser = async (knownSession?: Session): Promise<User> => {
   requireBackend();
-  const { data, error } = await supabase.auth.getUser();
-  if (error) throw error;
-  if (!data.user) throw new Error("Authentication required.");
-  return data.user;
+  // Coalesce only concurrent validation for the exact token. There is no
+  // settled identity cache, and old-account completions are rejected below.
+  let session = knownSession;
+  if (!session) {
+    const current = await supabase.auth.getSession();
+    if (current.error) throw current.error;
+    session = current.data.session ?? undefined;
+  }
+  if (!session) throw new Error("Authentication required.");
+  const key = `${session.user.id}:${session.access_token}`;
+  const pending = pendingUserValidations.get(key);
+  if (pending) return pending;
+  const request = withRequestDeadline(async () => {
+    const { data, error } = await supabase.auth.getUser(session.access_token);
+    if (error) throw error;
+    if (!data.user || data.user.id !== session.user.id) throw new Error("Authentication required.");
+    const current = await supabase.auth.getSession();
+    if (current.error) throw current.error;
+    if (current.data.session?.user.id !== data.user.id) throw new Error("Your signed-in account changed. Please try again.");
+    return data.user;
+  }, 30_000, "Your session took too long to validate. Check your connection and try again.").finally(() => { if (pendingUserValidations.get(key) === request) pendingUserValidations.delete(key); });
+  pendingUserValidations.set(key, request);
+  return request;
 };
 
 export async function handleAuthRedirect(
@@ -232,7 +253,7 @@ export async function bootstrapSession(): Promise<SessionBootstrap> {
     return { status: "anonymous", session: null, user: null, profile: null };
   }
 
-  const user = await getValidatedUser();
+  const user = await getValidatedUser(sessionData.session);
   return {
     status: "authenticated",
     session: { ...sessionData.session, user },

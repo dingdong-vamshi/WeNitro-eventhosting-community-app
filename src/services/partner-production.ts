@@ -16,7 +16,7 @@ export type PartnerTotals = {
 export type PartnerActivity = {
   id: number;
   title: string;
-  event_start_time: string;
+  event_start_time: string | null;
   event_end_time: string | null;
   price: number;
   status: string;
@@ -96,6 +96,7 @@ export const partnerProductionService = {
   },
   subscribe(userId: string, onRefresh: () => void) {
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let hasSubscribed = false;
     const changed = () => {
       if (timer) clearTimeout(timer);
       timer = setTimeout(onRefresh, 250);
@@ -106,7 +107,13 @@ export const partnerProductionService = {
     for (const table of ["tbl_events", "tbl_event_participants", "tbl_activity_registration_answers", "tbl_activity_payments"]) {
       channel.on("postgres_changes", { event: "*", schema: "public", table }, changed);
     }
-    channel.subscribe((status) => { if (status === "SUBSCRIBED") changed(); });
+    channel.subscribe((status) => {
+      if (status !== "SUBSCRIBED") return;
+      // The screen already loads once on mount. Refresh on reconnect to cover
+      // missed changes, but do not duplicate the initial dashboard request.
+      if (hasSubscribed) changed();
+      hasSubscribed = true;
+    });
     return () => {
       if (timer) clearTimeout(timer);
       void supabase.removeChannel(channel);

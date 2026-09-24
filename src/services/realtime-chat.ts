@@ -12,6 +12,8 @@ export type ChatSharePayload = {
   preview: string;
   deepLink: string;
   sharedBy: number;
+  creatorId?: string | null;
+  creatorName?: string | null;
   thumbnailBucket: string | null;
   thumbnailPath: string | null;
   thumbnailUrl: string | null;
@@ -234,6 +236,8 @@ function mapSharePayload(value: unknown): ChatSharePayload | null {
     preview: String(row.preview ?? ""),
     deepLink: String(row.deep_link ?? ""),
     sharedBy: Number(row.shared_by) || 0,
+    creatorId: nullableString(row.creator_id),
+    creatorName: nullableString(row.creator_name),
     thumbnailBucket: nullableString(row.thumbnail_bucket),
     thumbnailPath: nullableString(row.thumbnail_path),
     thumbnailUrl: nullableString(row.thumbnail_url),
@@ -669,6 +673,23 @@ function presence(channel: RealtimeChannel): PresenceParticipant[] {
   }
   return [...result.values()];
 }
+
+/** Realtime rows have no sender join; cache only for this room subscription. */
+export function createRealtimeSenderHydrator(loadProfile: (userId: number) => Promise<ChatProfile | null>) {
+  const profiles = new Map<number, Promise<ChatProfile | null>>();
+  return async (message: ChatMessage): Promise<ChatMessage> => {
+    if (message.profiles) return message;
+    let profile = profiles.get(message.sender_id);
+    if (!profile) {
+      profile = loadProfile(message.sender_id).catch(() => {
+        profiles.delete(message.sender_id);
+        return null; // A failed profile lookup must not hide the actual message.
+      });
+      profiles.set(message.sender_id, profile);
+    }
+    return { ...message, profiles: await profile };
+  };
+}
 export async function subscribeToConversation(
   options: SubscribeToConversationOptions,
 ): Promise<RealtimeChatSubscription> {
@@ -681,6 +702,12 @@ export async function subscribeToConversation(
     const showPresence = !privacyResult.error && privacyResult.data?.show_online_status !== false;
     await supabase.realtime.setAuth();
     let closed = false;
+    const hydrateSender = createRealtimeSenderHydrator(async (senderId) => {
+      const { data, error } = await supabase.from('tbl_users')
+        .select('id,username,fullname,profile_image').eq('id', senderId).maybeSingle();
+      if (error) throw error;
+      return mapProfile(data);
+    });
     let typingTimer: ReturnType<typeof setTimeout> | null = null;
     const deviceId = options.deviceId?.trim() || crypto.randomUUID();
     channel = supabase.channel(`room:${options.conversationId}`, {
@@ -709,12 +736,12 @@ export async function subscribeToConversation(
         (payload) => {
           void (async () => {
             try {
+              const message = payload.eventType === 'DELETE' ? null
+                : await hydrateSender((await signMedia([mapMessage(payload.new)], 3_600))[0]);
+              if (closed) return;
               callback(options.onMessageChange, {
                 eventType: payload.eventType,
-                message:
-                  payload.eventType === "DELETE"
-                    ? null
-                    : (await signMedia([mapMessage(payload.new)], 3_600))[0],
+                message,
                 old: partialMessage(payload.old),
               });
             } catch (error) {

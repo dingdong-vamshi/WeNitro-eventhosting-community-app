@@ -16,7 +16,8 @@ export type PartnerDashboardProps = {
   onCreateActivity?: () => void;
   initialActivityId?: string;
 };
-const dateLabel = (value: string) => {
+const dateLabel = (value: string | null) => {
+  if (!value) return "Date to be decided";
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? "Date unavailable" : date.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
 };
@@ -32,6 +33,9 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
   const [registrations, setRegistrations] = useState<PartnerRegistration[]>([]);
   const [transactions, setTransactions] = useState<PartnerTransaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [summaryError, setSummaryError] = useState("");
+  const [detailError, setDetailError] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState<number | null>(null);
   const [revision, setRevision] = useState(0);
@@ -46,13 +50,11 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
       do {
         queued = false;
         try {
-          const [next, rows, payments] = await Promise.all([partnerProductionService.dashboard(), partnerProductionService.registrations(selectedId), partnerProductionService.transactions(selectedId)]);
-          if (active) { setDashboard(next); setRegistrations(rows); setTransactions(payments); setError(""); }
+          const next = await partnerProductionService.dashboard();
+          if (active) { setDashboard(next); setSummaryError(""); }
         } catch (caught) {
           if (active) {
-            setDashboard(null);
-            setRegistrations([]); setTransactions([]);
-            setError(caught instanceof Error ? caught.message : "Could not load partner data. Try again.");
+            setSummaryError(caught instanceof Error ? caught.message : "Could not load partner data. Try again.");
           }
         } finally {
           if (active) setLoading(false);
@@ -61,14 +63,36 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
       running = false;
     };
     setLoading(true);
-    setRegistrations([]); setTransactions([]);
     void refresh();
-    const unsubscribe = partnerProductionService.subscribe(userId, () => void refresh());
-    const foreground = subscribeToAppForeground(refresh);
-    return () => { active = false; unsubscribe(); foreground(); };
-  }, [userId, selectedId, revision]);
+    const foreground = subscribeToAppForeground(() => setRevision(value => value + 1));
+    return () => { active = false; foreground(); };
+  }, [userId, revision]);
 
-  useEffect(() => { setDashboard(null); setRegistrations([]); setTransactions([]); }, [userId]);
+  useEffect(() => partnerProductionService.subscribe(userId, () => setRevision(value => value + 1)), [userId]);
+
+  // Overview does not need the full registration and transaction ledgers.
+  // Fetch the relevant ledger only when its tab is opened, without holding up
+  // the summary or clearing it if a ledger request fails.
+  useEffect(() => {
+    let active = true;
+    setDetailError("");
+    if (tab !== "Registrations" && tab !== "Earnings") {
+      setDetailLoading(false);
+      return;
+    }
+    setDetailLoading(true);
+    const request = tab === "Registrations"
+      ? partnerProductionService.registrations(selectedId).then(rows => { if (active) setRegistrations(rows); })
+      : partnerProductionService.transactions(selectedId).then(rows => { if (active) setTransactions(rows); });
+    void request.catch(caught => {
+      if (active) setDetailError(caught instanceof Error ? caught.message : "Could not load partner data. Try again.");
+    }).finally(() => { if (active) setDetailLoading(false); });
+    return () => { active = false; };
+  }, [userId, selectedId, tab, revision]);
+
+  useEffect(() => { setRegistrations([]); setTransactions([]); }, [selectedId]);
+
+  useEffect(() => { setDashboard(null); setRegistrations([]); setTransactions([]); setSummaryError(""); setDetailError(""); setError(""); }, [userId]);
 
   const selected = dashboard?.activities.find((activity) => activity.id === selectedId);
   const reload = () => setRevision((value) => value + 1);
@@ -101,7 +125,7 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={{ flex: 1, backgroundColor: c.background }}
       contentContainerStyle={{ padding: 16, paddingTop: Math.max(insets.top, 16), paddingBottom: Math.max(insets.bottom, 16) + 80, gap: 16, width: "100%", maxWidth: 760, alignSelf: "center" }}
-      refreshControl={<RefreshControl refreshing={loading} onRefresh={reload} tintColor={c.primary} />}>
+      refreshControl={<RefreshControl refreshing={loading || detailLoading} onRefresh={reload} tintColor={c.primary} />}>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
         {button("Back", onBack, true)}
         <Text accessibilityRole="header" style={[theme.typography.heading3, { color: c.textPrimary, flex: 1 }]}>Partner Dashboard</Text>
@@ -122,8 +146,9 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
           </Pressable>
         ))}
       </View>
-      {error ? <View accessibilityRole="alert" style={cardStyle}><Text selectable style={{ color: c.danger }}>{error}</Text>{button("Retry", reload, true)}</View> : null}
+      {[summaryError, detailError, error].filter(Boolean).map((message, index) => <View key={index} accessibilityRole="alert" style={cardStyle}><Text selectable style={{ color: c.danger }}>{message}</Text>{button("Retry", reload, true)}</View>)}
       {loading && !dashboard ? <ActivityIndicator accessibilityLabel="Loading partner dashboard" color={c.primary} /> : null}
+      {detailLoading ? <ActivityIndicator accessibilityLabel="Loading partner ledger" color={c.primary} /> : null}
       {tab === "Overview" && summary ? <>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
           {selected ? metric("Capacity", selected.capacity ?? "No limit") : null}
@@ -154,7 +179,7 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
         {onCreateActivity ? button("Host an Activity", onCreateActivity) : null}
       </> : null}
       {tab === "Registrations" && dashboard ? <>
-        {!registrations.length && !loading ? <Text style={labelStyle}>No registrations yet.</Text> : null}
+        {!registrations.length && !loading && !detailLoading && !summaryError && !detailError && !error ? <Text style={labelStyle}>No registrations yet.</Text> : null}
         {registrations.map((row) => <View key={row.participant_id} style={cardStyle}>
           <Text selectable style={[theme.typography.title, { color: c.textPrimary }]}>{row.display_name || "Participant"}</Text>
           <Text style={labelStyle}>{row.activity_title}</Text>
@@ -191,7 +216,7 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
           <Text style={labelStyle}>Settlement: {statusLabel(activity.settlement_status ?? "not scheduled")}</Text>
         </View>)}
         <Text accessibilityRole="header" style={[theme.typography.title, { color: c.textPrimary }]}>Successful transactions</Text>
-        {!transactions.length && !loading ? <Text style={labelStyle}>No successful transactions yet.</Text> : null}
+        {!transactions.length && !loading && !detailLoading && !summaryError && !detailError && !error ? <Text style={labelStyle}>No successful transactions yet.</Text> : null}
         {transactions.map((payment) => <View key={payment.payment_id} style={cardStyle}>
           <Text selectable style={[theme.typography.title, { color: c.textPrimary }]}>{payment.activity_title}</Text>
           <Text selectable style={labelStyle}>{payment.display_name || "Participant"} · {dateLabel(payment.paid_at)}</Text>

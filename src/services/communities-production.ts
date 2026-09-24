@@ -12,6 +12,20 @@ const POST_MIME_TYPES = new Set([...IMAGE_MIME_TYPES, "video/mp4"]);
 export type CommunityVisibility = "public" | "private";
 export type CommunityMembership = "none" | "joined" | "created" | "pending";
 export type CommunityReaction = "like" | "love" | "laugh" | "support";
+export type CommunityPermissions = {
+  can_approve: boolean;
+  can_post: boolean;
+  can_edit: boolean;
+  can_manage_roles: boolean;
+};
+
+/** Mirrors private.community_permission: flags only grant capabilities to moderators. */
+export function communityPermissions(role: string | null, owner: boolean, stored?: unknown): CommunityPermissions {
+  const admin = owner || role === 'admin' || role === 'creator';
+  const flags = stored && typeof stored === 'object' ? stored as Record<string, unknown> : {};
+  const granted = (key: keyof CommunityPermissions) => admin || (role === 'moderator' && flags[key] === true);
+  return { can_approve: granted('can_approve'), can_post: granted('can_post'), can_edit: granted('can_edit'), can_manage_roles: granted('can_manage_roles') };
+}
 export type CommunityMediaSource = {
   uri: string;
   contentType?: "image/jpeg" | "image/png" | "image/webp" | "video/mp4";
@@ -60,6 +74,7 @@ export type CommunitySummary = {
   adminsOnly: boolean;
   membership: CommunityMembership;
   membershipRole: "member" | "moderator" | "admin" | null;
+  permissions: CommunityPermissions;
   memberCount: number | null;
   owner: CommunityOwner | null;
   createdAt: string;
@@ -133,7 +148,7 @@ type LegacyRoom = {
   created_at: string | null;
   updated_at: string | null;
 };
-type LegacyParticipant = { room_id: number; role: string | null };
+type LegacyParticipant = { room_id: number; role: string | null; permissions?: unknown };
 type LegacyJoinRequest = { room_id: number; status: string | null };
 type LegacyMessage = {
   id: number;
@@ -295,7 +310,7 @@ async function membershipStateFor(userId: number | null, roomIds: number[]) {
   const [participantResult, requestResult] = await Promise.all([
     supabase
       .from("tbl_chat_participants")
-      .select("room_id,role")
+      .select("room_id,role,permissions")
       .eq("user_id", userId)
       .in("room_id", roomIds),
     supabase
@@ -351,6 +366,7 @@ async function mapRoom(
     adminsOnly: row.post_permission === "admins_only" || row.post_permission === "creator_only",
     membership: created ? "created" : participant ? "joined" : pending.has(row.id) ? "pending" : "none",
     membershipRole: created ? "admin" : participant ? normalizeRole(participant.role) : null,
+    permissions: communityPermissions(participant?.role ?? null, created, participant?.permissions),
     memberCount: memberCounts.get(row.id) ?? 0,
     owner: row.created_by === null ? null : owners.get(row.created_by) ?? null,
     createdAt: row.created_at ?? new Date(0).toISOString(),

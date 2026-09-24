@@ -1,5 +1,7 @@
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
-import { profileProductionService, type Profile } from "./profile-production";
+import type { User } from "@supabase/supabase-js";
+import { getValidatedUser } from "./auth-production";
+import { profileProductionService, type Profile, type ProfileDetails } from "./profile-production";
 import {
   suggestOnboardingUsername,
   validateOnboardingDateOfBirth,
@@ -20,6 +22,7 @@ export type ProfileOnboardingInput = {
 
 export type ProfileOnboardingState = {
   profile: Profile;
+  workspaceProfile: { authUserId: string; details: ProfileDetails };
   suggestedFullName: string;
   suggestedUsername: string;
   suggestedAvatarUrl: string | null;
@@ -63,19 +66,28 @@ function profileError(error: { code?: string; message?: string }): Error {
 }
 
 export const profileOnboardingService = {
-  async load(): Promise<ProfileOnboardingState> {
-    const user = await authenticatedUser();
+  async load(signal?: AbortSignal, validatedUser?: User): Promise<ProfileOnboardingState> {
+    if (signal?.aborted) throw new Error("Profile request cancelled.");
+    const user = validatedUser ?? await getValidatedUser();
+    const current = await supabase.auth.getSession();
+    if (current.error) throw current.error;
+    if (current.data.session?.user.id !== user.id) throw new Error("Your signed-in account changed. Please try again.");
+    if (signal?.aborted) throw new Error("Profile request cancelled.");
     // Older Auth identities can predate the profile-creation trigger. The RPC
     // is idempotent and may only repair the currently authenticated identity.
-    const { error: bootstrapError } = await supabase.rpc("bootstrap_my_profile");
+    const bootstrap = supabase.rpc("bootstrap_my_profile");
+    const { data: appUserId, error: bootstrapError } = await (signal ? bootstrap.abortSignal(signal) : bootstrap);
     if (bootstrapError) throw profileError(bootstrapError);
-    const { profile } = await profileProductionService.loadProfile();
+    if (signal?.aborted) throw new Error("Profile request cancelled.");
+    const details = await profileProductionService.loadProfile(signal, { user, appUserId });
+    const { profile } = details;
     const metadata = user.user_metadata;
     const providerName = typeof metadata.full_name === "string" ? metadata.full_name :
       typeof metadata.name === "string" ? metadata.name : "";
     const fullName = profile.full_name || providerName;
     return {
       profile,
+      workspaceProfile: { authUserId: user.id, details },
       suggestedFullName: fullName,
       suggestedUsername: profile.onboarding_completed ? profile.username :
         suggestOnboardingUsername(fullName, user.email),

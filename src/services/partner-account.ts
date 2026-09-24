@@ -64,13 +64,14 @@ export function validatePartnerAccount(input: PartnerAccountInput): string | nul
   const accountNumber = input.account_number.replace(/[^A-Za-z0-9]/g, "");
   const upiId = trimmed(input.upi_id).toLowerCase();
   if (!accountNumber && !upiId) return "Provide a bank account or UPI ID for future settlements.";
+  if (upiId && (accountNumber || trimmed(input.bank_name) || trimmed(input.account_holder_name) || trimmed(input.ifsc))) return "Choose either a bank account or UPI ID, not both.";
   if (accountNumber) {
     if (accountNumber.length < 6 || accountNumber.length > 34) return "Enter a valid bank account number.";
     if (trimmed(input.bank_name).length < 2 || trimmed(input.bank_name).length > 120) return "Enter the bank name.";
     if (trimmed(input.account_holder_name).length < 2 || trimmed(input.account_holder_name).length > 160) return "Enter the account holder name.";
     if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(trimmed(input.ifsc).toUpperCase())) return "Enter a valid 11-character IFSC code.";
   }
-  if (upiId && !/^[A-Za-z0-9._-]{2,256}@[A-Za-z][A-Za-z0-9.-]{1,63}$/.test(upiId)) return "Enter a valid UPI ID.";
+  if (upiId && !/^[A-Za-z0-9._-]{2,100}@[A-Za-z0-9.-]{2,55}$/.test(upiId)) return "Enter a valid UPI ID.";
   return null;
 }
 
@@ -108,8 +109,8 @@ export const partnerAccountService = {
       account_number: input.account_number.replace(/[^A-Za-z0-9]/g, ""), ifsc: trimmed(input.ifsc).toUpperCase(),
       upi_id: trimmed(input.upi_id).toLowerCase(),
     };
-    const rpc = supabase.rpc as unknown as (name: "submit_partner_application", args: { p_application: typeof application }) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-    const { data, error } = await rpc("submit_partner_application", { p_application: application });
+    // rpc uses the Supabase client receiver internally (this.rest).
+    const { data, error } = await supabase.rpc("submit_partner_application", { p_application: application });
     if (error) throw new Error(error.message);
     return accountResult(data);
   },

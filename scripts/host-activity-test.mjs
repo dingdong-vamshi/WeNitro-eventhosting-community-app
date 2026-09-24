@@ -16,7 +16,7 @@ for(const capacity of ['0','-1','1.5','NaN','2147483648'])assert.ok(hostStepErro
 for(const capacity of ['','1','100'])assert.equal(hostStepError({...valid,capacity},1,false,+now),'');
 for(const price of ['0.01','250','999.99','1000000'])assert.equal(hostStepError({...valid,isPaid:true,price},1,true,+now),'');
 for(const price of ['','0','-1','1.001','1000000.01','abc'])assert.match(hostStepError({...valid,isPaid:true,price},1,true,+now),/Activity Price/);
-assert.match(hostStepError({...valid,isPaid:true,price:'250'},1,false,+now),/approved Partner/);
+assert.equal(hostStepError({...valid,isPaid:true,price:'250'},1,false,+now),'');
 assert.equal(hostStepError({...valid,isPaid:false,price:'not-used'},1,false,+now),'');
 assert.equal(ageError('20','45'),'');assert.ok(ageError('45','20'));assert.ok(ageError('-1','20'));assert.ok(ageError('20','121'));assert.equal(ageError('0',''),'');
 assert.equal(HOST_CATEGORIES.length,21);assert.ok(!HOST_CATEGORIES.some(c => c.startsWith('[QA]')));assert.equal(GENDER_OPTIONS.length,4);
@@ -30,7 +30,7 @@ assert.equal(scheduleFieldErrors({...valid,start:localDateTime(now),end:localDat
 assert.equal(hostStepError({...valid,dateLater:true,start:'',end:'',deadline:''},2,false,+now),'');
 assert.equal(new Date(localDateTime(now)).getTime(), +now);
 const secondsNow=new Date('2026-09-08T12:00:31Z');const rounded=newHostDraft(secondsNow);
-assert.ok(Date.parse(rounded.start)-+secondsNow>=10*60*1000);assert.ok(Date.parse(rounded.start)-+secondsNow<11*60*1000);
+assert.equal(Date.parse(rounded.start)-+secondsNow,10*60*1000);
 const openedScheduleAt=new Date(+now+4*60*1000);const refreshed=withFreshHostSchedule(valid,openedScheduleAt);
 assert.equal(Date.parse(refreshed.start)-+openedScheduleAt,10*60*1000);
 assert.equal(Date.parse(refreshed.end)-Date.parse(refreshed.start),3600000);

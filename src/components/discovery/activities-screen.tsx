@@ -61,7 +61,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
   useEffect(() => {
     const controller = new AbortController(); let active = true;
     searchGeneration.current += 1;
-    setLoading(true); setLoadingMore(false); setError(''); setPage(1); setHasMore(false);
+    setLoading(data.activities.length === 0); setLoadingMore(false); setError(''); setPage(1); setHasMore(false);
     const timer = setTimeout(() => {
       void discoveryRequest(1, controller.signal)
         .then(async result => { const rows = await prepareReferenceActivities(result.items); if (active) { setData(current => ({ ...current, activities: rows })); setHasMore(result.hasMore); } })
@@ -144,7 +144,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
                 <View style={{ borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#FFFFFFEE' }}><Text style={{ color: '#392CC3', fontSize: 11, fontWeight: '800' }}>{item.category || 'Activity'}</Text></View>
                 {participation ? <View style={{ borderRadius: 13, paddingHorizontal: 8, paddingVertical: 5, backgroundColor: participation === 'Joined' ? '#159B67E8' : '#E08B27E8' }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{participation}</Text></View> : null}
               </View>
-              <View style={{ position: 'absolute', right: 9, bottom: 9, borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#07111FD9' }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{activityPriceBadge(item)}</Text></View>
+              <View style={{ position: 'absolute', right: 9, bottom: 9, borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#07111FD9' }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{paidActivity(item) ? `PAID · ${item.price}` : 'FREE'}</Text></View>
             </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel={saved ? `Unsave ${item.title}` : `Save ${item.title}`} onPress={() => void save(item)} style={{ position: 'absolute', top: 8, right: 8, width: 34, height: 34, borderRadius: 18, backgroundColor: '#07111FCC', alignItems: 'center', justifyContent: 'center' }}><Icon name={saved ? 'bookmark' : 'bookmark-outline'} color="#FFF" size={17} /></Pressable>
           </View>

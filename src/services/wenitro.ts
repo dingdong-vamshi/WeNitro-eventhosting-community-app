@@ -1,6 +1,6 @@
 import { partnerAccountService } from "./partner-account";
 import { normalizeRegistrationQuestions, validateRegistrationQuestions, type RegistrationQuestionDraft } from "./registration-questions";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+import type { RealtimeChannel, Session } from "@supabase/supabase-js";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 import { activitiesProductionService } from "./activities-production";
 import type {
@@ -11,9 +11,11 @@ import type {
 } from "./activities-production";
 import { communitiesProductionService } from "./communities-production";
 import { createMessageClientId, realtimeChatService } from "./realtime-chat";
-import { profileProductionService } from "./profile-production";
+import { profileProductionService, type ProfileDetails } from "./profile-production";
 import { storiesProductionService } from "./stories-production";
 import { vibesProductionService } from "./vibes-production";
+import type { WorkspaceSection } from "../domain/workspace-refresh";
+import { withRequestDeadline } from "./request-deadline";
 
 export type CommunityInput = {
   name: string;
@@ -181,11 +183,54 @@ const safeProfile = (profile: Row | null | undefined) =>
       }
     : null;
 
-export async function loadRemoteWorkspace() {
+export type WorkspaceProfile = { authUserId: string; details: ProfileDetails };
+type WorkspaceReadOptions = {
+  sections: WorkspaceSection[];
+  viewer: { authUserId: string; appUserId: string };
+};
+
+const pendingWorkspaces = new Map<string, Promise<Awaited<ReturnType<typeof readRemoteWorkspace>> | null>>();
+let activeWorkspaceIdentity: string | null = null;
+const workspaceIdentity = (session: Session | null) => session ? `${session.user.id}:${session.access_token}` : null;
+
+export async function loadRemoteWorkspace(profile?: WorkspaceProfile, options?: WorkspaceReadOptions) {
   if (!isSupabaseConfigured) return null;
-  const { data: session, error: sessionError } = await supabase.auth.getSession();
+  const { data, error: sessionError } = await withRequestDeadline(() => supabase.auth.getSession(), 30_000,
+    "Your session took too long to load. Check your connection and try again.");
   if (sessionError) throw sessionError;
-  if (!session.session) return null;
+  const session = data.session;
+  const identity = workspaceIdentity(session);
+  if (identity !== activeWorkspaceIdentity) {
+    pendingWorkspaces.clear();
+    activeWorkspaceIdentity = identity;
+  }
+  if (!session || !identity) return null;
+  // A partial refresh cannot satisfy an initial/full workspace request.
+  const requestKey = `${identity}:${options ? [...new Set(options.sections)].sort().join(",") : "all"}:${options?.viewer.appUserId ?? ""}`;
+  const pending = pendingWorkspaces.get(requestKey);
+  if (pending) return pending;
+
+  // A stalled read must not poison the single-flight entry forever. Consumers
+  // can explicitly retry after this expires; there is no automatic retry loop.
+  const request = withRequestDeadline(async () => {
+    const result = await readRemoteWorkspace(session, profile, options);
+    const current = await supabase.auth.getSession();
+    if (current.error) throw current.error;
+    // A load started under an old account/session must never hydrate the new
+    // account, even when its network requests finish after sign-out.
+    return identity === activeWorkspaceIdentity && identity === workspaceIdentity(current.data.session) ? result : null;
+  }, 30_000, "Your Feed took too long to load. Your account is still signed in. Try again.").finally(() => {
+    if (pendingWorkspaces.get(requestKey) === request) pendingWorkspaces.delete(requestKey);
+  });
+  pendingWorkspaces.set(requestKey, request);
+  return request;
+}
+
+async function readRemoteWorkspace(session: Session, existingProfile?: WorkspaceProfile, options?: WorkspaceReadOptions) {
+  const include = (section: WorkspaceSection) => !options || options.sections.includes(section);
+  const knownViewerId = options?.viewer.authUserId === session.user.id
+    && /^\d+$/.test(options.viewer.appUserId) && Number(options.viewer.appUserId) > 0
+    ? options.viewer.appUserId : null;
 
   const loadStage = async <T>(
     label: string,
@@ -208,7 +253,22 @@ export async function loadRemoteWorkspace() {
     return new Error(`Workspace ${label} failed: ${message}`, { cause: error });
   };
 
-  const userId = await currentLegacyUserId();
+  // Each service retains its authenticated/RLS boundary. Start independent
+  // screen reads together instead of waiting for a second Auth/profile lookup.
+  const activityTask = loadStage<Pick<Awaited<ReturnType<typeof activitiesProductionService.discover>>, "items">>("activities", include("activities") ? activitiesProductionService.discover({
+    pageSize: 50, upcomingOnly: false, sort: "newest",
+  }) : Promise.resolve({ items: [] }));
+  const profileTask = loadStage("profile", !include("profile") && knownViewerId ? Promise.resolve(null) : existingProfile?.authUserId === session.user.id
+    ? Promise.resolve(existingProfile.details)
+    : profileProductionService.loadProfile());
+  const inboxTask = loadStage<{ data: Row[] | null; error: unknown }>("conversations", include("conversations") ? supabase.rpc("list_chat_inbox", { p_message_limit: 1 }) : Promise.resolve({ data: [], error: null }));
+  const activityCoversTask = activityTask.then(page => signedActivityCoverUrls(page.items.map(item => item.coverUrl)));
+  const participantTask = activityTask.then(async page => {
+    const eventIds = page.items.map(item => Number(item.id));
+    return eventIds.length
+      ? supabase.from("tbl_event_participants").select("event_id,user_id,status").in("event_id", eventIds)
+      : Promise.resolve({ data: [] as Row[], error: null });
+  });
   const [
     activityPage,
     communityPage,
@@ -218,64 +278,45 @@ export async function loadRemoteWorkspace() {
     friendResult,
     vibePage,
     stories,
+    participantResult,
+    inboxResult,
+    activityCovers,
   ] =
     await Promise.all([
-      loadStage(
-        "activities",
-        activitiesProductionService.discover({
-          pageSize: 50,
-          upcomingOnly: false,
-          sort: "newest",
-        }),
-      ),
-      loadStage(
+      activityTask,
+      loadStage<Pick<Awaited<ReturnType<typeof communitiesProductionService.discover>>, "items">>(
         "communities",
-        communitiesProductionService.discover({ pageSize: 30 }),
+        include("communities") ? communitiesProductionService.discover({ pageSize: 30 }) : Promise.resolve({ items: [] }),
       ),
-      loadStage("profile", profileProductionService.loadProfile()),
-      loadStage("partner profile", partnerAccountService.get()).catch(() => ({ profile: null, payout_account: null, eligible: false, can_host_paid: false, unavailable: true })),
+      profileTask,
+      loadStage("partner profile", include("profile") ? partnerAccountService.get() : Promise.resolve({ profile: null, payout_account: null, eligible: false, can_host_paid: false })).catch(() => ({ profile: null, payout_account: null, eligible: false, can_host_paid: false, unavailable: true })),
       loadStage(
         "people",
-        (supabase.rpc as unknown as (
+        include("people") ? (supabase.rpc as unknown as (
           name: "list_discoverable_people",
           args: { p_limit: number },
         ) => PromiseLike<{ data: Row[] | null; error: unknown }>)(
           "list_discoverable_people",
           { p_limit: 50 },
-        ),
+        ) : Promise.resolve({ data: [] as Row[], error: null }),
       ),
-      loadStage(
+      loadStage<{ count: number | null; error: unknown }>(
         "friends",
-        supabase
+        include("profile") ? profileTask.then(details => supabase
           .from("tbl_friends")
           .select("id", { count: "exact", head: true })
-          .or(`user_id.eq.${userId},friend_id.eq.${userId}`),
+          .or(`user_id.eq.${details!.profile.id},friend_id.eq.${details!.profile.id}`)) : Promise.resolve({ count: 0, error: null }),
       ),
-      loadStage("vibes", vibesProductionService.listReels({ pageSize: 50 })),
-      loadStage("stories", storiesProductionService.listActive(50)),
+      loadStage<Pick<Awaited<ReturnType<typeof vibesProductionService.listReels>>, "reels">>("vibes", include("vibes") ? vibesProductionService.listReels({ pageSize: 50 }) : Promise.resolve({ reels: [] })),
+      loadStage("stories", include("stories") ? storiesProductionService.listActive(50) : Promise.resolve([])),
+      participantTask,
+      inboxTask,
+      activityCoversTask,
     ]);
+  const userId = Number(profileDetails?.profile.id ?? knownViewerId);
   if (peopleResult.error) throw workspaceError("people", peopleResult.error);
   if (friendResult.error) throw workspaceError("friends", friendResult.error);
 
-  const eventIds = activityPage.items.map((item) => Number(item.id));
-  const inboxTask = (
-    supabase.rpc as unknown as (
-      fn: "list_chat_inbox",
-      args: { p_message_limit: number },
-    ) => PromiseLike<{ data: Row[] | null; error: unknown }>
-  )("list_chat_inbox", { p_message_limit: 50 });
-  const [participantResult, inboxResult] = await Promise.all([
-    eventIds.length
-      ? supabase
-          .from("tbl_event_participants")
-          .select("event_id,user_id,status")
-          .in("event_id", eventIds)
-      : Promise.resolve({ data: [] as Row[], error: null }),
-    loadStage(
-      "conversations",
-      inboxTask,
-    ),
-  ]);
   if (participantResult.error)
     throw workspaceError("participants", participantResult.error);
   if (inboxResult.error)
@@ -303,20 +344,19 @@ export async function loadRemoteWorkspace() {
     community_posts: [],
   }));
 
-  const inboxRows = inboxResult.data ?? [];
+  const inboxRows = (inboxResult.data ?? []) as Row[];
   const activityEventIds = [...new Set(inboxRows.map((room) => Number(room.event_id)).filter((id) => Number.isInteger(id) && id > 0))];
-  const eventTitleResult = activityEventIds.length
-    ? await supabase.from("tbl_events").select("id,title,media").in("id", activityEventIds)
-    : { data: [] as Row[], error: null };
-  if (eventTitleResult.error) throw workspaceError("activity chat titles", eventTitleResult.error);
-  const eventRows = (eventTitleResult.data ?? []) as Row[];
-  const eventTitles = new Map(eventRows.map((row) => [Number(row.id), String(row.title || "").trim()]));
-  const eventCovers = new Map<number, string>();
-  await Promise.all(eventRows.map(async (row) => {
-    const coverPath = activityCoverFromMedia(row.media);
-    const signedCover = await signedActivityCoverUrl(coverPath);
-    if (signedCover) eventCovers.set(Number(row.id), signedCover);
-  }));
+  const knownActivities = new Map(activityPage.items.map(item => [Number(item.id), item]));
+  const missingEventIds = activityEventIds.filter(id => !knownActivities.has(id));
+  const eventDetailsTask = (async () => {
+    const result = missingEventIds.length
+      ? await supabase.from("tbl_events").select("id,title,media").in("id", missingEventIds)
+      : { data: [] as Row[], error: null };
+    if (result.error) throw workspaceError("activity chat titles", result.error);
+    const rows = (result.data ?? []) as Row[];
+    const covers = await signedActivityCoverUrls(rows.map(row => activityCoverFromMedia(row.media)));
+    return { rows, covers };
+  })();
   const inboxMessages = inboxRows.flatMap((room) =>
     Array.isArray(room.chat_messages) ? (room.chat_messages as Row[]) : [],
   );
@@ -333,7 +373,7 @@ export async function loadRemoteWorkspace() {
     ),
   ];
   const signedInboxMedia = new Map<string, string>();
-  if (inboxMediaPaths.length) {
+  const inboxMediaTask = (async () => { if (inboxMediaPaths.length) {
     const signedResult = await loadStage(
       "chat media",
       supabase.storage.from("messages").createSignedUrls(inboxMediaPaths, 3_600),
@@ -344,6 +384,24 @@ export async function loadRemoteWorkspace() {
       if (item.path && item.signedUrl)
         signedInboxMedia.set(item.path, item.signedUrl);
     }
+  } })();
+  const roomImagePaths = [...new Set(inboxRows.map(room => typeof room.image_url === "string" ? room.image_url : "")
+    .filter(path => path.length > 0 && !/^https?:\/\//i.test(path)))];
+  const roomImagesTask = signedWorkspaceRoomImages(roomImagePaths);
+  const [{ rows: eventRows, covers: otherEventCovers }, , signedRoomImages] = await Promise.all([
+    eventDetailsTask, inboxMediaTask, roomImagesTask,
+  ]);
+  const eventTitles = new Map(activityPage.items.map(item => [Number(item.id), item.title]));
+  const eventCovers = new Map<number, string>();
+  for (const item of activityPage.items) {
+    const cover = item.coverUrl ? activityCovers.get(item.coverUrl) : null;
+    if (cover) eventCovers.set(Number(item.id), cover);
+  }
+  for (const row of eventRows) {
+    eventTitles.set(Number(row.id), String(row.title || "").trim());
+    const path = activityCoverFromMedia(row.media);
+    const cover = path ? otherEventCovers.get(path) : null;
+    if (cover) eventCovers.set(Number(row.id), cover);
   }
 
   const conversationRows = inboxRows.map((room) => {
@@ -369,8 +427,11 @@ export async function loadRemoteWorkspace() {
           ? signedInboxMedia.get(mediaPath) ?? mediaPath
           : null,
         message_type: String(message.message_type ?? "text"),
+        poll_id: message.poll_id ?? null,
         share_payload: message.share_payload ?? null,
         created_at: String(message.created_at),
+        deleted_at: message.deleted_at ?? null,
+        edited_at: message.edited_at ?? null,
         profiles: sender?.id
           ? {
               id: String(sender.id),
@@ -423,21 +484,7 @@ export async function loadRemoteWorkspace() {
       last_message: chatMessages.at(-1) ?? null,
     };
   });
-  const roomImagePaths = [
-    ...new Set(
-      inboxRows
-        .map((room) => (typeof room.image_url === "string" ? room.image_url : ""))
-        .filter((path) => path.length > 0 && !/^https?:\/\//i.test(path)),
-    ),
-  ];
   if (roomImagePaths.length) {
-    const signedRoomImages = new Map<string, string>();
-    await Promise.all(
-      roomImagePaths.map(async (path) => {
-        const url = await realtimeChatService.signedRoomImage(path);
-        if (url) signedRoomImages.set(path, url);
-      }),
-    );
     for (const row of conversationRows) {
       if (row.avatar_url) continue;
       const source = inboxRows.find((room) => String(room.id) === row.id);
@@ -460,7 +507,7 @@ export async function loadRemoteWorkspace() {
       title: item.title,
       description: item.description,
       category: item.category,
-      cover_url: await signedActivityCoverUrl(item.coverUrl),
+      cover_url: item.coverUrl ? activityCovers.get(item.coverUrl) ?? null : null,
       location_name: item.locationName,
       latitude: item.latitude, longitude: item.longitude,
       price_inr: item.priceInr,
@@ -486,27 +533,31 @@ export async function loadRemoteWorkspace() {
       viewer_status: item.viewerState.participation?.status ?? null,
     }))),
   );
-  const profile = profileDetails.profile;
+  // On a scoped non-profile refresh only the already authenticated viewer ID
+  // is needed for message/story ownership. Omitted profile fields are not a
+  // profile refresh and must never overwrite the caller's current profile.
+  const profile = profileDetails?.profile;
   const normalizedProfile = {
-    id: String(profile.id),
+    id: String(userId),
     account_type: partnerAccount.can_host_paid ? "partner" : "individual",
     partner_profile: partnerAccount.profile,
     partner_eligible: partnerAccount.eligible,
     partner_unavailable: "unavailable" in partnerAccount,
-    username: profile.username,
-    full_name: profile.full_name,
-    avatar_url: profile.avatar_url,
-    bio: profile.bio,
-    location: profile.location,
-    trust_score: profile.trust_score,
-    email: session.session.user.email,
-    nitro_points: profile.nitro_points,
-    date_of_birth: profile.date_of_birth,
-    onboarding_completed: profile.onboarding_completed,
+    username: profile?.username,
+    full_name: profile?.full_name,
+    avatar_url: profile?.avatar_url,
+    bio: profile?.bio,
+    location: profile?.location,
+    trust_score: profile?.trust_score,
+    email: session.user.email,
+    nitro_points: profile?.nitro_points,
+    date_of_birth: profile?.date_of_birth,
+    onboarding_completed: profile?.onboarding_completed,
   };
 
   return {
     profile: normalizedProfile,
+    email: session.user.email,
     people: (peopleResult.data ?? []).map((person: Row) => safeProfile(person)),
     friendCount: friendResult.count ?? 0,
     activities,
@@ -550,12 +601,14 @@ export async function loadRemoteWorkspace() {
     likes: activityPage.items
       .filter((item) => item.viewerState.liked)
       .map((item) => ({ activity_id: item.id })),
+    likedIds: activityPage.items.filter(item => item.viewerState.liked).map(item => item.id),
+    savedIds: activityPage.items.filter(item => item.viewerState.saved).map(item => item.id),
     saves: activityPage.items
       .filter((item) => item.viewerState.saved)
       .map((item) => ({ activity_id: item.id })),
-    interests: profileDetails.interests.map((interest) => interest.name),
-    profileInterests: profileDetails.interests,
-    badges: profileDetails.badges,
+    interests: profileDetails?.interests.map((interest) => interest.name) ?? [],
+    profileInterests: profileDetails?.interests ?? [],
+    badges: profileDetails?.badges ?? [],
     likedVibeIds: vibePage.reels
       .filter((reel) => reel.likedByMe)
       .map((reel) => reel.id),
@@ -731,6 +784,7 @@ export const chatService = {
         mine: message.sender_id === ownId,
         image: message.media_signed_url || undefined,
         messageType: message.message_type,
+        pollId: message.poll_id ?? undefined,
         share: message.share_payload,
         createdAt: message.created_at,
       })),
@@ -847,6 +901,41 @@ const signedActivityCoverUrl = async (coverUrl: string | null) => {
     return null;
   }
   return data.signedUrl;
+};
+
+const signedActivityCoverUrls = async (values: Array<string | null>) => {
+  const urls = new Map<string, string>();
+  const paths: string[] = [];
+  for (const value of new Set(values)) {
+    if (!value) continue;
+    if (/^https?:\/\//i.test(value)) urls.set(value, value);
+    else if (!value.startsWith("media/events/")) paths.push(value);
+  }
+  if (paths.length) {
+    const { data, error } = await supabase.storage.from("activity-media").createSignedUrls(paths, 3_600);
+    if (!error) for (const item of data ?? []) {
+      if (item.path && item.signedUrl) urls.set(item.path, item.signedUrl);
+    }
+  }
+  return urls;
+};
+
+const signedWorkspaceRoomImages = async (paths: string[]) => {
+  const urls = new Map<string, string>();
+  // Legacy rooms can reference any of these buckets. Batch unresolved paths
+  // per bucket rather than trying three serial HTTP requests for every room.
+  for (const bucket of ["community", "communities", "avatars"] as const) {
+    const missing = paths.filter(path => !urls.has(path));
+    if (!missing.length) break;
+    const { data, error } = await supabase.storage.from(bucket).createSignedUrls(missing, 3_600);
+    if (!error) for (const item of data ?? []) {
+      if (item.path && item.signedUrl && !item.error) urls.set(item.path, item.signedUrl);
+    }
+  }
+  for (const path of paths) if (!urls.has(path)) {
+    urls.set(path, supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl);
+  }
+  return urls;
 };
 
 const activityForWorkspace = async (
