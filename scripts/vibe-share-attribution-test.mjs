@@ -38,7 +38,7 @@ try {
   run('initdb',['-D',database,'-A','trust','--no-locale']);
   run('pg_ctl',['-D',database,'-l',path.join(directory,'postgres.log'),'-o',`-F -h '' -k ${directory} -p 55439`,'-w','start']);
   started=true;
-  const original=fs.readFileSync('supabase/migrations/20260923134835_allow_authenticated_community_chat_shares.sql','utf8');
+  const original=fs.readFileSync('supabase/migrations/20260923135156_allow_authenticated_community_chat_shares.sql','utf8');
   const upgrade=fs.readFileSync('supabase/migrations/20260924091853_vibe_share_creator_attribution.sql','utf8');
   const output=run('psql',['-h',directory,'-p','55439','-d','postgres','-v','ON_ERROR_STOP=1','-Atq'],`
 create role anon; create role authenticated;

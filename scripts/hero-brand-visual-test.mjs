@@ -54,8 +54,8 @@ for (const behavior of [
   'go(slide.screen)',
 ]) assert.ok(feed.includes(behavior), `Missing hero behavior: ${behavior}`);
 assert.match(feed, /carouselDragging \|\| carouselPressed \|\| !appActive \|\| reduceMotion/);
-assert.ok(feed.includes('hero-reward-claim-top-mask'));
-assert.ok(feed.includes('hero-reward-claim-edge-mask'));
+assert.ok(!feed.includes('hero-reward-claim-top-mask'));
+assert.ok(!feed.includes('hero-reward-claim-edge-mask'));
 assert.doesNotMatch(feed, /\+500|V-Nitro|V Nitro/);
 
 const blue = 'assets/brand/wenitro-mark-blue.png';
@@ -80,4 +80,4 @@ const splash = appConfig.plugins.find(plugin => Array.isArray(plugin) && plugin[
 assert.equal(splash?.backgroundColor, '#6860F2');
 assert.equal(splash?.image, './assets/brand/wenitro-mark-white.png');
 
-console.log('PASS: exact supplied hero art, safe live overlays, lifecycle-aware carousel behavior, and official contrast-aware brand assets.');
+console.log('PASS: exact supplied hero art without masking patches, lifecycle-aware carousel behavior, and official contrast-aware brand assets.');

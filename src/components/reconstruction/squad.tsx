@@ -32,8 +32,11 @@ export function ReferenceSquad({ ownerId, back, openProfile }: { ownerId: string
         const isOwn = Number(identity.data) === id;
         if (active) setOwn(isOwn);
         if (!isOwn) { if (active) setMembers([]); return; }
-        const profiles = await referenceDeltaService.listSquad();
-        if (active) setMembers(profiles as SquadMember[]);
+        const profiles = await referenceDeltaService.listSquad() as SquadMember[];
+        // Friendship joins can expose the same person through more than one row.
+        // The Squad UI represents people, so keep one canonical card per user id.
+        const uniqueProfiles = [...new Map(profiles.map(profile => [profile.id, profile])).values()];
+        if (active) setMembers(uniqueProfiles);
       } catch (caught: any) {
         if (active) setError(caught.message || 'Could not load this Squad.');
       } finally {

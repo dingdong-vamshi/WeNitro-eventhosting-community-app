@@ -3,6 +3,8 @@ import fs from 'node:fs';
 
 const read = path => fs.readFileSync(path, 'utf8');
 const app = read('App.tsx');
+assert.match(app, /Show in Vibes/);
+assert.match(app, /setPostVibeDraft\(\{ activityId, asset \}\)/, 'Activity cover is offered in the Vibe composer without auto-publishing');
 const messages = read('src/components/reconstruction/messages.tsx');
 const profile = read('src/components/reconstruction/profile.tsx');
 const settings = read('src/components/reconstruction/settings.tsx');

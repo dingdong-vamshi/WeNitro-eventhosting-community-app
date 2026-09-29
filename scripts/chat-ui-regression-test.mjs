@@ -53,6 +53,7 @@ const workspace = fs.readFileSync('src/services/wenitro.ts', 'utf8');
 assert.match(workspace, /select\("id,title,media"\)/);
 assert.match(workspace, /eventCovers\.get/);
 const app = fs.readFileSync('App.tsx', 'utf8');
+assert.match(app, /prev === "communityDetail"[\s\S]*setSelectedCommunityId\(communityId\)[\s\S]*setCommunityPostsOpen\(false\)/, 'Community Chat back returns to the originating Community page');
 assert.match(app, /if \(id && messageCursors\[id\] === undefined\) void loadMessagePage\(id\)/,
   'Opening a routed inbox thread must hydrate its full first page, not leave the one-message preview as history');
 const migration = fs.readFileSync('supabase/migrations/20260922184236_community_chat_contract_recovery.sql', 'utf8');

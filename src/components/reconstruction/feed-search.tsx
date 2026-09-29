@@ -56,6 +56,15 @@ const HERO_SLIDES = [
 ] as const;
 const HERO_AUTO_ADVANCE_MS = 4500;
 const displayableMedia = (value?: string) => Boolean(value && /^(https?:|data:|blob:|file:)/i.test(value));
+const TRIBE_IMAGES = [
+  require('../../../assets/photos/study.jpg'),
+  require('../../../assets/photos/sport.jpg'),
+  require('../../../assets/photos/ride.jpg'),
+  require('../../../assets/photos/mic.jpg'),
+  require('../../../assets/photos/food.jpg'),
+  require('../../../assets/photos/cycling.jpg'),
+  require('../../../assets/photos/friends.jpg'),
+] as const;
 function activityPriceLabel(activity: Pick<Activity, 'price' | 'isPaid'>) {
   if (activity.isPaid) return `PAID · ${activity.price}`;
   return activity.price === 'Free' ? 'FREE' : activity.price;
@@ -101,7 +110,7 @@ export function feedActivityLoadState(pending: boolean, activityCount: number, e
   return error ? 'error' : 'empty';
 }
 
-export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, openVibe, openProfile, refreshOnMount = true, workspaceLoading = false, workspaceError = '' }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (s: Screen) => void; openActivity: (id: string) => void; openCommunity?: (id: string) => void; openVibe?: (id: string) => void; openProfile?: (id: string) => void; refreshOnMount?: boolean; workspaceLoading?: boolean; workspaceError?: string }) {
+export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, openVibe, openProfile, openActivitiesCategory, refreshOnMount = true, workspaceLoading = false, workspaceError = '' }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (s: Screen) => void; openActivity: (id: string) => void; openCommunity?: (id: string) => void; openVibe?: (id: string) => void; openProfile?: (id: string) => void; openActivitiesCategory?: (category: string) => void; refreshOnMount?: boolean; workspaceLoading?: boolean; workspaceError?: string }) {
   const c = usePalette();
   const { width } = useWindowDimensions();
   const homeCarousel = useRef<ScrollView>(null);
@@ -128,7 +137,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const [locating, setLocating] = useState(false);
   const pageWidth = Math.min(width, MOBILE_APP_MAX_WIDTH);
   const carouselCardWidth = Math.max(pageWidth - 34, 280);
-  const carouselCardHeight = Math.max(214, Math.min(252, Math.round(carouselCardWidth * .62)));
+  const carouselCardHeight = Math.max(188, Math.min(220, Math.round(carouselCardWidth * .53)));
   const carouselStep = carouselCardWidth;
 
   useEffect(() => {
@@ -223,15 +232,10 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
                 style={({ pressed }) => ({ width: carouselCardWidth, height: carouselCardHeight, opacity: pressed ? 0.88 : 1 })}
               >
                 <Image source={slide.image} accessible={false} accessibilityIgnoresInvertColors style={{ position: 'absolute', width: carouselCardWidth, height: carouselCardHeight }} resizeMode="cover" />
-                <View pointerEvents="none" style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '48%', backgroundColor: '#21105C' }} />
-                <LinearGradient pointerEvents="none" colors={['#21105C', 'rgba(33, 16, 92, 0.96)', 'rgba(25, 18, 76, 0.62)', 'rgba(15, 23, 42, 0.12)']} locations={[0, .34, .72, 1]} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: '35%' }} />
-                {'maskFalseRewardClaims' in slide ? <>
-                  <View testID="hero-reward-claim-top-mask" pointerEvents="none" style={{ position: 'absolute', left: '45%', top: 0, width: '30%', height: '27%', borderBottomLeftRadius: 18, borderBottomRightRadius: 18, backgroundColor: '#281263' }} />
-                  <View testID="hero-reward-claim-edge-mask" pointerEvents="none" style={{ position: 'absolute', right: 0, top: '31%', width: '18%', height: '45%', borderTopLeftRadius: 18, borderBottomLeftRadius: 18, backgroundColor: '#2A155E' }} />
-                </> : null}
-                <View style={{ flex: 1, width: '76%', padding: 18, paddingBottom: 25, justifyContent: 'center', gap: 7 }}>
+                <LinearGradient pointerEvents="none" colors={['rgba(31, 16, 88, 0.88)', 'rgba(31, 16, 88, 0.56)', 'rgba(15, 23, 42, 0.04)']} locations={[0, .55, 1]} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={{ position: 'absolute', inset: 0 }} />
+                <View style={{ flex: 1, width: '76%', padding: 16, paddingBottom: 22, justifyContent: 'center', gap: 6 }}>
                   <Text style={{ color: '#C9C3FF', fontSize: 12, lineHeight: 16, fontWeight: '800', letterSpacing: .7 }}>{slide.eyebrow}</Text>
-                  <Text style={{ color: '#FFFFFF', fontSize: 22, lineHeight: 26, fontWeight: '800' }}>{slide.title}</Text>
+                  <Text style={{ color: '#FFFFFF', fontSize: 20, lineHeight: 24, fontWeight: '800' }}>{slide.title}</Text>
                   <Text numberOfLines={2} style={{ color: '#F0EEFF', fontSize: 12, lineHeight: 17 }}>{slide.description}</Text>
                   <View style={{ alignSelf: 'flex-start', minHeight: 38, borderRadius: 19, backgroundColor: '#FFFFFF', paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center', gap: 7 }}>
                     <Text style={{ color: '#392CC3', fontSize: 12, fontWeight: '800' }}>{slide.cta}</Text>
@@ -300,9 +304,9 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
         {data.people.length ? <><SectionHeading title="People to Discover" action="Find people" onAction={() => go('search')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 16 }}>{data.people.slice(0, 8).map(person => <Pressable accessibilityRole="button" accessibilityLabel={`Open profile ${person.name}`} onPress={() => openProfile?.(person.id)} key={person.id} style={{ width: 70, alignItems: 'center', gap: 6 }}><UserAvatar uri={person.avatar} name={person.name} size={58} /><Text numberOfLines={1} style={{ color: c.text, width: 70, textAlign: 'center', fontSize: 12, fontWeight: '800' }}>{person.name} <VerifiedBadge userId={person.id} size={11} /></Text></Pressable>)}</ScrollView></> : null}
         {communityCards.length ? <><SectionHeading title="Communities" action="Explore all" onAction={() => go('communities')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>{communityCards.map(room => <Pressable accessibilityRole="button" accessibilityLabel={`Open community ${room.name}`} onPress={() => openCommunity ? openCommunity(room.id) : go('communities')} key={room.id} style={{ width: 154, height: 148, borderRadius: 17, overflow: 'hidden', backgroundColor: c.card, borderWidth: 1, borderColor: c.border }}>{room.image ? <Image source={{ uri: room.image }} style={{ height: 86, width: '100%' }} /> : <View style={{ height: 86, backgroundColor: c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name="people" color={c.accent} size={30} /></View>}<View style={{ padding: 9 }}><Text style={{ color: c.text, fontSize: 13, fontWeight: '800' }} numberOfLines={1}>{room.name}</Text><Text style={{ color: c.muted, fontSize: 12, fontWeight: '600', marginTop: 3 }}>{room.memberCount} members</Text></View></Pressable>)}</ScrollView></> : null}
         <SectionHeading title="Discover Your Tribe" />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>{(data.interests.length ? data.interests : INTEREST_CATEGORIES).filter(value => !/qa|automation|test/i.test(value)).slice(0, 7).map((value, index) => <Pressable accessibilityRole="button" onPress={() => go('search')} key={value} style={{ width: 112, minHeight: 66, borderRadius: 15, padding: 11, backgroundColor: ['#6553F5', '#D94C9A', '#2D8FE9', '#ED8D39'][index % 4] }}><Icon name={['book-outline', 'barbell-outline', 'airplane-outline', 'musical-notes-outline'][index % 4] as any} size={17} color="#FFF" /><Text style={{ color: '#FFF', fontSize: 12, lineHeight: 16, fontWeight: '800', marginTop: 5 }} numberOfLines={2}>Find {value}</Text></Pressable>)}</ScrollView>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 9 }}>{(data.interests.length ? data.interests : INTEREST_CATEGORIES).filter(value => !/qa|automation|test/i.test(value)).slice(0, 7).map((value, index) => <Pressable accessibilityRole="button" accessibilityLabel={`Browse ${value} activities`} onPress={() => openActivitiesCategory ? openActivitiesCategory(value) : go('activities')} key={value} style={{ width: 118, height: 82, borderRadius: 16, overflow: 'hidden', justifyContent: 'flex-end' }}><Image source={TRIBE_IMAGES[index % TRIBE_IMAGES.length]} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} resizeMode="cover" /><LinearGradient pointerEvents="none" colors={['transparent', 'rgba(10, 13, 35, .82)']} style={{ position: 'absolute', inset: 0 }} /><Text style={{ color: '#FFF', fontSize: 13, lineHeight: 17, fontWeight: '800', padding: 11 }} numberOfLines={2}>{value}</Text></Pressable>)}</ScrollView>
         <View style={{ marginTop: 18, minHeight: 142, borderRadius: 22, padding: 18, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-          <LinearGradient pointerEvents="none" colors={['#6954E7', '#167C83']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ position: 'absolute', inset: 0 }} />
+          <LinearGradient pointerEvents="none" colors={['#3420B8', '#6847F5']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ position: 'absolute', inset: 0 }} />
           <View style={{ width: 58, height: 58, borderRadius: 19, backgroundColor: '#FFFFFF24', alignItems: 'center', justifyContent: 'center' }}><Icon name="people" color="#FFFFFF" size={29} /></View>
           <View style={{ flex: 1 }}>
             <Text style={{ color: '#FFFFFF', fontSize: 17, fontWeight: '900' }}>Invite your friends</Text>
@@ -319,7 +323,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
         <SectionHeading title="Terms and Policies" />
         <View style={{ borderWidth: 1, borderColor: c.border, backgroundColor: c.card, borderRadius: 18, padding: 16, gap: 14 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 11 }}><View style={{ width: 42, height: 42, borderRadius: 14, backgroundColor: c.isDark ? '#2B285F' : '#EFECFF', alignItems: 'center', justifyContent: 'center' }}><Icon name="shield-checkmark-outline" color={c.accent} size={22} /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 16, fontWeight: '800' }}>Meet safely and know the rules</Text><Text style={{ color: c.muted, fontSize: 13, lineHeight: 19, fontWeight: '600', marginTop: 4 }}>Read how WeNitro handles privacy and the conditions for using the app.</Text></View></View><View style={{ flexDirection: 'row', gap: 9 }}><Pressable accessibilityRole="link" onPress={() => go('privacyPolicy')} style={{ flex: 1, minHeight: 48, borderRadius: 14, borderWidth: 1.5, borderColor: c.accent, alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: c.accent, fontSize: 14, fontWeight: '800' }}>Privacy Policy</Text></Pressable><Pressable accessibilityRole="link" onPress={() => go('terms')} style={{ flex: 1, minHeight: 48, borderRadius: 14, borderWidth: 1.5, borderColor: c.accent, alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: c.accent, fontSize: 14, fontWeight: '800' }}>Terms &amp; Conditions</Text></Pressable></View></View>
         <Pressable accessibilityRole="button" accessibilityLabel="Open Nitro Store" onPress={() => go('shop')} style={{ marginTop: 18, minHeight: 142, borderRadius: 22, padding: 18, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-          <LinearGradient pointerEvents="none" colors={['#6954E7', '#167C83']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ position: 'absolute', inset: 0 }} />
+          <LinearGradient pointerEvents="none" colors={['#3420B8', '#6847F5']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ position: 'absolute', inset: 0 }} />
           <View style={{ width: 58, height: 58, borderRadius: 19, backgroundColor: '#FFFFFF24', alignItems: 'center', justifyContent: 'center' }}><Icon name="flash" color="#F0D14E" size={29} /></View>
           <View style={{ flex: 1 }}>
             <Text style={{ color: '#FFFFFF', fontSize: 17, fontWeight: '900' }}>Nitro Points</Text>
@@ -341,7 +345,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   </Page>;
 }
 function useDarkColorScheme(c: ReturnType<typeof usePalette>) { return c.bg === '#101824' ? 'dark' : 'light'; }
-export function productionActivity(a: Omit<ActivityListItem, 'viewerState'> & { viewerState?: ActivityListItem['viewerState'] }): Activity { return { id: a.id, title: a.title, category: a.category, when: activityTime(a.startsAt || undefined), where: a.locationName, latitude: a.latitude, longitude: a.longitude, price: a.priceInr ? `₹${a.priceInr}` : a.costsMayApply ? 'Costs may apply' : 'Free', isPaid: a.isPaid, paymentCollectionMode: a.paymentCollectionMode, costsMayApply: a.costsMayApply, entryFeeRequired: a.entryFeeRequired, seats: a.capacity || 0, joined: 0, image: a.coverUrl || Asset.fromModule(require('../../../assets/wenitro-logo-transparent.png')).uri, host: a.owner?.username || a.owner?.fullName || 'Host', hostAvatar: a.owner?.avatarUrl || undefined, hostVerified: a.owner?.isVerified, ownerId: a.ownerId, startsAt: a.startsAt || undefined, end: a.endsAt || undefined, endsAt: a.endsAt || undefined, closes: a.registrationClosesAt || undefined, registrationClosesAt: a.registrationClosesAt || undefined, status: a.status, description: a.description || '', visibility: a.visibility, activityType: a.activityType, joinType: a.joinType, communityId: a.communityId, locationInstruction: a.locationInstruction || undefined, verifiedOnly: a.verifiedOnly, ageMin: a.ageMin, ageMax: a.ageMax, genderPreference: a.genderPreference, viewerStatus: a.viewerState?.participation?.status === 'going' ? 'going' : a.viewerState?.participation?.status || null }; }
+export function productionActivity(a: Omit<ActivityListItem, 'viewerState'> & { viewerState?: ActivityListItem['viewerState'] }): Activity { return { id: a.id, title: a.title, category: a.category, when: activityTime(a.startsAt || undefined), where: a.locationName, latitude: a.latitude, longitude: a.longitude, price: a.priceInr ? `₹${a.priceInr}` : a.costsMayApply ? 'Costs may apply' : 'Free', isPaid: a.isPaid, paymentCollectionMode: a.paymentCollectionMode, costsMayApply: a.costsMayApply, entryFeeRequired: a.entryFeeRequired, seats: a.capacity || 0, joined: 0, image: a.coverUrl || Asset.fromModule(require('../../../assets/wenitro-logo-transparent.png')).uri, host: a.owner?.username || a.owner?.fullName || 'Host', hostAvatar: a.owner?.avatarUrl || undefined, hostVerified: a.owner?.isVerified, ownerId: a.ownerId, startsAt: a.startsAt || undefined, end: a.endsAt || undefined, endsAt: a.endsAt || undefined, closes: a.registrationClosesAt || undefined, registrationClosesAt: a.registrationClosesAt || undefined, status: a.status, description: a.description || '', visibility: a.visibility, activityType: a.activityType, joinType: a.joinType, communityId: a.communityId, locationInstruction: a.locationInstruction || undefined, externalUrl: a.externalUrl || undefined, verifiedOnly: a.verifiedOnly, ageMin: a.ageMin, ageMax: a.ageMax, genderPreference: a.genderPreference, viewerStatus: a.viewerState?.participation?.status === 'going' ? 'going' : a.viewerState?.participation?.status || null }; }
 type SearchScope = 'Activities' | 'People' | 'Communities';
 type SearchRow =
  | { kind: 'activity'; id: string; activity: Activity }

@@ -28,6 +28,12 @@ const photos = {
   hobbies: require("../../../assets/onboarding/reference-hobbies.png"),
   startup: require("../../../assets/onboarding/reference-startup.png"),
 };
+const SPLASH_TAGLINES = [
+  "Find your perfect partner for every\npassion",
+  "Real people. Real activities.\nBetter together.",
+  "Meet your people. Make\nreal memories.",
+  "New people. New experiences.\nA bigger you.",
+] as const;
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -49,6 +55,7 @@ export function SplashScreen() {
   const enter = useRef(new Animated.Value(0)).current;
   const pulse = useRef(new Animated.Value(0)).current;
   const reduced = useReducedMotion();
+  const [tagline] = useState(() => SPLASH_TAGLINES[Math.floor(Math.random() * SPLASH_TAGLINES.length)]);
   useEffect(() => {
     const entrance = Animated.timing(enter, { toValue: 1, duration: reduced ? 0 : 450, useNativeDriver: Platform.OS !== "web" });
     const loop = Animated.loop(Animated.sequence([Animated.timing(pulse, { toValue: 1, duration: 500, useNativeDriver: Platform.OS !== "web" }), Animated.timing(pulse, { toValue: 0, duration: 500, useNativeDriver: Platform.OS !== "web" })]));
@@ -62,7 +69,7 @@ export function SplashScreen() {
     <Animated.View style={[s.splashCenter, { opacity: enter, transform: [{ scale: reduced ? 1 : enter.interpolate({ inputRange: [0, 1], outputRange: [.94, 1] }) }] }]}>
       <Image source={logoWhite} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors style={s.splashLogo} resizeMode="contain" />
       <Text style={s.splashName}>WeNitro</Text>
-      <Text style={s.splashTagline}>Find your perfect partner for every{"\n"}passion</Text>
+      <Text style={s.splashTagline}>{tagline}</Text>
     </Animated.View>
     <SafeAreaView edges={["bottom"]} style={s.splashDots}><View style={s.dot} /><Animated.View style={[s.dot, { opacity: reduced ? 1 : pulse.interpolate({ inputRange: [0, 1], outputRange: [.45, 1] }), backgroundColor: "white" }]} /><View style={s.dot} /></SafeAreaView>
   </View>;
@@ -117,11 +124,11 @@ export function IntroScreen({ onContinue }: { onContinue: () => void }) {
     }
     finish();
   };
-  const pageContent = (slide: 0 | 1) => slide === 0 ? <VibeIntroSlide width={pageWidth} height={height} reducedMotion={reduced} onNext={next} onSkip={finish} /> : <View style={[s.introContent, { width: pageWidth, minHeight: height }]}>
+  const pageContent = (slide: 0 | 1) => slide === 0 ? <VibeIntroSlide width={pageWidth} height={height} reducedMotion={reduced} onSkip={finish} /> : <View style={[s.introContent, { width: pageWidth, minHeight: height }]}>
     <View style={s.introHeader}><View style={s.brandRow}><Image source={logoWhite} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors style={{ width: 31, height: 31 }} resizeMode="contain" /><Text style={s.introBrand}><Text style={{ color: purple }}>We</Text>Nitro</Text></View><Pressable onPress={finish} accessibilityRole="button" style={s.skip}><Text style={s.skipText}>Skip</Text></Pressable></View>
     <IntroArtwork />
     <View style={s.introCopy}><Text style={s.introHeadline}>Real Connections{"\n"}<Text style={{ color: purple }}>Start Here</Text></Text><Text style={s.introDescription}>Join activities, meet amazing people, and create <Text style={{ color: purple, fontWeight: "700" }}>unforgettable memories.</Text></Text></View>
-    <View style={s.introFooter}><Text style={s.swipe}>⤺  Swipe to explore  ⟶</Text><GradientButton label="Next" onPress={next} arrow /></View>
+    <View style={s.introFooter}><Text style={s.swipe}>You’re ready to meet your people.</Text><GradientButton label="Start Exploring" onPress={finish} arrow /></View>
   </View>;
   return <Animated.View style={{ flex: 1, opacity: exit.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }), transform: [{ translateX: exit.interpolate({ inputRange: [0, 1], outputRange: [0, -22] }) }] }}><SafeAreaView style={[s.full, { backgroundColor: "#090C12" }]} edges={["top", "bottom"]}>
     <ScrollView ref={pager} horizontal pagingEnabled showsHorizontalScrollIndicator={false} bounces={false} scrollEventThrottle={16} onScroll={event => setPage(Math.max(0, Math.min(1, Math.round(event.nativeEvent.contentOffset.x / pageWidth))))} onMomentumScrollEnd={event => setPage(Math.round(event.nativeEvent.contentOffset.x / pageWidth))} style={{ width: pageWidth, alignSelf: "center" }} testID="intro-pager">

@@ -6,7 +6,7 @@ import ts from 'typescript';
 // offline transport. A server-validated identity is reused only within the
 // current bootstrap, never as a settled global identity cache.
 const calls = [];
-let session = { user: { id: 'auth-7', user_metadata: {} }, access_token: 'token-seven' };
+let session = { user: { id: 'auth-7', user_metadata: {} }, access_token: 'token-seven', refresh_token: 'refresh-seven', expires_at: Math.floor(Date.now()/1000)+3600 };
 let getUserOverride;
 const query = result => {
   const builder = { select: () => builder, eq: () => builder, order: () => builder,
@@ -17,6 +17,11 @@ const query = result => {
 const backend = { isSupabaseConfigured: true, supabase: {
   auth: {
     getSession: async () => ({ data: { session }, error: null }),
+    refreshSession: async ({ refresh_token }) => {
+      calls.push(['refreshSession', refresh_token]);
+      session = { ...session, access_token: 'token-refreshed', refresh_token: 'refresh-next', expires_at: Math.floor(Date.now()/1000)+3600 };
+      return { data: { session }, error: null };
+    },
     getUser: async token => { calls.push(['getUser', token]); return getUserOverride ? getUserOverride() : { data: { user: session.user }, error: null }; },
   },
   rpc(name) {
@@ -57,6 +62,13 @@ assert.ok(!calls.some(([name]) => name === 'get_current_legacy_user_id'), 'Reuse
 assert.equal(calls.filter(([name]) => name === 'tbl_users').length, 1);
 
 calls.length = 0;
+session = { ...session, access_token: 'token-expired', refresh_token: 'refresh-expired', expires_at: Math.floor(Date.now()/1000)-60 };
+const refreshed = await auth.bootstrapSession();
+assert.equal(refreshed.session.access_token, 'token-refreshed', 'Expired stored sessions refresh before Auth validation');
+assert.equal(calls.filter(([name]) => name === 'refreshSession').length, 1);
+assert.deepEqual(calls.find(([name]) => name === 'getUser'), ['getUser', 'token-refreshed']);
+
+calls.length = 0;
 await onboarding.profileOnboardingService.load();
 assert.equal(calls.filter(([name]) => name === 'getUser').length, 1, 'Standalone SIGNED_IN bootstrap still validates with Auth once');
 
@@ -76,7 +88,7 @@ getUserOverride = () => new Promise(resolve => { resolveUser = resolve; });
 const oldUser = session.user;
 const oldValidation = auth.getValidatedUser();
 await new Promise(resolve => setImmediate(resolve));
-session = { user: { id: 'auth-8', user_metadata: {} }, access_token: 'token-eight' };
+session = { user: { id: 'auth-8', user_metadata: {} }, access_token: 'token-eight', refresh_token: 'refresh-eight', expires_at: Math.floor(Date.now()/1000)+3600 };
 resolveUser({ data: { user: oldUser }, error: null });
 await assert.rejects(oldValidation, /account changed/);
 await assert.rejects(onboarding.profileOnboardingService.load(undefined, oldUser), /account changed/);

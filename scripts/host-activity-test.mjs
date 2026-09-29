@@ -9,13 +9,14 @@ new Function('exports', 'require', compile(fs.readFileSync('src/domain/host-acti
 const {newHostDraft,draftFromActivity,hasMeaningfulHostDraft,withFreshHostSchedule,scheduleFieldErrors,hostStepError,ageError,localDateTime,HOST_CATEGORIES,GENDER_OPTIONS}=module.exports;
 const now=new Date('2026-09-08T12:00:00Z');
 const valid={...newHostDraft(now),title:'A real meetup',description:'Meet to learn together',category:'Education',location:{label:'Pune, Maharashtra, India',latitude:18.52,longitude:73.85}};
+const withPartnerPrice=(draft,price)=>({...draft,isPaid:true,price,entryCategories:[{name:'General Admission',price,capacity:''}]});
 for(const step of [0,1,2])assert.equal(hostStepError(valid,step,false,+now),'');
 for(const title of ['', ' '.repeat(5), 'x'.repeat(51)])assert.ok(hostStepError({...valid,title},0,false,+now));
 assert.ok(hostStepError({...valid,description:''},0,false,+now));
 for(const capacity of ['0','-1','1.5','NaN','2147483648'])assert.ok(hostStepError({...valid,capacity},1,false,+now));
 for(const capacity of ['','1','100'])assert.equal(hostStepError({...valid,capacity},1,false,+now),'');
-for(const price of ['0.01','250','999.99','1000000'])assert.equal(hostStepError({...valid,isPaid:true,price},1,true,+now),'');
-for(const price of ['','0','-1','1.001','1000000.01','abc'])assert.match(hostStepError({...valid,isPaid:true,price},1,true,+now),/Activity Price/);
+for(const price of ['0.01','250','999.99','1000000'])assert.equal(hostStepError(withPartnerPrice(valid,price),1,true,+now),'');
+for(const price of ['','0','-1','1.001','1000000.01','abc'])assert.match(hostStepError(withPartnerPrice(valid,price),1,true,+now),/entry category|valid price/i);
 assert.equal(hostStepError({...valid,isPaid:true,price:'250'},1,false,+now),'');
 assert.equal(hostStepError({...valid,isPaid:false,price:'not-used'},1,false,+now),'');
 assert.equal(ageError('20','45'),'');assert.ok(ageError('45','20'));assert.ok(ageError('-1','20'));assert.ok(ageError('20','121'));assert.equal(ageError('0',''),'');
@@ -43,7 +44,7 @@ assert.equal(scheduleFieldErrors({...valid,end:localDateTime(new Date(Date.parse
 assert.match(scheduleFieldErrors({...valid,end:localDateTime(new Date(Date.parse(valid.start)+3599999))},+now).end,/at least 1 hour/);
 assert.match(scheduleFieldErrors({...valid,start:'not-a-date'},+now).start,/Choose/);
 const paidEdit=draftFromActivity({id:'7',title:'Paid meetup',price:'₹250',costsMayApply:true,entryFeeRequired:true},now);
-assert.equal(paidEdit.isPaid,true);assert.equal(paidEdit.price,'250');
+assert.equal(paidEdit.isPaid,true);assert.equal(paidEdit.price,'250');assert.equal(paidEdit.entryCategories[0].price,'250');
 const freeEdit=draftFromActivity({id:'8',title:'Free meetup',price:'Free'},now);
 assert.equal(freeEdit.isPaid,false);assert.equal(freeEdit.price,'');
 // Execute the actual shared write function with mock transport; no network or uploads.

@@ -8,7 +8,7 @@ import { activityService } from '../../services/wenitro';
 import { INTEREST_CATEGORIES } from '../../domain/interest-categories';
 import { activityDiscoveryInput, activityPriceBadge, dateInputValue, type ActivityGenderFilter, type ActivityPriceFilter, type ActivityQuickFilter } from '../../domain/activity-discovery';
 import { viewerCanListActivity } from '../../domain/activity-visibility';
-import { Button, ErrorLine, Header, Icon, Page, Pills, SearchField, Sheet, usePalette, purple } from '../reconstruction/ui';
+import { Button, ErrorLine, Icon, Page, Pills, SearchField, Sheet, usePalette, purple } from '../reconstruction/ui';
 import { prepareReferenceActivities } from '../reconstruction/feed-search';
 import { UserAvatar } from '../user-avatar';
 import { VerifiedBadge } from '../verified-badge';
@@ -21,13 +21,18 @@ const participationLabel = (value?: Activity['viewerStatus']) => ['approved', 'g
 const dateLabel = (value?: string) => value ? new Date(`${value}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Select Date';
 const paidActivity = (item: Activity) => activityPriceBadge(item) === 'PAID';
 function useDarkColorScheme(c: ReturnType<typeof usePalette>) { return c.isDark ? 'dark' : 'light'; }
+const FALLBACK_COLORS = ['#5B4BE8', '#C44E8E', '#277EC1', '#D7792F', '#287A68', '#7546A8'];
+const fallbackColor = (value: string) => FALLBACK_COLORS[[...value].reduce((sum, char) => sum + char.charCodeAt(0), 0) % FALLBACK_COLORS.length];
+const activityInitials = (value: string) => value.trim().split(/\s+/).slice(0, 2).map(part => part[0]?.toUpperCase()).join('') || 'WN';
+const hasRealCover = (image: Activity['image']) => Boolean(image && !(typeof image === 'string' && /wenitro-logo-transparent/i.test(image)));
 
-export function ClientActivitiesScreen({ data, setData, go, openActivity }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (screen: Screen) => void; openActivity: (id: string) => void }) {
+export function ClientActivitiesScreen({ data, setData, go, openActivity, openProfile, initialCategory = '' }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (screen: Screen) => void; openActivity: (id: string) => void; openProfile?: (id: string) => void; initialCategory?: string }) {
   const c = usePalette();
   const [filter, setFilter] = useState<Filter>('All');
   const [query, setQuery] = useState('');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [draftCategories, setDraftCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>(initialCategory ? [initialCategory] : []);
+  const [draftCategories, setDraftCategories] = useState<string[]>(initialCategory ? [initialCategory] : []);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [price, setPrice] = useState<ActivityPriceFilter>('All');
@@ -108,9 +113,14 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
   const save = async (activity: Activity) => { const key = `activity:${activity.id}`; const saved = data.savedIds.includes(key); try { await activityService.setSaved(activity.id, !saved); setData(current => ({ ...current, savedIds: saved ? current.savedIds.filter(id => id !== key) : [...current.savedIds, key] })); } catch (e: any) { setError(e.message); } };
 
   return <Page>
-    <Header title="Activities" back={() => go('feed')} />
+    <View style={{ minHeight: 61, borderBottomWidth: 1, borderColor: c.border, paddingHorizontal: 8, flexDirection: 'row', alignItems: 'center' }}>
+      <Pressable accessibilityRole="button" accessibilityLabel="Back" onPress={() => go('feed')} style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}><Icon name="arrow-back" color={c.text} /></Pressable>
+      <Text numberOfLines={1} style={{ color: c.text, flex: 1, fontSize: 20, fontWeight: '900' }}>All Activities</Text>
+      <Pressable accessibilityRole="button" accessibilityLabel={searchOpen ? 'Close activity search' : 'Search activities'} accessibilityState={{ expanded: searchOpen }} onPress={() => { setSearchOpen(current => !current); if (searchOpen) setQuery(''); }} style={{ width: 42, height: 42, alignItems: 'center', justifyContent: 'center' }}><Icon name={searchOpen ? 'close' : 'search-outline'} color={c.text} size={21} /></Pressable>
+      <Pressable accessibilityRole="button" accessibilityLabel="Notifications" onPress={() => go('notifications')} style={{ width: 42, height: 42, alignItems: 'center', justifyContent: 'center' }}><Icon name="notifications-outline" color={c.text} size={21} /></Pressable>
+    </View>
     <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 14, paddingBottom: 28 }}>
-      <View style={{ marginHorizontal: -14, marginTop: 2 }}><SearchField accessibilityLabel="Search activities" placeholder="Search activities, places, or interests" value={query} onChangeText={setQuery} /></View>
+      {searchOpen ? <View style={{ marginHorizontal: -14, marginTop: 2 }}><SearchField autoFocus accessibilityLabel="Search activities" placeholder="Search activities, places, or interests" value={query} onChangeText={setQuery} /></View> : null}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingBottom: 5 }}>
         {(['All', 'Popular', 'Nearby', 'Today', 'Tomorrow'] as Filter[]).map(item => {
           const active = item === filter;
@@ -119,17 +129,16 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
             <Text style={{ color: active ? '#FFF' : c.text, fontSize: 13, fontWeight: '800' }}>{item}</Text>
           </Pressable>;
         })}
+      </ScrollView>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16, marginBottom: 10 }}>
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: c.text, fontWeight: '900', fontSize: 19 }}>Activities for you</Text>
+          {categories.length ? <Text style={{ color: c.muted, fontSize: 12, fontWeight: '700', marginTop: 3 }}>{categories.join(', ')}</Text> : null}
+        </View>
         <Pressable accessibilityRole="button" accessibilityLabel="Open activity filters" accessibilityState={{ expanded: filtersOpen }} onPress={() => { setDraftCategories(categories); setDraft({ dateFrom, dateTo, price, gender, verifiedOnly }); setNativeDateField(null); setFiltersOpen(true); }} style={{ minHeight: 40, paddingHorizontal: 14, borderRadius: 20, backgroundColor: filtersActive ? c.accent : c.card, borderWidth: 1, borderColor: filtersActive ? c.accent : c.border, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Icon name="options-outline" size={15} color={filtersActive ? '#FFF' : c.accent} />
           <Text style={{ color: filtersActive ? '#FFF' : c.text, fontSize: 13, fontWeight: '800' }}>Filter</Text>
         </Pressable>
-      </ScrollView>
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 16, marginBottom: 10 }}>
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: c.text, fontWeight: '800', fontSize: 18 }}>Activities{data.location ? ` in ${data.location}` : ''}</Text>
-          <Text style={{ color: c.muted, fontSize: 13, fontWeight: '600', marginTop: 3 }}>{filter === 'Nearby' ? 'Within 25 km of your current location' : categories.length ? categories.join(', ') : 'Explore available activities'}</Text>
-        </View>
-        <Text style={{ color: c.accent, fontSize: 13, fontWeight: '800' }}>{rows.length} found</Text>
       </View>
       <ErrorLine text={error} />
       {loading ? <ActivityIndicator color={c.accent} style={{ marginTop: 36 }} /> : rows.map(item => {
@@ -138,7 +147,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
         return <View key={item.id} style={{ backgroundColor: c.card, borderRadius: 17, borderWidth: 1, borderColor: c.border, overflow: 'hidden', marginBottom: 11 }}>
           <View style={{ height: 148 }}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${item.title}`} onPress={() => openActivity(item.id)} style={({ pressed }) => ({ flex: 1, opacity: pressed ? .8 : 1 })}>
-              <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} resizeMode="cover" style={{ width: '100%', height: '100%', backgroundColor: c.inset }} />
+              {hasRealCover(item.image) ? <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} resizeMode="cover" style={{ width: '100%', height: '100%', backgroundColor: c.inset }} /> : <View style={{ width: '100%', height: '100%', backgroundColor: fallbackColor(`${item.id}:${item.title}`), alignItems: 'center', justifyContent: 'center', padding: 18 }}><Text style={{ color: '#FFF', fontSize: 31, fontWeight: '900', letterSpacing: 1 }}>{activityInitials(item.title)}</Text><Text numberOfLines={2} style={{ color: '#FFF', fontSize: 13, lineHeight: 18, fontWeight: '800', textAlign: 'center', marginTop: 8 }}>{item.title}</Text></View>}
               <View style={{ position: 'absolute', inset: 0, backgroundColor: '#06101D14' }} />
               <View style={{ position: 'absolute', top: 9, left: 9, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                 <View style={{ borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#FFFFFFEE' }}><Text style={{ color: '#392CC3', fontSize: 11, fontWeight: '800' }}>{item.category || 'Activity'}</Text></View>
@@ -148,21 +157,18 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity }: { da
             </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel={saved ? `Unsave ${item.title}` : `Save ${item.title}`} onPress={() => void save(item)} style={{ position: 'absolute', top: 8, right: 8, width: 34, height: 34, borderRadius: 18, backgroundColor: '#07111FCC', alignItems: 'center', justifyContent: 'center' }}><Icon name={saved ? 'bookmark' : 'bookmark-outline'} color="#FFF" size={17} /></Pressable>
           </View>
-          <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${item.title} details`} onPress={() => openActivity(item.id)} style={({ pressed }) => ({ paddingHorizontal: 12, paddingVertical: 12, gap: 7, opacity: pressed ? .8 : 1 })}>
-            <Text numberOfLines={2} style={{ color: c.text, fontSize: 16, lineHeight: 21, fontWeight: '800' }}>{item.title}</Text>
+          <View style={{ paddingHorizontal: 12, paddingVertical: 12, gap: 7 }}>
+            <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${item.title} details`} onPress={() => openActivity(item.id)}><Text numberOfLines={2} style={{ color: c.text, fontSize: 16, lineHeight: 21, fontWeight: '800' }}>{item.title}</Text></Pressable>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><Icon name="calendar-outline" color={c.accent} size={15} /><Text numberOfLines={1} style={{ color: c.accent, fontSize: 13, fontWeight: '800', flex: 1 }}>{time(item.startsAt)}</Text></View>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><Icon name="location-outline" color={c.muted} size={15} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 13, fontWeight: '600', flex: 1 }}>{item.where || 'Location to be decided'}</Text></View>
-            {item.description ? <Text style={{ color: c.muted, fontSize: 13, lineHeight: 18, fontWeight: '600' }} numberOfLines={2}>{item.description}</Text> : null}
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 1, gap: 7 }}>
-              <UserAvatar uri={item.hostAvatar} name={item.host} size={26} />
-              <Text numberOfLines={1} style={{ color: c.text, fontSize: 13, fontWeight: '800', flexShrink: 1 }}>{item.host}</Text>
-              <VerifiedBadge userId={item.ownerId} size={14} />
+              <Pressable accessibilityRole="button" accessibilityLabel={`Open ${item.host}'s profile`} disabled={!item.ownerId || !openProfile} onPress={() => item.ownerId && openProfile?.(item.ownerId)} style={{ flexDirection: 'row', alignItems: 'center', gap: 7, flexShrink: 1 }}><UserAvatar uri={item.hostAvatar} name={item.host} size={26} /><Text numberOfLines={1} style={{ color: c.text, fontSize: 13, fontWeight: '800', flexShrink: 1 }}>{item.host}</Text><VerifiedBadge userId={item.ownerId} size={14} /></Pressable>
               <View style={{ flex: 1 }} />
               {item.likeCount ? <><Icon name="heart-outline" size={15} color={c.muted} /><Text style={{ color: c.muted, fontSize: 12, fontWeight: '700' }}>{item.likeCount}</Text></> : null}
               <Icon name="people-outline" size={16} color={c.muted} />
               <Text style={{ color: c.muted, fontSize: 12, fontWeight: '700' }}>{item.joined}{item.seats ? ` / ${item.seats}` : ''}</Text>
             </View>
-          </Pressable>
+          </View>
         </View>;
       })}
       {hasMore && !loading ? <Pressable accessibilityRole="button" disabled={loadingMore} onPress={() => void loadMore()} style={{ padding: 16, alignItems: 'center' }}><Text style={{ color: c.accent, fontWeight: '800', fontSize: 14 }}>{loadingMore ? 'Loading…' : 'Load more activities'}</Text></Pressable> : null}

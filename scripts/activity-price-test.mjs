@@ -13,9 +13,12 @@ assert.equal((host.match(/label="Paid Activity"/g) || []).length, 1);
 assert.doesNotMatch(host, /isPartner \? <View[\s\S]*label="Paid Activity"/);
 assert.match(host, /priceInr: draft\.isPaid/);
 assert.match(host, /secure Cashfree checkout/i);
-assert.match(host, /Participants pay the host directly at the venue/);
+assert.match(host, /No price or Pay Now flow is shown/);
+assert.match(host, /draft\.isPaid && platformPayment \? <View[\s\S]*Entry Categories/);
+assert.match(host, /Cashfree receives the server-stored category price/);
+assert.match(host, /costsMayApply: draft\.isPaid && !platformPayment/);
 assert.doesNotMatch(domain, /d\.isPaid && !isPartner/);
-assert.match(detail, /requiresPlatformPayment = isPaidActivity && activity.paymentCollectionMode === "cashfree"/);
+assert.match(detail, /requiresPlatformPayment = Boolean\(activity\.isPaid && activity\.paymentCollectionMode === "cashfree"\)/);
 assert.match(detail, /Payment handled directly with the host at the venue/);
 
 for (const required of ['createActivityPayment', 'launchCashfreeCheckout', 'verifyActivityPayment', 'payment_required', 'Required registration questions']) {

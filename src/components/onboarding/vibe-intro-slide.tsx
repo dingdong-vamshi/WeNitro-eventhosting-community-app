@@ -10,8 +10,8 @@ const artwork = require('../../../assets/onboarding/vibes-phone-reference.png');
 const logo = require('../../../assets/brand/wenitro-mark-white.png');
 
 /** Slide 1 owns its composition so shared onboarding/Slide 2 styles cannot drift. */
-export function VibeIntroSlide({ width, height, reducedMotion, onNext, onSkip }: {
-  width: number; height: number; reducedMotion: boolean; onNext: () => void; onSkip: () => void;
+export function VibeIntroSlide({ width, height, reducedMotion, onSkip }: {
+  width: number; height: number; reducedMotion: boolean; onSkip: () => void;
 }) {
   const hero = useRef(new Animated.Value(0)).current;
   const copy = useRef(new Animated.Value(0)).current;
@@ -52,11 +52,7 @@ export function VibeIntroSlide({ width, height, reducedMotion, onNext, onSkip }:
     </Animated.View>
     <Animated.View style={[s.footer, { left: width * .052, right: width * .048, bottom: height * .052 }, reveal(footer, 5)]}>
       <Text testID="vibe-intro-swipe" style={[s.swipe, { fontSize: 15 * scale, marginBottom: 19 * scale }]}>⤺  Swipe to explore  ⟶</Text>
-      <Pressable accessibilityRole="button" onPress={onNext} style={({ pressed }) => ({ borderRadius: 40, overflow: 'hidden', opacity: pressed ? .85 : 1 })}>
-        <LinearGradient colors={['#6860F2', '#438DEC', '#13CAE0']} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={[s.next, { height: 49 * scale }]}>
-          <Text style={[s.nextText, { fontSize: 17 * scale }]}>Next</Text><Ionicons name="arrow-forward" size={23 * scale} color="white" />
-        </LinearGradient>
-      </Pressable>
+      <Text style={[s.swipeHint, { fontSize: 12.5 * scale }]}>Swipe left to continue</Text>
     </Animated.View>
   </View>;
 }
@@ -73,6 +69,5 @@ const s = StyleSheet.create({
   description: { color: '#B7B7BF', fontFamily: serif },
   footer: { position: 'absolute' },
   swipe: { color: accent, fontFamily: serif, fontStyle: 'italic', fontWeight: '700', textAlign: 'center' },
-  next: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
-  nextText: { color: '#FFF', fontFamily: serif, fontWeight: '700' },
+  swipeHint: { color: '#B7B7BF', fontFamily: serif, textAlign: 'center', letterSpacing: .2 },
 });
