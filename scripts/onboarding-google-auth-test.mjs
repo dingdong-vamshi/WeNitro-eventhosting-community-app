@@ -93,6 +93,10 @@ function loadModule(relativeFile, imports) {
 }
 
 const shared = loadModule('src/services/google-auth.shared.ts', { '@supabase/supabase-js': library, '../lib/supabase': backend });
+const webSource = fs.readFileSync(path.join(root, 'src/services/google-auth.web.ts'), 'utf8');
+assert.match(webSource, /let initializedIdentity: Promise<\{ sdk: GoogleIdentitySdk; nonce: string \}> \| undefined;/);
+assert.match(webSource, /if \(initializedIdentity\) return initializedIdentity;/, 'GIS must be initialized only once per page instead of once per component mount');
+assert.match(webSource, /if \(activeMount === mount\) activeMount = undefined;/, 'Unmounting a stale button must not clear the current Google callback owner');
 const native = loadModule('src/services/google-auth.ts', {
   'react-native': { Platform: { OS: 'android' } },
   './google-auth.shared': shared,

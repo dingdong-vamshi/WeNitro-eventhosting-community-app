@@ -9061,6 +9061,8 @@ export default function App() {
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(
     initialWebRoute?.screen === "activityDetail" ? initialWebRoute.entityId ?? null : null,
   );
+  const [activityRouteError, setActivityRouteError] = useState("");
+  const [activityRouteRetry, setActivityRouteRetry] = useState(0);
   const [activityCategoryFilter, setActivityCategoryFilter] = useState("");
   const [editingActivityId, setEditingActivityId] = useState<string | null>(null);
   const [postVibeDraft, setPostVibeDraft] = useState<{ activityId: string; asset?: ImagePicker.ImagePickerAsset } | null>(null);
@@ -9105,6 +9107,33 @@ export default function App() {
   const [selectedVibeId, setSelectedVibeId] = useState<string | null>(initialWebRoute?.screen === "vibes" ? initialWebRoute.entityId ?? null : null);
 
   useEffect(() => subscribeToInternalShareRequests(setShareEntity), []);
+
+  useEffect(() => {
+    if (
+      data.mode !== "authenticated" ||
+      !data.onboarded ||
+      screen !== "activityDetail" ||
+      !selectedActivityId ||
+      data.activities.some((item) => item.id === selectedActivityId)
+    ) {
+      setActivityRouteError("");
+      return;
+    }
+    let active = true;
+    setActivityRouteError("");
+    void activityService.getDetails(selectedActivityId).then((details) => {
+      if (!active) return;
+      const activity = activityFromRemote(details.activity);
+      setData((current) => ({
+        ...current,
+        activities: [activity, ...current.activities.filter((item) => item.id !== activity.id)],
+      }));
+    }).catch((caught: unknown) => {
+      if (!active) return;
+      setActivityRouteError(caught instanceof Error ? caught.message : "This Activity could not be opened.");
+    });
+    return () => { active = false; };
+  }, [data.mode, data.onboarded, data.activities, screen, selectedActivityId, activityRouteRetry]);
 
   useEffect(() => {
     if (Platform.OS !== "web" || typeof window === "undefined") return;
@@ -9741,6 +9770,7 @@ export default function App() {
             onEdit={() => { setEditingActivityId(selectedActivity.id); go("createActivity"); }}
           />
         );
+      return <FeedLoadingScreen error={activityRouteError} onRetry={() => setActivityRouteRetry((value) => value + 1)} onLogout={() => void authService.signOut()} />;
     }
     if (screen === "postVibe") return <PostVibeEntry {...props} initialActivityId={postVibeDraft?.activityId} initialMedia={postVibeDraft?.asset} />;
     if (screen === "createCommunity") return <>
@@ -9776,7 +9806,7 @@ export default function App() {
         go={go}
       />
     );
-  }, [routeScreen, data, history, selectedActivityId, selectedCommunityId, selectedProfileId, selectedSquadOwnerId, selectedConversationId, selectedVibeId, activityCategoryFilter, introSeen, welcomeError, profileSetup, communitySuccess, messagesTab, messagesFilter, legacyMessages, communityPostsOpen, phoneSignupHandoff]);
+  }, [routeScreen, data, history, selectedActivityId, selectedCommunityId, selectedProfileId, selectedSquadOwnerId, selectedConversationId, selectedVibeId, activityCategoryFilter, introSeen, welcomeError, profileSetup, communitySuccess, messagesTab, messagesFilter, legacyMessages, communityPostsOpen, phoneSignupHandoff, activityRouteError]);
 
   if (splashVisible || !fontsLoaded || !introChecked) return <SafeAreaProvider><View style={{ flex: 1, backgroundColor: "#6860F2" }}><StatusBar style="light" /><SplashScreen /></View></SafeAreaProvider>;
   if (!sessionChecked || authLoading || authError) return <SafeAreaProvider><ReferenceTheme.Provider value={data.theme}><ThemeContext.Provider value={data.theme}><View style={{ flex: 1, backgroundColor: data.theme === "dark" ? "#101824" : "#F7F7FB" }}><StatusBar style={data.theme === "dark" ? "light" : "dark"} /><FeedLoadingScreen error={authError} onRetry={() => void refreshAuthRef.current()} onLogout={() => void authService.signOut()} />{authIdentityRef.current && profileSetup?.profile.onboarding_completed && !authError ? <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"><TabBar active="feed" go={() => undefined} /></View> : null}</View></ThemeContext.Provider></ReferenceTheme.Provider></SafeAreaProvider>;

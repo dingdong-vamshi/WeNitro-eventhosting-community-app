@@ -11,6 +11,15 @@ type GoogleIdentitySdk = {
 };
 type GoogleWindow = Window & { google?: { accounts?: { id?: GoogleIdentitySdk } } };
 let scriptPromise: Promise<GoogleIdentitySdk> | undefined;
+type ActiveGoogleMount = {
+  callbacks: GoogleButtonCallbacks;
+  signal: AbortSignal;
+  active: boolean;
+  exchanging: boolean;
+  authenticated: boolean;
+};
+let activeMount: ActiveGoogleMount | undefined;
+let initializedIdentity: Promise<{ sdk: GoogleIdentitySdk; nonce: string }> | undefined;
 
 function loadGoogleIdentitySdk(): Promise<GoogleIdentitySdk> {
   const existing = (window as GoogleWindow).google?.accounts?.id;
@@ -45,6 +54,44 @@ export type GoogleButtonCallbacks = {
   onError: (error: unknown) => void;
 };
 
+function initializeGoogleIdentity(clientId: string) {
+  if (initializedIdentity) return initializedIdentity;
+  initializedIdentity = loadGoogleIdentitySdk().then(async (sdk) => {
+    const nonce = Array.from(crypto.getRandomValues(new Uint8Array(32)), (byte) => byte.toString(16).padStart(2, '0')).join('');
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(nonce));
+    const hashedNonce = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+    sdk.initialize({
+      client_id: clientId, nonce: hashedNonce, auto_select: false,
+      // The in-app browser currently rejects the opt-in FedCM request before GIS can
+      // return a credential or cancellation signal. Google's popup flow remains the
+      // compatible default and keeps its own button usable when the chooser closes.
+      ux_mode: 'popup', use_fedcm_for_button: false, button_auto_select: false,
+      callback: (response) => {
+        const mount = activeMount;
+        if (!mount?.active || mount.signal.aborted || mount.exchanging || mount.authenticated) return;
+        mount.exchanging = true;
+        mount.callbacks.onBusyChange(true);
+        void exchangeGoogleIdentity(response.credential, nonce, mount.signal).then((result) => {
+          if (mount.active && !mount.signal.aborted && result.status === 'authenticated') {
+            mount.authenticated = true;
+            mount.callbacks.onSuccess(result.session);
+          }
+        }).catch((error: unknown) => {
+          if (mount.active && !mount.signal.aborted) mount.callbacks.onError(error);
+        }).finally(() => {
+          mount.exchanging = false;
+          if (mount.active && !mount.signal.aborted && !mount.authenticated) mount.callbacks.onBusyChange(false);
+        });
+      },
+    });
+    return { sdk, nonce };
+  }).catch((error) => {
+    initializedIdentity = undefined;
+    throw error;
+  });
+  return initializedIdentity;
+}
+
 /** Google's actual rendered button opens its account chooser. No custom/fake chooser or secret is used. */
 export async function mountGoogleIdentityButton(container: HTMLElement, callbacks: GoogleButtonCallbacks, signal: AbortSignal): Promise<() => void> {
   requireGoogleBackend();
@@ -52,45 +99,18 @@ export async function mountGoogleIdentityButton(container: HTMLElement, callback
   if (!window.isSecureContext || !window.crypto?.subtle) {
     throw new GoogleSignInError('insecure_origin', 'Google sign-in requires HTTPS or localhost.');
   }
-  const sdk = await loadGoogleIdentitySdk();
+  const { sdk } = await initializeGoogleIdentity(clientId);
   if (signal.aborted) return () => undefined;
-  const nonce = Array.from(crypto.getRandomValues(new Uint8Array(32)), (byte) => byte.toString(16).padStart(2, '0')).join('');
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(nonce));
-  const hashedNonce = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
-  if (signal.aborted) return () => undefined;
-  let exchanging = false;
-  let authenticated = false;
-  let active = true;
-  sdk.initialize({
-    client_id: clientId, nonce: hashedNonce, auto_select: false,
-    // The in-app browser currently rejects the opt-in FedCM request before GIS can
-    // return a credential or cancellation signal. Google's popup flow remains the
-    // compatible default and keeps its own button usable when the chooser closes.
-    ux_mode: 'popup', use_fedcm_for_button: false, button_auto_select: false,
-    callback: (response) => {
-      if (!active || signal.aborted || exchanging || authenticated) return;
-      exchanging = true;
-      callbacks.onBusyChange(true);
-      void exchangeGoogleIdentity(response.credential, nonce, signal).then((result) => {
-        if (active && !signal.aborted && result.status === 'authenticated') {
-          authenticated = true;
-          callbacks.onSuccess(result.session);
-        }
-      }).catch((error: unknown) => {
-        if (active && !signal.aborted) callbacks.onError(error);
-      }).finally(() => {
-        exchanging = false;
-        if (active && !signal.aborted && !authenticated) callbacks.onBusyChange(false);
-      });
-    },
-  });
+  const mount: ActiveGoogleMount = { callbacks, signal, active: true, exchanging: false, authenticated: false };
+  activeMount = mount;
   sdk.renderButton(container, {
     type: 'standard', theme: 'outline', size: 'large', text: 'continue_with',
     shape: 'pill', width: Math.max(200, Math.min(400, Math.round(container.getBoundingClientRect().width))),
     logo_alignment: 'left',
   });
   return () => {
-    active = false;
+    mount.active = false;
+    if (activeMount === mount) activeMount = undefined;
     container.replaceChildren();
   };
 }
