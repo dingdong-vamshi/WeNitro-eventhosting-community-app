@@ -26,6 +26,7 @@ const includesAll = (source, values) => values.forEach(value => assert.ok(source
 includesAll(legal, ['https://wenitro.com/terms-and-conditions.html', 'https://wenitro.com/privacy-policy.html']);
 includesAll(app, ['errorText={name ? validateFullName(name).error : null}', 'errorText={email ? validateEmail(email).error : null}']);
 includesAll(app, ['redeemPendingReferral', 'redeemPendingActivityInvite', 'createActivityInvite', "'ensure_activity_chat'"]);
+includesAll(app, ['activityService.getDetails(id)', 'navigateToActivity(activity.id)', '"Activity unavailable"']);
 includesAll(app, ['setReportOpen(true)', 'vibesProductionService.report', 'onEndReached', 'ListFooterComponent']);
 includesAll(app, ['setLeaveConfirmOpen(true)', 'You can rejoin later while registration remains open.', 'Keep my place']);
 assert.ok(!app.includes('window.confirm(requestPending ? "Withdraw your registration request?" : "Leave this Activity?")'), 'Activity leave confirmation must use the in-app sheet on web.');

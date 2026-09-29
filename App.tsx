@@ -9438,11 +9438,30 @@ export default function App() {
       return copy;
     });
   };
-  const openActivity = (id: string) => {
+  const navigateToActivity = (id: string) => {
     setHistory((items) => [...items, screen]);
     setSelectedActivityId(id);
     setScreen("activityDetail");
     pushWebRoute("activityDetail", id);
+  };
+  const openActivity = (id: string) => {
+    if (data.activities.some((item) => item.id === id)) {
+      navigateToActivity(id);
+      return;
+    }
+    void activityService.getDetails(id).then((details) => {
+      const activity = activityFromRemote(details.activity);
+      setData((current) => ({
+        ...current,
+        activities: [activity, ...current.activities.filter((item) => item.id !== activity.id)],
+      }));
+      navigateToActivity(activity.id);
+    }).catch((caught) => {
+      Alert.alert(
+        "Activity unavailable",
+        caught instanceof Error ? caught.message : "This Activity may have been removed.",
+      );
+    });
   };
   const openCommunity = (id: string) => {
     setCommunityPostsOpen(false);
