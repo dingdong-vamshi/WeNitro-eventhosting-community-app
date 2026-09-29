@@ -9334,14 +9334,11 @@ export default function App() {
           setScreen(currentScreen => ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"].includes(currentScreen) ? "feed" : currentScreen);
           setAuthLoading(false);
           setSessionChecked(true);
-          // A shared/deep link should not fan out into every Feed request before
-          // its own screen can render. Keep ordinary sign-in on the full
-          // workspace bootstrap, but scope an explicit web route to the data
-          // consumed by that screen. Profile stays included so the initial
-          // hydration never replaces the authenticated identity with partial
-          // placeholder fields.
-          const authScreens: Screen[] = ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"];
-          const bootstrapSections = initialWebRoute && !authScreens.includes(initialWebRoute.screen)
+          // A shared Activity link should not fan out into every Feed request
+          // before its own targeted request can render. Other entry routes keep
+          // the established full workspace bootstrap. Profile stays included
+          // so initial hydration retains the authenticated identity.
+          const bootstrapSections = initialWebRoute?.screen === "activityDetail"
             ? foregroundWorkspaceSections(initialWebRoute.screen)
             : null;
           if (bootstrapSections && !bootstrapSections.includes("profile")) bootstrapSections.unshift("profile");
