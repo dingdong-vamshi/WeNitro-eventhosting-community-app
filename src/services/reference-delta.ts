@@ -55,13 +55,13 @@ const rpc = async <T>(name: string, args?: Record<string, unknown>): Promise<T> 
 };
 
 const currentIdentity = async () => {
-  const [auth, legacy] = await Promise.all([supabase.auth.getUser(), supabase.rpc('get_current_legacy_user_id')]);
+  const [auth, legacy] = await Promise.all([supabase.auth.getSession(), supabase.rpc('get_current_legacy_user_id')]);
   if (auth.error) throw auth.error;
   if (legacy.error) throw legacy.error;
-  if (!auth.data.user) throw new Error('Authentication required.');
+  if (!auth.data.session?.user) throw new Error('Authentication required.');
   const legacyId = Number(legacy.data);
   if (!Number.isSafeInteger(legacyId) || legacyId <= 0) throw new Error('Your WeNitro profile is unavailable.');
-  return { auth: auth.data.user, legacyId };
+  return { auth: auth.data.session.user, legacyId };
 };
 
 const imageType = (uri: string, mimeType?: string | null) => {

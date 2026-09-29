@@ -215,10 +215,10 @@ const requireBackend = () => {
 
 const currentUser = async (): Promise<User> => {
   requireBackend();
-  const { data, error } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
-  if (!data.user) throw new Error("Authentication required.");
-  return data.user;
+  if (!data.session?.user) throw new Error("Authentication required.");
+  return data.session.user;
 };
 
 const positiveInteger = (value: unknown, field: string): number => {

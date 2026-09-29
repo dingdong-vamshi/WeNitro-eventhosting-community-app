@@ -253,8 +253,8 @@ const appUserIdFromRpc = (value: unknown): number | null => {
 
 const currentUserId = async () => {
   requireBackend();
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) throw error ?? new Error("Authentication required.");
+  const { data, error } = await supabase.auth.getSession();
+  if (error || !data.session?.user) throw error ?? new Error("Authentication required.");
   const id = appUserIdFromRpc(
     await callRpc<unknown>("get_current_app_user_id", {}),
   );
@@ -266,8 +266,8 @@ const currentUserId = async () => {
 
 const optionalCurrentUserId = async () => {
   requireBackend();
-  const { data } = await supabase.auth.getUser();
-  if (!data.user) return null;
+  const { data } = await supabase.auth.getSession();
+  if (!data.session?.user) return null;
   try {
     return appUserIdFromRpc(
       await callRpc<unknown>("get_current_app_user_id", {}),

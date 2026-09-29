@@ -77,10 +77,10 @@ function mapVerification(value: unknown): VerificationRequest {
   };
 }
 async function authUserId() {
-  const { data, error } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
-  if (!data.user) throw new Error("Authentication is required.");
-  return data.user.id;
+  if (!data.session?.user) throw new Error("Authentication is required.");
+  return data.session.user.id;
 }
 function detectedMime(bytes: Uint8Array): Mime | null {
   if (

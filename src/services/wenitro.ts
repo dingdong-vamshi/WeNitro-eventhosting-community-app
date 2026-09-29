@@ -74,9 +74,9 @@ const requireBackend = () => {
 
 const currentUserId = async () => {
   requireBackend();
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) throw error ?? new Error("Authentication required.");
-  return data.user.id;
+  const { data, error } = await supabase.auth.getSession();
+  if (error || !data.session?.user) throw error ?? new Error("Authentication required.");
+  return data.session.user.id;
 };
 
 const currentLegacyUserId = async () => {

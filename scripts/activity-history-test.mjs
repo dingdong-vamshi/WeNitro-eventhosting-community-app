@@ -20,7 +20,9 @@ events.push(...Array.from({ length: 140 }, (_, index) => ({
 })));
 let failMemberships = false;
 const backend = {
-  auth: { getUser: async () => ({ data: { user: { id: 'auth44' } }, error: null }) },
+  auth: {
+    getSession: async () => ({ data: { session: { user: { id: 'auth44' } } }, error: null }),
+  },
   rpc: async name => {
     assert.equal(name, 'get_current_app_user_id'); return { data: 44, error: null };
   },

@@ -195,17 +195,17 @@ function normalizeRole(role: string | null): "member" | "moderator" | "admin" {
 
 async function currentAuthUserId() {
   requireBackend();
-  const { data, error } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
-  if (!data.user) throw new Error("Authentication required.");
-  return data.user.id;
+  if (!data.session?.user) throw new Error("Authentication required.");
+  return data.session.user.id;
 }
 
 async function currentLegacyUserId(required = false): Promise<number | null> {
   requireBackend();
-  const { data: authData, error: authError } = await supabase.auth.getUser();
+  const { data: authData, error: authError } = await supabase.auth.getSession();
   if (authError) throw authError;
-  if (!authData.user) {
+  if (!authData.session?.user) {
     if (required) throw new Error("Authentication required.");
     return null;
   }

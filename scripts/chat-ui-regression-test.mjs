@@ -7,7 +7,7 @@ let member = true, authenticated = true;
 let groupFailure = false;
 const authUserId = '3eaa15aa-2a8e-49b3-ae37-aef126239680';
 const row = id => ({ id, room_id: 11, sender_id: 35, content: `message ${id}`, message_type: 'text', created_at: `2026-09-11T07:00:0${id}Z`, client_id: 'e49c3d0e-3699-4b04-8b37-5c12fc25e758' });
-const backend = { auth: { getUser: async () => ({ data: { user: authenticated ? { id: authUserId } : null } }) }, storage: { from: bucket => ({ remove: async paths => { removedObjects.push({ bucket, paths }); return { data: paths, error: null }; } }) }, rpc: async (name, input) => {
+const backend = { auth: { getSession: async () => ({ data: { session: authenticated ? { user: { id: authUserId } } : null } }) }, storage: { from: bucket => ({ remove: async paths => { removedObjects.push({ bucket, paths }); return { data: paths, error: null }; } }) }, rpc: async (name, input) => {
  calls.push({ name, input });
  if (name === 'get_current_app_user_id') return { data: 35 };
  if (name === 'assert_chat_membership') return { data: member };

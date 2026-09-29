@@ -67,15 +67,15 @@ const nullableText = (value: unknown): string | null =>
 
 const currentIdentity = async () => {
   requireBackend();
-  const { data: authData, error: authError } = await supabase.auth.getUser();
+  const { data: authData, error: authError } = await supabase.auth.getSession();
   if (authError) throw authError;
-  if (!authData.user) throw new Error("Authentication required.");
+  if (!authData.session?.user) throw new Error("Authentication required.");
   const { data: legacyId, error: legacyError } = await supabase.rpc(
     "get_current_legacy_user_id",
   );
   if (legacyError) throw legacyError;
   return {
-    authId: authData.user.id,
+    authId: authData.session.user.id,
     legacyId: positiveInteger(legacyId, "legacy user id"),
   };
 };

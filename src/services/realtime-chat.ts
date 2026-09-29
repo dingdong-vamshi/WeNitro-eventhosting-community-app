@@ -328,9 +328,9 @@ async function currentUserId(operation: string): Promise<number> {
       operation,
     });
   }
-  const auth = await supabase.auth.getUser();
+  const auth = await supabase.auth.getSession();
   if (auth.error) throw auth.error;
-  if (!auth.data.user) {
+  if (!auth.data.session?.user) {
     throw new RealtimeChatError("Authentication is required.", {
       code: "UNAUTHENTICATED",
       operation,
@@ -448,15 +448,15 @@ export async function signedRoomImage(path: string | null | undefined) {
 export async function uploadGroupPhoto(localUri: string) {
   const operation = "upload a group photo";
   try {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) throw error ?? new Error("Authentication required.");
+    const { data, error } = await supabase.auth.getSession();
+    if (error || !data.session?.user) throw error ?? new Error("Authentication required.");
     const response = await fetch(localUri);
     if (!response.ok) throw new Error("Could not read the selected photo.");
     const body = await response.arrayBuffer();
     if (!body.byteLength || body.byteLength > 5 * 1024 * 1024) {
       throw new Error("Choose a photo smaller than 5 MB.");
     }
-    const path = `${data.user.id}/group/${Date.now()}.jpg`;
+    const path = `${data.session.user.id}/group/${Date.now()}.jpg`;
     const uploaded = await supabase.storage.from("community").upload(path, body, {
       contentType: "image/jpeg",
       upsert: false,
@@ -489,8 +489,8 @@ export async function createGroupConversation(
     );
     if (error) {
       if (imagePath) {
-        const auth = await supabase.auth.getUser().catch(() => ({ data: { user: null } }));
-        const ownerPrefix = auth.data.user ? `${auth.data.user.id}/group/` : '';
+        const auth = await supabase.auth.getSession().catch(() => ({ data: { session: null } }));
+        const ownerPrefix = auth.data.session?.user ? `${auth.data.session.user.id}/group/` : '';
         if (ownerPrefix && imagePath.startsWith(ownerPrefix)) {
           await supabase.storage.from("community").remove([imagePath]).catch(() => undefined);
         }

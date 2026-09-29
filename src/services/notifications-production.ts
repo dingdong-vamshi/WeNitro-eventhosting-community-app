@@ -71,9 +71,9 @@ function mapNotification(value: unknown): ProductionNotification {
   };
 }
 async function currentUserId() {
-  const auth = await supabase.auth.getUser();
+  const auth = await supabase.auth.getSession();
   if (auth.error) throw auth.error;
-  if (!auth.data.user) throw new Error("Authentication is required.");
+  if (!auth.data.session?.user) throw new Error("Authentication is required.");
   const { data, error } = await supabase.rpc(
     notificationBridgeRpc.currentUserId,
   );
