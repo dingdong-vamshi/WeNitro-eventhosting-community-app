@@ -5,9 +5,10 @@ const app = fs.readFileSync('App.tsx', 'utf8');
 
 assert.match(
   app,
-  /screen !== "activityDetail"[\s\S]*activityService\.getDetails\(selectedActivityId\)/,
+  /screen !== "activityDetail"[\s\S]*withRequestDeadline\([\s\S]*activityService\.getDetails\(selectedActivityId\)/,
   'A shared or reloaded Activity route must load the requested Activity when it is absent from the initial Feed payload.',
 );
+assert.match(app, /"This Activity took too long to load\. Try again\."/, 'A slow detail request must stop with a retryable deadline instead of leaving the shared link stuck.');
 assert.match(
   app,
   /activities: \[activity, \.\.\.current\.activities\.filter/,

@@ -9120,8 +9120,14 @@ export default function App() {
       return;
     }
     let active = true;
+    const controller = new AbortController();
     setActivityRouteError("");
-    void activityService.getDetails(selectedActivityId).then((details) => {
+    void withRequestDeadline(
+      () => activityService.getDetails(selectedActivityId),
+      8_000,
+      "This Activity took too long to load. Try again.",
+      controller.signal,
+    ).then((details) => {
       if (!active) return;
       const activity = activityFromRemote(details.activity);
       setData((current) => ({
@@ -9132,7 +9138,7 @@ export default function App() {
       if (!active) return;
       setActivityRouteError(caught instanceof Error ? caught.message : "This Activity could not be opened.");
     });
-    return () => { active = false; };
+    return () => { active = false; controller.abort(); };
   }, [data.mode, data.onboarded, data.activities, screen, selectedActivityId, activityRouteRetry]);
 
   useEffect(() => {
