@@ -19,5 +19,7 @@ assert.match(
   /return <FeedLoadingScreen error=\{activityRouteError\} onRetry=/,
   'An unresolved Activity route must show a retryable loading/error state instead of falling through to another screen.',
 );
+assert.match(app, /initialWebRoute\?\.screen === "activityDetail"/, 'Direct Activity bootstrap must be route aware.');
+assert.match(app, /bootstrapSections\.splice\(index, 1\)/, 'Direct Activity bootstrap must skip the full discovery list.');
 
-console.log('PASS: direct Activity URLs fetch missing records, merge them once, and retain a retryable route state. Offline source check only.');
+console.log('PASS: direct Activity URLs skip the full discovery bootstrap, fetch missing records, merge them once, and retain a retryable route state. Offline source check only.');

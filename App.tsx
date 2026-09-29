@@ -9334,8 +9334,28 @@ export default function App() {
           setScreen(currentScreen => ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"].includes(currentScreen) ? "feed" : currentScreen);
           setAuthLoading(false);
           setSessionChecked(true);
+          // A shared/deep link should not fan out into every Feed request before
+          // its own screen can render. Keep ordinary sign-in on the full
+          // workspace bootstrap, but scope an explicit web route to the data
+          // consumed by that screen. Profile stays included so the initial
+          // hydration never replaces the authenticated identity with partial
+          // placeholder fields.
+          const authScreens: Screen[] = ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"];
+          const bootstrapSections = initialWebRoute && !authScreens.includes(initialWebRoute.screen)
+            ? foregroundWorkspaceSections(initialWebRoute.screen)
+            : null;
+          if (bootstrapSections && !bootstrapSections.includes("profile")) bootstrapSections.unshift("profile");
+          // Activity details own a targeted, deadline-bounded fetch. Loading the
+          // complete discovery list first only delays a shared Activity URL.
+          if (initialWebRoute?.screen === "activityDetail" && bootstrapSections) {
+            const index = bootstrapSections.indexOf("activities");
+            if (index >= 0) bootstrapSections.splice(index, 1);
+          }
           const remote = await withRequestDeadline(
-            () => loadRemoteWorkspace(setup.workspaceProfile), 30_000,
+            () => loadRemoteWorkspace(setup.workspaceProfile, bootstrapSections ? {
+              sections: bootstrapSections,
+              viewer: { authUserId: identity, appUserId: String(setup.profile.id) },
+            } : undefined), 30_000,
             "Your Feed took too long to load. Your account is still signed in. Try again.", request.controller.signal,
           );
           if (!isCurrent()) return;
