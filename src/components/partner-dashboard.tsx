@@ -184,6 +184,7 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
           <Text selectable style={[theme.typography.title, { color: c.textPrimary }]}>{row.display_name || "Participant"}</Text>
           <Text style={labelStyle}>{row.activity_title}</Text>
           <Text selectable style={labelStyle}>{statusLabel(row.status)} · Payment: {statusLabel(row.payment_status)}</Text>
+          {row.entry_category_name ? <Text selectable style={labelStyle}>Entry: {row.entry_category_name}{row.entry_category_price_paisa ? ` · ${formatPartnerMoney(row.entry_category_price_paisa)}` : ""}</Text> : null}
           <Text selectable style={labelStyle}>Amount paid: {formatPartnerMoney(row.amount_paid_paisa)}</Text>
           <Text style={labelStyle}>Registered {dateLabel(row.registered_at)}</Text>
           {row.answers.length ? row.answers.map((answer) => <View key={answer.question_id} style={{ gap: 4 }}>
@@ -220,6 +221,7 @@ export function PartnerDashboard({ userId, dark = false, onBack, onOpenActivity,
         {transactions.map((payment) => <View key={payment.payment_id} style={cardStyle}>
           <Text selectable style={[theme.typography.title, { color: c.textPrimary }]}>{payment.activity_title}</Text>
           <Text selectable style={labelStyle}>{payment.display_name || "Participant"} · {dateLabel(payment.paid_at)}</Text>
+          {payment.entry_category_name ? <Text selectable style={labelStyle}>Entry: {payment.entry_category_name}</Text> : null}
           <Text selectable style={labelStyle}>Payment reference: {payment.payment_id}</Text>
           <Text selectable style={labelStyle}>Amount collected {formatPartnerMoney(payment.amount_paisa)}</Text>
           <Text selectable style={labelStyle}>Platform fee ({payment.platform_fee_bps / 100}%) {formatPartnerMoney(payment.platform_fee_paisa)}</Text>

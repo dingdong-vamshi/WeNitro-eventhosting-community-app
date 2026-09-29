@@ -602,6 +602,26 @@ export async function sendMessage(input: SendMessageInput) {
     throw chatError(error, operation);
   }
 }
+export async function deleteOwnMessage(messageId: number) {
+  const operation = "delete a message";
+  try {
+    await currentUserId(operation);
+    assertId(messageId, "messageId", operation);
+    const { data, error } = await supabase.rpc("delete_own_chat_message", {
+      p_message_id: messageId,
+    });
+    if (error) throw error;
+    const result = record(data);
+    const mediaPath = nullableString(result.media_path);
+    if (mediaPath && !/^https?:\/\//i.test(mediaPath)) {
+      const removal = await supabase.storage.from("messages").remove([mediaPath]);
+      if (removal.error) console.warn("The message was deleted, but its media cleanup will be retried later.", removal.error.message);
+    }
+    return { id: messageId, deletedAt: String(result.deleted_at ?? new Date().toISOString()) };
+  } catch (error) {
+    throw chatError(error, operation);
+  }
+}
 export async function sendShare(conversationIds: number[], kind: ChatShareKind, entityId: number) {
   const operation = "share content";
   try {
@@ -934,6 +954,7 @@ export const realtimeChatService = {
   loadMessagesPage,
   loadMessages,
   sendMessage,
+  deleteOwnMessage,
   sendShare,
   markConversationRead,
   subscribeToConversation,

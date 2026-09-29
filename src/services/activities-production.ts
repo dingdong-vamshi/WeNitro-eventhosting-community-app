@@ -66,6 +66,7 @@ export type Activity = {
   endsAt: string | null;
   registrationClosesAt: string | null;
   locationInstruction: string | null;
+  externalUrl: string | null;
   verifiedOnly: boolean;
   ageMin: number | null;
   ageMax: number | null;
@@ -166,7 +167,7 @@ export type CreateActivityInput = {
   costsMayApply?: boolean;
   entryFeeRequired?: boolean;
   capacity?: number | null;
-  locationInstruction?: string; verifiedOnly?: boolean; ageMin?: number | null; ageMax?: number | null; genderPreference?: string | null;
+  locationInstruction?: string; externalUrl?: string | null; verifiedOnly?: boolean; ageMin?: number | null; ageMax?: number | null; genderPreference?: string | null;
   matchScore?: number | null;
   activityType?: ActivityType;
   visibility?: ActivityVisibility;
@@ -206,7 +207,7 @@ export type ActivityRealtimeHandlers = {
 type DbRecord = Record<string, unknown>;
 
 const EVENT_SELECT =
-  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,payment_collection_mode,costs_may_apply,entry_fee_required,currency,intent,status,latitude,longitude,display_location,location_instruction,verified_only,age_min,age_max,gender_preference";
+  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,payment_collection_mode,costs_may_apply,entry_fee_required,currency,intent,status,latitude,longitude,display_location,location_instruction,external_url,verified_only,age_min,age_max,gender_preference";
 const FEEDBACK_SELECT = "id,event_id,created_by,reaction,comment,created_at";
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
@@ -432,6 +433,7 @@ const activityFromDb = (
     endsAt: nullableString(row.event_end_time),
     registrationClosesAt: nullableString(row.registration_close_time),
     locationInstruction: nullableString(row.location_instruction),
+    externalUrl: nullableString(row.external_url),
     verifiedOnly: row.verified_only === true,
     ageMin: row.age_min == null ? null : Number(row.age_min),
     ageMax: row.age_max == null ? null : Number(row.age_max),
@@ -561,6 +563,7 @@ const buildPayload = (
     payload.max_participants = input.capacity;
   }
   if (input.locationInstruction !== undefined) payload.location_instruction = input.locationInstruction.trim();
+  if (input.externalUrl !== undefined) payload.external_url = input.externalUrl?.trim() || null;
   if (input.verifiedOnly !== undefined) payload.verified_only = input.verifiedOnly;
   if (input.ageMin !== undefined) payload.age_min = input.ageMin;
   if (input.ageMax !== undefined) payload.age_max = input.ageMax;

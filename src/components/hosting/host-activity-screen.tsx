@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { activityService } from '../../services/wenitro';
 import { activityLocationService } from '../../services/activity-location';
+import { listActivityEntryCategories } from '../../services/payments';
 import { AGE_PRESETS, GENDER_OPTIONS, HOST_CATEGORIES, ageError, draftFromActivity, hasMeaningfulHostDraft, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, withFreshHostSchedule, type HostActivitySource, type HostDraft, type HostLocation } from '../../domain/host-activity';
 import CoverEditor from './cover-editor';
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from '../mobile-app-shell';
@@ -126,6 +127,8 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
   const [dialog, setDialog] = useState<'visibility' | 'age' | 'gender' | 'exit' | 'customAge' | null>(null);
   const [categoryOpen, setCategoryOpen] = useState(false), [categorySearch, setCategorySearch] = useState('');
   const [locationOpen, setLocationOpen] = useState(false), [cropUri, setCropUri] = useState('');
+  const [hostResponsibilityOpen, setHostResponsibilityOpen] = useState(!existing);
+  const [uploadResponsibilityOpen, setUploadResponsibilityOpen] = useState(false);
   const [ageMin, setAgeMin] = useState(''), [ageMax, setAgeMax] = useState('');
   const [error, setError] = useState(''), [saving, setSaving] = useState(false), [draftNotice, setDraftNotice] = useState('');
   const draftLoaded = useRef(false), completed = useRef(false), restoredDraft = useRef(false), scheduleInitialized = useRef(Boolean(existing));
@@ -136,6 +139,20 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
   const opacity = useRef(new Animated.Value(1)).current;
   const draftRef = useRef(draft); draftRef.current = draft; const storageKey = `wenitro:host-draft:v2:${userId}`;
   const patch = (p: Partial<HostDraft>) => { setDraft(d => ({ ...d, ...p })); setError(''); setDraftNotice(''); };
+  const patchEntryCategory = (index: number, value: Partial<HostDraft['entryCategories'][number]>) => setDraft(current => {
+    const entryCategories = current.entryCategories.map((item, itemIndex) => itemIndex === index ? { ...item, ...value } : item);
+    return { ...current, entryCategories, price: entryCategories[0]?.price || '' };
+  });
+  useEffect(() => {
+    if (!existing?.id || !platformPayment) return;
+    let active = true;
+    void listActivityEntryCategories(existing.id).then(items => {
+      if (!active || !items.length) return;
+      const entryCategories = items.map(item => ({ name: item.name, price: (item.pricePaisa / 100).toFixed(2).replace(/\.00$/, ''), capacity: item.capacity == null ? '' : String(item.capacity) }));
+      setDraft(current => ({ ...current, entryCategories, price: entryCategories[0]?.price || current.price }));
+    }).catch(e => active && setDraftNotice(e instanceof Error ? e.message : 'Entry categories could not be loaded.'));
+    return () => { active = false; };
+  }, [existing?.id, platformPayment]);
   useEffect(() => { alive.current = true; let active = true;
     if (existing) {
       committedId.current = existing.id;
@@ -188,9 +205,11 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     startsAt: draft.dateLater ? null : new Date(draft.start).toISOString(),
     endsAt: draft.dateLater ? null : new Date(draft.end).toISOString(),
     registrationClosesAt: draft.dateLater ? null : new Date(draft.deadline).toISOString(),
-    priceInr: draft.isPaid ? Number(draft.price) : 0,
-    costsMayApply: false,
+    priceInr: draft.isPaid && platformPayment ? Number(draft.entryCategories[0]?.price || draft.price) : 0,
+    costsMayApply: draft.isPaid && !platformPayment,
     entryFeeRequired: false,
+    externalUrl: platformPayment ? draft.externalUrl.trim() : undefined,
+    entryCategories: draft.isPaid && platformPayment ? draft.entryCategories.map(item => ({ name: item.name.trim(), pricePaisa: Math.round(Number(item.price) * 100), capacity: item.capacity ? Number(item.capacity) : null })) : undefined,
     activityType: 'meetup',
     visibility: draft.visibility,
     joinType: draft.approval ? 'approval' : 'direct',
@@ -198,7 +217,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
   } as const);
   const saveDraft = async () => {
     if (lock.current) return;
-    const invalid = [0, 1, 2].map(i => hostStepError(draft, i, isPartner)).find(Boolean);
+    const invalid = [0, 1, 2].map(i => hostStepError(draft, i, platformPayment)).find(Boolean);
     if (invalid) {
       await store();
       setDraftNotice('Draft saved on this device. Complete the required fields to add it to Profile.');
@@ -226,7 +245,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
   };
   const submit = async () => {
     if (lock.current) return;
-    const invalid = [0, 1, 2].map(i => hostStepError(draft, i, isPartner)).find(Boolean); if (invalid && !committedId.current) { setError(invalid); return; }
+    const invalid = [0, 1, 2].map(i => hostStepError(draft, i, platformPayment)).find(Boolean); if (invalid && !committedId.current) { setError(invalid); return; }
     lock.current = true; setSaving(true); setError('');
     try {
       const input = activityInput(async id => { committedId.current = id; committedStatus.current = 'published'; persistedCoverUri.current = draft.coverUri; setCreatedId(id); await store(); });
@@ -240,7 +259,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     finally { lock.current = false; if (alive.current) setSaving(false); }
   };
   if (!loaded) return <View style={[s.root, { justifyContent: 'center' }]}><ActivityIndicator color={c.purple} /></View>;
-  const invalid = createdId && !existing ? '' : hostStepError(draft, step, isPartner);
+  const invalid = createdId && !existing ? '' : hostStepError(draft, step, platformPayment);
   const timeErrors = scheduleFieldErrors(draft);
   const applyStart = (start: string) => {
     scheduleInitialized.current = true;
@@ -255,7 +274,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
       <Animated.View style={{ opacity }}><Text style={s.heading}>{['Find a Partner', 'Access & Privacy', 'Categories & Venue'][step]}</Text><Text style={s.subtitle}>{['Explain what kind of partner you are looking for.', 'Control who can see and join your circle.', 'Define the categories, setting and schedule for your upcoming meetup.'][step]}</Text>
       {step === 0 && <View style={s.sections}>
         <View style={{ gap: 12 }}><View style={s.between}><Text style={s.label}>TITLE</Text><Text style={s.small}>{draft.title.length}/50</Text></View><Control label="Title" icon="create-outline" value={draft.title} onChangeText={title => patch({ title })} maxLength={50} placeholder="I'm looking for a partner for..." /></View>
-        <View style={s.cover}><View style={{ flex: 1, gap: 10 }}><Text style={s.label}>COVER IMAGE</Text><Text style={s.subtitle}>Add a cover photo to make your activity stand out.</Text><Text style={s.small}>Recommended: 1080x600 px (PNG, JPG)</Text></View><View><Pressable accessibilityRole="button" accessibilityLabel={draft.coverUri ? 'Change cover photo' : 'Add Photo'} onPress={() => void pick()} style={s.photo}>{draft.coverUri ? <Image source={{ uri: draft.coverUri }} style={StyleSheet.absoluteFill} resizeMode="cover" /> : <><View style={s.photoCircle}><Glyph name="camera-outline" size={21} /></View><Text style={[s.value, { fontWeight: '700', fontSize: 11 }]}>Add Photo</Text></>}</Pressable>{draft.coverUri ? <Pressable accessibilityRole="button" accessibilityLabel="Remove cover photo" onPress={() => patch({ coverUri: '' })} style={s.remove}><Glyph name="close" color="white" size={12} /></Pressable> : null}</View></View>
+        <View style={s.cover}><View style={{ flex: 1, gap: 10 }}><Text style={s.label}>COVER IMAGE</Text><Text style={s.subtitle}>Add a cover photo to make your activity stand out.</Text><Text style={s.small}>Recommended: 1080x600 px (PNG, JPG)</Text></View><View><Pressable accessibilityRole="button" accessibilityLabel={draft.coverUri ? 'Change cover photo' : 'Add Photo'} onPress={() => setUploadResponsibilityOpen(true)} style={s.photo}>{draft.coverUri ? <Image source={{ uri: draft.coverUri }} style={StyleSheet.absoluteFill} resizeMode="cover" /> : <><View style={s.photoCircle}><Glyph name="camera-outline" size={21} /></View><Text style={[s.value, { fontWeight: '700', fontSize: 11 }]}>Add Photo</Text></>}</Pressable>{draft.coverUri ? <Pressable accessibilityRole="button" accessibilityLabel="Remove cover photo" onPress={() => patch({ coverUri: '' })} style={s.remove}><Glyph name="close" color="white" size={12} /></Pressable> : null}</View></View>
         <View style={{ gap: 12 }}><View style={s.inline}><Text style={s.label}>DESCRIPTION</Text><Glyph name="information-circle-outline" size={18} /></View><Control label="Description" icon="reorder-three-outline" multiline value={draft.description} onChangeText={description => patch({ description })} maxLength={5000} placeholder="Give more details about your activity and what you expect from a partner..." /></View>
       </View>}
       {step === 1 && <View style={{ marginTop: 34 }}><Text style={s.label}>ACCESS SETTINGS</Text><View style={{ marginTop: 22 }}><ChoiceRow label="Visibility" value={draft.visibility === 'public' ? 'Public' : draft.visibility === 'squad' ? 'Squad' : 'Private'} onPress={() => setDialog('visibility')} />
@@ -265,8 +284,9 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
         <Text style={[s.body, { fontSize: 12, marginBottom: 10 }]}>Participant Limit</Text><Control label="Participant Limit" keyboardType="number-pad" value={draft.capacity} onChangeText={capacity => patch({ capacity })} placeholder="No limit" />
         <View style={{ marginTop: 24 }}>
           <Text style={[s.label, { marginBottom: 8 }]}>{draft.isPaid ? 'PAID' : 'FREE'}</Text>
-          <Toggle label="Paid Activity" icon="cash-outline" description={platformPayment ? 'Collect the activity price through secure Cashfree checkout.' : 'Participants pay the host directly at the venue. WeNitro does not collect this payment.'} value={draft.isPaid} onChange={() => patch({ isPaid: !draft.isPaid, price: draft.isPaid ? '' : draft.price })} />
-          {draft.isPaid ? <View style={{ gap: 12, paddingTop: 16 }}><Text style={[s.body, { fontSize: 12 }]}>Activity Price</Text><Control label="Activity Price" icon="cash-outline" keyboardType="decimal-pad" inputMode="decimal" value={draft.price} maxLength={10} onChangeText={value => patch({ price: value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') })} placeholder="₹ 250" /><Text style={s.small}>{platformPayment ? 'Participants complete required registration questions and host approval, when enabled, before secure payment.' : 'This price is informational. Participants join normally and settle directly with you at the venue.'}</Text></View> : null}
+          <Toggle label="Paid Activity" icon="cash-outline" description={platformPayment ? 'Collect the activity price through secure Cashfree checkout.' : 'Mark that participants may spend or pay at the venue. WeNitro does not collect advance payment for normal-host activities.'} value={draft.isPaid} onChange={() => patch({ isPaid: !draft.isPaid, price: draft.isPaid ? '' : draft.price })} />
+          {draft.isPaid && platformPayment ? <View style={{ gap: 12, paddingTop: 16 }}><Text style={[s.body, { fontSize: 12 }]}>Entry Categories &amp; Prices</Text>{draft.entryCategories.map((item, index) => <View key={index} style={{ gap: 9, padding: 12, borderWidth: 1, borderColor: c.border, borderRadius: 12 }}><Control label={`Category ${index + 1} name`} value={item.name} maxLength={80} onChangeText={name => patchEntryCategory(index, { name })} placeholder={index ? 'VIP / Student / Couple' : 'General Admission'} /><Control label={`Category ${index + 1} price`} icon="cash-outline" keyboardType="decimal-pad" inputMode="decimal" value={item.price} maxLength={10} onChangeText={value => patchEntryCategory(index, { price: value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') })} placeholder="₹ 250" /><Control label={`Category ${index + 1} capacity (optional)`} keyboardType="number-pad" value={item.capacity} maxLength={9} onChangeText={capacity => patchEntryCategory(index, { capacity: capacity.replace(/\D/g, '') })} placeholder="Uses overall activity limit" />{draft.entryCategories.length > 1 ? <Pressable accessibilityRole="button" accessibilityLabel={`Remove ${item.name || `category ${index + 1}`}`} onPress={() => patch({ entryCategories: draft.entryCategories.filter((_, itemIndex) => itemIndex !== index) })}><Text style={[s.small, { color: c.danger, fontWeight: '700' }]}>Remove category</Text></Pressable> : null}</View>)}{draft.entryCategories.length < 8 ? <Pressable accessibilityRole="button" onPress={() => patch({ entryCategories: [...draft.entryCategories, { name: '', price: '', capacity: '' }] })} style={[s.inline, { minHeight: 44 }]}><Glyph name="add-circle-outline" /><Text style={s.settingTitle}>Add entry category</Text></Pressable> : null}<Text style={s.small}>Participants choose one category before checkout. Cashfree receives the server-stored category price.</Text></View> : null}
+          {draft.isPaid && !platformPayment ? <Text style={[s.small, { paddingTop: 12 }]}>No price or Pay Now flow is shown. Any venue spending is arranged directly with the host.</Text> : null}
         </View>
         <View style={{ marginTop: 14 }}><ChoiceRow label="Age Restriction" value={draft.ageLabel} onPress={() => setDialog('age')} />
         {draft.ageLabel === 'Custom range' ? <View style={[s.inline, { alignItems: 'flex-start' }]}>{(['ageMin', 'ageMax'] as const).map((key, i) => <View key={key} style={{ flex: 1, gap: 8 }}><Text style={s.small}>{i ? 'Maximum Age' : 'Minimum Age'}</Text><Control label={i ? 'Maximum Age' : 'Minimum Age'} value={draft[key]} keyboardType="number-pad" onChangeText={value => patch({ [key]: value })} /></View>)}</View> : null}
@@ -277,6 +297,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
         {categoryOpen && <View style={s.categories}><Control label="Search categories" icon="search-outline" value={categorySearch} onChangeText={setCategorySearch} placeholder="Search..." /><ScrollView nestedScrollEnabled style={{ maxHeight: 320 }} keyboardShouldPersistTaps="handled">{HOST_CATEGORIES.filter(v => v.toLowerCase().includes(categorySearch.toLowerCase())).map(cat => <Option key={cat} label={cat} selected={draft.category === cat} onPress={() => { patch({ category: cat }); setCategoryOpen(false); }} />)}{!HOST_CATEGORIES.some(v => v.toLowerCase().includes(categorySearch.toLowerCase())) && <Text style={[s.small, { padding: 18 }]}>No categories found</Text>}</ScrollView></View>}
         <Pressable accessibilityRole="button" accessibilityLabel={draft.location ? 'Change location' : 'Add Location'} onPress={() => setLocationOpen(true)} style={s.location}><View style={s.locationIcon}><Glyph name="location-outline" size={24} /></View><View style={{ flex: 1, gap: 4 }}><Text style={s.settingTitle}>{draft.location?.label || 'Add Location'}</Text><Text style={s.small}>{draft.location ? 'Tap to change location' : 'Where is this meetup happening?'}</Text></View><Glyph name="chevron-forward" size={17} color={c.muted} /></Pressable>
         <View style={{ gap: 12 }}><Text style={[s.body, { fontSize: 12 }]}>Location Instructions</Text><TextInput accessibilityLabel="Location Instructions" value={draft.locationInstruction} onChangeText={locationInstruction => patch({ locationInstruction })} multiline maxLength={1000} placeholder="e.g., Meet near the red bench, Room 404..." placeholderTextColor={c.muted} style={s.instructions} /></View>
+        {platformPayment ? <View style={{ gap: 12 }}><Text style={[s.body, { fontSize: 12 }]}>Partner External URL (optional)</Text><Control label="Partner External URL" icon="link-outline" autoCapitalize="none" keyboardType="url" value={draft.externalUrl} onChangeText={externalUrl => patch({ externalUrl })} maxLength={2048} placeholder="https://your-business.example/activity" /><Text style={s.small}>Only HTTPS links are accepted. WeNitro payment amounts still come from the server.</Text></View> : null}
         <Pressable accessibilityRole="checkbox" accessibilityLabel="Decide Date Later" accessibilityState={{ checked: draft.dateLater }} aria-checked={draft.dateLater} onPress={() => { scheduleInitialized.current = true; patch({ dateLater: !draft.dateLater }); }} style={s.later}><Text style={s.value}>📅 {draft.dateLater ? 'Add Date Now' : 'Decide Date Later'}</Text></Pressable>
         {draft.dateLater ? <View style={{ gap: 24 }}><View style={s.location}><Text style={s.subtitle}>📅 Date and time will be decided later. You can discuss with participants after they join!</Text></View><View><Text style={s.scheduleLabel}>JOIN DEADLINE</Text><Text style={[s.small, { marginTop: 12 }]}>Not set</Text></View></View> : <><View style={[s.inline, { alignItems: 'flex-start', gap: 16 }]}><ScheduleField label="KICKS OFF AT" value={draft.start} error={timeErrors.start} onChange={applyStart} /><ScheduleField label="WRAPS UP AT" value={draft.end} error={timeErrors.end} onChange={end => { scheduleInitialized.current = true; patch({ end }); }} /></View><ScheduleField label="JOIN DEADLINE" value={draft.deadline} error={timeErrors.deadline} onChange={deadline => { scheduleInitialized.current = true; patch({ deadline }); }} /></>}
       </View>}
@@ -286,6 +307,8 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     </ScrollView>
     <View style={s.footer}><Pressable accessibilityRole="button" accessibilityLabel={createdId && committedStatus.current === 'published' && !existing ? 'Open Activity' : step === 2 ? existing ? 'Save Changes' : 'Host Now' : 'Continue'} accessibilityState={{ disabled: !!invalid || saving, busy: saving }} disabled={!!invalid || saving} onPress={() => step < 2 ? transition(step + 1) : void submit()} style={[s.cta, (!!invalid || saving) && { opacity: .5 }]}>{saving ? <ActivityIndicator color="white" /> : <><Text style={s.ctaText}>{createdId && committedStatus.current === 'published' && !existing ? 'Open Activity' : step === 2 ? existing ? 'Save Changes' : 'Host Now' : 'Continue'}</Text><Glyph name="arrow-forward" color="white" /></>}</Pressable></View>
   </KeyboardAvoidingView>
+    {hostResponsibilityOpen ? <Dialog title="Host Responsibly" onClose={() => setHostResponsibilityOpen(false)}><View style={{ padding: 18, gap: 14 }}><Text style={s.subtitle}>Provide accurate, relevant, and appropriate activity details. Misleading, explicit, hateful, discriminatory, or unrelated content may result in activity removal and permanent account suspension.</Text><Pressable accessibilityRole="button" style={s.cta} onPress={() => setHostResponsibilityOpen(false)}><Text style={s.ctaText}>I Understand</Text></Pressable></View></Dialog> : null}
+    {uploadResponsibilityOpen ? <Dialog title="Upload Responsibly" onClose={() => setUploadResponsibilityOpen(false)}><View style={{ padding: 18, gap: 14 }}><Text style={s.subtitle}>Upload only media relevant to the activity. Inappropriate, explicit, hateful, or unrelated content may result in permanent account suspension.</Text><Pressable accessibilityRole="button" style={s.cta} onPress={() => { setUploadResponsibilityOpen(false); void pick(); }}><Text style={s.ctaText}>Continue</Text></Pressable></View></Dialog> : null}
     {dialog && <Dialog title={dialog === 'visibility' ? 'Visibility' : dialog === 'age' ? 'Age Restriction' : dialog === 'customAge' ? 'Custom Age Range' : dialog === 'gender' ? 'Gender Preference' : 'Keep your draft?'} onClose={() => setDialog(null)}>
       {dialog === 'visibility' && ([['public', 'Public', 'Anyone can find it'], ['squad', 'Squad', 'Limited to your network'], ['private', 'Private', 'Participants/invite-only']] as const).map(([value, label, subtitle]) => <Option key={value} label={label} subtitle={subtitle} selected={draft.visibility === value} onPress={() => { patch({ visibility: value }); setDialog(null); }} />)}
       {dialog === 'age' && <>{AGE_PRESETS.map(p => <Option key={p.label} label={p.label} selected={draft.ageLabel === p.label} onPress={() => { patch({ ageLabel: p.label, ageMin: p.min, ageMax: p.max }); setDialog(null); }} />)}<Option label="Custom range" selected={draft.ageLabel === 'Custom range'} onPress={() => { setAgeMin(draft.ageMin); setAgeMax(draft.ageMax); setDialog('customAge'); }} /></>}

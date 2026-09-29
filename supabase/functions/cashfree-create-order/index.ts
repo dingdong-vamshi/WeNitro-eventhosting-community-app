@@ -23,6 +23,8 @@ type PaymentRow = {
   status: string;
   idempotency_key: string;
   checkout_expires_at: string;
+  entry_category_id: number | null;
+  entry_category_name: string | null;
 };
 
 Deno.serve(async (request) => {
@@ -35,11 +37,13 @@ Deno.serve(async (request) => {
 
   try {
     const { client, user } = await authenticatedContext(request);
-    const body = (await request.json()) as { activityId?: unknown };
+    const body = (await request.json()) as { activityId?: unknown; entryCategoryId?: unknown };
     const activityId = positiveInteger(body.activityId, "Activity ID");
+    const entryCategoryId = body.entryCategoryId == null ? null : positiveInteger(body.entryCategoryId, "Entry category ID");
 
     const prepared = await client.rpc("prepare_activity_payment", {
       p_event_id: activityId,
+      p_entry_category_id: entryCategoryId,
     });
     if (prepared.error) throw prepared.error;
     const payment = firstRecord(prepared.data as PaymentRow | PaymentRow[]);
@@ -53,6 +57,8 @@ Deno.serve(async (request) => {
         amountPaisa: payment.amount_paisa,
         currency: payment.currency,
         status: payment.status,
+        entryCategoryId: payment.entry_category_id == null ? null : String(payment.entry_category_id),
+        entryCategoryName: payment.entry_category_name,
       });
     }
 
@@ -78,10 +84,11 @@ Deno.serve(async (request) => {
         ...(user.email ? { customer_email: user.email } : {}),
       },
       order_expiry_time: payment.checkout_expires_at,
-      order_note: "WeNitro activity " + payment.event_id,
+      order_note: "WeNitro activity " + payment.event_id + (payment.entry_category_name ? " · " + payment.entry_category_name : ""),
       order_tags: {
         activity_id: String(payment.event_id),
         wenitro_payment_id: String(payment.id),
+        ...(payment.entry_category_id ? { entry_category_id: String(payment.entry_category_id) } : {}),
       },
       ...(returnUrl ? { order_meta: { return_url: returnUrl } } : {}),
     };
@@ -137,6 +144,8 @@ Deno.serve(async (request) => {
       amountPaisa: payment.amount_paisa,
       currency: payment.currency,
       status: "pending",
+      entryCategoryId: payment.entry_category_id == null ? null : String(payment.entry_category_id),
+      entryCategoryName: payment.entry_category_name,
     });
   } catch (error) {
     return errorResponse(error);

@@ -17,7 +17,10 @@ export type ActivityPaymentOrder = {
   amountPaisa: number;
   currency: "INR";
   status: ActivityPaymentStatus;
+  entryCategoryId?: string | null;
+  entryCategoryName?: string | null;
 };
+export type ActivityEntryCategory = { id: string; name: string; pricePaisa: number; capacity: number | null; position: number };
 
 export type ActivityPaymentVerification = {
   orderId: string;
@@ -86,9 +89,11 @@ const invoke = async <T>(
 
 export const createActivityPayment = (
   activityId: string | number,
+  entryCategoryId?: string | number | null,
 ): Promise<ActivityPaymentOrder> => {
   const request = invoke<ActivityPaymentOrder>("cashfree-create-order", {
     activityId: positiveActivityId(activityId),
+    entryCategoryId: entryCategoryId == null ? null : positiveActivityId(entryCategoryId),
   });
   return request.then(order => {
     if (!order.paymentSessionId?.trim() || !/^wn_[A-Za-z0-9_]+$/.test(order.orderId) || !Number.isSafeInteger(order.amountPaisa) || order.amountPaisa <= 0 || order.currency !== "INR") {
@@ -96,6 +101,20 @@ export const createActivityPayment = (
     }
     return order;
   });
+};
+
+export const listActivityEntryCategories = async (activityId: string | number): Promise<ActivityEntryCategory[]> => {
+  const { data, error } = await supabase.rpc("list_activity_entry_categories", {
+    p_event_id: positiveActivityId(activityId),
+  });
+  if (error) throw error;
+  return (Array.isArray(data) ? data : []).map((row: any) => ({
+    id: String(row.id),
+    name: String(row.name),
+    pricePaisa: Number(row.price_paisa),
+    capacity: row.capacity == null ? null : Number(row.capacity),
+    position: Number(row.position) || 0,
+  })).filter(item => /^\d+$/.test(item.id) && item.name.trim() && Number.isSafeInteger(item.pricePaisa) && item.pricePaisa > 0);
 };
 
 export const launchCashfreeCheckout = async (

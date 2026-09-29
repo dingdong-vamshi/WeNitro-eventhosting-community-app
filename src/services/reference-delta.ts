@@ -101,6 +101,7 @@ export const referenceDeltaService = {
   listSquad: () => rpc<SquadRow[]>('list_my_squad'),
   removeSquadMember: (id: number) => rpc<void>('remove_my_squad_member', { p_member_id: id }),
   listNitroHistory: () => rpc<{ balance: number; items: NitroLedgerRow[] }>('list_my_nitro_history'),
+  claimPlayStoreRatingReward: () => rpc<{ awarded: boolean; points: number; balance: number }>('claim_play_store_rating_reward'),
   listParticipantRatings: (eventId: number) => rpc<ParticipantRating[]>('list_activity_participant_ratings', { p_event_id: eventId }),
   rateParticipant: (input: { eventId: number; userId: number; behaviour: number; friendly: number; communication: number; comment: string }) => rpc<ParticipantRating>('rate_activity_participant', {
     p_event_id: input.eventId,

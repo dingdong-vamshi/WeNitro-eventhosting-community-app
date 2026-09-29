@@ -47,6 +47,9 @@ export type PartnerRegistration = {
   status: string;
   payment_status: string;
   amount_paid_paisa: number;
+  entry_category_id: number | null;
+  entry_category_name: string | null;
+  entry_category_price_paisa: number | null;
   registered_at: string;
   answers: Array<{ question_id: number; label: string; value: string | string[] | boolean }>;
 };
@@ -58,6 +61,8 @@ export type PartnerTransaction = {
   display_name: string;
   paid_at: string;
   amount_paisa: number;
+  entry_category_id: number | null;
+  entry_category_name: string | null;
   platform_fee_bps: number;
   platform_fee_paisa: number;
   gst_bps: number;

@@ -92,6 +92,8 @@ export type CommunityPost = {
   mediaUrl: string | null;
   mediaType: "image" | "video" | null;
   status: "draft" | "published" | "removed";
+  isAnonymous: boolean;
+  canIdentifyAnonymous: boolean;
   author: CommunityOwner | null;
   reactionCount: number;
   commentCount: number;
@@ -468,19 +470,16 @@ export async function getCommunityFeed(
   const roomId = integerId(communityId, "communityId");
   const { page, pageSize, from, to } = pagination(options.page, options.pageSize);
   const userId = await currentLegacyUserId(false);
-  const { data, error, count } = await supabase
-    .from("tbl_community_posts")
-    .select("id,room_id,user_id,title,body,media_url,media_type,created_at,updated_at", { count: "exact" })
-    .eq("room_id", roomId)
-    .is("deleted_at", null)
-    .order("created_at", { ascending: false })
-    .range(from, to);
+  const { data, error } = await supabase.rpc("community_list_posts", {
+    p_room_id: roomId,
+    p_page: page,
+    p_page_size: pageSize,
+  });
   if (error) throw error;
-  const messages = (data ?? []) as Array<Record<string, unknown>>;
+  const payload = (data ?? {}) as Record<string, unknown>;
+  const messages = (Array.isArray(payload.items) ? payload.items : []) as Array<Record<string, unknown>>;
+  const count = payload.total == null ? null : Number(payload.total);
   const postIds = messages.map((message) => Number(message.id));
-  const owners = await ownersFor(
-    messages.flatMap((message) => (message.user_id ? [Number(message.user_id)] : [])),
-  );
   const [reactionResult, commentResult] = await Promise.all([
     postIds.length ? supabase.from("tbl_community_post_reactions").select("post_id,user_id,reaction").in("post_id", postIds) : Promise.resolve({ data: [], error: null }),
     postIds.length ? supabase.from("tbl_community_post_comments").select("post_id").in("post_id", postIds).is("deleted_at", null) : Promise.resolve({ data: [], error: null }),
@@ -493,26 +492,38 @@ export async function getCommunityFeed(
   for (const reaction of reactionResult.data ?? []) { const id = Number(reaction.post_id); reactionCounts.set(id, (reactionCounts.get(id) ?? 0) + 1); if (userId === Number(reaction.user_id)) myReactions.set(id, reaction.reaction as CommunityReaction); }
   for (const comment of commentResult.data ?? []) { const id = Number(comment.post_id); commentCounts.set(id, (commentCounts.get(id) ?? 0) + 1); }
   const items = await Promise.all(
-    messages.map(async (message): Promise<CommunityPost> => ({
+    messages.map(async (message): Promise<CommunityPost> => {
+      const author = message.author && typeof message.author === "object"
+        ? message.author as Record<string, unknown>
+        : null;
+      const authorId = message.author_id == null ? "" : String(message.author_id);
+      return ({
       id: String(message.id),
       communityId: String(message.room_id ?? roomId),
-      authorId: message.user_id == null ? "" : String(message.user_id),
+      authorId,
       title: String(message.title ?? ""),
       body: String(message.body ?? ""),
-      category: options.category?.trim() || "General",
+      category: String(message.category ?? options.category?.trim() ?? "General"),
       mediaUrl: await signedMediaUrl(typeof message.media_url === "string" ? message.media_url : null),
       mediaType:
         message.media_type === "image" || message.media_type === "video"
           ? message.media_type
           : null,
       status: "published",
-      author: message.user_id == null ? null : owners.get(Number(message.user_id)) ?? null,
+      isAnonymous: Boolean(message.is_anonymous),
+      canIdentifyAnonymous: Boolean(message.can_identify_anonymous),
+      author: author ? {
+        id: author.id == null ? "" : String(author.id),
+        username: String(author.username ?? "anonymous"),
+        fullName: author.fullname == null ? null : String(author.fullname),
+        avatarUrl: typeof author.profile_image === "string" ? author.profile_image : null,
+      } : null,
       reactionCount: reactionCounts.get(Number(message.id)) ?? 0,
       commentCount: commentCounts.get(Number(message.id)) ?? 0,
       myReaction: myReactions.get(Number(message.id)) ?? null,
       createdAt: String(message.created_at ?? new Date(0).toISOString()),
       updatedAt: String(message.updated_at ?? message.created_at ?? new Date(0).toISOString()),
-    })),
+    }); }),
   );
   return {
     items,
@@ -596,6 +607,7 @@ export async function createCommunityPost(input: {
   image?: string | CommunityMediaSource;
   media?: string | CommunityMediaSource;
   mediaType?: "image" | "video";
+  anonymous?: boolean;
 }): Promise<CommunityPost> {
   const authUserId = await currentAuthUserId();
   let uploadedPath: string | null = null;
@@ -608,13 +620,14 @@ export async function createCommunityPost(input: {
       ? input.mediaType ?? (media.contentType === "video/mp4" ? "video" : "image")
       : null;
     uploadedPath = media?.path ?? null;
-    const { data, error } = await supabase.rpc("community_create_post", {
+    const { data, error } = await supabase.rpc("community_create_post_v2", {
       p_room_id: integerId(input.communityId, "communityId"),
       p_title: input.title.trim(),
       p_body: input.body?.trim() ?? "",
       p_category: input.category?.trim() || "General",
       p_media_path: media?.path ?? null,
       p_media_type: mediaType,
+      p_anonymous: Boolean(input.anonymous),
     });
     if (error) throw error;
     const row = data as Record<string, unknown>;
@@ -628,7 +641,9 @@ export async function createCommunityPost(input: {
       mediaUrl: await signedMediaUrl((row.media_path as string | null) ?? media?.path ?? null),
       mediaType,
       status: "published",
-      author: null,
+      isAnonymous: Boolean(row.is_anonymous ?? input.anonymous),
+      canIdentifyAnonymous: false,
+      author: input.anonymous ? { id: "", username: "anonymous", fullName: "Anonymous", avatarUrl: null } : null,
       reactionCount: 0,
       commentCount: 0,
       myReaction: null,
@@ -772,9 +787,18 @@ export async function editCommunity(id: string, input: { name: string; descripti
   } catch (error) { if (path) await removeUploadedImages([path]).catch(() => undefined); throw error; }
 }
 export type CommunityPoll = { id: number; message_id: number; question: string; created_by: number; created_at: string; my_option_id: number | null; total_votes: number; options: { id: number; text: string; votes: number; percentage: number }[] };
+export type CommunityPollVoter = { user_id: number; option_id: number; option_text: string; username: string; full_name: string | null; avatar_url: string | null; voted_at: string };
 export async function communityPoll(action: 'create' | 'vote' | 'list', roomId: string, payload: Record<string, unknown>): Promise<CommunityPoll[]> {
   const roomIdNum = integerId(roomId, 'room');
   const { data, error } = await supabase.rpc('community_poll', { p_action: action, p_room_id: roomIdNum, p_payload: payload });
   if (error) throw error;
   return Array.isArray(data) ? data as CommunityPoll[] : [];
+}
+export async function communityPollVoters(roomId: string, pollId: number): Promise<CommunityPollVoter[]> {
+  const { data, error } = await supabase.rpc('community_poll_voters', {
+    p_room_id: integerId(roomId, 'room'),
+    p_poll_id: pollId,
+  });
+  if (error) throw error;
+  return Array.isArray(data) ? data as CommunityPollVoter[] : [];
 }

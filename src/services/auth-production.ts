@@ -155,6 +155,19 @@ const clearWebAuthParameters = () => {
 };
 
 const pendingUserValidations = new Map<string, Promise<User>>();
+const refreshSessionIfNeeded = async (session: Session): Promise<Session> => {
+  const expiresAt = Number(session.expires_at ?? 0);
+  if (!expiresAt || expiresAt > Math.floor(Date.now() / 1000) + 30) return session;
+  const { data, error } = await supabase.auth.refreshSession({
+    refresh_token: session.refresh_token,
+  });
+  if (error) throw error;
+  if (!data.session || data.session.user.id !== session.user.id) {
+    throw new Error("Your session expired. Please sign in again.");
+  }
+  return data.session;
+};
+
 export const getValidatedUser = async (knownSession?: Session): Promise<User> => {
   requireBackend();
   // Coalesce only concurrent validation for the exact token. There is no
@@ -166,6 +179,7 @@ export const getValidatedUser = async (knownSession?: Session): Promise<User> =>
     session = current.data.session ?? undefined;
   }
   if (!session) throw new Error("Authentication required.");
+  session = await refreshSessionIfNeeded(session);
   const key = `${session.user.id}:${session.access_token}`;
   const pending = pendingUserValidations.get(key);
   if (pending) return pending;
@@ -253,10 +267,11 @@ export async function bootstrapSession(): Promise<SessionBootstrap> {
     return { status: "anonymous", session: null, user: null, profile: null };
   }
 
-  const user = await getValidatedUser(sessionData.session);
+  const session = await refreshSessionIfNeeded(sessionData.session);
+  const user = await getValidatedUser(session);
   return {
     status: "authenticated",
-    session: { ...sessionData.session, user },
+    session: { ...session, user },
     user,
     profile: null,
   };
@@ -299,6 +314,15 @@ export async function loginWithPassword(input: PasswordLoginInput) {
   });
   if (error) throw error;
   return data;
+}
+
+export async function requestPasswordReset(email: string) {
+  requireBackend();
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    validEmailOrThrow(email),
+    { redirectTo: getAuthRedirectUrl() },
+  );
+  if (error) throw error;
 }
 
 export async function requestPhoneOtp(input: PhoneOtpRequestInput) {

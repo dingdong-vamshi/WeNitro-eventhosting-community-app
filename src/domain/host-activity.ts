@@ -8,12 +8,14 @@ export const GENDER_OPTIONS = [
   { label: 'Female Only', value: 'female' }, { label: 'Non-binary Only', value: 'non_binary' },
 ] as const;
 export type HostLocation = { label: string; latitude: number; longitude: number };
+export type HostEntryCategory = { name: string; price: string; capacity: string };
 export type HostDraft = {
   title: string; description: string; coverUri: string; coverContentType: string;
   visibility: 'public' | 'squad' | 'private'; approval: boolean; verifiedOnly: boolean;
   capacity: string; ageLabel: string; ageMin: string; ageMax: string; gender: string;
   isPaid: boolean; price: string; category: string; location: HostLocation | null;
-  locationInstruction: string; dateLater: boolean; start: string; end: string; deadline: string;
+  locationInstruction: string; externalUrl: string; dateLater: boolean; start: string; end: string; deadline: string;
+  entryCategories: HostEntryCategory[];
 };
 export function localDateTime(date: Date) {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
@@ -23,13 +25,13 @@ export function newHostDraft(now = new Date()): HostDraft {
   const start = new Date(minimumStart);
   return { title: '', description: '', coverUri: '', coverContentType: 'image/jpeg', visibility: 'public', approval: false,
     verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', isPaid: false, price: '',
-    category: '', location: null, locationInstruction: '', dateLater: false,
+    category: '', location: null, locationInstruction: '', externalUrl: '', entryCategories: [{ name: 'General Admission', price: '', capacity: '' }], dateLater: false,
     start: localDateTime(start), end: localDateTime(new Date(start.getTime() + 3600000)), deadline: localDateTime(start) };
 }
 export function hasMeaningfulHostDraft(draft: HostDraft) {
   return Boolean(
     draft.title.trim() || draft.description.trim() || draft.coverUri || draft.category || draft.location ||
-    draft.locationInstruction.trim() || draft.capacity || draft.price || draft.isPaid || draft.approval ||
+    draft.locationInstruction.trim() || draft.externalUrl.trim() || draft.entryCategories.some(item => item.price || item.name !== 'General Admission' || item.capacity) || draft.capacity || draft.price || draft.isPaid || draft.approval ||
     draft.verifiedOnly || draft.visibility !== 'public' || draft.ageLabel !== '15+ only' ||
     draft.ageMin !== '15' || draft.ageMax || draft.gender || draft.dateLater
   );
@@ -45,7 +47,7 @@ export type HostActivitySource = {
   genderPreference?: string | null; costsMayApply?: boolean; entryFeeRequired?: boolean;
   price?: string | null;
   category?: string; where?: string; latitude?: number | null; longitude?: number | null;
-  locationInstruction?: string; startsAt?: string; endsAt?: string; registrationClosesAt?: string;
+  locationInstruction?: string; externalUrl?: string | null; startsAt?: string; endsAt?: string; registrationClosesAt?: string;
 };
 export function draftFromActivity(activity: HostActivitySource, now = new Date()): HostDraft {
   const fresh = newHostDraft(now);
@@ -72,10 +74,12 @@ export function draftFromActivity(activity: HostActivitySource, now = new Date()
     gender: activity.genderPreference || '',
     isPaid,
     price: isPaid && price > 0 ? String(price) : '',
+    entryCategories: [{ name: 'General Admission', price: isPaid && price > 0 ? String(price) : '', capacity: '' }],
     category: activity.category || '',
     location: activity.where && activity.latitude != null && activity.longitude != null
       ? { label: activity.where, latitude: activity.latitude, longitude: activity.longitude } : null,
     locationInstruction: activity.locationInstruction || '',
+    externalUrl: activity.externalUrl || '',
     dateLater: !activity.startsAt,
     start, end, deadline,
   };
@@ -94,20 +98,27 @@ export function ageError(min: string, max: string) {
   if (max && (!/^\d+$/.test(max) || Number(max) < Number(min) || Number(max) > 120)) return 'Maximum age must be between the minimum age and 120.';
   return '';
 }
-export function hostStepError(d: HostDraft, step: number, isPartner: boolean, now = Date.now()) {
+export function hostStepError(d: HostDraft, step: number, requiresPrice: boolean, now = Date.now()) {
   if (step === 0) {
     if (!d.title.trim() || d.title.trim().length > 50) return 'Enter a title of 1–50 characters.';
     if (!d.description.trim()) return 'Describe the activity and the partner you are looking for.';
   }
   if (step === 1) {
     if (d.capacity && (!/^\d+$/.test(d.capacity) || Number(d.capacity) < 1 || Number(d.capacity) > 2147483647)) return 'Enter a positive participant limit, or leave it empty for no limit.';
-    if (d.isPaid && (!/^\d+(\.\d{1,2})?$/.test(d.price) || Number(d.price) <= 0 || Number(d.price) > 1000000)) return 'Enter a valid Activity Price from ₹0.01 to ₹10,00,000.';
+    if (d.isPaid && requiresPrice) {
+      if (!d.entryCategories.length || d.entryCategories.length > 8) return 'Add between 1 and 8 entry categories.';
+      const names = d.entryCategories.map(item => item.name.trim().toLowerCase());
+      if (names.some(name => !name) || new Set(names).size !== names.length) return 'Entry category names must be present and unique.';
+      if (d.entryCategories.some(item => !/^\d+(\.\d{1,2})?$/.test(item.price) || Number(item.price) <= 0 || Number(item.price) > 1000000)) return 'Every entry category needs a valid price from ₹0.01 to ₹10,00,000.';
+      if (d.entryCategories.some(item => item.capacity && (!/^\d+$/.test(item.capacity) || Number(item.capacity) <= 0))) return 'Category capacity must be a positive number.';
+    }
     const age = ageError(d.ageMin, d.ageMax); if (age) return age;
     if (!GENDER_OPTIONS.some(o => o.value === d.gender)) return 'Choose a gender preference.';
   }
   if (step === 2) {
     if (!d.category) return 'Select a category.';
     if (!d.location || !Number.isFinite(d.location.latitude) || !Number.isFinite(d.location.longitude)) return 'Select an actual location.';
+    if (d.externalUrl && !/^https:\/\/[^\s]+$/i.test(d.externalUrl.trim())) return 'Partner external URL must be a valid HTTPS link.';
     if (!d.dateLater) {
       const fields = scheduleFieldErrors(d, now);
       return fields.start || fields.end || fields.deadline;

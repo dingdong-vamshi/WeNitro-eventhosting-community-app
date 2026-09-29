@@ -745,6 +745,9 @@ export const chatService = {
       ),
     );
   },
+  async deleteMessage(messageId: string) {
+    return realtimeChatService.deleteOwnMessage(Number(messageId));
+  },
   async createDirect(memberId: string) {
     return String(
       await realtimeChatService.createDirectConversation(Number(memberId)),
@@ -787,6 +790,7 @@ export const chatService = {
         pollId: message.poll_id ?? undefined,
         share: message.share_payload,
         createdAt: message.created_at,
+        deleted: Boolean(message.deleted_at),
       })),
       nextCursor: page.nextCursor,
     };
@@ -889,6 +893,8 @@ export type ActivityWriteInput = {
   communityId?: string | null;
   joinType: "direct" | "approval";
   coverMedia?: { uri: string; contentType?: string };
+  externalUrl?: string;
+  entryCategories?: Array<{ name: string; pricePaisa: number; capacity: number | null }>;
 };
 
 const signedActivityCoverUrl = async (coverUrl: string | null) => {
@@ -962,6 +968,7 @@ const activityForWorkspace = async (
   ends_at: activity.endsAt,
   registration_closes_at: activity.registrationClosesAt,
   location_instruction: activity.locationInstruction,
+  external_url: activity.externalUrl,
   verified_only: activity.verifiedOnly,
   age_min: activity.ageMin,
   age_max: activity.ageMax,
@@ -1060,7 +1067,24 @@ const writeActivityFromUi = async (
     if (error) throw error;
     const createdActivityId = activityIdFromRpc(data);
     committed = true;
+    // Persist the server ID immediately. If a Partner-only secondary write
+    // fails, the host screen retries this same Activity instead of creating a
+    // duplicate record.
     await input.onCommitted?.(createdActivityId);
+    if (input.externalUrl?.trim()) {
+      const external = await supabase.rpc("set_partner_activity_external_url", {
+        p_event_id: Number(createdActivityId),
+        p_external_url: input.externalUrl.trim(),
+      });
+      if (external.error) throw external.error;
+    }
+    if (input.entryCategories?.length) {
+      const categories = await supabase.rpc("save_activity_entry_categories", {
+        p_event_id: Number(createdActivityId),
+        p_categories: input.entryCategories.map(item => ({ name: item.name, price_paisa: item.pricePaisa, capacity: item.capacity })),
+      });
+      if (categories.error) throw categories.error;
+    }
     const details =
       await activitiesProductionService.getDetails(createdActivityId);
     if (details.activity.joinType !== input.joinType) {
@@ -1142,6 +1166,20 @@ export const activityService = {
         coverUrl: uploadedCoverPath ?? undefined,
         status: input.status,
       });
+      if (input.externalUrl !== undefined) {
+        const external = await supabase.rpc("set_partner_activity_external_url", {
+          p_event_id: Number(activityId),
+          p_external_url: input.externalUrl.trim() || null,
+        });
+        if (external.error) throw external.error;
+      }
+      if (input.entryCategories?.length) {
+        const categories = await supabase.rpc("save_activity_entry_categories", {
+          p_event_id: Number(activityId),
+          p_categories: input.entryCategories.map(item => ({ name: item.name, price_paisa: item.pricePaisa, capacity: item.capacity })),
+        });
+        if (categories.error) throw categories.error;
+      }
       return await activityForWorkspace(activity, null, 0);
     } catch (error) {
       if (uploadedCoverPath) await supabase.storage.from("activity-media").remove([uploadedCoverPath]).catch(() => undefined);
