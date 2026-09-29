@@ -9307,6 +9307,9 @@ export default function App() {
           if (!remote) throw new Error("Your session is no longer available. Please sign in again.");
           if (remote.profile.id !== String(setup.profile.id)) throw new Error("Your account changed while loading. Please try again.");
           setData(current => current.mode === "authenticated" && current.userId === String(setup.profile.id) ? hydrateRemoteData(remote, current) : current);
+          setWorkspaceError(remote.workspaceWarnings?.length
+            ? `${remote.workspaceWarnings.slice(0, 2).join(" ")} Other Feed sections are available; retry to refresh the missing section.`
+            : "");
           setScreen(currentScreen => ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"].includes(currentScreen) ? "feed" : currentScreen);
         } catch (error) {
           console.warn("Workspace bootstrap failed", error);

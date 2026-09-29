@@ -228,6 +228,7 @@ export async function loadRemoteWorkspace(profile?: WorkspaceProfile, options?: 
 
 async function readRemoteWorkspace(session: Session, existingProfile?: WorkspaceProfile, options?: WorkspaceReadOptions) {
   const include = (section: WorkspaceSection) => !options || options.sections.includes(section);
+  const workspaceWarnings: string[] = [];
   const knownViewerId = options?.viewer.authUserId === session.user.id
     && /^\d+$/.test(options.viewer.appUserId) && Number(options.viewer.appUserId) > 0
     ? options.viewer.appUserId : null;
@@ -252,23 +253,52 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
           : String(error);
     return new Error(`Workspace ${label} failed: ${message}`, { cause: error });
   };
+  const optionalStage = async <T>(
+    label: string,
+    task: (signal: AbortSignal) => PromiseLike<T>,
+    fallback: T,
+  ): Promise<T> => {
+    try {
+      return await withRequestDeadline(
+        signal => Promise.resolve(task(signal)),
+        8_000,
+        `Workspace ${label} took too long to load.`,
+      );
+    } catch (error) {
+      const warning = workspaceError(label, error).message;
+      workspaceWarnings.push(warning);
+      console.warn(warning);
+      return fallback;
+    }
+  };
 
   // Each service retains its authenticated/RLS boundary. Start independent
   // screen reads together instead of waiting for a second Auth/profile lookup.
-  const activityTask = loadStage<Pick<Awaited<ReturnType<typeof activitiesProductionService.discover>>, "items">>("activities", include("activities") ? activitiesProductionService.discover({
-    pageSize: 50, upcomingOnly: false, sort: "newest",
-  }) : Promise.resolve({ items: [] }));
+  const activityTask = optionalStage<Pick<Awaited<ReturnType<typeof activitiesProductionService.discover>>, "items">>(
+    "activities",
+    signal => include("activities") ? activitiesProductionService.discover({
+      pageSize: 50, upcomingOnly: false, sort: "newest", signal,
+    }) : Promise.resolve({ items: [] }),
+    { items: [] },
+  );
   const profileTask = loadStage("profile", !include("profile") && knownViewerId ? Promise.resolve(null) : existingProfile?.authUserId === session.user.id
     ? Promise.resolve(existingProfile.details)
     : profileProductionService.loadProfile());
-  const inboxTask = loadStage<{ data: Row[] | null; error: unknown }>("conversations", include("conversations") ? supabase.rpc("list_chat_inbox", { p_message_limit: 1 }) : Promise.resolve({ data: [], error: null }));
-  const activityCoversTask = activityTask.then(page => signedActivityCoverUrls(page.items.map(item => item.coverUrl)));
-  const participantTask = activityTask.then(async page => {
+  const inboxTask = optionalStage<{ data: Row[] | null; error: unknown }>("conversations", signal => {
+    if (!include("conversations")) return Promise.resolve({ data: [], error: null });
+    return supabase.rpc("list_chat_inbox", { p_message_limit: 1 }).abortSignal(signal);
+  }, { data: [], error: null });
+  const activityCoversTask = activityTask.then(page => optionalStage(
+    "activity media",
+    () => signedActivityCoverUrls(page.items.map(item => item.coverUrl)),
+    new Map<string, string>(),
+  ));
+  const participantTask = activityTask.then(page => optionalStage<{ data: Row[] | null; error: unknown }>("participants", async signal => {
     const eventIds = page.items.map(item => Number(item.id));
-    return eventIds.length
-      ? supabase.from("tbl_event_participants").select("event_id,user_id,status").in("event_id", eventIds)
-      : Promise.resolve({ data: [] as Row[], error: null });
-  });
+    if (!eventIds.length) return { data: [] as Row[], error: null };
+    const result = await supabase.from("tbl_event_participants").select("event_id,user_id,status").in("event_id", eventIds).abortSignal(signal);
+    return { data: result.data as Row[] | null, error: result.error };
+  }, { data: [] as Row[], error: null }));
   const [
     activityPage,
     communityPage,
@@ -284,43 +314,43 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
   ] =
     await Promise.all([
       activityTask,
-      loadStage<Pick<Awaited<ReturnType<typeof communitiesProductionService.discover>>, "items">>(
+      optionalStage<Pick<Awaited<ReturnType<typeof communitiesProductionService.discover>>, "items">>(
         "communities",
-        include("communities") ? communitiesProductionService.discover({ pageSize: 30 }) : Promise.resolve({ items: [] }),
+        () => include("communities") ? communitiesProductionService.discover({ pageSize: 30 }) : Promise.resolve({ items: [] }),
+        { items: [] },
       ),
       profileTask,
-      loadStage("partner profile", include("profile") ? partnerAccountService.get() : Promise.resolve({ profile: null, payout_account: null, eligible: false, can_host_paid: false })).catch(() => ({ profile: null, payout_account: null, eligible: false, can_host_paid: false, unavailable: true })),
-      loadStage(
+      optionalStage<Awaited<ReturnType<typeof partnerAccountService.get>> & { unavailable?: boolean }>("partner profile", () => include("profile") ? partnerAccountService.get() : Promise.resolve({ profile: null, payout_account: null, eligible: false, can_host_paid: false }), { profile: null, payout_account: null, eligible: false, can_host_paid: false, unavailable: true }),
+      optionalStage(
         "people",
-        include("people") ? (supabase.rpc as unknown as (
+        () => include("people") ? (supabase.rpc as unknown as (
           name: "list_discoverable_people",
           args: { p_limit: number },
         ) => PromiseLike<{ data: Row[] | null; error: unknown }>)(
           "list_discoverable_people",
           { p_limit: 50 },
         ) : Promise.resolve({ data: [] as Row[], error: null }),
+        { data: [] as Row[], error: null },
       ),
-      loadStage<{ count: number | null; error: unknown }>(
+      optionalStage<{ count: number | null; error: unknown }>(
         "friends",
-        include("profile") ? profileTask.then(details => supabase
+        () => include("profile") ? profileTask.then(details => supabase
           .from("tbl_friends")
           .select("id", { count: "exact", head: true })
           .or(`user_id.eq.${details!.profile.id},friend_id.eq.${details!.profile.id}`)) : Promise.resolve({ count: 0, error: null }),
+        { count: 0, error: null },
       ),
-      loadStage<Pick<Awaited<ReturnType<typeof vibesProductionService.listReels>>, "reels">>("vibes", include("vibes") ? vibesProductionService.listReels({ pageSize: 50 }) : Promise.resolve({ reels: [] })),
-      loadStage("stories", include("stories") ? storiesProductionService.listActive(50) : Promise.resolve([])),
+      optionalStage<Pick<Awaited<ReturnType<typeof vibesProductionService.listReels>>, "reels">>("vibes", () => include("vibes") ? vibesProductionService.listReels({ pageSize: 50 }) : Promise.resolve({ reels: [] }), { reels: [] }),
+      optionalStage("stories", signal => include("stories") ? storiesProductionService.listActive(50, signal) : Promise.resolve([]), []),
       participantTask,
       inboxTask,
       activityCoversTask,
     ]);
   const userId = Number(profileDetails?.profile.id ?? knownViewerId);
-  if (peopleResult.error) throw workspaceError("people", peopleResult.error);
-  if (friendResult.error) throw workspaceError("friends", friendResult.error);
-
-  if (participantResult.error)
-    throw workspaceError("participants", participantResult.error);
-  if (inboxResult.error)
-    throw workspaceError("conversations", inboxResult.error);
+  if (peopleResult.error) workspaceWarnings.push(workspaceError("people", peopleResult.error).message);
+  if (friendResult.error) workspaceWarnings.push(workspaceError("friends", friendResult.error).message);
+  if (participantResult.error) workspaceWarnings.push(workspaceError("participants", participantResult.error).message);
+  if (inboxResult.error) workspaceWarnings.push(workspaceError("conversations", inboxResult.error).message);
   const participants = (participantResult.data ?? []) as Row[];
   const participantCount = new Map<number, number>();
   for (const row of participants) {
@@ -556,6 +586,7 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
   };
 
   return {
+    workspaceWarnings,
     profile: normalizedProfile,
     email: session.user.email,
     people: (peopleResult.data ?? []).map((person: Row) => safeProfile(person)),

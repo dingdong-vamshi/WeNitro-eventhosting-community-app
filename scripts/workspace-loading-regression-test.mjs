@@ -25,21 +25,30 @@ const backend = {
     getSession: async () => ({ data: { session: currentSession }, error: null }),
     getUser: async () => { throw new Error('Workspace must reuse the authenticated profile service identity'); },
   },
-  rpc: async function(name, args) {
+  rpc: function(name, args) {
     assert.equal(this, backend, 'RPC receiver must remain bound');
     calls.push({ name, args });
-    if (name === 'list_chat_inbox') return { data: rooms, error: null };
-    if (name === 'list_discoverable_people') return { data: [], error: null };
+    const result = name === 'list_chat_inbox' ? { data: rooms, error: null }
+      : name === 'list_discoverable_people' ? { data: [], error: null }
+      : null;
+    if (result) return { abortSignal() { return this; }, then(resolve, reject) { return Promise.resolve(result).then(resolve, reject); } };
     throw new Error(`Unexpected RPC ${name}`);
   },
   from(table) {
     const query = {
+      result: null,
       select: () => query,
       or: async filter => { calls.push({ name: table, filter }); return { data: null, count: 4, error: null }; },
-      in: async (column, values) => {
+      in: (column, values) => {
         calls.push({ name: table, column, values });
-        if (table === 'tbl_event_participants') return { data: [{ event_id: 1, user_id: 7, status: 'going' }], error: null };
-        if (table === 'tbl_events') return { data: [{ id: 99, title: 'Older activity', media: { cover_url: 'old.jpg' } }], error: null };
+        if (table === 'tbl_event_participants') query.result = { data: [{ event_id: 1, user_id: 7, status: 'going' }], error: null };
+        else if (table === 'tbl_events') query.result = { data: [{ id: 99, title: 'Older activity', media: { cover_url: 'old.jpg' } }], error: null };
+        else throw new Error(`Unexpected table ${table}`);
+        return query;
+      },
+      abortSignal: () => query,
+      then: (resolve, reject) => {
+        if (query.result) return Promise.resolve(query.result).then(resolve, reject);
         throw new Error(`Unexpected table ${table}`);
       },
     };
@@ -119,13 +128,22 @@ assert.deepEqual(calls.filter(call => call.name === 'sign' && call.bucket === 'a
 ]);
 console.log('PASS: concurrent workspace reads, one-message inbox, full unread total, participant counts, reused titles/covers, deduplicated cover batches and legacy avatar fallback.');
 
+const healthyStories = modules['./stories-production'].storiesProductionService.listActive;
+modules['./stories-production'].storiesProductionService.listActive = async () => { throw new Error('story connection timed out'); };
+const partial = await exports.loadRemoteWorkspace({ authUserId: 'auth-7', details: { profile: { id: '7', full_name: 'Already loaded' }, interests: [], badges: [] } });
+assert.equal(partial.activities.length, 3, 'An optional Story failure must not discard healthy Activity data');
+assert.match(partial.workspaceWarnings.join(' '), /stories failed: story connection timed out/);
+modules['./stories-production'].storiesProductionService.listActive = healthyStories;
+console.log('PASS: optional section failure returns a visible partial-workspace warning without blocking healthy Feed sections.');
+
 // No settled cache: explicit refreshes must reflect writes immediately. A
 // profile already read for this same authentication setup can be reused.
 const profileCalls = () => calls.filter(call => call.name === 'profile').length;
 const beforeProfileCalls = profileCalls();
+const beforeActivityCalls = calls.filter(call => call.name === 'activities').length;
 await exports.loadRemoteWorkspace({ authUserId: 'auth-7', details: { profile: { id: '7', full_name: 'Already loaded' }, interests: [], badges: [] } });
 assert.equal(profileCalls(), beforeProfileCalls, 'Reuse only the explicitly supplied same-identity profile');
-assert.equal(calls.filter(call => call.name === 'activities').length, 2, 'A completed result is not cached');
+assert.equal(calls.filter(call => call.name === 'activities').length, beforeActivityCalls + 1, 'A completed result is not cached');
 await exports.loadRemoteWorkspace({ authUserId: 'different-user', details: { profile: { id: '999' }, interests: [], badges: [] } });
 assert.equal(profileCalls(), beforeProfileCalls + 1, 'Ignore a supplied profile from another identity');
 

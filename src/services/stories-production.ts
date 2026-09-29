@@ -65,14 +65,17 @@ const positiveInteger = (value: unknown, field: string) => {
 const nullableText = (value: unknown): string | null =>
   typeof value === "string" && value.length > 0 ? value : null;
 
-const currentIdentity = async () => {
+const currentIdentity = async (signal?: AbortSignal) => {
   requireBackend();
+  if (signal?.aborted) throw new Error("Story request cancelled.");
   const { data: authData, error: authError } = await supabase.auth.getSession();
   if (authError) throw authError;
   if (!authData.session?.user) throw new Error("Authentication required.");
-  const { data: legacyId, error: legacyError } = await supabase.rpc(
+  let mapping = supabase.rpc(
     "get_current_legacy_user_id",
   );
+  if (signal) mapping = mapping.abortSignal(signal);
+  const { data: legacyId, error: legacyError } = await mapping;
   if (legacyError) throw legacyError;
   return {
     authId: authData.session.user.id,
@@ -209,27 +212,33 @@ const loadStoryById = async (
 };
 
 export const storiesProductionService = {
-  async listActive(limit = 50): Promise<Story[]> {
+  async listActive(limit = 50, signal?: AbortSignal): Promise<Story[]> {
     if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
       throw new Error("Story limit must be between 1 and 100.");
     }
-    const { legacyId } = await currentIdentity();
-    const { data, error } = await supabase
+    const { legacyId } = await currentIdentity(signal);
+    let stories = supabase
       .from("tbl_stories")
       .select(selectStory)
       .is("deleted_at", null)
       .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false })
       .limit(limit);
+    if (signal) stories = stories.abortSignal(signal);
+    const { data, error } = await stories;
     if (error) throw error;
     const rows = data ?? [];
     const ids = rows.map((row) => positiveInteger(row.id, "story id"));
-    const { data: views, error: viewsError } = ids.length
-      ? await supabase
+    let viewsRequest = ids.length
+      ? supabase
           .from("tbl_story_views")
           .select("story_id")
           .eq("viewer_id", legacyId)
           .in("story_id", ids)
+      : null;
+    if (signal && viewsRequest) viewsRequest = viewsRequest.abortSignal(signal);
+    const { data: views, error: viewsError } = viewsRequest
+      ? await viewsRequest
       : { data: [], error: null };
     if (viewsError) throw viewsError;
     const viewedIds = new Set(
