@@ -1,6 +1,10 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import {
+  signedUrl as cachedSignedUrl,
+  signedUrlMap,
+} from "./storage-signed-urls";
 
 const BUCKET = "stories";
 const MAX_BYTES = 50 * 1024 * 1024;
@@ -142,12 +146,7 @@ const readMedia = async (input: CreateStoryInput) => {
 };
 
 const signedUrl = async (path: string) => {
-  if (/^https?:\/\//i.test(path)) return path;
-  const { data, error } = await supabase.storage
-    .from(BUCKET)
-    .createSignedUrl(path, SIGNED_URL_SECONDS);
-  if (error) throw error;
-  return data.signedUrl;
+  return cachedSignedUrl(BUCKET, path, SIGNED_URL_SECONDS);
 };
 
 const avatarUrl = (value: unknown) => {
@@ -160,6 +159,7 @@ const mapStory = async (
   value: unknown,
   currentUserId: number,
   viewedIds: Set<number>,
+  mediaUrls?: ReadonlyMap<string, string>,
 ): Promise<Story> => {
   const row = asRecord(value);
   const author = relationRecord(row.author);
@@ -167,11 +167,13 @@ const mapStory = async (
   const userId = positiveInteger(row.user_id, "story user id");
   const path = String(row.media_url ?? "");
   if (!path) throw new Error("Story media path is missing.");
+  const mediaUrl = mediaUrls ? mediaUrls.get(path) : await signedUrl(path);
+  if (!mediaUrl) throw new Error("Story media is unavailable.");
   return {
     id,
     userId,
     mediaPath: path,
-    mediaUrl: await signedUrl(path),
+    mediaUrl,
     mediaType: String(row.media_type).startsWith("video") ? "video" : "image",
     caption: String(row.caption ?? ""),
     createdAt: String(row.created_at ?? ""),
@@ -212,11 +214,13 @@ const loadStoryById = async (
 };
 
 export const storiesProductionService = {
-  async listActive(limit = 50, signal?: AbortSignal): Promise<Story[]> {
+  async listActive(limit = 50, signal?: AbortSignal, viewerId?: number): Promise<Story[]> {
     if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
       throw new Error("Story limit must be between 1 and 100.");
     }
-    const { legacyId } = await currentIdentity(signal);
+    const legacyId = viewerId === undefined
+      ? (await currentIdentity(signal)).legacyId
+      : positiveInteger(viewerId, "legacy user id");
     let stories = supabase
       .from("tbl_stories")
       .select(selectStory)
@@ -244,7 +248,12 @@ export const storiesProductionService = {
     const viewedIds = new Set(
       (views ?? []).map((row) => positiveInteger(row.story_id, "story id")),
     );
-    return Promise.all(rows.map((row) => mapStory(row, legacyId, viewedIds)));
+    const paths = rows.map((row) => String(row.media_url ?? "")).filter(Boolean);
+    const mediaUrls = await signedUrlMap(BUCKET, paths, SIGNED_URL_SECONDS);
+    const mappedStories = await Promise.all(
+      rows.map((row) => mapStory(row, legacyId, viewedIds, mediaUrls).catch(() => null)),
+    );
+    return mappedStories.filter((story): story is Story => story !== null);
   },
 
   async listMine(limit = 50): Promise<Story[]> {
@@ -260,9 +269,13 @@ export const storiesProductionService = {
       .order("created_at", { ascending: false })
       .limit(limit);
     if (error) throw error;
-    return Promise.all(
-      (data ?? []).map((row) => mapStory(row, legacyId, new Set())),
+    const rows = data ?? [];
+    const paths = rows.map((row) => String(row.media_url ?? "")).filter(Boolean);
+    const mediaUrls = await signedUrlMap(BUCKET, paths, SIGNED_URL_SECONDS);
+    const stories = await Promise.all(
+      rows.map((row) => mapStory(row, legacyId, new Set(), mediaUrls).catch(() => null)),
     );
+    return stories.filter((story): story is Story => story !== null);
   },
 
   async create(input: CreateStoryInput | string): Promise<Story> {

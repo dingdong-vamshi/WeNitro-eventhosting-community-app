@@ -3,8 +3,8 @@ import fs from 'node:fs';
 import ts from 'typescript';
 
 // Execute the real auth, onboarding and profile services with an entirely
-// offline transport. A server-validated identity is reused only within the
-// current bootstrap, never as a settled global identity cache.
+// offline transport. Startup restores local identity once and relies on the
+// authenticated profile RPC as its server-side authorization boundary.
 const calls = [];
 let session = { user: { id: 'auth-7', user_metadata: {} }, access_token: 'token-seven', refresh_token: 'refresh-seven', expires_at: Math.floor(Date.now()/1000)+3600 };
 let getUserOverride;
@@ -56,7 +56,7 @@ const onboarding = load('src/services/profile-onboarding.ts', {
 const restored = await auth.bootstrapSession();
 const setup = await onboarding.profileOnboardingService.load(undefined, restored.user);
 assert.equal(setup.profile.id, 7);
-assert.equal(calls.filter(([name]) => name === 'getUser').length, 1, 'One server Auth validation for the entire initial bootstrap');
+assert.equal(calls.filter(([name]) => name === 'getUser').length, 0, 'Initial bootstrap does not duplicate profile authorization with /auth/v1/user');
 assert.equal(calls.filter(([name]) => name === 'bootstrap_my_profile').length, 1);
 assert.ok(!calls.some(([name]) => name === 'get_current_legacy_user_id'), 'Reuse the canonical profile ID returned by the authenticated repair RPC');
 assert.equal(calls.filter(([name]) => name === 'tbl_users').length, 1);
@@ -64,13 +64,13 @@ assert.equal(calls.filter(([name]) => name === 'tbl_users').length, 1);
 calls.length = 0;
 session = { ...session, access_token: 'token-expired', refresh_token: 'refresh-expired', expires_at: Math.floor(Date.now()/1000)-60 };
 const refreshed = await auth.bootstrapSession();
-assert.equal(refreshed.session.access_token, 'token-refreshed', 'Expired stored sessions refresh before Auth validation');
+assert.equal(refreshed.session.access_token, 'token-refreshed', 'Expired stored sessions refresh before profile authorization');
 assert.equal(calls.filter(([name]) => name === 'refreshSession').length, 1);
-assert.deepEqual(calls.find(([name]) => name === 'getUser'), ['getUser', 'token-refreshed']);
+assert.equal(calls.filter(([name]) => name === 'getUser').length, 0);
 
 calls.length = 0;
 await onboarding.profileOnboardingService.load();
-assert.equal(calls.filter(([name]) => name === 'getUser').length, 1, 'Standalone SIGNED_IN bootstrap still validates with Auth once');
+assert.equal(calls.filter(([name]) => name === 'getUser').length, 0, 'Standalone profile bootstrap uses session identity and an authenticated RPC');
 
 let resolveUser;
 getUserOverride = () => new Promise(resolve => { resolveUser = resolve; });
@@ -98,4 +98,4 @@ getUserOverride = () => ({ data: { user: null }, error: new Error('Temporary Aut
 await assert.rejects(auth.getValidatedUser(), /Temporary Auth failure/);
 getUserOverride = undefined;
 assert.equal((await auth.getValidatedUser()).id, 'auth-8', 'Rejected validation does not poison retry or a new account');
-console.log('PASS: actual initial/standalone bootstrap performs one Auth user validation, reuses canonical profile identity, coalesces only in-flight same-session requests, rejects stale identities and supports explicit retry.');
+console.log('PASS: startup avoids duplicate Auth user validation, relies on server-authorized profile bootstrap, coalesces explicit validation, rejects stale identities and supports retry.');

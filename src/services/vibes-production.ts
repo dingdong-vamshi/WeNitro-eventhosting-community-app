@@ -5,6 +5,7 @@ import type {
 } from "@supabase/supabase-js";
 
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { signedUrl, signedUrlMap } from "./storage-signed-urls";
 
 const VIBES_BUCKET = "vibes";
 const DEFAULT_PAGE_SIZE = 20;
@@ -280,15 +281,10 @@ function cleanHashtags(hashtags: string[] | undefined) {
 }
 
 async function signedMediaUrl(path: string) {
-  if (/^https?:\/\//i.test(path)) return path;
   if (path.startsWith("media/vibes/")) {
     throw new Error("Legacy Vibe media is unavailable.");
   }
-  const { data, error } = await supabase.storage
-    .from(VIBES_BUCKET)
-    .createSignedUrl(path, SIGNED_URL_TTL_SECONDS);
-  if (error) throw error;
-  return data.signedUrl;
+  return signedUrl(VIBES_BUCKET, path, SIGNED_URL_TTL_SECONDS);
 }
 
 async function profilesFor(ids: number[]) {
@@ -336,11 +332,13 @@ export async function uploadVibeMedia(
 }
 
 export async function listReels(
-  options: { cursor?: string | null; pageSize?: number; ownOnly?: boolean; userId?: string; activityId?: string } = {},
+  options: { cursor?: string | null; pageSize?: number; ownOnly?: boolean; userId?: string; activityId?: string; viewerId?: string } = {},
 ): Promise<ReelPage> {
   requireBackend();
   const pageSize = clampPageSize(options.pageSize);
-  const legacyUserId = await currentLegacyUserId(false);
+  const legacyUserId = options.viewerId
+    ? integerId(options.viewerId, "viewerId")
+    : await currentLegacyUserId(false);
   let query = supabase
     .from("tbl_activity_vibes")
     .select(
@@ -400,36 +398,41 @@ export async function listReels(
     commentCounts.set(row.vibe_id, (commentCounts.get(row.vibe_id) ?? 0) + 1);
   }
 
-  const reels = (
-    await Promise.all(
-      pageRows.map(async (row): Promise<VibeReel | null> => {
-        try {
-          return {
-            id: String(row.id),
-            activityId: row.event_id === null ? null : String(row.event_id),
-            userId: row.user_id === null ? "" : String(row.user_id),
-            mediaUrl: await signedMediaUrl(row.media_url),
-            mediaType: row.media_type === "video" ? "video" : "image",
-            caption: row.caption ?? "",
-            hashtags: row.hashtags ?? [],
-            visibility:
-              row.visibility === "private" || row.visibility === "activity"
-                ? row.visibility
-                : "public",
-            createdAt: row.created_at ?? new Date(0).toISOString(),
-            updatedAt:
-              row.updated_at ?? row.created_at ?? new Date(0).toISOString(),
-            author: row.user_id === null ? null : profiles.get(row.user_id) ?? null,
-            likedByMe: liked.has(row.id),
-            likeCount: Math.max(0, Number(row.likes_count ?? 0)),
-            commentCount: commentCounts.get(row.id) ?? 0,
-          };
-        } catch {
-          return null;
-        }
-      }),
-    )
-  ).filter((reel): reel is VibeReel => reel !== null);
+  const signablePaths = pageRows
+    .map((row) => row.media_url)
+    .filter((path) => !path.startsWith("media/vibes/"));
+  const signedMedia = await signedUrlMap(
+    VIBES_BUCKET,
+    signablePaths,
+    SIGNED_URL_TTL_SECONDS,
+  );
+
+  const reels = pageRows
+    .map((row): VibeReel | null => {
+      const mediaUrl = signedMedia.get(row.media_url);
+      if (!mediaUrl) return null;
+      return {
+        id: String(row.id),
+        activityId: row.event_id === null ? null : String(row.event_id),
+        userId: row.user_id === null ? "" : String(row.user_id),
+        mediaUrl,
+        mediaType: row.media_type === "video" ? "video" : "image",
+        caption: row.caption ?? "",
+        hashtags: row.hashtags ?? [],
+        visibility:
+          row.visibility === "private" || row.visibility === "activity"
+            ? row.visibility
+            : "public",
+        createdAt: row.created_at ?? new Date(0).toISOString(),
+        updatedAt:
+          row.updated_at ?? row.created_at ?? new Date(0).toISOString(),
+        author: row.user_id === null ? null : profiles.get(row.user_id) ?? null,
+        likedByMe: liked.has(row.id),
+        likeCount: Math.max(0, Number(row.likes_count ?? 0)),
+        commentCount: commentCounts.get(row.id) ?? 0,
+      };
+    })
+    .filter((reel): reel is VibeReel => reel !== null);
   const last = pageRows.at(-1);
   return {
     reels,

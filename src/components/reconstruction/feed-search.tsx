@@ -110,7 +110,7 @@ export function feedActivityLoadState(pending: boolean, activityCount: number, e
   return error ? 'error' : 'empty';
 }
 
-export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, openVibe, openProfile, openActivitiesCategory, refreshOnMount = true, workspaceLoading = false, workspaceError = '' }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (s: Screen) => void; openActivity: (id: string) => void; openCommunity?: (id: string) => void; openVibe?: (id: string) => void; openProfile?: (id: string) => void; openActivitiesCategory?: (category: string) => void; refreshOnMount?: boolean; workspaceLoading?: boolean; workspaceError?: string }) {
+export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, openVibe, openProfile, openActivitiesCategory, notificationCount = 0, refreshOnMount = true, workspaceLoading = false, workspaceError = '' }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (s: Screen) => void; openActivity: (id: string) => void; openCommunity?: (id: string) => void; openVibe?: (id: string) => void; openProfile?: (id: string) => void; openActivitiesCategory?: (category: string) => void; notificationCount?: number; refreshOnMount?: boolean; workspaceLoading?: boolean; workspaceError?: string }) {
   const c = usePalette();
   const { width } = useWindowDimensions();
   const homeCarousel = useRef<ScrollView>(null);
@@ -132,7 +132,6 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(data.activities.length === 0);
   const activityLoadState = feedActivityLoadState(loading || workspaceLoading, data.activities.length, error || workspaceError);
-  const [notificationCount, setNotificationCount] = useState(0);
   const [nearby, setNearby] = useState<{ latitude: number; longitude: number } | null>(null);
   const [locating, setLocating] = useState(false);
   const pageWidth = Math.min(width, MOBILE_APP_MAX_WIDTH);
@@ -164,33 +163,6 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
     }, HERO_AUTO_ADVANCE_MS);
     return () => clearInterval(timer);
   }, [carouselPaused, carouselStep]);
-
-  useEffect(() => {
-    const userId = Number(data.userId);
-    if (!Number.isSafeInteger(userId) || userId <= 0) {
-      setNotificationCount(0);
-      return;
-    }
-    let active = true;
-    const refresh = async () => {
-      const { count, error: countError } = await supabase
-        .from('tbl_notifications')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', userId)
-        .eq('is_read', false);
-      if (countError) throw countError;
-      if (active) setNotificationCount(count ?? 0);
-    };
-    const channel = supabase
-      .channel(`home-notification-unread:${userId}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tbl_notifications', filter: `user_id=eq.${userId}` }, () => { void refresh().catch(() => undefined); })
-      .subscribe(status => { if (status === 'SUBSCRIBED') void refresh().catch(() => undefined); });
-    void refresh().catch(() => undefined);
-    return () => {
-      active = false;
-      void supabase.removeChannel(channel);
-    };
-  }, [data.userId]);
 
   useEffect(() => { if (!refreshOnMount) { setLoading(false); return; } const controller = new AbortController(); let active = true; setLoading(true); void activitiesProductionService.discover({ pageSize: 50, upcomingOnly: false, sort: 'newest', signal: controller.signal }).then(async page => { const prepared = await prepareReferenceActivities(page.items); if (active) setData(current => ({ ...current, activities: prepared })); }).catch(e => { if (active && !controller.signal.aborted) setError(e.message); }).finally(() => { if (active) setLoading(false); }); return () => { active = false; controller.abort(); }; }, [refreshOnMount]);
   const chooseFilter = async (value: string) => { setFilter(value); if (value !== 'Nearby' || nearby || locating) return; setLocating(true); setError(''); try { setNearby(await activityLocationService.current()); } catch (e: any) { setError(e.message); } finally { setLocating(false); } };

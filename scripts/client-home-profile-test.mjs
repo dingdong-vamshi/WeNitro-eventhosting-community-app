@@ -18,8 +18,9 @@ assert.match(feed, /const TRIBE_IMAGES = \[/);
 assert.match(feed, /openActivitiesCategory \? openActivitiesCategory\(value\) : go\('activities'\)/);
 assert.match(feed, /colors=\{\['#3420B8', '#6847F5'\]\}/);
 assert.match(feed, /go\(slide\.screen\)/);
-assert.match(feed, /home-notification-unread:/);
+assert.doesNotMatch(feed, /home-notification-unread:/, 'Home reuses the app-level unread subscription');
 assert.match(feed, /notificationCount=\{notificationCount\}/);
+assert.match(fs.readFileSync('App.tsx', 'utf8'), /notificationCount=\{notificationUnreadCount\}/);
 
 const settings = fs.readFileSync('src/components/reconstruction/settings.tsx', 'utf8');
 const profile = fs.readFileSync('src/components/reconstruction/profile.tsx', 'utf8');

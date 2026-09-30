@@ -9165,7 +9165,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (data.mode !== "authenticated" || !isSupabaseConfigured) {
+    if (data.mode !== "authenticated" || !isSupabaseConfigured || workspaceLoading) {
       setNotificationUnreadCount(0);
       return;
     }
@@ -9186,12 +9186,12 @@ export default function App() {
       active = false;
       void cleanup?.();
     };
-  }, [data.mode, data.userId]);
+  }, [data.mode, data.userId, workspaceLoading]);
 
   const inboxViewRef = useRef({ selectedConversationId, conversations: data.conversations });
   inboxViewRef.current = { selectedConversationId, conversations: data.conversations };
   useEffect(() => {
-    if (data.mode !== "authenticated" || !isSupabaseConfigured) return;
+    if (data.mode !== "authenticated" || !isSupabaseConfigured || workspaceLoading) return;
     let active = true;
     let retryTimer: ReturnType<typeof setTimeout> | undefined;
     let retryAttempt = 0;
@@ -9231,10 +9231,9 @@ export default function App() {
           console.warn("Chat inbox unavailable", error);
           if (!active) return;
           retryAttempt += 1;
-          retryTimer = setTimeout(
-            subscribe,
-            Math.min(1_000 * 2 ** (retryAttempt - 1), 15_000),
-          );
+          const baseDelay = Math.min(2_000 * 2 ** (retryAttempt - 1), 5 * 60_000);
+          const jitter = Math.floor(Math.random() * Math.min(baseDelay * 0.2, 10_000));
+          retryTimer = setTimeout(subscribe, baseDelay + jitter);
         });
     };
     subscribe();
@@ -9243,7 +9242,7 @@ export default function App() {
       if (retryTimer) clearTimeout(retryTimer);
       void subscription?.cleanup();
     };
-  }, [data.mode, data.userId]);
+  }, [data.mode, data.userId, workspaceLoading]);
 
   useEffect(() => {
     if (data.mode !== "authenticated" || !isSupabaseConfigured) return;
@@ -9621,6 +9620,7 @@ export default function App() {
       return (
         <ReferenceFeed
           refreshOnMount={false}
+          notificationCount={notificationUnreadCount}
           workspaceLoading={workspaceLoading}
           workspaceError={workspaceError}
           data={data}

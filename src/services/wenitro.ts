@@ -229,9 +229,27 @@ export async function loadRemoteWorkspace(profile?: WorkspaceProfile, options?: 
 async function readRemoteWorkspace(session: Session, existingProfile?: WorkspaceProfile, options?: WorkspaceReadOptions) {
   const include = (section: WorkspaceSection) => !options || options.sections.includes(section);
   const workspaceWarnings: string[] = [];
-  const knownViewerId = options?.viewer.authUserId === session.user.id
+  const workspaceQueue: Array<() => void> = [];
+  let activeWorkspaceReads = 0;
+  const withWorkspaceSlot = async <T>(task: () => Promise<T>): Promise<T> => {
+    if (activeWorkspaceReads >= 3) {
+      await new Promise<void>((resolve) => workspaceQueue.push(resolve));
+    }
+    activeWorkspaceReads += 1;
+    try {
+      return await task();
+    } finally {
+      activeWorkspaceReads -= 1;
+      workspaceQueue.shift()?.();
+    }
+  };
+  const optionViewerId = options?.viewer.authUserId === session.user.id
     && /^\d+$/.test(options.viewer.appUserId) && Number(options.viewer.appUserId) > 0
     ? options.viewer.appUserId : null;
+  const profileViewerId = existingProfile?.authUserId === session.user.id
+    ? String(existingProfile.details.profile.id) : null;
+  const knownViewerId = optionViewerId ?? (profileViewerId && /^\d+$/.test(profileViewerId) && Number(profileViewerId) > 0
+    ? profileViewerId : null);
 
   const loadStage = async <T>(
     label: string,
@@ -259,11 +277,11 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
     fallback: T,
   ): Promise<T> => {
     try {
-      return await withRequestDeadline(
-        signal => Promise.resolve(task(signal)),
-        8_000,
-        `Workspace ${label} took too long to load.`,
-      );
+      return await withWorkspaceSlot(() => withRequestDeadline(
+          signal => Promise.resolve(task(signal)),
+          8_000,
+          `Workspace ${label} took too long to load.`,
+        ));
     } catch (error) {
       const warning = workspaceError(label, error).message;
       workspaceWarnings.push(warning);
@@ -272,8 +290,8 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
     }
   };
 
-  // Each service retains its authenticated/RLS boundary. Start independent
-  // screen reads together instead of waiting for a second Auth/profile lookup.
+  // Each service retains its authenticated/RLS boundary. Independent reads are
+  // bounded above so one screen cannot burst every backend service at once.
   const activityTask = optionalStage<Pick<Awaited<ReturnType<typeof activitiesProductionService.discover>>, "items">>(
     "activities",
     signal => include("activities") ? activitiesProductionService.discover({
@@ -316,7 +334,7 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
       activityTask,
       optionalStage<Pick<Awaited<ReturnType<typeof communitiesProductionService.discover>>, "items">>(
         "communities",
-        () => include("communities") ? communitiesProductionService.discover({ pageSize: 30 }) : Promise.resolve({ items: [] }),
+        () => include("communities") ? communitiesProductionService.discover({ pageSize: 30, viewerId: knownViewerId ? Number(knownViewerId) : undefined }) : Promise.resolve({ items: [] }),
         { items: [] },
       ),
       profileTask,
@@ -340,8 +358,8 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
           .or(`user_id.eq.${details!.profile.id},friend_id.eq.${details!.profile.id}`)) : Promise.resolve({ count: 0, error: null }),
         { count: 0, error: null },
       ),
-      optionalStage<Pick<Awaited<ReturnType<typeof vibesProductionService.listReels>>, "reels">>("vibes", () => include("vibes") ? vibesProductionService.listReels({ pageSize: 50 }) : Promise.resolve({ reels: [] }), { reels: [] }),
-      optionalStage("stories", signal => include("stories") ? storiesProductionService.listActive(50, signal) : Promise.resolve([]), []),
+      optionalStage<Pick<Awaited<ReturnType<typeof vibesProductionService.listReels>>, "reels">>("vibes", () => include("vibes") ? vibesProductionService.listReels({ pageSize: 50, viewerId: knownViewerId ?? undefined }) : Promise.resolve({ reels: [] }), { reels: [] }),
+      optionalStage("stories", signal => include("stories") ? storiesProductionService.listActive(50, signal, knownViewerId ? Number(knownViewerId) : undefined) : Promise.resolve([]), []),
       participantTask,
       inboxTask,
       activityCoversTask,

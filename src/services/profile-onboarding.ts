@@ -1,6 +1,5 @@
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 import type { User } from "@supabase/supabase-js";
-import { getValidatedUser } from "./auth-production";
 import { profileProductionService, type Profile, type ProfileDetails } from "./profile-production";
 import {
   suggestOnboardingUsername,
@@ -35,9 +34,9 @@ const safeAvatarUrl = (value: unknown): string | null => {
 
 async function authenticatedUser() {
   if (!isSupabaseConfigured) throw new Error("Supabase is not configured for this build.");
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) throw new Error("Please sign in again to finish your profile.");
-  return data.user;
+  const { data, error } = await supabase.auth.getSession();
+  if (error || !data.session?.user) throw new Error("Please sign in again to finish your profile.");
+  return data.session.user;
 }
 
 async function requireSameIdentity(expectedId: string) {
@@ -68,7 +67,7 @@ function profileError(error: { code?: string; message?: string }): Error {
 export const profileOnboardingService = {
   async load(signal?: AbortSignal, validatedUser?: User): Promise<ProfileOnboardingState> {
     if (signal?.aborted) throw new Error("Profile request cancelled.");
-    const user = validatedUser ?? await getValidatedUser();
+    const user = validatedUser ?? await authenticatedUser();
     const current = await supabase.auth.getSession();
     if (current.error) throw current.error;
     if (current.data.session?.user.id !== user.id) throw new Error("Your signed-in account changed. Please try again.");

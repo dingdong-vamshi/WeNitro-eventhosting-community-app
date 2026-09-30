@@ -44,5 +44,5 @@ assert.match(profile, /profile_reviews/);
 assert.match(profile, /\['going', 'approved', 'paid'\]/);
 const editor = fs.readFileSync('src/components/reconstruction/social-profiles.tsx', 'utf8');
 assert.match(editor, /my_social_links.*p_patch: normalized/);
-assert.match(editor, /auth\.data\.user\?\.id !== identity\.current/);
+assert.match(editor, /auth\.data\.session\?\.user\.id !== identity\.current/);
 console.log('PASS: 5-platform URL normalization, unsafe URL rejection, profile permission/layout/trust invariants, real persistence and account-change protection. No remote writes.');

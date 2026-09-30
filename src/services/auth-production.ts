@@ -268,7 +268,10 @@ export async function bootstrapSession(): Promise<SessionBootstrap> {
   }
 
   const session = await refreshSessionIfNeeded(sessionData.session);
-  const user = await getValidatedUser(session);
+  // Startup only selects client UI state from the restored identity. The
+  // following profile/bootstrap RPC verifies this JWT server-side, so startup
+  // does not need a second /auth/v1/user request.
+  const user = session.user;
   return {
     status: "authenticated",
     session: { ...session, user },

@@ -27,17 +27,17 @@ export function ReferenceEditProfile({ data, setData, back, onSocialProfiles }: 
  const mounted = useRef(true);
  useEffect(() => {
   mounted.current = true;
-  void Promise.all([profiles.loadProfile(), profiles.listAvailableInterests(), supabase.auth.getUser(), referenceDeltaService.listProfilePhotos()]).then(([details, options, auth, gallery]) => {
-   if (auth.error || !auth.data.user || String(details.profile.id) !== data.userId) throw new Error('Please reopen Edit Profile after signing in.');
+  void Promise.all([profiles.loadProfile(), profiles.listAvailableInterests(), supabase.auth.getSession(), referenceDeltaService.listProfilePhotos()]).then(([details, options, auth, gallery]) => {
+   if (auth.error || !auth.data.session?.user || String(details.profile.id) !== data.userId) throw new Error('Please reopen Edit Profile after signing in.');
    if (!mounted.current) return;
-   expectedAuth.current = auth.data.user.id; setEmail(auth.data.user.email || '');
+   expectedAuth.current = auth.data.session.user.id; setEmail(auth.data.session.user.email || '');
    const initial = formValues(details.profile); setValues(initial); setOriginal(initial); setAvatar(details.profile.avatar_url || '');
    setCatalog(options); setPhotos(gallery); const ids = details.interests.map(i => i.id); setInterests(ids); originalInterests.current = ids;
   }).catch(e => { if (mounted.current) setError(message(e)); });
   return () => { mounted.current = false; availabilityRequest.current++; };
  }, [data.userId]);
  const patch = (key: keyof Values, value: string) => { setValues(current => current && ({ ...current, [key]: value })); setSuccess(false); if (key === 'username') { availabilityRequest.current++; setAvailability(''); } };
- const sameIdentity = async () => { const auth = await supabase.auth.getUser(); if (auth.error || auth.data.user?.id !== expectedAuth.current) throw new Error('Your signed-in account changed. Reopen Edit Profile before saving.'); };
+ const sameIdentity = async () => { const auth = await supabase.auth.getSession(); if (auth.error || auth.data.session?.user.id !== expectedAuth.current) throw new Error('Your signed-in account changed. Reopen Edit Profile before saving.'); };
  const checkUsername = async () => {
   const request = ++availabilityRequest.current;
   if (!values || values.username === original?.username) return;

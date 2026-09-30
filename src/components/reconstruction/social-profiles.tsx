@@ -20,13 +20,13 @@ export function SocialProfilesScreen({ userId, back, onSaved }: { userId: string
   useEffect(() => {
     let active = true;
     void (async () => {
-      const auth = await supabase.auth.getUser();
-      if (auth.error || !auth.data.user) throw new Error('Please sign in to update your social profiles.');
+      const auth = await supabase.auth.getSession();
+      if (auth.error || !auth.data.session?.user) throw new Error('Please sign in to update your social profiles.');
       const [me, links] = await Promise.all([supabase.rpc('get_current_app_user_id'), supabase.rpc('my_social_links')]);
       if (me.error || String(me.data) !== userId) throw new Error('Your account changed. Reopen Social Profiles.');
       if (links.error) throw links.error;
       if (active) {
-        identity.current = auth.data.user.id;
+        identity.current = auth.data.session.user.id;
         setValues(Object.fromEntries(SOCIAL_PLATFORMS.map(({ key }) => [key, typeof links.data?.[key] === 'string' ? links.data[key] : ''])) as SocialLinks);
       }
     })().catch(e => active && setError(e.message)).finally(() => active && setLoading(false));
@@ -37,8 +37,8 @@ export function SocialProfilesScreen({ userId, back, onSaved }: { userId: string
     lock.current = true; setBusy(true); setError('');
     try {
       const normalized = Object.fromEntries(SOCIAL_PLATFORMS.map(({ key }) => [key, normalizeSocialUrl(key, values[key] || '')]));
-      const auth = await supabase.auth.getUser();
-      if (auth.error || auth.data.user?.id !== identity.current) throw new Error('Your account changed. Reopen Social Profiles.');
+      const auth = await supabase.auth.getSession();
+      if (auth.error || auth.data.session?.user.id !== identity.current) throw new Error('Your account changed. Reopen Social Profiles.');
       const result = await supabase.rpc('my_social_links', { p_patch: normalized });
       if (result.error) throw result.error;
       onSaved();

@@ -47,6 +47,8 @@ export type DiscoverCommunitiesOptions = {
   membership?: "all" | "joined" | "created";
   page?: number;
   pageSize?: number;
+  /** Authenticated integer identity already established by workspace bootstrap. */
+  viewerId?: number;
 };
 export type CommunityFeedOptions = { page?: number; pageSize?: number; category?: string };
 export type CommunityCommentOptions = { page?: number; pageSize?: number };
@@ -380,7 +382,9 @@ export async function discoverCommunities(
   options: DiscoverCommunitiesOptions = {},
 ): Promise<PaginatedResult<CommunitySummary>> {
   requireBackend();
-  const userId = await currentLegacyUserId(false);
+  const userId = options.viewerId === undefined
+    ? await currentLegacyUserId(false)
+    : integerId(String(options.viewerId), "viewerId");
   const { page, pageSize, from, to } = pagination(options.page, options.pageSize);
   let allowedRoomIds: number[] | null = null;
   if (options.membership === "joined") {
