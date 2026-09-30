@@ -23,7 +23,15 @@ export function getGoogleWebClientId() {
 }
 
 export function requireGoogleBackend() {
-  if (!isSupabaseConfigured || process.env.EXPO_PUBLIC_SUPABASE_URL?.replace(/\/$/, '') !== 'https://klyjzbisgycegkkacbjw.supabase.co') {
+  const configuredUrl = process.env.EXPO_PUBLIC_SUPABASE_URL?.trim().replace(/\/$/, '');
+  let validSupabaseUrl = false;
+  try {
+    const url = new URL(configuredUrl || '');
+    validSupabaseUrl = url.protocol === 'https:' && /^[a-z0-9]+\.supabase\.co$/.test(url.hostname);
+  } catch {
+    validSupabaseUrl = false;
+  }
+  if (!isSupabaseConfigured || !validSupabaseUrl) {
     throw new GoogleSignInError('incorrect_backend', 'Google sign-in requires the configured WeNitro authentication service.');
   }
 }

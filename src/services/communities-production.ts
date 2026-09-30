@@ -808,6 +808,14 @@ export async function manageCommunity(id: string, action: 'edit' | 'preferences'
   if (error) throw error;
   return data;
 }
+export async function removeCommunityMember(id: string, userId: number) {
+  const { data, error } = await supabase.rpc('community_remove_member', {
+    p_room_id: integerId(id, 'community'),
+    p_user_id: userId,
+  });
+  if (error) throw error;
+  return data;
+}
 export async function editCommunity(id: string, input: { name: string; description: string; category: string; avatar?: string }) {
   let path: string | undefined;
   try {

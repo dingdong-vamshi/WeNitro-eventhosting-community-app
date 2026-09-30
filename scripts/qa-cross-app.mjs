@@ -7,7 +7,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 
-const EXPECTED_HOST = "klyjzbisgycegkkacbjw.supabase.co";
+const DEFAULT_EXPECTED_HOST = "cxsznhrkzqndhseodcyy.supabase.co";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ENV_PATH = resolve(ROOT, ".env.local");
 const results = [];
@@ -41,7 +41,18 @@ function required(value, name) {
 }
 
 function redact(value) {
-  let message = value instanceof Error ? value.message : String(value);
+  let message;
+  if (value instanceof Error) {
+    message = value.message;
+  } else if (value && typeof value === "object") {
+    try {
+      message = JSON.stringify(value);
+    } catch {
+      message = String(value);
+    }
+  } else {
+    message = String(value);
+  }
   for (const secret of secrets) {
     if (secret) message = message.split(secret).join("<redacted>");
   }
@@ -163,13 +174,16 @@ function qaVerificationPdf(runId) {
 async function main() {
   const localEnv = parseEnv(await readFile(ENV_PATH, "utf8"));
   const url = required(
-    localEnv.EXPO_PUBLIC_SUPABASE_URL ?? localEnv.NEXT_PUBLIC_SUPABASE_URL,
-    "EXPO_PUBLIC_SUPABASE_URL in .env.local",
+    process.env.QA_SUPABASE_URL ??
+      localEnv.EXPO_PUBLIC_SUPABASE_URL ??
+      localEnv.NEXT_PUBLIC_SUPABASE_URL,
+    "QA_SUPABASE_URL or EXPO_PUBLIC_SUPABASE_URL in .env.local",
   );
   const key = required(
-    localEnv.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+    process.env.QA_SUPABASE_PUBLISHABLE_KEY ??
+      localEnv.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
       localEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-    "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.local",
+    "QA_SUPABASE_PUBLISHABLE_KEY or EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY in .env.local",
   );
   const credentials = {
     member1: {
@@ -193,8 +207,9 @@ async function main() {
   );
 
   const parsedUrl = new URL(url);
+  const expectedHost = process.env.QA_EXPECTED_SUPABASE_HOST ?? DEFAULT_EXPECTED_HOST;
   assert.equal(parsedUrl.protocol, "https:", "Supabase URL must use HTTPS");
-  assert.equal(parsedUrl.hostname, EXPECTED_HOST, "Refusing to run against an unexpected Supabase project");
+  assert.equal(parsedUrl.hostname, expectedHost, "Refusing to run against an unexpected Supabase project");
 
   const member1 = makeClient(url, key);
   const member2 = makeClient(url, key);

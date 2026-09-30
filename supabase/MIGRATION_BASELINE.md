@@ -1,6 +1,9 @@
 # WeNitro migration baseline
 
-Canonical production project: `klyjzbisgycegkkacbjw`.
+Canonical production project: `cxsznhrkzqndhseodcyy`.
+
+The previous source project `klyjzbisgycegkkacbjw` is retained untouched as the
+rollback source. Do not delete, reset, or link production commands to it.
 
 The live legacy integer-keyed schema was verified before reconciliation. The five bridge stages had originally been executed transactionally outside the migration ledger. Supported Supabase migration API calls then recorded five no-op baseline entries, and the local SQL files were renamed to the exact returned remote versions:
 

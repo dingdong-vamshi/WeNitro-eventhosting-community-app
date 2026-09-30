@@ -4000,6 +4000,10 @@ export type Database = {
         Args: { p_member_id: number }
         Returns: undefined
       }
+      community_remove_member: {
+        Args: { p_room_id: number; p_user_id: number }
+        Returns: Json
+      }
       report_vibe: {
         Args: { p_details?: string; p_reason: string; p_vibe_id: number }
         Returns: Json

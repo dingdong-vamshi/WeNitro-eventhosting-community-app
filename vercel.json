@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/share/vibe/:id",
-      "destination": "https://klyjzbisgycegkkacbjw.supabase.co/functions/v1/share-vibe?id=:id"
+      "destination": "https://cxsznhrkzqndhseodcyy.supabase.co/functions/v1/share-vibe?id=:id"
     }
   ],
   "headers": [

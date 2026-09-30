@@ -12,7 +12,7 @@ try {
   const context = await browser.newContext();
   const page = await context.newPage();
 
-  await page.route("https://klyjzbisgycegkkacbjw.supabase.co/**", async (route) => {
+  await page.route("https://cxsznhrkzqndhseodcyy.supabase.co/**", async (route) => {
     if (new URL(route.request().url()).pathname.endsWith("/auth/v1/otp")) {
       await route.fulfill({
         status: 200,

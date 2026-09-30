@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, Share, StyleSheet, Switch, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '../../lib/supabase';
-import { communitiesProductionService, manageCommunity, type CommunityDetail } from '../../services/communities-production';
+import { communitiesProductionService, manageCommunity, removeCommunityMember, type CommunityDetail } from '../../services/communities-production';
 import { realtimeChatService, type ChatMember, type CommunityMemberPermissions, type CommunityMemberRole } from '../../services/realtime-chat';
 import { CreateCommunitySheet } from './reference-community';
 import { Action, Button, ErrorLine, Header, Icon, Page, SearchField, Sheet, Skeleton, ui, usePalette, purple, type ReferencePalette } from '../reconstruction/ui';
@@ -25,6 +25,7 @@ export function CommunityInfo({ id, back, openProfile, openChat, openPosts, onCh
   const [requests, setRequests] = useState<{ user_id: number; name: string }[]>([]), [requestsLoading, setRequestsLoading] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false), [rulesOpen, setRulesOpen] = useState(false);
   const [roleMember, setRoleMember] = useState<ChatMember | null>(null);
+  const [removeMember, setRemoveMember] = useState<ChatMember | null>(null);
   const [roleDraft, setRoleDraft] = useState<CommunityMemberRole>('member');
   const [permDraft, setPermDraft] = useState<CommunityMemberPermissions>(defaultPermissions('member'));
   const refresh = async () => {
@@ -135,6 +136,12 @@ export function CommunityInfo({ id, back, openProfile, openChat, openPosts, onCh
       </> : null}
       <Button label="Save role" busy={busy} onPress={() => void saveRole()} />
       <Button label="View profile" onPress={() => { const userId = String(roleMember.user_id); setRoleMember(null); openProfile(userId); }} />
+      {admin ? <Button label="Remove member" danger disabled={busy} onPress={() => { setRemoveMember(roleMember); setRoleMember(null); }} /> : null}
+    </Sheet> : null}
+    {removeMember ? <Sheet title="Remove member?" centered close={() => { if (!busy) setRemoveMember(null); }}>
+      <Text style={{ color: c.muted, lineHeight: 21, fontSize: 13 }}>Remove {removeMember.profiles?.full_name || removeMember.profiles?.username || 'this member'} from {community?.name || 'this community'}? They can request to join again later.</Text>
+      <Button label="Cancel" disabled={busy} onPress={() => setRemoveMember(null)} />
+      <Button label="Remove member" danger busy={busy} onPress={() => { setBusy(true); setError(''); void removeCommunityMember(id, removeMember.user_id).then(async () => { setRemoveMember(null); await refresh(); }).catch(error => setError(errorText(error))).finally(() => setBusy(false)); }} />
     </Sheet> : null}
     {confirm ? <Sheet title={confirm === 'leave' ? 'Leave Community?' : 'Delete Community?'} centered close={() => { if (!busy) setConfirm(null); }}><Text style={{ color: c.muted, lineHeight: 21, fontSize: 13 }}>{confirm === 'leave' ? `You will leave ${community?.name || 'this community'} and it will be removed from your community conversations.` : 'This permanently deletes this community, its conversation, polls and posts. This action cannot be undone.'}</Text><Button label="Cancel" disabled={busy} onPress={() => setConfirm(null)} /><Button label={confirm === 'leave' ? 'Leave Community' : 'Delete'} danger busy={busy} onPress={() => { setBusy(true); const task = confirm === 'leave' ? communitiesProductionService.leave(id) : manageCommunity(id, 'delete', { confirmed: true }); void task.then(onDeleted).catch(error => { setError(errorText(error)); setConfirm(null); }).finally(() => setBusy(false)); }} /></Sheet> : null}
   </Page>;

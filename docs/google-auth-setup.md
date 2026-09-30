@@ -2,11 +2,11 @@
 
 The local implementation uses native Google Sign-In on Android/iOS and Google's rendered Identity Services button on web. Both obtain an ID token and exchange it with Supabase. It does not use the old browser OAuth authorization-code flow, request offline Google access, or require a Google client secret in the application. Never add a client secret to an `EXPO_PUBLIC_*` variable.
 
-## Verified on 2026-09-08 (Phase 3)
+## Target cutover status on 2026-09-30
 
-- Correct project: `klyjzbisgycegkkacbjw`, healthy and accessible through Supabase MCP.
-- Google is now enabled in Supabase Authentication → Sign In / Providers → Google. The existing Web client ID and the supplied secret were saved in provider settings only. Nonce verification remains enabled; “Allow users without an email” remains disabled.
-- Public `/auth/v1/settings`: HTTP 200; Google, email, and phone all enabled.
+- Current target project: `cxsznhrkzqndhseodcyy`, healthy and accessible through Supabase management.
+- Public `/auth/v1/settings`: HTTP 200; email is enabled, while Google and phone are not yet enabled on the target.
+- The source project previously had Google enabled with the existing Web client ID and provider secret. The same provider configuration must be saved on the target before Google sign-in can pass.
 - Public Web client ID: `866660461050-r2ijj81pp8g0kmrln2pucihne79ul5l3.apps.googleusercontent.com`.
 - The current Google Cloud account cannot see owning project number `866660461050`. Its available project is unrelated; no changes were made there.
 - The embedded browser Google attempt returned `FedCM get() rejects with NetworkError: Error retrieving a token.` No Google credential or Supabase Google session was returned. This does not establish whether the cause is origin/consent configuration or embedded-browser FedCM support.
@@ -24,7 +24,7 @@ Optional iOS Google support needs `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` registered 
 
 After changing public client IDs, restart Expo/rebuild so they are inlined. The native Google SDK is autolinked on Android. The real Android account chooser requires an installed development/release build containing the native dependency; Expo Go can review the UI but cannot verify this chooser. Do not use a simulated chooser as an auth test.
 
-The Supabase callback shown in provider settings is `https://klyjzbisgycegkkacbjw.supabase.co/auth/v1/callback`. Register that exact callback for any authorization-code flow. The current application uses ID-token exchange, so it does not navigate through this callback during its GIS/native sign-in. Do not add callback paths to JavaScript origins.
+The target Supabase callback is `https://cxsznhrkzqndhseodcyy.supabase.co/auth/v1/callback`. Register that exact callback for any authorization-code flow. The current application uses ID-token exchange, so it does not navigate through this callback during its GIS/native sign-in. Do not add callback paths to JavaScript origins.
 
 ## Validation limits
 

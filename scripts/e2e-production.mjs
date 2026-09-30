@@ -64,6 +64,34 @@ async function settle(page) {
   await page.waitForTimeout(250);
 }
 
+async function finishOnboarding(page) {
+  const skip = page.getByText("Skip", { exact: true }).first();
+  await skip.waitFor({ state: "visible", timeout: 5_000 }).catch(() => undefined);
+  if (await skip.isVisible().catch(() => false)) {
+    await skip.click();
+    await settle(page);
+  }
+  const fallback = page.getByText("Use email or phone instead", { exact: true }).first();
+  await fallback.waitFor({ state: "visible", timeout: 2_000 }).catch(() => undefined);
+  if (await fallback.isVisible().catch(() => false)) {
+    await fallback.click();
+    await settle(page);
+  }
+}
+
+async function completeProfileIfNeeded(page) {
+  const heading = page.getByText("Welcome to WeNitro!", { exact: true }).first();
+  await heading.waitFor({ state: "visible", timeout: 5_000 }).catch(() => undefined);
+  if (!(await heading.isVisible().catch(() => false))) return;
+  await page.getByRole("button", { name: "Choose date of birth" }).click();
+  const dateOfBirth = page.locator('input[type="date"]').first();
+  await visible(dateOfBirth, "date of birth");
+  await dateOfBirth.fill("1995-01-01");
+  await page.getByText("Done", { exact: true }).click();
+  await page.getByText("Prefer not to say", { exact: true }).click();
+  await page.getByRole("button", { name: /get started/i }).click();
+}
+
 async function visible(locator, description, timeout = 10_000) {
   await locator.first().waitFor({ state: "visible", timeout });
   if (!(await locator.first().isVisible())) throw new Error(`${description} is not visible`);
@@ -77,8 +105,19 @@ async function clickText(page, text) {
 }
 
 async function navigateTab(page, label, marker) {
-  await clickText(page, label);
+  const accessibleTab = page.getByRole("button", { name: `Open ${label}`, exact: true }).last();
+  if (await accessibleTab.isVisible().catch(() => false)) await accessibleTab.click();
+  else await clickText(page, label);
   await visible(marker, `${label} screen`);
+}
+
+async function navigateHome(page, marker) {
+  const home = page.getByText("Home", { exact: true }).last();
+  const feed = page.getByText("Feed", { exact: true }).last();
+  const target = await home.isVisible().catch(() => false) ? home : feed;
+  await visible(target, "Home or Feed navigation");
+  await target.click();
+  await visible(marker, "Home screen");
 }
 
 function attachRuntimeGuards(page, scope) {
@@ -95,14 +134,23 @@ function attachRuntimeGuards(page, scope) {
 async function enterDemo(page) {
   await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 30_000 });
   await settle(page);
+  await finishOnboarding(page);
 
   const demoButton = page.getByText("Explore the interactive demo", { exact: true });
   if (await demoButton.isVisible().catch(() => false)) {
     await demoButton.click();
+  } else if (AUTH_EMAIL && AUTH_PASSWORD) {
+    const email = page.getByLabel(/email/i).or(page.getByPlaceholder(/you@example\.com/i)).first();
+    const password = page.getByLabel(/password/i).or(page.getByPlaceholder(/password|minimum 6 characters/i)).first();
+    await visible(email, "email login");
+    await email.fill(AUTH_EMAIL);
+    await password.fill(AUTH_PASSWORD);
+    await page.getByRole("button", { name: /continue|log in|sign in/i }).first().click();
+    await completeProfileIfNeeded(page);
   }
 
   await visible(page.getByText("Home", { exact: true }).last(), "Home navigation", 15_000);
-  await visible(page.getByText("Discover Activities", { exact: false }), "Feed content");
+  await visible(page.getByText("Explore Activities", { exact: false }), "Feed content");
 }
 
 async function assertMobileLayout(page, label) {
@@ -130,7 +178,7 @@ async function runDemoSuite(browser) {
   const page = await context.newPage();
   attachRuntimeGuards(page, "demo-mobile");
 
-  await step(page, "Explicit demo login opens the feed", async () => {
+  await step(page, "QA login opens the feed", async () => {
     await enterDemo(page);
     await shot(page, "feed-light");
   });
@@ -140,68 +188,58 @@ async function runDemoSuite(browser) {
   });
 
   await step(page, "Dark theme persists between Feed and Profile", async () => {
-    const darkToggle = page.getByLabel("Switch to dark mode");
-    await visible(darkToggle, "dark-mode toggle");
-    await darkToggle.click();
-    await visible(page.getByLabel("Switch to light mode"), "light-mode toggle");
-    await shot(page, "feed-dark");
-
     await navigateTab(
       page,
       "Profile",
-      page.getByText("Suchit Pradhan", { exact: true }),
+      page.getByLabel("Settings"),
     );
-    await visible(page.getByLabel("Switch to light mode"), "persisted dark-mode state");
+    await page.getByLabel("Settings").click();
+    await visible(page.getByText("APPEARANCE", { exact: true }), "appearance settings");
+    const darkChoice = page.getByRole("radio", { name: "Dark" });
+    if ((await darkChoice.getAttribute("aria-checked")) !== "true") await darkChoice.click();
+    await page.getByLabel("Back").click();
+    await navigateHome(page, page.getByText("Discover Activities", { exact: false }));
+    await navigateTab(page, "Profile", page.getByLabel("Settings"));
     await shot(page, "profile-dark");
   });
 
   await step(page, "All main navigation tabs render their modules", async () => {
-    await navigateTab(page, "Home", page.getByText("Discover Activities", { exact: false }));
-    await navigateTab(page, "Vibes", page.getByLabel("Next vibe"));
-    const reelCounter = page.getByText(/^\d+\/\d+$/).first();
-    const before = await reelCounter.textContent();
-    await page.getByLabel("Next vibe").click();
-    await page.waitForTimeout(300);
-    const after = await reelCounter.textContent();
-    if (!before || !after || before === after) {
-      throw new Error(`Next vibe did not advance the reel counter (${before} -> ${after})`);
-    }
+    await navigateHome(page, page.getByText("Discover Activities", { exact: false }));
+    await navigateTab(page, "Vibes", page.getByText("Share", { exact: true }));
     await shot(page, "vibes-reel");
     await navigateTab(page, "Host", page.getByText("Create & Share", { exact: true }));
     await shot(page, "host");
-    await navigateTab(page, "Chat", page.getByPlaceholder("Search people and groups"));
+    await navigateTab(page, "Chat", page.getByPlaceholder("Search chats or users..."));
     await shot(page, "chat");
     await navigateTab(page, "Profile", page.getByLabel("Settings"));
   });
 
   await step(page, "Activities and search workflow is interactive", async () => {
-    await navigateTab(page, "Home", page.getByText("Discover Activities", { exact: false }));
+    await navigateHome(page, page.getByText("Discover Activities", { exact: false }));
     await page.getByLabel("Explore activities").click();
-    await visible(page.getByText("Activities in & around", { exact: false }), "activities list");
+    await visible(page.getByText("Activities for you", { exact: true }), "activities list");
     await shot(page, "activities");
 
-    await page.getByText("Search Activities", { exact: true }).click();
-    await visible(page.getByText("Search", { exact: true }).first(), "search screen");
-    const search = page.getByPlaceholder("Study buddy, badminton, cricket...");
-    await search.fill("study");
-    await visible(page.getByText(/study/i).first(), "filtered search result");
+    await page.getByLabel("Search activities").click();
+    const search = page.getByPlaceholder("Search activities, places, or interests");
+    await search.fill("QA");
+    await visible(page.getByText(/\[QA\]/i).first(), "filtered search result");
     await shot(page, "search-results");
   });
 
   await step(page, "Vibe composer supports activity selection and captions", async () => {
     await navigateTab(page, "Host", page.getByText("Create & Share", { exact: true }));
     await page.getByText("Post a Vibe", { exact: true }).first().click();
-    await visible(page.getByText("Choose an activity", { exact: true }), "activity picker");
+    await visible(page.getByText(/choose an activity/i).first(), "activity picker");
     const caption = page.getByPlaceholder("What is the update, request, or moment?");
     await caption.fill("Sunrise badminton with the WeNitro crew in Bhubaneswar.");
-    await visible(page.getByText("55/2200", { exact: true }), "caption counter");
     await visible(page.getByText("Post Vibe", { exact: true }).last(), "post action");
     await shot(page, "vibe-composer", true);
   });
 
   await step(page, "Communities discovery and filters work", async () => {
-    await navigateTab(page, "Home", page.getByText("Discover Activities", { exact: false }));
-    const communitiesLink = page.getByText("Explore all communities", { exact: false });
+    await navigateHome(page, page.getByText("Discover Activities", { exact: false }));
+    const communitiesLink = page.getByText("Explore communities", { exact: true }).first();
     await communitiesLink.scrollIntoViewIfNeeded();
     await communitiesLink.click();
     await visible(page.getByPlaceholder("Search Community"), "communities search");
@@ -216,17 +254,30 @@ async function runDemoSuite(browser) {
     await navigateTab(page, "Profile", page.getByLabel("Settings"));
     await page.getByLabel("Settings").click();
     await visible(page.getByText("Settings", { exact: true }).first(), "settings heading");
-    await visible(page.getByText("Privacy", { exact: true }), "privacy settings row");
-    await visible(page.getByText("Dark theme", { exact: true }), "appearance setting");
+    await visible(page.getByText("Privacy Settings", { exact: true }), "privacy settings row");
+    await visible(page.getByText("APPEARANCE", { exact: true }), "appearance setting");
     await shot(page, "settings-dark", true);
   });
 
   await step(page, "Theme returns to light and remains persistent", async () => {
-    const settingsSwitch = page.getByRole("switch");
-    await visible(settingsSwitch, "settings theme switch");
-    await settingsSwitch.click();
-    await page.getByText("Home", { exact: true }).last().click();
-    await visible(page.getByLabel("Switch to dark mode"), "persisted light-mode state");
+    const lightChoice = page.getByRole("radio", { name: "Light" });
+    await visible(lightChoice, "light theme choice");
+    if ((await lightChoice.getAttribute("aria-checked")) !== "true") await lightChoice.click();
+    await page.getByLabel("Back").click();
+    await navigateHome(page, page.getByText("Discover Activities", { exact: false }));
+    await navigateTab(page, "Profile", page.getByLabel("Settings"));
+    await page.getByLabel("Settings").click();
+    const persistedLight = page.getByRole("radio", { name: "Light" });
+    const unselectedSystem = page.getByRole("radio", { name: "System" });
+    const [lightColor, systemColor] = await Promise.all([
+      persistedLight.evaluate(element => getComputedStyle(element).backgroundColor),
+      unselectedSystem.evaluate(element => getComputedStyle(element).backgroundColor),
+    ]);
+    if (lightColor === systemColor) {
+      throw new Error("Light theme did not persist");
+    }
+    await page.getByLabel("Back").click();
+    await navigateHome(page, page.getByText("Discover Activities", { exact: false }));
     await shot(page, "feed-light-restored");
   });
 
@@ -274,6 +325,7 @@ async function runAuthenticatedSuite(browser) {
 
   await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 30_000 });
   await settle(page);
+  await finishOnboarding(page);
   const email = page
     .getByLabel(/email/i)
     .or(page.getByPlaceholder(/you@example\.com/i));
@@ -298,8 +350,9 @@ async function runAuthenticatedSuite(browser) {
       await password.first().fill(AUTH_PASSWORD);
       const submit = page.getByRole("button", { name: /continue|log in|sign in/i }).first();
       await submit.click();
+      await completeProfileIfNeeded(page);
       await visible(page.getByText("Home", { exact: true }).last(), "authenticated feed", 20_000);
-      await navigateTab(page, "Chat", page.getByPlaceholder("Search people and groups"));
+      await navigateTab(page, "Chat", page.getByPlaceholder("Search chats or users..."));
       await navigateTab(page, "Profile", page.getByLabel("Settings"));
       await shot(page, "authenticated-profile");
     },

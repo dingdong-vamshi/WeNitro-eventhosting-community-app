@@ -46,6 +46,7 @@ import {
   Manrope_800ExtraBold,
 } from "@expo-google-fonts/manrope";
 import { Ionicons } from "@expo/vector-icons";
+import { useEvent } from "expo";
 import { Asset } from "expo-asset";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
@@ -2811,15 +2812,14 @@ function ReelVideo({ uri, muted, active }: { uri: string; muted: boolean; active
   const player = useVideoPlayer(uri, (instance) => {
     instance.loop = true;
     instance.muted = muted;
-    if (active) instance.play();
   });
+  const { status } = useEvent(player, "statusChange", { status: player.status });
 
   useEffect(() => {
     player.muted = muted;
-    if (active) player.play();
-    else player.pause();
-    return () => player.pause();
-  }, [muted, active, player]);
+    if (active && status === "readyToPlay") player.play();
+    else if (!active && player.playing) player.pause();
+  }, [muted, active, player, status]);
 
   return (
     <VideoView
@@ -2866,13 +2866,12 @@ function ReelMedia({ vibe, muted, active }: { vibe: Vibe; muted: boolean; active
 function StoryVideo({ uri }: { uri: string }) {
   const player = useVideoPlayer(uri, (instance) => {
     instance.muted = true;
-    instance.play();
   });
+  const { status } = useEvent(player, "statusChange", { status: player.status });
 
   useEffect(() => {
-    player.play();
-    return () => player.pause();
-  }, [player]);
+    if (status === "readyToPlay") player.play();
+  }, [player, status]);
 
   return (
     <VideoView
@@ -8973,6 +8972,8 @@ function TabBar({ active, go }: { active: Screen; go: (s: Screen) => void }) {
             return (
               <Pressable
                 key={screen}
+                accessibilityRole="button"
+                accessibilityLabel={`Open ${label}`}
                 onPress={() => {
                   playClickSound();
                   go(screen);
@@ -9001,6 +9002,8 @@ function TabBar({ active, go }: { active: Screen; go: (s: Screen) => void }) {
           return (
             <Pressable
               key={screen}
+              accessibilityRole="button"
+              accessibilityLabel={`Open ${label}`}
               onPress={() => {
                 playClickSound();
                 go(screen);

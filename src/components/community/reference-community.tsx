@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Image, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useEvent } from 'expo';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { VideoView, useVideoPlayer } from 'expo-video';
@@ -334,6 +335,8 @@ export function PollCard({ poll, roomId, onUpdated }: { poll: CommunityPoll; roo
 }
 
 function CommunityVideo({ uri, close }: { uri: string; close: () => void }) {
- const player = useVideoPlayer(uri, instance => { instance.loop = false; instance.play(); });
+ const player = useVideoPlayer(uri, instance => { instance.loop = false; });
+ const { status } = useEvent(player, 'statusChange', { status: player.status });
+ useEffect(() => { if (status === 'readyToPlay') player.play(); }, [player, status]);
  return <Modal transparent animationType="fade" onRequestClose={close}><MobileOverlayFrame><SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}><View style={{ alignItems: 'flex-end' }}><Pressable accessibilityRole="button" accessibilityLabel="Close video" onPress={close} style={{ padding: 18 }}><Icon name="close" /></Pressable></View><VideoView player={player} nativeControls contentFit="contain" style={{ flex: 1 }} /></SafeAreaView></MobileOverlayFrame></Modal>;
 }

@@ -8,7 +8,7 @@ import ts from 'typescript';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const env = {
-  EXPO_PUBLIC_SUPABASE_URL: 'https://klyjzbisgycegkkacbjw.supabase.co',
+  EXPO_PUBLIC_SUPABASE_URL: 'https://cxsznhrkzqndhseodcyy.supabase.co',
   EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'isolated-test-public-key',
   EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: '123-isolated_test.apps.googleusercontent.com',
 };
@@ -85,7 +85,7 @@ function loadModule(relativeFile, imports) {
   vm.runInNewContext(compiled, {
     module, exports: module.exports,
     require: (name) => { assert.ok(name in imports, `Unexpected dependency: ${name}`); return imports[name]; },
-    process: { env }, AbortController, fetch: mockFetch,
+    process: { env }, AbortController, URL, fetch: mockFetch,
     setTimeout: (callback, delay) => { assert.equal(delay, 30000); deadline = callback; return 1; },
     clearTimeout: () => {},
   }, { filename: relativeFile });
