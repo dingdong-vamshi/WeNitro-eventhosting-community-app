@@ -2,12 +2,13 @@ import { supabase } from "../lib/supabase";
 
 type CachedSignedUrl = {
   expiresAt: number;
-  url: string;
+  url: string | null;
 };
 
 const cache = new Map<string, CachedSignedUrl>();
 const pending = new Map<string, Promise<Map<string, string>>>();
 const EXPIRY_SAFETY_SECONDS = 5 * 60;
+const MISSING_OBJECT_TTL_SECONDS = 5 * 60;
 const MAX_CACHE_ENTRIES = 1_000;
 
 const keyFor = (scope: string, bucket: string, path: string) =>
@@ -21,10 +22,10 @@ const usableCachedUrl = (
 ) => {
   const key = keyFor(scope, bucket, path);
   const cached = cache.get(key);
-  if (!cached) return null;
+  if (!cached) return undefined;
   if (cached.expiresAt <= now) {
     cache.delete(key);
-    return null;
+    return undefined;
   }
   return cached.url;
 };
@@ -65,8 +66,8 @@ export async function signedUrlMap(
       continue;
     }
     const cached = usableCachedUrl(scope, bucket, path, now);
-    if (cached) result.set(path, cached);
-    else missing.push(path);
+    if (typeof cached === "string") result.set(path, cached);
+    else if (cached === undefined) missing.push(path);
   }
   if (!missing.length) return result;
 
@@ -82,6 +83,13 @@ export async function signedUrlMap(
       const expiresAt =
         Date.now() +
         Math.max(30, expiresIn - EXPIRY_SAFETY_SECONDS) * 1_000;
+      const missingExpiresAt = Date.now() + MISSING_OBJECT_TTL_SECONDS * 1_000;
+      for (const path of missing) {
+        cache.set(keyFor(scope, bucket, path), {
+          expiresAt: missingExpiresAt,
+          url: null,
+        });
+      }
       for (const item of data ?? []) {
         if (!item.path || !item.signedUrl || item.error) continue;
         signed.set(item.path, item.signedUrl);

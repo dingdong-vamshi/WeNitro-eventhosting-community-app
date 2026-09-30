@@ -37,6 +37,9 @@ assert.deepEqual(calls[0].paths, ['a.jpg', 'missing.jpg']);
 assert.match(first.get('a.jpg'), /auth-a/);
 assert.equal(first.has('missing.jpg'), false, 'one missing object is isolated from healthy media');
 
+await api.signedUrlMap('vibes', ['missing.jpg'], 3600);
+assert.equal(calls.length, 1, 'a proven-missing object is not retried on every render');
+
 await api.signedUrlMap('vibes', ['a.jpg'], 3600);
 assert.equal(calls.length, 1, 'a valid signed URL is reused within its TTL');
 
@@ -48,5 +51,17 @@ assert.match(secondAccount.get('a.jpg'), /auth-b/);
 const remote = await api.signedUrlMap('vibes', ['https://cdn.invalid/public.jpg'], 3600);
 assert.equal(calls.length, 2, 'already-served URLs do not call Storage signing');
 assert.equal(remote.get('https://cdn.invalid/public.jpg'), 'https://cdn.invalid/public.jpg');
+
+const communitySource = fs.readFileSync('src/services/communities-production.ts', 'utf8');
+assert.match(
+  communitySource,
+  /signedUrlMap\(\s*COMMUNITY_BUCKET,\s*mediaPaths/,
+  'Community discovery signs its page media in one batch',
+);
+assert.doesNotMatch(
+  communitySource,
+  /\.createSignedUrl\(/,
+  'Community reads use the shared cache instead of per-object signing',
+);
 
 console.log('PASS: private media paths are deduplicated, batch-signed, TTL-cached, identity-scoped and failure-isolated.');

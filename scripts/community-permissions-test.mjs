@@ -11,8 +11,9 @@ const compiled = ts.transpileModule(source, {
 const sandbox = {
   exports: {},
   require(name) {
-    assert.equal(name, '../lib/supabase', `Unexpected runtime dependency: ${name}`);
-    return { isSupabaseConfigured: false, supabase: null };
+    if (name === '../lib/supabase') return { isSupabaseConfigured: false, supabase: null };
+    if (name === './storage-signed-urls') return { signedUrl: async () => null, signedUrlMap: async () => new Map() };
+    assert.fail(`Unexpected runtime dependency: ${name}`);
   },
 };
 vm.runInNewContext(compiled, sandbox, { filename: 'communities-production.js' });

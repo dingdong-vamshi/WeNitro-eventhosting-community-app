@@ -1,6 +1,7 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { signedUrl, signedUrlMap } from "./storage-signed-urls";
 
 const COMMUNITY_BUCKET = "communities";
 const MAX_PAGE_SIZE = 50;
@@ -273,15 +274,22 @@ async function uploadCommunityImage(
   return { path, contentType };
 }
 
+function communityObjectPath(path: string) {
+  return path.replace(/^media\/communities\//, "");
+}
+
 async function signedMediaUrl(path: string | null) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path)) return path;
-  const objectPath = path.replace(/^media\/communities\//, "");
-  const { data, error } = await supabase.storage
-    .from(COMMUNITY_BUCKET)
-    .createSignedUrl(objectPath, SIGNED_URL_TTL_SECONDS);
-  if (error) return null;
-  return data.signedUrl;
+  try {
+    return await signedUrl(
+      COMMUNITY_BUCKET,
+      communityObjectPath(path),
+      SIGNED_URL_TTL_SECONDS,
+    );
+  } catch {
+    return null;
+  }
 }
 
 async function removeUploadedImages(paths: string[]) {
@@ -349,6 +357,7 @@ async function mapRoom(
   participants: Map<number, LegacyParticipant>,
   pending: Set<number>,
   memberCounts: Map<number, number>,
+  mediaUrls?: Map<string, string>,
 ): Promise<CommunitySummary> {
   const participant = participants.get(row.id);
   const created = userId !== null && row.created_by === userId;
@@ -361,8 +370,16 @@ async function mapRoom(
     description: row.description ?? "",
     category: (Array.isArray(row.tbl_categories) ? row.tbl_categories[0]?.name : row.tbl_categories?.name)?.trim() || "General",
     tags: row.tags ?? [],
-    imageUrl: await signedMediaUrl(row.image_url),
-    coverUrl: await signedMediaUrl(row.cover_url),
+    imageUrl: row.image_url && !/^https?:\/\//i.test(row.image_url)
+      ? mediaUrls
+        ? mediaUrls.get(communityObjectPath(row.image_url)) ?? null
+        : await signedMediaUrl(row.image_url)
+      : await signedMediaUrl(row.image_url),
+    coverUrl: row.cover_url && !/^https?:\/\//i.test(row.cover_url)
+      ? mediaUrls
+        ? mediaUrls.get(communityObjectPath(row.cover_url)) ?? null
+        : await signedMediaUrl(row.cover_url)
+      : await signedMediaUrl(row.cover_url),
     visibility: row.visibility === "private" ? "private" : "public",
     verified: row.verification_level === "verified_only",
     verifiedOnly: row.verification_level === "verified_only",
@@ -423,10 +440,18 @@ export async function discoverCommunities(
   const owners = await ownersFor(rooms.flatMap((room) => (room.created_by ? [room.created_by] : [])));
   const state = await membershipStateFor(userId, rooms.map((room) => room.id));
   const memberCounts = await memberCountsFor(rooms.map((room) => room.id));
+  const mediaPaths = rooms.flatMap((room) => [room.image_url, room.cover_url])
+    .filter((path): path is string => Boolean(path) && !/^https?:\/\//i.test(path as string))
+    .map(communityObjectPath);
+  const mediaUrls = await signedUrlMap(
+    COMMUNITY_BUCKET,
+    mediaPaths,
+    SIGNED_URL_TTL_SECONDS,
+  );
   return {
     items: await Promise.all(
       rooms.map((room) =>
-        mapRoom(room, userId, owners, state.participants, state.pending, memberCounts),
+        mapRoom(room, userId, owners, state.participants, state.pending, memberCounts, mediaUrls),
       ),
     ),
     page,
