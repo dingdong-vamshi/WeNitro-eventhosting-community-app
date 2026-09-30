@@ -101,6 +101,7 @@ assert.equal((await auth.getValidatedUser()).id, 'auth-8', 'Rejected validation 
 
 const appSource = fs.readFileSync('App.tsx', 'utf8');
 const realtimeSource = fs.readFileSync('src/services/realtime-chat.ts', 'utf8');
+const notificationSource = fs.readFileSync('src/services/notifications-production.ts', 'utf8');
 assert.match(
   appSource,
   /subscribeUnreadCount\(\s*Number\(data\.userId\)/,
@@ -115,5 +116,10 @@ assert.match(
   realtimeSource,
   /requestedUserId == null[\s\S]*?currentUserId\(operation\)[\s\S]*?id\(requestedUserId, "current user id"\)/,
   'Inbox keeps a standalone identity fallback without duplicating startup identity work',
+);
+assert.match(
+  notificationSource,
+  /requestedUserId == null[\s\S]*?currentUserId\(\)[\s\S]*?id\(requestedUserId, "current user id"\)/,
+  'Notification subscriptions reuse the resolved startup identity while retaining a standalone fallback',
 );
 console.log('PASS: startup avoids duplicate Auth user validation, relies on server-authorized profile bootstrap, coalesces explicit validation, rejects stale identities and supports retry.');

@@ -28,6 +28,7 @@ function harness(options = {}) {
   const dep = {
     loaded: true, isSupabaseConfigured: true, initialData: { mode: 'unauthenticated' }, initialWebRoute: null, Platform: { OS: 'web' },
     authIdentityRef: { current: null }, authGenerationRef: { current: 0 }, refreshAuthRef: { current: noop },
+    workspaceLoadedSectionsRef: { current: new Set() },
     setData: next => { state.data = typeof next === 'function' ? next(state.data) : next; },
     setAuthLoading: value => { state.authLoading = value; }, setAuthError: value => { state.authError = value; },
     setWorkspaceError: value => { state.workspaceError = value; }, setWorkspaceLoading: value => { state.workspaceLoading = value; }, setSessionChecked: value => { state.sessionChecked = value; },
@@ -36,6 +37,8 @@ function harness(options = {}) {
     profileOnboardingService: { load: (signal, validatedUser) => { state.profileCalls++; state.signals.push(signal); state.validatedUsers.push(validatedUser); return options.profile ? options.profile(signal, state.profileCalls) : Promise.resolve(profile(7)); } },
     loadRemoteWorkspace: async () => { state.workspaceCalls++; return options.workspace ? options.workspace() : { profile: { id: '7' } }; },
     hydrateRemoteData: (remote, current) => ({ ...current, workspace: remote }),
+    foregroundWorkspaceSections: () => ['activities'],
+    mergeWorkspaceRefresh: (_current, refreshed) => refreshed,
     subscribeToAuthRedirects: () => noop,
     supabase: { auth: { onAuthStateChange: handler => { callback = handler; return { data: { subscription: { unsubscribe: noop } } }; } } },
     withRequestDeadline: deadlines.withRequestDeadline, setTimeout,

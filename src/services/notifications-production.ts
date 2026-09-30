@@ -127,9 +127,12 @@ export const notificationService = {
     onInsert: (item: ProductionNotification) => void,
     onError?: (error: Error) => void,
   ): Promise<RealtimeChannel> {
-    const userId = await currentUserId();
-    if (requestedUserId != null && requestedUserId !== userId)
-      throw new Error("Cannot subscribe to another user's notifications.");
+    // The app already resolved this integer identity through the authenticated
+    // profile bootstrap. Reusing it avoids another identity RPC every time the
+    // subscription is recreated; Realtime still enforces the table's RLS.
+    const userId = requestedUserId == null
+      ? await currentUserId()
+      : id(requestedUserId, "current user id");
     return supabase
       .channel(`notifications:${userId}`)
       .on(
@@ -164,9 +167,9 @@ export const notificationService = {
     onCount: (count: number) => void,
     onError?: (error: Error) => void,
   ): Promise<() => Promise<void>> {
-    const userId = await currentUserId();
-    if (requestedUserId != null && requestedUserId !== userId)
-      throw new Error("Cannot subscribe to another user's notifications.");
+    const userId = requestedUserId == null
+      ? await currentUserId()
+      : id(requestedUserId, "current user id");
 
     let disposed = false;
     let refreshQueued = false;

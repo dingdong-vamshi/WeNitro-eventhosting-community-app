@@ -9,7 +9,7 @@ new Function('exports', ts.transpile(fs.readFileSync('src/domain/workspace-refre
 const { foregroundWorkspaceSections, mergeWorkspaceRefresh } = exports;
 assert.deepEqual(foregroundWorkspaceSections('partnerDashboard'), [], 'Dashboard owns foreground refresh');
 assert.deepEqual(foregroundWorkspaceSections('partnerRegistrationForm'), []);
-assert.deepEqual(foregroundWorkspaceSections('feed'), ['activities', 'vibes', 'stories']);
+assert.deepEqual(foregroundWorkspaceSections('feed'), ['activities', 'communities', 'people', 'vibes', 'stories']);
 assert.deepEqual(foregroundWorkspaceSections('chat'), ['conversations', 'stories', 'people']);
 const current = {
   name: 'Actual profile', accountType: 'partner', activities: ['a'], communities: ['c'], people: ['p'],

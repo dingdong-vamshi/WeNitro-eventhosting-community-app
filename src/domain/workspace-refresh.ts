@@ -4,7 +4,7 @@ export type WorkspaceSection = "profile" | "activities" | "communities" | "peopl
 // (Partner Dashboard, histories, settings, forms) own their own service reads.
 export function foregroundWorkspaceSections(screen: string): WorkspaceSection[] {
   switch (screen) {
-    case "feed": case "firstFeed": return ["activities", "vibes", "stories"];
+    case "feed": case "firstFeed": return ["activities", "communities", "people", "vibes", "stories"];
     case "activities": case "activityDetail": case "saved": return ["activities"];
     case "liked": return ["activities", "vibes"];
     case "communities": case "communityDetail": return ["communities"];

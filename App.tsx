@@ -21,7 +21,7 @@ import { communityPoll, type CommunityPoll } from "./src/services/communities-pr
 import { HostActivityScreen, HostLanding, HostNavigation } from "./src/components/hosting/host-activity-screen";
 import { viewerCanListActivity } from "./src/domain/activity-visibility";
 import { mergeInboxPreview } from "./src/domain/chat-inbox";
-import { foregroundWorkspaceSections, mergeWorkspaceRefresh } from "./src/domain/workspace-refresh";
+import { foregroundWorkspaceSections, mergeWorkspaceRefresh, type WorkspaceSection } from "./src/domain/workspace-refresh";
 import { withRequestDeadline } from "./src/services/request-deadline";
 import { PartnerAccountScreen } from "./src/components/partner-account-screen";
 import type { PartnerBusinessProfile } from "./src/services/partner-account";
@@ -9097,6 +9097,7 @@ export default function App() {
   const refreshAuthRef = useRef<() => Promise<void>>(async () => undefined);
   const authIdentityRef = useRef<string | null>(null);
   const authGenerationRef = useRef(0);
+  const workspaceLoadedSectionsRef = useRef(new Set<WorkspaceSection>());
   useEffect(() => {
     const timer = setTimeout(() => setSplashVisible(false), 1500);
     let active = true;
@@ -9245,7 +9246,7 @@ export default function App() {
   }, [data.mode, data.userId, workspaceLoading]);
 
   useEffect(() => {
-    if (data.mode !== "authenticated" || !isSupabaseConfigured) return;
+    if (data.mode !== "authenticated" || !isSupabaseConfigured || workspaceLoading) return;
     // Community chat owns its discovery and raw inbox preview refresh already.
     const sections = screen === "chat" && !selectedConversationId && !legacyMessages && messagesTab === "Communities"
       ? [] : foregroundWorkspaceSections(screen);
@@ -9256,7 +9257,7 @@ export default function App() {
     if (!authUserId) return;
     let active = true;
     let refreshing = false;
-    const unsubscribe = subscribeToAppForeground(async () => {
+    const refreshSections = async () => {
       if (!active || refreshing) return;
       refreshing = true;
       try {
@@ -9267,14 +9268,19 @@ export default function App() {
           const next = hydrateRemoteData(remote, current);
           return mergeWorkspaceRefresh(current, next, sections);
         });
+        sections.forEach(section => workspaceLoadedSectionsRef.current.add(section));
       } catch (error) {
         console.warn("Foreground refresh failed", error);
       } finally {
         refreshing = false;
       }
-    });
+    };
+    // Navigation loads a section the first time it is opened. Subsequent
+    // refreshes happen only when the app returns to the foreground.
+    if (sections.some(section => !workspaceLoadedSectionsRef.current.has(section))) void refreshSections();
+    const unsubscribe = subscribeToAppForeground(refreshSections);
     return () => { active = false; unsubscribe(); };
-  }, [data.mode, data.userId, screen, selectedConversationId, legacyMessages, messagesTab]);
+  }, [data.mode, data.userId, screen, selectedConversationId, legacyMessages, messagesTab, workspaceLoading]);
 
   useEffect(() => {
     if (!loaded || !isSupabaseConfigured) return;
@@ -9289,6 +9295,7 @@ export default function App() {
       running?.controller.abort();
       authIdentityRef.current = id;
       authGenerationRef.current += 1;
+      workspaceLoadedSectionsRef.current.clear();
       running = null;
       readyIdentity = null;
       attemptedIdentity = null;
@@ -9333,14 +9340,10 @@ export default function App() {
           setScreen(currentScreen => ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"].includes(currentScreen) ? "feed" : currentScreen);
           setAuthLoading(false);
           setSessionChecked(true);
-          // A shared Activity link should not fan out into every Feed request
-          // before its own targeted request can render. Other entry routes keep
-          // the established full workspace bootstrap. Profile stays included
-          // so initial hydration retains the authenticated identity.
-          const bootstrapSections = initialWebRoute?.screen === "activityDetail"
-            ? foregroundWorkspaceSections(initialWebRoute.screen)
-            : null;
-          if (bootstrapSections && !bootstrapSections.includes("profile")) bootstrapSections.unshift("profile");
+          // Initial hydration is route-scoped. This keeps optional inbox,
+          // partner and social reads out of Feed startup while the foreground
+          // refresh continues to load those sections when they are opened.
+          const bootstrapSections = foregroundWorkspaceSections(initialWebRoute?.screen ?? "feed");
           // Activity details own a targeted, deadline-bounded fetch. Loading the
           // complete discovery list first only delays a shared Activity URL.
           if (initialWebRoute?.screen === "activityDetail" && bootstrapSections) {
@@ -9348,16 +9351,20 @@ export default function App() {
             if (index >= 0) bootstrapSections.splice(index, 1);
           }
           const remote = await withRequestDeadline(
-            () => loadRemoteWorkspace(setup.workspaceProfile, bootstrapSections ? {
+            () => loadRemoteWorkspace(setup.workspaceProfile, {
               sections: bootstrapSections,
               viewer: { authUserId: identity, appUserId: String(setup.profile.id) },
-            } : undefined), 30_000,
+            }), 30_000,
             "Your Feed took too long to load. Your account is still signed in. Try again.", request.controller.signal,
           );
           if (!isCurrent()) return;
           if (!remote) throw new Error("Your session is no longer available. Please sign in again.");
           if (remote.profile.id !== String(setup.profile.id)) throw new Error("Your account changed while loading. Please try again.");
-          setData(current => current.mode === "authenticated" && current.userId === String(setup.profile.id) ? hydrateRemoteData(remote, current) : current);
+          setData(current => {
+            if (current.mode !== "authenticated" || current.userId !== String(setup.profile.id)) return current;
+            return mergeWorkspaceRefresh(current, hydrateRemoteData(remote, current), bootstrapSections);
+          });
+          bootstrapSections.forEach(section => workspaceLoadedSectionsRef.current.add(section));
           setWorkspaceError(remote.workspaceWarnings?.length
             ? `${remote.workspaceWarnings.slice(0, 2).join(" ")} Other Feed sections are available; retry to refresh the missing section.`
             : "");
