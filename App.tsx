@@ -9173,7 +9173,7 @@ export default function App() {
     let cleanup: (() => Promise<void>) | undefined;
     notificationService
       .subscribeUnreadCount(
-        undefined,
+        Number(data.userId),
         (count) => active && setNotificationUnreadCount(count),
         (error) => console.warn("Notification count subscription failed", error),
       )
@@ -9221,7 +9221,7 @@ export default function App() {
           onConversationChange: refreshInbox,
           onError: (error) =>
             console.warn("Chat inbox subscription failed", error),
-        })
+        }, Number(data.userId))
         .then((created) => {
           retryAttempt = 0;
           if (active) subscription = created;

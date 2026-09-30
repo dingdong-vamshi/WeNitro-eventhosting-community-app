@@ -859,11 +859,18 @@ export async function subscribeToConversation(
 
 export async function subscribeToInbox(
   handlers: InboxRealtimeHandlers = {},
+  requestedUserId?: number,
 ): Promise<InboxRealtimeSubscription> {
   const operation = "subscribe to the chat inbox";
   let channel: RealtimeChannel | null = null;
   try {
-    const userId = await currentUserId(operation);
+    // Workspace bootstrap has already resolved this legacy user ID through an
+    // authenticated server call. Reuse it so the two global subscriptions do
+    // not race identical identity RPCs during every session restore. Realtime
+    // authorization is still enforced by the private channel and table RLS.
+    const userId = requestedUserId == null
+      ? await currentUserId(operation)
+      : id(requestedUserId, "current user id");
     await supabase.realtime.setAuth();
     let closed = false;
     const report = (error: unknown, failedOperation: string) =>
