@@ -4076,6 +4076,8 @@ function PostVibeScreen({
 
 export function ActivityDetailScreen({
   activity,
+  initialDetails,
+  onInitialDetailsConsumed,
   data,
   setData,
   back,
@@ -4090,6 +4092,8 @@ export function ActivityDetailScreen({
   onEdit,
 }: {
   activity: Activity;
+  initialDetails?: Awaited<ReturnType<typeof activityService.getDetails>>;
+  onInitialDetailsConsumed?: () => void;
   data: AppData;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
   back: () => void;
@@ -4159,7 +4163,18 @@ export function ActivityDetailScreen({
     if (!isSupabaseConfigured || !isBackendId(activity.id)) return;
     setLoadingDetails(true);
     try {
-      const details = await activityService.getDetails(activity.id);
+      const details = await activityService.getDetails(activity.id, data.userId);
+      applyDetails(details);
+    } catch (caught) {
+      Alert.alert(
+        "Activity details could not load",
+        caught instanceof Error ? caught.message : "Please try again.",
+      );
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
+  const applyDetails = (details: Awaited<ReturnType<typeof activityService.getDetails>>) => {
       const refreshed = activityFromRemote(details.activity);
       setParticipants(details.participants);
       setComments(details.comments);
@@ -4183,14 +4198,6 @@ export function ActivityDetailScreen({
           item.id === activity.id ? { ...refreshed, likeCount: details.likeCount ?? item.likeCount ?? 0 } : item,
         ),
       }));
-    } catch (caught) {
-      Alert.alert(
-        "Activity details could not load",
-        caught instanceof Error ? caught.message : "Please try again.",
-      );
-    } finally {
-      setLoadingDetails(false);
-    }
   };
   const verifyPayment = async (orderId: string) => {
     setPaymentBusy(true); setJoinError(""); setPaymentMessage("Checking payment with Cashfree…");
@@ -4235,7 +4242,10 @@ export function ActivityDetailScreen({
   };
   useEffect(() => {
     setHeroLoadFailed(false);
-    void refreshDetails();
+    if (initialDetails) {
+      applyDetails(initialDetails);
+      onInitialDetailsConsumed?.();
+    } else void refreshDetails();
     if (requiresPlatformPayment && isBackendId(activity.id)) {
       void listActivityEntryCategories(activity.id).then(items => {
         setEntryCategories(items);
@@ -9098,6 +9108,7 @@ export default function App() {
   const authIdentityRef = useRef<string | null>(null);
   const authGenerationRef = useRef(0);
   const workspaceLoadedSectionsRef = useRef(new Set<WorkspaceSection>());
+  const activityRouteDetailsRef = useRef<{ activityId: string; details: Awaited<ReturnType<typeof activityService.getDetails>> } | null>(null);
   useEffect(() => {
     const timer = setTimeout(() => setSplashVisible(false), 1500);
     let active = true;
@@ -9124,12 +9135,13 @@ export default function App() {
     const controller = new AbortController();
     setActivityRouteError("");
     void withRequestDeadline(
-      () => activityService.getDetails(selectedActivityId),
+      () => activityService.getDetails(selectedActivityId, data.userId),
       8_000,
       "This Activity took too long to load. Try again.",
       controller.signal,
     ).then((details) => {
       if (!active) return;
+      activityRouteDetailsRef.current = { activityId: selectedActivityId, details };
       const activity = activityFromRemote(details.activity);
       setData((current) => ({
         ...current,
@@ -9500,6 +9512,7 @@ export default function App() {
     });
   };
   const navigateToActivity = (id: string) => {
+    if (activityRouteDetailsRef.current?.activityId !== id) activityRouteDetailsRef.current = null;
     setHistory((items) => [...items, screen]);
     setSelectedActivityId(id);
     setScreen("activityDetail");
@@ -9510,7 +9523,8 @@ export default function App() {
       navigateToActivity(id);
       return;
     }
-    void activityService.getDetails(id).then((details) => {
+    void activityService.getDetails(id, data.userId).then((details) => {
+      activityRouteDetailsRef.current = { activityId: id, details };
       const activity = activityFromRemote(details.activity);
       setData((current) => ({
         ...current,
@@ -9580,7 +9594,8 @@ export default function App() {
       const activityId = invitation.status === 'fulfilled' ? invitation.value : null;
       if (!activityId) return;
       try {
-        const details = await activityService.getDetails(activityId);
+        const details = await activityService.getDetails(activityId, data.userId);
+        activityRouteDetailsRef.current = { activityId, details };
         const activity = activityFromRemote(details.activity);
         setData((current) => ({ ...current, activities: [activity, ...current.activities.filter((item) => item.id !== activity.id)] }));
         openActivity(activity.id);
@@ -9759,6 +9774,10 @@ export default function App() {
           <ActivityDetailScreen
             key={selectedActivity.id}
             activity={selectedActivity}
+            initialDetails={activityRouteDetailsRef.current?.activityId === selectedActivity.id ? activityRouteDetailsRef.current.details : undefined}
+            onInitialDetailsConsumed={() => {
+              if (activityRouteDetailsRef.current?.activityId === selectedActivity.id) activityRouteDetailsRef.current = null;
+            }}
             data={data}
             setData={setData}
             back={back}

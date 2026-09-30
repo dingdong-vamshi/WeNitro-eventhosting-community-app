@@ -1239,11 +1239,15 @@ export const activityService = {
     const activity = await activitiesProductionService.publish(activityId);
     return await activityForWorkspace(activity, null, 0);
   },
-  async getDetails(activityId: string) {
-    const [details, participantRows, eventResult, legacyUserId, feedbackRows, likeResult, activityVibes] =
+  async getDetails(activityId: string, requestedUserId?: string) {
+    const knownUserId = requestedUserId && /^\d+$/.test(requestedUserId) && Number(requestedUserId) > 0
+      ? Number(requestedUserId)
+      : null;
+    const [details, participantRows, legacyUserId, feedbackRows, likeResult, activityVibes] =
       await Promise.all([
         activitiesProductionService.getDetails(activityId, {
           commentPageSize: 100,
+          viewerId: knownUserId ?? undefined,
         }),
         supabase
           .from("tbl_event_participants")
@@ -1251,12 +1255,7 @@ export const activityService = {
           .eq("event_id", Number(activityId))
           .neq("status", "left")
           .order("created_at", { ascending: true }),
-        supabase
-          .from("tbl_events")
-          .select("created_by,join_type")
-          .eq("id", Number(activityId))
-          .single(),
-        currentLegacyUserId(),
+        knownUserId == null ? currentLegacyUserId() : Promise.resolve(knownUserId),
         supabase
           .from("tbl_event_feedback")
           .select("id,reaction,comment,created_at,created_by")
@@ -1267,7 +1266,7 @@ export const activityService = {
           .from("tbl_event_likes")
           .select("id", { count: "exact", head: true })
           .eq("event_id", Number(activityId)),
-        vibesProductionService.listReels({ activityId, pageSize: 50 }),
+        vibesProductionService.listReels({ activityId, pageSize: 50, viewerId: knownUserId == null ? undefined : String(knownUserId) }),
       ]);
     let participantResult = participantRows;
     if (participantResult.error) {
@@ -1288,7 +1287,6 @@ export const activityService = {
         })),
       };
     }
-    if (eventResult.error) throw eventResult.error;
     const rows = (participantResult.data ?? []) as Row[];
     const userIds = [...new Set(rows.map((row) => Number(row.user_id)))];
     const profilesResult = userIds.length
@@ -1316,10 +1314,9 @@ export const activityService = {
       viewerStatus: details.viewerState.participation?.status ?? null,
       liked: details.viewerState.liked,
       saved: details.viewerState.saved,
-      isHost: Number(eventResult.data.created_by) === legacyUserId,
+      isHost: Number(details.activity.ownerId) === legacyUserId,
       isCohost: rows.some((row) => Number(row.user_id) === legacyUserId && String(row.role) === "cohost"),
-      joinType:
-        eventResult.data.join_type === "approval" ? "approval" : "direct",
+      joinType: details.activity.joinType,
       participants: rows.map((row) => {
         const profile = profiles.get(Number(row.user_id));
         return {

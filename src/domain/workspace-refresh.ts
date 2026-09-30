@@ -5,7 +5,10 @@ export type WorkspaceSection = "profile" | "activities" | "communities" | "peopl
 export function foregroundWorkspaceSections(screen: string): WorkspaceSection[] {
   switch (screen) {
     case "feed": case "firstFeed": return ["activities", "communities", "people", "vibes", "stories"];
-    case "activities": case "activityDetail": case "saved": return ["activities"];
+    case "activities": case "saved": return ["activities"];
+    // Activity detail owns a targeted fetch and a Realtime subscription. A
+    // full discovery refresh here duplicates that work on shared/deep links.
+    case "activityDetail": return [];
     case "liked": return ["activities", "vibes"];
     case "communities": case "communityDetail": return ["communities"];
     case "vibes": return ["vibes"];

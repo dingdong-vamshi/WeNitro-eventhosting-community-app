@@ -11,6 +11,7 @@ assert.deepEqual(foregroundWorkspaceSections('partnerDashboard'), [], 'Dashboard
 assert.deepEqual(foregroundWorkspaceSections('partnerRegistrationForm'), []);
 assert.deepEqual(foregroundWorkspaceSections('feed'), ['activities', 'communities', 'people', 'vibes', 'stories']);
 assert.deepEqual(foregroundWorkspaceSections('chat'), ['conversations', 'stories', 'people']);
+assert.deepEqual(foregroundWorkspaceSections('activityDetail'), [], 'Activity details own their targeted read');
 const current = {
   name: 'Actual profile', accountType: 'partner', activities: ['a'], communities: ['c'], people: ['p'],
   vibes: ['v'], stories: ['s'], conversations: ['loaded history'],

@@ -702,13 +702,16 @@ const chunksOf = <T>(values: T[], size: number) => {
 
 async function getViewerStates(
   activityIds: string[],
+  requestedUserId?: string | number,
 ): Promise<Record<string, ActivityViewerState>> {
   const ids = [...new Set(activityIds.map((id) => parseId(id, "Activity ID")))];
   const states: Record<string, ActivityViewerState> = Object.fromEntries(
     ids.map((id) => [String(id), emptyViewerState()]),
   );
   if (!ids.length) return states;
-  const userId = await optionalCurrentUserId();
+  const userId = requestedUserId == null
+    ? await optionalCurrentUserId()
+    : parseId(requestedUserId, "App user ID");
   if (userId == null) return states;
 
   const batches = await Promise.all(
@@ -1114,6 +1117,7 @@ export const activitiesProductionService = {
       commentPage?: number;
       commentPageSize?: number;
       signal?: AbortSignal;
+      viewerId?: string | number;
     } = {},
   ): Promise<ActivityDetails> {
     requireBackend();
@@ -1125,7 +1129,7 @@ export const activitiesProductionService = {
         pageSize: options.commentPageSize,
         signal: options.signal,
       }),
-      getViewerStates([activityId]),
+      getViewerStates([activityId], options.viewerId),
     ]);
     return {
       activity,
