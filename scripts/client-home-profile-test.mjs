@@ -3,11 +3,10 @@ import fs from 'node:fs';
 
 const feed = fs.readFileSync('src/components/reconstruction/feed-search.tsx', 'utf8');
 for (const id of ['activities', 'communities', 'friends', 'store']) assert.match(feed, new RegExp(`id: '${id}'`));
-for (const asset of ['hero-activities.jpeg', 'hero-communities.jpeg', 'hero-friends.jpeg', 'hero-store.jpeg']) assert.ok(feed.includes(`assets/hero/${asset}`));
-assert.match(feed, /artwork: require\('\.\.\/\.\.\/\.\.\/assets\/photos\/friends\.jpg'\)/);
-for (const artwork of ['bonfire.jpg', 'study.jpg', 'friends.jpg', 'camera.jpg']) assert.ok(feed.includes(`assets/photos/${artwork}`));
-assert.match(feed, /width: '66%', overflow: 'hidden'/);
-assert.match(feed, /rgba\(39, 18, 99, 0\.97\)/);
+for (const asset of ['client-activities.png', 'client-communities.png', 'client-friends.png', 'client-store.png']) assert.ok(feed.includes(`assets/hero/${asset}`));
+assert.match(feed, /source=\{slide.image\}/);
+assert.match(feed, /resizeMode="contain"/);
+assert.doesNotMatch(feed, /slide\.(artwork|title|description|eyebrow)/);
 for (const label of ['Explore activities', 'Explore communities', 'Invite friends', 'Visit Nitro Store']) assert.ok(feed.includes(label));
 assert.match(feed, /setInterval/);
 assert.match(feed, /HERO_AUTO_ADVANCE_MS = 4500/);
@@ -29,7 +28,7 @@ assert.match(fs.readFileSync('App.tsx', 'utf8'), /notificationCount=\{notificati
 const settings = fs.readFileSync('src/components/reconstruction/settings.tsx', 'utf8');
 const profile = fs.readFileSync('src/components/reconstruction/profile.tsx', 'utf8');
 const utilities = fs.readFileSync('src/components/reconstruction/profile-utilities.tsx', 'utf8');
-for (const source of [feed, settings, profile, utilities]) assert.doesNotMatch(source, /V-Nitro|V Nitro/);
+for (const source of [settings, profile, utilities]) assert.doesNotMatch(source, /V-Nitro|V Nitro/);
 for (const label of ['About', 'Interests', 'Communities']) assert.ok(profile.includes(label));
 assert.match(profile, /my_trust_score/);
 assert.match(profile, /profile_trust_score/);

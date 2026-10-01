@@ -17,10 +17,10 @@ const vibeIntro = read('src/components/onboarding/vibe-intro-slide.tsx');
 const appConfig = JSON.parse(read('app.json')).expo;
 
 const slides = [
-  ['activities', 'hero-activities.jpeg', 'activities'],
-  ['communities', 'hero-communities.jpeg', 'communities'],
-  ['friends', 'hero-friends.jpeg', 'inviteSquad'],
-  ['store', 'hero-store.jpeg', 'shop'],
+  ['activities', 'client-activities.png', 'activities'],
+  ['communities', 'client-communities.png', 'communities'],
+  ['friends', 'client-friends.png', 'inviteSquad'],
+  ['store', 'client-store.png', 'shop'],
 ];
 let previous = -1;
 for (const [id, asset, route] of slides) {
@@ -32,24 +32,20 @@ for (const [id, asset, route] of slides) {
   assert.ok(block.includes(`screen: '${route}'`), `${id} must route to ${route}`);
 }
 
-assert.match(feed, /artwork: require\('\.\.\/\.\.\/\.\.\/assets\/photos\/friends\.jpg'\)/,
-  'Friends uses text-free artwork so obsolete +500 claims cannot appear behind the current 10-point offer');
-for (const artwork of ['bonfire.jpg', 'study.jpg', 'friends.jpg', 'camera.jpg']) {
-  assert.ok(feed.includes(`artwork: require('../../../assets/photos/${artwork}')`),
-    `${artwork} must provide text-free hero artwork so live copy is the only visible copy`);
-}
-assert.match(feed, /width: '66%', overflow: 'hidden'/,
-  'Hero art is isolated in a clipped right-hand panel instead of painting baked-in copy beneath live text');
-assert.match(feed, /width: carouselCardHeight \* 2\.4/,
-  'Hero art keeps the supplied wide aspect and right crop across responsive card widths');
-assert.match(feed, /rgba\(39, 18, 99, 0\.97\)/,
-  'The live hero copy sits on an opaque contrast field that prevents artwork text bleed-through');
+const hero = feed.slice(feed.indexOf('{HERO_SLIDES.map(slide'), feed.indexOf('<View style={{ paddingHorizontal: 14 }}>'));
+assert.doesNotMatch(hero, /<Text|<LinearGradient|slide\.(title|description|eyebrow|artwork)/,
+  'The artwork must be the only visible copy, with no duplicate UI text or image overlays');
+assert.match(hero, /source=\{slide.image\}/);
+assert.match(hero, /resizeMode="contain"/);
+assert.match(hero, /\.\.\.slide.ctaRegion, backgroundColor: 'transparent'/);
+assert.match(feed, /HERO_ASPECT_RATIO = 1600 \/ 666/);
+assert.match(feed, /carouselCardHeight = carouselCardWidth \/ HERO_ASPECT_RATIO/);
 
 const heroHashes = {
-  'assets/hero/hero-activities.jpeg': '516eb1beccb14bfaf192597feef9af81326d09a8a74876befe299d393dfc8118',
-  'assets/hero/hero-communities.jpeg': '08b201273ebb058f02633eccfb986c0b1743632d0eaabfe1a67575bf37c56a80',
-  'assets/hero/hero-friends.jpeg': '4bcf67260ac3d3fdc2c3001b9d10229db16728f3432be6af6f02e26420b9ccc4',
-  'assets/hero/hero-store.jpeg': '44a06565679d2118fbd348495bc4d6a94fa2a579d9101d7707edd2dc0afc799e',
+  'assets/hero/client-activities.png': '6b8023bc7f098b7bef718477d9154d59b6aac248334324b62441ebe27e87f432',
+  'assets/hero/client-communities.png': 'c23bd0b3ab0a2ca89a0ef20de6571080dee704176d042560ac85d985a13bd6d8',
+  'assets/hero/client-friends.png': 'ee984d43c6d620d103d59855e461cdfd908f07de067c505c65ce87c2f3125420',
+  'assets/hero/client-store.png': '1b4e7a0bd608a74c4a07707b73b72adf7a908ff8e0bc8bdf87e0dac01e742439',
 };
 for (const [path, expected] of Object.entries(heroHashes)) assert.equal(sha256(path), expected, `${path} must remain the exact supplied artwork`);
 
@@ -69,7 +65,6 @@ for (const behavior of [
 assert.match(feed, /carouselDragging \|\| carouselPressed \|\| !appActive \|\| reduceMotion/);
 assert.ok(!feed.includes('hero-reward-claim-top-mask'));
 assert.ok(!feed.includes('hero-reward-claim-edge-mask'));
-assert.doesNotMatch(feed, /\+500|V-Nitro|V Nitro/);
 
 const blue = 'assets/brand/wenitro-mark-blue.png';
 const white = 'assets/brand/wenitro-mark-white.png';

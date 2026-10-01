@@ -18,46 +18,39 @@ import { Action, BrandBar, Button, ErrorLine, Header, Icon, Page, Pills, SearchF
 const HERO_SLIDES = [
   {
     id: 'activities',
-    image: require('../../../assets/hero/hero-activities.jpeg'),
-    artwork: require('../../../assets/photos/bonfire.jpg'),
-    eyebrow: 'REAL PEOPLE, OFFLINE',
-    title: 'Host and discover new activities',
-    description: 'Make plans around shared interests and meet in real life.',
+    image: require('../../../assets/hero/client-activities.png'),
+    label: 'Host and Discover New Activities. Meet real people offline.',
+    ctaRegion: { left: '4.6%', top: '72.7%', width: '26.1%', height: '13.8%' } as const,
     cta: 'Explore activities',
     screen: 'activities' as const,
   },
   {
     id: 'communities',
-    image: require('../../../assets/hero/hero-communities.jpeg'),
-    artwork: require('../../../assets/photos/study.jpg'),
-    eyebrow: 'FIND YOUR PEOPLE',
-    title: 'Join a community that feels like yours',
-    description: 'Share ideas, join conversations and build your squad.',
+    image: require('../../../assets/hero/client-communities.png'),
+    label: 'Find your community. Join the conversation.',
+    ctaRegion: { left: '5.3%', top: '67.7%', width: '26.8%', height: '13.4%' } as const,
     cta: 'Explore communities',
     screen: 'communities' as const,
   },
   {
     id: 'friends',
-    image: require('../../../assets/hero/hero-friends.jpeg'),
-    artwork: require('../../../assets/photos/friends.jpg'),
-    eyebrow: 'BETTER TOGETHER',
-    title: 'Bring your friends. Earn Nitro Points.',
-    description: 'Invite your squad and earn 10 Nitro Points when they join.',
+    image: require('../../../assets/hero/client-friends.png'),
+    label: 'Bring your friends. Earn Nitro Points.',
+    ctaRegion: { left: '5.3%', top: '67.9%', width: '21.3%', height: '13.2%' } as const,
     cta: 'Invite friends',
     screen: 'inviteSquad' as const,
   },
   {
     id: 'store',
-    image: require('../../../assets/hero/hero-store.jpeg'),
-    artwork: require('../../../assets/photos/camera.jpg'),
-    eyebrow: 'NITRO STORE',
-    title: 'Turn Nitro Points into rewards',
-    description: 'See your balance and learn when rewards become available.',
+    image: require('../../../assets/hero/client-store.png'),
+    label: 'Turn your Nitro Points into rewards. Explore the V-Nitro Store.',
+    ctaRegion: { left: '5.1%', top: '73.6%', width: '23.8%', height: '12.8%' } as const,
     cta: 'Visit Nitro Store',
     screen: 'shop' as const,
   },
 ] as const;
 const HERO_AUTO_ADVANCE_MS = 4500;
+const HERO_ASPECT_RATIO = 1600 / 666;
 const displayableMedia = (value?: string) => Boolean(value && /^(https?:|data:|blob:|file:)/i.test(value));
 const TRIBE_IMAGES = [
   require('../../../assets/photos/study.jpg'),
@@ -138,8 +131,8 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const [nearby, setNearby] = useState<{ latitude: number; longitude: number } | null>(null);
   const [locating, setLocating] = useState(false);
   const pageWidth = Math.min(width, MOBILE_APP_MAX_WIDTH);
-  const carouselCardWidth = Math.max(pageWidth - 34, 280);
-  const carouselCardHeight = Math.max(188, Math.min(220, Math.round(carouselCardWidth * .53)));
+  const carouselCardWidth = Math.max(pageWidth - 34, 1);
+  const carouselCardHeight = carouselCardWidth / HERO_ASPECT_RATIO;
   const carouselStep = carouselCardWidth;
 
   useEffect(() => {
@@ -160,12 +153,17 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
     const timer = setInterval(() => {
       setHomeSlide(current => {
         const next = (current + 1) % HERO_SLIDES.length;
-        homeCarousel.current?.scrollTo({ x: next * carouselStep, animated: true });
+        homeCarousel.current?.scrollTo({ x: next * carouselStep, animated: false });
         return next;
       });
     }, HERO_AUTO_ADVANCE_MS);
     return () => clearInterval(timer);
   }, [carouselPaused, carouselStep]);
+
+  // Resizing must preserve the selected page instead of leaving two partial slides.
+  useEffect(() => {
+    homeCarousel.current?.scrollTo({ x: homeSlide * carouselStep, animated: false });
+  }, [carouselStep, homeSlide]);
 
   useEffect(() => { if (!refreshOnMount) { setLoading(false); return; } const controller = new AbortController(); let active = true; setLoading(true); void activitiesProductionService.discover({ pageSize: 50, upcomingOnly: false, sort: 'newest', signal: controller.signal }).then(async page => { const prepared = await prepareReferenceActivities(page.items); if (active) setData(current => ({ ...current, activities: prepared })); }).catch(e => { if (active && !controller.signal.aborted) setError(e.message); }).finally(() => { if (active) setLoading(false); }); return () => { active = false; controller.abort(); }; }, [refreshOnMount]);
   const chooseFilter = async (value: string) => { setFilter(value); if (value !== 'Nearby' || nearby || locating) return; setLocating(true); setError(''); try { setNearby(await activityLocationService.current()); } catch (e: any) { setError(e.message); } finally { setLocating(false); } };
@@ -176,7 +174,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   return <Page>
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 28 }}>
       <BrandBar go={go} location={data.location || 'Nearby'} avatarUrl={data.avatarUri} notificationCount={notificationCount}>
-        <View style={{ marginTop: 14, width: carouselCardWidth, height: carouselCardHeight, borderRadius: 18, overflow: 'hidden', backgroundColor: '#0F172A', alignSelf: 'center' }}>
+        <View style={{ marginTop: 14, width: carouselCardWidth, alignSelf: 'center' }}>
           <ScrollView
             ref={homeCarousel}
             horizontal
@@ -193,54 +191,46 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
               setHomeSlide(Math.max(0, Math.min(HERO_SLIDES.length - 1, Math.round(event.nativeEvent.contentOffset.x / carouselStep))));
               setCarouselDragging(false);
             }}
-            style={{ width: carouselCardWidth, height: carouselCardHeight }}
+            style={{ width: carouselCardWidth, height: carouselCardHeight, borderRadius: carouselCardWidth * .03, overflow: 'hidden' }}
           >
             {HERO_SLIDES.map(slide => (
-              <Pressable
-                key={slide.id}
-                accessibilityRole="button"
-                accessibilityLabel={`${slide.cta}: ${slide.title}`}
-                accessibilityHint="Opens the featured WeNitro destination"
-                onPressIn={() => setCarouselPressed(true)}
-                onPressOut={() => setCarouselPressed(false)}
-                onPress={() => go(slide.screen)}
-                style={({ pressed }) => ({ width: carouselCardWidth, height: carouselCardHeight, opacity: pressed ? 0.88 : 1 })}
-              >
-                <View pointerEvents="none" style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '66%', overflow: 'hidden' }}>
-                  <Image source={slide.artwork} accessible={false} accessibilityIgnoresInvertColors style={{ position: 'absolute', right: 0, top: 0, width: carouselCardHeight * 2.4, height: carouselCardHeight }} resizeMode="cover" />
-                </View>
-                <LinearGradient pointerEvents="none" colors={['rgba(39, 18, 99, 1)', 'rgba(39, 18, 99, 0.97)', 'rgba(22, 15, 62, 0.42)']} locations={[0, .54, 1]} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={{ position: 'absolute', inset: 0 }} />
-                <View style={{ flex: 1, width: pageWidth <= 360 ? '74%' : '70%', padding: 16, paddingBottom: 22, justifyContent: 'center', gap: 6 }}>
-                  <Text style={{ color: '#C9C3FF', fontSize: 12, lineHeight: 16, fontWeight: '800', letterSpacing: .7 }}>{slide.eyebrow}</Text>
-                  <Text style={{ color: '#FFFFFF', fontSize: 20, lineHeight: 24, fontWeight: '800' }}>{slide.title}</Text>
-                  <Text numberOfLines={2} style={{ color: '#F0EEFF', fontSize: 12, lineHeight: 17 }}>{slide.description}</Text>
-                  <View style={{ alignSelf: 'flex-start', minHeight: 38, borderRadius: 19, backgroundColor: '#FFFFFF', paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center', gap: 7 }}>
-                    <Text style={{ color: '#392CC3', fontSize: 12, fontWeight: '800' }}>{slide.cta}</Text>
-                    <Icon name="arrow-forward" size={14} color="#392CC3" />
-                  </View>
-                </View>
-              </Pressable>
+              <View key={slide.id} testID={`hero-slide-${slide.id}`} style={{ width: carouselCardWidth, height: carouselCardHeight }}>
+                <Image source={slide.image} accessibilityLabel={slide.label} accessibilityIgnoresInvertColors style={{ width: '100%', height: '100%' }} resizeMode="contain" />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={slide.cta}
+                  accessibilityHint="Opens the featured WeNitro destination"
+                  onPressIn={() => setCarouselPressed(true)}
+                  onPressOut={() => setCarouselPressed(false)}
+                  onFocus={() => setCarouselPressed(true)}
+                  onBlur={() => setCarouselPressed(false)}
+                  onPress={() => go(slide.screen)}
+                  hitSlop={{ top: 10, bottom: 10 }}
+                  style={{ position: 'absolute', ...slide.ctaRegion, backgroundColor: 'transparent' }}
+                />
+              </View>
             ))}
           </ScrollView>
-          <View pointerEvents="box-none" accessibilityLabel={`Carousel slide ${homeSlide + 1} of ${HERO_SLIDES.length}`} style={{ position: 'absolute', left: 0, right: 0, bottom: 10, flexDirection: 'row', justifyContent: 'center', gap: 6 }}>
+          <View accessibilityLabel={`Carousel slide ${homeSlide + 1} of ${HERO_SLIDES.length}`} style={{ flexDirection: 'row', justifyContent: 'center', gap: 2 }}>
             {HERO_SLIDES.map((_, index) => (
               <Pressable
                 key={index}
                 accessibilityRole="button"
                 accessibilityLabel={`Show carousel slide ${index + 1}`}
+                accessibilityState={{ selected: homeSlide === index }}
                 onPressIn={() => setCarouselPressed(true)}
                 onPressOut={() => setCarouselPressed(false)}
                 onPress={() => {
                   setHomeSlide(index);
-                  homeCarousel.current?.scrollTo({ x: index * carouselStep, animated: true });
+                  homeCarousel.current?.scrollTo({ x: index * carouselStep, animated: false });
                 }}
                 style={{
-                  width: homeSlide === index ? 22 : 6,
-                  height: 6,
-                  borderRadius: 3,
-                  backgroundColor: homeSlide === index ? '#FFFFFF' : 'rgba(255, 255, 255, 0.45)',
+                  width: 32,
+                  height: 28,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-              />
+              ><View style={{ width: homeSlide === index ? 22 : 6, height: 6, borderRadius: 3, backgroundColor: homeSlide === index ? '#FFFFFF' : 'rgba(255, 255, 255, 0.45)' }} /></Pressable>
             ))}
           </View>
         </View>
