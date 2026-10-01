@@ -36,6 +36,7 @@ new Function('exports', 'require', compiled)(serviceModule.exports, name => {
   return { supabase: {} };
 });
 const valid = {
+  terms_accepted: true,
   business_name: 'Trail Club', description: '', city: 'Pune', activity_types: ['Outdoors'],
   activity_location: 'Pune district', age_category: '18+', bank_name: 'Example Bank',
   account_holder_name: 'Sample Partner', account_number: '1234567890', ifsc: 'ABCD0123456', upi_id: '',

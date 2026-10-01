@@ -32,6 +32,7 @@ new Function('exports', 'require', ts.transpile(
 });
 const { partnerAccountService, validatePartnerAccount } = exports;
 const upi = {
+  terms_accepted: true,
   business_name: ' QA Club ', description: '', city: ' Pune ', activity_types: [' Outdoors ', 'Outdoors'],
   activity_location: ' Pune park ', age_category: ' 18+ ', bank_name: '',
   account_holder_name: '', account_number: '', ifsc: '', upi_id: ' Qa.Member@UPI ',
@@ -52,6 +53,8 @@ assert.equal(requests[1].payload.p_application.account_number, '1234567890');
 assert.equal(requests[1].payload.p_application.ifsc, 'ABCD0123456');
 
 const invalidInputs = [
+  { ...upi, terms_accepted: false },
+  { ...upi, terms_accepted: undefined },
   { ...upi, upi_id: 'missing-provider' },
   { ...upi, upi_id: `${'x'.repeat(101)}@upi` },
   { ...upi, upi_id: `qa@${'x'.repeat(56)}` },

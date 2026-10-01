@@ -22,15 +22,18 @@ try {
   const chatMedia = fs.readFileSync('supabase/migrations/20261001112539_chat_photo_poll_only.sql', 'utf8');
   const closedChat = fs.readFileSync('supabase/migrations/20261001114800_closed_activity_chat_writes.sql', 'utf8');
   const policies = fs.readFileSync('supabase/migrations/20261001115500_first_signup_policy_agreement.sql', 'utf8');
+  const partnerTerms = fs.readFileSync('supabase/migrations/20261001121200_partner_application_terms.sql', 'utf8');
   const tables = [...moderation.matchAll(/on public\.(\w+) for each row/g)].map(m => m[1]);
   const output = run('psql', ['-h', directory, '-p', '55441', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-Atq'], `
-create role anon; create role authenticated; create schema private; create schema auth;
+create role anon; create role authenticated; create role service_role; create schema private; create schema auth;
 create function auth.uid() returns uuid language sql as $$select case when current_setting('qa.user',true)<>'' then '00000000-0000-0000-0000-000000000001'::uuid end$$;
 create function public.get_current_app_user_id() returns integer language sql as $$select nullif(current_setting('qa.user',true),'')::integer$$;
 create function public.is_wenitro_admin() returns boolean language sql as $$select coalesce(current_setting('qa.user',true)='1',false)$$;
 create table public.tbl_users(id integer primary key,fullname text,bio text);
 alter table public.tbl_users add column onboarding_completed boolean not null default false;
 insert into public.tbl_users(id) values(1),(2),(3);
+create function private.submit_partner_application(jsonb) returns jsonb language sql as $$select '{"accepted":true}'::jsonb$$;
+${partnerTerms}
 ${policies}
 ${announcements}
 ${tables.filter(t => t !== 'tbl_users').map(t => `create table public.${t}(id integer,body text,title text,content text);`).join('\n')}
@@ -52,6 +55,11 @@ select set_config('qa.user','1',false);
 select public.admin_create_login_announcement('QA','Hello',now()-interval '1 minute',now()+interval '1 day',array[2]);
 do $$ begin
   perform set_config('qa.user','2',true);
+  begin perform public.submit_partner_application('{}'); raise exception 'missing partner terms accepted'; exception when sqlstate '22023' then null; end;
+  begin perform public.submit_partner_application('{"terms_accepted":"true"}'); raise exception 'string partner terms accepted'; exception when sqlstate '22023' then null; end;
+  perform public.submit_partner_application('{"terms_accepted":true}');
+  perform public.submit_partner_application('{"terms_accepted":true}');
+  if (select count(*) from public.tbl_partner_terms_acceptances where user_id=2)<>1 then raise exception 'duplicate partner terms'; end if;
   begin update public.tbl_users set onboarding_completed=true where id=2; raise exception 'signup without policy'; exception when insufficient_privilege then null; end;
   perform public.accept_signup_policies('2026-10-01');
   perform public.accept_signup_policies('2026-10-01');

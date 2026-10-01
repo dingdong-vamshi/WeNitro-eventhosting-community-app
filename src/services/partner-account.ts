@@ -37,6 +37,7 @@ export type PartnerAccountResult = {
 };
 
 export type PartnerAccountInput = {
+  terms_accepted?: boolean;
   business_name: string;
   description: string;
   city: string;
@@ -53,6 +54,7 @@ export type PartnerAccountInput = {
 const trimmed = (value: string) => value.trim();
 
 export function validatePartnerAccount(input: PartnerAccountInput): string | null {
+  if (input.terms_accepted !== true) return "Agree to the Terms & Conditions before applying.";
   if (trimmed(input.business_name).length < 2 || trimmed(input.business_name).length > 120) return "Enter a business name between 2 and 120 characters.";
   if (trimmed(input.description).length > 1000) return "Keep the description within 1,000 characters.";
   if (trimmed(input.city).length < 2 || trimmed(input.city).length > 120) return "Enter a city between 2 and 120 characters.";
@@ -102,6 +104,7 @@ export const partnerAccountService = {
     const validation = validatePartnerAccount(input);
     if (validation) throw new Error(validation);
     const application = {
+      terms_accepted: input.terms_accepted === true,
       business_name: trimmed(input.business_name), description: trimmed(input.description), city: trimmed(input.city),
       activity_types: [...new Set(input.activity_types.map(trimmed).filter(Boolean))],
       activity_location: trimmed(input.activity_location), age_category: trimmed(input.age_category),

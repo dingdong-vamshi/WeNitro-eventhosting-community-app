@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { WENITRO_LEGAL_URLS } from "./onboarding/reference-screens";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { partnerAccountService, validatePartnerAccount, type PartnerAccountInput, type PartnerAccountResult } from "../services/partner-account";
 import { createTheme } from "../theme/production-theme";
 
 const ACTIVITY_TYPES = ["Fitness", "Sports", "Social", "Learning", "Outdoors", "Wellness", "Entertainment", "Networking"];
 const emptyApplication: PartnerAccountInput = {
+  terms_accepted: false,
   business_name: "", description: "", city: "", activity_types: [], activity_location: "", age_category: "",
   bank_name: "", account_holder_name: "", account_number: "", ifsc: "", upi_id: "",
 };
@@ -79,7 +81,7 @@ export function PartnerAccountScreen({ dark = false, onBack, onSaved }: {
   const action = (label: string, onPress: () => void, disabled = false, primary = false) => <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled }} disabled={disabled} onPress={onPress} style={{ minHeight: 44, padding: 12, borderRadius: 8, backgroundColor: primary ? c.primary : c.surfaceSubtle, opacity: disabled ? 0.5 : 1, alignItems: "center", justifyContent: "center" }}>
     <Text style={[theme.typography.button, { color: primary ? "#FFFFFF" : c.textPrimary }]}>{label}</Text>
   </Pressable>;
-  const field = (label: string, key: Exclude<keyof PartnerAccountInput, "activity_types">, maxLength: number, multiline = false, options?: { autoCapitalize?: "none" | "characters" | "words" }) => <View style={{ gap: 8 }}>
+  const field = (label: string, key: Exclude<keyof PartnerAccountInput, "activity_types" | "terms_accepted">, maxLength: number, multiline = false, options?: { autoCapitalize?: "none" | "characters" | "words" }) => <View style={{ gap: 8 }}>
     <Text style={[theme.typography.label, { color: c.textPrimary }]}>{label}</Text>
     <TextInput accessibilityLabel={label} value={String(input[key])} onChangeText={text => update(key, text)} editable={canEdit && !saving} maxLength={maxLength} multiline={multiline} autoCapitalize={options?.autoCapitalize} style={{ minHeight: multiline ? 110 : 48, padding: 12, borderWidth: 1, borderColor: c.border, borderRadius: 8, textAlignVertical: "top", color: c.textPrimary, backgroundColor: c.surface }} />
   </View>;
@@ -113,8 +115,10 @@ export function PartnerAccountScreen({ dark = false, onBack, onSaved }: {
         <View style={{ flexDirection: "row", gap: 8 }}>{(["bank", "upi"] as const).map(method => <Pressable key={method} accessibilityRole="radio" accessibilityState={{ checked: payoutMethod === method }} disabled={!canEdit || saving} onPress={() => setPayoutMethod(method)} style={{ flex: 1, minHeight: 44, alignItems: "center", justifyContent: "center", borderRadius: 8, backgroundColor: payoutMethod === method ? c.primary : c.surfaceSubtle }}><Text style={[theme.typography.label, { color: payoutMethod === method ? "#FFFFFF" : c.textPrimary }]}>{method === "bank" ? "Bank account" : "UPI"}</Text></Pressable>)}</View>
         {payoutMethod === "bank" ? <>{field("Bank name *", "bank_name", 120)}{field("Account holder name *", "account_holder_name", 160)}{field("Account number *", "account_number", 34, false, { autoCapitalize: "none" })}{field("IFSC code *", "ifsc", 11, false, { autoCapitalize: "characters" })}</> : field("UPI ID *", "upi_id", 160, false, { autoCapitalize: "none" })}
       </View>
+      <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.terms)}><Text style={{ color: c.primary }}>Read Terms &amp; Conditions</Text></Pressable>
+      <Pressable accessibilityRole="checkbox" accessibilityLabel="I agree to the Partner Terms and Conditions" accessibilityState={{ checked: input.terms_accepted === true, disabled: !canEdit || saving }} disabled={!canEdit || saving} onPress={() => update("terms_accepted", !input.terms_accepted)} style={{ minHeight: 48, padding: 12, borderWidth: 1, borderColor: input.terms_accepted ? c.primary : c.border, borderRadius: 8 }}><Text style={{ color: c.textPrimary }}>{input.terms_accepted ? "☑" : "☐"} I agree to the Terms &amp; Conditions for my Partner application.</Text></Pressable>
       {saved ? <Text accessibilityRole="alert" style={[theme.typography.body, { color: c.success }]}>Application submitted for review.</Text> : null}
-      {canEdit ? action(saving ? "Submitting…" : status === "APPROVED" ? "Submit updated details" : status === "REJECTED" ? "Resubmit application" : "Submit application", () => void submit(), saving, true) : null}
+      {canEdit ? action(saving ? "Submitting…" : status === "APPROVED" ? "Submit updated details" : status === "REJECTED" ? "Resubmit application" : "Submit application", () => void submit(), saving || !input.terms_accepted, true) : null}
     </> : null}
   </ScrollView>;
 }
