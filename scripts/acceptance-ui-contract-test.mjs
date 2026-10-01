@@ -8,12 +8,14 @@ assert.match(participants, /participant\.userId !== activity\.ownerId/);
 assert.match(participants, /Remove Co-Host/);
 assert.match(participants, /canHost&&!activityEnded&&approved&&!cohost/);
 assert.match(participants, /Remove Participant/);
-for (const path of ['src/components/reconstruction/profile.tsx', 'src/components/reconstruction/messages.tsx', 'src/components/community/reference-community.tsx']) {
+for (const path of ['src/components/reconstruction/profile.tsx', 'src/components/reconstruction/edit-profile.tsx', 'src/components/reconstruction/messages.tsx', 'src/components/community/reference-community.tsx']) {
   assert.match(source(path), /useResponsibleUpload/);
   assert.match(source(path), /await confirmUpload\(\)/);
   assert.match(source(path), /\{uploadNotice\}/);
 }
 assert.match(source('src/components/reconstruction/responsible-upload.tsx'), /label="Continue"/);
+assert.match(app, /onSaved=\{\(\) => go\('profile'\)\}/);
+assert.match(source('src/components/reconstruction/edit-profile.tsx'), /setSuccess\(true\);\s*onSaved\(\);/);
 assert.match(source('src/components/reconstruction/settings.tsx'), /Redemption requires at least 200 Nitro Points/);
 assert.match(source('src/components/reconstruction/settings.tsx'), /conversation\.map/);
 assert.match(source('src/services/activities-production.ts'), /order\("is_admin_pinned", \{ ascending: false \}\)/);

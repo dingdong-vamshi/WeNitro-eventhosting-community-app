@@ -9741,7 +9741,7 @@ export default function App() {
     if (screen === 'emergency') return <ReferenceEmergencyContact back={back} />;
     if (screen === 'saved' || screen === 'liked') return <ReferenceCollection kind={screen} data={data} setData={setData} back={back} openActivity={openActivity} openVibe={id => { setSelectedVibeId(id); go('vibes', id); }} />;
     if (screen === 'socialLinks') return <SocialProfilesScreen key={data.userId} userId={data.userId!} back={back} onSaved={() => go('profile')} />;
-    if (screen === 'editProfile') return <ReferenceEditProfile key={data.userId} data={data} setData={setData} back={back} onSocialProfiles={() => go('socialLinks')} />;
+    if (screen === 'editProfile') return <ReferenceEditProfile key={data.userId} data={data} setData={setData} back={back} onSaved={() => go('profile')} onSocialProfiles={() => go('socialLinks')} />;
     if (screen === 'inviteSquad') return <ReferenceInviteSquad userId={data.userId || ""} back={back} />;
     if (screen === 'settings') return <ReferenceSettings {...props} />;
     if (screen === 'privacy') return <ReferencePrivacy back={back} />;
