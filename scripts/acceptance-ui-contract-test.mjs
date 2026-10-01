@@ -16,6 +16,9 @@ for (const path of ['src/components/reconstruction/profile.tsx', 'src/components
 assert.match(source('src/components/reconstruction/responsible-upload.tsx'), /label="Continue"/);
 assert.match(app, /onSaved=\{\(\) => go\('profile'\)\}/);
 assert.match(app, /<LoginAnnouncements key=\{`login-announcements:\$\{data.userId\}`\}/);
+assert.match(source('src/components/onboarding/reference-screens.tsx'), /I Agree and Continue/);
+assert.match(source('src/components/onboarding/reference-screens.tsx'), /if \(!policyAccepted\)/);
+assert.match(app, /accept_signup_policies/);
 assert.doesNotMatch(app, /<LoginAnnouncements key=\{data.userId\}/);
 assert.match(source('src/components/reconstruction/edit-profile.tsx'), /setSuccess\(true\);\s*onSaved\(\);/);
 assert.match(source('src/components/reconstruction/settings.tsx'), /Redemption requires at least 200 Nitro Points/);

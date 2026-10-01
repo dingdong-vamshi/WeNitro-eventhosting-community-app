@@ -87,7 +87,7 @@ function Preview() {
   const go = (_screen: Screen) => undefined;
   let content: React.ReactNode;
   if (screen === 'welcome') content = <WelcomeScreen googleButton={<GoogleButton />} onFallback={() => undefined} onLegal={() => undefined} />;
-  else if (screen === 'profileCompletion') content = <ProfileCompletionScreen initial={{ fullName: 'Vamshi Pendyala', username: 'vamshi', dateOfBirth: '1998-09-09', gender: 'male' }} checkUsername={async username => ({ available: true, username })} onSubmit={async () => undefined} />;
+  else if (screen === 'profileCompletion') content = <ProfileCompletionScreen onAcceptPolicies={async () => undefined} initial={{ fullName: 'Vamshi Pendyala', username: 'vamshi', dateOfBirth: '1998-09-09', gender: 'male' }} checkUsername={async username => ({ available: true, username })} onSubmit={async () => undefined} />;
   else if (screen === 'hostActivity') content = <HostActivityScreen userId={`theme-${data.theme}`} isPartner={false} onBack={() => undefined} onCreated={() => undefined} />;
   else if (screen === 'feed') content = <ReferenceFeed data={data} setData={setData} go={go} openActivity={() => undefined} refreshOnMount={false} />;
   else if (screen === 'messages') content = <ReferenceMessages data={data} tab="Chats" setTab={() => undefined} filter="All" setFilter={() => undefined} setData={() => undefined} openProfile={() => undefined} openConversation={() => undefined} startConversation={async () => undefined} openCommunity={() => undefined} createCommunity={() => undefined} />;

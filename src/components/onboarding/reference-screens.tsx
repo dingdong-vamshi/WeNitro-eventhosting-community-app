@@ -175,11 +175,14 @@ export function GradientButton({ label, onPress, disabled = false, arrow = false
 }
 
 export type ProfileSetupValues = { fullName: string; username: string; dateOfBirth: string; gender: string; photoUri?: string };
-export function ProfileCompletionScreen({ initial, onSubmit, checkUsername, loading = false }: {
+export function ProfileCompletionScreen({ initial, onSubmit, onAcceptPolicies, checkUsername, loading = false }: {
   initial: ProfileSetupValues & { avatarUrl?: string }; onSubmit: (values: ProfileSetupValues) => Promise<void>;
+  onAcceptPolicies: () => Promise<void>;
   checkUsername: (value: string) => Promise<{ available: boolean; username: string }>; loading?: boolean;
 }) {
   const [values, setValues] = useState(initial);
+  const [policyOpen, setPolicyOpen] = useState(true), [policyChecked, setPolicyChecked] = useState(false), [policyAccepted, setPolicyAccepted] = useState(false), [policyBusy, setPolicyBusy] = useState(false), [policyError, setPolicyError] = useState('');
+  const policyLock = useRef(false);
   const [avatar, setAvatar] = useState(initial.avatarUrl || "");
   const [showPhotoOptions, setShowPhotoOptions] = useState(false);
   const [datePicker, setDatePicker] = useState(false);
@@ -212,6 +215,7 @@ export function ProfileCompletionScreen({ initial, onSubmit, checkUsername, load
   };
   const submit = async () => {
     if (lock.current || loading || photoBusy) return;
+    if (!policyAccepted) { setPolicyOpen(true); return; }
     lock.current = true; setBusy(true); setError("");
     try { await onSubmit(values); }
     catch (caught) { setError(caught instanceof Error ? caught.message : "Your profile could not be saved. Please try again."); }
@@ -234,6 +238,16 @@ export function ProfileCompletionScreen({ initial, onSubmit, checkUsername, load
         <Pressable accessibilityRole="button" accessibilityLabel="Get Started" accessibilityState={{ disabled: busy || loading || photoBusy, busy }} onPress={() => void submit()} disabled={busy || loading || photoBusy} style={s.getStarted}>{busy || loading ? <ActivityIndicator color="white" /> : <Text style={s.getStartedLabel}>Get Started ⚡</Text>}</Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
+    <Modal transparent visible={policyOpen} animationType="fade" onRequestClose={() => { if (!policyBusy) setPolicyOpen(false); }}><MobileOverlayFrame><View style={[s.modalShade, { backgroundColor: c.overlay }]}><View style={[s.modalCard, { backgroundColor: c.sheet }]}>
+      <Text accessibilityRole="header" style={[s.modalTitle, { color: c.text }]}>Welcome — review our policies</Text>
+      <Text style={{ color: c.muted, fontSize: 14, lineHeight: 21 }}>Before completing your first signup, please review and agree to WeNitro's Terms &amp; Conditions and Privacy Policy.</Text>
+      <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.terms)}><Text style={{ color: c.accent }}>Read Terms &amp; Conditions</Text></Pressable>
+      <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.privacyPolicy)}><Text style={{ color: c.accent }}>Read Privacy Policy</Text></Pressable>
+      <Pressable accessibilityRole="checkbox" accessibilityLabel="I agree to the Terms and Privacy Policy" accessibilityState={{ checked: policyChecked, disabled: policyBusy }} disabled={policyBusy} onPress={() => setPolicyChecked(value => !value)} style={{ flexDirection: 'row', gap: 10, paddingVertical: 12 }}><Ionicons name={policyChecked ? 'checkbox' : 'square-outline'} color={c.accent} size={24} /><Text style={{ flex: 1, color: c.text }}>I agree to the Terms &amp; Conditions and Privacy Policy.</Text></Pressable>
+      {policyError ? <Text accessibilityRole="alert" style={{ color: c.danger }}>{policyError}</Text> : null}
+      <Pressable accessibilityRole="button" accessibilityLabel="I Agree and Continue" disabled={!policyChecked || policyBusy} accessibilityState={{ disabled: !policyChecked || policyBusy, busy: policyBusy }} style={[s.getStarted, { marginTop: 0, opacity: policyChecked ? 1 : .5 }]} onPress={() => { if (policyLock.current || !policyChecked) return; policyLock.current = true; setPolicyBusy(true); setPolicyError(''); void onAcceptPolicies().then(() => { setPolicyAccepted(true); setPolicyOpen(false); }).catch(() => setPolicyError('Could not save your agreement. Please try again.')).finally(() => { policyLock.current = false; setPolicyBusy(false); }); }}>{policyBusy ? <ActivityIndicator color="white" /> : <Text style={s.getStartedLabel}>I Agree and Continue</Text>}</Pressable>
+      <Pressable accessibilityRole="button" disabled={policyBusy} onPress={() => setPolicyOpen(false)} style={s.modalAction}><Text style={{ color: c.muted }}>Not Now</Text></Pressable>
+    </View></View></MobileOverlayFrame></Modal>
     <Modal transparent visible={showPhotoOptions} animationType="fade" onRequestClose={() => setShowPhotoOptions(false)}><MobileOverlayFrame><View style={[s.modalShade, { backgroundColor: c.overlay }]}><View style={[s.modalCard, { backgroundColor: c.sheet }]}><Text style={[s.modalTitle, { color: c.text }]}>Profile photo</Text><Pressable accessibilityRole="button" style={s.modalAction} onPress={() => void pickPhoto(false)}><Text style={[s.genderText, { color: c.text }]}>Choose from library</Text></Pressable>{Platform.OS !== "web" && <Pressable accessibilityRole="button" style={s.modalAction} onPress={() => void pickPhoto(true)}><Text style={[s.genderText, { color: c.text }]}>Take a photo</Text></Pressable>}<Pressable accessibilityRole="button" style={s.modalAction} onPress={() => setShowPhotoOptions(false)}><Text style={{ color: c.accent }}>Cancel</Text></Pressable></View></View></MobileOverlayFrame></Modal>
     {datePicker && Platform.OS !== "web" && <DateTimePicker mode="date" value={values.dateOfBirth ? new Date(`${values.dateOfBirth}T12:00:00`) : new Date(2000, 0, 1)} maximumDate={new Date()} onChange={(event, date) => { setDatePicker(false); if (event.type === "set" && date) set("dateOfBirth", `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`); }} />}
     {datePicker && Platform.OS === "web" && <WebDateDialog value={values.dateOfBirth} onChange={value => { set("dateOfBirth", value); }} onClose={() => setDatePicker(false)} />}
