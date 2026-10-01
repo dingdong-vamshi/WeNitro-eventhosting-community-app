@@ -9908,7 +9908,7 @@ export default function App() {
           <Pressable accessibilityRole="button" accessibilityLabel="Retry loading Feed" onPress={() => void refreshAuthRef.current()} style={{ alignSelf: "flex-start", paddingVertical: 8, paddingHorizontal: 12 }}><Text style={{ color: data.theme === "dark" ? "#C7BAFF" : "#3524C9", fontWeight: "700" }}>Retry</Text></Pressable>
         </View> : null}
         {content}
-        {data.mode === "authenticated" && data.onboarded && data.userId ? <LoginAnnouncements key={data.userId} userId={data.userId} /> : null}
+        {data.mode === "authenticated" && data.onboarded && data.userId ? <LoginAnnouncements key={`login-announcements:${data.userId}`} userId={data.userId} /> : null}
         <ShareToChatModal
           entity={shareEntity}
           conversations={data.conversations}
