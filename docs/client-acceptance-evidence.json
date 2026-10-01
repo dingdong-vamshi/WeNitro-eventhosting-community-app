@@ -1,0 +1,306 @@
+{
+  "recordedAt": "2026-10-01T12:22:01.718Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "crossApp": "PASS configuration targets the WeNitro project\nPASS member 1 authentication\nPASS member 2 authentication\nPASS admin authentication and role\nPASS member 1 legacy-user bridge\nPASS member 2 legacy-user bridge\nPASS admin legacy-user bridge\nPASS profile read\nPASS profile update and persistence\nPASS interests read\nPASS interests update and persistence\nPASS privacy read\nPASS privacy update and persistence\nPASS activity create RPC and database persistence\nPASS activity join RPC\nPASS activity approve RPC\nPASS community create RPC\nPASS community join RPC\nPASS community post RPC\nPASS community reaction RPC\nPASS community comment RPC and listing\nPASS vibe QA video upload and Storage verification\nPASS vibe create RPC and database persistence\nPASS vibe like RPC\nPASS vibe comment RPC\nPASS story QA video upload and Storage verification\nPASS story create RPC and database persistence\nPASS story view RPC and viewed persistence\nPASS chat room RPC\nPASS chat send and recipient read RPC\nPASS notification list, trigger correlation, and mark-read RPC\nPASS profile state restoration\nPASS interest state restoration\nPASS privacy state restoration\nPASS session cleanup\nSUMMARY 35/35 operations passed\nQA RECORDS activity=266 community=235 post=28 vibe=128 story=26 verification=none chat_room=226 chat_message=279\n",
+  "stability": "PASS: authenticated cold round 1/5\nPASS: authenticated cold round 2/5\nPASS: authenticated cold round 3/5\nPASS: authenticated cold round 4/5\nPASS: authenticated cold round 5/5\n{\n  \"rounds\": 5,\n  \"requests\": 50,\n  \"success\": 50,\n  \"clientErrors\": 0,\n  \"serverErrors\": 0,\n  \"statusCounts\": {\n    \"200\": 45,\n    \"204\": 5\n  },\n  \"realtime\": \"subscribed\",\n  \"worstLatencyMs\": 1295\n}\n",
+  "payment": "PASS wrong password rejected\nPASS session restore\nPASS recovery link targets new Supabase and production app (no email sent)\nPASS share-vibe public preview\nPASS Partner application / Admin review / approved capability\n{\"qaEvent\":273,\"qaPartner\":109,\"qaAuthUser\":\"44ba62c6-293d-41c4-bb0a-a68fa7a295f2\"}\nPASS checkout requires verified phone\nPASS Cashfree sandbox order / authoritative category amount / target webhook / return URL\nPASS order creation idempotency\nPASS verify-payment reads real Sandbox order as unpaid\nPASS reusable QA member phone remains unchanged\nPASS signed synthetic sandbox webhook invalid\nPASS signed synthetic sandbox webhook valid\nPASS signed synthetic sandbox webhook replay\nPASS synthetic webhook updates DB / participant exactly once\nPASS Partner transaction and registration reflection\nPASS ordinary QA admin correctly denied finance-only access\n{\"qaEvent\":273,\"qaPartner\":109,\"qaAuthUser\":\"44ba62c6-293d-41c4-bb0a-a68fa7a295f2\",\"orderId\":\"wn_273_110_1fdb510bd46545569e99\",\"paymentEvidence\":\"synthetic signed webhook, not completed provider checkout\"}\nPASS synthetic fixture private and financially ON_HOLD\n",
+  "liveAssertions": [
+    {
+      "name": "Normal Paid toggle uses off-platform costs, zero platform price",
+      "result": "PASS"
+    },
+    {
+      "name": "Join / leave / rejoin yields one pending approval row",
+      "result": "PASS"
+    },
+    {
+      "name": "Host approves and promotes Co-host",
+      "result": "PASS"
+    },
+    {
+      "name": "Co-host edits and rejects/reapproves participant",
+      "result": "PASS"
+    },
+    {
+      "name": "Demotion preserves membership and original creator, revokes Co-host edit",
+      "result": "PASS"
+    },
+    {
+      "name": "Participant comment identity and nonparticipant denial",
+      "result": "FAIL",
+      "error": "The expression evaluated to a falsy value:\n\n  auditAssert.ok(denied.error)\n"
+    },
+    {
+      "name": "Like identity visible to another member",
+      "result": "PASS"
+    },
+    {
+      "name": "Normal nonparticipant cannot comment; approved participant can",
+      "result": "FAIL",
+      "error": "The expression evaluated to a falsy value:\n\n  auditAssert.ok(denied.error)\n"
+    },
+    {
+      "name": "Community member removal and rejoin",
+      "result": "PASS"
+    },
+    {
+      "name": "Community poll create/vote and named voter list",
+      "result": "PASS"
+    },
+    {
+      "name": "Anonymous Community post: public identity absent, Admin attribution present",
+      "result": "FAIL",
+      "error": "posts.find is not a function"
+    },
+    {
+      "name": "Anonymous Community recipient masking and Admin audit attribution",
+      "result": "FAIL",
+      "error": "Not a chat participant"
+    },
+    {
+      "name": "Anonymous Community direct API privacy and Admin dashboard attribution",
+      "result": "FAIL",
+      "error": "column tbl_community_posts.author_id does not exist"
+    },
+    {
+      "name": "FIX RETEST: pending/left comments denied, approved comment accepted",
+      "result": "PASS"
+    },
+    {
+      "name": "Anonymous post direct API masking and Admin author access",
+      "result": "FAIL",
+      "error": "permission denied for table tbl_community_posts"
+    },
+    {
+      "name": "Personal chat block prevents new sends, history remains readable, unblock restores",
+      "result": "PASS"
+    },
+    {
+      "name": "Personal chat poll vote and voter identity",
+      "result": "PASS"
+    },
+    {
+      "name": "Anonymous Community audit RPC exposes author to Admin only",
+      "result": "PASS"
+    },
+    {
+      "name": "Activity chat poll supported",
+      "result": "PASS"
+    },
+    {
+      "name": "Profile gallery positions 2/3 save and max-three enforcement",
+      "result": "PASS"
+    },
+    {
+      "name": "Admin pin authorization, persistence and unpin",
+      "result": "PASS"
+    },
+    {
+      "name": "Production announcement acknowledgement stored exactly once",
+      "result": "PASS"
+    },
+    {
+      "name": "Ended Activity server rejects edit, removal and leaving",
+      "result": "PASS"
+    },
+    {
+      "name": "Anonymous rating redaction and duplicate Nitro prevention",
+      "result": "PASS"
+    },
+    {
+      "name": "Second legitimate rating earns +2; self-rating and Host No Show denied",
+      "result": "PASS"
+    },
+    {
+      "name": "Named rating exposes intended identity and Nitro history has two distinct +2 entries",
+      "result": "PASS"
+    },
+    {
+      "name": "Regular participant No Show is allowed, duplicate reward prevented",
+      "result": "PASS"
+    },
+    {
+      "name": "Nitro ledger records exactly two +2 rewards for two distinct ratings",
+      "result": "PASS"
+    },
+    {
+      "name": "Community cover and rules edit persist",
+      "result": "FAIL",
+      "error": "Check community name and description"
+    },
+    {
+      "name": "Support query persists in Admin-readable queue",
+      "result": "PASS"
+    },
+    {
+      "name": "Community cover/rules update with required form fields persists",
+      "result": "PASS"
+    },
+    {
+      "name": "Personal photo message Storage, recipient read and deletion",
+      "result": "PASS"
+    },
+    {
+      "name": "Chat rejects newly attached video at server boundary",
+      "result": "FAIL",
+      "error": "The expression evaluated to a falsy value:\n\n  auditAssert.ok(r.error)\n"
+    },
+    {
+      "name": "FIX RETEST: new Chat video rejected in personal, Activity and Community rooms",
+      "result": "PASS"
+    },
+    {
+      "name": "Blocking authorization verified with complete valid send parameters",
+      "result": "PASS"
+    },
+    {
+      "name": "Story delete is persisted and cross-user history stays safe",
+      "result": "PASS"
+    },
+    {
+      "name": "Vibes Video remains available and Community Posts accept Video",
+      "result": "PASS"
+    },
+    {
+      "name": "Community Photo post remains available",
+      "result": "PASS"
+    },
+    {
+      "name": "Sharing Activity, Community and Vibe cards to QA chat",
+      "result": "PASS"
+    },
+    {
+      "name": "Realtime delivers new QA chat message to subscribed recipient",
+      "result": "PASS"
+    },
+    {
+      "name": "Play Store reward backend grants once and never duplicates",
+      "result": "PASS"
+    },
+    {
+      "name": "Vibe report can be submitted by a second email user",
+      "result": "PASS"
+    },
+    {
+      "name": "Email-only private selfie submission, Admin review and nonpublic Storage",
+      "result": "PASS"
+    },
+    {
+      "name": "Squad API returns unique identities",
+      "result": "PASS"
+    },
+    {
+      "name": "Cancelled Activity chat disappears and cannot accept messages",
+      "result": "FAIL",
+      "error": "Could not find the function public.list_chat_inbox(p_limit) in the schema cache"
+    },
+    {
+      "name": "RETEST: cancelled Activity chat hidden and messages rejected",
+      "result": "FAIL",
+      "error": "The expression evaluated to a falsy value:\n\n  auditAssert.ok(denied.error)\n"
+    },
+    {
+      "name": "FIX RETEST: cancelled Activity chat rejects new messages",
+      "result": "PASS"
+    },
+    {
+      "name": "Co-host removes approved participant and rejoin returns to approval",
+      "result": "FAIL",
+      "error": "Could not find the function public.set_activity_cohost(p_enabled, p_event_id, p_user_id) in the schema cache"
+    },
+    {
+      "name": "RETEST: Co-host participant removal, rejoin and demotion",
+      "result": "FAIL",
+      "error": "Could not find the function public.request_join_activity(p_event_id, p_message) in the schema cache"
+    },
+    {
+      "name": "RETEST complete: Co-host removes participant; request again persists pending",
+      "result": "PASS"
+    },
+    {
+      "name": "Production UI anonymous rating persisted with one +2 ledger reward",
+      "result": "FAIL",
+      "error": "Expected values to be strictly equal:\n\n0 !== 1\n"
+    },
+    {
+      "name": "RETEST: browser anonymous rating stores one +2 entry for event 272",
+      "result": "PASS"
+    },
+    {
+      "name": "New signup cannot bypass policy agreement through completion RPC",
+      "result": "PASS"
+    },
+    {
+      "name": "Policy receipt saves exactly once and cannot be read by another user",
+      "result": "FAIL",
+      "error": "Cannot read properties of null (reading 'length')"
+    },
+    {
+      "name": "RETEST: policy receipt idempotent and recipient-private",
+      "result": "PASS"
+    },
+    {
+      "name": "Activity-only Vibe is hidden from nonparticipants but visible to joined member",
+      "result": "PASS"
+    },
+    {
+      "name": "Production signup UI completed with accepted policies and persisted DOB",
+      "result": "FAIL",
+      "error": "column tbl_users.date_of_birth does not exist"
+    },
+    {
+      "name": "RETEST: completed browser signup persists DOB and one policy receipt",
+      "result": "PASS"
+    },
+    {
+      "name": "Partner application requires explicit Terms and records private acceptance",
+      "result": "PASS"
+    },
+    {
+      "name": "Legacy chat video deletion succeeds while new video remains rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "Populated reciprocal Squad rows return one member identity",
+      "result": "PASS"
+    }
+  ],
+  "interpretation": "Chronological ledger retains initial product failures and test-harness argument/field errors. Later named RETEST/PASS entries supersede them. Not all FAIL entries were product defects.",
+  "productionUi": [
+    "Email login/logout/relogin/wrong-password/session restore",
+    "New email signup policy agreement, DOB persistence and first-feed welcome",
+    "Home blue/purple gradients #3420B8 to #6847F5; compact carousel",
+    "Edit Profile save returns to Profile; gallery upload warning/picker/display",
+    "Original Host and Co-host demotion controls",
+    "Anonymous rating checkbox, +2 popup, recipient masking/no link",
+    "Community cover/members/anonymous+Photo+Video posts",
+    "Community Poll voter identities and Back to same Community",
+    "Admin anonymous author attribution, category correction/pinning/dashboard",
+    "Personal Chat history; Photo/Poll-only attachment menu",
+    "Stories grouping/reload and video readyState4/no playback error",
+    "NitroBot multi-turn FAQ;200-point disabled Hubble Store",
+    "Partner Terms link/unchecked checkbox disables submit until checked",
+    "Notifications list and Activity272 navigation"
+  ],
+  "deployment": {
+    "appAsset": "/_expo/static/js/web/index-d2eec89496061f17425ce0a8b6453714.js",
+    "appTarget": true,
+    "appOld": false,
+    "adminTarget": true,
+    "adminOld": false
+  },
+  "stabilityWindow": {
+    "from": "2026-10-01T10:45:00Z",
+    "to": "2026-10-01T11:40:00Z",
+    "observed5xx": 0
+  },
+  "limitations": [
+    "No physical OTP",
+    "No final Google chooser/login",
+    "No real Cashfree checkout; signed synthetic Sandbox success webhook",
+    "No real-inbox recovery completion",
+    "No native persistent SOS/background verification",
+    "No automated image/semantic moderation provider",
+    "No supplied final badge specification"
+  ]
+}

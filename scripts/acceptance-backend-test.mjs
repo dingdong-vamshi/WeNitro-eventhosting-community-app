@@ -23,6 +23,8 @@ try {
   const closedChat = fs.readFileSync('supabase/migrations/20261001114800_closed_activity_chat_writes.sql', 'utf8');
   const policies = fs.readFileSync('supabase/migrations/20261001115500_first_signup_policy_agreement.sql', 'utf8');
   const partnerTerms = fs.readFileSync('supabase/migrations/20261001121200_partner_application_terms.sql', 'utf8');
+  const legacyDeletion = fs.readFileSync('supabase/migrations/20261001122000_allow_legacy_chat_media_deletion.sql', 'utf8');
+  const squad = fs.readFileSync('supabase/migrations/20261001122100_unique_squad_members.sql', 'utf8');
   const tables = [...moderation.matchAll(/on public\.(\w+) for each row/g)].map(m => m[1]);
   const output = run('psql', ['-h', directory, '-p', '55441', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-Atq'], `
 create role anon; create role authenticated; create role service_role; create schema private; create schema auth;
@@ -30,6 +32,9 @@ create function auth.uid() returns uuid language sql as $$select case when curre
 create function public.get_current_app_user_id() returns integer language sql as $$select nullif(current_setting('qa.user',true),'')::integer$$;
 create function public.is_wenitro_admin() returns boolean language sql as $$select coalesce(current_setting('qa.user',true)='1',false)$$;
 create table public.tbl_users(id integer primary key,fullname text,bio text);
+alter table public.tbl_users add column username text, add column profile_image text, add column isverified integer default 0, add column is_delete integer default 0, add column is_active integer default 1;
+create table public.tbl_friends(user_id integer,friend_id integer,created_at timestamptz default now());
+${squad}
 alter table public.tbl_users add column onboarding_completed boolean not null default false;
 insert into public.tbl_users(id) values(1),(2),(3);
 create function private.submit_partner_application(jsonb) returns jsonb language sql as $$select '{"accepted":true}'::jsonb$$;
@@ -46,8 +51,10 @@ ${comments}
 alter table public.tbl_events add column event_start_time timestamptz, add column updated_at timestamptz, add column updated_by integer;
 ${pinning}
 alter table public.tbl_messages add column message_type text, add column media_url text;
+alter table public.tbl_messages add column deleted_at timestamptz;
 insert into public.tbl_messages(id,message_type,media_url) values(1,'video','legacy.mp4');
 ${chatMedia}
+${legacyDeletion}
 alter table public.tbl_messages add column room_id integer;
 alter table public.tbl_chat_rooms add column event_id integer;
 ${closedChat}
@@ -55,6 +62,8 @@ select set_config('qa.user','1',false);
 select public.admin_create_login_announcement('QA','Hello',now()-interval '1 minute',now()+interval '1 day',array[2]);
 do $$ begin
   perform set_config('qa.user','2',true);
+  insert into public.tbl_friends(user_id,friend_id) values(2,3),(3,2),(2,2);
+  if jsonb_array_length(public.list_my_squad())<>1 then raise exception 'Squad duplicate/self relationship'; end if;
   begin perform public.submit_partner_application('{}'); raise exception 'missing partner terms accepted'; exception when sqlstate '22023' then null; end;
   begin perform public.submit_partner_application('{"terms_accepted":"true"}'); raise exception 'string partner terms accepted'; exception when sqlstate '22023' then null; end;
   perform public.submit_partner_application('{"terms_accepted":true}');
@@ -104,6 +113,8 @@ do $$ begin
   perform set_config('qa.user','1',true);
   perform public.admin_set_activity_pinned(1,false);
   update public.tbl_messages set content='legacy history remains readable' where id=1;
+  update public.tbl_messages set media_url=null,deleted_at=now() where id=1;
+  if exists(select 1 from public.tbl_messages where id=1 and deleted_at is null) then raise exception 'legacy video deletion blocked'; end if;
   begin insert into public.tbl_messages(message_type,media_url) values('video','new.mp4'); raise exception 'video bypass'; exception when sqlstate '22023' then null; end;
   begin insert into public.tbl_messages(message_type,media_url) values('image','new.MP4?x=1'); raise exception 'disguised video bypass'; exception when sqlstate '22023' then null; end;
   insert into public.tbl_messages(message_type,media_url) values('image','photo.png');

@@ -1,28 +1,31 @@
 {
   "source": "Must changesimplementations.pdf (all 40 pages rendered and read), four WhatsApp screenshots supplied 2026-10-01",
   "target": "cxsznhrkzqndhseodcyy",
-  "status": "AUDIT IN PROGRESS — NOT A SIGN-OFF",
+  "status": "Evidence-qualified acceptance: implemented fixes deployed; external/manual/specification caveats remain. Not an unconditional all-flows sign-off.",
   "pages": [
     {
       "page": 1,
       "requirements": [
         {
           "requirement": "Onboarding spacing",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Onboarding spacing and no-Next design; intro slides and first-feed welcome are implemented.",
+          "test": "Source/UI contracts; fresh QA signup reached first-feed welcome.",
+          "production": "Live first-feed welcome confirmed; exact old-app extra-screen parity cannot be proved without that missing reference.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "No Next button",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Onboarding spacing and no-Next design; intro slides and first-feed welcome are implemented.",
+          "test": "Source/UI contracts; fresh QA signup reached first-feed welcome.",
+          "production": "Live first-feed welcome confirmed; exact old-app extra-screen parity cannot be proved without that missing reference.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Additional old-app onboarding screen",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Current intro plus first-feed welcome implemented.",
+          "test": "Fresh email QA signup reached extra welcome.",
+          "production": "Exact historical old-app screen equivalence is unknown; missing old reference.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -31,9 +34,10 @@
       "requirements": [
         {
           "requirement": "Tagline changes on welcome-screen load",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Welcome/tagline rotation implemented.",
+          "test": "Reloads showed distinct taglines during this run.",
+          "production": "Observed several different production welcome taglines.",
+          "status": "PASS"
         }
       ]
     },
@@ -42,15 +46,17 @@
       "requirements": [
         {
           "requirement": "WeNitro email branding where configurable",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Configured WeNitro wording/templates; app wording uses Confirm your Email Address.",
+          "test": "Configuration/source inspected; email session succeeds.",
+          "production": "Template configuration only; sender branding/inbox delivery depends on SMTP. No claim of inbox delivery.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Confirm your Email Address wording",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Configured WeNitro wording/templates; app wording uses Confirm your Email Address.",
+          "test": "Configuration/source inspected; email session succeeds.",
+          "production": "Template configuration only; sender branding/inbox delivery depends on SMTP. No claim of inbox delivery.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -59,9 +65,10 @@
       "requirements": [
         {
           "requirement": "Google implementation; external Google Cloud correction separated",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "TARGET Google provider and production Web Client integration retained.",
+          "test": "No external Google retry per acceptance scope; live button client ID matches configured client.",
+          "production": "Client Google Cloud origin/callback correction remains; final account login not passed.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -70,9 +77,10 @@
       "requirements": [
         {
           "requirement": "Forgot Password flow",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Forgot Password and production recovery redirect implemented.",
+          "test": "Wrong-password UI; recovery link generated against TARGET and production return URL.",
+          "production": "Link configuration PASS; example.com QA email rejected for outbound delivery, so inbox/reset completion not claimed.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -81,9 +89,10 @@
       "requirements": [
         {
           "requirement": "Phone signup architecture; external Fast2SMS credential blocker",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Phone Auth, Send SMS Hook, send-sms, Veriphone and safe error message implemented.",
+          "test": "Provider configuration/code reviewed; known Fast2SMS 401/code412 isolated.",
+          "production": "External invalid provider credential; physical OTP not passed.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -92,15 +101,17 @@
       "requirements": [
         {
           "requirement": "Reduced Home carousel height",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Home carousel compact styling and unwanted background removal implemented.",
+          "test": "Home production rendered; DOM carousel measured 210px in tested desktop viewport.",
+          "production": "Production Home inspected; no extra blue patch.",
+          "status": "PASS"
         },
         {
           "requirement": "Remove unwanted blue background",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Home carousel compact styling and unwanted background removal implemented.",
+          "test": "Home production rendered; DOM carousel measured 210px in tested desktop viewport.",
+          "production": "Production Home inspected; no extra blue patch.",
+          "status": "PASS"
         }
       ]
     },
@@ -109,15 +120,17 @@
       "requirements": [
         {
           "requirement": "Lighter carousel/no blue patch",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Theme-aware carousel plus uploaded photo/initials fallback implemented.",
+          "test": "Home/Profile UI and uploaded QA profile picture exercised.",
+          "production": "Production avatars and carousel rendered.",
+          "status": "PASS"
         },
         {
           "requirement": "Uploaded photo or colored avatar fallback",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Theme-aware carousel plus uploaded photo/initials fallback implemented.",
+          "test": "Home/Profile UI and uploaded QA profile picture exercised.",
+          "production": "Production avatars and carousel rendered.",
+          "status": "PASS"
         }
       ]
     },
@@ -126,51 +139,59 @@
       "requirements": [
         {
           "requirement": "Activities redesign",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Redesigned Activities, collapsible search, notification/filter controls, full-cover fallback, Host links implemented.",
+          "test": "Production Activities/search/filter navigation; Tribe-to-Fitness filter; Host profile navigation.",
+          "production": "Production UI and target Activity data verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Search and Notification icons",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Redesigned Activities, collapsible search, notification/filter controls, full-cover fallback, Host links implemented.",
+          "test": "Production Activities/search/filter navigation; Tribe-to-Fitness filter; Host profile navigation.",
+          "production": "Production UI and target Activity data verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Search field only after tapping Search",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Redesigned Activities, collapsible search, notification/filter controls, full-cover fallback, Host links implemented.",
+          "test": "Production Activities/search/filter navigation; Tribe-to-Fitness filter; Host profile navigation.",
+          "production": "Production UI and target Activity data verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Filter beside Activities for You",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Redesigned Activities, collapsible search, notification/filter controls, full-cover fallback, Host links implemented.",
+          "test": "Production Activities/search/filter navigation; Tribe-to-Fitness filter; Host profile navigation.",
+          "production": "Production UI and target Activity data verified.",
+          "status": "PASS"
         },
         {
           "requirement": "No unnecessary card description",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Redesigned Activities, collapsible search, notification/filter controls, full-cover fallback, Host links implemented.",
+          "test": "Production Activities/search/filter navigation; Tribe-to-Fitness filter; Host profile navigation.",
+          "production": "Production UI and target Activity data verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Fallback Activity visual/title",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Redesigned Activities, collapsible search, notification/filter controls, full-cover fallback, Host links implemented.",
+          "test": "Production Activities/search/filter navigation; Tribe-to-Fitness filter; Host profile navigation.",
+          "production": "Production UI and target Activity data verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Full image coverage",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Redesigned Activities, collapsible search, notification/filter controls, full-cover fallback, Host links implemented.",
+          "test": "Production Activities/search/filter navigation; Tribe-to-Fitness filter; Host profile navigation.",
+          "production": "Production UI and target Activity data verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Host profile navigation",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Redesigned Activities, collapsible search, notification/filter controls, full-cover fallback, Host links implemented.",
+          "test": "Production Activities/search/filter navigation; Tribe-to-Fitness filter; Host profile navigation.",
+          "production": "Production UI and target Activity data verified.",
+          "status": "PASS"
         }
       ]
     },
@@ -179,15 +200,17 @@
       "requirements": [
         {
           "requirement": "Non-overlapping timeline and appropriate typography",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Timeline typography and long-press liker identity action implemented.",
+          "test": "UI/source contract plus cross-user liker identity API test.",
+          "production": "Production detail and liker-data path pass; native long-press gesture itself not separately device-tested.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Long-press Like opens liker identities",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Timeline typography and long-press liker identity action implemented.",
+          "test": "UI/source contract plus cross-user liker identity API test.",
+          "production": "Production detail and liker-data path pass; native long-press gesture itself not separately device-tested.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -196,33 +219,38 @@
       "requirements": [
         {
           "requirement": "Host/participant photos or initials",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Host/participant avatars and Message action; ended edit/removal/leave restrictions in UI and backend.",
+          "test": "Cross-user chat; completed event270 API mutation denials; completed272 UI.",
+          "production": "Production completed Activity restrictions verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Message action",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Host/participant avatars and Message action; ended edit/removal/leave restrictions in UI and backend.",
+          "test": "Cross-user chat; completed event270 API mutation denials; completed272 UI.",
+          "production": "Production completed Activity restrictions verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Ended Activity not editable",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Host/participant avatars and Message action; ended edit/removal/leave restrictions in UI and backend.",
+          "test": "Cross-user chat; completed event270 API mutation denials; completed272 UI.",
+          "production": "Production completed Activity restrictions verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Ended participants cannot be removed",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Host/participant avatars and Message action; ended edit/removal/leave restrictions in UI and backend.",
+          "test": "Cross-user chat; completed event270 API mutation denials; completed272 UI.",
+          "production": "Production completed Activity restrictions verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Cannot leave ended Activity",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Host/participant avatars and Message action; ended edit/removal/leave restrictions in UI and backend.",
+          "test": "Cross-user chat; completed event270 API mutation denials; completed272 UI.",
+          "production": "Production completed Activity restrictions verified.",
+          "status": "PASS"
         }
       ]
     },
@@ -231,15 +259,17 @@
       "requirements": [
         {
           "requirement": "Only eligible participants can comment",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Approved/going/paid participant or Host comment gate and author identity enforced.",
+          "test": "Found missing backend gate; fixed; pending/left/nonparticipant denied and approved accepted.",
+          "production": "Fresh TARGET retest passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Comment author identity",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Approved/going/paid participant or Host comment gate and author identity enforced.",
+          "test": "Found missing backend gate; fixed; pending/left/nonparticipant denied and approved accepted.",
+          "production": "Fresh TARGET retest passed.",
+          "status": "PASS"
         }
       ]
     },
@@ -248,21 +278,24 @@
       "requirements": [
         {
           "requirement": "Ended participant sees Rate Participants",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Completed participant rating CTA and nonparticipant ended state; leave disallowed.",
+          "test": "Completed272 rating UI; completed270 leave denial and source-state contract.",
+          "production": "Production rating entry and backend restrictions passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Nonparticipant sees Activity Ended",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Completed participant rating CTA and nonparticipant ended state; leave disallowed.",
+          "test": "Completed272 rating UI; completed270 leave denial and source-state contract.",
+          "production": "Production rating entry and backend restrictions passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Ended participant cannot leave",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Completed participant rating CTA and nonparticipant ended state; leave disallowed.",
+          "test": "Completed272 rating UI; completed270 leave denial and source-state contract.",
+          "production": "Production rating entry and backend restrictions passed.",
+          "status": "PASS"
         }
       ]
     },
@@ -271,9 +304,10 @@
       "requirements": [
         {
           "requirement": "Cancelled/deleted Activity chat hidden",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Cancelled/deleted Activity chats excluded from inbox; cancelled writes blocked.",
+          "test": "Cancelled266 hidden from inbox; valid send rejected after fix.",
+          "production": "TARGET live retest passed; prior history retained.",
+          "status": "PASS"
         }
       ]
     },
@@ -282,27 +316,31 @@
       "requirements": [
         {
           "requirement": "No self-rating",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Self-rating excluded, Host label present, No Show eligibility enforced.",
+          "test": "Cross-user completed270: self and Host-No-Show denied; regular No Show allowed.",
+          "production": "Production API rules and rating UI passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Host visibly identified",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Self-rating excluded, Host label present, No Show eligibility enforced.",
+          "test": "Cross-user completed270: self and Host-No-Show denied; regular No Show allowed.",
+          "production": "Production API rules and rating UI passed.",
+          "status": "PASS"
         },
         {
           "requirement": "No Show for appropriate participants",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Self-rating excluded, Host label present, No Show eligibility enforced.",
+          "test": "Cross-user completed270: self and Host-No-Show denied; regular No Show allowed.",
+          "production": "Production API rules and rating UI passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Host excluded from No Show",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Self-rating excluded, Host label present, No Show eligibility enforced.",
+          "test": "Cross-user completed270: self and Host-No-Show denied; regular No Show allowed.",
+          "production": "Production API rules and rating UI passed.",
+          "status": "PASS"
         }
       ]
     },
@@ -311,33 +349,38 @@
       "requirements": [
         {
           "requirement": "+2 Nitro for each legitimate rating",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "+2 per legitimate rating, popup, ledger and idempotency implemented.",
+          "test": "Two distinct ratings +4; retries +0; browser272 displayed +2 popup and exactly one ledger row.",
+          "production": "Production UI and TARGET ledger verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Submission reward popup",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "+2 per legitimate rating, popup, ledger and idempotency implemented.",
+          "test": "Two distinct ratings +4; retries +0; browser272 displayed +2 popup and exactly one ledger row.",
+          "production": "Production UI and TARGET ledger verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Multiple ratings award separately",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "+2 per legitimate rating, popup, ledger and idempotency implemented.",
+          "test": "Two distinct ratings +4; retries +0; browser272 displayed +2 popup and exactly one ledger row.",
+          "production": "Production UI and TARGET ledger verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Nitro ledger",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "+2 per legitimate rating, popup, ledger and idempotency implemented.",
+          "test": "Two distinct ratings +4; retries +0; browser272 displayed +2 popup and exactly one ledger row.",
+          "production": "Production UI and TARGET ledger verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Duplicate-reward prevention",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "+2 per legitimate rating, popup, ledger and idempotency implemented.",
+          "test": "Two distinct ratings +4; retries +0; browser272 displayed +2 popup and exactly one ledger row.",
+          "production": "Production UI and TARGET ledger verified.",
+          "status": "PASS"
         }
       ]
     },
@@ -346,21 +389,24 @@
       "requirements": [
         {
           "requirement": "Tribe/category pictures",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Tribe images/names without Find prefix and matching filter navigation implemented.",
+          "test": "Production Fitness Tribe opens filtered All Activities.",
+          "production": "Production navigation passed.",
+          "status": "PASS"
         },
         {
           "requirement": "No Find prefix",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Tribe images/names without Find prefix and matching filter navigation implemented.",
+          "test": "Production Fitness Tribe opens filtered All Activities.",
+          "production": "Production navigation passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Tribe routes to filtered Activities",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Tribe images/names without Find prefix and matching filter navigation implemented.",
+          "test": "Production Fitness Tribe opens filtered All Activities.",
+          "production": "Production navigation passed.",
+          "status": "PASS"
         }
       ]
     },
@@ -369,27 +415,31 @@
       "requirements": [
         {
           "requirement": "Host Responsibly warning",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Host warning and prominently emphasized suspension consequence; backend explicit-word guard and Admin manual moderation.",
+          "test": "Source contracts; local DB normalization/whole-word tests; production warning inspected.",
+          "production": "Warnings/word guard deployed. Automated image/hate/misleading-content classification is NOT implemented without an approved provider.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Prominent account-suspension consequence",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Host warning and prominently emphasized suspension consequence; backend explicit-word guard and Admin manual moderation.",
+          "test": "Source contracts; local DB normalization/whole-word tests; production warning inspected.",
+          "production": "Warnings/word guard deployed. Automated image/hate/misleading-content classification is NOT implemented without an approved provider.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Text profanity checks",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Host warning and prominently emphasized suspension consequence; backend explicit-word guard and Admin manual moderation.",
+          "test": "Source contracts; local DB normalization/whole-word tests; production warning inspected.",
+          "production": "Warnings/word guard deployed. Automated image/hate/misleading-content classification is NOT implemented without an approved provider.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Image/content moderation requirement",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Manual Admin moderation exists; automated image/semantic classification absent.",
+          "test": "No fabricated classifier/provider test.",
+          "production": "Approved moderation service/model/account and policy required; not marked complete.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -398,15 +448,17 @@
       "requirements": [
         {
           "requirement": "Upload Responsibly warning across Activity/Vibe/Community and other media entry points",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Reusable responsibility warning at Activity/Vibe/Post/Story/Profile/chat media entry points.",
+          "test": "Entry-point source contracts; production profile warning Continue opened file picker and uploaded QA image.",
+          "production": "Production picker/upload path passed; camera/native permissions remain device-only.",
+          "status": "PASS"
         },
         {
           "requirement": "Continue opens picker",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Reusable responsibility warning at Activity/Vibe/Post/Story/Profile/chat media entry points.",
+          "test": "Entry-point source contracts; production profile warning Continue opened file picker and uploaded QA image.",
+          "production": "Production picker/upload path passed; camera/native permissions remain device-only.",
+          "status": "PASS"
         }
       ]
     },
@@ -415,27 +467,31 @@
       "requirements": [
         {
           "requirement": "Correct Community logo/position",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Community logo/header, search icon beside notifications, collapsible search/filter/back implemented.",
+          "test": "Production Community list/detail navigation and source contracts.",
+          "production": "Production Community interface verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Search beside consistent Notification icon",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Community logo/header, search icon beside notifications, collapsible search/filter/back implemented.",
+          "test": "Production Community list/detail navigation and source contracts.",
+          "production": "Production Community interface verified.",
+          "status": "PASS"
         },
         {
           "requirement": "No permanent search bar",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Community logo/header, search icon beside notifications, collapsible search/filter/back implemented.",
+          "test": "Production Community list/detail navigation and source contracts.",
+          "production": "Production Community interface verified.",
+          "status": "PASS"
         },
         {
           "requirement": "Search/filter/back UI",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Community logo/header, search icon beside notifications, collapsible search/filter/back implemented.",
+          "test": "Production Community list/detail navigation and source contracts.",
+          "production": "Production Community interface verified.",
+          "status": "PASS"
         }
       ]
     },
@@ -444,33 +500,38 @@
       "requirements": [
         {
           "requirement": "Smaller Community cover",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Smaller cover, deterministic fallback, member avatars and Admin removal implemented.",
+          "test": "Production Community235; API member removal/rejoin; cover update persisted.",
+          "production": "Production UI and target membership state passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Colored cover fallback",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Smaller cover, deterministic fallback, member avatars and Admin removal implemented.",
+          "test": "Production Community235; API member removal/rejoin; cover update persisted.",
+          "production": "Production UI and target membership state passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Avatar initials/color fallback",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Smaller cover, deterministic fallback, member avatars and Admin removal implemented.",
+          "test": "Production Community235; API member removal/rejoin; cover update persisted.",
+          "production": "Production UI and target membership state passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Member icons",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Smaller cover, deterministic fallback, member avatars and Admin removal implemented.",
+          "test": "Production Community235; API member removal/rejoin; cover update persisted.",
+          "production": "Production UI and target membership state passed.",
+          "status": "PASS"
         },
         {
           "requirement": "Admin member removal",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Smaller cover, deterministic fallback, member avatars and Admin removal implemented.",
+          "test": "Production Community235; API member removal/rejoin; cover update persisted.",
+          "production": "Production UI and target membership state passed.",
+          "status": "PASS"
         }
       ]
     },
@@ -479,9 +540,10 @@
       "requirements": [
         {
           "requirement": "Members list icons",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Member avatars/initials rendered in Members list.",
+          "test": "Production Community members and source inspection.",
+          "production": "Production member identities/fallbacks verified.",
+          "status": "PASS"
         }
       ]
     },
@@ -490,9 +552,10 @@
       "requirements": [
         {
           "requirement": "Edit Community cover",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Community cover edit/upload path implemented.",
+          "test": "Fresh cover and rules update; persisted database plus production detail.",
+          "production": "TARGET/production pass.",
+          "status": "PASS"
         }
       ]
     },
@@ -501,15 +564,17 @@
       "requirements": [
         {
           "requirement": "Poll voter identities",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Named poll-voter list and Community-aware back navigation implemented.",
+          "test": "Community235 poll voter QA2 visible; Back returned to same Community.",
+          "production": "Production UI pass.",
+          "status": "PASS"
         },
         {
           "requirement": "Community Chat Back returns to same Community",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Named poll-voter list and Community-aware back navigation implemented.",
+          "test": "Community235 poll voter QA2 visible; Back returned to same Community.",
+          "production": "Production UI pass.",
+          "status": "PASS"
         }
       ]
     },
@@ -518,27 +583,31 @@
       "requirements": [
         {
           "requirement": "Verification +10 Trust only, not Nitro",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Trust-only verification points, private selfie evidence/review, staged verified badge implemented.",
+          "test": "Email-only107 selfie submission/private Storage; Admin rejected synthetic evidence; Trust/Nitro distinction checked.",
+          "production": "Production backend pass; no fake physical phone/Aadhaar verification granted.",
+          "status": "PASS"
         },
         {
           "requirement": "Private selfie review evidence",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Trust-only verification points, private selfie evidence/review, staged verified badge implemented.",
+          "test": "Email-only107 selfie submission/private Storage; Admin rejected synthetic evidence; Trust/Nitro distinction checked.",
+          "production": "Production backend pass; no fake physical phone/Aadhaar verification granted.",
+          "status": "PASS"
         },
         {
           "requirement": "Phone verification architecture",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Trust-only verification points, private selfie evidence/review, staged verified badge implemented.",
+          "test": "Email-only107 selfie submission/private Storage; Admin rejected synthetic evidence; Trust/Nitro distinction checked.",
+          "production": "Production backend pass; no fake physical phone/Aadhaar verification granted.",
+          "status": "PASS"
         },
         {
           "requirement": "Verified badge requires intended stages",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Trust-only verification points, private selfie evidence/review, staged verified badge implemented.",
+          "test": "Email-only107 selfie submission/private Storage; Admin rejected synthetic evidence; Trust/Nitro distinction checked.",
+          "production": "Production backend pass; no fake physical phone/Aadhaar verification granted.",
+          "status": "PASS"
         }
       ]
     },
@@ -547,9 +616,10 @@
       "requirements": [
         {
           "requirement": "Aadhaar requires licensed approved provider; no simulation",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Intentionally not simulated.",
+          "test": "No licensed approved Aadhaar provider supplied.",
+          "production": "EXTERNAL HOLD; not a passed verification integration.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -558,9 +628,10 @@
       "requirements": [
         {
           "requirement": "Notifications page has no duplicate-subscription error",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Notification load/subscription management and read/navigation path implemented.",
+          "test": "Cross-app generated notification/read test; five-round stability; production page checked.",
+          "production": "No recurring duplicate-subscription error in observed run.",
+          "status": "PASS"
         }
       ]
     },
@@ -569,9 +640,10 @@
       "requirements": [
         {
           "requirement": "Up-to-three-photo Profile gallery",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Up to three Profile photos with gallery navigation and backend maximum enforced.",
+          "test": "UI profile upload; API positions2/3 accepted and fourth rejected.",
+          "production": "Production upload/display and target cap passed.",
+          "status": "PASS"
         }
       ]
     },
@@ -580,15 +652,17 @@
       "requirements": [
         {
           "requirement": "Community image/icon in Profile",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Community links/icons implemented; achievement badges explicitly locked rather than invented.",
+          "test": "Profile communities navigation/source; live Profile shows locked achievements.",
+          "production": "Community behavior pass; final badge award specification remains client-defined.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Badge behavior only to supplied specification",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Achievement badges remain explicitly locked/coming soon.",
+          "test": "Live Profile shows locked badges.",
+          "production": "Client award criteria were not supplied; no invented rules.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -597,9 +671,10 @@
       "requirements": [
         {
           "requirement": "No duplicate Squad members",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Canonical member deduplication in UI and now SQL API; self-relations excluded.",
+          "test": "Inserted two reciprocal QA friendship rows; fresh API returned one identity; production Squad showed one row.",
+          "production": "PASS; temporary QA relationship removed after verification.",
+          "status": "PASS"
         }
       ]
     },
@@ -608,9 +683,10 @@
       "requirements": [
         {
           "requirement": "Save Edit Profile returns to Profile",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Successful Edit Profile save navigates back to Profile; date input persistence fixed.",
+          "test": "Production save/back behavior retested; new-account date picker retained1995-01-01.",
+          "production": "Production PASS after fixes.",
+          "status": "PASS"
         }
       ]
     },
@@ -619,15 +695,17 @@
       "requirements": [
         {
           "requirement": "Partner instructions",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Partner instructions, explicit checkbox/link, service validation and server receipt added on current application route.",
+          "test": "Missing consent rejected; accepted email-only application UNDER_REVIEW; private receipt confirmed.",
+          "production": "PASS: deployed Partner form shows Terms link/unchecked checkbox; Submit disabled until checked. API rejects omitted consent and stores private receipt.",
+          "status": "PASS"
         },
         {
           "requirement": "Terms agreement before application",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Partner instructions, explicit checkbox/link, service validation and server receipt added on current application route.",
+          "test": "Missing consent rejected; accepted email-only application UNDER_REVIEW; private receipt confirmed.",
+          "production": "PASS: deployed Partner form shows Terms link/unchecked checkbox; Submit disabled until checked. API rejects omitted consent and stores private receipt.",
+          "status": "PASS"
         }
       ]
     },
@@ -636,33 +714,38 @@
       "requirements": [
         {
           "requirement": "Partner Dashboard",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "DB-backed Partner dashboard, category pricing, required details and paid-only registration implemented.",
+          "test": "Real Sandbox create/verify; authoritative1234paise despite client1; signed synthetic webhook/replay; Partner reflection.",
+          "production": "Backend PASS. Synthetic webhook is NOT completed provider checkout; interactive Sandbox checkout remains manual.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Participant/details/amount",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "DB-backed Partner dashboard, category pricing, required details and paid-only registration implemented.",
+          "test": "Real Sandbox create/verify; authoritative1234paise despite client1; signed synthetic webhook/replay; Partner reflection.",
+          "production": "Backend PASS. Synthetic webhook is NOT completed provider checkout; interactive Sandbox checkout remains manual.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Multiple categories and prices",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "DB-backed Partner dashboard, category pricing, required details and paid-only registration implemented.",
+          "test": "Real Sandbox create/verify; authoritative1234paise despite client1; signed synthetic webhook/replay; Partner reflection.",
+          "production": "Backend PASS. Synthetic webhook is NOT completed provider checkout; interactive Sandbox checkout remains manual.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Category selection",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "DB-backed Partner dashboard, category pricing, required details and paid-only registration implemented.",
+          "test": "Real Sandbox create/verify; authoritative1234paise despite client1; signed synthetic webhook/replay; Partner reflection.",
+          "production": "Backend PASS. Synthetic webhook is NOT completed provider checkout; interactive Sandbox checkout remains manual.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Join only after verified payment and required answers",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "DB-backed Partner dashboard, category pricing, required details and paid-only registration implemented.",
+          "test": "Real Sandbox create/verify; authoritative1234paise despite client1; signed synthetic webhook/replay; Partner reflection.",
+          "production": "Backend PASS. Synthetic webhook is NOT completed provider checkout; interactive Sandbox checkout remains manual.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -671,9 +754,10 @@
       "requirements": [
         {
           "requirement": "Partner Activity visual differentiation",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Partner Activity badge/treatment remains separate from normal costs-may-apply Activities.",
+          "test": "Rendering contract and Partner/normal paid data classification checked.",
+          "production": "Deployed code verified; no real-money collection introduced.",
+          "status": "PASS"
         }
       ]
     },
@@ -682,21 +766,24 @@
       "requirements": [
         {
           "requirement": "Database-backed Admin",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Authenticated DB-backed Admin with role/finance boundaries implemented.",
+          "test": "Fresh Admin email login; target dashboard data; ordinary user/Admin finance restrictions.",
+          "production": "Production Admin and target role checks passed; no invented Master privileges.",
+          "status": "PASS"
         },
         {
           "requirement": "Authenticated access",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Authenticated DB-backed Admin with role/finance boundaries implemented.",
+          "test": "Fresh Admin email login; target dashboard data; ordinary user/Admin finance restrictions.",
+          "production": "Production Admin and target role checks passed; no invented Master privileges.",
+          "status": "PASS"
         },
         {
           "requirement": "Master/Admin controls and role enforcement",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Authenticated DB-backed Admin with role/finance boundaries implemented.",
+          "test": "Fresh Admin email login; target dashboard data; ordinary user/Admin finance restrictions.",
+          "production": "Production Admin and target role checks passed; no invented Master privileges.",
+          "status": "PASS"
         }
       ]
     },
@@ -705,27 +792,31 @@
       "requirements": [
         {
           "requirement": "Admin pin upcoming Activity",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Admin pinning/category edit and scoped login announcements implemented.",
+          "test": "Live pin/unpin permission test; production category corrected; QA-targeted announcement acknowledged once.",
+          "production": "Production Admin controls/announcement pass; QA pin/announcement cleaned up.",
+          "status": "PASS"
         },
         {
           "requirement": "Admin category correction",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Admin pinning/category edit and scoped login announcements implemented.",
+          "test": "Live pin/unpin permission test; production category corrected; QA-targeted announcement acknowledged once.",
+          "production": "Production Admin controls/announcement pass; QA pin/announcement cleaned up.",
+          "status": "PASS"
         },
         {
           "requirement": "Operational Admin functions",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Admin pinning/category edit and scoped login announcements implemented.",
+          "test": "Live pin/unpin permission test; production category corrected; QA-targeted announcement acknowledged once.",
+          "production": "Production Admin controls/announcement pass; QA pin/announcement cleaned up.",
+          "status": "PASS"
         },
         {
           "requirement": "Login popup/message",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Admin pinning/category edit and scoped login announcements implemented.",
+          "test": "Live pin/unpin permission test; production category corrected; QA-targeted announcement acknowledged once.",
+          "production": "Production Admin controls/announcement pass; QA pin/announcement cleaned up.",
+          "status": "PASS"
         }
       ]
     },
@@ -734,69 +825,80 @@
       "requirements": [
         {
           "requirement": "Create Activity navigates to created detail",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Creation navigation, sharing, Community success, message deletion, time defaults, FAQ NitroBot and reward/hold messaging implemented.",
+          "test": "UI Activity creation; cross-app Community create; three share types; photo delete; defaults/source; NitroBot conversation; Play Store idempotency.",
+          "production": "See per-requirement caveats: native SOS, SMTP support routing, Play Store proof and Hubble remain limited.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Ended Activity not editable",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Creation navigation, sharing, Community success, message deletion, time defaults, FAQ NitroBot and reward/hold messaging implemented.",
+          "test": "UI Activity creation; cross-app Community create; three share types; photo delete; defaults/source; NitroBot conversation; Play Store idempotency.",
+          "production": "See per-requirement caveats: native SOS, SMTP support routing, Play Store proof and Hubble remain limited.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Activity/Community/Vibe sharing and invite links",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Creation navigation, sharing, Community success, message deletion, time defaults, FAQ NitroBot and reward/hold messaging implemented.",
+          "test": "UI Activity creation; cross-app Community create; three share types; photo delete; defaults/source; NitroBot conversation; Play Store idempotency.",
+          "production": "See per-requirement caveats: native SOS, SMTP support routing, Play Store proof and Hubble remain limited.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Community Created success",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Creation navigation, sharing, Community success, message deletion, time defaults, FAQ NitroBot and reward/hold messaging implemented.",
+          "test": "UI Activity creation; cross-app Community create; three share types; photo delete; defaults/source; NitroBot conversation; Play Store idempotency.",
+          "production": "See per-requirement caveats: native SOS, SMTP support routing, Play Store proof and Hubble remain limited.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Delete chat message/media",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Creation navigation, sharing, Community success, message deletion, time defaults, FAQ NitroBot and reward/hold messaging implemented.",
+          "test": "UI Activity creation; cross-app Community create; three share types; photo delete; defaults/source; NitroBot conversation; Play Store idempotency.",
+          "production": "See per-requirement caveats: native SOS, SMTP support routing, Play Store proof and Hubble remain limited.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Start now+10m/end+1h/deadline=start",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Creation navigation, sharing, Community success, message deletion, time defaults, FAQ NitroBot and reward/hold messaging implemented.",
+          "test": "UI Activity creation; cross-app Community create; three share types; photo delete; defaults/source; NitroBot conversation; Play Store idempotency.",
+          "production": "See per-requirement caveats: native SOS, SMTP support routing, Play Store proof and Hubble remain limited.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "SOS reminder/native status",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "SOS emergency-contact path exists; no persistent10-minute native scheduler.",
+          "test": "Source inspected; native background not exercised.",
+          "production": "Intentional native-device/background-provider hold.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "NitroBot chat/questions",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Creation navigation, sharing, Community success, message deletion, time defaults, FAQ NitroBot and reward/hold messaging implemented.",
+          "test": "UI Activity creation; cross-app Community create; three share types; photo delete; defaults/source; NitroBot conversation; Play Store idempotency.",
+          "production": "See per-requirement caveats: native SOS, SMTP support routing, Play Store proof and Hubble remain limited.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Send Query destination",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Send Query writes tbl_user_feedbacks for Admin/database review.",
+          "test": "Fresh QA query8 persisted.",
+          "production": "No email-routing delivery claimed; SMTP/routing not configured.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "One-time Play Store +10 reward",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "One-time +10 reward for opening Play Store listing, not proof of review.",
+          "test": "First call+10; retry+0.",
+          "production": "Reward/idempotency PASS; actual Play Store review cannot be verified by this implementation.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Hubble minimum 200/provider hold",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "200-point minimum displayed and disabled redemption does not deduct.",
+          "test": "Production Store shows threshold/deficit/provider hold.",
+          "production": "Hubble production redemption intentionally disabled.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -805,63 +907,73 @@
       "requirements": [
         {
           "requirement": "Co-host approve/reject/remove/edit",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Co-host lifecycle, chat history/blocking, consent, privacy, profile routing and documentation implemented.",
+          "test": "Cross-user live assertions; fresh signup policy and date saved; anonymous member/Admin UI; Activity-only Vibe privacy.",
+          "production": "Production/backend checks pass with provider-dependent Nitro redemption and badge caveats.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Unblock and retained old chat history",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Co-host lifecycle, chat history/blocking, consent, privacy, profile routing and documentation implemented.",
+          "test": "Cross-user live assertions; fresh signup policy and date saved; anonymous member/Admin UI; Activity-only Vibe privacy.",
+          "production": "Production/backend checks pass with provider-dependent Nitro redemption and badge caveats.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "First-signup policy consent",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Co-host lifecycle, chat history/blocking, consent, privacy, profile routing and documentation implemented.",
+          "test": "Cross-user live assertions; fresh signup policy and date saved; anonymous member/Admin UI; Activity-only Vibe privacy.",
+          "production": "Production/backend checks pass with provider-dependent Nitro redemption and badge caveats.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Public Profile starts on Vibes",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Co-host lifecycle, chat history/blocking, consent, privacy, profile routing and documentation implemented.",
+          "test": "Cross-user live assertions; fresh signup policy and date saved; anonymous member/Admin UI; Activity-only Vibe privacy.",
+          "production": "Production/backend checks pass with provider-dependent Nitro redemption and badge caveats.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Nitro spending negative",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Negative ledger values are rendered as spending.",
+          "test": "Source/unit contract; no fabricated live redemption.",
+          "production": "Live spending not executed while Hubble/redemption remains on hold.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Partner external URL",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Co-host lifecycle, chat history/blocking, consent, privacy, profile routing and documentation implemented.",
+          "test": "Cross-user live assertions; fresh signup policy and date saved; anonymous member/Admin UI; Activity-only Vibe privacy.",
+          "production": "Production/backend checks pass with provider-dependent Nitro redemption and badge caveats.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Activity media optional Vibes and participant eligibility",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Co-host lifecycle, chat history/blocking, consent, privacy, profile routing and documentation implemented.",
+          "test": "Cross-user live assertions; fresh signup policy and date saved; anonymous member/Admin UI; Activity-only Vibe privacy.",
+          "production": "Production/backend checks pass with provider-dependent Nitro redemption and badge caveats.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Anonymous Community identity private from users/Admin audit",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Co-host lifecycle, chat history/blocking, consent, privacy, profile routing and documentation implemented.",
+          "test": "Cross-user live assertions; fresh signup policy and date saved; anonymous member/Admin UI; Activity-only Vibe privacy.",
+          "production": "Production/backend checks pass with provider-dependent Nitro redemption and badge caveats.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Security/privacy",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Co-host lifecycle, chat history/blocking, consent, privacy, profile routing and documentation implemented.",
+          "test": "Cross-user live assertions; fresh signup policy and date saved; anonymous member/Admin UI; Activity-only Vibe privacy.",
+          "production": "Production/backend checks pass with provider-dependent Nitro redemption and badge caveats.",
+          "status": "QUALIFIED"
         },
         {
           "requirement": "Developer documentation",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Existing developer/security/runbook docs retained plus this acceptance ledger.",
+          "test": "Inspected maintained docs and new migrations/tests.",
+          "production": "Documentation available; maintainability is not a warranty.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -870,9 +982,10 @@
       "requirements": [
         {
           "requirement": "Explicit unresolved ambiguities; do not invent badge/old-app specifications",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Ambiguities explicitly recorded rather than fabricated.",
+          "test": "Compared all40 pages and all4 screenshots to implementation.",
+          "production": "Old-app exact extra-screen reference, badge rules, semantic/image moderation provider and support delivery need clarification/config.",
+          "status": "QUALIFIED"
         }
       ]
     },
@@ -881,9 +994,10 @@
       "requirements": [
         {
           "requirement": "No known fixable regression in completed tested scope",
-          "implementation": "pending evidence consolidation",
-          "test": "pending evidence consolidation",
-          "production": "pending evidence consolidation"
+          "implementation": "Known defects discovered in this pass repaired and regression-tested.",
+          "test": "43 local suites,35 cross-app operations,50 stability requests; live targeted assertions and production UI.",
+          "production": "No known unresolved code defect in tested scope; not a claim of exhaustive native/device/provider coverage.",
+          "status": "QUALIFIED"
         }
       ]
     }
@@ -898,5 +1012,227 @@
     "Co-host demotion persisted",
     "Chats Photo/Poll only; Vibes/Community Video retained",
     "Anonymous rating backend/recipient privacy/no navigation/Nitro idempotency"
-  ]
+  ],
+  "testCounts": {
+    "localSuites": 43,
+    "crossAppOperations": 35,
+    "stabilityRequests": 50
+  },
+  "recordedAt": "2026-10-01",
+  "emailQa": [
+    {
+      "feature": "Auth",
+      "test": "Email login/logout/relogin; wrong password; restored session; fresh onboarding and consent",
+      "result": "PASS",
+      "production": "Browser + live Auth API"
+    },
+    {
+      "feature": "Recovery",
+      "test": "Generated TARGET recovery link and production redirect",
+      "result": "PASS (configuration)",
+      "production": "Real inbox/reset completion not verified; QA example.com delivery rejected"
+    },
+    {
+      "feature": "Home",
+      "test": "Carousel, collapsible search, navigation, Tribe filter, blue/purple Invite/Nitro",
+      "result": "PASS",
+      "production": "Production browser + computed gradients"
+    },
+    {
+      "feature": "Profile",
+      "test": "Own/public; edit/save returns; gallery upload/3-photo cap; communities; Vibes-first; Trust/Nitro",
+      "result": "PASS",
+      "production": "Production browser + authenticated API"
+    },
+    {
+      "feature": "Squad",
+      "test": "Populated reciprocal relationship returns/displays one member; cleanup succeeds",
+      "result": "PASS",
+      "production": "Live TARGET API + production browser"
+    },
+    {
+      "feature": "Activity",
+      "test": "Create/free/normal Paid toggle; edit; join/approve/reject/leave/rejoin",
+      "result": "PASS",
+      "production": "Production browser + fresh live cross-user API"
+    },
+    {
+      "feature": "Host/Co-host",
+      "test": "Original Host; promote/edit/approve/reject/remove; demote retains membership/revokes powers",
+      "result": "PASS",
+      "production": "Production participants UI + fresh live API"
+    },
+    {
+      "feature": "Activity interaction",
+      "test": "Comment eligibility/identity; likes/liker identities; Activity Chat and Poll",
+      "result": "PASS",
+      "production": "Live authenticated APIs; native long-press gesture not device-tested"
+    },
+    {
+      "feature": "Completed Activity",
+      "test": "Edit/remove/leave denied; rating CTA; self/No Show restrictions",
+      "result": "PASS",
+      "production": "Production rating UI + server mutation denials"
+    },
+    {
+      "feature": "Ratings",
+      "test": "Named/anonymous reviews, redaction, no anonymous profile link, +2 popup, retries/multiple awards",
+      "result": "PASS",
+      "production": "Production UI + direct API privacy + ledger assertions"
+    },
+    {
+      "feature": "Activity removal",
+      "test": "Cancelled chat hidden and writes rejected",
+      "result": "PASS",
+      "production": "Live target API; message history preserved"
+    },
+    {
+      "feature": "Community",
+      "test": "Create/edit/cover/avatar/members/remove/rejoin; Photo/Video/Post/Poll/voters",
+      "result": "PASS",
+      "production": "Production Community UI + fresh target mutations"
+    },
+    {
+      "feature": "Community privacy/navigation",
+      "test": "Anonymous user masking; Admin attribution; chat Back same Community",
+      "result": "PASS",
+      "production": "Production member/Admin browser + API restrictions"
+    },
+    {
+      "feature": "Vibes",
+      "test": "Video upload/create/like/comment/report/share; Activity-only access",
+      "result": "PASS",
+      "production": "Fresh target API/Storage; production video/post render"
+    },
+    {
+      "feature": "Stories",
+      "test": "Create/view/group/reload/delete",
+      "result": "PASS",
+      "production": "Fresh API/Storage; browser grouped playback readyState4/no error; deletion persisted"
+    },
+    {
+      "feature": "Personal Chat",
+      "test": "Text/Photo/Poll/voters/delete; block/unblock; readable history; shares",
+      "result": "PASS",
+      "production": "Fresh live API + production history/menu"
+    },
+    {
+      "feature": "Chat media rules",
+      "test": "Photo/Poll only for new messages; Vibe/Community Video remains",
+      "result": "PASS",
+      "production": "Three-room server rejection; production menus; legacy deletion retest"
+    },
+    {
+      "feature": "Notifications",
+      "test": "Generated notification; list/read; navigation",
+      "result": "PASS",
+      "production": "Live trigger/read test and production browser"
+    },
+    {
+      "feature": "Admin",
+      "test": "Email login, target dashboard/users/activity/category/pin/moderation/verification/anonymous author",
+      "result": "PASS",
+      "production": "Production browser + role-checked API"
+    },
+    {
+      "feature": "Partner",
+      "test": "Email-only application and Terms gate; Admin review; dashboard/participants/category amounts",
+      "result": "PASS",
+      "production": "Production Terms UI + authenticated API"
+    },
+    {
+      "feature": "Cashfree",
+      "test": "Sandbox order/pricing/idempotency/verify; invalid/valid/replayed signed webhook; DB and Partner reflection",
+      "result": "PASS (backend)",
+      "production": "Real Sandbox order/verify; payment-success evidence is synthetic signed webhook, not provider checkout"
+    },
+    {
+      "feature": "Verification",
+      "test": "Email-only private selfie evidence and Admin rejection; Trust distinct from Nitro",
+      "result": "PASS",
+      "production": "Fresh target API/private Storage; no false verified badge"
+    },
+    {
+      "feature": "Support/rewards",
+      "test": "NitroBot conversation; query DB; Play Store once-only reward;200-point Hubble hold",
+      "result": "PASS with limits",
+      "production": "Production UI/API; no SMTP query-email delivery, real review proof, or redemption"
+    }
+  ],
+  "fixes": [
+    "Server-enforced Activity comment eligibility for Host/approved participants.",
+    "Persistent original Host display plus visible participant removal controls.",
+    "Admin upcoming-Activity pin/unpin with role checks and correct feed ordering.",
+    "Scoped/expiring login announcements with private idempotent acknowledgements.",
+    "Baseline explicit-word validation across user-generated text; manual moderation retained.",
+    "Responsibility warnings on additional Profile and chat upload entry points.",
+    "Successful Edit Profile save returns to Profile.",
+    "Unique React key for announcements prevents duplicate retained screens.",
+    "New Chat video attachments rejected server-side in all room types.",
+    "Cancelled/deleted Activity chat writes rejected, in addition to hiding inbox entry.",
+    "Legacy video messages remain owner-deletable despite new attachment restriction.",
+    "First-signup explicit policy modal and private receipt enforced by onboarding backend.",
+    "Web date inputs persist selections on signup and Edit Profile.",
+    "Current Partner application route now requires explicit Terms, validated client/server with private receipt.",
+    "NitroBot keeps question/answer turns; Store accurately shows200-point minimum/provider hold.",
+    "Safe Phone-change OTP error wording retained; no raw hook502 exposed.",
+    "Previously supplied anonymous-rating and Host-suspension emphasis changes committed/deployed and retested with target privacy/Nitro evidence.",
+    "Squad API deduplicates reciprocal legacy friendships, not just the frontend list."
+  ],
+  "external": [
+    {
+      "provider": "Google",
+      "action": "Correct the same OAuth Web Client: origin https://wenitro-app.vercel.app and redirect https://cxsznhrkzqndhseodcyy.supabase.co/auth/v1/callback. Final Google account login remains manual."
+    },
+    {
+      "provider": "Fast2SMS",
+      "action": "Supply enabled Dev API key; provider currently reports HTTP401/code412 invalid Authorization Key. Check API access/template/wallet/KYC/allowlisting with provider; no claim which prerequisite is wrong."
+    },
+    {
+      "provider": "Cashfree",
+      "action": "Interactive Sandbox checkout only. Backend tested with real Sandbox order and synthetic signed payment-success event; no real money."
+    },
+    {
+      "provider": "Google Maps",
+      "action": "Supply/configure paid Google Maps/Places API credentials, billing/API enablement and domain/app restrictions. Current implementation is Photon/Nominatim, NOT Google Maps."
+    },
+    {
+      "provider": "SMTP",
+      "action": "Production sender/delivery credentials and support-email routing not supplied. Recovery redirect/link generation passes; real-inbox delivery/reset completion not claimed."
+    },
+    {
+      "provider": "Moderation",
+      "action": "Approved image/semantic moderation provider/model and policy not supplied. Explicit-word guard/manual Admin review are not an automated image/hate/misleading-content classifier."
+    }
+  ],
+  "phoneOnly": [
+    {
+      "feature": "Actual phone signup/verification/change",
+      "enforcement": "Supabase Auth + SMS Hook OTP confirmation",
+      "manual": "Receive valid physical OTP after Fast2SMS credential repair."
+    },
+    {
+      "feature": "Cashfree checkout with a real user",
+      "enforcement": "cashfree-create-order requires authenticated user.phone",
+      "manual": "Verified real phone session and interactive Sandbox checkout. Reserved synthetic QA fixtures tested backend only."
+    }
+  ],
+  "intentionalHolds": [
+    "Aadhaar/government KYC and bank/Aadhaar ownership verification require licensed approved provider; no simulation.",
+    "Full verified-only Activity/Community access depends on staged verification including Aadhaar, not merely phone OTP.",
+    "Native persistent SOS/background push requires native-device/provider work and is not web-verified.",
+    "Hubble production redemption and automated real-money payout/refund/chargeback/transfers remain disabled.",
+    "Apple Auth without provider configuration.",
+    "Leaked-password protection if unavailable on current Free plan.",
+    "Badge award rules and exact historical extra onboarding screen await missing client specification/reference."
+  ],
+  "deployment": {
+    "app": "https://wenitro-app.vercel.app/",
+    "admin": "https://wenitro-admin-roan.vercel.app/",
+    "target": "cxsznhrkzqndhseodcyy",
+    "appCodeCommit": "9c6e94b",
+    "adminCodeCommit": "f346515",
+    "activeOldRuntimeReference": false,
+    "notes": "Later commit only records audit/legacy-deletion database fix. Production UI9c6e94b verified; targeted migrations applied to TARGET."
+  }
 }
