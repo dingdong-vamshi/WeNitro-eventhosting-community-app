@@ -19,6 +19,7 @@ try {
   const moderation = fs.readFileSync('supabase/migrations/20261001110210_acceptance_text_content_guards.sql', 'utf8');
   const comments = fs.readFileSync('supabase/migrations/20261001111357_activity_comment_eligibility.sql', 'utf8');
   const pinning = fs.readFileSync('supabase/migrations/20261001111919_admin_activity_pinning.sql', 'utf8');
+  const chatMedia = fs.readFileSync('supabase/migrations/20261001112539_chat_photo_poll_only.sql', 'utf8');
   const tables = [...moderation.matchAll(/on public\.(\w+) for each row/g)].map(m => m[1]);
   const output = run('psql', ['-h', directory, '-p', '55441', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-Atq'], `
 create role anon; create role authenticated; create schema private; create schema auth;
@@ -37,6 +38,9 @@ create function public.can_read_event(integer) returns boolean language sql as $
 ${comments}
 alter table public.tbl_events add column event_start_time timestamptz, add column updated_at timestamptz, add column updated_by integer;
 ${pinning}
+alter table public.tbl_messages add column message_type text, add column media_url text;
+insert into public.tbl_messages(id,message_type,media_url) values(1,'video','legacy.mp4');
+${chatMedia}
 select set_config('qa.user','1',false);
 select public.admin_create_login_announcement('QA','Hello',now()-interval '1 minute',now()+interval '1 day',array[2]);
 do $$ begin
@@ -74,6 +78,10 @@ do $$ begin
   begin update public.tbl_events set is_admin_pinned=false where id=1; raise exception 'direct pin bypass'; exception when insufficient_privilege then null; end;
   perform set_config('qa.user','1',true);
   perform public.admin_set_activity_pinned(1,false);
+  update public.tbl_messages set content='legacy history remains readable' where id=1;
+  begin insert into public.tbl_messages(message_type,media_url) values('video','new.mp4'); raise exception 'video bypass'; exception when sqlstate '22023' then null; end;
+  begin insert into public.tbl_messages(message_type,media_url) values('image','new.MP4?x=1'); raise exception 'disguised video bypass'; exception when sqlstate '22023' then null; end;
+  insert into public.tbl_messages(message_type,media_url) values('image','photo.png');
 end $$;
 select 'PASS: announcement audience, authorization, receipt idempotency, explicit-word guard, Unicode normalization, innocent substrings and unchanged-field updates';
 `);
