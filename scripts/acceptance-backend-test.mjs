@@ -20,6 +20,7 @@ try {
   const comments = fs.readFileSync('supabase/migrations/20261001111357_activity_comment_eligibility.sql', 'utf8');
   const pinning = fs.readFileSync('supabase/migrations/20261001111919_admin_activity_pinning.sql', 'utf8');
   const chatMedia = fs.readFileSync('supabase/migrations/20261001112539_chat_photo_poll_only.sql', 'utf8');
+  const closedChat = fs.readFileSync('supabase/migrations/20261001114800_closed_activity_chat_writes.sql', 'utf8');
   const tables = [...moderation.matchAll(/on public\.(\w+) for each row/g)].map(m => m[1]);
   const output = run('psql', ['-h', directory, '-p', '55441', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-Atq'], `
 create role anon; create role authenticated; create schema private; create schema auth;
@@ -41,6 +42,9 @@ ${pinning}
 alter table public.tbl_messages add column message_type text, add column media_url text;
 insert into public.tbl_messages(id,message_type,media_url) values(1,'video','legacy.mp4');
 ${chatMedia}
+alter table public.tbl_messages add column room_id integer;
+alter table public.tbl_chat_rooms add column event_id integer;
+${closedChat}
 select set_config('qa.user','1',false);
 select public.admin_create_login_announcement('QA','Hello',now()-interval '1 minute',now()+interval '1 day',array[2]);
 do $$ begin
@@ -59,6 +63,11 @@ do $$ begin
   begin update public.tbl_events set title='ＦＵＣＫ' where id=1; raise exception 'unicode bypass'; exception when sqlstate '22023' then null; end;
   update public.tbl_events set body='harmless' where id=1;
   update public.tbl_events set created_by=2 where id=1;
+  insert into public.tbl_chat_rooms(id,event_id) values(1,1);
+  insert into public.tbl_messages(room_id,content,message_type) values(1,'before cancellation','text');
+  update public.tbl_events set is_cancelled=true where id=1;
+  begin insert into public.tbl_messages(room_id,content,message_type) values(1,'after cancellation','text'); raise exception 'cancelled chat accepts writes'; exception when insufficient_privilege then null; end;
+  update public.tbl_events set is_cancelled=false where id=1;
   begin insert into public.tbl_event_comments(event_id,user_id,body) values(1,3,'not joined'); raise exception 'nonparticipant comment bypass'; exception when insufficient_privilege then null; end;
   insert into public.tbl_event_participants values(1,3,'pending');
   begin insert into public.tbl_event_comments(event_id,user_id,body) values(1,3,'pending'); raise exception 'pending comment bypass'; exception when insufficient_privilege then null; end;
