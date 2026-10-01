@@ -19,6 +19,7 @@ const HERO_SLIDES = [
   {
     id: 'activities',
     image: require('../../../assets/hero/hero-activities.jpeg'),
+    artwork: require('../../../assets/hero/hero-activities.jpeg'),
     eyebrow: 'REAL PEOPLE, OFFLINE',
     title: 'Host and discover new activities',
     description: 'Make plans around shared interests and meet in real life.',
@@ -28,6 +29,7 @@ const HERO_SLIDES = [
   {
     id: 'communities',
     image: require('../../../assets/hero/hero-communities.jpeg'),
+    artwork: require('../../../assets/hero/hero-communities.jpeg'),
     eyebrow: 'FIND YOUR PEOPLE',
     title: 'Join a community that feels like yours',
     description: 'Share ideas, join conversations and build your squad.',
@@ -37,7 +39,7 @@ const HERO_SLIDES = [
   {
     id: 'friends',
     image: require('../../../assets/hero/hero-friends.jpeg'),
-    maskFalseRewardClaims: true,
+    artwork: require('../../../assets/photos/friends.jpg'),
     eyebrow: 'BETTER TOGETHER',
     title: 'Bring your friends. Earn Nitro Points.',
     description: 'Invite your squad and earn 10 Nitro Points when they join.',
@@ -47,6 +49,7 @@ const HERO_SLIDES = [
   {
     id: 'store',
     image: require('../../../assets/hero/hero-store.jpeg'),
+    artwork: require('../../../assets/hero/hero-store.jpeg'),
     eyebrow: 'NITRO STORE',
     title: 'Turn Nitro Points into rewards',
     description: 'See your balance and learn when rewards become available.',
@@ -203,9 +206,11 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
                 onPress={() => go(slide.screen)}
                 style={({ pressed }) => ({ width: carouselCardWidth, height: carouselCardHeight, opacity: pressed ? 0.88 : 1 })}
               >
-                <Image source={slide.image} accessible={false} accessibilityIgnoresInvertColors style={{ position: 'absolute', width: carouselCardWidth, height: carouselCardHeight }} resizeMode="cover" />
-                <LinearGradient pointerEvents="none" colors={['rgba(31, 16, 88, 0.88)', 'rgba(31, 16, 88, 0.56)', 'rgba(15, 23, 42, 0.04)']} locations={[0, .55, 1]} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={{ position: 'absolute', inset: 0 }} />
-                <View style={{ flex: 1, width: '76%', padding: 16, paddingBottom: 22, justifyContent: 'center', gap: 6 }}>
+                <View pointerEvents="none" style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '66%', overflow: 'hidden' }}>
+                  <Image source={slide.artwork} accessible={false} accessibilityIgnoresInvertColors style={{ position: 'absolute', right: 0, top: 0, width: carouselCardHeight * 2.4, height: carouselCardHeight }} resizeMode="cover" />
+                </View>
+                <LinearGradient pointerEvents="none" colors={['rgba(39, 18, 99, 1)', 'rgba(39, 18, 99, 0.97)', 'rgba(22, 15, 62, 0.42)']} locations={[0, .54, 1]} start={{ x: 0, y: .5 }} end={{ x: 1, y: .5 }} style={{ position: 'absolute', inset: 0 }} />
+                <View style={{ flex: 1, width: pageWidth <= 360 ? '74%' : '70%', padding: 16, paddingBottom: 22, justifyContent: 'center', gap: 6 }}>
                   <Text style={{ color: '#C9C3FF', fontSize: 12, lineHeight: 16, fontWeight: '800', letterSpacing: .7 }}>{slide.eyebrow}</Text>
                   <Text style={{ color: '#FFFFFF', fontSize: 20, lineHeight: 24, fontWeight: '800' }}>{slide.title}</Text>
                   <Text numberOfLines={2} style={{ color: '#F0EEFF', fontSize: 12, lineHeight: 17 }}>{slide.description}</Text>

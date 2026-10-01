@@ -32,6 +32,15 @@ for (const [id, asset, route] of slides) {
   assert.ok(block.includes(`screen: '${route}'`), `${id} must route to ${route}`);
 }
 
+assert.match(feed, /artwork: require\('\.\.\/\.\.\/\.\.\/assets\/photos\/friends\.jpg'\)/,
+  'Friends uses text-free artwork so obsolete +500 claims cannot appear behind the current 10-point offer');
+assert.match(feed, /width: '66%', overflow: 'hidden'/,
+  'Hero art is isolated in a clipped right-hand panel instead of painting baked-in copy beneath live text');
+assert.match(feed, /width: carouselCardHeight \* 2\.4/,
+  'Hero art keeps the supplied wide aspect and right crop across responsive card widths');
+assert.match(feed, /rgba\(39, 18, 99, 0\.97\)/,
+  'The live hero copy sits on an opaque contrast field that prevents artwork text bleed-through');
+
 const heroHashes = {
   'assets/hero/hero-activities.jpeg': '516eb1beccb14bfaf192597feef9af81326d09a8a74876befe299d393dfc8118',
   'assets/hero/hero-communities.jpeg': '08b201273ebb058f02633eccfb986c0b1743632d0eaabfe1a67575bf37c56a80',
