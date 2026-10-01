@@ -1,4 +1,5 @@
 import { VerifiedBadge } from './src/components/verified-badge';
+import { ActivityRatings } from './src/components/activity-ratings';
 import { UserAvatar } from './src/components/user-avatar';
 import { ReferenceEditProfile } from './src/components/reconstruction/edit-profile';
 import { SocialProfilesScreen } from './src/components/reconstruction/social-profiles';
@@ -4137,6 +4138,7 @@ export function ActivityDetailScreen({
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [participantsOpen, setParticipantsOpen] = useState(false);
+  const [ratingsOpen, setRatingsOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState("Spam or misleading");
   const [reportDetails, setReportDetails] = useState("");
@@ -4594,6 +4596,7 @@ export function ActivityDetailScreen({
     requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.where}` });
   };
   const filteredParticipants = (canHost ? participants : joinedParticipants).filter(participant => participantTab === 'All' || participantTab === 'Approved' && ['approved','going','paid'].includes(participant.status) || participantTab === 'Pending' && ['pending','waitlist','payment_required','payment_pending','approved_pending_payment'].includes(participant.status) || participantTab === 'Rejected' && participant.status === 'rejected');
+  if (ratingsOpen && activityEnded && (isHost || joined)) return <ActivityRatings eventId={activity.id} viewerId={String(data.userId)} host={{ userId: String(activity.ownerId), name: activity.host, avatarUrl: activity.hostAvatar }} participants={participants} back={() => setRatingsOpen(false)} />;
   if (participantsOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}>
     <View style={{ maxWidth, width:'100%', alignSelf:'center', minHeight:61, borderBottomWidth:1, borderColor:palette.border, flexDirection:'row', alignItems:'center' }}><Pressable accessibilityRole="button" accessibilityLabel="Back to Activity" onPress={() => setParticipantsOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text} /></Pressable><Text style={{ color:palette.text,fontSize:20,fontWeight:'800',flex:1 }}>Manage Participants</Text></View>
     <View style={{ maxWidth,width:'100%',alignSelf:'center' }}><View style={{ flexDirection:'row',gap:7,padding:14 }}>{['All','Pending','Approved','Rejected'].map(tab=><Pressable accessibilityRole="tab" accessibilityState={{selected:participantTab===tab}} key={tab} onPress={()=>setParticipantTab(tab)} style={{ flex:1,minHeight:42,borderRadius:21,backgroundColor:participantTab===tab?'#5948EA':palette.card,alignItems:'center',justifyContent:'center' }}><Text style={{ color:participantTab===tab?'#FFF':palette.muted,fontSize:11,fontWeight:'700' }}>{tab}</Text></Pressable>)}</View></View>
@@ -4950,7 +4953,9 @@ export function ActivityDetailScreen({
               <Icon name={liked ? "heart" : "heart-outline"} color={palette.accent} />
               <Text style={[styles.likeButtonText, { color: palette.accent }]}>Like</Text>
             </Pressable>
-            {canHost ? (
+            {activityEnded ? (
+              <View style={{ flex: 1 }}><Button label={isHost || joined ? "Rate Participants" : "Activity Ended"} disabled={!isHost && !joined} onPress={() => setRatingsOpen(true)} /></View>
+            ) : canHost ? (
               <View style={styles.joinButtonLarge}>
                 <Text style={styles.joinButtonText}>{isCohost && !isHost ? "You are a Co-Host" : "You are the Host"}</Text>
                 <Icon name="shield-checkmark" color="#fff" />
@@ -9351,7 +9356,7 @@ export default function App() {
           }
           // Identity and onboarding are sufficient to render navigation. Social
           // data loads in the background instead of blocking the entire app.
-          setData(current => ({ ...current, mode: "authenticated", userId: String(setup.profile.id), name: setup.suggestedFullName, username: `@${setup.suggestedUsername}`, avatarUri: setup.suggestedAvatarUrl ?? undefined, bio: setup.profile.bio || '', location: setup.profile.location || '', onboarded: true }));
+          setData(current => ({ ...current, mode: "authenticated", userId: String(setup.profile.id), name: setup.suggestedFullName, username: `@${setup.suggestedUsername}`, avatarUri: setup.suggestedAvatarUrl ?? undefined, bio: setup.profile.bio || '', location: setup.profile.location || '', nitro: setup.profile.nitro_points, trustScore: setup.profile.trust_score, onboarded: true }));
           setScreen(currentScreen => ["authFallback", "authSignup", "login", "signup", "intro", "onboarding"].includes(currentScreen) ? "feed" : currentScreen);
           setAuthLoading(false);
           setSessionChecked(true);
@@ -9716,7 +9721,7 @@ export default function App() {
         />
       );
     if (screen === 'squad') return <ReferenceSquad ownerId={selectedSquadOwnerId || data.userId || ''} back={back} openProfile={openProfile} />;
-    if (screen === 'profile') return selectedProfileId ? <ReferenceMemberProfile key={selectedProfileId} id={selectedProfileId} back={back} onOpenCommunity={openCommunity} onOpenActivity={activity => { setData(current => ({ ...current, activities: [activity, ...current.activities.filter(a => a.id !== activity.id)] })); openActivity(activity.id); }} onOpenVibe={id => { setSelectedVibeId(id); go('vibes', id); }} onOpenSquad={openSquad} onConversation={(id, person) => { setData(current => ({ ...current, conversations: current.conversations.some(c => c.id === id) ? current.conversations : [...current.conversations, { id, name: person.fullname || person.username, type: 'People', roomType: 'personal', avatar: person.profile_image || '', memberCount: 2, online: false, unread: 0, userId: String(person.id), messages: [] }] })); setSelectedConversationId(id); go('chat', id); }} /> : <ReferenceProfile openCommunity={openCommunity} data={data} setData={setData} go={go} openActivity={openActivity} openDraft={() => go('createActivity')} openVibe={id => { setSelectedVibeId(id); go('vibes', id); }} openSquad={() => openSquad(data.userId || '')} />;
+    if (screen === 'profile') return selectedProfileId ? <ReferenceMemberProfile key={selectedProfileId} id={selectedProfileId} back={back} onOpenCommunity={openCommunity} onOpenProfile={openProfile} onOpenActivity={activity => { setData(current => ({ ...current, activities: [activity, ...current.activities.filter(a => a.id !== activity.id)] })); openActivity(activity.id); }} onOpenVibe={id => { setSelectedVibeId(id); go('vibes', id); }} onOpenSquad={openSquad} onConversation={(id, person) => { setData(current => ({ ...current, conversations: current.conversations.some(c => c.id === id) ? current.conversations : [...current.conversations, { id, name: person.fullname || person.username, type: 'People', roomType: 'personal', avatar: person.profile_image || '', memberCount: 2, online: false, unread: 0, userId: String(person.id), messages: [] }] })); setSelectedConversationId(id); go('chat', id); }} /> : <ReferenceProfile openCommunity={openCommunity} openProfile={openProfile} data={data} setData={setData} go={go} openActivity={openActivity} openDraft={() => go('createActivity')} openVibe={id => { setSelectedVibeId(id); go('vibes', id); }} openSquad={() => openSquad(data.userId || '')} />;
     if (screen === 'search') return <ReferenceSearch back={back} setData={setData} openActivity={openActivity} openProfile={openProfile} openCommunity={openCommunity} />;
     if (screen === 'shop') return <ReferenceStore points={data.nitro} back={back} />;
     if (screen === 'nitroHistory') return <ReferenceNitroHistory back={back} />;

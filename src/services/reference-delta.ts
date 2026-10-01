@@ -46,6 +46,9 @@ export type ParticipantRating = {
   overall_rating: number;
   comment: string;
   updated_at: string;
+  is_no_show?: boolean;
+  is_anonymous?: boolean;
+  points_awarded?: number;
 };
 
 const rpc = async <T>(name: string, args?: Record<string, unknown>): Promise<T> => {
@@ -103,13 +106,15 @@ export const referenceDeltaService = {
   listNitroHistory: () => rpc<{ balance: number; items: NitroLedgerRow[] }>('list_my_nitro_history'),
   claimPlayStoreRatingReward: () => rpc<{ awarded: boolean; points: number; balance: number }>('claim_play_store_rating_reward'),
   listParticipantRatings: (eventId: number) => rpc<ParticipantRating[]>('list_activity_participant_ratings', { p_event_id: eventId }),
-  rateParticipant: (input: { eventId: number; userId: number; behaviour: number; friendly: number; communication: number; comment: string }) => rpc<ParticipantRating>('rate_activity_participant', {
+  markParticipantNoShow: (eventId: number, userId: number) => rpc<ParticipantRating>('mark_activity_participant_no_show', { p_event_id: eventId, p_user_id: userId }),
+  rateParticipant: (input: { eventId: number; userId: number; behaviour: number; friendly: number; communication: number; comment: string; isAnonymous: boolean }) => rpc<ParticipantRating>('rate_activity_participant', {
     p_event_id: input.eventId,
     p_user_id: input.userId,
     p_behaviour: input.behaviour,
     p_friendly: input.friendly,
     p_communication: input.communication,
     p_comment: input.comment,
+    p_is_anonymous: input.isAnonymous,
   }),
   async requestPhoneChange(phone: string) {
     const normalized = normalizeIndianPhone(phone);

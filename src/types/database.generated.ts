@@ -1881,6 +1881,7 @@ export type Database = {
           event_id: number | null
           friendly_rating: number | null
           id: number
+          is_anonymous: boolean
           is_no_show: boolean | null
           overall_rating: number | null
           rated_user_id: number | null
@@ -1895,6 +1896,7 @@ export type Database = {
           event_id?: number | null
           friendly_rating?: number | null
           id?: number
+          is_anonymous?: boolean
           is_no_show?: boolean | null
           overall_rating?: number | null
           rated_user_id?: number | null
@@ -1909,6 +1911,7 @@ export type Database = {
           event_id?: number | null
           friendly_rating?: number | null
           id?: number
+          is_anonymous?: boolean
           is_no_show?: boolean | null
           overall_rating?: number | null
           rated_user_id?: number | null

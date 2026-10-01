@@ -244,7 +244,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     finally { lock.current = false; setSaving(false); }
   };
   const submit = async () => {
-    if (lock.current) return;
+    if (lock.current || hostResponsibilityOpen) return;
     const invalid = [0, 1, 2].map(i => hostStepError(draft, i, platformPayment)).find(Boolean); if (invalid && !committedId.current) { setError(invalid); return; }
     lock.current = true; setSaving(true); setError('');
     try {
@@ -307,7 +307,15 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     </ScrollView>
     <View style={s.footer}><Pressable accessibilityRole="button" accessibilityLabel={createdId && committedStatus.current === 'published' && !existing ? 'Open Activity' : step === 2 ? existing ? 'Save Changes' : 'Host Now' : 'Continue'} accessibilityState={{ disabled: !!invalid || saving, busy: saving }} disabled={!!invalid || saving} onPress={() => step < 2 ? transition(step + 1) : void submit()} style={[s.cta, (!!invalid || saving) && { opacity: .5 }]}>{saving ? <ActivityIndicator color="white" /> : <><Text style={s.ctaText}>{createdId && committedStatus.current === 'published' && !existing ? 'Open Activity' : step === 2 ? existing ? 'Save Changes' : 'Host Now' : 'Continue'}</Text><Glyph name="arrow-forward" color="white" /></>}</Pressable></View>
   </KeyboardAvoidingView>
-    {hostResponsibilityOpen ? <Dialog title="Host Responsibly" onClose={() => setHostResponsibilityOpen(false)}><View style={{ padding: 18, gap: 14 }}><Text style={s.subtitle}>Provide accurate, relevant, and appropriate activity details. Misleading, explicit, hateful, discriminatory, or unrelated content may result in activity removal and permanent account suspension.</Text><Pressable accessibilityRole="button" style={s.cta} onPress={() => setHostResponsibilityOpen(false)}><Text style={s.ctaText}>I Understand</Text></Pressable></View></Dialog> : null}
+    {hostResponsibilityOpen ? <Dialog title="Host Responsibly" onClose={onBack}><View style={{ padding: 18, gap: 18 }}>
+      <Text style={[s.subtitle, { lineHeight: 22 }]}>Provide accurate, relevant, and appropriate activity details. Misleading, explicit, hateful, discriminatory, or unrelated content may have serious consequences.</Text>
+      <View style={{ borderRadius: 16, borderWidth: 1, borderColor: c.isDark ? '#AD735F' : '#DD9B7A', backgroundColor: c.isDark ? '#2A202D' : '#FFF2EB', padding: 16, gap: 10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}><Glyph name="warning-outline" size={21} color={c.isDark ? '#F6B884' : '#AF543B'} /><Text style={{ color: c.isDark ? '#F6B884' : '#AF543B', fontSize: 12, fontWeight: '800', letterSpacing: 0.6 }}>ACCOUNT CONSEQUENCES</Text></View>
+        <Text style={{ color: c.text, fontSize: 15, fontWeight: '700', lineHeight: 23 }}>Activity removal</Text>
+        <Text style={{ color: c.isDark ? '#FFD2B4' : '#9B332C', fontSize: 17, fontWeight: '900', lineHeight: 25 }}>Permanent account suspension</Text>
+      </View>
+      <Pressable accessibilityRole="button" style={s.cta} onPress={() => setHostResponsibilityOpen(false)}><Text style={s.ctaText}>I Understand</Text></Pressable>
+    </View></Dialog> : null}
     {uploadResponsibilityOpen ? <Dialog title="Upload Responsibly" onClose={() => setUploadResponsibilityOpen(false)}><View style={{ padding: 18, gap: 14 }}><Text style={s.subtitle}>Upload only media relevant to the activity. Inappropriate, explicit, hateful, or unrelated content may result in permanent account suspension.</Text><Pressable accessibilityRole="button" style={s.cta} onPress={() => { setUploadResponsibilityOpen(false); void pick(); }}><Text style={s.ctaText}>Continue</Text></Pressable></View></Dialog> : null}
     {dialog && <Dialog title={dialog === 'visibility' ? 'Visibility' : dialog === 'age' ? 'Age Restriction' : dialog === 'customAge' ? 'Custom Age Range' : dialog === 'gender' ? 'Gender Preference' : 'Keep your draft?'} onClose={() => setDialog(null)}>
       {dialog === 'visibility' && ([['public', 'Public', 'Anyone can find it'], ['squad', 'Squad', 'Limited to your network'], ['private', 'Private', 'Participants/invite-only']] as const).map(([value, label, subtitle]) => <Option key={value} label={label} subtitle={subtitle} selected={draft.visibility === value} onPress={() => { patch({ visibility: value }); setDialog(null); }} />)}
