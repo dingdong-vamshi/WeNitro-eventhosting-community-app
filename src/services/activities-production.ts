@@ -971,6 +971,8 @@ export const activitiesProductionService = {
       );
     }
 
+    // Admin pins sort before the user's secondary order, within the same filters.
+    query = query.order("is_admin_pinned", { ascending: false });
     switch (input.sort) {
       case "latest":
         query = query.order("event_start_time", { ascending: false });

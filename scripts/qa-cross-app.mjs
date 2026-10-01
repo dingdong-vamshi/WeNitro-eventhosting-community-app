@@ -628,156 +628,158 @@ async function main() {
     );
   });
 
-  state.verificationId = await step("verification draft RPC and user listing", async () => {
-    const existing = await rpc(member1, "list_user_verifications");
-    const approved = existing.find((item) => item.status === "approved");
-    if (approved) {
-      state.verificationAlreadyApproved = true;
-      return positiveId(approved, "Existing approved verification");
-    }
-    const draft = first(
-      await rpc(member1, "create_verification_draft", {
-        p_verification_type: "identity",
-      }),
-    );
-    const id = positiveId(draft, "Verification draft");
-    const mine = await rpc(member1, "list_user_verifications");
-    assert(mine.some((item) => Number(item.id) === id && item.status === "draft"));
-    return id;
-  });
-
-  const verificationPath = objectInput(
-    "QA_VERIFICATION_OBJECT_PATH",
-    requireState(state.authUser1, "member 1 auth").id,
-    runId,
-  );
-  const verificationPdf = qaVerificationPdf(runId);
-  await step("verification document upload and private Storage verification", async () => {
-    assert(/\.pdf$/i.test(verificationPath), "QA verification object path must end in .pdf");
-    await uploadStorageEvidence(
-      member1,
-      "verification",
-      verificationPath,
-      verificationPdf,
-      "application/pdf",
-    );
-    await assertStorageObject(
-      member1,
-      "verification",
-      verificationPath,
-      requireState(state.authUser1, "member 1 auth").id,
-    );
-    const persisted = await downloadStorageEvidence(member1, "verification", verificationPath);
-    assert.equal(persisted.subarray(0, 5).toString("ascii"), "%PDF-", "Stored verification evidence is not a PDF");
-  });
-  await step("verification finalize and submitted user status", async () => {
-    if (state.verificationAlreadyApproved) {
+  if (process.env.QA_CORE_ONLY !== "1") {
+    state.verificationId = await step("verification draft RPC and user listing", async () => {
+      const existing = await rpc(member1, "list_user_verifications");
+      const approved = existing.find((item) => item.status === "approved");
+      if (approved) {
+        state.verificationAlreadyApproved = true;
+        return positiveId(approved, "Existing approved verification");
+      }
+      const draft = first(
+        await rpc(member1, "create_verification_draft", {
+          p_verification_type: "identity",
+        }),
+      );
+      const id = positiveId(draft, "Verification draft");
       const mine = await rpc(member1, "list_user_verifications");
+      assert(mine.some((item) => Number(item.id) === id && item.status === "draft"));
+      return id;
+    });
+
+    const verificationPath = objectInput(
+      "QA_VERIFICATION_OBJECT_PATH",
+      requireState(state.authUser1, "member 1 auth").id,
+      runId,
+    );
+    const verificationPdf = qaVerificationPdf(runId);
+    await step("verification document upload and private Storage verification", async () => {
+      assert(/\.pdf$/i.test(verificationPath), "QA verification object path must end in .pdf");
+      await uploadStorageEvidence(
+        member1,
+        "verification",
+        verificationPath,
+        verificationPdf,
+        "application/pdf",
+      );
+      await assertStorageObject(
+        member1,
+        "verification",
+        verificationPath,
+        requireState(state.authUser1, "member 1 auth").id,
+      );
+      const persisted = await downloadStorageEvidence(member1, "verification", verificationPath);
+      assert.equal(persisted.subarray(0, 5).toString("ascii"), "%PDF-", "Stored verification evidence is not a PDF");
+    });
+    await step("verification finalize and submitted user status", async () => {
+      if (state.verificationAlreadyApproved) {
+        const mine = await rpc(member1, "list_user_verifications");
+        assert.equal(
+          mine.find((item) => Number(item.id) === state.verificationId)?.status,
+          "approved",
+        );
+        return;
+      }
+      const submission = first(
+        await rpc(member1, "finalize_verification", {
+          p_verification_id: requireState(state.verificationId, "verification"),
+          p_document_path: verificationPath,
+          p_document_mime: "application/pdf",
+          p_document_size: verificationPdf.length,
+        }),
+      );
+      assert.equal(submission?.status, "submitted");
+      assert.equal(submission?.document_path, verificationPath);
+      const mine = await rpc(member1, "list_user_verifications");
+      const persisted = mine.find((item) => Number(item.id) === state.verificationId);
+      assert.equal(persisted?.status, "submitted");
+      assert.equal(persisted?.document_path, verificationPath);
+    });
+    await step("admin sees exact submitted verification", async () => {
+      const submissions = await rpc(admin, "admin_list_verifications", {
+        p_status: state.verificationAlreadyApproved ? "approved" : "submitted",
+        p_limit: 100,
+        p_before_id: null,
+      });
+      const submission = submissions.find((item) => Number(item.id) === state.verificationId);
+      assert.equal(Number(submission?.user_id), state.appUser1);
+      if (!state.verificationAlreadyApproved) assert.equal(submission?.document_path, verificationPath);
+    });
+    await step("admin approves verification through review RPC", async () => {
+      if (state.verificationAlreadyApproved) {
+        const approved = await rpc(admin, "admin_list_verifications", {
+          p_status: "approved",
+          p_limit: 100,
+          p_before_id: null,
+        });
+        assert(approved.some((item) => Number(item.id) === state.verificationId));
+        return;
+      }
+      const reviewed = first(
+        await rpc(admin, "admin_review_verification", {
+          p_verification_id: requireState(state.verificationId, "verification"),
+          p_status: "approved",
+          p_review_notes: `[QA] Approved by cross-app harness ${runId}`,
+        }),
+      );
+      assert.equal(reviewed?.status, "approved");
+      assert.equal(Number(reviewed?.user_id), state.appUser1);
+    });
+    await step("mobile user reflects approval and verified badge award", async () => {
+      const [mine, profile, badges] = await Promise.all([
+        rpc(member1, "list_user_verifications"),
+        rpc(member1, "get_my_profile"),
+        rpc(member1, "list_my_badges"),
+      ]);
       assert.equal(
         mine.find((item) => Number(item.id) === state.verificationId)?.status,
         "approved",
       );
-      return;
-    }
-    const submission = first(
-      await rpc(member1, "finalize_verification", {
-        p_verification_id: requireState(state.verificationId, "verification"),
-        p_document_path: verificationPath,
-        p_document_mime: "application/pdf",
-        p_document_size: verificationPdf.length,
-      }),
-    );
-    assert.equal(submission?.status, "submitted");
-    assert.equal(submission?.document_path, verificationPath);
-    const mine = await rpc(member1, "list_user_verifications");
-    const persisted = mine.find((item) => Number(item.id) === state.verificationId);
-    assert.equal(persisted?.status, "submitted");
-    assert.equal(persisted?.document_path, verificationPath);
-  });
-  await step("admin sees exact submitted verification", async () => {
-    const submissions = await rpc(admin, "admin_list_verifications", {
-      p_status: state.verificationAlreadyApproved ? "approved" : "submitted",
-      p_limit: 100,
-      p_before_id: null,
+      assert.equal(Number(first(profile)?.isverified), 1);
+      const verifiedBadge = badges.find((badge) => badge.slug === "verified");
+      assert(verifiedBadge, "Verified badge was not awarded");
+      assert.equal(Number(verifiedBadge.awarded_by), state.adminAppUser);
     });
-    const submission = submissions.find((item) => Number(item.id) === state.verificationId);
-    assert.equal(Number(submission?.user_id), state.appUser1);
-    if (!state.verificationAlreadyApproved) assert.equal(submission?.document_path, verificationPath);
-  });
-  await step("admin approves verification through review RPC", async () => {
-    if (state.verificationAlreadyApproved) {
-      const approved = await rpc(admin, "admin_list_verifications", {
-        p_status: "approved",
-        p_limit: 100,
-        p_before_id: null,
-      });
-      assert(approved.some((item) => Number(item.id) === state.verificationId));
-      return;
-    }
-    const reviewed = first(
-      await rpc(admin, "admin_review_verification", {
-        p_verification_id: requireState(state.verificationId, "verification"),
-        p_status: "approved",
-        p_review_notes: `[QA] Approved by cross-app harness ${runId}`,
-      }),
-    );
-    assert.equal(reviewed?.status, "approved");
-    assert.equal(Number(reviewed?.user_id), state.appUser1);
-  });
-  await step("mobile user reflects approval and verified badge award", async () => {
-    const [mine, profile, badges] = await Promise.all([
-      rpc(member1, "list_user_verifications"),
-      rpc(member1, "get_my_profile"),
-      rpc(member1, "list_my_badges"),
-    ]);
-    assert.equal(
-      mine.find((item) => Number(item.id) === state.verificationId)?.status,
-      "approved",
-    );
-    assert.equal(Number(first(profile)?.isverified), 1);
-    const verifiedBadge = badges.find((badge) => badge.slug === "verified");
-    assert(verifiedBadge, "Verified badge was not awarded");
-    assert.equal(Number(verifiedBadge.awarded_by), state.adminAppUser);
-  });
 
-  await step("admin live legacy-table reads", async () => {
-    requireState(adminUser, "admin auth");
-    const [users, activity, participant, community, post, vibe, story, verification] =
-      await Promise.all([
-        checked(admin.from("tbl_users").select("id", { count: "exact", head: true })),
-        checked(admin.from("tbl_events").select("id,title").eq("id", state.activityId).single()),
-        checked(
-          admin
-            .from("tbl_event_participants")
-            .select("event_id,user_id,status")
-            .eq("event_id", state.activityId)
-            .eq("user_id", state.appUser2)
-            .single(),
-        ),
-        checked(admin.from("tbl_chat_rooms").select("id,title").eq("id", state.communityId).single()),
-        checked(admin.from("tbl_community_posts").select("id,room_id").eq("id", state.communityPostId).single()),
-        checked(admin.from("tbl_activity_vibes").select("id,caption").eq("id", state.vibeId).single()),
-        checked(admin.from("tbl_stories").select("id,caption").eq("id", state.storyId).single()),
-        checked(admin.rpc("admin_list_verifications", {
-          p_status: "approved",
-          p_limit: 100,
-          p_before_id: null,
-        })),
-      ]);
-    assert((users.count ?? 0) > 0, "Admin user count is empty");
-    assert.equal(Number(activity.data.id), state.activityId);
-    assert.equal(activity.data.title, qa.activityName);
-    assert.equal(Number(participant.data.user_id), state.appUser2);
-    assert.equal(Number(community.data.id), state.communityId);
-    assert.equal(community.data.title, qa.communityName);
-    assert.equal(Number(post.data.room_id), state.communityId);
-    assert.equal(vibe.data.caption, qa.vibeCaption);
-    assert.equal(story.data.caption, qa.storyCaption);
-    assert(
-      verification.data.some((item) => Number(item.id) === state.verificationId),
-      "Admin cannot see the approved verification",
-    );
-  });
+    await step("admin live legacy-table reads", async () => {
+      requireState(adminUser, "admin auth");
+      const [users, activity, participant, community, post, vibe, story, verification] =
+        await Promise.all([
+          checked(admin.from("tbl_users").select("id", { count: "exact", head: true })),
+          checked(admin.from("tbl_events").select("id,title").eq("id", state.activityId).single()),
+          checked(
+            admin
+              .from("tbl_event_participants")
+              .select("event_id,user_id,status")
+              .eq("event_id", state.activityId)
+              .eq("user_id", state.appUser2)
+              .single(),
+          ),
+          checked(admin.from("tbl_chat_rooms").select("id,title").eq("id", state.communityId).single()),
+          checked(admin.from("tbl_community_posts").select("id,room_id").eq("id", state.communityPostId).single()),
+          checked(admin.from("tbl_activity_vibes").select("id,caption").eq("id", state.vibeId).single()),
+          checked(admin.from("tbl_stories").select("id,caption").eq("id", state.storyId).single()),
+          checked(admin.rpc("admin_list_verifications", {
+            p_status: "approved",
+            p_limit: 100,
+            p_before_id: null,
+          })),
+        ]);
+      assert((users.count ?? 0) > 0, "Admin user count is empty");
+      assert.equal(Number(activity.data.id), state.activityId);
+      assert.equal(activity.data.title, qa.activityName);
+      assert.equal(Number(participant.data.user_id), state.appUser2);
+      assert.equal(Number(community.data.id), state.communityId);
+      assert.equal(community.data.title, qa.communityName);
+      assert.equal(Number(post.data.room_id), state.communityId);
+      assert.equal(vibe.data.caption, qa.vibeCaption);
+      assert.equal(story.data.caption, qa.storyCaption);
+      assert(
+        verification.data.some((item) => Number(item.id) === state.verificationId),
+        "Admin cannot see the approved verification",
+      );
+    });
+  }
   await step("profile state restoration", async () => {
     const original = requireState(state.profileOriginal, "profile");
     await rpc(member1, "update_my_profile", { p_patch: { bio: original.bio ?? null } });
@@ -799,9 +801,9 @@ async function main() {
   });
   await step("session cleanup", async () => {
     const outcomes = await Promise.all([
-      member1.auth.signOut(),
-      member2.auth.signOut(),
-      admin.auth.signOut(),
+      member1.auth.signOut({ scope: "local" }),
+      member2.auth.signOut({ scope: "local" }),
+      admin.auth.signOut({ scope: "local" }),
     ]);
     for (const outcome of outcomes) if (outcome.error) throw outcome.error;
   });

@@ -16,6 +16,7 @@ import { safeSocialUrl, SOCIAL_PLATFORMS, type SocialLinks } from '../../domain/
 import { SocialPlatformIcon } from './social-profiles';
 import { Button, ErrorLine, Icon, Page, Sheet, Skeleton, usePalette } from './ui';
 import { prepareReferenceActivities } from './feed-search';
+import { useResponsibleUpload } from './responsible-upload';
 
 type Metrics = { verified?: boolean; nitro?: number | null; karma?: number | null; trust_score?: number | null; rating?: number | null; activities?: number | null; squad?: number | null; phone_verified?: boolean; aadhaar_verified?: boolean; email_verified?: boolean; selfie_verified?: boolean; social_linked?: boolean; activities_joined?: number | null };
 type Tab = 'Activities' | 'My Vibes' | 'Reviews' | 'Communities' | 'Drafts';
@@ -210,6 +211,7 @@ async function pickProfileImage() {
 }
 
 export function ReferenceProfile({ data, setData, go, openActivity, openDraft, openVibe, openSquad, openCommunity, openProfile }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (screen: Screen) => void; openActivity: (id: string) => void; openDraft: () => void; openVibe: (id: string) => void; openSquad: () => void; openCommunity: (id: string) => void; openProfile: (id: string) => void }) {
+ const { confirmUpload, uploadNotice } = useResponsibleUpload();
  const [metrics, setMetrics] = useState<Metrics | null>(null), [links, setLinks] = useState<SocialLinks>({});
  const [summary, setSummary] = useState<ProfileSummary>({ location: data.location, about: data.bio, interests: data.interests });
  const [tab, setTab] = useState<Tab>('Activities'), [error, setError] = useState(''), [loading, setLoading] = useState(true), [vibes, setVibes] = useState<VibeReel[]>([]), [activities, setActivities] = useState<Activity[]>([]), [cursor, setCursor] = useState<string | null>(null), [contact, setContact] = useState<{ email?: string; phone?: string } | null>(null);
@@ -251,11 +253,11 @@ export function ReferenceProfile({ data, setData, go, openActivity, openDraft, o
  return <><ProfileLayout identity={{ id: data.userId!, name: data.name, username: data.username, avatar: data.avatarUri, bio: data.bio }} summary={{ ...summary, communities: communityNames }} metrics={metrics} links={links} gallery={gallery} owner store={() => go('shop')} settings={() => go('settings')} editSocial={() => go('socialLinks')} editProfile={() => go('editProfile')} verify={() => go('verification')} partnerAccount={{ label: partnerLabel, onPress: () => go('partnerAccount') }} partnerDashboard={data.accountType === 'partner' ? () => go('partnerDashboard') : undefined} contact={openContact} activities={() => go('activityHistory')} squad={openSquad} nitro={() => go('nitroHistory')} tab={tab} setTab={setTab} onPhoto={setActivePhoto}><ErrorLine text={error} /><Content tab={tab} loading={loading} vibes={vibes} rows={rows} reviews={reviews} communities={profileCommunities} openCommunity={openCommunity} openVibe={openVibe} openActivity={a => openActivity(a.id)} openDraft={openDraft} openProfile={openProfile} />{cursor && !['Reviews', 'Communities'].includes(tab) ? <View style={{ padding: 10 }}><Button label="Load more" busy={loading} onPress={() => void load(true)} /></View> : null}</ProfileLayout>
  {activePhoto ? <Sheet title={activePhoto.uri ? 'Profile photo' : 'Add photo'} close={() => { if (!photoBusy) setActivePhoto(null); }}>
   {activePhoto.uri ? <Image source={{ uri: activePhoto.uri }} style={{ width: '100%', height: 220, borderRadius: 14, backgroundColor: '#EEE' }} /> : <Text style={{ color: '#73809A' }}>Add up to 3 photos others can view.</Text>}
-  <Button label={activePhoto.uri ? 'Change photo' : 'Choose photo'} busy={photoBusy} onPress={() => void runPhoto(async () => { const asset = await pickProfileImage(); if (!asset?.uri) return; const saved = await referenceDeltaService.uploadProfilePhoto(activePhoto.position || gallery.length + 1, asset.uri, asset.mimeType); if ((activePhoto.position || 1) === 1) setData(current => ({ ...current, avatarUri: saved.public_url })); })} />
+  <Button label={activePhoto.uri ? 'Change photo' : 'Choose photo'} busy={photoBusy} onPress={() => void runPhoto(async () => { if (!await confirmUpload()) return; const asset = await pickProfileImage(); if (!asset?.uri) return; const saved = await referenceDeltaService.uploadProfilePhoto(activePhoto.position || gallery.length + 1, asset.uri, asset.mimeType); if ((activePhoto.position || 1) === 1) setData(current => ({ ...current, avatarUri: saved.public_url })); })} />
   {activePhoto.uri && activePhoto.position !== 1 ? <Button label="Set as primary" busy={photoBusy} onPress={() => void runPhoto(async () => { const url = await referenceDeltaService.setPrimaryProfilePhoto(activePhoto.position, activePhoto.uri, data.avatarUri); setData(current => ({ ...current, avatarUri: url })); })} /> : null}
   {activePhoto.uri ? <Button label="Delete" danger busy={photoBusy} onPress={() => void runPhoto(async () => { if (activePhoto.position === 1) { const fallback = await referenceDeltaService.removePrimaryProfilePhoto(); setData(current => ({ ...current, avatarUri: fallback || undefined })); } else { const photo = photos.find(item => item.position === activePhoto.position); if (photo) await referenceDeltaService.removeProfilePhoto(photo); } })} /> : null}
  </Sheet> : null}
- {contact && <ContactSheet contact={contact} close={() => setContact(null)} />}</>;
+ {contact && <ContactSheet contact={contact} close={() => setContact(null)} />}{uploadNotice}</>;
 }
 
 export function ReferenceMemberProfile({ id, back, onConversation, onOpenActivity, onOpenVibe, onOpenSquad, onOpenCommunity, onOpenProfile }: { id: string; back: () => void; onConversation: (id: string, person: any) => void; onOpenActivity: (activity: Activity) => void; onOpenVibe: (id: string) => void; onOpenSquad: (id: string) => void; onOpenCommunity: (id: string) => void; onOpenProfile: (id: string) => void }) {

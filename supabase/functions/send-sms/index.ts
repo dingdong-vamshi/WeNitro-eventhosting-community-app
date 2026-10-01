@@ -12,6 +12,7 @@ type VeriphoneResult = {
 
 type Fast2SmsResult = {
   return?: unknown;
+  status_code?: unknown;
 };
 
 const FAST2SMS_URL = "https://www.fast2sms.com/dev/otp/send";
@@ -87,11 +88,22 @@ async function sendFast2Sms(
       signal: controller.signal,
     });
 
-    if (!response.ok) return false;
-
     const result = (await response.json()) as Fast2SmsResult;
-    return result.return === true;
+    const sent = response.ok && result.return === true;
+    if (!sent) {
+      // Never log provider bodies, credentials, phone numbers, or OTPs.
+      const code = Number(result.status_code);
+      console.warn(JSON.stringify({
+        event: "sms_provider_rejected",
+        provider: "fast2sms",
+        http_status: response.status,
+        provider_code: Number.isInteger(code) ? code : null,
+        reason: code === 412 ? "invalid_authorization_key" : "provider_rejected",
+      }));
+    }
+    return sent;
   } catch {
+    console.warn(JSON.stringify({ event: "sms_provider_unavailable", provider: "fast2sms" }));
     return false;
   } finally {
     clearTimeout(timeout);
@@ -146,6 +158,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
       parsed.phone.e164,
       veriphoneApiKey,
     );
+    console.info(JSON.stringify({ event: "sms_phone_validation", provider: "veriphone", verdict: phoneVerdict }));
     if (phoneVerdict === "invalid") {
       return hookError(422, "Phone number is invalid");
     }

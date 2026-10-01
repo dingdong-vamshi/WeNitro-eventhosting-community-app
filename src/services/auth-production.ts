@@ -38,13 +38,20 @@ export type PhoneOtpVerifyInput = {
 };
 
 export function phoneOtpErrorMessage(error: unknown, createAccount: boolean) {
-  const source = error as { code?: string; message?: string } | null;
+  const source = error as { code?: string; message?: string; status?: number } | null;
   const message = source?.message?.trim();
   const existingAccountOnly =
     !createAccount &&
     (source?.code === "otp_disabled" || /signups? not allowed for otp/i.test(message ?? ""));
   if (existingAccountOnly) {
     return "No WeNitro account was found for this phone number. Create an account to continue.";
+  }
+  if (
+    (source?.status ?? 0) >= 500 ||
+    /^hook_/.test(source?.code ?? "") ||
+    /(?:status code returned from hook|sms provider|authorization key|fast2sms)/i.test(message ?? "")
+  ) {
+    return "Unable to send OTP right now. Please try again shortly.";
   }
   return message || "Could not send OTP.";
 }
@@ -252,6 +259,7 @@ export function subscribeToAuthRedirects(
 
 export async function bootstrapSession(): Promise<SessionBootstrap> {
   requireBackend();
+  try {
   let { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   if (sessionError) throw sessionError;
   if (!sessionData.session) {
@@ -278,6 +286,15 @@ export async function bootstrapSession(): Promise<SessionBootstrap> {
     user,
     profile: null,
   };
+  } catch (error) {
+    const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : '';
+    // Revoked/consumed refresh credentials require a new sign-in, not a Feed
+    // retry screen. Network and provider outages must remain retryable errors.
+    if (['refresh_token_not_found', 'refresh_token_already_used', 'session_not_found', 'session_expired'].includes(code)) {
+      return { status: 'anonymous', session: null, user: null, profile: null };
+    }
+    throw error;
+  }
 }
 
 export async function signUpWithPassword(input: SignUpInput) {

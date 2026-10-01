@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase';
-import { normalizeIndianPhone } from './auth-production';
+import { normalizeIndianPhone, phoneOtpErrorMessage } from './auth-production';
 import { profileProductionService } from './profile-production';
 
 export type EmergencyContact = {
@@ -119,7 +119,7 @@ export const referenceDeltaService = {
   async requestPhoneChange(phone: string) {
     const normalized = normalizeIndianPhone(phone);
     const result = await supabase.auth.updateUser({ phone: normalized });
-    if (result.error) throw result.error;
+    if (result.error) throw new Error(phoneOtpErrorMessage(result.error, true));
     return normalized;
   },
   async verifyPhoneChange(phone: string, token: string) {

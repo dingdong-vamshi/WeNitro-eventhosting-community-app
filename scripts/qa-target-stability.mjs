@@ -69,7 +69,8 @@ for (let round = 1; round <= rounds; round += 1) {
     });
     await client.removeAllChannels();
   }
-  const logout = await client.auth.signOut();
+  // Keep parallel QA browser sessions alive; only close this round's session.
+  const logout = await client.auth.signOut({ scope: 'local' });
   assert.ifError(logout.error);
   console.log(`PASS: authenticated cold round ${round}/${rounds}`);
 }

@@ -816,12 +816,17 @@ export async function removeCommunityMember(id: string, userId: number) {
   if (error) throw error;
   return data;
 }
-export async function editCommunity(id: string, input: { name: string; description: string; category: string; avatar?: string }) {
-  let path: string | undefined;
+export async function editCommunity(id: string, input: { name: string; description: string; category: string; avatar?: string; cover?: string; rules?: string[]; visibility?: 'public' | 'private' }) {
+  let path: string | undefined, coverPath: string | undefined;
   try {
     if (input.avatar) path = (await uploadCommunityImage(input.avatar, await currentAuthUserId(), 'image')).path;
-    await manageCommunity(id, 'edit', { name: input.name, description: input.description, category: input.category, ...(input.avatar === undefined ? {} : { image_path: path || '' }) });
-  } catch (error) { if (path) await removeUploadedImages([path]).catch(() => undefined); throw error; }
+    if (input.cover) coverPath = (await uploadCommunityImage(input.cover, await currentAuthUserId(), 'cover')).path;
+    await manageCommunity(id, 'edit', { name: input.name, description: input.description, category: input.category,
+      ...(input.avatar === undefined ? {} : { image_path: path || '' }),
+      ...(input.cover === undefined ? {} : { cover_path: coverPath || '' }),
+      ...(input.rules === undefined ? {} : { rules: input.rules }),
+      ...(input.visibility === undefined ? {} : { visibility: input.visibility }) });
+  } catch (error) { await removeUploadedImages([path, coverPath].filter((p): p is string => !!p)).catch(() => undefined); throw error; }
 }
 export type CommunityPoll = { id: number; message_id: number; question: string; created_by: number; created_at: string; my_option_id: number | null; total_votes: number; options: { id: number; text: string; votes: number; percentage: number }[] };
 export type CommunityPollVoter = { user_id: number; option_id: number; option_text: string; username: string; full_name: string | null; avatar_url: string | null; voted_at: string };

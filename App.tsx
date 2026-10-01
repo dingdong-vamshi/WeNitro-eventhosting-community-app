@@ -77,6 +77,8 @@ import {
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { isSupabaseConfigured, supabase } from "./src/lib/supabase";
+import { LoginAnnouncements } from "./src/components/login-announcements";
+import { useResponsibleUpload } from "./src/components/reconstruction/responsible-upload";
 import {
   activityService,
   authService,
@@ -4601,7 +4603,12 @@ export function ActivityDetailScreen({
     <View style={{ maxWidth, width:'100%', alignSelf:'center', minHeight:61, borderBottomWidth:1, borderColor:palette.border, flexDirection:'row', alignItems:'center' }}><Pressable accessibilityRole="button" accessibilityLabel="Back to Activity" onPress={() => setParticipantsOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text} /></Pressable><Text style={{ color:palette.text,fontSize:20,fontWeight:'800',flex:1 }}>Manage Participants</Text></View>
     <View style={{ maxWidth,width:'100%',alignSelf:'center' }}><View style={{ flexDirection:'row',gap:7,padding:14 }}>{['All','Pending','Approved','Rejected'].map(tab=><Pressable accessibilityRole="tab" accessibilityState={{selected:participantTab===tab}} key={tab} onPress={()=>setParticipantTab(tab)} style={{ flex:1,minHeight:42,borderRadius:21,backgroundColor:participantTab===tab?'#5948EA':palette.card,alignItems:'center',justifyContent:'center' }}><Text style={{ color:participantTab===tab?'#FFF':palette.muted,fontSize:11,fontWeight:'700' }}>{tab}</Text></Pressable>)}</View></View>
     <ScrollView contentContainerStyle={{ width: "100%", maxWidth, alignSelf: "center", padding: 16, paddingBottom: 36, gap: 14 }}>
-      {filteredParticipants.map(participant => { const approved=['approved','going','paid'].includes(participant.status); const cohost = participant.role === 'cohost'; return <View key={participant.id} style={{ borderRadius:18,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,padding:16,gap:13 }}><Pressable accessibilityRole="button" accessibilityLabel={`Open ${participant.name}'s profile`} onPress={()=>openProfile(participant.userId)} style={{ flexDirection:'row',alignItems:'center',gap:12 }}><UserAvatar uri={participant.avatarUrl} name={participant.name} size={54} /><View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:17,fontWeight:'800'}}>{participant.name} <VerifiedBadge userId={participant.userId} /></Text><Text style={{color:palette.muted,fontSize:12}}>@{participant.username}{cohost ? ' · Co-host' : ''}</Text></View><View style={{paddingHorizontal:10,paddingVertical:7,borderRadius:8,backgroundColor:approved?'#D7F8E6':participant.status==='rejected'?'#FDE5E8':palette.inset}}><Text style={{color:approved?'#187A56':participant.status==='rejected'?'#C93D51':'#9A771A',fontSize:9,fontWeight:'800'}}>{cohost ? 'CO-HOST' : participantStatus(participant.status)}</Text></View></Pressable><View style={{height:1,backgroundColor:palette.border}}/><View style={{flexDirection:'row',gap:16}}><Text style={{color:palette.text,fontSize:11}}>⭐ {participant.rating==null?'—':participant.rating.toFixed(1)} Global</Text><Text style={{color:palette.muted,fontSize:11}}>{new Date(participant.joinedAt).toLocaleDateString([],{day:'numeric',month:'short'})} Joined</Text></View>{canHost&&!activityEnded&&participant.status==='pending'?<View style={{flexDirection:'row',gap:10}}><View style={{flex:1}}><Button label="Approve" onPress={()=>void respondToParticipant(participant,'approved')}/></View><View style={{flex:1}}><Button label="Reject" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')}/></View></View>:null}{isHost&&!activityEnded&&approved&&participant.userId!==activity.ownerId?<Button label={cohost ? 'Remove Co-Host' : 'Make Co-Host'} variant="outline" onPress={()=>void setParticipantCohost(participant, !cohost)} />:null}</View>; })}
+      <Pressable accessibilityRole="button" accessibilityLabel={`Open original Host ${activity.host}'s profile`} disabled={!activity.ownerId} onPress={() => activity.ownerId && openProfile(activity.ownerId)} style={{ borderRadius:18, backgroundColor:palette.card, borderWidth:1, borderColor:'#7967F5', padding:16, flexDirection:'row', alignItems:'center', gap:12 }}>
+        <UserAvatar uri={activity.hostAvatar} name={activity.host} size={54} />
+        <View style={{ flex:1, gap:6 }}><Text style={{ color:palette.text, fontSize:17, fontWeight:'800' }}>{activity.host}</Text><Text style={{ color:'#A899FF', fontSize:11, fontWeight:'800' }}>HOST · ORIGINAL CREATOR</Text></View>
+        <VerifiedBadge userId={activity.ownerId} />
+      </Pressable>
+      {filteredParticipants.filter(participant => participant.userId !== activity.ownerId).map(participant => { const approved=['approved','going','paid'].includes(participant.status); const cohost = participant.role === 'cohost'; return <View key={participant.id} style={{ borderRadius:18,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,padding:16,gap:13 }}><Pressable accessibilityRole="button" accessibilityLabel={`Open ${participant.name}'s profile`} onPress={()=>openProfile(participant.userId)} style={{ flexDirection:'row',alignItems:'center',gap:12 }}><UserAvatar uri={participant.avatarUrl} name={participant.name} size={54} /><View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:17,fontWeight:'800'}}>{participant.name} <VerifiedBadge userId={participant.userId} /></Text><Text style={{color:palette.muted,fontSize:12}}>@{participant.username}{cohost ? ' · Co-host' : ''}</Text></View><View style={{paddingHorizontal:10,paddingVertical:7,borderRadius:8,backgroundColor:approved?'#D7F8E6':participant.status==='rejected'?'#FDE5E8':palette.inset}}><Text style={{color:approved?'#187A56':participant.status==='rejected'?'#C93D51':'#9A771A',fontSize:9,fontWeight:'800'}}>{cohost ? 'CO-HOST' : participantStatus(participant.status)}</Text></View></Pressable><View style={{height:1,backgroundColor:palette.border}}/><View style={{flexDirection:'row',gap:16}}><Text style={{color:palette.text,fontSize:11}}>⭐ {participant.rating==null?'—':participant.rating.toFixed(1)} Global</Text><Text style={{color:palette.muted,fontSize:11}}>{new Date(participant.joinedAt).toLocaleDateString([],{day:'numeric',month:'short'})} Joined</Text></View>{canHost&&!activityEnded&&participant.status==='pending'?<View style={{flexDirection:'row',gap:10}}><View style={{flex:1}}><Button label="Approve" onPress={()=>void respondToParticipant(participant,'approved')}/></View><View style={{flex:1}}><Button label="Reject" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')}/></View></View>:null}{isHost&&!activityEnded&&approved&&participant.userId!==activity.ownerId?<Button label={cohost ? 'Remove Co-Host' : 'Make Co-Host'} variant="outline" onPress={()=>void setParticipantCohost(participant, !cohost)} />:null}{canHost&&!activityEnded&&approved&&!cohost&&participant.userId!==String(data.userId)&&participant.userId!==activity.ownerId?<Button label="Remove Participant" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')} />:null}</View>; })}
       {!filteredParticipants.length?<View style={{alignItems:'center',paddingTop:80,gap:10}}><Icon name="people-outline" color={palette.muted} size={48}/><Text style={{color:palette.text,fontWeight:'700'}}>No participants in this tab</Text></View>:null}
     </ScrollView>
   </SafeAreaView>;
@@ -5054,6 +5061,7 @@ export function ChatScreen({
   const [query, setQuery] = useState("");
   const [creatingGroup, setCreatingGroup] = useState(false);
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
+  const { confirmUpload, uploadNotice } = useResponsibleUpload();
   const [groupName, setGroupName] = useState("");
   const [groupPhoto, setGroupPhoto] = useState<string | null>(null);
   const [groupMembers, setGroupMembers] = useState<string[]>([]);
@@ -5417,6 +5425,8 @@ export function ChatScreen({
     ]);
   };
   const pickMessageMedia = async (kind: "images" | "videos") => {
+    setAttachmentsOpen(false);
+    if (!await confirmUpload()) return;
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) return;
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -5790,6 +5800,7 @@ export function ChatScreen({
             </React.Fragment>
           ))}
         </ScrollView>
+        {uploadNotice}
         {attachmentsOpen ? <ReferenceSheet title="Chat Options" close={() => setAttachmentsOpen(false)}>
           <Pressable accessibilityRole="button" onPress={() => void pickMessageMedia("images")} style={styles.optionRow}><Icon name="image-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Share Photo</Text></Pressable>
           <Pressable accessibilityRole="button" onPress={() => { setAttachmentsOpen(false); setPollOpen(true); }} style={styles.optionRow}><Icon name="stats-chart-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Create Poll</Text></Pressable>
@@ -9897,6 +9908,7 @@ export default function App() {
           <Pressable accessibilityRole="button" accessibilityLabel="Retry loading Feed" onPress={() => void refreshAuthRef.current()} style={{ alignSelf: "flex-start", paddingVertical: 8, paddingHorizontal: 12 }}><Text style={{ color: data.theme === "dark" ? "#C7BAFF" : "#3524C9", fontWeight: "700" }}>Retry</Text></Pressable>
         </View> : null}
         {content}
+        {data.mode === "authenticated" && data.onboarded && data.userId ? <LoginAnnouncements key={data.userId} userId={data.userId} /> : null}
         <ShareToChatModal
           entity={shareEntity}
           conversations={data.conversations}

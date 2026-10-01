@@ -1,0 +1,902 @@
+{
+  "source": "Must changesimplementations.pdf (all 40 pages rendered and read), four WhatsApp screenshots supplied 2026-10-01",
+  "target": "cxsznhrkzqndhseodcyy",
+  "status": "AUDIT IN PROGRESS — NOT A SIGN-OFF",
+  "pages": [
+    {
+      "page": 1,
+      "requirements": [
+        {
+          "requirement": "Onboarding spacing",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "No Next button",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Additional old-app onboarding screen",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "requirements": [
+        {
+          "requirement": "Tagline changes on welcome-screen load",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "requirements": [
+        {
+          "requirement": "WeNitro email branding where configurable",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Confirm your Email Address wording",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "requirements": [
+        {
+          "requirement": "Google implementation; external Google Cloud correction separated",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "requirements": [
+        {
+          "requirement": "Forgot Password flow",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "requirements": [
+        {
+          "requirement": "Phone signup architecture; external Fast2SMS credential blocker",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "requirements": [
+        {
+          "requirement": "Reduced Home carousel height",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Remove unwanted blue background",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "requirements": [
+        {
+          "requirement": "Lighter carousel/no blue patch",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Uploaded photo or colored avatar fallback",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "requirements": [
+        {
+          "requirement": "Activities redesign",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Search and Notification icons",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Search field only after tapping Search",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Filter beside Activities for You",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "No unnecessary card description",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Fallback Activity visual/title",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Full image coverage",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Host profile navigation",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "requirements": [
+        {
+          "requirement": "Non-overlapping timeline and appropriate typography",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Long-press Like opens liker identities",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "requirements": [
+        {
+          "requirement": "Host/participant photos or initials",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Message action",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Ended Activity not editable",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Ended participants cannot be removed",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Cannot leave ended Activity",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "requirements": [
+        {
+          "requirement": "Only eligible participants can comment",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Comment author identity",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "requirements": [
+        {
+          "requirement": "Ended participant sees Rate Participants",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Nonparticipant sees Activity Ended",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Ended participant cannot leave",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 14,
+      "requirements": [
+        {
+          "requirement": "Cancelled/deleted Activity chat hidden",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 15,
+      "requirements": [
+        {
+          "requirement": "No self-rating",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Host visibly identified",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "No Show for appropriate participants",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Host excluded from No Show",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 16,
+      "requirements": [
+        {
+          "requirement": "+2 Nitro for each legitimate rating",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Submission reward popup",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Multiple ratings award separately",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Nitro ledger",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Duplicate-reward prevention",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 17,
+      "requirements": [
+        {
+          "requirement": "Tribe/category pictures",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "No Find prefix",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Tribe routes to filtered Activities",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 18,
+      "requirements": [
+        {
+          "requirement": "Host Responsibly warning",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Prominent account-suspension consequence",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Text profanity checks",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Image/content moderation requirement",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 19,
+      "requirements": [
+        {
+          "requirement": "Upload Responsibly warning across Activity/Vibe/Community and other media entry points",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Continue opens picker",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 20,
+      "requirements": [
+        {
+          "requirement": "Correct Community logo/position",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Search beside consistent Notification icon",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "No permanent search bar",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Search/filter/back UI",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 21,
+      "requirements": [
+        {
+          "requirement": "Smaller Community cover",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Colored cover fallback",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Avatar initials/color fallback",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Member icons",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Admin member removal",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 22,
+      "requirements": [
+        {
+          "requirement": "Members list icons",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 23,
+      "requirements": [
+        {
+          "requirement": "Edit Community cover",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 24,
+      "requirements": [
+        {
+          "requirement": "Poll voter identities",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Community Chat Back returns to same Community",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 25,
+      "requirements": [
+        {
+          "requirement": "Verification +10 Trust only, not Nitro",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Private selfie review evidence",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Phone verification architecture",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Verified badge requires intended stages",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 26,
+      "requirements": [
+        {
+          "requirement": "Aadhaar requires licensed approved provider; no simulation",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 27,
+      "requirements": [
+        {
+          "requirement": "Notifications page has no duplicate-subscription error",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 28,
+      "requirements": [
+        {
+          "requirement": "Up-to-three-photo Profile gallery",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 29,
+      "requirements": [
+        {
+          "requirement": "Community image/icon in Profile",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Badge behavior only to supplied specification",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 30,
+      "requirements": [
+        {
+          "requirement": "No duplicate Squad members",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 31,
+      "requirements": [
+        {
+          "requirement": "Save Edit Profile returns to Profile",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 32,
+      "requirements": [
+        {
+          "requirement": "Partner instructions",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Terms agreement before application",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 33,
+      "requirements": [
+        {
+          "requirement": "Partner Dashboard",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Participant/details/amount",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Multiple categories and prices",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Category selection",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Join only after verified payment and required answers",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 34,
+      "requirements": [
+        {
+          "requirement": "Partner Activity visual differentiation",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 35,
+      "requirements": [
+        {
+          "requirement": "Database-backed Admin",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Authenticated access",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Master/Admin controls and role enforcement",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 36,
+      "requirements": [
+        {
+          "requirement": "Admin pin upcoming Activity",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Admin category correction",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Operational Admin functions",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Login popup/message",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 37,
+      "requirements": [
+        {
+          "requirement": "Create Activity navigates to created detail",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Ended Activity not editable",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Activity/Community/Vibe sharing and invite links",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Community Created success",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Delete chat message/media",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Start now+10m/end+1h/deadline=start",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "SOS reminder/native status",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "NitroBot chat/questions",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Send Query destination",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "One-time Play Store +10 reward",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Hubble minimum 200/provider hold",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 38,
+      "requirements": [
+        {
+          "requirement": "Co-host approve/reject/remove/edit",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Unblock and retained old chat history",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "First-signup policy consent",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Public Profile starts on Vibes",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Nitro spending negative",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Partner external URL",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Activity media optional Vibes and participant eligibility",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Anonymous Community identity private from users/Admin audit",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Security/privacy",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        },
+        {
+          "requirement": "Developer documentation",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 39,
+      "requirements": [
+        {
+          "requirement": "Explicit unresolved ambiguities; do not invent badge/old-app specifications",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    },
+    {
+      "page": 40,
+      "requirements": [
+        {
+          "requirement": "No known fixable regression in completed tested scope",
+          "implementation": "pending evidence consolidation",
+          "test": "pending evidence consolidation",
+          "production": "pending evidence consolidation"
+        }
+      ]
+    }
+  ],
+  "laterRequests": [
+    "Blue/purple Invite/Nitro only",
+    "Normal Paid toggle no price/Cashfree",
+    "Partner payments separate",
+    "Google Maps credential dependency",
+    "Leave/rejoin approval",
+    "Original Host preserved in detail and participant list",
+    "Co-host demotion persisted",
+    "Chats Photo/Poll only; Vibes/Community Video retained",
+    "Anonymous rating backend/recipient privacy/no navigation/Nitro idempotency"
+  ]
+}

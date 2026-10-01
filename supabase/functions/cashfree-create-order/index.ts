@@ -3,6 +3,7 @@ import {
   adminClient,
   authenticatedContext,
   cashfreeRequest,
+  cashfreeWebhookUrl,
   checkoutReturnUrl,
   corsHeaders,
   errorResponse,
@@ -90,7 +91,10 @@ Deno.serve(async (request) => {
         wenitro_payment_id: String(payment.id),
         ...(payment.entry_category_id ? { entry_category_id: String(payment.entry_category_id) } : {}),
       },
-      ...(returnUrl ? { order_meta: { return_url: returnUrl } } : {}),
+      order_meta: {
+        notify_url: cashfreeWebhookUrl(),
+        ...(returnUrl ? { return_url: returnUrl } : {}),
+      },
     };
 
     let providerOrder: Record<string, unknown>;

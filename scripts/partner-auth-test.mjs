@@ -79,6 +79,16 @@ check('email login uses existing identity without classification', () => {
   assert.equal(latest().account_type, undefined);
 });
 const requestsBeforeInvalid = calls.length;
+check('provider and hook errors never leak into OTP UI', () => {
+  const safe = 'Unable to send OTP right now. Please try again shortly.';
+  for (const error of [
+    { message: 'Unexpected status code returned from hook: 502' },
+    { code: 'hook_timeout', message: 'Hook deadline exceeded' },
+    { status: 500, message: 'internal detail' },
+    { message: 'Invalid Authentication, Check Authorization Key' },
+  ]) assert.equal(auth.phoneOtpErrorMessage(error, false), safe);
+  assert.equal(auth.phoneOtpErrorMessage({ status: 429, message: 'Please wait before requesting another OTP.' }, false), 'Please wait before requesting another OTP.');
+});
 await assert.rejects(() => auth.requestPhoneOtp({ accountType: 'partner', fullName: ' ', phone: '9876543210', createAccount: true }), /Full name/);
 check('invalid signup makes no auth request', () => assert.equal(calls.length, requestsBeforeInvalid));
 for (const invalid of [

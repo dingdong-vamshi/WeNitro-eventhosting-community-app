@@ -36,11 +36,13 @@ const dependencies = {
   react: { __esModule: true, default: react, ...react },
   'react-native': new Proxy({}, { get: (_, key) => key }),
   'expo-image-picker': {}, '../verified-badge': { VerifiedBadge: noop }, '../user-avatar': { UserAvatar: noop },
+  'expo-video': { VideoView: noop, useVideoPlayer: noop },
   '../../services/communities-production': { communitiesProductionService: { discover(input) { const request = { ...deferred(), input }; discoveries.push(request); return request.promise; } } },
   '../../lib/supabase': { isSupabaseConfigured: true, supabase: backend },
   '../../services/realtime-chat': {}, '../../services/stories-production': {},
   '../../services/app-freshness': { subscribeToAppForeground(callback) { foreground = callback; return () => { foreground = undefined; }; } },
   './ui': ui,
+  './responsible-upload': { useResponsibleUpload: () => ({ confirmUpload: async () => false, uploadNotice: null }) },
 };
 const exported = {};
 new Function('exports', 'require', 'setTimeout', 'clearTimeout', ts.transpile(fs.readFileSync('src/components/reconstruction/messages.tsx', 'utf8'), { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.React }))(exported, name => {
@@ -91,4 +93,19 @@ assert.equal(hooks[8].value['9'].last_message.content, 'fresh');
 props.data = { ...props.data, userId: '55' }; dirty = true; await flush();
 assert.deepEqual(hooks[8].value, {}, 'Private previews are cleared across account changes');
 assert.equal(inboxCalls.length, 3);
+props.data = { ...props.data, stories: [
+  { id: '1', authorId: '55', name: 'Your Story', mine: true, viewed: true, mediaType: 'video', image: 'qa.mp4', createdAt: '2026-09-30T10:00:00Z' },
+  { id: '2', authorId: '55', name: 'Your Story', mine: true, viewed: true, mediaType: 'image', image: 'qa.png', createdAt: '2026-09-30T11:00:00Z' },
+] }; dirty = true; await flush();
+const grouped = find(tree, node => node.props.accessibilityLabel === 'Open Your Story stories (2)');
+assert.ok(grouped, 'Stories are grouped by author');
+await grouped.props.onPress(); await flush();
+assert.ok(find(tree, node => node.type?.name === 'StoryVideoPreview'), 'Video story uses the video player');
+await find(tree, node => node.props.label === 'Next Story').props.onPress(); await flush();
+assert.ok(find(tree, node => node.props.source?.uri === 'qa.png'), 'Next selects the second story');
+assert.ok(find(tree, node => node.props.label === 'Delete my story'), 'Owner has a delete control');
+props.data = { ...props.data, userId: '56', stories: [] }; dirty = true; await flush();
+assert.equal(find(tree, node => node.props.label === 'Delete my story'), null, 'Story preview is cleared across account changes');
+await find(tree, node => node.props.accessibilityLabel === 'Add story').props.onPress(); await flush();
+assert.ok(find(tree, node => node.props.title === 'Upload Responsibly'), 'Story upload shows responsibility warning before the gallery');
 console.log('PASS: typing/pagination make zero extra inbox reads; foreground refresh, stale-response guards, abort cleanup, page deduplication and account isolation are preserved. No remote writes.');

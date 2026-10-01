@@ -8,6 +8,7 @@ import ts from 'typescript';
 const calls = [];
 let session = { user: { id: 'auth-7', user_metadata: {} }, access_token: 'token-seven', refresh_token: 'refresh-seven', expires_at: Math.floor(Date.now()/1000)+3600 };
 let getUserOverride;
+let sessionErrorOverride;
 const query = result => {
   const builder = { select: () => builder, eq: () => builder, order: () => builder,
     abortSignal: () => builder, single: () => Promise.resolve(result),
@@ -16,7 +17,7 @@ const query = result => {
 };
 const backend = { isSupabaseConfigured: true, supabase: {
   auth: {
-    getSession: async () => ({ data: { session }, error: null }),
+    getSession: async () => ({ data: { session }, error: sessionErrorOverride ?? null }),
     refreshSession: async ({ refresh_token }) => {
       calls.push(['refreshSession', refresh_token]);
       session = { ...session, access_token: 'token-refreshed', refresh_token: 'refresh-next', expires_at: Math.floor(Date.now()/1000)+3600 };
@@ -54,6 +55,11 @@ const onboarding = load('src/services/profile-onboarding.ts', {
 });
 
 const restored = await auth.bootstrapSession();
+sessionErrorOverride = { code: 'refresh_token_not_found', message: 'Invalid Refresh Token: Refresh Token Not Found' };
+assert.equal((await auth.bootstrapSession()).status, 'anonymous', 'Revoked refresh token returns to sign-in');
+sessionErrorOverride = new Error('Network unavailable');
+await assert.rejects(auth.bootstrapSession(), /Network unavailable/, 'Transient network failures retain retry behavior');
+sessionErrorOverride = undefined;
 const setup = await onboarding.profileOnboardingService.load(undefined, restored.user);
 assert.equal(setup.profile.id, 7);
 assert.equal(calls.filter(([name]) => name === 'getUser').length, 0, 'Initial bootstrap does not duplicate profile authorization with /auth/v1/user');

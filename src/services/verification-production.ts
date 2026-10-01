@@ -30,6 +30,7 @@ export type VerificationMethods = {
   email_verified: boolean;
   phone_verified: boolean;
   live_photo_verified: boolean;
+  live_photo_pending?: boolean;
   is_verified: boolean;
   verification_points: number;
   points_awarded: number;
@@ -176,7 +177,7 @@ export const verificationService = {
     if (userError) throw userError;
     const { data, error } = await (supabase as any).from('tbl_user_verification').select('live_photo_path,live_photo_verified').eq('user_id', Number(userId)).maybeSingle();
     if (error) throw error;
-    if (!data?.live_photo_verified || !data.live_photo_path) return null;
+    if (!data?.live_photo_path) return null;
     const signed = await supabase.storage.from(BUCKET).createSignedUrl(data.live_photo_path, 3600);
     if (signed.error) return null;
     return signed.data.signedUrl;

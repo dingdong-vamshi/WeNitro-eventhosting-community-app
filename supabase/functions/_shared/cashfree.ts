@@ -209,6 +209,10 @@ export const checkoutReturnUrl = (
   );
 };
 
+// Derive this from the runtime project, never from a client-supplied URL.
+export const cashfreeWebhookUrl = () =>
+  new URL("/functions/v1/cashfree-webhook", requiredEnv("SUPABASE_URL")).href;
+
 const constantTimeEqual = (left: Uint8Array, right: Uint8Array) => {
   if (left.length !== right.length) return false;
   let difference = 0;

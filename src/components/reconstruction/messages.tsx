@@ -1,7 +1,8 @@
 import { VerifiedBadge } from '../verified-badge';
 import { UserAvatar } from '../user-avatar';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Alert, Image, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { VideoView, useVideoPlayer } from 'expo-video';
 import * as ImagePicker from 'expo-image-picker';
 import type { AppData } from '../../../App';
 import { communitiesProductionService, type CommunitySummary } from '../../services/communities-production';
@@ -10,8 +11,14 @@ import { realtimeChatService } from '../../services/realtime-chat';
 import { storiesProductionService } from '../../services/stories-production';
 import { subscribeToAppForeground } from '../../services/app-freshness';
 import { Action, Button, ErrorLine, Icon, Page, Sheet, Skeleton, ui, usePalette, purple } from './ui';
+import { useResponsibleUpload } from './responsible-upload';
 
 const isBackendId = (value: string) => /^[1-9]\d*$/.test(value);
+
+function StoryVideoPreview({ uri }: { uri: string }) {
+  const player = useVideoPlayer(uri, instance => { instance.muted = true; });
+  return <VideoView player={player} nativeControls contentFit="contain" style={{ width: '100%', height: 360, borderRadius: 16 }} />;
+}
 
 function mediaUri(value?: string | null) {
   const path = String(value || '').trim();
@@ -54,11 +61,54 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   const [creatingGroup, setCreatingGroup] = useState(false);
   const [groupName, setGroupName] = useState('');
   const [groupPhoto, setGroupPhoto] = useState<string | null>(null);
+  const { confirmUpload, uploadNotice } = useResponsibleUpload();
   const [groupMembers, setGroupMembers] = useState<string[]>([]);
   const [groupBusy, setGroupBusy] = useState(false);
   const [avatars, setAvatars] = useState<Record<string, string>>({});
   const [storyPreview, setStoryPreview] = useState<AppData['stories'][number] | null>(null);
   const [markingStories, setMarkingStories] = useState(false);
+  const [storyBusy, setStoryBusy] = useState(false);
+  const [storyUploadWarning, setStoryUploadWarning] = useState(false);
+  const storyGroups = Array.from(data.stories.slice()
+    .sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')))
+    .reduce((groups, story) => {
+      const key = story.authorId || (story.mine ? `mine:${data.userId}` : `name:${story.name}`);
+      groups.set(key, [...(groups.get(key) || []), story]);
+      return groups;
+    }, new Map<string, AppData['stories']>()));
+  const previewGroup = storyGroups.find(([, stories]) => stories.some(story => story.id === storyPreview?.id))?.[1] || [];
+  const previewIndex = previewGroup.findIndex(story => story.id === storyPreview?.id);
+
+  const addStory = async () => {
+    if (storyBusy) return;
+    try {
+      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permission.granted) throw new Error('Allow photo access to choose a story.');
+      const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images', 'videos'], quality: 0.8 });
+      const asset = !result.canceled && result.assets[0];
+      if (!asset) return;
+      setStoryBusy(true);
+      const created = await storiesProductionService.create({ uri: asset.uri, contentType: asset.mimeType || undefined });
+      setData(current => ({ ...current, stories: [{ id: String(created.id), name: 'Your Story', image: created.mediaUrl, mediaType: created.mediaType, text: created.caption, viewed: false, mine: true, authorId: String(created.userId), authorAvatar: current.avatarUri, createdAt: created.createdAt }, ...current.stories] }));
+    } catch (caught) {
+      Alert.alert('Story not uploaded', caught instanceof Error ? caught.message : 'Please try again.');
+    } finally { setStoryBusy(false); }
+  };
+  const deleteStory = () => {
+    if (!storyPreview?.mine || storyBusy) return;
+    const id = storyPreview.id;
+    const remove = async () => {
+      setStoryBusy(true);
+      try {
+        await storiesProductionService.delete(id);
+        setData(current => ({ ...current, stories: current.stories.filter(story => story.id !== id) }));
+        setStoryPreview(null);
+      } catch (caught) { Alert.alert('Story not deleted', caught instanceof Error ? caught.message : 'Please try again.'); }
+      finally { setStoryBusy(false); }
+    };
+    if (Platform.OS === 'web') { if (window.confirm('Delete your story and its media?')) void remove(); }
+    else Alert.alert('Delete story?', 'This removes your story and its media.', [{ text: 'Cancel', style: 'cancel' }, { text: 'Delete', style: 'destructive', onPress: () => void remove() }]);
+  };
 
   useEffect(() => {
     if (!creatingGroup || data.people.length || people.length) return;
@@ -112,6 +162,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   useEffect(() => {
     // Clear private preview state when the authenticated account changes.
     setInbox({}); setInboxError(''); setRows([]); setAvatars({});
+    setStoryPreview(null); setStoryUploadWarning(false);
   }, [data.userId]);
 
   useEffect(() => {
@@ -262,12 +313,17 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
           ))}
         </View>
       )}
-      {data.stories.length ? <View style={{ paddingHorizontal: 14, paddingBottom: 8, gap: 8 }}>
+      {<View style={{ paddingHorizontal: 14, paddingBottom: 8, gap: 8 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}><Text style={{ flex: 1, color: c.text, fontSize: 15, fontWeight: '700' }}>Stories</Text><Pressable accessibilityRole="button" disabled={markingStories || !data.stories.some((story) => !story.viewed)} onPress={() => void markAllStoriesSeen()}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '700', opacity: data.stories.some((story) => !story.viewed) ? 1 : .5 }}>{markingStories ? 'Saving…' : 'Mark all seen'}</Text></Pressable></View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
-          {data.stories.map((story) => <Pressable key={story.id} accessibilityRole="button" accessibilityLabel={`Open ${story.name} story`} onPress={() => void markStorySeen(story)} style={{ alignItems: 'center', gap: 4, width: 58 }}><View style={{ padding: 2, borderWidth: story.viewed ? 1 : 2, borderColor: story.viewed ? c.border : c.accent, borderRadius: 27 }}><UserAvatar uri={story.authorAvatar || story.image} name={story.name} size={46} /></View><Text numberOfLines={1} style={{ color: c.muted, fontSize: 9, width: 58, textAlign: 'center' }}>{story.name}</Text></Pressable>)}
+          <Pressable accessibilityRole="button" accessibilityLabel="Add story" disabled={storyBusy} onPress={() => setStoryUploadWarning(true)} style={{ alignItems: 'center', gap: 4, width: 58 }}><Icon name="add-circle-outline" size={50} color={c.accent} /><Text style={{ color: c.muted, fontSize: 9 }}>{storyBusy ? 'Uploading…' : 'Add story'}</Text></Pressable>
+          {storyGroups.map(([authorId, stories]) => {
+            const story = stories.at(-1)!;
+            const viewed = stories.every(item => item.viewed);
+            return <Pressable key={authorId} accessibilityRole="button" accessibilityLabel={`Open ${story.name} stories (${stories.length})`} onPress={() => void markStorySeen(stories.find(item => !item.viewed) || stories[0])} style={{ alignItems: 'center', gap: 4, width: 58 }}><View style={{ padding: 2, borderWidth: viewed ? 1 : 2, borderColor: viewed ? c.border : c.accent, borderRadius: 27 }}><UserAvatar uri={story.authorAvatar || (story.mediaType !== 'video' ? story.image : undefined)} name={story.name} size={46} /></View><Text numberOfLines={1} style={{ color: c.muted, fontSize: 9, width: 58, textAlign: 'center' }}>{story.name}</Text></Pressable>;
+          })}
         </ScrollView>
-      </View> : null}
+      </View>}
       <ErrorLine text={error} />
       {tab === 'Communities' && inboxError ? <View style={{ paddingHorizontal: 14, paddingBottom: 8 }}><ErrorLine text={inboxError} /><Pressable accessibilityRole="button" onPress={() => setVersion(value => value + 1)}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '600' }}>Retry message previews</Text></Pressable></View> : null}
       {tab === 'Communities' && loading && page === 1 ? <Skeleton count={5} /> : (
@@ -351,6 +407,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
             disabled={groupBusy}
             onPress={() => {
               void (async () => {
+                if (!await confirmUpload()) return;
                 const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
                 if (!permission.granted) return Alert.alert('Photo access needed', 'Allow photos to set a group profile picture.');
                 const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.85, allowsEditing: true, aspect: [1, 1] });
@@ -388,9 +445,18 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
           <Button label={`Create Group · ${groupMembers.length} selected`} busy={groupBusy} disabled={groupBusy} onPress={() => void createGroup()} />
         </Sheet>
       ) : null}
+      {uploadNotice}
+      {storyUploadWarning ? <Sheet title="Upload Responsibly" close={() => setStoryUploadWarning(false)}>
+        <Text style={{ color: c.muted, fontSize: 14, lineHeight: 20 }}>Upload only appropriate media you have permission to share. Inappropriate, explicit, hateful, or unrelated content may result in permanent account suspension.</Text>
+        <Button label="Continue" onPress={() => { setStoryUploadWarning(false); void addStory(); }} />
+        <Button label="Cancel" variant="outline" onPress={() => setStoryUploadWarning(false)} />
+      </Sheet> : null}
       {storyPreview ? <Sheet title={storyPreview.name} close={() => setStoryPreview(null)} centered>
-        <Image source={{ uri: storyPreview.image }} style={{ width: '100%', height: 420, borderRadius: 16, backgroundColor: c.inset }} resizeMode="cover" />
+        <Text style={{ color: c.muted }}>Story {previewIndex + 1} of {previewGroup.length}</Text>
+        {storyPreview.mediaType === 'video' ? <StoryVideoPreview key={storyPreview.id} uri={storyPreview.image} /> : <Image source={{ uri: storyPreview.image }} style={{ width: '100%', height: 360, borderRadius: 16, backgroundColor: c.inset }} resizeMode="contain" />}
         {storyPreview.text ? <Text style={{ color: c.text, fontSize: 14, lineHeight: 20 }}>{storyPreview.text}</Text> : null}
+        <View style={{ flexDirection: 'row', gap: 12 }}><Button label="Previous Story" disabled={previewIndex <= 0} onPress={() => void markStorySeen(previewGroup[previewIndex - 1])} /><Button label="Next Story" disabled={previewIndex >= previewGroup.length - 1} onPress={() => void markStorySeen(previewGroup[previewIndex + 1])} /></View>
+        {storyPreview.mine ? <Button label="Delete my story" disabled={storyBusy} onPress={deleteStory} /> : null}
       </Sheet> : null}
     </Page>
   );

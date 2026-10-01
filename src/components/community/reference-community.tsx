@@ -16,6 +16,7 @@ import { Sheet, Button, Field, ErrorLine, Header, Page, usePalette, type Referen
 import CoverEditor from '../hosting/cover-editor';
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from '../mobile-app-shell';
 import { openSharedContent } from '../../services/internal-share';
+import { useResponsibleUpload } from '../reconstruction/responsible-upload';
 
 const RULES = ['Be respectful to others', 'No spam or self-promotion', 'No hate speech or harassment', 'Keep content relevant to the community'];
 export type CreatedCommunity = { id: string; name: string; description: string; category: string; image: string; cover?: string; rules: string[]; visibility?: 'public' | 'private' };
@@ -58,7 +59,7 @@ export function CreateCommunitySheet({ onClose, onCreated, initial }: { initial?
     locked.current = true; setCreating(true);
     try {
       const cleanRules = rules.map(rule => rule.trim()).filter(Boolean);
-      const id = initial ? (await editCommunity(initial.id, { name: name.trim(), description: description.trim(), category, ...(avatar === initial.imageUrl || (!avatar && !initial.imageUrl) ? {} : { avatar }) }), initial.id) : await communityService.create({ name: name.trim(), description: description.trim(), tagline: description.trim().slice(0, 160), category, tags: [category], rules: cleanRules, visibility, imageUri: avatar || undefined, coverUri: cover || undefined });
+      const id = initial ? (await editCommunity(initial.id, { name: name.trim(), description: description.trim(), category, rules: cleanRules, visibility, ...(avatar === initial.imageUrl || (!avatar && !initial.imageUrl) ? {} : { avatar }), ...(cover === initial.coverUrl || (!cover && !initial.coverUrl) ? {} : { cover }) }), initial.id) : await communityService.create({ name: name.trim(), description: description.trim(), tagline: description.trim().slice(0, 160), category, tags: [category], rules: cleanRules, visibility, imageUri: avatar || undefined, coverUri: cover || undefined });
       // Creation has committed. Navigation does not depend on a second network request.
       onCreated({ id, name: name.trim(), description: description.trim(), category, image: avatar, cover, rules: cleanRules, visibility });
     } catch (e) { setError(errorText(e)); locked.current = false; setCreating(false); }
@@ -94,6 +95,7 @@ export function CommunityConversation({ id, userId, name, avatar, success, onDis
   const [body, setBody] = useState(''), [attachment, setAttachment] = useState(''), [loading, setLoading] = useState(true), [sending, setSending] = useState(false), [error, setError] = useState('');
   const [metadata, setMetadata] = useState<{ name: string; avatar?: string; memberCount: number | null }>({ name, avatar, memberCount: null }), [retry, setRetry] = useState(0), [historyLoading, setHistoryLoading] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false), [pollOpen, setPollOpen] = useState(false), [polls, setPolls] = useState<Record<number, CommunityPoll>>({});
+  const { confirmUpload, uploadNotice } = useResponsibleUpload();
   const [postingAllowed, setPostingAllowed] = useState(true);
   const attachmentType = useRef<'image' | 'video'>('image');
   const attachmentMime = useRef('image/jpeg');
@@ -178,6 +180,7 @@ export function CommunityConversation({ id, userId, name, avatar, success, onDis
     ]);
   };
   const pick = async (type: 'image' | 'video') => { setOptionsOpen(false); try {
+    if (!await confirmUpload()) return;
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync(); if (!permission.granted) { setError('Allow media access to share a photo or video.'); return; }
     const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: type === 'video' ? ['videos'] : ['images'], quality: .85 });
     if (!result.canceled && result.assets[0]?.uri) { const asset = result.assets[0]; if (asset.fileSize && asset.fileSize > 50 * 1024 * 1024) throw new Error('Choose media smaller than 50 MB.'); const mime = asset.mimeType || (type === 'video' ? 'video/mp4' : 'image/jpeg'); if (!['image/jpeg', 'image/png', 'image/webp', 'video/mp4'].includes(mime)) throw new Error(type === 'video' ? 'Choose an MP4 video.' : 'Choose a JPEG, PNG or WebP photo.'); attachmentMime.current = mime; attachmentType.current = type; setAttachment(asset.uri); await send(asset.uri, ''); }
@@ -196,6 +199,7 @@ export function CommunityConversation({ id, userId, name, avatar, success, onDis
     </ScrollView>}
     {attachment ? <View style={s.attachment}>{attachmentType.current === 'image' ? <Image source={{ uri: attachment }} style={{ width: 54, height: 54, borderRadius: 8 }} /> : <Icon name="film-outline" />}<Pressable accessibilityRole="button" accessibilityLabel="Remove attachment" disabled={sending} onPress={() => setAttachment('')} style={s.iconButton}><Icon name="close" /></Pressable></View> : null}
     <View style={s.composer}><Pressable accessibilityRole="button" accessibilityLabel="Add photo or poll" disabled={sending || loading || !postingAllowed} onPress={() => setOptionsOpen(true)} style={s.composerAdd}><Icon name="add" size={25} color={postingAllowed ? c.accent : c.iconMuted} /></Pressable><View style={s.inputShell}><TextInput accessibilityLabel="Community message" placeholder={postingAllowed ? 'Message the community...' : 'Only admins can post'} placeholderTextColor={c.muted} value={body} onChangeText={setBody} editable={!sending && !loading && postingAllowed} multiline maxLength={10000} style={s.messageInput} />{body.length ? <Text style={s.messageCounter}>{body.length}/10000</Text> : null}</View><Pressable accessibilityRole="button" accessibilityLabel="Send message" disabled={sending || loading || !postingAllowed || (!body.trim() && !attachment)} onPress={() => void send()} style={[s.send, (!body.trim() && !attachment) && { opacity: .45 }]}>{sending ? <ActivityIndicator color="white" size="small" /> : <Icon name="paper-plane" size={18} color="white" />}</Pressable></View>
+    {uploadNotice}
     {playingVideo ? <CommunityVideo uri={playingVideo} close={() => setPlayingVideo('')} /> : null}
     {optionsOpen && <Sheet title="Share with Community" close={() => setOptionsOpen(false)}>{[['Share Photo', 'image-outline', 'JPEG, PNG or WebP', () => void pick('image')], ['Create Poll', 'stats-chart-outline', 'Ask members and vote together', () => { setOptionsOpen(false); setPollOpen(true); }]].map(([label, icon, hint, action]) => <Pressable accessibilityRole="button" key={String(label)} onPress={action as () => void} style={s.optionRow}><View style={s.optionIcon}><Icon name={icon as any} color={c.accent} /></View><View style={{ flex: 1, gap: 4 }}><Text style={s.optionTitle}>{String(label)}</Text><Text style={s.optionHint}>{String(hint)}</Text></View><Icon name="chevron-forward" size={18} color={c.iconMuted} /></Pressable>)}<Button label="Cancel" onPress={() => setOptionsOpen(false)} /></Sheet>}
     {pollOpen && <PollComposer roomId={id} close={() => setPollOpen(false)} onPosted={async () => { setPollOpen(false); const page = await realtimeChatService.loadMessagesPage(Number(id)); merge(page.items); const latest = page.items[page.items.length - 1]; if (latest) callback.current(latest); }} />}

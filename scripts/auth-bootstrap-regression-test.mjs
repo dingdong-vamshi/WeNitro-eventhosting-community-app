@@ -15,7 +15,7 @@ visit(ast);
 assert.ok(effect);
 const compile = text => ts.transpile(text, { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS });
 const deferred = () => { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; };
-const profile = id => ({ profile: { id, onboarding_completed: true }, suggestedFullName: `User ${id}`, workspaceProfile: { authUserId: `auth-${id}`, details: {} } });
+const profile = id => ({ profile: { id, onboarding_completed: true, nitro_points: id * 2, trust_score: 20 }, suggestedFullName: `User ${id}`, workspaceProfile: { authUserId: `auth-${id}`, details: {} } });
 const flush = async () => { for (let i = 0; i < 80; i++) await Promise.resolve(); };
 function harness(options = {}) {
   const timers = new Map(); let timerId = 0, callback;
@@ -51,6 +51,8 @@ function harness(options = {}) {
 
 const normal = harness(); await flush();
 assert.equal(normal.state.profileCalls, 1); assert.equal(normal.state.workspaceCalls, 1);
+assert.equal(normal.state.data.nitro, 14, 'Cold Feed uses the existing bootstrap balance without opening Profile');
+assert.equal(normal.state.data.trustScore, 20);
 assert.equal(normal.state.validatedUsers[0]?.id, 'auth-7', 'App passes its server-validated bootstrap identity into profile loading');
 for (let i = 0; i < 5; i++) { normal.event('SIGNED_IN'); normal.runTimers(0); await flush(); }
 assert.equal(normal.state.profileCalls, 1, 'Same identity confirmations/refocus never repeat account bootstrap');
@@ -94,6 +96,7 @@ oldProfile.resolve(profile(7)); await flush();
 assert.equal(switching.state.authLoading, true, 'Old request finalizer cannot clear new-account loading');
 newProfile.resolve(profile(8)); await flush();
 assert.equal(switching.state.data.userId, '8');
+assert.equal(switching.state.data.nitro, 16, 'Account switching never retains another user balance');
 switching.event('SIGNED_OUT'); await flush();
 assert.equal(switching.state.data.mode, 'unauthenticated');
 switching.cleanup();
