@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const screens = fs.readFileSync(new URL('../src/components/onboarding/reference-screens.tsx', import.meta.url), 'utf8');
+const vibe = fs.readFileSync(new URL('../src/components/onboarding/vibe-intro-slide.tsx', import.meta.url), 'utf8');
+const app = fs.readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
+const intro = screens.slice(screens.indexOf('export function IntroScreen'), screens.indexOf('export function WelcomeScreen'));
+assert.match(intro, /\[0, 1, 2\] as const/);
+assert.match(intro, /Find People/);
+assert.match(intro, /Build Real Connections/);
+assert.match(intro, /nestedScrollEnabled/);
+assert.match(intro, /height - insets.top - insets.bottom - 64/);
+assert.match(intro, /Show onboarding page/);
+assert.match(intro, /label="Start Exploring"/);
+assert.doesNotMatch(intro, /label="Next"/);
+assert.doesNotMatch(vibe, /label="Next"|top: height \* \.103/);
+assert.match(vibe, /marginTop: 18/);
+assert.match(vibe, /minHeight: height/);
+assert.match(app, /onReplayIntro=\{\(\) => setIntroSeen\(false\)\}/);
+assert.match(screens, /SPLASH_TAGLINES/);
+console.log('PASS three evidence-backed slides, flowing copy, safe-area/scroll layout, accessible page controls, Skip/finish, replay and preserved taglines (source contracts; browser verification separate)');

@@ -109,36 +109,45 @@ function IntroArtwork() {
 
 export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const pageWidth = Math.min(width, MOBILE_APP_MAX_WIDTH);
+  const pageHeight = Math.max(240, height - insets.top - insets.bottom - 64);
   const pager = useRef<ScrollView>(null);
   const [page, setPage] = useState(0);
+  const pageRef = useRef(0);
   const finished = useRef(false);
   const exit = useRef(new Animated.Value(0)).current;
   const reduced = useReducedMotion();
   const finish = () => { if (!finished.current) { finished.current = true; Animated.timing(exit, { toValue: 1, duration: reduced ? 0 : 220, useNativeDriver: Platform.OS !== "web" }).start(({ finished: done }) => { if (done) onContinue(); }); } };
-  const next = () => {
-    if (page === 0) {
-      pager.current?.scrollTo({ x: pageWidth, animated: !reduced });
-      setPage(1);
-      return;
-    }
-    finish();
+  const selectPage = (index: number) => {
+    pageRef.current = index;
+    setPage(index);
+    pager.current?.scrollTo({ x: pageWidth * index, animated: !reduced });
   };
-  const pageContent = (slide: 0 | 1) => slide === 0 ? <VibeIntroSlide width={pageWidth} height={height} reducedMotion={reduced} onSkip={finish} /> : <View style={[s.introContent, { width: pageWidth, minHeight: height }]}>
+  useEffect(() => { pager.current?.scrollTo({ x: pageWidth * pageRef.current, animated: false }); }, [pageWidth]);
+  const pageContent = (slide: 0 | 1 | 2) => slide === 0 ? <VibeIntroSlide width={pageWidth} height={pageHeight} reducedMotion={reduced} onSkip={finish} /> : <View testID={`intro-slide-${slide + 1}`} style={[s.introContent, { width: pageWidth, minHeight: pageHeight }]}>
     <View style={s.introHeader}><View style={s.brandRow}><Image source={logoWhite} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors style={{ width: 31, height: 31 }} resizeMode="contain" /><Text style={s.introBrand}><Text style={{ color: purple }}>We</Text>Nitro</Text></View><Pressable onPress={finish} accessibilityRole="button" style={s.skip}><Text style={s.skipText}>Skip</Text></Pressable></View>
-    <IntroArtwork />
-    <View style={s.introCopy}><Text style={s.introHeadline}>Real Connections{"\n"}<Text style={{ color: purple }}>Start Here</Text></Text><Text style={s.introDescription}>Join activities, meet amazing people, and create <Text style={{ color: purple, fontWeight: "700" }}>unforgettable memories.</Text></Text></View>
-    <View style={s.introFooter}><Text style={s.swipe}>You’re ready to meet your people.</Text><GradientButton label="Start Exploring" onPress={finish} arrow /></View>
+    {slide === 1 ? <><View style={{ height: Math.min(445, Math.max(210, pageHeight * .49)), overflow: "hidden" }}><IntroArtwork /></View>
+    <View style={[s.introCopy, { marginTop: 18 }]}><Text style={s.introHeadline}>Real Connections{"\n"}<Text style={{ color: purple }}>Start Here</Text></Text><Text style={s.introDescription}>Join activities, meet amazing people, and create <Text style={{ color: purple, fontWeight: "700" }}>unforgettable memories.</Text></Text></View>
+    <View style={s.introFooter}><Text style={s.swipe}>Swipe to discover your people →</Text></View></> : <>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 18, justifyContent: "center", paddingVertical: 28 }} accessibilityLabel="Discover shared interests">
+        {[{ label: "Workout", image: photos.workout }, { label: "Travel", image: photos.travel }, { label: "Food", image: photos.food }, { label: "Hobbies", image: photos.hobbies }, { label: "Startup", image: photos.startup }, { label: "Social Impact", image: photos.friends }].map(item => <View key={item.label} style={{ width: "27%", alignItems: "center", gap: 8 }}><Image source={item.image} style={{ width: Math.min(76, pageWidth * .18), height: Math.min(76, pageWidth * .18), borderRadius: 40, borderWidth: 2, borderColor: purple }} /><Text style={{ color: "#C7C9D6", fontSize: 12, lineHeight: 18, textAlign: "center" }}>{item.label}</Text></View>)}
+      </View>
+      <View style={s.introCopy}><Text style={[s.introHeadline, { fontSize: 31, lineHeight: 40 }]}>Find People.{"\n"}Do Something.{"\n"}<Text style={{ color: purple }}>Build Real Connections.</Text></Text><Text style={s.introDescription}>Join communities, discover activities, and connect with people who share your passions.</Text></View>
+      <View style={s.introFooter}><Text style={s.swipe}>What's your vibe today?</Text><GradientButton label="Start Exploring" onPress={finish} arrow /></View>
+    </>}
   </View>;
   return <Animated.View style={{ flex: 1, opacity: exit.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }), transform: [{ translateX: exit.interpolate({ inputRange: [0, 1], outputRange: [0, -22] }) }] }}><SafeAreaView style={[s.full, { backgroundColor: "#090C12" }]} edges={["top", "bottom"]}>
-    <ScrollView ref={pager} horizontal pagingEnabled showsHorizontalScrollIndicator={false} bounces={false} scrollEventThrottle={16} onScroll={event => setPage(Math.max(0, Math.min(1, Math.round(event.nativeEvent.contentOffset.x / pageWidth))))} onMomentumScrollEnd={event => setPage(Math.round(event.nativeEvent.contentOffset.x / pageWidth))} style={{ width: pageWidth, alignSelf: "center" }} testID="intro-pager">
-      {pageContent(0)}
-      {pageContent(1)}
+    <ScrollView ref={pager} horizontal pagingEnabled showsHorizontalScrollIndicator={false} bounces={false} scrollEventThrottle={100} onScroll={event => { const index = Math.max(0, Math.min(2, Math.round(event.nativeEvent.contentOffset.x / pageWidth))); if (index !== pageRef.current) { pageRef.current = index; setPage(index); } }} style={{ width: pageWidth, alignSelf: "center" }} testID="intro-pager">
+      {([0, 1, 2] as const).map(slide => <ScrollView key={slide} style={{ width: pageWidth }} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} nestedScrollEnabled>{pageContent(slide)}</ScrollView>)}
     </ScrollView>
+    <View style={{ height: 64, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 6 }} accessibilityLabel={`Onboarding page ${page + 1} of 3`}>
+      {[0, 1, 2].map(index => <Pressable key={index} accessibilityRole="button" accessibilityLabel={`Show onboarding page ${index + 1}`} accessibilityState={{ selected: index === page }} onPress={() => selectPage(index)} style={{ minWidth: 44, minHeight: 44, alignItems: "center", justifyContent: "center" }}><View style={{ width: index === page ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: index === page ? purple : "#555767" }} /></Pressable>)}
+    </View>
   </SafeAreaView></Animated.View>;
 }
 
-export function WelcomeScreen({ googleButton, onLegal, error, onFallback }: { onFallback?: () => void; googleButton: React.ReactNode; onLegal?: (kind: "terms" | "privacyPolicy") => void; error?: string }) {
+export function WelcomeScreen({ googleButton, onLegal, error, onFallback, onReplayIntro }: { onReplayIntro?: () => void; onFallback?: () => void; googleButton: React.ReactNode; onLegal?: (kind: "terms" | "privacyPolicy") => void; error?: string }) {
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const c = usePalette();
@@ -159,6 +168,7 @@ export function WelcomeScreen({ googleButton, onLegal, error, onFallback }: { on
         <Text style={[s.welcomeSupport, { color: c.muted }]}>Join communities, discover trending activities,{"\n"}and connect with your squad securely.</Text>
         <View style={s.googleSlot}>{googleButton}</View>
         {onFallback ? <Pressable accessibilityRole="button" onPress={onFallback} style={{ minHeight: 44, justifyContent: "center", marginTop: 6 }}><Text style={{ textAlign: "center", color: c.isDark ? "#A5B4FC" : c.accent, fontSize: 13, fontWeight: "600" }}>Use email or phone instead</Text></Pressable> : null}
+        {onReplayIntro ? <Pressable accessibilityRole="button" onPress={onReplayIntro} style={{ minHeight: 44, justifyContent: "center" }}><Text style={{ textAlign: "center", color: c.muted, fontSize: 12 }}>Explore WeNitro</Text></Pressable> : null}
         {error ? <Text accessibilityRole="alert" style={[s.error, { color: c.danger }]}>{error}</Text> : null}
         <Text style={[s.legalText, { color: c.muted }]}>By continuing, you agree to our <Text accessibilityRole="link" onPress={() => openLegal("terms")} style={[s.legalLink, { color: c.isDark ? "#A5B4FC" : c.accent }]}>Terms &amp; Conditions</Text> and <Text accessibilityRole="link" onPress={() => openLegal("privacyPolicy")} style={[s.legalLink, { color: c.isDark ? "#A5B4FC" : c.accent }]}>Privacy Policy</Text></Text>
       </View>
