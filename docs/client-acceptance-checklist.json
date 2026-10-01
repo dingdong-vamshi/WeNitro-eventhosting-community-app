@@ -8,24 +8,24 @@
       "requirements": [
         {
           "requirement": "Onboarding spacing",
-          "implementation": "Onboarding spacing and no-Next design; intro slides and first-feed welcome are implemented.",
-          "test": "Source/UI contracts; fresh QA signup reached first-feed welcome.",
-          "production": "Live first-feed welcome confirmed; exact old-app extra-screen parity cannot be proved without that missing reference.",
-          "status": "QUALIFIED"
+          "implementation": "Normal-flow headings/copy, explicit line spacing, safe-area-aware pager and vertically scrollable short-screen slides.",
+          "test": "Typecheck and 44 source/unit suites passed; local short-screen and deployed mobile-sized UI inspected.",
+          "production": "All three slides inspected at 390x844; no clipped text. Signed-out replay and completion verified on 1 October.",
+          "status": "PASS"
         },
         {
           "requirement": "No Next button",
-          "implementation": "Onboarding spacing and no-Next design; intro slides and first-feed welcome are implemented.",
-          "test": "Source/UI contracts; fresh QA signup reached first-feed welcome.",
-          "production": "Live first-feed welcome confirmed; exact old-app extra-screen parity cannot be proved without that missing reference.",
-          "status": "QUALIFIED"
+          "implementation": "No Next button; horizontal swipe, accessible page controls, Skip and final Start Exploring.",
+          "test": "Source contract plus production swipe/page controls, Skip and Start Exploring tested.",
+          "production": "PASS: all three deployed slides contain no Next; completion returns to authentication welcome.",
+          "status": "PASS"
         },
         {
           "requirement": "Additional old-app onboarding screen",
-          "implementation": "Current intro plus first-feed welcome implemented.",
-          "test": "Fresh email QA signup reached extra welcome.",
-          "production": "Exact historical old-app screen equivalence is unknown; missing old reference.",
-          "status": "QUALIFIED"
+          "implementation": "Added third discovery slide using existing historical Find People / Do Something / Build Real Connections language and six interest photos, as authorized in the latest request. Existing post-signup welcome retained.",
+          "test": "Repository history, components, references and assets investigated; evidence-backed adaptation documented in onboarding-completion-evidence.md.",
+          "production": "PASS: third slide displayed and Start Exploring reaches authentication welcome. This is an authorized adaptation, not a claimed recovery of an exact historical screenshot.",
+          "status": "PASS"
         }
       ]
     },
@@ -65,10 +65,10 @@
       "requirements": [
         {
           "requirement": "Google implementation; external Google Cloud correction separated",
-          "implementation": "TARGET Google provider and production Web Client integration retained.",
-          "test": "No external Google retry per acceptance scope; live button client ID matches configured client.",
-          "production": "Client Google Cloud origin/callback correction remains; final account login not passed.",
-          "status": "QUALIFIED"
+          "implementation": "TARGET Google provider enabled with newly supplied secret and matching Web Client; production GIS popup/ID-token flow retained.",
+          "test": "Actual production Google login, TARGET session, unique tbl_users mapping, Home/Profile navigation and reload restore passed.",
+          "production": "Primary Google login PASS. Separate redirect-based OAuth probe returns redirect_uri_mismatch for https://cxsznhrkzqndhseodcyy.supabase.co/auth/v1/callback; client must add that URI to the same Web Client without deleting Firebase handler.",
+          "status": "PASS"
         }
       ]
     },
@@ -88,10 +88,10 @@
       "page": 6,
       "requirements": [
         {
-          "requirement": "Phone signup architecture; external Fast2SMS credential blocker",
+          "requirement": "Phone signup architecture; physical OTP delivery verification",
           "implementation": "Phone Auth, Send SMS Hook, send-sms, Veriphone and safe error message implemented.",
-          "test": "Provider configuration/code reviewed; known Fast2SMS 401/code412 isolated.",
-          "production": "External invalid provider credential; physical OTP not passed.",
+          "test": "NEW target secret digest matched; no whitespace; endpoint/header/template code inspected. Wallet authentication returned HTTP200/return:true. Non-delivery OTP request returned HTTP400: The mobile field is required. Veriphone independently passed. Signed hook invalid-payload guard passed.",
+          "production": "Old invalid-credential diagnosis superseded. New credential authentication PASS; full send/template/delivery path still needs an authorized controlled number and physical OTP. No claim of successful SMS delivery.",
           "status": "QUALIFIED"
         }
       ]
