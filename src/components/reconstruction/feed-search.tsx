@@ -19,7 +19,7 @@ const HERO_SLIDES = [
   {
     id: 'activities',
     image: require('../../../assets/hero/hero-activities.jpeg'),
-    artwork: require('../../../assets/hero/hero-activities.jpeg'),
+    artwork: require('../../../assets/photos/bonfire.jpg'),
     eyebrow: 'REAL PEOPLE, OFFLINE',
     title: 'Host and discover new activities',
     description: 'Make plans around shared interests and meet in real life.',
@@ -29,7 +29,7 @@ const HERO_SLIDES = [
   {
     id: 'communities',
     image: require('../../../assets/hero/hero-communities.jpeg'),
-    artwork: require('../../../assets/hero/hero-communities.jpeg'),
+    artwork: require('../../../assets/photos/study.jpg'),
     eyebrow: 'FIND YOUR PEOPLE',
     title: 'Join a community that feels like yours',
     description: 'Share ideas, join conversations and build your squad.',
@@ -49,7 +49,7 @@ const HERO_SLIDES = [
   {
     id: 'store',
     image: require('../../../assets/hero/hero-store.jpeg'),
-    artwork: require('../../../assets/hero/hero-store.jpeg'),
+    artwork: require('../../../assets/photos/camera.jpg'),
     eyebrow: 'NITRO STORE',
     title: 'Turn Nitro Points into rewards',
     description: 'See your balance and learn when rewards become available.',

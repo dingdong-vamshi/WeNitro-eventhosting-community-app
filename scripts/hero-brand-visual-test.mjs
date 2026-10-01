@@ -34,6 +34,10 @@ for (const [id, asset, route] of slides) {
 
 assert.match(feed, /artwork: require\('\.\.\/\.\.\/\.\.\/assets\/photos\/friends\.jpg'\)/,
   'Friends uses text-free artwork so obsolete +500 claims cannot appear behind the current 10-point offer');
+for (const artwork of ['bonfire.jpg', 'study.jpg', 'friends.jpg', 'camera.jpg']) {
+  assert.ok(feed.includes(`artwork: require('../../../assets/photos/${artwork}')`),
+    `${artwork} must provide text-free hero artwork so live copy is the only visible copy`);
+}
 assert.match(feed, /width: '66%', overflow: 'hidden'/,
   'Hero art is isolated in a clipped right-hand panel instead of painting baked-in copy beneath live text');
 assert.match(feed, /width: carouselCardHeight \* 2\.4/,

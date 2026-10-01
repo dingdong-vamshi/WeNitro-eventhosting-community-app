@@ -5,6 +5,7 @@ const feed = fs.readFileSync('src/components/reconstruction/feed-search.tsx', 'u
 for (const id of ['activities', 'communities', 'friends', 'store']) assert.match(feed, new RegExp(`id: '${id}'`));
 for (const asset of ['hero-activities.jpeg', 'hero-communities.jpeg', 'hero-friends.jpeg', 'hero-store.jpeg']) assert.ok(feed.includes(`assets/hero/${asset}`));
 assert.match(feed, /artwork: require\('\.\.\/\.\.\/\.\.\/assets\/photos\/friends\.jpg'\)/);
+for (const artwork of ['bonfire.jpg', 'study.jpg', 'friends.jpg', 'camera.jpg']) assert.ok(feed.includes(`assets/photos/${artwork}`));
 assert.match(feed, /width: '66%', overflow: 'hidden'/);
 assert.match(feed, /rgba\(39, 18, 99, 0\.97\)/);
 for (const label of ['Explore activities', 'Explore communities', 'Invite friends', 'Visit Nitro Store']) assert.ok(feed.includes(label));
