@@ -12,6 +12,10 @@ assert.deepEqual(foregroundWorkspaceSections('partnerRegistrationForm'), []);
 assert.deepEqual(foregroundWorkspaceSections('feed'), ['activities', 'communities', 'people', 'vibes', 'stories']);
 assert.deepEqual(foregroundWorkspaceSections('chat'), ['conversations', 'stories', 'people']);
 assert.deepEqual(foregroundWorkspaceSections('activityDetail'), [], 'Activity details own their targeted read');
+assert.deepEqual(foregroundWorkspaceSections('communityDetail'), [], 'Community details own their targeted read');
+assert.deepEqual(foregroundWorkspaceSections('communities'), ['communities'], 'Discovery still refreshes its collection');
+const communityInfo = fs.readFileSync('src/components/community/community-info.tsx', 'utf8');
+assert.match(communityInfo, /getCommunity\(id\);\s*setCommunity\(result\);\s*onChanged\(result\)/, 'Targeted load seeds parent Posts/Chat cache');
 const current = {
   name: 'Actual profile', accountType: 'partner', activities: ['a'], communities: ['c'], people: ['p'],
   vibes: ['v'], stories: ['s'], conversations: ['loaded history'],

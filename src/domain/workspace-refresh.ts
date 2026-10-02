@@ -10,7 +10,10 @@ export function foregroundWorkspaceSections(screen: string): WorkspaceSection[] 
     // full discovery refresh here duplicates that work on shared/deep links.
     case "activityDetail": return [];
     case "liked": return ["activities", "vibes"];
-    case "communities": case "communityDetail": return ["communities"];
+    case "communities": return ["communities"];
+    // CommunityInfo loads the selected room and seeds the Posts/Chat cache.
+    // Deep links must not wait for an unrelated full discovery collection.
+    case "communityDetail": return [];
     case "vibes": return ["vibes"];
     case "chat": return ["conversations", "stories", "people"];
     case "search": return ["activities", "communities", "people"];
