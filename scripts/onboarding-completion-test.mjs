@@ -13,6 +13,7 @@ assert.match(intro, /height - insets.top - insets.bottom - 124/);
 assert.match(intro, /Show onboarding page/);
 assert.match(intro, /label="Start Exploring"/);
 assert.match(intro, /label="Next" onPress=\{\(\) => selectPage\(Math.min\(2, page \+ 1\)\)\}/);
+assert.match(intro, /scrollTo\(\{ x: pageWidth \* index, animated: false \}\)/);
 assert.doesNotMatch(vibe, /label="Next"|top: height \* \.103/);
 assert.match(vibe, /marginTop: 18/);
 assert.match(vibe, /minHeight: height/);

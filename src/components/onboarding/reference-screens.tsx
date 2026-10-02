@@ -122,7 +122,10 @@ export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   const selectPage = (index: number) => {
     pageRef.current = index;
     setPage(index);
-    pager.current?.scrollTo({ x: pageWidth * index, animated: !reduced });
+    // Keep buttons and the visible page atomic. An animated jump emits intermediate
+    // scroll positions that can briefly turn Next into the final Finish action.
+    // Gestural paging remains available; explicit controls move directly to their page.
+    pager.current?.scrollTo({ x: pageWidth * index, animated: false });
   };
   useEffect(() => { pager.current?.scrollTo({ x: pageWidth * pageRef.current, animated: false }); }, [pageWidth]);
   const pageContent = (slide: 0 | 1 | 2) => slide === 0 ? <VibeIntroSlide width={pageWidth} height={pageHeight} reducedMotion={reduced} onSkip={finish} /> : <View testID={`intro-slide-${slide + 1}`} style={[s.introContent, { width: pageWidth, minHeight: pageHeight }]}>
