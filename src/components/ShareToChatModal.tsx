@@ -17,6 +17,7 @@ import { chatService } from "../services/wenitro";
 import { shareEntityExternally, type InternalShareEntity } from "../services/internal-share";
 import type { ChatMessage } from "../services/realtime-chat";
 import { MobileOverlayFrame } from "./mobile-app-shell";
+import { UserAvatar } from "./user-avatar";
 import { usePalette } from "./reconstruction/ui";
 
 type ConversationTarget = {
@@ -208,7 +209,7 @@ export function ShareToChatModal({
               const checked = selected.includes(target.key);
               return (
                 <Pressable accessibilityRole="checkbox" accessibilityLabel={`Share with ${target.name}`} accessibilityState={{ checked }} key={target.key} style={[styles.target, { backgroundColor: c.card }]} onPress={() => toggle(target.key)}>
-                  <Image source={{ uri: target.avatar }} style={[styles.avatar, { backgroundColor: c.inset }]} />
+                  <UserAvatar uri={target.avatar} name={target.name} identity={target.userId || target.key} size={46} />
                   <View style={styles.targetText}>
                     <Text style={[styles.targetName, { color: c.text }]}>{target.name}</Text>
                     <Text style={[styles.targetDetail, { color: c.muted }]}>{target.detail}</Text>

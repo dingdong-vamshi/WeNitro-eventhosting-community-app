@@ -56,4 +56,7 @@ new Function('exports', 'require', ts.transpile(fs.readFileSync('src/services/in
 await shareApi.shareEntityExternally({ kind: 'community', id: '123', title: 'QA Community', preview: 'QA preview' });
 assert.equal(shares[0].url, 'https://wenitro-app.vercel.app/#/community/123');
 assert.match(shares[0].message, /Shared from WeNitro/);
+const shareModal = fs.readFileSync('src/components/ShareToChatModal.tsx', 'utf8');
+assert.match(shareModal, /<UserAvatar uri=\{target.avatar\} name=\{target.name\}/);
+assert.doesNotMatch(shareModal, /<Image source=\{\{ uri: target.avatar \}\}/);
 console.log('PASS: community avatar batching, RLS result isolation, URL signing, fallback, lazy rendering and failure retry contracts. No remote writes.');
