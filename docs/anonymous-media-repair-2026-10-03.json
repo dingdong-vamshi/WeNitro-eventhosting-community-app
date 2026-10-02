@@ -1,0 +1,48 @@
+{
+  "status": "LOCAL_REPAIR_TESTED_NOT_DEPLOYED",
+  "target": "cxsznhrkzqndhseodcyy",
+  "requestedChange": "Anonymous Community authors must not be identifiable by ordinary users through UI or APIs; authorized Admin attribution remains available.",
+  "found": {
+    "fixture": { "community": 244, "post": 36, "ownerQaUser": 70, "viewerQaUser": 71 },
+    "sanitizedProductionResult": { "authorFieldsRedacted": true, "mediaPathHidden": false, "rawMediaColumnDenied": false, "directStorageSigningDenied": false },
+    "impact": "The anonymous media path begins with the uploader Auth UUID, which can correlate with a known public profile-photo URL. Text-only author redaction did not cover this channel."
+  },
+  "implementedLocally": [
+    "Feed RPC returns anonymous-media:<post ID>, not the Storage path, for all anonymous media.",
+    "Revoke authenticated raw-table media_url column reads; retain other safe column reads.",
+    "Restrictive Storage SELECT policy prevents other members from listing/signing/downloading anonymous uploader paths. Owners can still clean up their uploads; authorized Admin retains access.",
+    "community-media POST verifies the user and room membership, then returns at most 50 opaque HMAC media links without author identifiers.",
+    "GET/HEAD validate signature and expiry, reject deleted/non-anonymous posts, stream only allowed image/video types and support single-range video requests. Storage headers, redirects and detailed upstream errors are not exposed.",
+    "Frontend resolves anonymous URLs once per page and batches normal Storage signing. It never falls back to author paths for anonymous posts.",
+    "A preview failure after successful creation cannot delete the committed upload or encourage duplicate posting."
+  ],
+  "localVerification": {
+    "handler": "deno test --no-config supabase/functions/community-media/handler.test.ts: 2 tests passed; includes membership, cross-room selection, bad IDs, unauthorized origin, tampering, expiry, deletion, safe errors and range playback",
+    "edgeTypes": "deno check --no-config --node-modules-dir=none supabase/functions/community-media/index.ts passed",
+    "database": "scripts/anonymous-media-db-test.mjs passed in disposable PostgreSQL, including actual SET ROLE authenticated column and restrictive-RLS checks",
+    "client": "scripts/community-anonymous-media-service-test.mjs passed",
+    "regression": "Nine existing client/source suites plus disposable acceptance-backend suite passed",
+    "typecheck": "npm run typecheck passed",
+    "build": "npm run vercel-build passed"
+  },
+  "deployment": {
+    "completed": false,
+    "reason": "Target Dashboard authenticated; connector OAuth refresh fails and existing CLI identity lacks target project authorization. App frontend intentionally not deployed ahead of required backend.",
+    "requiredOrder": [
+      "Deploy community-media to target with verify_jwt=false; handler itself checks POST JWT/membership and GET signatures. Uses existing SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY runtime values; no new client/provider secret.",
+      "Apply tested migration 20261002200547_anonymous_community_media_privacy.sql to target.",
+      "Run qa-anonymous-media-acceptance.mjs using supplied QA credential environment; it logs sanitized booleans only.",
+      "Push/deploy dependent app build to existing Vercel project.",
+      "Verify post 36 image renders as member 71 with generic Anonymous, no profile navigation, no author path in response/URL, and named post media unchanged.",
+      "Recheck authenticated Realtime delivery, Storage rejection, Admin audit and stability; capture deployed screenshots.",
+      "Remove only the temporary QA post 36/media fixture after evidence is recorded."
+    ]
+  },
+  "productionVerification": "Current defect confirmed; repaired backend and frontend not yet production verified.",
+  "screenshotProof": "Pending deployed repair. Technical privacy proof is required; a generic Anonymous screenshot alone cannot prove absence of API leakage.",
+  "residualNotes": [
+    "Already-issued legacy signed Storage URLs may remain valid until their original expiry. Previously disclosed identifiers cannot be retroactively erased.",
+    "This protects application identity metadata and paths, not identity deliberately revealed in user-written content or image pixels."
+  ],
+  "finalStatus": "NOT_ACCEPTED_PENDING_TARGET_DEPLOYMENT_AND_PRODUCTION_RETEST"
+}

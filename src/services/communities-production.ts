@@ -312,6 +312,19 @@ async function signedMediaUrl(path: string | null) {
   }
 }
 
+/** One authorization request per page; the returned URLs contain no author path. */
+async function anonymousMediaUrls(roomId: number, postIds: number[]) {
+  if (!postIds.length) return new Map<string, string>();
+  const { data, error } = await supabase.functions.invoke('community-media', {
+    body: { roomId, postIds: [...new Set(postIds)] },
+  });
+  if (error) throw new Error('Could not load community media. Please try again.');
+  const urls = data?.urls;
+  if (!urls || typeof urls !== 'object') throw new Error('Invalid community media response.');
+  return new Map<string, string>(Object.entries(urls).filter((entry): entry is [string, string] =>
+    typeof entry[1] === 'string' && postIds.includes(Number(entry[0]))));
+}
+
 async function removeUploadedImages(paths: string[]) {
   if (paths.length) await supabase.storage.from(COMMUNITY_BUCKET).remove(paths);
 }
@@ -529,6 +542,14 @@ export async function getCommunityFeed(
   const messages = (Array.isArray(payload.items) ? payload.items : []) as Array<Record<string, unknown>>;
   const count = payload.total == null ? null : Number(payload.total);
   const postIds = messages.map((message) => Number(message.id));
+  const anonymousIds = messages.filter(message => message.is_anonymous && message.media_url)
+    .map(message => Number(message.id));
+  const normalPaths = messages.flatMap(message => !message.is_anonymous && typeof message.media_url === 'string'
+    && !/^https?:\/\//i.test(message.media_url) ? [communityObjectPath(message.media_url)] : []);
+  const [anonymousUrls, normalUrls] = await Promise.all([
+    anonymousMediaUrls(roomId, anonymousIds),
+    signedUrlMap(COMMUNITY_BUCKET, normalPaths, SIGNED_URL_TTL_SECONDS),
+  ]);
   const [reactionResult, commentResult] = await Promise.all([
     postIds.length ? supabase.from("tbl_community_post_reactions").select("post_id,user_id,reaction").in("post_id", postIds) : Promise.resolve({ data: [], error: null }),
     postIds.length ? supabase.from("tbl_community_post_comments").select("post_id").in("post_id", postIds).is("deleted_at", null) : Promise.resolve({ data: [], error: null }),
@@ -553,7 +574,10 @@ export async function getCommunityFeed(
       title: String(message.title ?? ""),
       body: String(message.body ?? ""),
       category: String(message.category ?? options.category?.trim() ?? "General"),
-      mediaUrl: await signedMediaUrl(typeof message.media_url === "string" ? message.media_url : null),
+      mediaUrl: message.is_anonymous ? anonymousUrls.get(String(message.id)) ?? null
+        : typeof message.media_url !== 'string' ? null
+          : /^https?:\/\//i.test(message.media_url) ? message.media_url
+            : normalUrls.get(communityObjectPath(message.media_url)) ?? null,
       mediaType:
         message.media_type === "image" || message.media_type === "video"
           ? message.media_type
@@ -680,6 +704,12 @@ export async function createCommunityPost(input: {
     });
     if (error) throw error;
     const row = data as Record<string, unknown>;
+    // The post owns the uploaded object now. A preview/network failure must not
+    // remove committed media or invite the author to submit a duplicate post.
+    uploadedPath = null;
+    const anonymousPreview = input.anonymous && media
+      ? await anonymousMediaUrls(Number(input.communityId), [Number(row.id)]).catch(() => new Map<string, string>())
+      : null;
     return {
       id: String(row.id),
       communityId: String(row.community_id ?? input.communityId),
@@ -687,7 +717,8 @@ export async function createCommunityPost(input: {
       title: String(row.title ?? input.title.trim()),
       body: String(row.body ?? input.body?.trim() ?? ""),
       category: String(row.category ?? input.category?.trim() ?? "General"),
-      mediaUrl: await signedMediaUrl((row.media_path as string | null) ?? media?.path ?? null),
+      mediaUrl: input.anonymous ? anonymousPreview?.get(String(row.id)) ?? null
+        : await signedMediaUrl((row.media_path as string | null) ?? media?.path ?? null),
       mediaType,
       status: "published",
       isAnonymous: Boolean(row.is_anonymous ?? input.anonymous),
