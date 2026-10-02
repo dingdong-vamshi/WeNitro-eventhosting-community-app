@@ -111,7 +111,7 @@ export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const pageWidth = Math.min(width, MOBILE_APP_MAX_WIDTH);
-  const pageHeight = Math.max(240, height - insets.top - insets.bottom - 64);
+  const pageHeight = Math.max(240, height - insets.top - insets.bottom - 124);
   const pager = useRef<ScrollView>(null);
   const [page, setPage] = useState(0);
   const pageRef = useRef(0);
@@ -134,15 +134,18 @@ export function IntroScreen({ onContinue }: { onContinue: () => void }) {
         {[{ label: "Workout", image: photos.workout }, { label: "Travel", image: photos.travel }, { label: "Food", image: photos.food }, { label: "Hobbies", image: photos.hobbies }, { label: "Startup", image: photos.startup }, { label: "Social Impact", image: photos.friends }].map(item => <View key={item.label} style={{ width: "27%", alignItems: "center", gap: 8 }}><Image source={item.image} style={{ width: Math.min(76, pageWidth * .18), height: Math.min(76, pageWidth * .18), borderRadius: 40, borderWidth: 2, borderColor: purple }} /><Text style={{ color: "#C7C9D6", fontSize: 12, lineHeight: 18, textAlign: "center" }}>{item.label}</Text></View>)}
       </View>
       <View style={s.introCopy}><Text style={[s.introHeadline, { fontSize: 31, lineHeight: 40 }]}>Find People.{"\n"}Do Something.{"\n"}<Text style={{ color: purple }}>Build Real Connections.</Text></Text><Text style={s.introDescription}>Join communities, discover activities, and connect with people who share your passions.</Text></View>
-      <View style={s.introFooter}><Text style={s.swipe}>What's your vibe today?</Text><GradientButton label="Start Exploring" onPress={finish} arrow /></View>
+      <View style={s.introFooter}><Text style={s.swipe}>What's your vibe today?</Text></View>
     </>}
   </View>;
   return <Animated.View style={{ flex: 1, opacity: exit.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }), transform: [{ translateX: exit.interpolate({ inputRange: [0, 1], outputRange: [0, -22] }) }] }}><SafeAreaView style={[s.full, { backgroundColor: "#090C12" }]} edges={["top", "bottom"]}>
     <ScrollView ref={pager} horizontal pagingEnabled showsHorizontalScrollIndicator={false} bounces={false} scrollEventThrottle={100} onScroll={event => { const index = Math.max(0, Math.min(2, Math.round(event.nativeEvent.contentOffset.x / pageWidth))); if (index !== pageRef.current) { pageRef.current = index; setPage(index); } }} style={{ width: pageWidth, alignSelf: "center" }} testID="intro-pager">
       {([0, 1, 2] as const).map(slide => <ScrollView key={slide} style={{ width: pageWidth }} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} nestedScrollEnabled>{pageContent(slide)}</ScrollView>)}
     </ScrollView>
-    <View style={{ height: 64, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 6 }} accessibilityLabel={`Onboarding page ${page + 1} of 3`}>
+    <View style={{ width: pageWidth, alignSelf: "center", paddingHorizontal: 22, paddingBottom: 12 }}>
+    <View style={{ height: 56, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 6 }} accessibilityLabel={`Onboarding page ${page + 1} of 3`}>
       {[0, 1, 2].map(index => <Pressable key={index} accessibilityRole="button" accessibilityLabel={`Show onboarding page ${index + 1}`} accessibilityState={{ selected: index === page }} onPress={() => selectPage(index)} style={{ minWidth: 44, minHeight: 44, alignItems: "center", justifyContent: "center" }}><View style={{ width: index === page ? 24 : 8, height: 8, borderRadius: 4, backgroundColor: index === page ? purple : "#555767" }} /></Pressable>)}
+    </View>
+    {page < 2 ? <GradientButton label="Next" onPress={() => selectPage(Math.min(2, page + 1))} arrow /> : <GradientButton label="Start Exploring" onPress={finish} arrow />}
     </View>
   </SafeAreaView></Animated.View>;
 }

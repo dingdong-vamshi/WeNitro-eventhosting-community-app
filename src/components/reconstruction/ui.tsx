@@ -67,19 +67,19 @@ export function BrandBar({
   children?: React.ReactNode;
 }) {
   const c = usePalette();
-  return <LinearGradient colors={c.isDark ? ['#1B1744', '#281E66'] : ['#2D23BA', '#533EE6']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[ui.brandBar, children ? { minHeight: undefined, paddingBottom: 16, borderBottomLeftRadius: 30, borderBottomRightRadius: 30 } : null]}>
+  return <View testID="home-brand-surround" style={[ui.brandBar, { backgroundColor: c.bg }, children ? { minHeight: undefined, paddingTop: 8, paddingBottom: 0 } : null]}>
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
       <View style={ui.brandIdentity}>
         <ImageLogo />
         <View>
-          <Text style={ui.brandName}>WeNitro</Text>
-          {location ? <Text style={ui.brandLocation}><Ionicons name="location" size={9} /> {location}</Text> : null}
+          <Text style={[ui.brandName, { color: c.text }]}>WeNitro</Text>
+          {location ? <Text style={[ui.brandLocation, { color: c.muted }]}><Ionicons name="location" size={9} /> {location}</Text> : null}
         </View>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-        <Action color="#FFFFFF" name="search-outline" label="Search" onPress={() => go?.('search')} />
+        <Action color={c.text} name="search-outline" label="Search" onPress={() => go?.('search')} />
         <Pressable accessibilityRole="button" accessibilityLabel="Notifications" onPress={() => go?.('notifications')} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
-          <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
+          <Ionicons name="notifications-outline" size={22} color={c.text} />
           {notificationCount > 0 ? (
             <View style={{ position: 'absolute', top: 5, right: 6, minWidth: 16, height: 16, borderRadius: 8, backgroundColor: '#EF4444', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 }}>
               <Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{notificationCount > 99 ? '99+' : notificationCount}</Text>
@@ -89,7 +89,7 @@ export function BrandBar({
       </View>
     </View>
     {children}
-  </LinearGradient>;
+  </View>;
 }
 function ImageLogo() { return <View style={ui.logoTile}><Image source={require('../../../assets/brand/wenitro-mark-blue.png')} accessibilityLabel="WeNitro" accessibilityIgnoresInvertColors resizeMode="contain" style={{ width: 31, height: 31 }} /></View>; }
 export function SectionHeading({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) { const c = usePalette(); return <View style={ui.sectionHeading}><Text style={[ui.sectionHeadingText, { color: c.text }]}>{title}</Text>{action ? <Pressable accessibilityRole="button" onPress={onAction}><Text style={[ui.sectionAction, { color: c.accent }]}>{action}  ›</Text></Pressable> : null}</View>; }

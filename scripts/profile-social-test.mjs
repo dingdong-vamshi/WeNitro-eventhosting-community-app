@@ -29,7 +29,8 @@ const migration = fs.readFileSync('supabase/migrations/20260911073000_profile_pu
 assert.match(migration, /private.can_read_profile\(p_user_id\)/);
 assert.match(migration, /perform public.get_current_app_user_id\(\)/);
 assert.match(migration, /tbl_user_social_links l where l.user_id=p_user_id/);
-assert.match(profile, /FEATURE UNLOCKS SOON/);
+assert.match(profile, /<ProfileAchievements userId=\{identity.id\}/);
+assert.doesNotMatch(profile, /FEATURE UNLOCKS SOON/);
 assert.match(profile, /'Communities', \.\.\.\(owner \? \['Drafts'\] as const : \[\]\)/);
 assert.match(profile, /const socials = configured/);
 assert.doesNotMatch(profile, /configured\.length \? configured : SOCIAL_PLATFORMS/);

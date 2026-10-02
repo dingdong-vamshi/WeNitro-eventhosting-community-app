@@ -18,7 +18,7 @@ export function ActivityRatings({ eventId, viewerId, host, participants, back }:
   const [anonymous, setAnonymous] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [receipt, setReceipt] = useState<string | null>(null);
+  const [receipt, setReceipt] = useState<{ rewarded: boolean; message: string } | null>(null);
   useEffect(() => {
     let active = true;
     referenceDeltaService.listParticipantRatings(Number(eventId)).then(rows => {
@@ -37,7 +37,7 @@ export function ActivityRatings({ eventId, viewerId, host, participants, back }:
         : await referenceDeltaService.rateParticipant({ eventId: Number(eventId), userId: Number(selected),
             behaviour: scores[0], friendly: scores[1], communication: scores[2], comment, isAnonymous: anonymous });
       setRatings(rows => [...rows.filter(r => r.rated_user_id !== Number(selected)), result]);
-      setReceipt(result.points_awarded === 2 ? '+2 Nitro Points added to your history.' : 'Rating updated. The reward for this participant was already awarded.');
+      setReceipt({ rewarded: result.points_awarded === 2, message: result.points_awarded === 2 ? '+2 Nitro Points added to your history.' : 'Rating updated. The reward for this participant was already awarded.' });
       setSelected(null);
     } catch (e: any) { setError(e.message || 'Rating could not be saved.'); }
     finally { setBusy(false); }
@@ -68,6 +68,15 @@ export function ActivityRatings({ eventId, viewerId, host, participants, back }:
     <Button label="Submit Rating" busy={busy} disabled={scores.some(s => s < 1)} onPress={() => void save(false)} />
     {selected !== host.userId && <Button label="Mark as No Show" variant="outline" busy={busy} onPress={() => void save(true)} />}
   </Sheet>}
-  {receipt && <Sheet title="Rating saved" centered close={() => setReceipt(null)}><Text style={{ color: c.text, fontSize: 17, lineHeight: 25 }}>{receipt}</Text><Button label="Continue" onPress={() => setReceipt(null)} /></Sheet>}
+  {receipt && <Sheet title={receipt.rewarded ? 'Congratulations!' : 'Rating saved'} centered close={() => setReceipt(null)}>
+    {receipt.rewarded ? <View testID="rating-nitro-reward" style={{ backgroundColor: '#142137', borderColor: '#8A7435', borderWidth: 1, borderRadius: 22, padding: 24, alignItems: 'center', gap: 18 }}>
+      <View accessibilityLabel="Gold Nitro coin" style={{ width: 88, height: 88, borderRadius: 44, borderWidth: 5, borderColor: '#FFE68B', backgroundColor: '#D9AA13', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 24px #FFD44A44' }}><Text style={{ color: '#FFF9D8', fontSize: 40, fontWeight: '900' }}>N</Text></View>
+      <Text style={{ color: '#FFF', fontSize: 19, fontWeight: '800', textAlign: 'center' }}>CONGRATULATIONS!</Text>
+      <Text style={{ color: '#C1CAD8', textAlign: 'center', lineHeight: 21 }}>You have earned rating rewards</Text>
+      <View style={{ paddingHorizontal: 20, paddingVertical: 12, borderRadius: 14, backgroundColor: '#4A4221', borderWidth: 1, borderColor: '#8A7435' }}><Text style={{ color: '#FFE052', fontWeight: '800', fontSize: 16 }}><Text style={{ fontSize: 32 }}>+2</Text> Nitro Points</Text></View>
+      <Text style={{ color: '#C1CAD8', textAlign: 'center', lineHeight: 20 }}>Your points and Nitro history have been updated.</Text>
+    </View> : <Text style={{ color: c.text, fontSize: 17, lineHeight: 25 }}>{receipt.message}</Text>}
+    <Button label={receipt.rewarded ? 'Awesome!' : 'Continue'} onPress={() => setReceipt(null)} />
+  </Sheet>}
   </Page>;
 }
