@@ -278,6 +278,26 @@ function communityObjectPath(path: string) {
   return path.replace(/^media\/communities\//, "");
 }
 
+/** Read only requested, RLS-visible community avatars; never load posts or members. */
+export async function communityAvatarUrls(ids: string[]): Promise<Map<string, string>> {
+  requireBackend();
+  const roomIds = [...new Set(ids.filter(id => /^[1-9]\d*$/.test(id)))];
+  const result = new Map<string, string>();
+  for (let offset = 0; offset < roomIds.length; offset += MAX_PAGE_SIZE) {
+    const { data, error } = await supabase.from('tbl_chat_rooms').select('id,image_url')
+      .eq('room_type', 'community').in('id', roomIds.slice(offset, offset + MAX_PAGE_SIZE).map(Number));
+    if (error) throw error;
+    const rows = (data ?? []) as { id: number; image_url: string | null }[];
+    const paths = rows.flatMap(row => row.image_url && !/^https?:\/\//i.test(row.image_url) ? [communityObjectPath(row.image_url)] : []);
+    const urls = paths.length ? await signedUrlMap(COMMUNITY_BUCKET, paths, SIGNED_URL_TTL_SECONDS) : new Map<string, string>();
+    for (const row of rows) {
+      const url = row.image_url && (/^https?:\/\//i.test(row.image_url) ? row.image_url : urls.get(communityObjectPath(row.image_url)));
+      if (url) result.set(String(row.id), url);
+    }
+  }
+  return result;
+}
+
 async function signedMediaUrl(path: string | null) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path)) return path;

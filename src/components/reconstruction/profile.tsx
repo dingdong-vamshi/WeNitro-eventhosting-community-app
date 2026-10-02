@@ -5,6 +5,8 @@ import * as ImagePicker from 'expo-image-picker';
 import type { AppData, Activity, Screen } from '../../../App';
 import { VerifiedBadge } from '../verified-badge';
 import { ProfileAchievements } from '../profile-achievements';
+import { UserAvatar } from '../user-avatar';
+import { communityAvatarUrls } from '../../services/communities-production';
 import { supabase } from '../../lib/supabase';
 import { activitiesProductionService } from '../../services/activities-production';
 import { listReels, type VibeReel } from '../../services/vibes-production';
@@ -25,7 +27,7 @@ type Identity = { id: string; name: string; username: string; avatar?: string; b
 type GalleryItem = { uri: string; position: number };
 type ProfileSummary = { location?: string | null; about?: string | null; interests?: string[]; communities?: string[] };
 type ProfileReview = { id: number; rating: number; comment?: string | null; created_at?: string | null; event_title?: string | null; is_anonymous: boolean; rater_id?: number | null; rater_username?: string | null; rater_name?: string | null; rater_avatar?: string | null };
-type ProfileCommunity = { id?: string; name: string };
+type ProfileCommunity = { id?: string; name: string; image?: string };
 const completed = (a: Activity) => a.status === 'completed' || Boolean(a.endsAt && new Date(a.endsAt).getTime() < Date.now());
 
 function trustFrom(metrics: Metrics | null, socialLinked?: boolean) {
@@ -176,11 +178,25 @@ function TrustCard({ metrics, socialLinked, owner }: { metrics: Metrics | null; 
  return <View style={[s.trust, { backgroundColor: c.card, borderColor: c.border }]}><View style={s.nameRow}><Icon name="shield-checkmark-outline" color={c.accent} size={19} /><Text style={[s.sectionTitle, { color: c.text }]}>Trust Score</Text></View><Text style={{ color: c.muted, fontSize: 12, lineHeight: 17, marginTop: 3, marginLeft: 25 }}>{detailsAvailable ? `${metrics?.verified ? 'Verified Profile' : 'Standard Profile'} · verification + rating + activities joined` : 'Public signals only · private verification details are not exposed'}</Text><View style={s.trustBody}><View style={[s.scoreRing, { borderColor: c.isDark ? '#363248' : '#E9E5F6' }]}><Text style={[s.score, { color: c.text }]}>{displayedTotal ?? '—'}</Text><Text style={{ color: c.muted, fontSize: 12 }}>{displayedTotal == null ? 'pending' : '/ 100'}</Text></View><View style={{ flex: 1, gap: 8 }}>{visibleParts.map(check => <View key={check.key} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><Icon name={check.done ? 'checkmark-circle' : 'ellipse-outline'} size={15} color={check.done ? '#22A377' : c.iconMuted} /><Text style={{ flex: 1, color: check.done ? c.text : c.muted, fontSize: 12 }}>{check.label}</Text><Text style={{ color: check.done ? '#22A377' : c.iconMuted, fontSize: 12 }}>+{check.earned}</Text></View>)}</View></View></View>;
 }
 
+function ProfileCommunities({ communities, openCommunity }: { communities: ProfileCommunity[]; openCommunity: (id: string) => void }) {
+ const c = usePalette(), [avatars, setAvatars] = useState<Map<string, string>>(new Map()), [error, setError] = useState(''), [retry, setRetry] = useState(0);
+ const missingIds = JSON.stringify(communities.filter(room => room.id && !room.image).map(room => room.id));
+ useEffect(() => {
+  let active = true;
+  setAvatars(new Map()); setError('');
+  void communityAvatarUrls(JSON.parse(missingIds)).then(urls => { if (active) setAvatars(urls); })
+   .catch(() => { if (active) setError('Community pictures could not be loaded. You can still open each community.'); });
+  return () => { active = false; };
+ }, [missingIds, retry]);
+ if (!communities.length) return <Empty icon="people-outline" text="No public communities to show yet." />;
+ return <View style={{ padding: 12, gap: 8 }}><ErrorLine text={error} />{error ? <Button label="Retry community pictures" onPress={() => setRetry(value => value + 1)} /> : null}{communities.map((community, index) => <Pressable key={community.id || `${community.name}-${index}`} accessibilityRole={community.id ? 'button' : undefined} accessibilityLabel={community.id ? `Open community ${community.name}` : community.name} disabled={!community.id} onPress={() => community.id && openCommunity(community.id)} style={[s.communityRow, { backgroundColor: c.inset }]}><UserAvatar uri={community.image || avatars.get(community.id || '')} name={community.name} identity={`community-${community.id || community.name}`} size={40} /><Text style={{ color: c.text, fontSize: 13, fontWeight: '600', flex: 1 }}>{community.name}</Text>{community.id && <Icon name="chevron-forward" color={c.muted} size={15} />}</Pressable>)}</View>;
+}
+
 function Content({ tab, loading, vibes, rows, reviews, communities = [], openVibe, openActivity, openDraft, openCommunity, openProfile }: { tab: Tab; loading: boolean; vibes: VibeReel[]; rows: Activity[]; reviews: ProfileReview[]; communities?: ProfileCommunity[]; openVibe: (id: string) => void; openActivity: (a: Activity) => void; openDraft?: () => void; openCommunity: (id: string) => void; openProfile: (id: string) => void }) {
  const c = usePalette();
  const upcoming = rows.filter(a => !completed(a));
  const done = rows.filter(completed);
- if (tab === 'Communities') return communities.length ? <View style={{ padding: 12, gap: 8 }}>{communities.map((community, index) => <Pressable key={community.id || `${community.name}-${index}`} accessibilityRole={community.id ? 'button' : undefined} accessibilityLabel={community.id ? `Open community ${community.name}` : community.name} disabled={!community.id} onPress={() => community.id && openCommunity(community.id)} style={[s.communityRow, { backgroundColor: c.inset }]}><Icon name="people-outline" color={c.accent} size={18} /><Text style={{ color: c.text, fontSize: 13, fontWeight: '600', flex: 1 }}>{community.name}</Text>{community.id && <Icon name="chevron-forward" color={c.muted} size={15} />}</Pressable>)}</View> : <Empty icon="people-outline" text="No public communities to show yet." />;
+ if (tab === 'Communities') return <ProfileCommunities communities={communities} openCommunity={openCommunity} />;
  if (loading && !(tab === 'My Vibes' ? vibes.length : tab === 'Reviews' ? reviews.length : rows.length)) return <Skeleton count={2} />;
  if (tab === 'Reviews') return reviews.length ? <View>{reviews.map(review => <View key={review.id} style={[s.activity, { borderColor: c.border, alignItems: 'flex-start' }]}>
   <Pressable accessibilityRole={review.is_anonymous || !review.rater_id ? undefined : 'button'} accessibilityLabel={review.is_anonymous ? 'Anonymous reviewer' : `Open ${review.rater_name || review.rater_username || 'reviewer'}'s profile`} disabled={review.is_anonymous || !review.rater_id} onPress={() => review.rater_id && !review.is_anonymous && openProfile(String(review.rater_id))} style={{ flexDirection: 'row', flex: 1, alignItems: 'flex-start', gap: 10 }}>
@@ -248,7 +264,7 @@ export function ReferenceProfile({ data, setData, go, openActivity, openDraft, o
  const gallery: GalleryItem[] = [...new Map([{ uri: data.avatarUri || '', position: 1 }, ...photos.map(photo => ({ uri: photo.public_url, position: photo.position }))].filter(item => item.uri).map(item => [item.position, item])).values()].slice(0, 3);
  const openContact = () => { void supabase.rpc('profile_contact', { p_user_id: Number(data.userId) }).then(({ data: value, error: failure }) => { if (failure) setError(failure.message); else setContact(value); }); };
  const runPhoto = async (work: () => Promise<void>) => { setPhotoBusy(true); setError(''); try { await work(); await refreshMetrics(); } catch (caught: any) { setError(caught.message || 'Could not update photos.'); } finally { setPhotoBusy(false); setActivePhoto(null); } };
- const profileCommunities = data.communities.filter(room => room.membership === 'joined' || room.membership === 'created').map(room => ({ id: room.id, name: room.name }));
+ const profileCommunities = data.communities.filter(room => room.membership === 'joined' || room.membership === 'created').map(room => ({ id: room.id, name: room.name, image: room.image }));
  const communityNames = profileCommunities.map(room => room.name);
  const partnerLabel = data.partnerProfile ? data.partnerProfile.status === 'DRAFT' ? 'Complete Partner Application' : data.partnerProfile.status === 'UNDER_REVIEW' ? 'Partner Application · Under Review' : 'Partner Account · View Details' : data.partnerUnavailable ? 'Partner Account' : 'Become a Partner';
  return <><ProfileLayout identity={{ id: data.userId!, name: data.name, username: data.username, avatar: data.avatarUri, bio: data.bio }} summary={{ ...summary, communities: communityNames }} metrics={metrics} links={links} gallery={gallery} owner store={() => go('shop')} settings={() => go('settings')} editSocial={() => go('socialLinks')} editProfile={() => go('editProfile')} verify={() => go('verification')} partnerAccount={{ label: partnerLabel, onPress: () => go('partnerAccount') }} partnerDashboard={data.accountType === 'partner' ? () => go('partnerDashboard') : undefined} contact={openContact} activities={() => go('activityHistory')} squad={openSquad} nitro={() => go('nitroHistory')} tab={tab} setTab={setTab} onPhoto={setActivePhoto}><ErrorLine text={error} /><Content tab={tab} loading={loading} vibes={vibes} rows={rows} reviews={reviews} communities={profileCommunities} openCommunity={openCommunity} openVibe={openVibe} openActivity={a => openActivity(a.id)} openDraft={openDraft} openProfile={openProfile} />{cursor && !['Reviews', 'Communities'].includes(tab) ? <View style={{ padding: 10 }}><Button label="Load more" busy={loading} onPress={() => void load(true)} /></View> : null}</ProfileLayout>
