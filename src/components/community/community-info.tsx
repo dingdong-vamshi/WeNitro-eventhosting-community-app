@@ -1,11 +1,13 @@
 import { VerifiedBadge } from '../verified-badge';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Image, Pressable, ScrollView, Share, StyleSheet, Switch, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '../../lib/supabase';
 import { communitiesProductionService, manageCommunity, removeCommunityMember, type CommunityDetail } from '../../services/communities-production';
 import { realtimeChatService, type ChatMember, type CommunityMemberPermissions, type CommunityMemberRole } from '../../services/realtime-chat';
 import { CreateCommunitySheet } from './reference-community';
+import { UserAvatar } from '../user-avatar';
+import { requestInternalShare } from '../../services/internal-share';
 import { Action, Button, ErrorLine, Header, Icon, Page, SearchField, Sheet, Skeleton, ui, usePalette, purple, type ReferencePalette } from '../reconstruction/ui';
 
 const errorText = (error: unknown) => error && typeof error === 'object' && 'message' in error ? String(error.message) : 'Please try again.';
@@ -75,7 +77,7 @@ export function CommunityInfo({ id, back, openProfile, openChat, openPosts, onCh
             <View style={s.heroBar}>
               <Pressable accessibilityRole="button" accessibilityLabel="Back to all communities" onPress={back} style={s.heroIcon}><Icon name="arrow-back" color="#FFF" /></Pressable>
               <Text style={s.heroTitle}>Community</Text>
-              <Pressable accessibilityRole="button" accessibilityLabel="Share community" onPress={() => { void Share.share({ message: `Join our community "${community.name}" on WeNitro! Tap here: wenitro://community/join/${id}` }).catch(error => setError(errorText(error))); }} style={s.heroIcon}><Icon name="share-social-outline" color="#FFF" /></Pressable>
+              <Pressable accessibilityRole="button" accessibilityLabel="Share community" onPress={() => requestInternalShare({ kind: 'community', id, title: community.name, preview: community.tagline || community.description, thumbnailUrl: community.imageUrl })} style={s.heroIcon}><Icon name="share-social-outline" color="#FFF" /></Pressable>
               {canOpenSettings ? <Pressable accessibilityRole="button" accessibilityLabel="Community settings" onPress={() => setView('settings')} style={s.heroIcon}><Icon name="settings-outline" color="#FFF" /></Pressable> : null}
             </View>
             <View style={s.coverActions}>
@@ -84,12 +86,12 @@ export function CommunityInfo({ id, back, openProfile, openChat, openPosts, onCh
             </View>
           </View>
           <View style={s.identityBody}>
-            <View style={s.avatarWrap}>{community.imageUrl ? <Image source={{ uri: community.imageUrl }} style={s.avatar} /> : <View style={[s.avatar, s.avatarFallback]}><Icon name="people" size={34} color={c.accent} /></View>}</View>
+            <View style={s.avatarWrap}><UserAvatar uri={community.imageUrl} name={community.name} identity={`community-${id}`} size={80} /></View>
             <Text style={s.name}>{community.name}</Text>
             {community.tagline ? <Text style={s.tagline}>{community.tagline}</Text> : null}
             <View style={s.metaRow}>
               <View style={s.memberStat}>
-                <View style={s.avatarStack}>{members.slice(0, 4).map((member, index) => member.profiles?.avatar_url ? <Image key={member.user_id} source={{ uri: member.profiles.avatar_url }} style={[s.stackAvatar, { marginLeft: index ? -8 : 0 }]} /> : <View key={member.user_id} style={[s.stackAvatar, s.avatarFallback, { marginLeft: index ? -8 : 0 }]} />)}</View>
+                <View style={s.avatarStack}>{members.slice(0, 4).map((member, index) => <View key={member.user_id} style={{ marginLeft: index ? -6 : 0 }}><UserAvatar uri={member.profiles?.avatar_url} name={member.profiles?.full_name || member.profiles?.username || 'Member'} identity={String(member.user_id)} size={26} /></View>)}</View>
                 <Text style={s.metaText}>{community.memberCount ?? members.length} members</Text>
               </View>
               <Meta icon={community.visibility === 'private' ? 'lock-closed-outline' : 'globe-outline'} text={community.visibility === 'private' ? 'Private' : 'Public'} />
@@ -110,7 +112,7 @@ export function CommunityInfo({ id, back, openProfile, openChat, openPosts, onCh
         <View style={s.card}><View style={s.sectionTitleRow}><Icon name="people-outline" size={19} color={c.accent} /><Text style={s.sectionTitle}>Members</Text><Text style={s.sectionCount}>{community.memberCount ?? members.length}</Text></View>{joined ? <>{canManageRoles ? <Text style={s.settingSubtitle}>{admin ? 'Tap a joined member to make them Co-Admin or Moderator and choose what they can do.' : 'Tap a member to manage the moderator permissions you can grant.'}</Text> : null}<SearchField accessibilityLabel="Search members" placeholder="Search members..." value={query} onChangeText={setQuery} style={{ margin: 0 }} />{visibleMembers.length ? visibleMembers.map(member => {
           const isOwner = String(member.user_id) === community.ownerId;
           const canManageMember = canManageRoles && !isOwner && (admin || member.role !== 'admin');
-          return <Pressable accessibilityRole="button" key={member.user_id} onPress={() => canManageMember ? openRole(member) : openProfile(String(member.user_id))} style={s.memberRow}>{member.profiles?.avatar_url ? <Image source={{ uri: member.profiles.avatar_url }} style={s.memberAvatar} /> : <View style={[s.memberAvatar, s.avatarFallback]}><Icon name="person-outline" size={21} color={c.iconMuted} /></View>}<View style={{ flex: 1, gap: 3 }}><Text style={s.memberName}>{member.profiles?.full_name || member.profiles?.username || 'Member'} <VerifiedBadge userId={String(member.user_id)} /></Text><Text style={s.memberUsername}>@{member.profiles?.username || 'member'}</Text></View><View style={s.creatorBadge}><Text style={s.creatorText}>{roleLabel(member.role, isOwner)}</Text></View>{canManageMember ? <Icon name="options-outline" size={17} color={c.iconMuted} /> : <Icon name="chevron-forward" size={17} color={c.iconMuted} />}</Pressable>;
+          return <Pressable accessibilityRole="button" key={member.user_id} onPress={() => canManageMember ? openRole(member) : openProfile(String(member.user_id))} style={s.memberRow}><UserAvatar uri={member.profiles?.avatar_url} name={member.profiles?.full_name || member.profiles?.username || 'Member'} identity={String(member.user_id)} size={42} /><View style={{ flex: 1, gap: 3 }}><Text style={s.memberName}>{member.profiles?.full_name || member.profiles?.username || 'Member'} <VerifiedBadge userId={String(member.user_id)} /></Text><Text style={s.memberUsername}>@{member.profiles?.username || 'member'}</Text></View><View style={s.creatorBadge}><Text style={s.creatorText}>{roleLabel(member.role, isOwner)}</Text></View>{canManageMember ? <Icon name="options-outline" size={17} color={c.iconMuted} /> : <Icon name="chevron-forward" size={17} color={c.iconMuted} />}</Pressable>;
         }) : <Text style={s.empty}>No members match your search.</Text>}</> : <Text style={s.empty}>Join this community to see its members.</Text>}</View>
         {community.membership === 'joined' ? <Pressable accessibilityRole="button" onPress={() => setConfirm('leave')} style={s.dangerAction}><Text style={s.dangerText}>Leave Community</Text></Pressable> : null}
       </> : view === 'settings' ? <>

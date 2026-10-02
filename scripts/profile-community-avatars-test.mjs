@@ -43,4 +43,17 @@ assert.match(profile, /name: room.name, image: room.image/);
 assert.match(profile, /<UserAvatar uri=\{community.image \|\| avatars.get/);
 assert.match(profile, /Retry community pictures/);
 assert.match(profile, /return \(\) => \{ active = false; \}/);
+const detail = fs.readFileSync('src/components/community/community-info.tsx', 'utf8');
+assert.match(detail, /<UserAvatar uri=\{community.imageUrl\}/);
+assert.equal((detail.match(/<UserAvatar uri=\{member.profiles\?\.avatar_url\}/g) || []).length, 2, 'Member stack and member list both render real avatars with fallbacks');
+assert.match(detail, /requestInternalShare\(\{ kind: 'community', id,/);
+assert.doesNotMatch(detail, /wenitro:\/\/community/);
+const shareApi = {}, shares = [];
+new Function('exports', 'require', ts.transpile(fs.readFileSync('src/services/internal-share.ts', 'utf8'), { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }))(shareApi, name => {
+  assert.equal(name, 'react-native');
+  return { Platform: { OS: 'web' }, Share: { share: async payload => shares.push(payload) } };
+});
+await shareApi.shareEntityExternally({ kind: 'community', id: '123', title: 'QA Community', preview: 'QA preview' });
+assert.equal(shares[0].url, 'https://wenitro-app.vercel.app/#/community/123');
+assert.match(shares[0].message, /Shared from WeNitro/);
 console.log('PASS: community avatar batching, RLS result isolation, URL signing, fallback, lazy rendering and failure retry contracts. No remote writes.');

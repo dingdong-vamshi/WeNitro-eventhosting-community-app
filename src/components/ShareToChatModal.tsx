@@ -57,12 +57,18 @@ export function ShareToChatModal({
   entity,
   conversations,
   people,
+  targetsLoading = false,
+  targetsError = '',
+  onRetryTargets,
   onClose,
   onSent,
 }: {
   entity: InternalShareEntity | null;
   conversations: ConversationTarget[];
   people: PersonTarget[];
+  targetsLoading?: boolean;
+  targetsError?: string;
+  onRetryTargets?: () => void;
   onClose: () => void;
   onSent: (roomIds: string[], messages: ChatMessage[], targets: ResolvedShareTarget[]) => void;
 }) {
@@ -211,7 +217,9 @@ export function ShareToChatModal({
                 </Pressable>
               );
             })}
-            {!targets.length ? <Text style={[styles.empty, { color: c.muted }]}>No matching WeNitro chats or people.</Text> : null}
+            {targetsLoading ? <View accessibilityRole="progressbar" accessibilityLabel="Loading share recipients" style={{ padding: 16 }}><ActivityIndicator color={c.accent} /></View> : null}
+            {targetsError ? <View accessibilityRole="alert" style={{ padding: 12, gap: 8 }}><Text style={{ color: c.danger }}>{targetsError}</Text><Pressable accessibilityRole="button" accessibilityLabel="Retry share recipients" disabled={targetsLoading} onPress={onRetryTargets} style={{ paddingVertical: 12 }}><Text style={{ color: c.accent, fontWeight: '700' }}>Retry</Text></Pressable></View> : null}
+            {!targets.length && !targetsLoading && !targetsError ? <Text style={[styles.empty, { color: c.muted }]}>No matching WeNitro chats or people.</Text> : null}
           </ScrollView>
           {feedback ? <View accessibilityRole="alert" style={[styles.feedback, { backgroundColor: feedback.tone === "success" ? (c.isDark ? "#163B2D" : "#E2F7EC") : (c.isDark ? "#4A2229" : "#FDECEF") }]}><Ionicons name={feedback.tone === "success" ? "checkmark-circle" : "alert-circle"} size={19} color={feedback.tone === "success" ? "#23956B" : c.danger} /><Text style={[styles.feedbackText, { color: feedback.tone === "success" ? (c.isDark ? "#9AE6C5" : "#176848") : c.danger }]}>{feedback.text}</Text></View> : null}
           <Pressable accessibilityRole="button" accessibilityLabel="Send shared item" accessibilityState={{ disabled: !selected.length || sending }} onPress={send} disabled={!selected.length || sending} style={[styles.send, (!selected.length || sending) && styles.sendDisabled]}>

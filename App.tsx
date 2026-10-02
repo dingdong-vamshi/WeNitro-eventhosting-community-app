@@ -9135,9 +9135,32 @@ export default function App() {
     return () => { active = false; clearTimeout(timer); };
   }, []);
   const [shareEntity, setShareEntity] = useState<InternalShareEntity | null>(null);
+  const [shareTargetsLoading, setShareTargetsLoading] = useState(false);
+  const [shareTargetsError, setShareTargetsError] = useState('');
+  const [shareTargetsRetry, setShareTargetsRetry] = useState(0);
   const [selectedVibeId, setSelectedVibeId] = useState<string | null>(initialWebRoute?.screen === "vibes" ? initialWebRoute.entityId ?? null : null);
 
   useEffect(() => subscribeToInternalShareRequests(setShareEntity), []);
+
+  // A shared/deep-linked page need not have loaded Chat or People. Fetch only
+  // recipient sections when sharing opens, rather than broadening startup.
+  useEffect(() => {
+    if (!shareEntity) return;
+    if (data.mode !== 'authenticated' || !data.userId) { setShareEntity(null); return; }
+    const appUserId = data.userId, authUserId = authIdentityRef.current;
+    if (!authUserId) return;
+    let active = true;
+    const sections: WorkspaceSection[] = ['conversations', 'people'];
+    setShareTargetsLoading(true); setShareTargetsError('');
+    void loadRemoteWorkspace(undefined, { sections, viewer: { authUserId, appUserId } }).then(remote => {
+      if (!active || !remote || authUserId !== authIdentityRef.current) return;
+      setData(current => current.mode !== 'authenticated' || current.userId !== appUserId ? current
+        : mergeWorkspaceRefresh(current, hydrateRemoteData(remote, current), sections));
+      if (remote.workspaceWarnings?.length) setShareTargetsError('Some recipients could not be loaded. Please retry.');
+    }).catch(() => { if (active) setShareTargetsError('Recipients could not be loaded. Please retry.'); })
+      .finally(() => { if (active) setShareTargetsLoading(false); });
+    return () => { active = false; };
+  }, [shareEntity?.kind, shareEntity?.id, data.mode, data.userId, shareTargetsRetry]);
 
   useEffect(() => {
     if (
@@ -9913,6 +9936,9 @@ export default function App() {
           entity={shareEntity}
           conversations={data.conversations}
           people={data.people}
+          targetsLoading={shareTargetsLoading}
+          targetsError={shareTargetsError}
+          onRetryTargets={() => setShareTargetsRetry(value => value + 1)}
           onClose={() => setShareEntity(null)}
           onSent={(roomIds, messages, resolvedTargets) => {
             const mapped = messages.map((message) => {
