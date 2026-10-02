@@ -7366,6 +7366,9 @@ export function CommunityDetailScreen({
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [commentDraft, setCommentDraft] = useState("");
   const [commentsLoading, setCommentsLoading] = useState(false);
+  const [postsLoading, setPostsLoading] = useState(isSupabaseConfigured && isBackendId(community.id));
+  const [postsError, setPostsError] = useState("");
+  const [postsRetry, setPostsRetry] = useState(0);
   const visible = community.posts.filter((post) => filter === "All" || post.category === filter);
   const update = (transform: (item: Community) => Community) =>
     setData((current) => ({
@@ -7377,6 +7380,8 @@ export function CommunityDetailScreen({
   useEffect(() => {
     if (!isSupabaseConfigured || !isBackendId(community.id)) return;
     let active = true;
+    setPostsLoading(true);
+    setPostsError("");
     communitiesProductionService
       .getFeed(community.id, { page: 1, pageSize: 20 })
       .then((feed) => {
@@ -7403,18 +7408,14 @@ export function CommunityDetailScreen({
           })),
         }));
       })
-      .catch((error) =>
-        active
-          ? Alert.alert(
-              "Community posts unavailable",
-              error instanceof Error ? error.message : "Please try again.",
-            )
-          : undefined,
-      );
+      .catch(() => {
+        if (active) setPostsError("Unable to load community posts. Please try again.");
+      })
+      .finally(() => { if (active) setPostsLoading(false); });
     return () => {
       active = false;
     };
-  }, [community.id]);
+  }, [community.id, postsRetry]);
   useEffect(() => {
     if (!isSupabaseConfigured || !isBackendId(community.id)) return;
     let active = true;
@@ -7719,11 +7720,13 @@ export function CommunityDetailScreen({
             </View>
           ) : null}
         </View>
-        {!visible.length ? <Text style={{ color: palette.muted, textAlign: 'center', padding: 22 }}>No posts to show in this category yet.</Text> : null}
+        {postsError ? <View accessibilityRole="alert" style={{ padding: 16, gap: 8 }}><Text style={{ color: palette.muted }}>{postsError}</Text><Pressable accessibilityRole="button" accessibilityLabel="Retry community posts" onPress={() => setPostsRetry(current => current + 1)}><Text style={{ color: palette.accent, fontWeight: '700' }}>Retry</Text></Pressable></View> : null}
+        {postsLoading && !visible.length ? <Text style={{ color: palette.muted, textAlign: 'center', padding: 22 }}>Loading community posts…</Text> : null}
+        {!postsLoading && !postsError && !visible.length ? <Text style={{ color: palette.muted, textAlign: 'center', padding: 22 }}>No posts to show in this category yet.</Text> : null}
         {visible.map((post) => (
           <View key={post.id} style={[styles.communityPost, { backgroundColor: palette.card, borderColor: palette.border }]}>
             <View style={styles.postHeader}>
-              {post.anonymous ? <View style={[styles.postAvatar, { backgroundColor: palette.inset, alignItems: "center", justifyContent: "center" }]}><Icon name="person-outline" color={palette.muted} size={21} /></View> : <Image source={{ uri: runtimeString(post, ["authorAvatar", "author_avatar", "avatar"]) ?? neutralAvatar }} style={styles.postAvatar} />}
+              {post.anonymous ? <View style={[styles.postAvatar, { backgroundColor: palette.inset, alignItems: "center", justifyContent: "center" }]}><Icon name="person-outline" color={palette.muted} size={21} /></View> : <UserAvatar uri={post.authorAvatar} name={post.author} size={34} />}
               <View style={styles.messageBody}>
                 <Text style={[styles.postAuthor, { color: palette.text }]}>
                   {post.author} <VerifiedBadge userId={post.authorId} />{" "}
