@@ -1183,9 +1183,8 @@
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Root IAB opened synthetic120 submission31 through an authorized private signed preview, selected Reject, observed persisted rejected/Complete status, and checked that owner pending cleared without Trust/Nitro or identity approval. Formal lifecycle artifact is being finalized by App QA.",
-        "Authorized private submission31 preview shows controlled camera object; five-minute signed access; not biometric evidence",
-        "Synthetic object-photo31 rejected through deployed Admin; timestamp recorded and review complete"
+        "Root IAB opened synthetic120 submission31 through an authorized private signed preview, selected Reject and observed persisted rejected/Complete status.",
+        "App QA finalized PASS_REJECTED_AND_PRIVATE_OBJECT_CLEANED: row31 remains rejected; owner pending=false and selfie=false; Trust10/Nitro0 unchanged; synthetic private object removed and absence verified. No fake identity approval occurred."
       ],
       "technicalProof": [
         "docs/chat001-admin-current-read-models-proof.json"
@@ -1218,6 +1217,12 @@
       "release": {
         "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
         "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      },
+      "supplementaryEvidenceAwaitingIntegration": {
+        "path": "/Users/vamshipendyala/.codex/worktrees/chat001-app-audit/wenitro-phone-app-/docs/chat001-verification120-fixture-proof.json",
+        "integratedPath": "docs/chat001-verification120-fixture-proof.json",
+        "status": "PASS_REJECTED_AND_PRIVATE_OBJECT_CLEANED",
+        "owner": "app_pdf_regression"
       }
     },
     {

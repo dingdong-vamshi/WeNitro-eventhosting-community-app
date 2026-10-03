@@ -1,0 +1,645 @@
+{
+  "at": "2026-10-03T18:53:19.084530+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "count": 16,
+  "purpose": "Proposed coordinator reconciliation only. No runtime work, mutation or provider payment was performed by this document generation.",
+  "releaseReviewed": false,
+  "counts": {
+    "PENDING_DEPLOYED_RETEST": 2,
+    "PENDING_SCOPED_ACCEPTANCE": 13,
+    "PASS": 1
+  },
+  "metadataCorrectionsNeeded": [
+    {
+      "names": [
+        "integrated-partner-dashboard-overview",
+        "integrated-partner-unpaid-registration"
+      ],
+      "issue": "account116 metadata conflicts with outcome Partner71; coordinator must confirm actual identity."
+    },
+    {
+      "names": [
+        "integrated-partner-entry-categories"
+      ],
+      "issue": "PARTNER/CASHFREE are noncanonical placeholders; directly referenced here with limited category-display scope only."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "PARTNER-INSTRUCTIONS",
+      "status": "PENDING_DEPLOYED_RETEST",
+      "proposalOnly": true,
+      "requestedChange": "Show readable bullet-point Partner instructions before the application fields, explaining required details, payout destination and approval.",
+      "before": "Only paragraph instructions were present; original PDF32 called for bullets before form entry.",
+      "implemented": "Accurate bullet instructions precede the application gate and describe eligibility, details, payout destination and review.",
+      "sourceProof": [
+        "src/components/partner-account-screen.tsx"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/partner-preflight-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "The recorded old-release form predates the accepted local preflight correction and cannot prove the corrected requirement.",
+        "Partner application explains reviewed paid-host eligibility and business/activity/location fields."
+      ],
+      "technicalProof": [
+        "docs/chat001-partner-preflight-regression.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-instructions.png",
+          "scope": "Partner application explains reviewed paid-host eligibility and business/activity/location fields.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:16:58.997Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "The existing instructions screenshot is from the pre-fix release. Capture the deployed corrected bullet instructions.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-TERMS",
+      "status": "PENDING_DEPLOYED_RETEST",
+      "proposalOnly": true,
+      "requestedChange": "Present the Partner Terms agreement popup before filling the application. Gate fields until agreement, preserve a current own prior receipt, and persist accepted policy version atomically on submission.",
+      "before": "Only a paragraph and bottom-of-form checkbox existed; fields could be filled before agreement. Existing saved acceptance was not loaded.",
+      "implemented": "Bullet instructions and a blocking Terms popup; fields are not rendered until explicit agreement or a current-version own receipt. Not now/dismiss cannot bypass. Current-version receipt is read under existing own-user RLS. No backend policy or payout behavior changed.",
+      "sourceProof": [
+        "src/components/partner-account-screen.tsx",
+        "src/services/partner-account.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/partner-preflight-test.mjs",
+        "scripts/partner-submit-regression-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "The recorded old-release form predates the accepted local preflight correction and cannot prove the corrected requirement.",
+        "Application exposes Terms link, unchecked required agreement and disabled submission. No legal agreement or application submitted."
+      ],
+      "technicalProof": [
+        "scripts/partner-submit-regression-test.mjs",
+        "scripts/partner-v1-contract-test.mjs",
+        "docs/chat001-partner-preflight-regression.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-terms-disabled.png",
+          "scope": "Application exposes Terms link, unchecked required agreement and disabled submission. No legal agreement or application submitted.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:17:05.494Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "The old bottom-checkbox screenshot does not prove the required pre-entry popup. Capture the unaccepted popup and inaccessible fields after replacement deployment; do not accept legal terms on behalf of a real applicant.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-DASHBOARD",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "An approved Partner can open their actual dashboard and manage only their authorized activities.",
+      "before": "Existing Partner dashboard required authorization and live-data validation.",
+      "implemented": "Actual approved Partner state and owned activity/registration/financial summaries load through the Partner service.",
+      "sourceProof": [
+        "src/components/partner-dashboard.tsx",
+        "src/services/partner-production.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/partner-dashboard-loading-test.mjs",
+        "scripts/partner-auth-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Synthetic fixture capability can_host_paid confirmed; dashboard screenshots and actual authorized registration display remain coordinator-owned.",
+        "Approved QA Partner71 sees actual hosted/registration and Sandbox financial metrics; amounts are not real-money settlement."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-dashboard-overview.png",
+          "scope": "Approved QA Partner71 sees actual hosted/registration and Sandbox financial metrics; amounts are not real-money settlement.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:20:57.155Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Current dashboard screenshot exists, but metadata account116 conflicts with outcome Partner71. Root must correct identity and review replacement release.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-PARTICIPANTS",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Partner dashboard participant details reflect real registrations and payment/join states.",
+      "before": "Existing participant reporting required checks against actual unpaid/approved/paid states.",
+      "implemented": "Partner dashboard shows server registration, payment and required-answer records, including selected entry tier.",
+      "sourceProof": [
+        "src/components/partner-dashboard.tsx",
+        "src/services/partner-production.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/partner-ecosystem-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Actual participant table states persist exactly one approved seat after valid ledger, left/payment_required for unfulfilled. Real hosted checkout and dashboard detail proof coordinator-owned.",
+        "QA Partner71 sees buyer116 payment required, UNPAID, \u20b90 and no answers before checkout; not falsely approved."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-unpaid-registration.png",
+          "scope": "QA Partner71 sees buyer116 payment required, UNPAID, \u20b90 and no answers before checkout; not falsely approved.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:21:57.405Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Current unpaid registration screenshot is scoped negative-state proof. Complete actual hosted paid registration and owner dashboard confirmation, and resolve account metadata116 versus71.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-PAYMENT-DETAILS",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "The chosen registration's payable amount, selected category and required details are correctly displayed.",
+      "before": "Existing payment-detail view required validation of selected category, amount and answers.",
+      "implemented": "Server-owned payment/category records populate registration details; provider totals are distinguished from actual paid amounts.",
+      "sourceProof": [
+        "src/components/partner-dashboard.tsx",
+        "src/services/payments.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "One-paisa synthetic server tier is persisted and used by prepare/finalizer; user-visible selected amount/details require coordinator hosted fixture297 proof.",
+        "QA Partner71 sees buyer116 payment required, UNPAID, \u20b90 and no answers before checkout; not falsely approved."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-unpaid-registration.png",
+          "scope": "QA Partner71 sees buyer116 payment required, UNPAID, \u20b90 and no answers before checkout; not falsely approved.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:21:57.405Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Existing unpaid detail shows no payment/answers before checkout. It does not prove selected paid category and persisted required-answer details after successful payment.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-CATEGORY-PRICES",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "A Partner can configure multiple distinct entry categories with server-stored prices and applicable capacities.",
+      "before": "Partner entry categories required server-side validation of prices, capacities and unavailable Activity states.",
+      "implemented": "Server persists distinct tiers and validates current authorized price/capacity; new saves are denied for ineligible Activities.",
+      "sourceProof": [
+        "supabase/migrations/20261003075132_payment_entry_authorization.sql",
+        "src/services/payments.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current deployed category save/capacity and trusted price used; local real PostgreSQL47 assertions cover alternate tiers and state guards.",
+        "Private Partner activity presents Standard \u20b912.34 and Plus \u20b918 entry categories before checkout."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-entry-categories.png",
+          "scope": "Private Partner activity presents Standard \u20b912.34 and Plus \u20b918 entry categories before checkout.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:08:02.698Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Current entry screen shows Standard12.34INR and Plus18INR on297; root metadata uses PARTNER/CASHFREE rather than canonical IDs. Review editor persistence and replacement deployment.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-CATEGORY-SELECTION",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "A participant selects an eligible entry category and checkout uses its current server price.",
+      "before": "Legacy checkout could bypass required category selection.",
+      "implemented": "Checkout requires an eligible stored category and uses its trusted server price.",
+      "sourceProof": [
+        "supabase/migrations/20261003075132_payment_entry_authorization.sql",
+        "src/services/payments.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Legacy missing-category checkout denied and current selected tier required; UI selection screenshot coordinator-owned.",
+        "Private Partner activity presents Standard \u20b912.34 and Plus \u20b918 entry categories before checkout."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-entry-categories.png",
+          "scope": "Private Partner activity presents Standard \u20b912.34 and Plus \u20b918 entry categories before checkout.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:08:02.698Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Entry option visibility is captured; selected-tier-to-hosted-order progression still needs fresh replacement-release acceptance.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-REQUIRED-ANSWERS",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Required registration answers must be valid and persisted before paid registration can secure participation.",
+      "before": "The required-question flow needed explicit validation before secure paid participation, including invited registrants.",
+      "implemented": "Required question validation and answer persistence precede payment qualification; owner controls lock forms when registration already exists.",
+      "sourceProof": [
+        "src/services/registration-questions.ts",
+        "src/domain/registration-questions.ts",
+        "src/components/registration-questions.tsx"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/registration-questions-test.mjs",
+        "scripts/invited-registration-answers-postgres-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Local question validation/registration tests; coordinator fresh hosted fixture297 has required answer and must supply final live proof. This agent does not claim a live required-answer positive from empty-form fixtures.",
+        "Host sees persisted required short-text question; editing locked once registrations exist."
+      ],
+      "technicalProof": [
+        "scripts/registration-questions-test.mjs"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-required-question.png",
+          "scope": "Host sees persisted required short-text question; editing locked once registrations exist.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:22:07.103Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Host required-question screenshot proves configuration, not buyer validation/persistence. Capture buyer missing-answer denial and valid answer persisted through legitimate hosted checkout.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-PAID-JOIN",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Joined/seat-secured confirmation requires both legitimate successful payment and approved qualifying participation; refund-required reconciliation must not claim a secured seat.",
+      "before": "Paid-but-ineligible reconciliation could be confused with a secured registration.",
+      "implemented": "Client verifies paid plus registrationConfirmed and approved qualifying participation; REFUND_REQUIRED states show reconciliation rather than Joined.",
+      "sourceProof": [
+        "src/services/payments.ts",
+        "supabase/functions/cashfree-verify-payment/index.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/payment-registration-confirmation-test.mjs",
+        "scripts/cashfree-modal-completion-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed Edgev4 returns paid=true but registrationConfirmed=false/refundRequired=true for ineligible received payment; eligible ledger+approved seat true.90 local Edge/client/App assertions. Synthetic provider references are not hosted Cashfree payment proof.",
+        "Prior deployment dpl_8RVLnVe6qWMyaopojogiqZevawkx had real interactive Sandbox event280 payment41 success, one approved seat and replay-safe ledger. Retained as baseline only."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+        "scripts/payment-registration-confirmation-test.mjs",
+        "docs/chat001-hosted-checkout-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Earlier real hosted Sandbox proof event280 belongs to a prior deployment. Current backend synthetic payment references prove state/idempotency, not hosted checkout. Complete current coordinated-release legitimate Sandbox payment and same mounted screen confirmation.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-LIST-IDENTITY",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Partner activities are visually differentiated with the requested Partner identity across discovery, Home, Profile and recommendation lists.",
+      "before": "Partner identity required consistent visible distinction across all requested activity surfaces.",
+      "implemented": "Production Activity mapping propagates isPartner for cards and host identity.",
+      "sourceProof": [
+        "src/components/reconstruction/feed-search.tsx"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/partner-ecosystem-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Visual list identity across surfaces belongs to coordinator/UI proof.",
+        "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities."
+      ],
+      "technicalProof": [],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activities-collapsed.png",
+          "scope": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T08:26:58.489Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Current Activities list screenshot establishes only one surface. Home, Profile and recommendation list evidence still needs explicit matching or capture.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "PARTNER-EXTERNAL-URL",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Partner activities can persist and open a safe external website URL.",
+      "before": "Partner external link persistence and safe opening required acceptance.",
+      "implemented": "Partner-only HTTPS external URL is saved by authorized RPC and mapped into Activity details.",
+      "sourceProof": [
+        "supabase/migrations/20260929095345_partner_activity_external_url.sql",
+        "src/components/hosting/host-activity-screen.tsx",
+        "src/services/wenitro.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/partner-ecosystem-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Existing safe-URL backend/client checks and coordinator UI proof; no new external navigation claim by this agent."
+      ],
+      "technicalProof": [],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "No current deployed persisted-and-opened safe external URL interaction screenshot was found in supplied metadata.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "HOST-NORMAL-PAID",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "A normal non-Partner host gets only the Paid ON/OFF cost classification, with no amount field, Cashfree checkout or platform collection.",
+      "before": "Ordinary host venue-cost classification had to remain separate from Partner platform collection.",
+      "implemented": "Ordinary host Paid toggle records costs may apply, with no amount input or Cashfree collection; approved Partner collection remains a distinct authorized mode.",
+      "sourceProof": [
+        "src/components/hosting/host-activity-screen.tsx",
+        "src/services/payments.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/activity-payment-modes-test.mjs",
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Existing dual-payment implementation and local/primary regression evidence; coordinator UI must show no platform amount/checkout for ordinary host.",
+        "Non-Partner paid toggle classifies venue spending only, without amount field or advance collection; warning continuation reaches editable form.",
+        "Normal host Paid ON has venue-spending classification and explicit no price/Pay Now collection."
+      ],
+      "technicalProof": [
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-normal-host-paid.png",
+          "scope": "Non-Partner paid toggle classifies venue spending only, without amount field or advance collection; warning continuation reaches editable form.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:09:56.290Z"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-normal-host-paid-visible.png",
+          "scope": "Normal host Paid ON has venue-spending classification and explicit no price/Pay Now collection.",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "at": "2026-10-03T18:10:33.057Z"
+        }
+      ],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Actual ordinary-host Paid ON screenshot and local/server mode guards establish this scope. Replacement release still needs coordinator review.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "SEC-PAYMENT-PRIVACY",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Payment orders, personal registration details and provider secrets remain restricted to authorized participants, hosts and permitted finance/Admin access.",
+      "before": "Existing payment and registration tables required current cross-user and role-boundary checks.",
+      "implemented": "RLS and privileged RPCs restrict orders, answers, finance data and provider secrets to authorized identities.",
+      "sourceProof": [
+        "supabase/migrations/20260907055640_partner_account_type_guard.sql",
+        "src/services/payments.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Other member cannot read payment row, service finalizer inaccessible, private tier prices hidden; provider secrets never exposed. Registration answer privacy final hosted evidence coordinator-owned."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Deployed cross-user/order/finalizer checks pass. Current hosted answer-privacy proof and final replacement release review remain coordinator-owned.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "SEC-PAYMENT-IDEMPOTENCY",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Duplicate payment callbacks/reconciliation cannot duplicate paid registration, ledger records or a seat.",
+      "before": "Repeated finalization and callback reconciliation required proof of exactly one financial event and seat.",
+      "implemented": "Finalizer and Edge verification replay retain one order/ledger/approved registration; terminal paid states do not initiate duplicate provider work.",
+      "sourceProof": [
+        "supabase/functions/cashfree-verify-payment/index.ts",
+        "supabase/functions/cashfree-webhook/index.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/payment-registration-confirmation-test.mjs",
+        "scripts/cashfree-webhook-target-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Paid finalize replay returns same row, one financial event and one seat; Edge retries do not call provider for terminal paid rows; paid invite replay preserves admitted seat/use count1."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Current deployed synthetic ledger replay passes. Root must combine fresh legitimate hosted Sandbox replay on the replacement release; older hosted proof is baseline only.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "SEC-PAYMENT-AMOUNT",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Checkout uses trusted current server amount/category/capacity and rejects forged, missing, stale or unauthorized order inputs.",
+      "before": "Legacy/missing-category checkout and stale Activity entry could bypass the canonical price/authorization path.",
+      "implemented": "Server-derived category amount, currency, capacity and identity checks reject forged, missing, stale or private unauthorized input.",
+      "sourceProof": [
+        "supabase/migrations/20261003075132_payment_entry_authorization.sql",
+        "supabase/functions/cashfree-create-order/index.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Server-derived tier amount/capacity, missing category/private/phone denial deployed; forged amount/conflicting provider replay validation covered by real local PostgreSQL suite."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Current deployed trusted tier/private/missing-category checks and local forged/conflict cases pass. Replacement release and actual hosted selected-tier amount need final review.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "SEC-PAYMENT-STATE",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Ended/cancelled/removed/suspended or otherwise ineligible registration cannot newly secure a paid seat; real paid-but-ineligible states require explicit reconciliation instead of false success.",
+      "before": "Late real payment could coexist with an ineligible Activity/registration state and be displayed as successful participation.",
+      "implemented": "Eligibility finalization preserves received money with REFUND_REQUIRED but no seat; cancelled/ended/removed/restricted states deny newly securing participation.",
+      "sourceProof": [
+        "supabase/migrations/20261003075132_payment_entry_authorization.sql",
+        "supabase/functions/cashfree-verify-payment/index.ts",
+        "src/services/payments.ts"
+      ],
+      "sourceProofMeaning": "Implementation locations; source existence is not executed runtime proof.",
+      "localVerification": [
+        "scripts/payment-entry-authorization-test.mjs",
+        "scripts/payment-registration-confirmation-test.mjs",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed completed/capacity late payment becomes REFUND_REQUIRED with no seat; ended/closed invitation guards applied and natural deadline tested; local47 covers cancelled/removed/banned and exact end-clock boundary."
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
+      "reason": "Deployed late payment/capacity reconciliation and local exact-time/state boundaries pass. The final deployed UI must preserve this distinction and the latest release remains unreviewed.",
+      "releaseReviewed": false,
+      "screenshotsReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    }
+  ]
+}
