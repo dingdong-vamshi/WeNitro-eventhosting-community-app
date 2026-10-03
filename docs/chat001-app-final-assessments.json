@@ -1,12 +1,11 @@
 {
-  "at": "2026-10-03T20:08:48.099627+00:00",
+  "at": "2026-10-03T20:26:18.375626+00:00",
   "scope": "A126 plus B/C80 guide-schema subset; excludes22BADGE rows owned by backend. Scoped PASS only; unresolved normal actions are pending, not external holds.",
   "count": 206,
   "counts": {
-    "PASS": 112,
-    "PENDING_SCOPED_ACCEPTANCE": 86,
+    "PASS": 122,
+    "PENDING_SCOPED_ACCEPTANCE": 77,
     "PARTIAL_EXTERNAL_DEPENDENCY": 3,
-    "PENDING_VISUAL_PROOF": 1,
     "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
     "PENDING_REGRESSION_RETEST": 2,
     "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION": 1
@@ -17,8 +16,9 @@
   },
   "metadataSnapshot": {
     "path": "qa-evidence/chat001/integrated-ae-screenshots.json",
-    "sha256": "bf0e07fae6c266b441c7058c70c5fce26ea9d5a6a31b3f08ba4177ef518be5d1",
-    "records": 110
+    "entries": 111,
+    "at": "2026-10-03T20:26:18.375626+00:00",
+    "merge": "All records matched by canonical ID and exact path, not list position."
   },
   "coordinatorScreenshotReviewStillNeeded": [],
   "requirements": [
@@ -2102,6 +2102,22 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-host-participants",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-host-participants.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:43:04.357Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "ACT-HOST-IDENTITY",
+            "ACT-TAGS-POSITION",
+            "AVATAR-FALLBACK",
+            "AVATAR-SHAPE"
+          ],
+          "outcome": "Actual originalHost120, tags belowAbout and two approved members70/71 with roundinitials; ownerphoto also shown besidecommentfield.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -2227,6 +2243,22 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-host-participants",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-host-participants.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:43:04.357Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "ACT-HOST-IDENTITY",
+            "ACT-TAGS-POSITION",
+            "AVATAR-FALLBACK",
+            "AVATAR-SHAPE"
+          ],
+          "outcome": "Actual originalHost120, tags belowAbout and two approved members70/71 with roundinitials; ownerphoto also shown besidecommentfield.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -2746,6 +2778,21 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-detail",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:43:04.176Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "ACT-VISIBILITY-LABEL",
+            "ACT-TIMELINE",
+            "UI-TYPE-READABILITY"
+          ],
+          "outcome": "Controlled Activity300 shows Private/Upcoming, distinct START END REG.BY local-time timeline and readable title.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -2817,6 +2864,21 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-detail",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:43:04.176Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "ACT-VISIBILITY-LABEL",
+            "ACT-TIMELINE",
+            "UI-TYPE-READABILITY"
+          ],
+          "outcome": "Controlled Activity300 shows Private/Upcoming, distinct START END REG.BY local-time timeline and readable title.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -3348,6 +3410,19 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-comment",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-comment.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:43:39.703Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "ACT-COMMENT-IDENTITY"
+          ],
+          "outcome": "Actual submitted Activity comment renders author QA Audit recipient and exact controlled text.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -3555,14 +3630,14 @@
     },
     {
       "id": "CHAT-CANCELLED-WRITES",
-      "status": "PENDING_VISUAL_PROOF",
+      "status": "PASS",
       "sourceClauseIds": [
         "A14-02"
       ],
       "requestedChange": "Stale direct chat requests cannot write to a cancelled or deleted Activity chat.",
       "before": "Client-requested acceptance gap: Stale direct chat requests cannot write to a cancelled or deleted Activity chat.",
       "implemented": "Chat uses real direct/group/community/activity conversations, persisted messages/polls, privacy actions and live inbox state; group/story media uses the upload flow. The criterion-specific acceptance is not inferred from source presence.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Proposed pass only for stated criterion and evidence scope. Final selected-release and image review flags remain unset.",
+      "acceptanceScope": "Authenticated member attempted stale send after Activity deletion and received42501; no client-only disabled button is used as authority.",
       "localVerification": [
         {
           "suite": "scripts/chat-ui-regression-test.mjs",
@@ -3599,21 +3674,28 @@
             "Deleted activity blocks stale chat writes"
           ],
           "scope": "Actual current-target authenticated cross-user API tests; no browser screenshot implied."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "assertion": "Deleted activity blocks stale chat writes",
+          "status": "PASS"
         }
       ],
       "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Proposed pass only for stated criterion and evidence scope. Final selected-release and image review flags remain unset.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Proposed pass only for stated criterion and evidence scope. Final selected-release and image review flags remain unset."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Existing actual current-target API run mus4oh17-f4d98f remains compatible: later releases did not relax cancelled Activity chat RLS.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "CHAT-RETAINED-HISTORY",
@@ -4083,7 +4165,7 @@
     },
     {
       "id": "NITRO-HISTORY",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A16-04",
         "A38-08"
@@ -4091,7 +4173,7 @@
       "requestedChange": "Nitro history displays the persisted award/spend ledger with positive rewards and negative spending signs.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Positive+2 entries proven; requirement also includes negative spend sign. Inspect a legitimate persisted negative entry if available; do not fabricate a spend.",
+      "acceptanceScope": "Actual production ledger renders persisted rating awards with+2 and server balance; actual component JSX locally renders+2,-10,+0 with matching reward/spend colors. No real negative spend or Hubble redemption is fabricated.",
       "localVerification": [
         {
           "check": "client-pdf-regression-test",
@@ -4102,6 +4184,11 @@
         {
           "path": "docs/chat001-integrated-local-verification.json",
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        },
+        {
+          "path": "docs/chat001-nitro-ledger-format-proof.json",
+          "status": "PASS",
+          "scope": "Actual signed value and semantic color JSX expressions."
         }
       ],
       "productionVerification": [
@@ -4137,6 +4224,10 @@
         {
           "path": "docs/client-acceptance-evidence.json",
           "scope": "Original recorded production observation: Nitro ledger records exactly two +2 rewards for two distinct ratings"
+        },
+        {
+          "path": "docs/chat001-nitro-ledger-format-proof.json",
+          "scope": "Actual JSX renderer executed with positive, negative, zero ledger values; no live mutation."
         }
       ],
       "screenshotProof": [
@@ -4144,18 +4235,20 @@
           "path": "qa-evidence/production-nitro-rating-history.png"
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Positive+2 entries proven; requirement also includes negative spend sign. Inspect a legitimate persisted negative entry if available; do not fabricate a spend.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Positive+2 entries proven; requirement also includes negative spend sign. Inspect a legitimate persisted negative entry if available; do not fabricate a spend."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Ledger component presentation unchanged; production positive entries prove persisted integration, while negative/zero values are executable local presentation coverage. Historical Email+10 row is not asserted as a current email reward.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "RATE-IDEMPOTENCY",
@@ -4922,6 +5015,35 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-communities-before-header-fix",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-communities-before-header-fix.png",
+          "url": "https://wenitro-app.vercel.app/#/communities",
+          "at": "2026-10-03T18:53:10.765Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-HEADER",
+            "COMM-BACK-LIST"
+          ],
+          "outcome": "BEFORE upcomingcorrection: Backreturnscommunitylist butlegacytextlogo and alwaysvisiblesearch do notmatchPDFheader",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community-header",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-header.png",
+          "url": "https://wenitro-app.vercel.app/#/communities",
+          "at": "2026-10-03T19:37:59.588Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-HEADER",
+            "COMM-SEARCH-TOGGLE",
+            "COMM-AVATAR"
+          ],
+          "outcome": "Released Communities header uses WeNitro logo and adjacent search/notification controls with searchcollapsed; image and initials fallbacks visible in horizontal communities.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -4999,6 +5121,35 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community-header",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-header.png",
+          "url": "https://wenitro-app.vercel.app/#/communities",
+          "at": "2026-10-03T19:37:59.588Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-HEADER",
+            "COMM-SEARCH-TOGGLE",
+            "COMM-AVATAR"
+          ],
+          "outcome": "Released Communities header uses WeNitro logo and adjacent search/notification controls with searchcollapsed; image and initials fallbacks visible in horizontal communities.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community-search-category",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-search-category.png",
+          "url": "https://wenitro-app.vercel.app/#/communities",
+          "at": "2026-10-03T19:38:29.723Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-SEARCH-TOGGLE",
+            "COMM-SEARCH-FILTER"
+          ],
+          "outcome": "Expanded search with mixed-case cHaT001 and Creative category filters list to QA252; functional category controls visible.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5068,6 +5219,20 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community-search-category",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-search-category.png",
+          "url": "https://wenitro-app.vercel.app/#/communities",
+          "at": "2026-10-03T19:38:29.723Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-SEARCH-TOGGLE",
+            "COMM-SEARCH-FILTER"
+          ],
+          "outcome": "Expanded search with mixed-case cHaT001 and Creative category filters list to QA252; functional category controls visible.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5145,6 +5310,36 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-owner",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-owner.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:49:57.806Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-AVATAR",
+            "COMM-MEMBER-COUNT",
+            "COMM-COVER",
+            "COMM-POSTS-SEPARATE"
+          ],
+          "outcome": "Loaded actual communityavatar,1member,compactcover and separate Posts/Chat actions",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community252-cover-reloaded",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community252-cover-reloaded.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T19:41:19.200Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-COVER-EDIT",
+            "COMM-COVER"
+          ],
+          "outcome": "Owner edited cover through picker/crop/save; reload retains food cover above camera avatar in compactCommunityheader.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5235,6 +5430,37 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-owner",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-owner.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:49:57.806Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-AVATAR",
+            "COMM-MEMBER-COUNT",
+            "COMM-COVER",
+            "COMM-POSTS-SEPARATE"
+          ],
+          "outcome": "Loaded actual communityavatar,1member,compactcover and separate Posts/Chat actions",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community-header",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-header.png",
+          "url": "https://wenitro-app.vercel.app/#/communities",
+          "at": "2026-10-03T19:37:59.588Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-HEADER",
+            "COMM-SEARCH-TOGGLE",
+            "COMM-AVATAR"
+          ],
+          "outcome": "Released Communities header uses WeNitro logo and adjacent search/notification controls with searchcollapsed; image and initials fallbacks visible in horizontal communities.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5340,6 +5566,36 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-owner",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-owner.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:49:57.806Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-AVATAR",
+            "COMM-MEMBER-COUNT",
+            "COMM-COVER",
+            "COMM-POSTS-SEPARATE"
+          ],
+          "outcome": "Loaded actual communityavatar,1member,compactcover and separate Posts/Chat actions",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-member-count",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-member-count.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:56:23.315Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-MEMBER-COUNT",
+            "COMM-MEMBER-PROFILE"
+          ],
+          "outcome": "Secondcontrolledmemberjoined;2distinctmembersand roles rendered",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5477,6 +5733,33 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-member-count",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-member-count.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:56:23.315Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-MEMBER-COUNT",
+            "COMM-MEMBER-PROFILE"
+          ],
+          "outcome": "Secondcontrolledmemberjoined;2distinctmembersand roles rendered",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-member-profile",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-member-profile.png",
+          "url": "https://wenitro-app.vercel.app/#/profile/120",
+          "at": "2026-10-03T18:57:30.791Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-MEMBER-PROFILE"
+          ],
+          "outcome": "Clicking communitymember120 opens exactpublicprofile with loadedavatar",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5547,6 +5830,20 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community252-cover-reloaded",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community252-cover-reloaded.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T19:41:19.200Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-COVER-EDIT",
+            "COMM-COVER"
+          ],
+          "outcome": "Owner edited cover through picker/crop/save; reload retains food cover above camera avatar in compactCommunityheader.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5615,6 +5912,19 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct253-poll-voters",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-poll-voters.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T19:09:06.326Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "POLL-VOTER-IDENTITY"
+          ],
+          "outcome": "Visible voter identity QA Audit recipient and chosen Morning option; retrieved from deployed poll voters control.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5686,6 +5996,19 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-chat-back",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-chat-back.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:53:03.082Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-CHAT-BACK"
+          ],
+          "outcome": "Opening communitychat thenBack restores samecommunity252detail",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5752,6 +6075,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-verification120-rejected",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-verification120-rejected.png",
+          "url": "https://wenitro-app.vercel.app/#/verification",
+          "at": "2026-10-03T18:42:38.190Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "VERIFY-SELFIE-REVIEW",
+            "VERIFY-TRUST-NOT-NITRO"
+          ],
+          "outcome": "After Admin rejection and reload selfie remains unverified and totalTrust10 unchanged",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -5852,6 +6189,21 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-verification120-pending",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-verification120-pending.png",
+          "url": "https://wenitro-app.vercel.app/#/verification",
+          "at": "2026-10-03T18:41:55.439Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "VERIFY-SELFIE-REVIEW",
+            "VERIFY-SELFIE-CAMERA",
+            "VERIFY-STAGED-BADGE"
+          ],
+          "outcome": "Selfie Awaiting Review with camera-only controls and pending0Trust; Aadhaar unavailable explicitly",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -5983,6 +6335,35 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-verification120-pending",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-verification120-pending.png",
+          "url": "https://wenitro-app.vercel.app/#/verification",
+          "at": "2026-10-03T18:41:55.439Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "VERIFY-SELFIE-REVIEW",
+            "VERIFY-SELFIE-CAMERA",
+            "VERIFY-STAGED-BADGE"
+          ],
+          "outcome": "Selfie Awaiting Review with camera-only controls and pending0Trust; Aadhaar unavailable explicitly",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-verification120-rejected",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-verification120-rejected.png",
+          "url": "https://wenitro-app.vercel.app/#/verification",
+          "at": "2026-10-03T18:42:38.190Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "VERIFY-SELFIE-REVIEW",
+            "VERIFY-TRUST-NOT-NITRO"
+          ],
+          "outcome": "After Admin rejection and reload selfie remains unverified and totalTrust10 unchanged",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -6068,6 +6449,21 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-verification120-pending",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-verification120-pending.png",
+          "url": "https://wenitro-app.vercel.app/#/verification",
+          "at": "2026-10-03T18:41:55.439Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "VERIFY-SELFIE-REVIEW",
+            "VERIFY-SELFIE-CAMERA",
+            "VERIFY-STAGED-BADGE"
+          ],
+          "outcome": "Selfie Awaiting Review with camera-only controls and pending0Trust; Aadhaar unavailable explicitly",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -6146,7 +6542,7 @@
     },
     {
       "id": "NOTIFICATIONS-LOAD",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A27-01",
         "A27-02"
@@ -6154,7 +6550,7 @@
       "requestedChange": "Notifications load, reload and reopen without recurring errors, distinguishing empty, multiple-item, loading and error states.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Use existing actual notifications; reopen/reload list and record stable visible state. Backend/previous list/read observation exists.",
+      "acceptanceScope": "Authenticated production user116 Notifications loads four persisted payment/request notifications with timestamps and unread indicators. Earlier recipient/read authorization checks remain separately scoped.",
       "localVerification": [
         {
           "check": "client-pdf-regression-test",
@@ -6213,18 +6609,20 @@
           "url": "https://wenitro-app.vercel.app/#/notifications"
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Use existing actual notifications; reopen/reload list and record stable visible state. Backend/previous list/read observation exists.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Use existing actual notifications; reopen/reload list and record stable visible state. Backend/previous list/read observation exists."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Notification loader/list UI unchanged; viewed integrated-notifications-loaded screenshot records actual loaded state, not fabricated empty data. A second identical reload is not required for this load criterion.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "PROFILE-GALLERY-LIMIT",
@@ -6480,6 +6878,33 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-photo-added",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-photo-added.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:44:07.089Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-ADD",
+            "PROFILE-PHOTO-PRIMARY"
+          ],
+          "outcome": "Controlled camera object uploaded through deployed gallery and rendered as primary",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-three-photos",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:45:02.437Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-ADD"
+          ],
+          "outcome": "Three rendered photo slots, gallery capacity reached and add control removed",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -6583,6 +7008,34 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-photo-management",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-photo-management.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:45:10.589Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-CHANGE",
+            "PROFILE-PHOTO-DELETE",
+            "PROFILE-PHOTO-PRIMARY"
+          ],
+          "outcome": "Photo preview exposes Change, Set as primary and Delete",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-extra-replaced",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-extra-replaced.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:46:00.945Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-CHANGE"
+          ],
+          "outcome": "Third gallery photo replacement persists after reload and preview shows camera object",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -6693,6 +7146,34 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-photo-management",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-photo-management.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:45:10.589Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-CHANGE",
+            "PROFILE-PHOTO-DELETE",
+            "PROFILE-PHOTO-PRIMARY"
+          ],
+          "outcome": "Photo preview exposes Change, Set as primary and Delete",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-extra-deleted",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-extra-deleted.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:46:11.948Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-DELETE"
+          ],
+          "outcome": "Disposable third photo removed; two slots remain and add control returns",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -6829,6 +7310,62 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-photo-added",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-photo-added.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:44:07.089Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-ADD",
+            "PROFILE-PHOTO-PRIMARY"
+          ],
+          "outcome": "Controlled camera object uploaded through deployed gallery and rendered as primary",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-photo-management",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-photo-management.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:45:10.589Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-CHANGE",
+            "PROFILE-PHOTO-DELETE",
+            "PROFILE-PHOTO-PRIMARY"
+          ],
+          "outcome": "Photo preview exposes Change, Set as primary and Delete",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-primary-reloaded",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-primary-reloaded.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:45:34.945Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-PRIMARY"
+          ],
+          "outcome": "Reload retains the changed primary image and three-photo gallery",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-public120-gallery-readonly",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-public120-gallery-readonly.png",
+          "url": "https://wenitro-app.vercel.app/#/profile/120",
+          "at": "2026-10-03T18:55:15.972Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-PRIMARY",
+            "PROFILE-GALLERY-PUBLIC"
+          ],
+          "outcome": "Otheruser71 can preview loaded primary image, with noChange/Delete/SetPrimary controls",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -6946,6 +7483,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-public120-gallery-readonly",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-public120-gallery-readonly.png",
+          "url": "https://wenitro-app.vercel.app/#/profile/120",
+          "at": "2026-10-03T18:55:15.972Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PHOTO-PRIMARY",
+            "PROFILE-GALLERY-PUBLIC"
+          ],
+          "outcome": "Otheruser71 can preview loaded primary image, with noChange/Delete/SetPrimary controls",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -7047,6 +7598,32 @@
           "at": "2026-10-03T19:56:42.147Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-squad120-deduplicated",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-squad120-deduplicated.png",
+          "url": "https://wenitro-app.vercel.app/#/squad/120",
+          "at": "2026-10-03T19:56:03.002Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "SQUAD-DEDUP"
+          ],
+          "outcome": "Controlled reciprocal and self fixture resolves once to Arjun70, self omitted.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-squad120-counter",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-squad120-counter.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T19:56:42.147Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "SQUAD-DEDUP"
+          ],
+          "outcome": "Owner profile Squad1 matches unique Arjun70 list; Nitro remains0.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -7341,6 +7918,19 @@
           "at": "2026-10-03T20:06:47.509Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chat253-community-shared",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chat253-community-shared.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T20:06:47.509Z",
+          "account": 71,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "SHARE-COMMUNITY"
+          ],
+          "outcome": "Moderator71 sharedCommunity252 toowner120; meaningfultitle/description and ViewinWeNitrocard present.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -7403,6 +7993,33 @@
           "at": "2026-10-03T20:04:50.763Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chat253-vibe-shared",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chat253-vibe-shared.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T20:04:37.956Z",
+          "account": 71,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "SHARE-VIBE"
+          ],
+          "outcome": "Recipient71 receives actualVibe135 meaningful caption and creatorQA Auditrecipient; card opensauthorizedVibe.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-vibe135-recipient",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe135-recipient.png",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "at": "2026-10-03T20:04:50.763Z",
+          "account": 71,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "SHARE-VIBE",
+            "VIBE-REELS"
+          ],
+          "outcome": "Recipient71 opens sharedVibe135 and authorizedvideo. Newestcontrolledvideo appears before olderQAactivityVibes.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -7478,6 +8095,19 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community120-created",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community120-created.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/252",
+          "at": "2026-10-03T18:49:34.416Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-CREATED-STATE"
+          ],
+          "outcome": "Community Created success shows exactmarkedname, firstmember and ViewCommunity action",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -7840,6 +8470,20 @@
           "at": "2026-10-03T19:55:00.381Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-sos",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-sos.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:55:00.381Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "SOS-ACTION"
+          ],
+          "outcome": "Safety sheet offers share/copy/contact and truthful reminder guidance. Copy was attempted, but clipboard read was empty; not successful-copy proof. Clipboard handling is covered by subsequent regression fix.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json",
+          "scopeCorrection": "Toast previously claimed copied; actual clipboard read was empty. This image proves SOS sheet only; clipboard regression retest pending."
         }
       ],
       "technicalProof": [],
@@ -7853,7 +8497,7 @@
         },
         {
           "path": "qa-evidence/chat001/release-activity300-sos.png",
-          "scope": "Safety sheet offers share/copy/contact; copied controlled Activity300 details. No emergency call made. Real reminder separately proven.",
+          "scope": "Safety sheet offers share/copy/contact and truthful reminder guidance. Copy was attempted, but clipboard read was empty; not successful-copy proof. Clipboard handling is covered by subsequent regression fix.",
           "at": "2026-10-03T19:55:00.381Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "url": "https://wenitro-app.vercel.app/#/activity/300",
@@ -7866,7 +8510,7 @@
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "ActualActivity300 SOS sheet and Copy details success captured. One Manage emergency contact navigation remains to prove requested saved-contact access; no call or fake emergency required.",
+      "reason": "SOS sheet and guidance are visible. Prior Copy details toast is not clipboard proof: actual clipboard read was empty. Retest corrected copy result and Manage emergency contact navigation after regression deployment; no emergency call required.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
@@ -7919,14 +8563,14 @@
     },
     {
       "id": "HELP-NITROBOT",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A37-08"
       ],
       "requestedChange": "NitroBot answers the supported FAQ without pretending to access private account data or unsupported services.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Home/settings/navigation surfaces and service paths implement the requested behavior within the supported provider scope; linked tests and visible observations remain criterion-specific.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "acceptanceScope": "Actual deployed Activity FAQ response displays supported guidance and clearly states no private account access.",
       "localVerification": [
         {
           "check": "client-pdf-regression-test",
@@ -7985,29 +8629,31 @@
           "url": "https://wenitro-app.vercel.app/#/help"
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "FAQ implementation and screen unchanged; integrated-nitrobot-faq is compatible earlier production evidence.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "HELP-SUPPORT-QUERY",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A37-09"
       ],
       "requestedChange": "A member can submit a support/feedback query and receive confirmation only after persistence succeeds.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Home/settings/navigation surfaces and service paths implement the requested behavior within the supported provider scope; linked tests and visible observations remain criterion-specific.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "acceptanceScope": "Actual deployed Send Query disables empty input, persists controlled user116 query9, then displays success only after the server row exists.",
       "localVerification": [
         {
           "check": "client-pdf-regression-test",
@@ -8059,6 +8705,10 @@
         {
           "path": "docs/client-acceptance-checklist.json",
           "scope": "Original recorded production observation: NitroBot conversation; query DB; Play Store once-only reward;200-point Hubble hold"
+        },
+        {
+          "path": "docs/chat001-support-production-proof.json",
+          "scope": "UI action plus database readback, query9/user116."
         }
       ],
       "screenshotProof": [
@@ -8070,29 +8720,31 @@
           "url": "https://wenitro-app.vercel.app/#/feedback"
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Support form/RPC unchanged; current-target persisted query9 and viewed success image remain valid.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "PLAY-STORE-REWARD",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A37-10"
       ],
       "requestedChange": "The supported Play Store action awards its intended reward once without falsely claiming proof of a submitted review.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Home/settings/navigation surfaces and service paths implement the requested behavior within the supported provider scope; linked tests and visible observations remain criterion-specific.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "acceptanceScope": "Deployed ledger screen explains one-time10 reward for opening Play Store, not proof of a written review. Actual production award RPC grants once and replay does not duplicate.",
       "localVerification": [
         {
           "check": "client-pdf-regression-test",
@@ -8131,19 +8783,28 @@
           "scope": "Original recorded production observation: NitroBot conversation; query DB; Play Store once-only reward;200-point Hubble hold"
         }
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/production-nitro-rating-history.png",
+          "scope": "Visible actual Play Store action and precise once-only opening reward copy.",
+          "url": "https://wenitro-app.vercel.app/#/nitroHistory",
+          "reviewed": true
+        }
+      ],
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Same Play Store link/RPC/once-only reward code; ledger screenshot and named prior current-target award check are compatible. No app-store review submission is claimed.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "STORE-MINIMUM",
@@ -8844,6 +9505,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct253-options",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-options.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T18:58:15.953Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "CHAT-NO-VIDEO",
+            "CHAT-BLOCK"
+          ],
+          "outcome": "Actualattachmentmenu hasSharePhoto/CreatePoll/Block and noVideo",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -9062,6 +9737,19 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-public120-vibes-first",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-public120-vibes-first.png",
+          "url": "https://wenitro-app.vercel.app/#/profile/120",
+          "at": "2026-10-03T18:55:38.195Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-PUBLIC-VIBES-FIRST"
+          ],
+          "outcome": "Publicprofile initiallyselectsVibes and renders No vibes posted; noownermanagementcontrols",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -9146,6 +9834,76 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity-media-off",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-off.png",
+          "url": "https://wenitro-app.vercel.app/#/postVibe",
+          "at": "2026-10-03T19:43:52.818Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-FROM-ACTIVITY-MEDIA",
+            "VIBE-COMPOSER"
+          ],
+          "outcome": "Activity300 composer defaults ShowinVibesOFF with participants-onlycopy and AddtoActivityaction.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity-media-off-controls",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-off-controls.png",
+          "url": "https://wenitro-app.vercel.app/#/postVibe",
+          "at": "2026-10-03T19:44:45.344Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-FROM-ACTIVITY-MEDIA",
+            "VIBE-COMPOSER"
+          ],
+          "outcome": "Selected camera photo and caption with ShowinVibesOFF; participants-onlycopy and AddtoActivitybutton visible.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-media-inside",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-media-inside.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:45:10.090Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-FROM-ACTIVITY-MEDIA"
+          ],
+          "outcome": "Activity-only post returned to Activity300 and appears under ActivityVibes1Upload with chosen camera photo.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity-media-on-controls",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-on-controls.png",
+          "url": "https://wenitro-app.vercel.app/#/postVibe",
+          "at": "2026-10-03T19:45:35.781Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-FROM-ACTIVITY-MEDIA",
+            "VIBE-COMPOSER"
+          ],
+          "outcome": "Selected synthetic2secondvideo, ShowinVibesON, participants-onlyaudience remains, PostVibeaction visible.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-vibe-video-playing",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-video-playing.png",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "at": "2026-10-03T19:46:07.852Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-VIDEO",
+            "VIBE-REELS",
+            "VIBE-FROM-ACTIVITY-MEDIA"
+          ],
+          "outcome": "Published Activity300 syntheticvideo opens full-heightreel with actualcreator/caption/context and no old arrows/header; DOM playback advancing error-free.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -10222,14 +10980,14 @@
     },
     {
       "id": "REFERRAL-REWARD",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "B06-01"
       ],
       "requestedChange": "A legitimate successful referral earns the authoritative ten Nitro reward.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Home/settings/navigation surfaces and service paths implement the requested behavior within the supported provider scope; linked tests and visible observations remain criterion-specific.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion.",
+      "acceptanceScope": "Actual production RPC awarded exactly10 to the confirmed unique referral inviter once; replay/self referral denied and unrelated member data private. Synthetic confirmed fixture verifies server qualification, not real OTP delivery.",
       "localVerification": [
         {
           "check": "referral-reward-identity-test",
@@ -10248,7 +11006,13 @@
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
         }
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Named current-target authenticated checks passed: exact10 award, no replay award, self referral rejected.",
+          "source": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "at": "2026-10-03T08:22:08.070Z"
+        }
+      ],
       "technicalProof": [
         {
           "exactPassedChecks": [
@@ -10258,21 +11022,32 @@
           "runStatus": "PASS",
           "limit": "Backend semantics only; no screenshot or full visual acceptance.",
           "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "assertions": [
+            "New confirmed referral grants exactly ten Nitro",
+            "Same referral replay awards nothing",
+            "Self referral rejected"
+          ],
+          "status": "PASS"
         }
       ],
       "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Same deployed authoritative referral function/identity guard; subsequent App copy explains qualification and does not alter award amount.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "REFERRAL-EXPLANATION",
@@ -10329,7 +11104,15 @@
         }
       ],
       "technicalProof": [],
-      "screenshotProof": [],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/integrated-hero-invite-destination.png",
+          "scope": "Hero Invite Friends opened Invite Squad; visible terms consistently state10 Nitro and account116 referral.",
+          "at": "2026-10-03T08:24:02.922Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "url": "https://wenitro-app.vercel.app/#/inviteSquad"
+        }
+      ],
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
@@ -10846,7 +11629,7 @@
     },
     {
       "id": "FILTER-GENDER",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "B10-02",
         "B11-01"
@@ -10854,7 +11637,7 @@
       "requestedChange": "Gender preference filters change the returned Activity matches correctly.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "acceptanceScope": "Actual deployed Female preference was selected together with Today/Free and applied; resulting empty state is valid. Actual live discovery-service read excludes other gender preferences.",
       "localVerification": [
         {
           "check": "activities-filter-test",
@@ -10890,21 +11673,40 @@
         {
           "path": "docs/chat001-activity-discovery-proof.json",
           "scope": "Original recorded production observation: Actual live discovery-service results: local-day bounds; free/paid; category; gender; verified filtering."
+        },
+        {
+          "path": "docs/chat001-activity-discovery-proof.json",
+          "scope": "Actual target discovery service filtering, including valid empty Female result."
         }
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/production-filters-date-free-female.png",
+          "scope": "Actual selected Female + Today + Free production filters.",
+          "url": "https://wenitro-app.vercel.app/#/activities",
+          "reviewed": true
+        },
+        {
+          "path": "qa-evidence/chat001/production-filters-date-free-female-results.png",
+          "scope": "Applied production filter displays actual empty result.",
+          "url": "https://wenitro-app.vercel.app/#/activities",
+          "reviewed": true
+        }
+      ],
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Filter semantics are unchanged; this verifies selection/application and allowed empty result, not a nonexistent positive female fixture.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "FILTER-APPLY",
@@ -11661,6 +12463,21 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-detail",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:43:04.176Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "ACT-VISIBILITY-LABEL",
+            "ACT-TIMELINE",
+            "UI-TYPE-READABILITY"
+          ],
+          "outcome": "Controlled Activity300 shows Private/Upcoming, distinct START END REG.BY local-time timeline and readable title.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -11719,6 +12536,22 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-host-participants",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-host-participants.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:43:04.357Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "ACT-HOST-IDENTITY",
+            "ACT-TAGS-POSITION",
+            "AVATAR-FALLBACK",
+            "AVATAR-SHAPE"
+          ],
+          "outcome": "Actual originalHost120, tags belowAbout and two approved members70/71 with roundinitials; ownerphoto also shown besidecommentfield.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -11849,6 +12682,22 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity300-host-participants",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-host-participants.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:43:04.357Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "ACT-HOST-IDENTITY",
+            "ACT-TAGS-POSITION",
+            "AVATAR-FALLBACK",
+            "AVATAR-SHAPE"
+          ],
+          "outcome": "Actual originalHost120, tags belowAbout and two approved members70/71 with roundinitials; ownerphoto also shown besidecommentfield.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -11927,6 +12776,48 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity-media-off",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-off.png",
+          "url": "https://wenitro-app.vercel.app/#/postVibe",
+          "at": "2026-10-03T19:43:52.818Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-FROM-ACTIVITY-MEDIA",
+            "VIBE-COMPOSER"
+          ],
+          "outcome": "Activity300 composer defaults ShowinVibesOFF with participants-onlycopy and AddtoActivityaction.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity-media-off-controls",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-off-controls.png",
+          "url": "https://wenitro-app.vercel.app/#/postVibe",
+          "at": "2026-10-03T19:44:45.344Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-FROM-ACTIVITY-MEDIA",
+            "VIBE-COMPOSER"
+          ],
+          "outcome": "Selected camera photo and caption with ShowinVibesOFF; participants-onlycopy and AddtoActivitybutton visible.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-activity-media-on-controls",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-on-controls.png",
+          "url": "https://wenitro-app.vercel.app/#/postVibe",
+          "at": "2026-10-03T19:45:35.781Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-FROM-ACTIVITY-MEDIA",
+            "VIBE-COMPOSER"
+          ],
+          "outcome": "Selected synthetic2secondvideo, ShowinVibesON, participants-onlyaudience remains, PostVibeaction visible.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12090,6 +12981,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct253-options",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-options.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T18:58:15.953Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "CHAT-NO-VIDEO",
+            "CHAT-BLOCK"
+          ],
+          "outcome": "Actualattachmentmenu hasSharePhoto/CreatePoll/Block and noVideo",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -12172,6 +13077,49 @@
           "at": "2026-10-03T20:05:00.919Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-vibe-video-playing",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-video-playing.png",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "at": "2026-10-03T19:46:07.852Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-VIDEO",
+            "VIBE-REELS",
+            "VIBE-FROM-ACTIVITY-MEDIA"
+          ],
+          "outcome": "Published Activity300 syntheticvideo opens full-heightreel with actualcreator/caption/context and no old arrows/header; DOM playback advancing error-free.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-vibe135-recipient",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe135-recipient.png",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "at": "2026-10-03T20:04:50.763Z",
+          "account": 71,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "SHARE-VIBE",
+            "VIBE-REELS"
+          ],
+          "outcome": "Recipient71 opens sharedVibe135 and authorizedvideo. Newestcontrolledvideo appears before olderQAactivityVibes.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-vibe-vertical-next",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-vertical-next.png",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "at": "2026-10-03T20:05:00.919Z",
+          "account": 71,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-REELS",
+            "VIBE-NEWEST"
+          ],
+          "outcome": "One vertical scroll advances from newest135 to olderQA BadmintonVibe; no arrow controls. Authorlabel regression separatelytracked.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12246,6 +13194,19 @@
           "at": "2026-10-03T19:54:40.445Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-vibe-activity-link",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-activity-link.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "at": "2026-10-03T19:54:40.445Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-ACTIVITY-LINK"
+          ],
+          "outcome": "Video135 View activity opens original private Activity300 with both media items.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12497,6 +13458,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-communities-before-header-fix",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-communities-before-header-fix.png",
+          "url": "https://wenitro-app.vercel.app/#/communities",
+          "at": "2026-10-03T18:53:10.765Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-HEADER",
+            "COMM-BACK-LIST"
+          ],
+          "outcome": "BEFORE upcomingcorrection: Backreturnscommunitylist butlegacytextlogo and alwaysvisiblesearch do notmatchPDFheader",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12522,7 +13497,7 @@
     },
     {
       "id": "COMM-MODERATOR-ROLE",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "B23-03",
         "B23-04"
@@ -12530,7 +13505,7 @@
       "requestedChange": "Authorized owners can select/change Community moderators and backend privileges follow the persisted role.",
       "before": "Client-requested acceptance gap: Authorized owners can select/change Community moderators and backend privileges follow the persisted role.",
       "implemented": "Community create/edit/info/posts/conversation controls are wired to real category, membership, role, media and message services. The criterion-specific deployed interaction remains scoped by the evidence and remaining action below.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Owner promotion/permission choices and reload are captured. Peer71 actual allowed/denied moderator action still needs proof or exact backend capability mapping.",
+      "acceptanceScope": "Owner120 promotes controlled71 to Moderator with approve/post/edit allowed and role management disabled; actual71 edits Community252 description, Save persists and owner reload retains it. Local and deployed capability checks retain denied privilege boundaries.",
       "localVerification": [
         {
           "suite": "scripts/community-permissions-test.mjs",
@@ -12562,6 +13537,32 @@
           "at": "2026-10-03T20:05:58.078Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community252-moderator",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community252-moderator.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T19:42:43.451Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-MODERATOR-ROLE"
+          ],
+          "outcome": "After save and reload Priya remains Moderator with approve/post/edit permissions enabled and role-changing permissiondisabled.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-community252-moderator-edit",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community252-moderator-edit.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T20:05:58.078Z",
+          "account": 71,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "COMM-MODERATOR-ROLE"
+          ],
+          "outcome": "Moderator71 saved description addition; production reload retains it while originalcreator120 remainsowner.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12582,18 +13583,20 @@
           "canonicalAliasCorrectedFrom": null
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Owner promotion/permission choices and reload are captured. Peer71 actual allowed/denied moderator action still needs proof or exact backend capability mapping.",
-      "evidenceCompatibility": "Fresh changed-surface screenshots explicitly identify dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR. Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Owner promotion/permission choices and reload are captured. Peer71 actual allowed/denied moderator action still needs proof or exact backend capability mapping."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Fresh current-release moderator selection and actual peer edit/reload screenshots directly cover changed state; no fake role record or unsupported privilege claim.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "COMM-POSTS-SEPARATE",
@@ -12642,6 +13645,22 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-owner",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-owner.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:49:57.806Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-AVATAR",
+            "COMM-MEMBER-COUNT",
+            "COMM-COVER",
+            "COMM-POSTS-SEPARATE"
+          ],
+          "outcome": "Loaded actual communityavatar,1member,compactcover and separate Posts/Chat actions",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12724,6 +13743,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-video-post",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-video-post.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:52:17.901Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-POST-VIDEO",
+            "COMM-POST-NO-POLL"
+          ],
+          "outcome": "Published generated video appears in community posts; composer exposesPhoto/Video with noPoll",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12808,6 +13841,33 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-video-post",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-video-post.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:52:17.901Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-POST-VIDEO",
+            "COMM-POST-NO-POLL"
+          ],
+          "outcome": "Published generated video appears in community posts; composer exposesPhoto/Video with noPoll",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-community252-video-played",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-video-played.png",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "at": "2026-10-03T18:52:36.686Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "COMM-POST-VIDEO"
+          ],
+          "outcome": "Native player reached2/2seconds endedtrue without media error after actualPlay click",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12898,6 +13958,36 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct71-to120-sent",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct71-to120-sent.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T18:58:07.543Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "CHAT-NAMES",
+            "CHAT-TIMESTAMPS"
+          ],
+          "outcome": "Actualcontrolledrecipientname and datedownmessage rendered aftersend",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chats-all",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-all.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:35:01.879Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-ALL-TYPES",
+            "CHAT-QUIET-INDICATOR",
+            "CHAT-NAMES",
+            "GROUP-AVATAR"
+          ],
+          "outcome": "Released All tab lists one direct and one group, counts2=1+1; uploadedgroupavatar and names visible; no inactive quiet badge.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12997,6 +14087,32 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct120-unread",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct120-unread.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:06:55.429Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "CHAT-UNREAD"
+          ],
+          "outcome": "Recipient inbox shows one conversation containing two unread messages from controlled sender Priya.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct120-read-cleared",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct120-read-cleared.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:09:21.724Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "CHAT-UNREAD"
+          ],
+          "outcome": "Opening room253 cleared its two-message unread badge; retained conversation and latest poll preview remain.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -13077,6 +14193,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct71-to120-sent",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct71-to120-sent.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T18:58:07.543Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "CHAT-NAMES",
+            "CHAT-TIMESTAMPS"
+          ],
+          "outcome": "Actualcontrolledrecipientname and datedownmessage rendered aftersend",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -13154,6 +14284,33 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-group254-info",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-group254-info.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/254",
+          "at": "2026-10-03T19:36:08.694Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-INFO-NAVIGATION",
+            "GROUP-AVATAR"
+          ],
+          "outcome": "Released group Info opens real three-member list with correct roles, UserAvatar initials/photo and no fake Date/Location card.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-group-member-profile",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-group-member-profile.png",
+          "url": "https://wenitro-app.vercel.app/#/profile/71",
+          "at": "2026-10-03T19:36:41.836Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-INFO-NAVIGATION"
+          ],
+          "outcome": "Group254 member Priya button opens correct public profile71 with name/handle; default Vibes tab retained.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -13227,6 +14384,19 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct253-poll-created",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-poll-created.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T19:05:24.297Z",
+          "account": 71,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "POLL-CREATE"
+          ],
+          "outcome": "Created two-option poll in direct QA chat; persisted poll has zero votes before recipient voting.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -13291,6 +14461,19 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-direct253-poll-voted",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-poll-voted.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "at": "2026-10-03T19:08:31.375Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "POLL-VOTE"
+          ],
+          "outcome": "QA recipient120 voted Morning: one vote and100percent, while sender text remains visible without owner-delete controls.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -13361,6 +14544,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-group120-created",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-group120-created.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/254",
+          "at": "2026-10-03T19:16:00.590Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "CHAT-PLUS-GROUP",
+            "GROUP-AVATAR"
+          ],
+          "outcome": "Created named group254 with actual uploaded photo and three controlled members; group header navigation is a separate pending fix.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -13569,6 +14766,19 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-profile120-social-persisted",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-social-persisted.png",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "at": "2026-10-03T18:47:45.274Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "PROFILE-SOCIAL"
+          ],
+          "outcome": "Social handle persists after reload as normalized HTTPSInstagramlink; Nitro0 and Trust20",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -13713,6 +14923,19 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-profile71-reviews",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-profile71-reviews.png",
+          "url": "https://wenitro-app.vercel.app/#/profile/71",
+          "at": "2026-10-03T19:37:05.824Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "PROFILE-REVIEWS"
+          ],
+          "outcome": "Public71 Reviews shows two anonymous4.0ratings with identityhidden plus namedArjun4.0rating and Activitycontext.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [
@@ -13776,6 +14999,20 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-profile71-activity-history",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-profile71-activity-history.png",
+          "url": "https://wenitro-app.vercel.app/#/profile/71",
+          "at": "2026-10-03T19:37:30.819Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "PROFILE-UPCOMING",
+            "PROFILE-COMPLETED"
+          ],
+          "outcome": "Public profile71 Activities renders populated Upcoming list and older Completed Sept29 activities with actual titles/date/location.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -13828,6 +15065,20 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-profile71-activity-history",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-profile71-activity-history.png",
+          "url": "https://wenitro-app.vercel.app/#/profile/71",
+          "at": "2026-10-03T19:37:30.819Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "PROFILE-UPCOMING",
+            "PROFILE-COMPLETED"
+          ],
+          "outcome": "Public profile71 Activities renders populated Upcoming list and older Completed Sept29 activities with actual titles/date/location.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -14582,6 +15833,20 @@
           "at": "2026-10-03T20:05:00.919Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-vibe-vertical-next",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-vertical-next.png",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "at": "2026-10-03T20:05:00.919Z",
+          "account": 71,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-REELS",
+            "VIBE-NEWEST"
+          ],
+          "outcome": "One vertical scroll advances from newest135 to olderQA BadmintonVibe; no arrow controls. Authorlabel regression separatelytracked.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -14691,6 +15956,22 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chats-all",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-all.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:35:01.879Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-ALL-TYPES",
+            "CHAT-QUIET-INDICATOR",
+            "CHAT-NAMES",
+            "GROUP-AVATAR"
+          ],
+          "outcome": "Released All tab lists one direct and one group, counts2=1+1; uploadedgroupavatar and names visible; no inactive quiet badge.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -14759,6 +16040,20 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chats-groups-search",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-groups-search.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:35:30.328Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-ALL-TYPES",
+            "CHAT-LIVE-SEARCH"
+          ],
+          "outcome": "Groups filter and mixed-case cHaT001 query show only matching group, update counts1/0/1.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -14841,6 +16136,49 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chats-all",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-all.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:35:01.879Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-ALL-TYPES",
+            "CHAT-QUIET-INDICATOR",
+            "CHAT-NAMES",
+            "GROUP-AVATAR"
+          ],
+          "outcome": "Released All tab lists one direct and one group, counts2=1+1; uploadedgroupavatar and names visible; no inactive quiet badge.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chats-people",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-people.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:35:15.235Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-ALL-TYPES"
+          ],
+          "outcome": "People filter displays only direct conversation and retains exact category counts.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chats-groups-search",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-groups-search.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:35:30.328Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-ALL-TYPES",
+            "CHAT-LIVE-SEARCH"
+          ],
+          "outcome": "Groups filter and mixed-case cHaT001 query show only matching group, update counts1/0/1.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -14987,6 +16325,50 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "iab-group120-created",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-group120-created.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/254",
+          "at": "2026-10-03T19:16:00.590Z",
+          "account": 120,
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "requirements": [
+            "CHAT-PLUS-GROUP",
+            "GROUP-AVATAR"
+          ],
+          "outcome": "Created named group254 with actual uploaded photo and three controlled members; group header navigation is a separate pending fix.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-chats-all",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-all.png",
+          "url": "https://wenitro-app.vercel.app/#/chat",
+          "at": "2026-10-03T19:35:01.879Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-ALL-TYPES",
+            "CHAT-QUIET-INDICATOR",
+            "CHAT-NAMES",
+            "GROUP-AVATAR"
+          ],
+          "outcome": "Released All tab lists one direct and one group, counts2=1+1; uploadedgroupavatar and names visible; no inactive quiet badge.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-group254-info",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-group254-info.png",
+          "url": "https://wenitro-app.vercel.app/#/chat/254",
+          "at": "2026-10-03T19:36:08.694Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "CHAT-INFO-NAVIGATION",
+            "GROUP-AVATAR"
+          ],
+          "outcome": "Released group Info opens real three-member list with correct roles, UserAvatar initials/photo and no fake Date/Location card.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -15026,14 +16408,14 @@
     },
     {
       "id": "APP-CATEGORY-CATALOG",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A36-03"
       ],
       "requestedChange": "App category selectors consume the shared active catalog, distinguish loading/error/empty states, support retry and retain unchanged historical selections safely.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Active category UI and atomic archived-interest API checks are proven. Changed catalog retry/empty/historical preservation UI remains local fault/race-tested, not a live injected failure screenshot.",
+      "acceptanceScope": "Actual deployed shared active categories render in Activities and hosting. Local executable fault/race tests verify loading, Retry/error/empty and identity-safe historical selection; production transaction tests prove archived-selection preservation and rejected additions roll back atomically.",
       "localVerification": [
         {
           "check": "admin-category-catalog-test",
@@ -15062,6 +16444,15 @@
         {
           "path": "docs/chat001-integrated-local-verification.json",
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        },
+        {
+          "path": "docs/chat001-predeployment-local-verification.json",
+          "checks": [
+            "category-catalog-client-test",
+            "profile-catalog-recovery-test",
+            "profile-interest-atomic-test"
+          ],
+          "scope": "Local executable API fault/race/atomic-operation coverage; visible normal state separately proved on production."
         }
       ],
       "productionVerification": [
@@ -15153,18 +16544,20 @@
           "url": "https://wenitro-app.vercel.app/#/createActivity"
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Active category UI and atomic archived-interest API checks are proven. Changed catalog retry/empty/historical preservation UI remains local fault/race-tested, not a live injected failure screenshot.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Active category UI and atomic archived-interest API checks are proven. Changed catalog retry/empty/historical preservation UI remains local fault/race-tested, not a live injected failure screenshot."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Current catalog service/hook behavior unchanged after those tests. No deliberate live failure was injected and no production error-state screenshot is claimed.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Opened actual production PNG bytes; checked depicted identity/state against coordinator action metadata. Backend-only criteria have no visual claim.",
+        "at": "2026-10-03T20:26:18.375626+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "ACT-LEAVE-REJOIN",
@@ -15276,6 +16669,21 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "release-vibe-video-playing",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-video-playing.png",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "at": "2026-10-03T19:46:07.852Z",
+          "account": 120,
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "requirements": [
+            "VIBE-VIDEO",
+            "VIBE-REELS",
+            "VIBE-FROM-ACTIVITY-MEDIA"
+          ],
+          "outcome": "Published Activity300 syntheticvideo opens full-heightreel with actualcreator/caption/context and no old arrows/header; DOM playback advancing error-free.",
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],

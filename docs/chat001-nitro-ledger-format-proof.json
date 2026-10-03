@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-03T20:24:20.712Z",
+  "status": "PASS",
+  "scope": "Actual production-component JSX node executed locally for positive, negative and zero persisted ledger values. No production spend or redemption fabricated.",
+  "source": "src/components/reconstruction/profile-utilities.tsx",
+  "sourceSha256": "8e7392bd26b0086cbdec899e5368fb7d25303773961ecfd55454be310e4eb3af",
+  "method": "TypeScript AST selects ledger Text with row.points JSX child; transpile actual node and execute with React.createElement recorder.",
+  "checks": [
+    {
+      "input": 2,
+      "rendered": "+2",
+      "color": "#2D9666",
+      "status": "PASS"
+    },
+    {
+      "input": -10,
+      "rendered": "-10",
+      "color": "#C93D51",
+      "status": "PASS"
+    },
+    {
+      "input": 0,
+      "rendered": "+0",
+      "color": "#2D9666",
+      "status": "PASS"
+    }
+  ]
+}

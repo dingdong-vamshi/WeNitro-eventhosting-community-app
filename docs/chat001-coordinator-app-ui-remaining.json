@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-03T20:08:48.099627+00:00",
-  "snapshotCount": 110,
+  "at": "2026-10-03T20:26:18.375626+00:00",
+  "snapshotCount": 111,
   "note": "Coordinator route batches. Actual prior API checks and explicit prior UI observations remain accepted within scope; never rerun destructive mutations just for count. Existing screenshots lacking exact state are not fabricated. Detailed206 rows in chat001-app-final-assessments.json.",
   "knownRegressionRetests": [
     "Public Squad count after authorized metric correction, keep47\u201349.",
@@ -16,7 +16,7 @@
         71
       ],
       "actions": [
-        "SOS Manage emergency contact (copy alreadydone).",
+        "SOS: retest clipboard using actual copied bytes after fix, then Manage emergency contact navigation.",
         "Like\u2192longpresslikers\u2192profile.",
         "Chat255 title/info/back; memberunread\u2192filter/readclear.",
         "Cancel300 LAST\u2192activechatremoved/stalesenddenied."
@@ -32,7 +32,6 @@
         "CHAT-TIMESTAMPS",
         "CHAT-UNREAD",
         "CHAT-CANCELLED-HIDDEN",
-        "CHAT-CANCELLED-WRITES",
         "ACT-HOST-DELETE"
       ]
     },
@@ -61,13 +60,11 @@
         71
       ],
       "actions": [
-        "Sharecard actualrecipient (unlesspriorproofaccepted).",
-        "Moderator71 allowedaction anddeniedprivilegedrolechange.",
-        "Remove71 afterallcommunityproof, verifycount/capabilities."
+        "Open already delivered Community252 share card to correct destination.",
+        "Remove71 after all Community proof; verify member count and peer capability loss."
       ],
       "ids": [
         "SHARE-COMMUNITY",
-        "COMM-MODERATOR-ROLE",
         "COMM-REMOVE-MEMBER"
       ]
     },
@@ -96,10 +93,10 @@
         120
       ],
       "actions": [
-        "InviteSquad currentverifiedqualificationcopy.",
-        "NewHostnumericdefaults current+10/end+1/deadline=start.",
-        "HomeSeeAll\u2192Activity\u2192Back\u2192Home; Tribe image/name\u2192categoryfilter.",
-        "CurrentNotificationsreload, FAQ/query/PlayStore earlierproof mayonlyneedstateimage; nonegativespendfabrication."
+        "Invite Squad current verified-unique-account qualification copy.",
+        "New Host numeric start current+10min, end+1h, registration deadline=start.",
+        "Home See All \u2192 Activity \u2192 Back \u2192 Home; Tribe image/name \u2192 category filter.",
+        "FAQ/query/notifications/Play Store/Nitro ledger evidence now reconciled; no repeated mutation needed."
       ],
       "ids": [
         "REFERRAL-EXPLANATION",
@@ -111,12 +108,7 @@
         "ACT-DETAIL-BACK",
         "TRIBE-PRESENTATION",
         "TRIBE-NAVIGATION",
-        "HOME-NITRO-CARD",
-        "NOTIFICATIONS-LOAD",
-        "HELP-NITROBOT",
-        "HELP-SUPPORT-QUERY",
-        "PLAY-STORE-REWARD",
-        "NITRO-HISTORY"
+        "HOME-NITRO-CARD"
       ]
     },
     {
@@ -348,5 +340,18 @@
       "additionalFreshChecks.hostForms: end+1/deadline=start unsubmittedPartnerform (numericimagecropped)"
     ],
     "limits": "Priorobservations are actualrecords, not freshproof. Screenshot requirement still needs applicableimage; providerflags do notproveemail/OTPdelivery."
-  }
+  },
+  "proofOnlyReconciledThisPass": [
+    "CHAT-CANCELLED-WRITES",
+    "REFERRAL-REWARD",
+    "APP-CATEGORY-CATALOG",
+    "HELP-NITROBOT",
+    "HELP-SUPPORT-QUERY",
+    "NOTIFICATIONS-LOAD",
+    "FILTER-GENDER",
+    "COMM-MODERATOR-ROLE",
+    "NITRO-HISTORY",
+    "PLAY-STORE-REWARD"
+  ],
+  "sourceAuditConclusion": "No additional ordinary implementation defect identified in this focused review. Known in-app confirmation, Vibe creator/share image hydration, public Squad count, SOS clipboard and liker-profile defects have assigned fixes in the coordinator regression batch. Remaining route actions are acceptance proof, not presumed missing implementations. Google Maps/Places, Aadhaar and Hubble gaps retain their explicit provider/setup and implementation dispositions."
 }
