@@ -42,6 +42,9 @@ const dependencies = {
   '../../services/realtime-chat': {}, '../../services/stories-production': { storiesProductionService: { markViewed(id) { const request = { ...deferred(), id }; seenRequests.push(request); return request.promise; } } },
   '../../services/app-freshness': { subscribeToAppForeground(callback) { foreground = callback; return () => { foreground = undefined; }; } },
   './ui': ui,
+  // This harness exercises inbox effects; destructive consent is declined. The
+  // real confirmation controller and deletion boundary have a dedicated test.
+  './action-confirmation': { useActionConfirmation: () => async () => false },
   './responsible-upload': { useResponsibleUpload: () => ({ confirmUpload: async () => false, uploadNotice: null }) },
 };
 const exported = {};
