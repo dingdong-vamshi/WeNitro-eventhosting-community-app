@@ -73,6 +73,9 @@ create trigger cancel_changed_campaign_schedule before update on private.admin_w
 
 -- Cron installation is verified on Supabase after the integrated deployment.
 create extension if not exists pg_cron with schema pg_catalog;
+revoke all on schema cron from public,anon,authenticated;
+revoke all on all tables in schema cron from public,anon,authenticated;
+revoke execute on all functions in schema cron from public,anon,authenticated;
 grant usage on schema cron to postgres;
 grant all privileges on all tables in schema cron to postgres;
 select cron.schedule('wenitro-admin-in-app-campaigns','* * * * *','select private.dispatch_due_admin_campaigns()');
