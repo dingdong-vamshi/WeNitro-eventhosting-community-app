@@ -1000,11 +1000,12 @@
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "proposalOnly": false,
       "requestedChange": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets.",
-      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
-      "implemented": "Actual application, masked settlement details, decisions and history use existing Partner review flow.",
+      "before": "Actual applicant108 detail showed business fields, masked UPI and review history but omitted an existing Terms receipt.",
+      "implemented": "Partner application review plus actual recorded Terms policy version/time, with honest missing/loading/error states and current Admin/Master-only receipt reads.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
-        "docs/chat001-integrated-local-verification.json"
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-admin-partner-terms-regression.json"
       ],
       "productionVerification": [
         "Deployed ordinaryAdmin sees21 matching applications and actual statuses/filter options. New Partner preflight correction is separately tracked; existing review/payout secrets remain masked.",
@@ -1020,11 +1021,16 @@
           "screenshot": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p33-admin-partner.png",
           "originalDeployment": null,
           "evidenceType": "VISUAL_STATE_WITH_LINKED_BEHAVIORAL_RECORDS"
+        },
+        {
+          "path": "docs/chat001-admin-partner-terms-production-proof.json",
+          "outcome": "Actual Admin reads108 receipt, legacy71 null; Finance121/member120 denied; no new consent or role change."
         }
       ],
       "technicalProof": [
         "docs/chat001-admin-current-read-models-proof.json",
-        "docs/chat001-partner-preflight-regression.json"
+        "docs/chat001-partner-preflight-regression.json",
+        "docs/chat001-admin-partner-terms-production-proof.json"
       ],
       "screenshotProof": [
         {
@@ -1042,16 +1048,21 @@
           "priorCompatibleRelease": true,
           "visuallyReviewed": true,
           "sha256": "5c4fb80744b9e306b8922c534864d5429529b347e10b2a355f95391cee4f06f0"
+        },
+        {
+          "path": "qa-evidence/chat001/release-admin-partner108-history.png",
+          "scope": "Actual masked UPI and persisted New\u2192Under review row; no receipt UI shown yet.",
+          "visuallyReviewed": true
         }
       ],
       "acceptanceScope": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets.",
-      "reason": "Actual list, existing approved business details/masked payout and prior Partner lifecycle API are proven. Current agreement receipt and review-history detail screenshot/action remain to be supplied; no approval of a real applicant was performed.",
+      "reason": "Existing list/details/masked payout/history and live receipt API authorization proven. New deployed receipt108/version-time and legacy71 no-record UI states remain pending after coordinated Admin deployment.",
       "remainingValidation": [
-        "Actual list, existing approved business details/masked payout and prior Partner lifecycle API are proven. Current agreement receipt and review-history detail screenshot/action remain to be supplied; no approval of a real applicant was performed."
+        "Existing list/details/masked payout/history and live receipt API authorization proven. New deployed receipt108/version-time and legacy71 no-record UI states remain pending after coordinated Admin deployment."
       ],
       "screenshotsReviewed": true,
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
-      "releaseReviewed": true,
+      "releaseReviewed": false,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
@@ -1487,19 +1498,19 @@
         "docs/chat001-admin-auth-ip-regression.json"
       ],
       "screenshotProof": [],
-      "acceptanceScope": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls.",
+      "acceptanceScope": "Read existing retained Auth IP events under current Admin/Master authorization, with bounded search, refresh and truthful empty/error states. No inferred location, anomalies, account linkage beyond recorded actor, or IP blocking enforcement.",
       "reason": "Local implementation and32realPostgres boundary checks, adapter/UI/cancellation tests, typecheck/lint/build passed. Migration/Admin deployment and read-only actual role/UI verification remain pending. Current source table has zero retained IP records; empty data is a scope limitation, not an external implementation dependency.",
       "remainingValidation": [
         "After coordinated deployment, run read-only actual Admin/Finance/member/anonymous tests; capture real empty page and Refresh. No fabricated audit rows or temporary live Master grant."
       ],
       "screenshotsReviewed": false,
-      "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
+      "screenshotReviewProvenance": "Prior unavailable-only capture is not acceptance of the new reader. New deployed empty/results capture is pending.",
       "releaseReviewed": false,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions.",
+      "releaseReviewBasis": "Implementation committed and locally verified; coordinator deployment and production read-only/UI verification pending.",
       "implementationStatus": "IMPLEMENTED"
     },
     {
@@ -3336,7 +3347,11 @@
   "incomplete": [
     {
       "id": "ADMIN-PARTNER-REVIEW",
-      "reason": "Actual list, existing approved business details/masked payout and prior Partner lifecycle API are proven. Current agreement receipt and review-history detail screenshot/action remain to be supplied; no approval of a real applicant was performed."
+      "reason": "Existing list/details/masked payout/history and live receipt API authorization proven. New deployed receipt108/version-time and legacy71 no-record UI states remain pending after coordinated Admin deployment."
+    },
+    {
+      "id": "ADMIN-IP-MONITORING",
+      "reason": "Local implementation and32realPostgres boundary checks, adapter/UI/cancellation tests, typecheck/lint/build passed. Migration/Admin deployment and read-only actual role/UI verification remain pending. Current source table has zero retained IP records; empty data is a scope limitation, not an external implementation dependency."
     }
   ]
 }
