@@ -1,0 +1,562 @@
+{
+  "recordedAt": "2026-10-03T19:37:10.375Z",
+  "projectId": "cxsznhrkzqndhseodcyy",
+  "proofType": "Authenticated API fixture preparation and read-only existing data discovery; not visual acceptance",
+  "fixture": {
+    "id": 300,
+    "title": "[QA] CHAT001 private media and safety acceptance",
+    "created_by": 120,
+    "status": "published",
+    "is_cancelled": false,
+    "is_deleted": false,
+    "visibility_type": "private",
+    "join_type": "direct",
+    "event_start_time": "2026-10-04T19:37:07.627+00:00",
+    "event_end_time": "2026-10-04T21:37:07.627+00:00",
+    "registration_close_time": "2026-10-04T18:37:07.627+00:00",
+    "chatId": 255,
+    "participants": [
+      {
+        "event_id": 300,
+        "user_id": 70,
+        "status": "approved"
+      },
+      {
+        "event_id": 300,
+        "user_id": 71,
+        "status": "approved"
+      }
+    ],
+    "access": [
+      {
+        "userId": 120,
+        "eventVisible": true,
+        "chatVisible": true
+      },
+      {
+        "userId": 70,
+        "eventVisible": true,
+        "chatVisible": true
+      },
+      {
+        "userId": 71,
+        "eventVisible": true,
+        "chatVisible": true
+      }
+    ],
+    "activityUrl": "https://wenitro-app.vercel.app/#/activity/300",
+    "chatUrl": "https://wenitro-app.vercel.app/#/chat/255"
+  },
+  "existingProfiles": [
+    {
+      "userId": 70,
+      "profileUrl": "https://wenitro-app.vercel.app/#/profile/70",
+      "squadUrl": "https://wenitro-app.vercel.app/#/squad/70",
+      "ownHistoryNavigation": "Own Profile > Activities count (activityHistory)",
+      "joinedMemberships": [
+        {
+          "event_id": 300,
+          "status": "approved"
+        },
+        {
+          "event_id": 211,
+          "status": "approved"
+        },
+        {
+          "event_id": 203,
+          "status": "approved"
+        },
+        {
+          "event_id": 212,
+          "status": "payment_required"
+        },
+        {
+          "event_id": 210,
+          "status": "approved"
+        },
+        {
+          "event_id": 209,
+          "status": "approved"
+        }
+      ],
+      "hosted": [
+        {
+          "id": 211,
+          "title": "QA Sep24 partner free",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": null,
+          "event_end_time": null,
+          "registration_close_time": null
+        },
+        {
+          "id": 282,
+          "title": "[QA] CHAT001 Admin moderation acceptance",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "private",
+          "join_type": "direct",
+          "event_start_time": "2026-10-06T07:03:28.69+00:00",
+          "event_end_time": "2026-10-06T08:03:28.69+00:00",
+          "registration_close_time": "2026-10-06T07:03:28.69+00:00"
+        },
+        {
+          "id": 278,
+          "title": "[QA] WeNitro Badminton Activity 20261002183628",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-04T18:36:35.28+00:00",
+          "event_end_time": "2026-10-04T20:36:35.28+00:00",
+          "registration_close_time": "2026-10-03T18:36:35.28+00:00"
+        },
+        {
+          "id": 277,
+          "title": "[QA] Acceptance email lifecycle 2026-10-02T18:25:36.406Z",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "approval",
+          "event_start_time": "2026-10-04T18:25:36.406+00:00",
+          "event_end_time": "2026-10-04T19:25:36.406+00:00",
+          "registration_close_time": "2026-10-04T18:25:36.406+00:00"
+        },
+        {
+          "id": 203,
+          "title": "Golden Hour Photography Walk",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "approval",
+          "event_start_time": "2026-10-03T11:30:00+00:00",
+          "event_end_time": "2026-10-03T13:30:00+00:00",
+          "registration_close_time": "2026-10-03T08:30:00+00:00"
+        },
+        {
+          "id": 233,
+          "title": "[QA] WeNitro Badminton Activity 20260929113018",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:30:25.462+00:00",
+          "event_end_time": "2026-10-01T13:30:25.462+00:00",
+          "registration_close_time": "2026-09-30T11:30:25.462+00:00"
+        },
+        {
+          "id": 232,
+          "title": "[QA] WeNitro Badminton Activity 20260929112908",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:29:15.612+00:00",
+          "event_end_time": "2026-10-01T13:29:15.612+00:00",
+          "registration_close_time": "2026-09-30T11:29:15.612+00:00"
+        },
+        {
+          "id": 231,
+          "title": "[QA] WeNitro Badminton Activity 20260929112648",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:26:55.84+00:00",
+          "event_end_time": "2026-10-01T13:26:55.84+00:00",
+          "registration_close_time": "2026-09-30T11:26:55.84+00:00"
+        }
+      ],
+      "completedActivities": [
+        {
+          "id": 203,
+          "title": "Golden Hour Photography Walk",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "approval",
+          "event_start_time": "2026-10-03T11:30:00+00:00",
+          "event_end_time": "2026-10-03T13:30:00+00:00",
+          "registration_close_time": "2026-10-03T08:30:00+00:00"
+        },
+        {
+          "id": 233,
+          "title": "[QA] WeNitro Badminton Activity 20260929113018",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:30:25.462+00:00",
+          "event_end_time": "2026-10-01T13:30:25.462+00:00",
+          "registration_close_time": "2026-09-30T11:30:25.462+00:00"
+        },
+        {
+          "id": 232,
+          "title": "[QA] WeNitro Badminton Activity 20260929112908",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:29:15.612+00:00",
+          "event_end_time": "2026-10-01T13:29:15.612+00:00",
+          "registration_close_time": "2026-09-30T11:29:15.612+00:00"
+        },
+        {
+          "id": 231,
+          "title": "[QA] WeNitro Badminton Activity 20260929112648",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:26:55.84+00:00",
+          "event_end_time": "2026-10-01T13:26:55.84+00:00",
+          "registration_close_time": "2026-09-30T11:26:55.84+00:00"
+        }
+      ],
+      "reviews": [],
+      "squad": []
+    },
+    {
+      "userId": 71,
+      "profileUrl": "https://wenitro-app.vercel.app/#/profile/71",
+      "squadUrl": "https://wenitro-app.vercel.app/#/squad/71",
+      "ownHistoryNavigation": "Own Profile > Activities count (activityHistory)",
+      "joinedMemberships": [
+        {
+          "event_id": 300,
+          "status": "approved"
+        },
+        {
+          "event_id": 282,
+          "status": "approved"
+        },
+        {
+          "event_id": 278,
+          "status": "approved"
+        },
+        {
+          "event_id": 277,
+          "status": "approved"
+        },
+        {
+          "event_id": 233,
+          "status": "approved"
+        },
+        {
+          "event_id": 232,
+          "status": "approved"
+        },
+        {
+          "event_id": 231,
+          "status": "approved"
+        },
+        {
+          "event_id": 212,
+          "status": "approved"
+        },
+        {
+          "event_id": 209,
+          "status": "approved"
+        },
+        {
+          "event_id": 211,
+          "status": "approved"
+        },
+        {
+          "event_id": 203,
+          "status": "payment_required"
+        }
+      ],
+      "hosted": [
+        {
+          "id": 209,
+          "title": "QA Sep24 normal onsite",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": null,
+          "event_end_time": null,
+          "registration_close_time": null
+        },
+        {
+          "id": 210,
+          "title": "QA Sep24 normal free",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": null,
+          "event_end_time": null,
+          "registration_close_time": null
+        },
+        {
+          "id": 212,
+          "title": "QA Sep24 partner platform paid",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": null,
+          "event_end_time": null,
+          "registration_close_time": null
+        },
+        {
+          "id": 297,
+          "title": "[QA] Integrated hosted Sandbox acceptance",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "private",
+          "join_type": "direct",
+          "event_start_time": "2026-10-05T18:02:47.287+00:00",
+          "event_end_time": "2026-10-05T19:02:47.287+00:00",
+          "registration_close_time": "2026-10-05T18:02:47.287+00:00"
+        },
+        {
+          "id": 280,
+          "title": "[QA] CHAT001 Sandbox modal acceptance",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "private",
+          "join_type": "direct",
+          "event_start_time": "2026-10-05T06:01:05.539+00:00",
+          "event_end_time": "2026-10-05T07:01:05.539+00:00",
+          "registration_close_time": "2026-10-05T06:01:05.539+00:00"
+        },
+        {
+          "id": 279,
+          "title": "[QA] CHAT001 Cashfree SANDBOX 1791006303704",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "private",
+          "join_type": "direct",
+          "event_start_time": "2026-10-05T05:45:04.934+00:00",
+          "event_end_time": "2026-10-05T06:45:04.934+00:00",
+          "registration_close_time": "2026-10-05T05:45:04.934+00:00"
+        },
+        {
+          "id": 236,
+          "title": "Final QA Cashfree Sandbox Meetup",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-09-29T14:24:37.285663+00:00",
+          "event_end_time": "2026-09-29T15:24:37.285663+00:00",
+          "registration_close_time": "2026-09-29T13:54:37.285663+00:00"
+        },
+        {
+          "id": 234,
+          "title": "Final QA Partner Studio Meetup",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "approval",
+          "event_start_time": "2026-09-29T11:49:46+00:00",
+          "event_end_time": "2026-09-29T12:49:46+00:00",
+          "registration_close_time": "2026-09-29T11:49:46+00:00"
+        }
+      ],
+      "completedActivities": [
+        {
+          "id": 236,
+          "title": "Final QA Cashfree Sandbox Meetup",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-09-29T14:24:37.285663+00:00",
+          "event_end_time": "2026-09-29T15:24:37.285663+00:00",
+          "registration_close_time": "2026-09-29T13:54:37.285663+00:00"
+        },
+        {
+          "id": 234,
+          "title": "Final QA Partner Studio Meetup",
+          "created_by": 71,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "approval",
+          "event_start_time": "2026-09-29T11:49:46+00:00",
+          "event_end_time": "2026-09-29T12:49:46+00:00",
+          "registration_close_time": "2026-09-29T11:49:46+00:00"
+        },
+        {
+          "id": 203,
+          "title": "Golden Hour Photography Walk",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "approval",
+          "event_start_time": "2026-10-03T11:30:00+00:00",
+          "event_end_time": "2026-10-03T13:30:00+00:00",
+          "registration_close_time": "2026-10-03T08:30:00+00:00"
+        },
+        {
+          "id": 231,
+          "title": "[QA] WeNitro Badminton Activity 20260929112648",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:26:55.84+00:00",
+          "event_end_time": "2026-10-01T13:26:55.84+00:00",
+          "registration_close_time": "2026-09-30T11:26:55.84+00:00"
+        },
+        {
+          "id": 232,
+          "title": "[QA] WeNitro Badminton Activity 20260929112908",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:29:15.612+00:00",
+          "event_end_time": "2026-10-01T13:29:15.612+00:00",
+          "registration_close_time": "2026-09-30T11:29:15.612+00:00"
+        },
+        {
+          "id": 233,
+          "title": "[QA] WeNitro Badminton Activity 20260929113018",
+          "created_by": 70,
+          "status": "published",
+          "is_cancelled": false,
+          "is_deleted": false,
+          "visibility_type": "public",
+          "join_type": "direct",
+          "event_start_time": "2026-10-01T11:30:25.462+00:00",
+          "event_end_time": "2026-10-01T13:30:25.462+00:00",
+          "registration_close_time": "2026-09-30T11:30:25.462+00:00"
+        }
+      ],
+      "reviews": [
+        {
+          "id": 77,
+          "rating": 4,
+          "comment": "[QA] Anonymous rating UI and Nitro reward acceptance.",
+          "is_anonymous": true
+        },
+        {
+          "id": 75,
+          "rating": 4,
+          "comment": "[QA] Anonymous rating acceptance check",
+          "is_anonymous": true
+        },
+        {
+          "id": 73,
+          "rating": 4,
+          "comment": "[QA] Named rating acceptance check",
+          "rater_id": 70,
+          "created_at": "2026-10-02T18:51:33.481506+00:00",
+          "rater_name": "Arjun Sharma",
+          "event_title": "[QA] WeNitro Badminton Activity 20260929112648",
+          "is_anonymous": false,
+          "rater_avatar": null,
+          "rater_username": "release3eaa15aa2a"
+        }
+      ],
+      "squad": []
+    }
+  ],
+  "preservedFixtures": {
+    "communityId": 252,
+    "groupId": 254,
+    "directChatId": 253
+  },
+  "mutations": "Created only a private free synthetic QA Activity, expiring two-use invite, controlled memberships and Activity chat through ordinary RPCs. No ratings, review identities, past dates, successful verifications or content fabricated.",
+  "cleanup": "Deferred until parent completes actual UI acceptance. Invitation secret exists only in ignored manifest.",
+  "uiActions": [
+    {
+      "scope": "R4/R6",
+      "actor": 120,
+      "route": "https://wenitro-app.vercel.app/#/activity/300",
+      "actions": [
+        "Open participants to see approved70 and71.",
+        "Open Add photos/videos, verify participants-only notice and optional Show in Vibes control (off by default).",
+        "Use actual UI for media/comment/like/SOS; no content has been seeded by this script.",
+        "Open Activity chat255; coordinate member UI and unread proof.",
+        "Cancel only after remaining Activity proof is complete."
+      ]
+    },
+    {
+      "scope": "R8 reviews",
+      "actor": 70,
+      "route": "https://wenitro-app.vercel.app/#/profile/71",
+      "actions": [
+        "Open Reviews: three stored rows, two anonymous and one named Arjun Sharma.",
+        "Check anonymous rows do not expose author/avatar/profile link.",
+        "Open named reviewer profile from named row."
+      ]
+    },
+    {
+      "scope": "R8 history",
+      "actor": 71,
+      "route": "Own Profile > Activities count",
+      "actions": [
+        "Use ended joined Activity203 Golden Hour Photography Walk or existing QA Activity231.",
+        "Hosted ended Activity234/236 also exists.",
+        "Open actual Activity details from history; do not mutate historical dates."
+      ]
+    },
+    {
+      "scope": "R8 Squad",
+      "actor": 71,
+      "route": "https://wenitro-app.vercel.app/#/squad/71",
+      "actions": [
+        "Capture actual empty own Squad; both70/71 currently return no accepted Squad members.",
+        "For another owner use public profile Squad action to verify private-state presentation."
+      ],
+      "limitation": "No populated Squad proof is claimed. Read-only discovery did not create friendships."
+    }
+  ]
+}
