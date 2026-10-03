@@ -554,7 +554,55 @@
     "deploymentBundles": "Fresh App entry bundle and 19 Admin entry-page scripts contain target reference and no old-project reference. This is the fetched entry-script set, not a claim that every lazy Admin route bundle was scanned.",
     "communityProductionUi": "Community 244 cold direct link loads without full-discovery warning; Posts loads existing named and anonymous posts; named author has colored initials. Chat poll shows Priya Nair voted Morning; attachment sheet has Photo/Poll and no Video; Back returns to Community 244. Evidence: qa-evidence/production-community-chat-poll-photo-only.png.",
     "localRetest": "Workspace refresh/loading, avatar batch/fallback, acceptance UI, client readiness, PDF source contracts, privacy mapper, discovery filters, payment-mode mapping, Chat UI, exact hero assets and deterministic avatar contrast passed. Disposable PostgreSQL acceptance backend suite passed. Typecheck and Vercel web builds passed.",
-    "privacyScope": "Anonymous rating and text Community identity proof retained. Anonymous media repair now deployed and production/API verified; see CHAT001 evidence."
+    "privacyScope": "Anonymous rating and text Community identity proof retained. Anonymous media repair now deployed and production/API verified; see CHAT001 evidence.",
+    "normalHostPricingUi": {
+      "user": 116,
+      "scope": "Synthetic normal member; unsubmitted form only. Paid OFF and ON captured. ON contains no amount/category/Cashfree collection and explains direct venue arrangement. Left form without saving. This fixture is not OTP or onboarding verification evidence.",
+      "evidence": [
+        "qa-evidence/chat001/production-normal-host-paid-off.png",
+        "qa-evidence/chat001/production-normal-host-paid-on-no-price.png"
+      ]
+    },
+    "activityDiscoveryAfterRepair": {
+      "commit": "1a3051a",
+      "backendEvidence": "docs/chat001-activity-discovery-proof.json",
+      "evidence": [
+        "qa-evidence/chat001/production-paid-filter-normal-costs.png",
+        "qa-evidence/chat001/production-partner-card-identity.png",
+        "qa-evidence/chat001/production-host-profile-destination.png"
+      ],
+      "scope": "Paid includes ordinary costs and Partner fees. Full name shown and actual host profile opens. Purple Partner label/border in Home and discovery main cards. Additional compact lists being aligned."
+    },
+    "cashfreeHostedSandbox": {
+      "status": "PASS",
+      "evidence": "docs/chat001-hosted-checkout-proof.json",
+      "firstRunFound": "Modal completion left stale preparing message. Fixed 75cbea7, deployed and fresh hosted Sandbox retest passed.",
+      "scope": "No real money; synthetic fixture does not prove physical phone OTP. Real refunds/payouts remain separate."
+    },
+    "targetedAnnouncement": {
+      "status": "PASS",
+      "evidence": "docs/chat001-announcement-proof.json",
+      "scope": "Admin UI created for only synthetic user116; actual deployed recipient popup acknowledged; read receipt idempotency and other member denial verified; Admin disabled fixture."
+    },
+    "legalLinks": {
+      "status": "PASS",
+      "production": "Home Privacy Policy and Terms pages each expose View More. Clicked both to open actual wenitro.com privacy-policy.html and terms-and-conditions.html and read respective headings.",
+      "evidence": [
+        "qa-evidence/chat001/production-privacy-view-more.png",
+        "qa-evidence/chat001/production-privacy-external-destination.png",
+        "qa-evidence/chat001/production-terms-view-more.png",
+        "qa-evidence/chat001/production-terms-external-destination.png"
+      ]
+    },
+    "adminPinCategoryUi": {
+      "event": 280,
+      "scope": "Private synthetic Sandbox QA activity. Admin Pin showed Featured/Unpin; corrected Social to Sports; member reload displayed Sports; restored Unpin and Social through UI.",
+      "evidence": [
+        "qa-evidence/chat001/production-admin-pinned-category-corrected.png",
+        "qa-evidence/chat001/production-admin-category-member-reflection.png"
+      ],
+      "pending": "Capture final restored state and member denial technical result for this exact fixture. Historical fresh member denial already exists for278."
+    }
   },
   "deployments": [
     {
@@ -593,6 +641,18 @@
     {
       "commit": "c2da52c",
       "id": "dpl_BzoHy2CAqKFDV9sSduvYfRnGotUr"
+    },
+    {
+      "commit": "1a3051a",
+      "id": "dpl_HkpvioK2WoHF4Rgt16HbdiXzuhVd"
+    },
+    {
+      "commit": "75cbea7",
+      "id": "dpl_8RVLnVe6qWMyaopojogiqZevawkx"
+    },
+    {
+      "commit": "029e72a",
+      "id": "dpl_3cmHhvHbKsptz8Qh9DnewDgc5cy6"
     }
   ],
   "accessObservation": {

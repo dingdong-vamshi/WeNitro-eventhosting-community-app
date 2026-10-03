@@ -1,0 +1,50 @@
+{
+  "recordedAt": "2026-10-03T06:10:13.205Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "app": "https://wenitro-app.vercel.app",
+  "environment": "sandbox",
+  "eventId": 280,
+  "userId": 116,
+  "paymentId": 41,
+  "checks": [
+    {
+      "name": "Cashfree Sandbox provider order is PAID",
+      "status": "PASS",
+      "data": {
+        "orderId": "wn_280_116_5f4a3b86f8fc49dfa9e9",
+        "amount": 12.34,
+        "currency": "INR"
+      }
+    },
+    {
+      "name": "Hosted bank simulator generated actual provider SUCCESS",
+      "status": "PASS",
+      "data": {
+        "paymentId": "1459790727161539584",
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "name": "Deployed verification returns paid and safely repeats",
+      "status": "PASS"
+    },
+    {
+      "name": "One approved registration persisted after verified payment",
+      "status": "PASS"
+    },
+    {
+      "name": "One financial PAYMENT event after repeated verification",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "qa-evidence/chat001/production-cashfree-hosted-checkout.png",
+    "qa-evidence/chat001/production-cashfree-second-simulator.png",
+    "qa-evidence/chat001/production-cashfree-confirmed-registration.png"
+  ],
+  "scope": "Hosted interactive Sandbox; no real money. Synthetic phone is not evidence of OTP delivery.",
+  "commit": "75cbea7",
+  "deployment": "dpl_8RVLnVe6qWMyaopojogiqZevawkx",
+  "ui": "Hosted checkout completed in Chrome. Same mounted Activity displayed Payment confirmed. Your place is secured and JOINED without reload or manual verification; then backend replay checks passed.",
+  "quarantine": "Both test activities 279 and 280 private. Payments and settlements ON_HOLD; no payout."
+}

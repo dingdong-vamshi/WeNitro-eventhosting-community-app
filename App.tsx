@@ -12442,13 +12442,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   recommendedRow: { gap: 10, paddingBottom: 4 },
-  recommendedCard: { width: 152, gap: 6 },
+  recommendedCard: { width: 164, gap: 6, padding: 4, borderRadius: 14 },
   recommendedImage: { width: "100%", height: 84, borderRadius: 12 },
   recommendedTitle: {
     fontFamily: "Manrope_700Bold",
     color: "#F3F4F7",
-    fontSize: 10,
-    lineHeight: 14,
+    fontSize: 12,
+    lineHeight: 17,
   },
   detailBottomActions: {
     flexDirection: "row",

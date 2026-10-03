@@ -1,0 +1,21 @@
+{
+  "recordedAt": "2026-10-03T06:14:02.570Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "announcementId": 2,
+  "recipient": 116,
+  "phase": "AFTER_UI_ACK",
+  "checks": [
+    "Admin publication persisted with only QA user 116 as audience",
+    "Non-recipient cannot receive targeted announcement",
+    "Non-recipient acknowledgement denied",
+    "Raw announcement table hidden from member",
+    "Member cannot publish announcements",
+    "UI acknowledgement persisted once; retry preserves original receipt and hides announcement"
+  ],
+  "screenshots": [
+    "qa-evidence/chat001/production-admin-announcement-published.png",
+    "qa-evidence/chat001/production-login-announcement-recipient.png",
+    "qa-evidence/chat001/production-admin-announcement-disabled.png"
+  ],
+  "cleanup": "Admin Disable clicked and Inactive status verified after acknowledgement."
+}

@@ -1,0 +1,17 @@
+{
+  "recordedAt": "2026-10-03T06:25:58.410Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "event": 280,
+  "checks": [
+    "Admin pin removed and original Social category persisted after UI restoration",
+    "Ordinary participant cannot invoke Admin pin or category correction",
+    "Private activity readable by joined participant but hidden from unrelated member",
+    "Own payment readable; another member cannot read it; Sandbox funds ON_HOLD",
+    "Ordinary Admin cannot access finance-only data"
+  ],
+  "screenshots": [
+    "qa-evidence/chat001/production-admin-pinned-category-corrected.png",
+    "qa-evidence/chat001/production-admin-category-member-reflection.png",
+    "qa-evidence/chat001/production-admin-corrected-stats-restored-controls.png"
+  ]
+}
