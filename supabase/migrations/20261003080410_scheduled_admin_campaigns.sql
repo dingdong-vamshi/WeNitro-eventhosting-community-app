@@ -11,7 +11,7 @@ begin
  if p_version is null or campaign.version<>p_version then raise exception 'Campaign changed. Reload before sending.' using errcode='40001';end if;
  if campaign.payload->>'channel'<>'in_app' then raise exception 'External campaign delivery provider is not configured. The draft is preserved.';end if;
  for recipient in select distinct value::integer from jsonb_array_elements_text(campaign.payload->'recipients') loop
-  if not exists(select 1 from public.tbl_users u where u.id=recipient and coalesce(u.is_active,1)=1 and coalesce(u.is_delete,0)=0 and u.deactivated_at is null and not exists(select 1 from auth.users a where a.id=u.auth_user_id and a.banned_until>now())) then raise exception 'Recipient % is unavailable',recipient;end if;
+  if not exists(select 1 from public.tbl_users u where u.id=recipient and coalesce(u.is_active,1)=1 and coalesce(u.is_delete,0)=0 and u.deactivated_at is null and exists(select 1 from auth.users a where a.id=u.auth_user_id and (a.banned_until is null or a.banned_until<=now()))) then raise exception 'Recipient % is unavailable',recipient;end if;
   perform private.enqueue_notification(recipient,'admin_campaign',campaign.payload->>'title',campaign.payload->>'body',campaign.id::text,null,jsonb_build_object('campaign_id',campaign.id));
   total:=total+1;
  end loop;
