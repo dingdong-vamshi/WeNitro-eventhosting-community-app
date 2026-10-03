@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-03T19:50:58.156731+00:00",
+  "at": "2026-10-03T20:07:16.103281+00:00",
   "purpose": "Final-release E16 contribution awaiting root hosted297 and new preflight/external-link visual proof. Preserves exact prior compatible nonpayment scopes; no fabricated success.",
   "target": "cxsznhrkzqndhseodcyy",
   "count": 16,
@@ -8,14 +8,13 @@
     "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
   },
   "counts": {
-    "PENDING_DEPLOYED_RETEST": 2,
-    "PASS": 3,
+    "PASS": 5,
     "PENDING_SCOPED_ACCEPTANCE": 11
   },
   "requirements": [
     {
       "id": "PARTNER-INSTRUCTIONS",
-      "status": "PENDING_DEPLOYED_RETEST",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Show readable bullet-point Partner instructions before the application fields, explaining required details, payout destination and approval.",
       "before": "Only paragraph instructions were present; original PDF32 called for bullets before form entry.",
@@ -28,27 +27,29 @@
         "scripts/partner-preflight-test.mjs",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "qa-evidence/chat001/integrated-ae-screenshots.json"
+      ],
       "technicalProof": [
         "docs/chat001-partner-preflight-regression.json"
       ],
-      "screenshotProof": [],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "New release contains corrected bullet preflight instructions. Await exact deployed unaccepted preflight screenshot; the old paragraph form is excluded as proof.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        "qa-evidence/chat001/release-partner-preflight-instructions.png"
+      ],
+      "acceptanceScope": "Original PDF32 bullet instructions and blocking Terms popup before form entry; deployed unaccepted/dismissed states plus local state/receipt persistence tests. UI QA did not accept new legal terms or approve a Partner.",
+      "reason": "Personally reviewed actual released QA120 preflight pixels. Before-fields bullet instructions list eligibility, business details, masked payout destination and review; Not now leaves fields inaccessible. Terms modal opens before fields with unchecked agreement and disabled Continue. No new legal acceptance was made during UI QA; prior same-version handling and atomic receipt persistence are covered by existing technical tests.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "New release contains corrected bullet preflight instructions. Await exact deployed unaccepted preflight screenshot; the old paragraph form is excluded as proof."
-      ],
+      "remainingValidation": [],
       "excludedPriorEvidence": "Old instructions/bottom-checkbox screenshots predate corrected pre-entry gate and cannot satisfy original PDF32."
     },
     {
       "id": "PARTNER-TERMS",
-      "status": "PENDING_DEPLOYED_RETEST",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Present the Partner Terms agreement popup before filling the application. Gate fields until agreement, preserve a current own prior receipt, and persist accepted policy version atomically on submission.",
       "before": "Only a paragraph and bottom-of-form checkbox existed; fields could be filled before agreement. Existing saved acceptance was not loaded.",
@@ -63,24 +64,27 @@
         "scripts/partner-submit-regression-test.mjs",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "qa-evidence/chat001/integrated-ae-screenshots.json"
+      ],
       "technicalProof": [
         "scripts/partner-submit-regression-test.mjs",
         "scripts/partner-v1-contract-test.mjs",
         "docs/chat001-partner-preflight-regression.json"
       ],
-      "screenshotProof": [],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "New release contains Terms modal before editable fields and same-version prior-receipt handling. Await unaccepted modal/blocked-fields capture; do not accept legal terms for a real applicant.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        "qa-evidence/chat001/release-partner-preflight-instructions.png",
+        "qa-evidence/chat001/release-partner-preflight-terms.png"
+      ],
+      "acceptanceScope": "Original PDF32 bullet instructions and blocking Terms popup before form entry; deployed unaccepted/dismissed states plus local state/receipt persistence tests. UI QA did not accept new legal terms or approve a Partner.",
+      "reason": "Personally reviewed actual released QA120 preflight pixels. Before-fields bullet instructions list eligibility, business details, masked payout destination and review; Not now leaves fields inaccessible. Terms modal opens before fields with unchecked agreement and disabled Continue. No new legal acceptance was made during UI QA; prior same-version handling and atomic receipt persistence are covered by existing technical tests.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "New release contains Terms modal before editable fields and same-version prior-receipt handling. Await unaccepted modal/blocked-fields capture; do not accept legal terms for a real applicant."
-      ],
+      "remainingValidation": [],
       "excludedPriorEvidence": "Old instructions/bottom-checkbox screenshots predate corrected pre-entry gate and cannot satisfy original PDF32."
     },
     {
