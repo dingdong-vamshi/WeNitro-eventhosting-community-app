@@ -37,8 +37,8 @@
   "localVerification": {
     "command": "node scripts/registration-text-guards-postgres-test.mjs",
     "status": "PASS",
-    "checks": 44,
-    "scope": "Actual PostgreSQL migration and original guard; previous omitted-fields acceptance reproduced, insert/update denied, every option/array, NFKC/innocent substrings, valid input, legacy no-op, atomic statement rollback and no submitted text in error. Prepared rollback-only live verifier itself executed successfully against local deployed bindings."
+    "checks": 47,
+    "scope": "Actual PostgreSQL migration and original guard; previous omitted-fields acceptance reproduced, insert/update denied, every option/array, NFKC/innocent substrings, valid input, legacy no-op, atomic statement rollback and no submitted text in error. Prepared rollback-only live verifier itself executed successfully against local deployed bindings. No-DDL controlled-fixture verifier executed locally: all12 fields rejected and fixture value unchanged after rollback."
   },
   "reviewedInputs": [
     "src/components/registration-questions.tsx (host label/options and attendee short/long answers)",
@@ -55,5 +55,6 @@
   ],
   "preparedProductionVerifier": "scripts/sql/qa-registration-text-guards-rollback.sql",
   "productionVerification": [],
-  "remaining": "Coordinator must integrate and pass full local gate before deployment. Rollback-only production verifier checks exact deployed bindings and guard semantics on temporary rows; hosted UI acceptance remains independent."
+  "remaining": "Coordinator must integrate and pass full local gate before deployment. SQL connector may run only the no-DDL fixture verifier; it reports missing controlled rows as UNAVAILABLE. TEMP-DDL verifier requires an appropriate direct psql session and is not for execute_sql/apply_migration. Hosted UI acceptance remains independent.",
+  "preparedNoDDLProductionVerifier": "scripts/sql/qa-registration-text-guards-fixtures.sql"
 }

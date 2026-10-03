@@ -16,7 +16,7 @@ try {
  ${questionSource.slice(questionSource.indexOf('create table public.tbl_activity_registration_questions ('),questionSource.indexOf('create table public.tbl_activity_registration_answers ('))}
  ${questionSource.slice(questionSource.indexOf('create table public.tbl_activity_registration_answers ('),questionSource.indexOf('create index registration_answers_event_user'))}
  ${partnerSource.slice(partnerSource.indexOf('create table public.tbl_partner_profiles ('),partnerSource.indexOf('alter table public.tbl_partner_profiles'))}
- create table public.tbl_event_feedback(id int primary key,comment text,reaction text);
+ create table public.tbl_event_feedback(id int primary key,comment text,reaction text,event_id int,created_by int);
  create table public.tbl_chat_rooms(id int primary key,title text,description text,tagline text,tags text[],rules text[]);
  ${categorySource.slice(0,categorySource.indexOf('create index'))}
  ${guardSource.slice(0,guardSource.indexOf('create trigger'))}
@@ -27,7 +27,7 @@ try {
  eq(attempt("insert into tbl_activity_registration_questions(id,event_id,label,type,display_order,options) values(1,1,'fuck','single_choice',0,'[\"Normal\",\"shit\"]')"),'ACCEPTED');
  eq(attempt("insert into tbl_activity_entry_categories(id,event_id,name,price_paisa) values(1,1,'shit',100)"),'ACCEPTED');
  sql(`insert into tbl_activity_registration_answers values(1,1,1,'\"shit\"');
- insert into tbl_event_feedback values(1,'shit','great');
+ insert into tbl_event_feedback(id,comment,reaction) values(1,'shit','great');
  insert into tbl_partner_profiles(user_id,business_name,description) values(1,'shit','fuck');
  insert into tbl_chat_rooms values(1,'Clean','Clean','Clean',array['fuck'],array['shit']);`);
  sql(fs.readFileSync('supabase/migrations/20261003203126_registration_question_category_text_guards.sql','utf8'));
@@ -57,7 +57,7 @@ try {
  for(const q of [
   "insert into tbl_activity_registration_answers(event_id,question_id,user_id,value) values(1,100,2,'\"fuck\"')",
   "update tbl_activity_registration_answers set value='\"fucking\"' where user_id=1",
-  "insert into tbl_event_feedback values(2,'fuck','great')",
+  "insert into tbl_event_feedback(id,comment,reaction) values(2,'fuck','great')",
   "update tbl_event_feedback set comment='fucking' where id=1",
   "insert into tbl_partner_profiles(user_id,business_name) values(2,'fuck')",
   "insert into tbl_partner_profiles(user_id,business_name,description) values(2,'Clean','shit')",
@@ -81,5 +81,16 @@ try {
  eq(sql("select qa_error('update tbl_event_feedback set comment=''fuck PRIVATE_SECRET'' where id=1')"),'Please remove explicit or hateful language before saving.');
  eq(sql("select has_function_privilege('authenticated','private.guard_ugc_text()','EXECUTE')"),'f');
  eq(sql(fs.readFileSync('scripts/sql/qa-registration-text-guards-rollback.sql','utf8')).startsWith('PASS: six deployed trigger bindings'),true);
+ sql(`insert into tbl_events values(297),(300);insert into tbl_users values(70),(116);
+ insert into tbl_activity_registration_questions(id,event_id,label,type,display_order) values(999,297,'Entry name','short_text',0);
+ insert into tbl_activity_registration_answers(event_id,question_id,user_id,value) values(297,999,116,'"Sandbox Acceptance"');
+ insert into tbl_activity_entry_categories(id,event_id,name,price_paisa) values(999,297,'General',1234);
+ insert into tbl_event_feedback(id,event_id,created_by,comment,reaction) values(999,300,120,'Great','good');
+ insert into tbl_partner_profiles(user_id,business_name,description) values(70,'QA Partner','Classes');
+ insert into tbl_chat_rooms(id,title,description,tagline,tags,rules) values(252,'QA Community','Description','Tagline',array['sport'],array['Be kind']);`);
+ const fixtureProof=sql(fs.readFileSync('scripts/sql/qa-registration-text-guards-fixtures.sql','utf8'));
+ const fixtureResults=JSON.parse(fixtureProof.split('\n').at(-1));
+ eq(fixtureResults.length,12);eq(fixtureResults.every(row=>row.outcome.startsWith('PASS:')),true);
+ eq(sql('select label from tbl_activity_registration_questions where id=999'),'Entry name');
  console.log(JSON.stringify({status:'PASS',checks,scope:'Actual PostgreSQL tables, existing unchanged guard and new migration. Pre-fix reproduction; label/JSON-option/category/answer/feedback/Partner/Community insert and update denial, NFKC, innocent substrings, normal saves, unchanged legacy fields, clean replacement, statement rollback and unchanged private execution grant.'}));
 } finally {if(started)run('pg_ctl',['-D',dir+'/db','-m','immediate','-w','stop']);fs.rmSync(dir,{recursive:true,force:true});}
