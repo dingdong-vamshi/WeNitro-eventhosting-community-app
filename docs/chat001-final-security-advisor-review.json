@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-03 19:36:22 UTC",
+  "target": "cxsznhrkzqndhseodcyy",
+  "release": {
+    "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+  },
+  "source": "Fresh read-only Supabase security advisors and catalog SQL after five-migration batch",
+  "totals": {
+    "ERROR": 0,
+    "WARN": 136,
+    "INFO": 9
+  },
+  "advisors": [
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "count": 9,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "review": "Private tables have RLS without ordinary access policies. Latest safety ledger is dispatcher-owned and ordinary users have no dispatcher execute permission."
+    },
+    {
+      "name": "authenticated_security_definer_function_executable",
+      "level": "WARN",
+      "count": 135,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+      "review": "135 callable authenticated API signatures remain a review surface, not automatically safe. Tested identity/role/ownership/lifecycle guards are evidenced by isolated API and real PostgreSQL tests; this is not exhaustive proof of every branch."
+    },
+    {
+      "name": "auth_leaked_password_protection",
+      "level": "WARN",
+      "count": 1,
+      "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection",
+      "review": "Leaked-password protection remains disabled; no claim of configuration remediation."
+    }
+  ],
+  "structuralChecks": {
+    "anonymousPublicSecdef": 0,
+    "publicTablesWithoutRls": 0,
+    "callableViewsWithoutSecurityInvoker": 0,
+    "ordinarySafetyDispatcherExecute": false,
+    "observedAt": "2026-10-03T19:35:56.035811Z"
+  },
+  "reviewLimit": "Security advisor summary is not a blanket security certification; provider delivery and transitive dependency warnings remain separately recorded.",
+  "queryCorrection": "Initial read-only catalog query used an incorrect dispatcher name and returned42883. Correct dispatch_due_activity_safety_reminders signature query succeeded; no mutation occurred."
+}

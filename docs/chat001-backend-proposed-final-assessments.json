@@ -25,11 +25,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "Coordinator must review final operational/deployment documentation; runtime tests do not establish documentation completeness."
       ]
     },
@@ -58,12 +60,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ]
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": []
     },
     {
       "id": "SEC-MEDIA-CAPABILITY",
@@ -91,12 +94,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ]
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": []
     },
     {
       "id": "SEC-ANONYMOUS-RATING",
@@ -123,12 +127,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ],
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": [],
       "evidenceCaveat": "The musp6fp8 report is overall FAIL because a later Realtime subscription timed out. Only the explicitly passed rating/report checks are cited. Separate fresh Realtime retry passed; do not relabel original report PASS."
     },
     {
@@ -163,11 +168,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "Account-switch race is executable local evidence, not a replayed browser race; combine UI owner account-switch proof if required."
       ]
     },
@@ -196,12 +203,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ]
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": []
     },
     {
       "id": "SEC-REPORT-SUBMISSION",
@@ -228,12 +236,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ],
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": [],
       "evidenceCaveat": "The musp6fp8 report is overall FAIL because a later Realtime subscription timed out. Only the explicitly passed rating/report checks are cited. Separate fresh Realtime retry passed; do not relabel original report PASS."
     },
     {
@@ -268,12 +277,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ]
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": []
     },
     {
       "id": "SEC-BADGE-IDEMPOTENCY",
@@ -307,12 +317,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ]
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": []
     },
     {
       "id": "SEC-BADGE-READ-PRIVACY",
@@ -346,12 +357,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ]
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": []
     },
     {
       "id": "SEC-STORAGE-OWNERSHIP",
@@ -377,20 +389,27 @@
           "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
           "outcome": "Current owner upload/read/delete and cross-user overwrite/delete denial across avatars, communities, vibes and messages. Gallery fourth-slot denial and anonymous direct-path denial tested. Public avatar CDN cache may retain old bytes after object deletion; authoritative remove response/listing checked.",
           "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:38:11.927Z",
+          "proof": "docs/chat001-isolated-backend-production-mussnxbq-287618.json",
+          "outcome": "Final-release Activity media participant signing returns bytes; outsider signing/read denied; another participant cannot alter author feed choice; former participant loses row access."
         }
       ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
-        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-mussnxbq-287618.json"
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ]
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": []
     },
     {
       "id": "SEC-OBSERVATION-AUTH",
@@ -425,12 +444,13 @@
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
-      "remaining": [
-        "Reconcile final release IDs and implementation compatibility."
-      ]
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
+      "remaining": []
     },
     {
       "id": "BADGE-01",
@@ -470,11 +490,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -528,11 +550,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -586,11 +610,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -648,11 +674,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -706,11 +734,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -764,11 +794,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -822,11 +854,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -880,11 +914,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -938,11 +974,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -996,11 +1034,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1054,11 +1094,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1112,11 +1154,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1174,11 +1218,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1232,11 +1278,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1290,11 +1338,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1348,11 +1398,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1406,11 +1458,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1464,11 +1518,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1522,11 +1578,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1580,11 +1638,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1638,11 +1698,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1696,11 +1758,13 @@
         }
       ],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Technical release compatibility reviewed; coordinator must reconcile required deployed visual proof and final narratives before assigning terminal PASS.",
       "remaining": [
-        "Reconcile final release IDs and implementation compatibility.",
         "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
       ],
       "priorUiVerification": [
@@ -1726,12 +1790,13 @@
       "docs/chat001-postdeploy-auth-provider-state.json"
     ],
     "priorAdvisorResult": "0 ERROR;135 authenticated SECURITY DEFINER warnings; leaked-password protection disabled warning;8 private RLS-no-policy informational findings. No anonymous SECURITY DEFINER execution, no public tables without RLS or callable views without security_invoker in the inspected snapshot.",
-    "remaining": "Refresh structural/advisor inventory after the five pending migrations. The number of warnings is not a proof of absence or presence of an exploitable boundary.",
+    "remaining": "Leaked-password protection warning remains; Auth delivery/native/provider boundaries remain separately documented.",
     "externalConstraints": [
       "Leaked-password protection requires actual Supabase Auth configuration/provider availability review; no disabled setting represented as enabled.",
       "Auth provider settings are not proof of successful inbox/SMS delivery or Google consent completion.",
       "Known transitive tooling vulnerabilities remain recorded by coordinator; no claim of npm audit clean."
-    ]
+    ],
+    "currentFinalProof": "docs/chat001-final-security-advisor-review.json"
   },
   "migrationReview": {
     "blockingFindings": [],
@@ -1758,5 +1823,36 @@
       "--participant-management",
       "--activity-media"
     ]
+  },
+  "finalReleaseTechnicalReview": {
+    "at": "2026-10-03T19:40:17.398876+00:00",
+    "release": {
+      "appCommit": "08b8bb8abee17f33f412cb449b9edce2749db0b4",
+      "adminCommit": "bcdaa9662a73897a0e413f58793b8f45463c906f",
+      "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+      "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+      "cashfreeCreateVersion": 6,
+      "cashfreeVerifyVersion": 4,
+      "cashfreeWebhookVersion": 4,
+      "appliedMigrations": [
+        "20261003074100",
+        "20261003074522",
+        "20261003075132",
+        "20261003075305",
+        "20261003075439",
+        "20261003075444",
+        "20261003075804",
+        "20261003080410",
+        "20261003082759",
+        "20261003082845",
+        "20261003181143",
+        "20261003181703",
+        "20261003182405",
+        "20261003183320",
+        "20261003185740"
+      ]
+    },
+    "proof": "docs/chat001-final-backend-production-proof.json",
+    "scope": "Final batch source compared with prior technical evidence. Core achievement, Trust, anonymous media capability and rating logic unchanged; new Activity media privacy enforced by actual final-release API/Storage tests."
   }
 }
