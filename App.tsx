@@ -9810,7 +9810,7 @@ export default function App() {
     if (screen === 'shop') return <ReferenceStore points={data.nitro} back={back} />;
     if (screen === 'nitroHistory') return <ReferenceNitroHistory back={back} />;
     if (screen === 'activityHistory') return <ReferenceActivityHistory userId={data.userId || ''} back={back} openActivity={openActivity} />;
-    if (screen === 'verification') return <ReferenceVerification back={back} />;
+    if (screen === 'verification') return <ReferenceVerification key={`verification:${data.userId}`} back={back} />;
     if (screen === 'emergency') return <ReferenceEmergencyContact back={back} />;
     if (screen === 'saved' || screen === 'liked') return <ReferenceCollection kind={screen} data={data} setData={setData} back={back} openActivity={openActivity} openVibe={id => { setSelectedVibeId(id); go('vibes', id); }} />;
     if (screen === 'socialLinks') return <SocialProfilesScreen key={data.userId} userId={data.userId!} back={back} onSaved={() => go('profile')} />;

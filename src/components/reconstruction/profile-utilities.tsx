@@ -1,5 +1,6 @@
+import { LiveSelfieCamera } from './live-selfie-camera';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, Image, Linking, Pressable, ScrollView, Text, View } from 'react-native';
+import { FlatList, Image, Linking, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import type { Activity } from '../../../App';
 import { activitiesProductionService } from '../../services/activities-production';
@@ -23,6 +24,9 @@ export function ReferenceVerification({ back }: { back: () => void }) {
   const [emailVerified, setEmailVerified] = useState(false);
   const [email, setEmail] = useState('');
   const [methods, setMethods] = useState<VerificationMethods | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const alive = useRef(true);
+  const cameraRequest = useRef(false);
   const [identityPhoto, setIdentityPhoto] = useState<ImagePicker.ImagePickerAsset | null>(null);
   const [selfiePreview, setSelfiePreview] = useState<string | null>(null);
   const [trustScore, setTrustScore] = useState<number | null>(null);
@@ -33,20 +37,17 @@ export function ReferenceVerification({ back }: { back: () => void }) {
   const lock = useRef(false);
   const load = async () => {
     const state = await verificationService.syncMethods();
+    if (!alive.current) return;
     const [metrics, trust, auth] = await Promise.all([
       supabase.rpc('my_profile_metrics'),
       Promise.resolve(supabase.rpc('my_trust_score')).catch(() => ({ data: null, error: null })),
       supabase.auth.getUser(),
     ]);
+    if (!alive.current) return;
     if (metrics.error) throw metrics.error;
     if (auth.error) throw auth.error;
-    setPhoneVerified(state.phone_verified);
-    setEmailVerified(state.email_verified);
-    setEmail(auth.data.user?.email || '');
-    setMethods(state);
     const trustData = !trust.error && trust.data && typeof trust.data === 'object' ? trust.data as Record<string, unknown> : {};
     const combinedMetrics = { ...(metrics.data || {}), ...trustData };
-    setMetrics(combinedMetrics);
     const fallbackScore = derivedTrustScore({
       email_verified: state.email_verified,
       phone_verified: state.phone_verified,
@@ -57,18 +58,31 @@ export function ReferenceVerification({ back }: { back: () => void }) {
       activities_joined: Number(combinedMetrics.activities_joined ?? 0),
     });
     const authoritativeScore = Number(trustData.total);
+    const preview = state.live_photo_verified || state.live_photo_pending ? await verificationService.previewLivePhoto().catch(() => null) : null;
+    if (!alive.current) return;
+    setPhoneVerified(state.phone_verified); setEmailVerified(state.email_verified);
+    setEmail(auth.data.user?.email || ''); setMethods(state); setMetrics(combinedMetrics);
     setTrustScore(Number.isFinite(authoritativeScore) ? authoritativeScore : fallbackScore);
     setPhone(auth.data.user?.phone?.replace(/^\+91/, '') || '');
-    if (state.live_photo_verified || state.live_photo_pending) setSelfiePreview(await verificationService.previewLivePhoto().catch(() => null));
+    setSelfiePreview(preview);
   };
-  useEffect(() => { let active = true; void load().catch(e => active && setError(e.message)).finally(() => active && setLoading(false)); return () => { active = false; }; }, []);
-  const run = async (action: () => Promise<unknown>) => { if (lock.current) return; lock.current = true; setBusy(true); setError(''); try { await action(); } catch (e: any) { setError(e.message || 'Verification could not continue.'); } finally { lock.current = false; setBusy(false); } };
+  useEffect(() => { alive.current = true; void load().catch(e => alive.current && setError(e.message)).finally(() => alive.current && setLoading(false)); return () => { alive.current = false; }; }, []);
+  const run = async (action: () => Promise<unknown>) => { if (lock.current) return; lock.current = true; setBusy(true); setError(''); try { await action(); } catch (e: any) { if (alive.current) setError(e.message || 'Verification could not continue.'); } finally { lock.current = false; if (alive.current) setBusy(false); } };
   const openCamera = async () => {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-    if (!permission.granted) { setError('Camera access is required to take a selfie.'); return; }
-    const result = await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], allowsEditing: false, allowsMultipleSelection: false, quality: .9, cameraType: ImagePicker.CameraType.front });
-    if (!result.canceled && result.assets[0]?.uri) { setIdentityPhoto(result.assets[0]); setError(''); }
+    if (cameraRequest.current || busy) return;
+    setError('');
+    if (Platform.OS === 'web') { setCameraOpen(true); return; }
+    cameraRequest.current = true;
+    try {
+      const permission = await ImagePicker.requestCameraPermissionsAsync();
+      if (!alive.current) return;
+      if (!permission.granted) { setError('Camera access is required to take a selfie. Allow camera access in device settings and retry.'); return; }
+      const result = await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], allowsEditing: false, allowsMultipleSelection: false, quality: .9, cameraType: ImagePicker.CameraType.front });
+      if (alive.current && !result.canceled && result.assets[0]?.uri) { setIdentityPhoto(result.assets[0]); setError(''); }
+    } catch (error) { if (alive.current) setError(error instanceof Error ? error.message : 'The camera could not open. Check device camera permissions and retry.'); }
+    finally { cameraRequest.current = false; }
   };
+
   const photoVerified = methods?.live_photo_verified === true;
   const shownSelfie = identityPhoto?.uri || selfiePreview;
   const parts = trustScoreParts({
@@ -85,20 +99,21 @@ export function ReferenceVerification({ back }: { back: () => void }) {
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 8 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: emailVerified ? '#D8F7E7' : c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name={emailVerified ? 'checkmark' : 'mail-outline'} color={emailVerified ? '#198457' : c.muted} size={17} /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{emailVerified ? 'Email Verified' : 'Email Not Verified'}</Text><Text numberOfLines={1} style={{ color: c.muted, fontSize: 12 }}>{email || 'No email address is attached to this account.'}</Text></View><Text style={{ color: emailVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View></View>
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 13 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: phoneVerified ? '#D8F7E7' : '#ECE9FF', alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: phoneVerified ? '#198457' : purple, fontWeight: '800' }}>{phoneVerified ? '✓' : '1'}</Text></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{phoneVerified ? 'Number Verified' : 'Number Not Verified'}</Text><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18 }}>{phoneVerified ? 'Verified · +10 Trust Score. No Nitro reward.' : 'Verify with a one-time password · +10 Trust Score'}</Text></View><Text style={{ color: phoneVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View>
       {!phoneVerified && <><View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><View style={{ minHeight: 46, justifyContent: 'center', paddingHorizontal: 13, borderWidth: 1, borderColor: c.border, borderRadius: 9, backgroundColor: c.bg }}><Text style={{ color: c.text }}>+91</Text></View><Field accessibilityLabel="Phone number" keyboardType="phone-pad" maxLength={10} value={phone} onChangeText={value => setPhone(value.replace(/\D/g, '').slice(0, 10))} placeholder="10-digit mobile number" style={{ flex: 1 }} /></View>{otpSent && <Field accessibilityLabel="Phone OTP" keyboardType="number-pad" maxLength={6} value={otp} onChangeText={value => setOtp(value.replace(/\D/g, '').slice(0, 6))} placeholder="6-digit OTP" />}
-      <Button label={otpSent ? 'Verify Phone' : 'Add & Verify Phone'} busy={busy} disabled={otpSent ? otp.length !== 6 : phone.length !== 10} onPress={() => void run(async () => { if (!otpSent) { await referenceDeltaService.requestPhoneChange(phone); setOtpSent(true); } else { await referenceDeltaService.verifyPhoneChange(phone, otp); setOtpSent(false); setOtp(''); await load(); } })} /></>}
+      <Button label={otpSent ? 'Verify Phone' : 'Add & Verify Phone'} busy={busy} disabled={otpSent ? otp.length !== 6 : phone.length !== 10} onPress={() => void run(async () => { if (!otpSent) { await referenceDeltaService.requestPhoneChange(phone); if (alive.current) setOtpSent(true); } else { await referenceDeltaService.verifyPhoneChange(phone, otp); if (!alive.current) return; setOtpSent(false); setOtp(''); await load(); } })} /></>}
     </View>
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 13 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><Icon name={photoVerified ? 'checkmark-circle' : 'camera-outline'} color={photoVerified ? '#2D9666' : c.accent} /><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{photoVerified ? 'Selfie Approved' : methods?.live_photo_pending ? 'Selfie Awaiting Review' : 'Upload Selfie'}</Text><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18, marginTop: 4 }}>{photoVerified ? '+10 Trust Score after Admin review. No Nitro reward.' : 'Take a selfie with the camera. Admin review is required before +10 Trust Score.'}</Text></View><Text style={{ color: photoVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View>
       <Text style={{ color: c.muted, fontSize: 12, lineHeight: 18 }}>Your selfie stays private and is never used as your avatar or posted publicly. Open Camera only — gallery upload is not allowed.</Text>
       {shownSelfie ? <Image source={{ uri: shownSelfie }} style={{ width: '100%', height: 190, borderRadius: 12, backgroundColor: c.inset }} resizeMode="cover" /> : null}
       <Button label={shownSelfie ? 'Retake with Camera' : 'Open Camera'} disabled={busy} onPress={() => void openCamera()} />
-      {identityPhoto ? <Button label={'Submit Selfie for Review'} busy={busy} onPress={() => void run(async () => { await verificationService.submitLivePhoto(identityPhoto.uri, identityPhoto.mimeType); setIdentityPhoto(null); await load(); })} /> : null}
+      {identityPhoto ? <Button label="Cancel captured selfie" variant="outline" disabled={busy} onPress={() => setIdentityPhoto(null)} /> : null}
+      {identityPhoto ? <Button label={'Submit Selfie for Review'} busy={busy} onPress={() => void run(async () => { await verificationService.submitLivePhoto(identityPhoto.uri, identityPhoto.mimeType); if (!alive.current) return; setIdentityPhoto(null); await load(); })} /> : null}
       {photoVerified && <Text style={{ color: c.muted, fontSize: 12 }}>Replacing your selfie requires a new review and never awards Nitro Points.</Text>}
     </View>
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 8 }}><View style={{ flexDirection: 'row' }}><Text style={{ color: c.text, fontWeight: '700', fontSize: 15, flex: 1 }}>Aadhaar Verification</Text><Text style={{ color: metrics?.aadhaar_verified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+20</Text></View><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18 }}>{metrics?.aadhaar_verified ? 'Aadhaar verified · +20 points.' : 'Aadhaar verification is not available in this build yet. Completing it will add +20 to Trust Score.'}</Text></View>
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, gap: 8, borderWidth: 1, borderColor: c.border }}><Text style={{ color: c.text, fontWeight: '700', fontSize: 15 }}>Trust Score breakdown</Text>{parts.parts.map(part => <View key={part.key} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Icon name={part.done ? 'checkmark-circle' : 'ellipse-outline'} color={part.done ? '#2D9666' : c.iconMuted} size={16} /><Text style={{ color: c.text, fontSize: 12, flex: 1 }}>{part.label}</Text><Text style={{ color: part.done ? '#2D9666' : c.muted, fontSize: 12 }}>{part.earned}/{part.points}</Text></View>)}<Text style={{ color: c.muted, fontSize: 12, lineHeight: 18 }}>Email (Google or confirmed email) +10, phone OTP +10, selfie +10, Aadhaar +20, 1+ social profile +10, 4+ karma rating +10 (0 if rating drops below 4), 10 activities joined +20, 20+ joined +30.</Text></View>
     <ErrorLine text={error} />
-  </ScrollView>}</Page>;
+  </ScrollView>}{cameraOpen ? <LiveSelfieCamera onClose={() => setCameraOpen(false)} onCapture={asset => { if (alive.current) { setIdentityPhoto(asset); setCameraOpen(false); } }} /> : null}</Page>;
 }
 
 const RELATIONS = ['Parent', 'Spouse', 'Sibling', 'Friend', 'Partner', 'Guardian', 'Other'];

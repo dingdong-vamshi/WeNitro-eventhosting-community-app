@@ -1,0 +1,20 @@
+{
+  "status": "PASS_LOCAL_PENDING_PRODUCTION_CAMERA_ACCEPTANCE",
+  "change": "Web capture now uses getUserMedia front-camera stream and actual frame capture, with no file-input/gallery fallback. Native retains Expo launchCameraAsync.",
+  "privacy": "No microphone requested. Captured frame remains local until explicit Submit Selfie for Review. No biometric provider added and no media transmitted in these tests. Admin review remains required; camera capture is not liveness or identity approval.",
+  "accountIsolation": "ReferenceVerification keyed by userId. Private method/preview hydration, native permission/picker callbacks and phone OTP continuations check mounted scope; web camera stream closes on component unmount/account replacement.",
+  "ui": "Live preview, capture, review before submission, Cancel captured selfie, retake; insecure/unsupported browsers and permission/device errors expose retry guidance without filepicker fallback.",
+  "localChecks": [
+    { "script": "scripts/live-selfie-camera-test.mjs", "status": "PASS", "scope": "Actual service/controller and component callbacks: permission denial, unsupported/insecure environment, late-grant cleanup, account disposal, native success/failure, no microphone, front camera, capture bounds, closed-session rejection. Actual local Chromium synthetic camera stream creates JPEG and stops tracks; not physical-device proof." },
+    { "script": "scripts/phase5-profile-test.mjs", "status": "PASS", "scope": "Actual mocked profile/service/domain checks plus source contracts." },
+    { "script": "scripts/acceptance-ui-contract-test.mjs", "status": "PASS", "scope": "Source contracts only." },
+    { "command": "npm run typecheck", "status": "PASS" }
+  ],
+  "remaining": "Coordinator grouped build/deploy; actual controlled physical camera permission/capture/preview/cancel/retake and private submission production proof. No fake identity approval permitted.",
+  "references": [
+    "https://docs.expo.dev/versions/v57.0.0/",
+    "https://docs.expo.dev/versions/v57.0.0/sdk/imagepicker/",
+    "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia",
+    "https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/stop"
+  ]
+}
