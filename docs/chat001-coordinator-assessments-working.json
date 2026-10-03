@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "at": "2026-10-03T20:37:26.262Z",
+  "at": "2026-10-03T21:31:11.507Z",
   "status": "WORKING_INCOMPLETE_NOT_FINAL_ACCEPTANCE",
   "count": 308,
   "localVerificationStages": {
@@ -10,7 +10,7 @@
       "failed": 0
     },
     "firstProductionRegression": {
-      "path": "docs/chat001-production-regression-local-verification.json",
+      "path": "docs/chat001-regression-first-run.json",
       "checks": 98,
       "passed": 96,
       "failed": 2,
@@ -18,22 +18,32 @@
         "messages-search-performance-test import mock",
         "phone-otp-ui-test required local server"
       ],
-      "individualRepairStatus": "Coordinator reports both individually passing after repair; full rerun still pending."
+      "individualRepairStatus": "Both individually repaired; latestRecordedGate is authoritative for the final complete rerun."
     },
     "pendingSource": {
-      "appCommit": "2858a3a",
-      "adminCommit": "e4a6625"
+      "appCommit": "53cb3d4",
+      "adminCommit": "03d20e5"
     },
-    "production": "New regression source batch not yet deployed; no fresh regression production UI claimed. Selected deployment IDs stay at existing release."
+    "production": "New regression source batch not yet deployed; no fresh regression production UI claimed. Selected deployment IDs stay at existing release.",
+    "latestRecordedGate": {
+      "startedAt": "2026-10-03T21:28:26.435473+00:00",
+      "finishedAt": "2026-10-03T21:30:40.362973+00:00",
+      "status": "PASS",
+      "appCommit": "53cb3d46a2c48fbb79b057108793fd0a29e1bad4",
+      "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
+      "counts": {
+        "total": 115,
+        "passed": 115
+      }
+    }
   },
   "counts": {
     "PASS": 219,
     "PENDING_SCOPED_ACCEPTANCE": 65,
-    "PARTIAL_EXTERNAL_DEPENDENCY": 18,
-    "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 2,
+    "PARTIAL_EXTERNAL_DEPENDENCY": 20,
     "PENDING_REGRESSION_RETEST": 2,
-    "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION": 1,
-    "PENDING_LOCAL_IMPLEMENTATION": 1
+    "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
+    "PENDING_DEPLOYED_RETEST": 1
   },
   "selectedRelease": {
     "projectId": "cxsznhrkzqndhseodcyy",
@@ -349,7 +359,7 @@
   "inputSnapshots": [
     {
       "path": "docs/chat001-canonical-requirements.json",
-      "sha256": "08e93be37d4ea8aaeeba9c3cf35af88ba8bee7bcd4aceeed523d33eaa1382716"
+      "sha256": "2175059ab4d26528caa0298c428cbbfe24b440fdb6d671e41296afa86c064eec"
     },
     {
       "path": "docs/chat001-integrated-release.json",
@@ -357,7 +367,7 @@
     },
     {
       "path": "docs/chat001-app-final-assessments.json",
-      "sha256": "8fb63a0005af195ee88a098ede5fd943070e0cf7cfbc2507d3decc21a979d8c9"
+      "sha256": "2b58844f6a87eb01de745ce0d6a97501aa06bda61ed6ed6fcb0deb1b4ea6c28b"
     },
     {
       "path": "docs/chat001-backend-final-assessments.json",
@@ -365,7 +375,7 @@
     },
     {
       "path": "docs/chat001-admin-final-assessments.json",
-      "sha256": "16ee12a192495fc0debc90d3df9c6d569eefa25b306107b70aa2e83664a57d9b"
+      "sha256": "d3bdea4efc3cc7a3bef8146b91088c14e93ccbbf675576f774c2d7558f47da1d"
     },
     {
       "path": "docs/chat001-partner-final-assessments-proposed.json",
@@ -373,10 +383,18 @@
     },
     {
       "path": "docs/chat001-auth-provider-final-assessments-supplement.json",
-      "sha256": "533b349449975f5b1ece82066af153ae413fc1e2ee865fa949b54177135435d9"
+      "sha256": "e8838a5bcb902d068e75b6a41cfd677df8681877779130d056c6f698a45780e6"
+    },
+    {
+      "path": "docs/chat001-digilocker-assessments-supplement.json",
+      "sha256": "665c03ae72a1d447ee439ca2636b6c70f57df7901a7deb550caf0f2fa8bbf1e2"
+    },
+    {
+      "path": "docs/chat001-production-regression-local-verification.json",
+      "sha256": "79985211ff80729723b38ad4fdafbbce1cffd1ed1795d17801e87045b2ce4be0"
     }
   ],
-  "precedence": "Four disjoint owner assessment files, then16 auth/provider overrides. Ordinary Google cancellation remains pending. Admin receipt live API updates are scoped; UI still pending.",
+  "precedence": "Four disjoint owner assessment files, then16 exact auth/provider overrides, then2 supported DigiLocker overrides. Preserve the latest explicit owner status and evidence; no hardcoded pending/PASS overrides.",
   "requirements": [
     {
       "id": "ONB-NEXT",
@@ -1665,7 +1683,7 @@
       "requestedChange": "Configured Google sign-in exchanges valid provider credentials and rejects invalid or cancelled attempts.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "Actual valid Google GIS credential exchange into target session passed. Local executable chooser cancellation, retry, duplicate-tap, invalid exchange/error restoration tests pass on unchanged auth code.",
-      "acceptanceScope": "Actual valid Google GIS credential exchange into target session passed. Local executable chooser cancellation, retry, duplicate-tap, invalid exchange/error restoration tests pass on unchanged auth code. Remaining external interaction: Live provider cancellation/invalid-credential UI evidence is not retained; current locked-device/browser authorization prevents that interactive branch. Primary valid exchange is already proven and must not be reported as failed or missing Google credentials.",
+      "acceptanceScope": "Prior valid GIS exchange and local chooser cancellation/error boundaries accepted within recorded scope; live cancellation/error UI still pending.",
       "localVerification": [
         {
           "check": "google-oauth-web-test",
@@ -1717,11 +1735,11 @@
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Actual primary GIS valid exchange is proven and local cancellation/invalid exchange tests pass. Live chooser cancellation/error UI remains unexercised in the retained evidence; the current Mac lock is a temporary test-access block, not missing Google configuration or an external implementation dependency.",
+      "reason": "Actual primary GIS valid exchange is proven and local cancellation/invalid exchange tests pass. Live chooser cancellation/error UI remains unexercised in retained evidence. Mac lock is a temporary test-access block, not missing Google configuration or an external implementation dependency.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314→08b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
-        "Actual primary GIS valid exchange is proven and local cancellation/invalid exchange tests pass. Live chooser cancellation/error UI remains unexercised in the retained evidence; the current Mac lock is a temporary test-access block, not missing Google configuration or an external implementation dependency."
+        "Actual primary GIS valid exchange is proven and local cancellation/invalid exchange tests pass. Live chooser cancellation/error UI remains unexercised in retained evidence. Mac lock is a temporary test-access block, not missing Google configuration or an external implementation dependency."
       ],
       "implementationStatus": "IMPLEMENTED",
       "coordinatorSource": "docs/chat001-auth-provider-final-assessments-supplement.json",
@@ -7089,50 +7107,33 @@
     },
     {
       "id": "VERIFY-AADHAAR",
-      "status": "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY",
-      "sourceClauseIds": [
-        "A26-01",
-        "A26-02",
-        "A26-03"
-      ],
-      "requestedChange": "Aadhaar verification uses an approved licensed provider and exposes only legitimate verification outcomes.",
-      "before": "Client-requested acceptance gap: Aadhaar verification uses an approved licensed provider and exposes only legitimate verification outcomes.",
-      "implemented": "Verification UI truthfully exposes unavailable Aadhaar provider; no licensed provider integration is active.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed.",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "implementationStatus": "IMPLEMENTED_DISABLED_PENDING_COORDINATED_RELEASE",
+      "before": "Verification UI had no supported Aadhaar provider integration; the original page 26 explicitly suggested Sandbox. Existing Trust accepted the legacy approved Aadhaar source only.",
+      "implemented": "Supported Sandbox DigiLocker consent/initiate/status/issued-Aadhaar metadata adapter with authenticated account-bound private ledger, disabled default and test non-award; Verification consent/hosted link/status UI; production verified outcome adds existing Aadhaar +20 and preserves selfie/Nitro/other Trust rules.",
+      "acceptanceScope": "Local protocol/security/DB/UI verification only. No claim of live identity verification, deployed screenshot, provider activation, or ownership demonstration from a synthetic test.",
       "localVerification": [
-        {
-          "suite": "scripts/phase5-profile-test.mjs",
-          "type": "actual transpiled profile/domain/service behavior plus source contracts",
-          "status": "PASS",
-          "proof": "docs/chat001-predeployment-local-verification.json#/checks/50"
-        },
-        {
-          "suite": "scripts/acceptance-ui-contract-test.mjs",
-          "type": "source-string UI contract only",
-          "status": "PASS",
-          "proof": "docs/chat001-predeployment-local-verification.json#/checks/1"
-        },
-        {
-          "path": "docs/chat001-integrated-local-verification.json",
-          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
-        }
+        "docs/chat001-digilocker-local-proof.json"
       ],
       "productionVerification": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-digilocker-local-proof.json",
+        "docs/chat001-digilocker-integration.md"
+      ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": true,
-      "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
-      },
-      "reason": "Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314→08b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Provider flow remains disabled pending authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials, registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance. Remote credentials absence was not established. Coordinated deployment and visual acceptance also remain pending.",
       "remainingValidation": [
-        "Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed."
+        "Coordinator integrated gate and migration/Edge/frontend deployment",
+        "Authorized provider setup and test environment protocol acceptance",
+        "Explicit production activation and real consenting hosted-flow verification",
+        "Fresh deployed Verification UI and unchanged other Trust behavior"
       ],
-      "coordinatorSource": "docs/chat001-app-final-assessments.json"
+      "evidenceCompatibility": "Earlier verification screenshots do not prove the new DigiLocker card. Existing badge criterion screenshots remain scoped to unchanged badge UI/criteria; Aadhaar Trust source now has a new migration and its local proof must accompany any release compatibility assessment.",
+      "coordinatorSource": "docs/chat001-digilocker-assessments-supplement.json",
+      "coordinatorPrecedence": "Supported DigiLocker implementation supersedes the earlier missing Aadhaar implementation assessment."
     },
     {
       "id": "NOTIFICATIONS-LOAD",
@@ -15154,34 +15155,58 @@
     },
     {
       "id": "MAPS-GOOGLE",
-      "status": "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
       "sourceClauseIds": [
         "B21-01"
       ],
       "requestedChange": "Actual Google Maps/Places integration uses the client's authorized configured account.",
-      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
-      "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Google Maps/Places integration code is not implemented; source currently uses Photon/Nominatim/GPS. Client-authorized Maps project/API configuration plus implementation are required. This is not merely a native-device test hold.",
+      "before": "Host search used Photon/Nominatim/GPS; no Google Places adapter or configured Google account was proven.",
+      "implemented": "Locally implemented actual Google venue selection and ID-only drafts; source/placeID persistence; trusted28-day coordinate cache and purge; transient attributed name/address resolution; all Activity mappers/Nearby expiry guards; Google Maps PlaceID navigation/share/SOS. Adapter validates an active non-banned app identity and stays disabled until authorized configuration.",
+      "acceptanceScope": "Local executable mocked provider/UI/domain/service checks and59 real PostgreSQL retention/access checks only. No live Google account, activation, deployed Google screenshots or real provider requests are claimed.",
       "localVerification": [
         {
           "path": "docs/chat001-integrated-local-verification.json",
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        },
+        {
+          "path": "docs/chat001-google-places-local-proof.json",
+          "check": "google-places-adapter-test + host-activity-test + App TypeScript + Deno check",
+          "observedStatus": "PASS",
+          "scope": "Executable mocked provider/client and actual rendered location callbacks; no Google traffic."
+        },
+        {
+          "path": "docs/chat001-google-places-local-proof.json",
+          "check": "google-venue-persistence-test, expanded google-places-adapter-test, focused regressions, App TS/Edge Deno",
+          "observedStatus": "PASS",
+          "scope": "Actual Google source/ID selection and durable contract; expiry/memory cleanup; real rendered callback/effect behavior with mocked provider."
         }
       ],
       "productionVerification": [],
-      "technicalProof": [],
+      "technicalProof": [
+        {
+          "path": "docs/chat001-google-places-local-proof.json",
+          "scope": "Exact adapter/configuration, no-storage boundary, official policy sources and remaining saved-venue architecture."
+        },
+        {
+          "path": "docs/chat001-google-place-retention-local-proof.json",
+          "scope": "59 real PostgreSQL checks; scheduler stub limitation explicit. SQL commit a8d339e."
+        }
+      ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": true,
+      "releaseReviewed": false,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Google Maps/Places integration code is not implemented; source currently uses Photon/Nominatim/GPS. Client-authorized Maps project/API configuration plus implementation are required. This is not merely a native-device test hold.",
+      "reason": "Implementation is locally complete. Client-authorized Google account/API/billing/restricted key and terms/privacy configuration are not activated; production provider end-to-end acceptance and deployment/Cron validation remain pending.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314→08b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
-        "Google Maps/Places integration code is not implemented; source currently uses Photon/Nominatim/GPS. Client-authorized Maps project/API configuration plus implementation are required. This is not merely a native-device test hold."
+        "Integrate full App/Admin/Edge local gate and grouped deployment; this is not a full-suite result.",
+        "Production SQL/cache function and hourly Cron job inspection without Google traffic.",
+        "Client-authorized project, billing/API/key/restrictions/quota and applicable Google terms/privacy setup before setting either enable flag.",
+        "Authorized real provider venue selection/publication/edit/expiry-refresh and actual deployed attribution/map/provider-error screenshots. No production Google behavior is presently claimed."
       ],
       "coordinatorSource": "docs/chat001-app-final-assessments.json"
     },
@@ -15206,6 +15231,10 @@
         {
           "path": "docs/chat001-integrated-local-verification.json",
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        },
+        {
+          "path": "docs/chat001-google-places-local-proof.json",
+          "scope": "New explicit missing/unavailable provider labels and separated attributed transient results; actual render callback test passes. Existing deployed OSM attribution proof remains its original scope; new labels await grouped deployment review."
         }
       ],
       "productionVerification": [
@@ -17405,88 +17434,32 @@
     {
       "id": "TRUST-AADHAAR",
       "status": "PARTIAL_EXTERNAL_DEPENDENCY",
-      "sourceClauseIds": [
-        "B30-02"
-      ],
-      "requestedChange": "Legitimate Aadhaar verification contributes twenty Trust points.",
-      "before": "Client-requested acceptance gap: Legitimate Aadhaar verification contributes twenty Trust points.",
-      "implemented": "Trusted approved Aadhaar state supplies20 in scoring; production provider integration is unavailable.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed.",
+      "implementationStatus": "IMPLEMENTED_DISABLED_PENDING_COORDINATED_RELEASE",
+      "before": "Verification UI had no supported Aadhaar provider integration; the original page 26 explicitly suggested Sandbox. Existing Trust accepted the legacy approved Aadhaar source only.",
+      "implemented": "Supported Sandbox DigiLocker consent/initiate/status/issued-Aadhaar metadata adapter with authenticated account-bound private ledger, disabled default and test non-award; Verification consent/hosted link/status UI; production verified outcome adds existing Aadhaar +20 and preserves selfie/Nitro/other Trust rules.",
+      "acceptanceScope": "Local protocol/security/DB/UI verification only. No claim of live identity verification, deployed screenshot, provider activation, or ownership demonstration from a synthetic test.",
       "localVerification": [
-        {
-          "suite": "scripts/trust-score-database-test.mjs",
-          "type": "real disposable PostgreSQL23 scoring/privacy/reward checks",
-          "status": "PASS",
-          "proof": "docs/chat001-predeployment-local-verification.json#/checks/60"
-        },
-        {
-          "suite": "scripts/phase5-profile-test.mjs",
-          "type": "actual transpiled profile/domain/service behavior plus source contracts",
-          "status": "PASS",
-          "proof": "docs/chat001-predeployment-local-verification.json#/checks/50"
-        },
-        {
-          "path": "docs/chat001-integrated-local-verification.json",
-          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
-        }
+        "docs/chat001-digilocker-local-proof.json"
       ],
-      "productionVerification": [
-        {
-          "scope": "Scoring formula/current owner state only",
-          "result": "Real PostgreSQL approved flag scoring passed; no real licensed-provider Aadhaar transaction occurred.",
-          "providerOrNativeFlowClaimed": false
-        }
-      ],
+      "productionVerification": [],
       "technicalProof": [
-        {
-          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
-          "scope": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance.",
-          "classification": "current production API evidence; see scoped results and retained failures"
-        },
-        {
-          "path": "docs/chat001-current-profile70-proof.json",
-          "scope": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance.",
-          "classification": "current production API evidence; see scoped results and retained failures"
-        },
-        {
-          "path": "scripts/trust-score-database-test.mjs",
-          "scope": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance.",
-          "classification": "local executable test"
-        },
-        {
-          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
-          "scope": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
-        },
-        {
-          "path": "docs/chat001-current-profile70-proof.json",
-          "scope": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
-        },
-        {
-          "path": "docs/chat001-agent-backend-report.md",
-          "scope": "Actual recorded local PostgreSQL Trust assertions / 22 badge rules and82 threshold boundaries; not a live provider flow."
-        }
+        "docs/chat001-digilocker-local-proof.json",
+        "docs/chat001-digilocker-integration.md"
       ],
-      "screenshotProof": [
-        {
-          "path": "qa-evidence/chat001-integrated-bc/profile-owner-trust.png",
-          "scope": "Actual earlier deployed state; exact interaction is in prior B/C owner record.",
-          "source": "docs/chat001-production-bc-qa.json",
-          "compatibility": "Unchanged criterion-specific UI; final release coordinator review remains required."
-        }
-      ],
+      "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": true,
-      "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
-      },
-      "reason": "Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314→08b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Provider flow remains disabled pending authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials, registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance. Remote credentials absence was not established. Coordinated deployment and visual acceptance also remain pending.",
       "remainingValidation": [
-        "Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed."
+        "Coordinator integrated gate and migration/Edge/frontend deployment",
+        "Authorized provider setup and test environment protocol acceptance",
+        "Explicit production activation and real consenting hosted-flow verification",
+        "Fresh deployed Verification UI and unchanged other Trust behavior"
       ],
-      "coordinatorSource": "docs/chat001-app-final-assessments.json"
+      "evidenceCompatibility": "Earlier verification screenshots do not prove the new DigiLocker card. Existing badge criterion screenshots remain scoped to unchanged badge UI/criteria; Aadhaar Trust source now has a new migration and its local proof must accompany any release compatibility assessment.",
+      "coordinatorSource": "docs/chat001-digilocker-assessments-supplement.json",
+      "coordinatorPrecedence": "Supported DigiLocker implementation supersedes the earlier missing Aadhaar implementation assessment."
     },
     {
       "id": "TRUST-SOCIAL",
@@ -18804,8 +18777,8 @@
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "proposalOnly": false,
       "requestedChange": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets.",
-      "before": "Actual applicant108 detail showed business, masked payout and history but omitted an existing Terms consent receipt.",
-      "implemented": "Admin receipt version/time card and SELECT-only current Admin/Master permission are implemented; receipt adapter has actual, missing, loading and retryable-error states. No consent is created by review.",
+      "before": "Actual applicant108 detail showed business fields, masked UPI and review history but omitted an existing Terms receipt.",
+      "implemented": "Partner application review plus actual recorded Terms policy version/time, with honest missing/loading/error states and current Admin/Master-only receipt reads.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json",
@@ -18828,7 +18801,7 @@
         },
         {
           "path": "docs/chat001-admin-partner-terms-production-proof.json",
-          "outcome": "Live Admin reads108 receipt, legacy71 null; Finance121 and unrelated120 cannot read108. No data/role mutation."
+          "outcome": "Actual Admin reads108 receipt, legacy71 null; Finance121/member120 denied; no new consent or role change."
         }
       ],
       "technicalProof": [
@@ -18855,14 +18828,14 @@
         },
         {
           "path": "qa-evidence/chat001/release-admin-partner108-history.png",
-          "scope": "Actual masked UPI and retained New→Under review history; does not show the new receipt UI.",
+          "scope": "Actual masked UPI and persisted New→Under review row; no receipt UI shown yet.",
           "visuallyReviewed": true
         }
       ],
       "acceptanceScope": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets.",
-      "reason": "Admin receipt code and live RLS/API are verified. After coordinated Admin deployment, capture108 existing version/time and legacy71 no-record state. Actual masked payout/history and security export already have proof; those are not still missing.",
+      "reason": "Existing list/details/masked payout/history and live receipt API authorization proven. New deployed receipt108/version-time and legacy71 no-record UI states remain pending after coordinated Admin deployment.",
       "remainingValidation": [
-        "Admin receipt code and live RLS/API are verified. After coordinated Admin deployment, capture108 existing version/time and legacy71 no-record state. Actual masked payout/history and security export already have proof; those are not still missing."
+        "Existing list/details/masked payout/history and live receipt API authorization proven. New deployed receipt108/version-time and legacy71 no-record UI states remain pending after coordinated Admin deployment."
       ],
       "screenshotsReviewed": true,
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
@@ -19292,52 +19265,38 @@
     },
     {
       "id": "ADMIN-IP-MONITORING",
-      "status": "PENDING_LOCAL_IMPLEMENTATION",
+      "status": "PENDING_DEPLOYED_RETEST",
       "proposalOnly": false,
       "requestedChange": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls.",
-      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
-      "implemented": "Unavailable telemetry/blocked-IP enforcement is explicit with working audit/account/report links.",
+      "before": "Page showed only an unavailable notice even though the existing Auth audit table could support a real bounded reader.",
+      "implemented": "Actual minimal Auth IP reader guarded by current Admin/Master plus active account authorization; search/Refresh/results/empty/error state UI, mapped-user navigation and aborted obsolete requests. No broad Auth table grant or fake risk/geolocation/IP-block enforcement.",
       "localVerification": [
-        "docs/chat001-agent-admin-report.md",
-        "docs/chat001-integrated-local-verification.json"
+        "docs/chat001-admin-auth-ip-regression.json"
       ],
       "productionVerification": [
-        "Read-only actual target auth.audit_log_entries aggregate had0 rows/usableIPobservations. Deployed IP page shows unavailable and actual fallbacklinks.",
-        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
         {
-          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
-          "screenshot": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-ip-monitoring.png",
-          "originalDeployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
-          "evidenceType": "VISUAL_STATE_WITH_LINKED_BEHAVIORAL_RECORDS"
+          "path": "docs/chat001-admin-auth-ip-regression.json",
+          "scope": "Read-only live schema/zero retained rows inspection only; newRPC not yet deployed."
         }
       ],
       "technicalProof": [
-        "docs/chat001-admin-production-technical-proof.json"
+        "docs/chat001-admin-auth-ip-regression.json"
       ],
-      "screenshotProof": [
-        {
-          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-ip-monitoring.png",
-          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
-          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
-          "at": "2026-10-03T18:34:44.260Z",
-          "url": "https://wenitro-admin-roan.vercel.app/security/ip-monitoring",
-          "visuallyReviewed": true,
-          "sha256": "3b2cb3b0165c771c0f1eb2cf28e6cfa12b389681f923a2cd6f6073c293d0911c"
-        }
-      ],
-      "acceptanceScope": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls.",
-      "reason": "Zero retained Auth audit rows does not establish an external implementation dependency. Existing auth.audit_log_entries can support a bounded Admin-only reader; real empty/results/refresh UI and authorization tests are now required locally. No new geolocation/anomaly/IP-blocking service is inferred from A36.",
+      "screenshotProof": [],
+      "acceptanceScope": "Read existing retained Auth IP events under current Admin/Master authorization, with bounded search, refresh and truthful empty/error states. No inferred location, anomalies, account linkage beyond recorded actor, or IP blocking enforcement.",
+      "reason": "Local implementation and32realPostgres boundary checks, adapter/UI/cancellation tests, typecheck/lint/build passed. Migration/Admin deployment and read-only actual role/UI verification remain pending. Current source table has zero retained IP records; empty data is a scope limitation, not an external implementation dependency.",
       "remainingValidation": [
-        "Zero retained Auth audit rows does not establish an external implementation dependency. Existing auth.audit_log_entries can support a bounded Admin-only reader; real empty/results/refresh UI and authorization tests are now required locally. No new geolocation/anomaly/IP-blocking service is inferred from A36."
+        "After coordinated deployment, run read-only actual Admin/Finance/member/anonymous tests; capture real empty page and Refresh. No fabricated audit rows or temporary live Master grant."
       ],
-      "screenshotsReviewed": true,
-      "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
-      "releaseReviewed": true,
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Prior unavailable-only capture is not acceptance of the new reader. New deployed empty/results capture is pending.",
+      "releaseReviewed": false,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3→bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions.",
+      "releaseReviewBasis": "Implementation committed and locally verified; coordinator deployment and production read-only/UI verification pending.",
+      "implementationStatus": "IMPLEMENTED",
       "coordinatorSource": "docs/chat001-admin-final-assessments.json"
     },
     {
