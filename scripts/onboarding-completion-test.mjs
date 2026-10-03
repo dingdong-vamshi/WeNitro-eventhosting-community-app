@@ -18,5 +18,5 @@ assert.doesNotMatch(vibe, /label="Next"|top: height \* \.103/);
 assert.match(vibe, /marginTop: 18/);
 assert.match(vibe, /minHeight: height/);
 assert.match(app, /onReplayIntro=\{\(\) => setIntroSeen\(false\)\}/);
-assert.match(screens, /SPLASH_TAGLINES/);
+assert.match(screens, /nextSplashTagline/);
 console.log('PASS three evidence-backed slides, flowing copy, safe-area/scroll layout, accessible page controls, Skip/finish, replay and preserved taglines (source contracts; browser verification separate)');

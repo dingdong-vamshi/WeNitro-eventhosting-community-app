@@ -8,6 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { usePalette } from "../reconstruction/ui";
+import { useResponsibleUpload } from "../reconstruction/responsible-upload";
+import { nextSplashTagline } from "../../services/splash-taglines";
 
 export const WENITRO_LEGAL_URLS = {
   terms: "https://wenitro.com/terms-and-conditions.html",
@@ -28,12 +30,6 @@ const photos = {
   hobbies: require("../../../assets/onboarding/reference-hobbies.png"),
   startup: require("../../../assets/onboarding/reference-startup.png"),
 };
-const SPLASH_TAGLINES = [
-  "Find your perfect partner for every\npassion",
-  "Real people. Real activities.\nBetter together.",
-  "Meet your people. Make\nreal memories.",
-  "New people. New experiences.\nA bigger you.",
-] as const;
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -55,7 +51,12 @@ export function SplashScreen() {
   const enter = useRef(new Animated.Value(0)).current;
   const pulse = useRef(new Animated.Value(0)).current;
   const reduced = useReducedMotion();
-  const [tagline] = useState(() => SPLASH_TAGLINES[Math.floor(Math.random() * SPLASH_TAGLINES.length)]);
+  const [tagline, setTagline] = useState("");
+  useEffect(() => {
+    let active = true;
+    void nextSplashTagline().then(value => { if (active) setTagline(value); });
+    return () => { active = false; };
+  }, []);
   useEffect(() => {
     const entrance = Animated.timing(enter, { toValue: 1, duration: reduced ? 0 : 450, useNativeDriver: Platform.OS !== "web" });
     const loop = Animated.loop(Animated.sequence([Animated.timing(pulse, { toValue: 1, duration: 500, useNativeDriver: Platform.OS !== "web" }), Animated.timing(pulse, { toValue: 0, duration: 500, useNativeDriver: Platform.OS !== "web" })]));
@@ -204,6 +205,8 @@ export function ProfileCompletionScreen({ initial, onSubmit, onAcceptPolicies, c
   const [datePicker, setDatePicker] = useState(false);
   const [busy, setBusy] = useState(false);
   const [photoBusy, setPhotoBusy] = useState(false);
+  const photoLock = useRef(false);
+  const { confirmUpload, uploadNotice } = useResponsibleUpload();
   const [error, setError] = useState("");
   const [availability, setAvailability] = useState("");
   const [usernameTouched, setUsernameTouched] = useState(false);
@@ -219,15 +222,18 @@ export function ProfileCompletionScreen({ initial, onSubmit, onAcceptPolicies, c
     return () => { active = false; clearTimeout(timer); };
   }, [values.username, usernameTouched, checkUsername]);
   const pickPhoto = async (camera: boolean) => {
+    if (photoLock.current) return;
+    photoLock.current = true;
     setShowPhotoOptions(false); setPhotoBusy(true); setError("");
     try {
+      if (!await confirmUpload()) return;
       const permission = camera ? await ImagePicker.requestCameraPermissionsAsync() : await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permission.granted) throw new Error(camera ? "Allow camera access to take a profile photo." : "Allow photo access to choose your profile image.");
       const options: ImagePicker.ImagePickerOptions = { mediaTypes: ["images"], allowsEditing: true, aspect: [1, 1], quality: .85 };
       const result = await (camera ? ImagePicker.launchCameraAsync(options) : ImagePicker.launchImageLibraryAsync(options));
       if (!result.canceled && result.assets[0]?.uri) { setAvatar(result.assets[0].uri); set("photoUri", result.assets[0].uri); }
     } catch { setError("Could not open your photo picker. Check permissions and try again."); }
-    finally { setPhotoBusy(false); }
+    finally { photoLock.current = false; setPhotoBusy(false); }
   };
   const submit = async () => {
     if (lock.current || loading || photoBusy) return;
@@ -267,6 +273,7 @@ export function ProfileCompletionScreen({ initial, onSubmit, onAcceptPolicies, c
     <Modal transparent visible={showPhotoOptions} animationType="fade" onRequestClose={() => setShowPhotoOptions(false)}><MobileOverlayFrame><View style={[s.modalShade, { backgroundColor: c.overlay }]}><View style={[s.modalCard, { backgroundColor: c.sheet }]}><Text style={[s.modalTitle, { color: c.text }]}>Profile photo</Text><Pressable accessibilityRole="button" style={s.modalAction} onPress={() => void pickPhoto(false)}><Text style={[s.genderText, { color: c.text }]}>Choose from library</Text></Pressable>{Platform.OS !== "web" && <Pressable accessibilityRole="button" style={s.modalAction} onPress={() => void pickPhoto(true)}><Text style={[s.genderText, { color: c.text }]}>Take a photo</Text></Pressable>}<Pressable accessibilityRole="button" style={s.modalAction} onPress={() => setShowPhotoOptions(false)}><Text style={{ color: c.accent }}>Cancel</Text></Pressable></View></View></MobileOverlayFrame></Modal>
     {datePicker && Platform.OS !== "web" && <DateTimePicker mode="date" value={values.dateOfBirth ? new Date(`${values.dateOfBirth}T12:00:00`) : new Date(2000, 0, 1)} maximumDate={new Date()} onChange={(event, date) => { setDatePicker(false); if (event.type === "set" && date) set("dateOfBirth", `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`); }} />}
     {datePicker && Platform.OS === "web" && <WebDateDialog value={values.dateOfBirth} onChange={value => { set("dateOfBirth", value); }} onClose={() => setDatePicker(false)} />}
+    {uploadNotice}
   </SafeAreaView>;
 }
 
