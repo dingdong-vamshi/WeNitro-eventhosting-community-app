@@ -9,7 +9,7 @@ assert(start>0&&end>start);
 const source=ts.transpileModule(app.slice(start,end)+'\nstartPayment();',{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText;
 for(const scenario of ['completed','cancelled','redirected','error','busy','review']){
  const messages=[],verified=[],busy=[],errors=[];
- const context={paymentBusy:scenario==='busy',paymentNeedsReview:scenario==='review',setPaymentOrderId:()=>{},activity:{id:'279'},selectedEntryCategoryId:'25',window:undefined,
+ const context={registrationQuestionService:{getForm:async()=>({questions:[],answers:[]})},validateRegistrationAnswers:()=>null,paymentBusy:scenario==='busy',paymentNeedsReview:scenario==='review',setPaymentOrderId:()=>{},activity:{id:'279'},selectedEntryCategoryId:'25',window:undefined,
  cashfreeCheckoutAvailability:()=>({available:true}),setPaymentBusy:v=>busy.push(v),setJoinError:v=>errors.push(v),setPaymentMessage:v=>messages.push(v),setViewerStatus:()=>{},
  createActivityPayment:async()=>({paymentSessionId:'sandbox-session',orderId:'wn_279_test'}),
  launchCashfreeCheckout:async()=>({completed:scenario==='completed',redirected:scenario==='redirected',...(scenario==='error'?{errorMessage:'provider failed'}:{})}),

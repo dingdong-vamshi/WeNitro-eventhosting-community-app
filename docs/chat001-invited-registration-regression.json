@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-03T18:09:36.694Z",
+  "eventId": 297,
+  "userId": 116,
+  "form": {
+    "locked": true,
+    "answers": [],
+    "questions": [
+      {
+        "id": 134,
+        "type": "short_text",
+        "label": "Entry name for this Sandbox test",
+        "options": [],
+        "required": true,
+        "display_order": 0
+      }
+    ]
+  },
+  "participant": {
+    "status": "payment_required"
+  },
+  "payments": [],
+  "readOnly": true,
+  "elapsedMs": 629,
+  "diagnosis": [
+    "Invited payment_required path called checkout without collecting required answers.",
+    "submit_activity_registration returned early for payment_required even when no required answers existed.",
+    "create-order threw plain PostgREST error; shared error response replaced it with generic Payment request failed."
+  ],
+  "localVerification": {
+    "actualAppAndEdgeAssertions": 32,
+    "realPostgresAnswerAssertions": 39,
+    "realPostgresInviteAssertions": 42,
+    "paymentConfirmationAssertions": 90,
+    "modalScenarios": 6,
+    "registrationValidationAssertions": 21,
+    "typecheck": "PASS",
+    "denoCreateOrderCheck": "PASS",
+    "diffCheck": "PASS"
+  },
+  "productionVerification": "NOT YET: fixture297 observed read-only; parent owns migration/Edge/App release and required-answer hosted Sandbox retest.",
+  "latency": "Read-only form/participation/payment API diagnostic completed in629ms. Observed UI approximately30s delay not independently reproduced or attributed."
+}

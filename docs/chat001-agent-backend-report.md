@@ -120,3 +120,14 @@ Fresh public Auth settings: email/phone/Google enabled, Apple disabled, email/ph
 Final scoped cleanup SQL (`docs/chat001-isolated-fixture-cleanup-audit.json`) shows **0** active synthetic profiles, **0** unbanned synthetic Auth identities, **0** visible synthetic Activities, **0** remaining Storage objects, **0** synthetic paid rows not on hold, and **0** synthetic settlements not on hold. The old anonymous post36 was never reused. Its earlier authentic one-hour expiry proof remains explicitly attributed to the unchanged media capability implementation.
 
 QA entrypoint path handling now uses `fileURLToPath` and canonical paths; **16 local gate assertions PASS**, including spaces and symlink paths. All new social, invitation and Storage modules pass syntax checking. Production tests require explicit release readiness; invitation scope additionally requires migration20261003082845 before any fixtures are created.
+
+
+## Invited required-answer production regression (fixture297)
+
+Read-only API proof in `docs/chat001-invited-registration-regression.json` confirms buyer116 is `payment_required`, required question134 has no answers, and no payment row exists. The App payment-required shortcut skipped the registration form. The RPC also returned early before saving initial answers for this state. Finally create-order passed a plain PostgREST error to an Error-only formatter, losing the validation message.
+
+The App now checks persisted answers on every checkout entry, opens the existing form when incomplete and never calls Cashfree until valid. Migration `20261003181143_invited_registration_answers.sql` saves initial required answers for authorized invitees without changing their approved/going/paid/payment_required status; complete answers stay immutable on retries. New writes enforce Activity lifecycle and registration deadline. Normal self-join still follows the existing request/approval path. The create-order Edge preserves the actionable RPC message in HTTP400.
+
+Focused local verification: actual App/Edge handlers **32 assertions PASS**, real PostgreSQL answer RPC **39 PASS**, invitation lifecycle **42 PASS**, payment receipt/seat confirmation **90 PASS**, Cashfree modal **6 scenarios PASS**, registration validation **21 PASS**, TypeScript and Deno create-order checks PASS; diff whitespace check PASS. PostgreSQL testing caught and corrected an alias/PLpgSQL variable ambiguity before release. The diagnostic read completed in629ms; the reported approximately30-second UI delay was not independently reproduced.
+
+Fixture297 and shared users remain untouched. This is a local regression fix awaiting coordinator integration, migration then create-order Edge/App deployment, followed by the actual required-answer hosted Sandbox production retest. No deployment, payment, answer submission or finalization was performed by this agent for fixture297.

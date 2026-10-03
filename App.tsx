@@ -39,7 +39,7 @@ import { validateOnboardingGender } from "./src/utils/onboarding";
 import { PartnerDashboard } from "./src/components/partner-dashboard";
 import { PartnerRegistrationFormScreen } from "./src/components/partner-registration-form-screen";
 import { RegistrationQuestionEditor, RegistrationAnswerForm } from "./src/components/registration-questions";
-import { registrationQuestionService, validateRegistrationQuestions, type RegistrationQuestionDraft, type RegistrationForm, type RegistrationAnswer } from "./src/services/registration-questions";
+import { registrationQuestionService, validateRegistrationQuestions, validateRegistrationAnswers, type RegistrationQuestionDraft, type RegistrationForm, type RegistrationAnswer } from "./src/services/registration-questions";
 import { cashfreeCheckoutAvailability, createActivityPayment, launchCashfreeCheckout, listActivityEntryCategories, verifyActivityPayment, type ActivityEntryCategory } from "./src/services/payments";
 import type { AccountType } from "./src/services/auth-production";
 import {
@@ -4250,6 +4250,15 @@ export function ActivityDetailScreen({
     }
     setPaymentBusy(true); setJoinError(""); setPaymentMessage("Preparing secure checkout…");
     try {
+      // An invitation can authorize payment before the attendee answers the form.
+      // Check persisted answers on every checkout entry path, including retries.
+      const form = await registrationQuestionService.getForm(activity.id);
+      if (validateRegistrationAnswers(form.questions, form.answers)) {
+        setRegistrationForm(form);
+        setPaymentMessage("");
+        detailScrollRef.current?.scrollTo({ y: 0, animated: true });
+        return;
+      }
       const order = await createActivityPayment(activity.id, selectedEntryCategoryId);
       setPaymentOrderId(order.orderId);
       setViewerStatus("payment_pending");

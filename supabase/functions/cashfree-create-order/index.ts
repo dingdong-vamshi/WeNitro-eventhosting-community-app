@@ -50,7 +50,7 @@ Deno.serve(async (request) => {
       p_event_id: activityId,
       p_entry_category_id: entryCategoryId,
     });
-    if (prepared.error) throw prepared.error;
+    if (prepared.error) throw new Error(prepared.error.message);
     const payment = firstRecord(prepared.data as PaymentRow | PaymentRow[]);
     if (!payment) throw new Error("Payment attempt could not be prepared.");
 
