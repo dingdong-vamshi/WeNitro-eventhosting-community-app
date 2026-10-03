@@ -1,0 +1,216 @@
+{
+  "at": "2026-10-03T18:29:02.265523+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "adminDeployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+  "source": "Actual supported CUA DOM/tool observations from dedicatedAdmin1798 and actual API/source adapters; these notes explicitly do not replace screenshot proof.",
+  "requirements": [
+    {
+      "id": "ADMIN-LOGIN-DATA",
+      "observation": "Ordinary Admin signed in through the deployed login and loaded actual dashboard data. API identity matches current Admin role."
+    },
+    {
+      "id": "ADMIN-MASTER-ROLES",
+      "observation": "Earlier production16-check role lifecycle proof remains available. Current ordinary Admin UI denied /admins and /admins/roles. No fresh permanentMaster grant was made."
+    },
+    {
+      "id": "ADMIN-ROLE-ENFORCEMENT",
+      "observation": "Current API denied memberAdminidentity listing, Finance moderation, and ordinaryAdminFinance reads. Finance authorized rows loaded. Deployed Finance UI denied /users; ordinaryAdmin UI denied Master routes."
+    },
+    {
+      "id": "ADMIN-PIN",
+      "observation": "Current syntheticActivity283 pin true was visible to host119, then unpin false persisted. Deployed detail exposes Pin upcoming Activity control."
+    },
+    {
+      "id": "ADMIN-CATEGORY-CORRECTION",
+      "observation": "Current283 category correction reached host relation, then original27 was restored. Deployed detail offers existing-category correction."
+    },
+    {
+      "id": "ANNOUNCEMENT-CREATE",
+      "observation": "Deployed UI created announcement3 titled [QA] CHAT001 integrated Admin UI acceptance for only120. Current API confirmed persisted row. Disable will follow recipient popup/ack proof."
+    },
+    {
+      "id": "ANNOUNCEMENT-AUDIENCE",
+      "observation": "API confirmed120 receives announcement3;119 does not, cannot acknowledge it and cannot read its raw row."
+    },
+    {
+      "id": "ANNOUNCEMENT-DISPLAY",
+      "observation": "Fresh current Admin publication exists; root will capture recipient120 App popup. Prior116 popup evidence predates integrated build and is not reused as a fresh capture."
+    },
+    {
+      "id": "ANNOUNCEMENT-RECEIPT",
+      "observation": "Prior116 idempotentreceipt proof exists. Announcement3 remains unacknowledged for root fresh App popup test; current receipt/retry retest pending."
+    },
+    {
+      "id": "ADMIN-ANONYMOUS-AUDIT",
+      "observation": "Existing anonymous Community audit proof retained. Current backend agent owns refreshed anonymous attribution/security tests; no ordinary identity disclosure is introduced by Admin history."
+    },
+    {
+      "id": "ADMIN-DASHBOARD",
+      "observation": "Deployed ordinary Admin dashboard loaded real counts; original dashboard screenshot visually verified correct."
+    },
+    {
+      "id": "ADMIN-USERS",
+      "observation": "Current adapter reads all3 QA identities and existing profile/history; current rating policy permitsAdmin metadata and denies member/Finance unrelated rows. New login Not tracked/rating-history UI awaiting release retest."
+    },
+    {
+      "id": "ADMIN-ACTIVITIES",
+      "observation": "Current adapter finds283. Deployed detail and participants route show0 joined, No participant limit, No limit and Not capped."
+    },
+    {
+      "id": "ADMIN-COMMUNITIES",
+      "observation": "Current adapter returns stored Communities; deployed DOM showed28 actual records and saved visibility/member totals."
+    },
+    {
+      "id": "ADMIN-VIBES",
+      "observation": "Current adapter returns43 Vibes; deployed content and report views load real rows. No unrelated moderation performed."
+    },
+    {
+      "id": "ADMIN-STORIES",
+      "observation": "Current adapter read storedStories; deployed DOM showed17 records with their actual expiry/deletion state."
+    },
+    {
+      "id": "ADMIN-VERIFICATION",
+      "observation": "Current adapter and deployed verification table load9 stored submissions with statuses/private links. No fresh private-document retrieval or approval/rejection was performed in this Admin batch."
+    },
+    {
+      "id": "ADMIN-PARTNER-REVIEW",
+      "observation": "Deployed ordinaryAdmin sees21 matching applications and actual statuses/filter options. New Partner preflight correction is separately tracked; existing review/payout secrets remain masked."
+    },
+    {
+      "id": "ADMIN-ACCESS-AUDIT",
+      "observation": "Earlier16-check role/audit lifecycle plus revoked temporaryMaster cleanup retained. Current ordinaryAdmin UI denied /admins/activity-logs."
+    },
+    {
+      "id": "ADMIN-USER-RESTRICTIONS",
+      "observation": "Current synthetic119 suspension denied identity and hid rows using existingJWT; restore immediately reopened issued session. Deployed profile remainedActive after restore."
+    },
+    {
+      "id": "ADMIN-ACTIVITY-MODERATION",
+      "observation": "Current unpaid283 cancellation persisted; repeat caused no duplicate notification; restore/remove/restore affected host visibility correctly. Parent/backend owns paidfinancial restriction proof."
+    },
+    {
+      "id": "ADMIN-REPORT-REVIEW",
+      "observation": "Deployed investigation UI changed syntheticreportevent-4 to investigating, then resolved with explicit QA restoration note. No account restriction applied to shared70."
+    },
+    {
+      "id": "ADMIN-INVESTIGATION",
+      "observation": "Deployed Open reports only toggle revealed retained closedreportevent-4, current account context, profile/history and Activity282 links. Investigate/resolve persisted."
+    },
+    {
+      "id": "ADMIN-MANUAL-MEDIA-REVIEW",
+      "observation": "Deployed chat/media/abuse routes loaded their actual queues and stated missing classifier/transcript explicitly; no fabricated evidence or success."
+    },
+    {
+      "id": "ADMIN-AUTO-MODERATION",
+      "observation": "Deployed media/abuse UI states no configured automated image/message classifier; no automated verdict claimed."
+    },
+    {
+      "id": "ADMIN-IP-MONITORING",
+      "observation": "Read-only actual target auth.audit_log_entries aggregate had0 rows/usableIPobservations. Deployed IP page shows unavailable and actual fallbacklinks."
+    },
+    {
+      "id": "ADMIN-SECURITY-AUDIT",
+      "observation": "Current API audit contained283 operations and denied member reads. Deployed audit tables loaded current119/283 mutations and persisted workspace/category edits."
+    },
+    {
+      "id": "ADMIN-PARTNER-ACTIVITIES",
+      "observation": "Current adapter onlyreturns actualPartnerhosts; deployed list included actual QA297/282/280 rows and controls, with sponsorship/budget/impressions unavailable explanation."
+    },
+    {
+      "id": "ADMIN-TRANSACTIONS",
+      "observation": "Dedicated Finance121 loaded deployed transactionledger; ordinaryAdmin deniedFinance API. This read-only pass did not execute money movement."
+    },
+    {
+      "id": "ADMIN-REVENUE",
+      "observation": "Deployed Finance summary showed actual gross111.10, fee11.07, net100.03INR at observation time; numbers are storedledger, not proof of real settlement."
+    },
+    {
+      "id": "ADMIN-SETTLEMENTS",
+      "observation": "Finance121 loaded actualpending/on-hold ledger; no payout/refund executed or claimed. Provider/bank execution remains external."
+    },
+    {
+      "id": "ADMIN-ANALYTICS-USERS",
+      "observation": "Current API observedUTCstart2026-10-03 with actualDAU/MAU; deployed UserAnalytics showed3/3 and awaitingpriorcohort, growth defined prior/currentUTC period."
+    },
+    {
+      "id": "ADMIN-ANALYTICS-PLATFORM",
+      "observation": "API observedDAU matches useranalytics. New explicitstart/UTC/all-time UIcopy committed96ba706; deployed recheck pending."
+    },
+    {
+      "id": "ADMIN-ANALYTICS-ENGAGEMENT",
+      "observation": "Current API conversionnull/ratingsnull; deployed oldcard mislabelEventShares fixed to VibeShares6d3230f awaiting fresh UIreleasecheck."
+    },
+    {
+      "id": "ADMIN-ANALYTICS-EVENTS",
+      "observation": "Current API topActivityratingsnull. Deployed EventAnalytics actualcounts/categories and TopEvents Not collected observed."
+    },
+    {
+      "id": "ADMIN-ANALYTICS-EVENT-VIEWS",
+      "observation": "Current API unauthorizedprivateobservations denied, repeatedview/share once; actualview/share counts surfaced independently. Private rawtables denied member406."
+    },
+    {
+      "id": "ADMIN-ANALYTICS-HOSTS",
+      "observation": "Current API includesactual119host. Deployed leaderboard loaded; new explicitrating\u00d720/completed\u00f7hosted copy96ba706 awaiting UIreleasecheck."
+    },
+    {
+      "id": "ADMIN-ANALYTICS-GEOGRAPHY",
+      "observation": "Current adapter returns recordedfields; deployed screen states limitations and displays actualrecords."
+    },
+    {
+      "id": "ADMIN-CATEGORY-CATALOG",
+      "observation": "Production lifecycleAPI passedcreate/disable/archive/restore/rename/historicalordinaryedit; deniednewdisabledassignment/member/Finance. Deployeddescriptionedit survivedreload with validimage."
+    },
+    {
+      "id": "ADMIN-CAMPAIGN-DRAFTS",
+      "observation": "CurrentAPI draftfreshread/archive/conflict guards pass; stale409 returns147\u2013165ms unchangedrows. DeployedUI shows savedemail/push/inappdrafts."
+    },
+    {
+      "id": "ADMIN-CAMPAIGN-DELIVERY",
+      "observation": "Immediate1notificationrecipient120 withreadreceipt; actualcron08:32delivered scheduledcampaign exactlyonce and replaydidnotduplicate. Exactly1activecronjob. Email/pushfailure preservesdraft."
+    },
+    {
+      "id": "ADMIN-TEMPLATES",
+      "observation": "Template edited throughdeployedUI, savedandreopenedafterreload; updatedbodypresent inCUADOM. LaterPNGinvalidstalepixels; needsrecapture."
+    },
+    {
+      "id": "ADMIN-REWARD-RULES",
+      "observation": "Currentadapter and deployedrules table show participant2/referral10/PlayStore10/verification0."
+    },
+    {
+      "id": "ADMIN-REWARD-CATALOG",
+      "observation": "CurrentAPI save/read/archive/staleguardpassed; deployed rewardproposalvisible and providerboundaryexplained."
+    },
+    {
+      "id": "ADMIN-COUPONS",
+      "observation": "CurrentAPI save/read/archive/staleguardpassed; deployed couponproposalvisible."
+    },
+    {
+      "id": "ADMIN-BADGE-CATALOG",
+      "observation": "Productionadapterfound25oldrows caused fix6d3230f; actualfixedsource againstproductionreturns22, unitadaptercheckslegacyexclusion/order/awardcount. Freshdeployed22imagepending."
+    },
+    {
+      "id": "ADMIN-LEADERBOARD",
+      "observation": "Actualsourceadapter verifiedsort; deployed table/periodcontrols/explanatoryscope loaded withrealrecords."
+    },
+    {
+      "id": "ADMIN-FEATURE-SETTINGS",
+      "observation": "All4productiongatesreadON; rollbacktransactionactivitiesdisabled actualcreate_activitydenied42501 thenallON. Allfourtriggerrowtypes testedreal localPostgres; no committedglobaldisable."
+    },
+    {
+      "id": "ADMIN-LANGUAGE-SETTINGS",
+      "observation": "Deployedlanguageview Englishonly and clearadditionaltranslationdependency."
+    },
+    {
+      "id": "ADMIN-HEADER-SEARCH",
+      "observation": "Two deployedqueries QA Audit then Historical category changedmember/activityresults correctly; bothscreensvalid."
+    },
+    {
+      "id": "ADMIN-HEADER-NOTIFICATIONS",
+      "observation": "Deployedbannerpendingcount5 andclickroutedPendingReports withstored5Vibereports afterload. Screenshotstaleexcluded."
+    },
+    {
+      "id": "ADMIN-HEADER-HELP-PROFILE",
+      "observation": "Helpimagevalid. Deployedprofiledialog showscurrentAdminemail/role/lastsign-in; screenshotstaleexcluded."
+    }
+  ]
+}

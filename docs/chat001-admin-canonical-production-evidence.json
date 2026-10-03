@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-03T18:05:39.099478+00:00",
+  "at": "2026-10-03T18:29:02.265523+00:00",
   "target": "cxsznhrkzqndhseodcyy",
   "adminDeployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
   "appDeployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
@@ -15,538 +15,680 @@
       "id": "ADMIN-LOGIN-DATA",
       "requestedChange": "The Admin session authenticates to the existing correct Supabase target and loads real authorized data.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "The Admin session authenticates to the existing correct Supabase target and loads real authorized data. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Supabase-authenticated Admin session, live role lookup and authorized production readers replace disconnected display data.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "Ordinary Admin signed in through the deployed login and loaded actual dashboard data. API identity matches current Admin role."
       ],
       "screenshotProof": [
         "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-dashboard.png"
       ],
       "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json",
         "docs/chat001-admin-integrated-production-proof.json"
       ],
       "status": "PASS",
-      "remaining": ""
+      "remaining": "",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "VALIDATED_DEPLOYED_SCREENSHOT"
     },
     {
       "id": "ADMIN-MASTER-ROLES",
       "requestedChange": "An authorized Master can grant, change, suspend and revoke supported Admin roles on intended existing accounts.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "An authorized Master can grant, change, suspend and revoke supported Admin roles on intended existing accounts. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Existing Master-only role management and restricted access audit retained; current-role checks govern grants, edits, suspension and revocation.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Earlier production16-check role lifecycle proof remains available. Current ordinary Admin UI denied /admins and /admins/roles. No fresh permanentMaster grant was made."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-access-proof.json"
+        "docs/chat001-admin-access-proof.json",
+        "docs/chat001-admin-access-cleanup-proof.json",
+        "docs/chat001-admin-current-controls-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Permanent Master owner identity has not been designated; temporary QA authority was revoked."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Permanent Master owner identity remains undesignated; temporaryQAauthorityrevoked.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ROLE-ENFORCEMENT",
       "requestedChange": "Admin/Master/Finance permissions are enforced by backend identity and live role state, including denial to members and revoked sessions.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Admin/Master/Finance permissions are enforced by backend identity and live role state, including denial to members and revoked sessions. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Server role checks and UI route boundaries separate ordinary Admin, Master and Finance.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "Current API denied memberAdminidentity listing, Finance moderation, and ordinaryAdminFinance reads. Finance authorized rows loaded. Deployed Finance UI denied /users; ordinaryAdmin UI denied Master routes."
       ],
       "screenshotProof": [],
       "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json",
         "docs/chat001-admin-integrated-production-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-PIN",
       "requestedChange": "An authorized Admin can pin and unpin upcoming Activities, reflected in member ordering and display.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "An authorized Admin can pin and unpin upcoming Activities, reflected in member ordering and display. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Audited persisted Activity pin/unpin is reflected in authorized member reads.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Current syntheticActivity283 pin true was visible to host119, then unpin false persisted. Deployed detail exposes Pin upcoming Activity control."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-controls-proof.json"
+        "docs/chat001-admin-current-controls-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-CATEGORY-CORRECTION",
       "requestedChange": "An authorized Admin can correct an Activity category and members see the persisted correction.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "An authorized Admin can correct an Activity category and members see the persisted correction. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Activity category correction persists the relation; unavailable historical categories survive unrelated edits.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Current283 category correction reached host relation, then original27 was restored. Deployed detail offers existing-category correction."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-controls-proof.json"
+        "docs/chat001-admin-current-controls-proof.json",
+        "docs/chat001-admin-integrated-production-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ANNOUNCEMENT-CREATE",
       "requestedChange": "An authorized Admin can create and disable a persisted login announcement.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "An authorized Admin can create and disable a persisted login announcement. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Admin publication persists title/body/active window and explicit audience; disable is backed by RPC.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Deployed UI created announcement3 titled [QA] CHAT001 integrated Admin UI acceptance for only120. Current API confirmed persisted row. Disable will follow recipient popup/ack proof."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-announcement-proof.json"
+        "docs/chat001-admin-current-announcement-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Disable pending recipientpopup/ack acceptance.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ANNOUNCEMENT-AUDIENCE",
       "requestedChange": "Login announcements are returned only to their configured eligible audience during the active window.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Login announcements are returned only to their configured eligible audience during the active window. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Server filters login announcements by configured audience and current active window.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "API confirmed120 receives announcement3;119 does not, cannot acknowledge it and cannot read its raw row."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-announcement-proof.json"
+        "docs/chat001-admin-current-announcement-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ANNOUNCEMENT-DISPLAY",
       "requestedChange": "An eligible login displays the actual announcement popup and its content.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "An eligible login displays the actual announcement popup and its content. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "App login/load reads authorized announcements and renders their actual content.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Fresh current Admin publication exists; root will capture recipient120 App popup. Prior116 popup evidence predates integrated build and is not reused as a fresh capture."
       ],
       "screenshotProof": [],
       "technicalProof": [
+        "docs/chat001-admin-current-announcement-proof.json",
         "docs/chat001-announcement-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Root must capture fresh recipient120 popup.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ANNOUNCEMENT-RECEIPT",
       "requestedChange": "Acknowledging a login announcement persists an idempotent read receipt and avoids unwanted redisplay.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Acknowledging a login announcement persists an idempotent read receipt and avoids unwanted redisplay. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Server acknowledgement stores one receipt and excludes acknowledged announcements.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Prior116 idempotentreceipt proof exists. Announcement3 remains unacknowledged for root fresh App popup test; current receipt/retry retest pending."
       ],
       "screenshotProof": [],
       "technicalProof": [
+        "docs/chat001-admin-current-announcement-proof.json",
         "docs/chat001-announcement-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Fresh120 UIack+idempotentretry pending.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ANONYMOUS-AUDIT",
       "requestedChange": "Authorized Admin audit identifies an anonymous Community post's actual author while ordinary members are denied that attribution.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Authorized Admin audit identifies an anonymous Community post's actual author while ordinary members are denied that attribution. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Restricted backend author audit preserves public anonymous presentation while allowing authorized investigation.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Existing anonymous Community audit proof retained. Current backend agent owns refreshed anonymous attribution/security tests; no ordinary identity disclosure is introduced by Admin history."
       ],
       "screenshotProof": [],
       "technicalProof": [
         "docs/chat001-anonymous-media-live-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-DASHBOARD",
       "requestedChange": "Dashboard summaries and entry routes load actual authorized counts and records, with visible loading/error states.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Dashboard summaries and entry routes load actual authorized counts and records, with visible loading/error states. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Dashboard counts, charts, navigation and refresh use actual authorized Supabase records.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Deployed authenticated ordinary Admin dashboard displayed live counts, recent fixture records and moderation queue; screenshot captured."
+        "Deployed ordinary Admin dashboard loaded real counts; original dashboard screenshot visually verified correct."
       ],
       "screenshotProof": [
         "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-dashboard.png"
       ],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
       "status": "PASS",
-      "remaining": ""
+      "remaining": "",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "VALIDATED_DEPLOYED_SCREENSHOT"
     },
     {
       "id": "ADMIN-USERS",
       "requestedChange": "Users listing, filters, profile details and activity history show real authorized account data without fabricated last-active/follower metrics.",
       "before": "Follower count and last-active values were fabricated; latest verification could fail on multiple rows.",
-      "implemented": "Paginated real accounts, latest verification, unavailable metrics represented truthfully.",
+      "implemented": "Real user/profile/history readers with actual latest verification, no fabricated follower/last-active; new correction adds received rating metadata and unknown login telemetry.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current adapter reads all3 QA identities and existing profile/history; current rating policy permitsAdmin metadata and denies member/Finance unrelated rows. New login Not tracked/rating-history UI awaiting release retest."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
-      "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-current-announcement-proof.json",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "status": "PENDING_DEPLOYED_RETEST",
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Targeted UIregression changes requirefreshdeployment check.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ACTIVITIES",
       "requestedChange": "Activity lists, status filters, detail and participant views use real records and correct uncapped capacity labels.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Activity lists, status filters, detail and participant views use real records and correct uncapped capacity labels. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Activity lists/details/participants use real records and distinguish uncapped capacity.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current adapter finds283. Deployed detail and participants route show0 joined, No participant limit, No limit and Not capped."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-COMMUNITIES",
       "requestedChange": "Admin Community listing/details reflect actual Communities and memberships.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Admin Community listing/details reflect actual Communities and memberships. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Community route reads real rooms and member counts.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current adapter returns stored Communities; deployed DOM showed28 actual records and saved visibility/member totals."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-VIBES",
       "requestedChange": "Admin Vibe content and report review use actual Vibes with intended ownership and moderation boundaries.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Admin Vibe content and report review use actual Vibes with intended ownership and moderation boundaries. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Vibe list and report inbox read stored media posts and actual reports.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current adapter returns43 Vibes; deployed content and report views load real rows. No unrelated moderation performed."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-STORIES",
       "requestedChange": "Admin Story content view uses actual stored Stories and intended access controls.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Admin Story content view uses actual stored Stories and intended access controls. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Story route reads actual stored active, expired and deleted state.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current adapter read storedStories; deployed DOM showed17 records with their actual expiry/deletion state."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-VERIFICATION",
       "requestedChange": "Authorized Admin can inspect intended private verification evidence and persist an approved/rejected review with audit notes.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Authorized Admin can inspect intended private verification evidence and persist an approved/rejected review with audit notes. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Authorized private submission retrieval and audited review remain connected; selfie approval does not imply all identity stages.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current adapter and deployed verification table load9 stored submissions with statuses/private links. No fresh private-document retrieval or approval/rejection was performed in this Admin batch; root/backend must link the applicable lifecycle evidence."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof.  Fresh verification decision lifecycle proof is not claimed by this batch.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-PARTNER-REVIEW",
       "requestedChange": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Actual application, masked settlement details, decisions and history use existing Partner review flow.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Deployed ordinaryAdmin sees21 matching applications and actual statuses/filter options. New Partner preflight correction is separately tracked; existing review/payout secrets remain masked."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-partner-preflight-regression.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ACCESS-AUDIT",
       "requestedChange": "Role grants, suspensions and revocations produce a restricted persistent audit trail; temporary test authority is revoked after QA.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Role grants, suspensions and revocations produce a restricted persistent audit trail; temporary test authority is revoked after QA. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Master role mutations retain restricted actor/target audit with temporary test authority cleanup.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Earlier16-check role/audit lifecycle plus revoked temporaryMaster cleanup retained. Current ordinaryAdmin UI denied /admins/activity-logs."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-access-proof.json"
+        "docs/chat001-admin-access-proof.json",
+        "docs/chat001-admin-access-cleanup-proof.json",
+        "docs/chat001-admin-current-controls-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-USER-RESTRICTIONS",
       "requestedChange": "Authorized account restriction and restore controls persist their reason/duration and affect current-session access while protecting ineligible targets.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Authorized account restriction and restore controls persist their reason/duration and affect current-session access while protecting ineligible targets. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Audited reason/duration restrictions affect already-issued sessions; restore returns access.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Current synthetic119 suspension denied identity and hid rows using existingJWT; restore immediately reopened issued session. Deployed profile remainedActive after restore."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-operations-proof.json"
+        "docs/chat001-admin-current-controls-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ACTIVITY-MODERATION",
       "requestedChange": "Authorized Activity warning/cancellation/deletion/restore controls persist and respect paid financial-state restrictions.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Authorized Activity warning/cancellation/deletion/restore controls persist and respect paid financial-state restrictions. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Actual Activity cancel/remove/restore operations persist and audit, with financial-state protections.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Current unpaid283 cancellation persisted; repeat caused no duplicate notification; restore/remove/restore affected host visibility correctly. Parent/backend owns paidfinancial restriction proof."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-operations-proof.json"
+        "docs/chat001-admin-current-controls-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-REPORT-REVIEW",
       "requestedChange": "Safety Report investigation/resolution/dismissal persists actual report status and review notes with authorization and audit.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Safety Report investigation/resolution/dismissal persists actual report status and review notes with authorization and audit. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Actual report status/review notes persist with authorization and audit.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Deployed investigation UI changed syntheticreportevent-4 to investigating, then resolved with explicit QA restoration note. No account restriction applied to shared70."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-operations-proof.json"
+        "docs/chat001-admin-current-controls-proof.json",
+        "docs/chat001-admin-production-dom-observations.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-INVESTIGATION",
       "requestedChange": "Investigation presents actual allegations/current account context and links usable profile/history/Activity moderation instead of fake risk scores or no-op actions.",
       "before": "Investigation used placeholder evidence/actions.",
-      "implemented": "Actual report evidence/current account and working profile/history/review/restriction links; dialog identity retained through refresh.",
+      "implemented": "Actual submitted allegations and current account context replace invented risk scores; real profile/Activity links and review actions.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Deployed Open reports only toggle revealed retained closedreportevent-4, current account context, profile/history and Activity282 links. Investigate/resolve persisted."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-production-dom-observations.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-MANUAL-MEDIA-REVIEW",
       "requestedChange": "Chat/media/abuse review screens expose actual report evidence and working manual decisions, without pretending to have unsupported classifier output or missing transcripts.",
       "before": "Media/chat/abuse controls used placeholder classification/actions.",
-      "implemented": "Manual report-topic review with actual evidence and persisted review decisions.",
+      "implemented": "Topic-filtered actual reports and manual review replace fake chat/media classification.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Deployed chat/media/abuse routes loaded their actual queues and stated missing classifier/transcript explicitly; no fabricated evidence or success."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-AUTO-MODERATION",
       "requestedChange": "Automatic semantic image/message/abuse classification is represented as available only when a functioning configured classifier supplies actual findings.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Automatic semantic image/message/abuse classification is represented as available only when a functioning configured classifier supplies actual findings. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Manual report review works; automatic classifier is explicitly unavailable.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Deployed media/abuse UI states no configured automated image/message classifier; no automated verdict claimed."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-production-technical-proof.json"
+      ],
       "status": "EXTERNAL_DEPENDENCY",
-      "remaining": "No configured semantic image/message classifier or approved classification policy. Manual reported-evidence workflow exists; automatic classification is not claimed."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. No configuredclassifier/approvedclassificationpolicy.",
+      "implementationStatus": "MANUAL_FALLBACK_IMPLEMENTED_EXTERNAL_CAPABILITY_UNAVAILABLE",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-IP-MONITORING",
       "requestedChange": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Unavailable telemetry/blocked-IP enforcement is explicit with working audit/account/report links.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Read-only actual target auth.audit_log_entries aggregate had0 rows/usableIPobservations. Deployed IP page shows unavailable and actual fallbacklinks."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-production-technical-proof.json"
+      ],
       "status": "EXTERNAL_DEPENDENCY",
-      "remaining": "Supabase Auth audit table exists but contained zero retained rows, zero usable IP observations. No enforced IP-block provider."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. No retainedIPtelemetry orenforcedIPblockprovider.",
+      "implementationStatus": "MANUAL_FALLBACK_IMPLEMENTED_EXTERNAL_CAPABILITY_UNAVAILABLE",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-SECURITY-AUDIT",
       "requestedChange": "Security/action logs show actual operations, support intended search/export and preserve restricted audit access.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Security/action logs show actual operations, support intended search/export and preserve restricted audit access. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Security/action logs read actual persisted operations with actor, target, reason and restricted access.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Earlier production baseline proof exists but predates integrated deployment; not marked current-release acceptance solely from that baseline."
+        "Current API audit contained283 operations and denied member reads. Deployed audit tables loaded current119/283 mutations and persisted workspace/category edits."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-read-model-proof.json"
+        "docs/chat001-admin-current-controls-proof.json",
+        "docs/chat001-admin-current-read-models-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-PARTNER-ACTIVITIES",
       "requestedChange": "The Partner activity route lists actual Partner-hosted Activities and opens working Activity controls, without fabricated advertising sponsorship economics.",
       "before": "Partner activity list used an empty placeholder.",
-      "implemented": "Real approved-Partner hosted Activities and working Activity controls.",
+      "implemented": "Actual Partner-hosted Activity list links existing controls; no fabricated ad sponsorship metrics.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current adapter onlyreturns actualPartnerhosts; deployed list included actual QA297/282/280 rows and controls, with sponsorship/budget/impressions unavailable explanation."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-TRANSACTIONS",
       "requestedChange": "Authorized payment transaction views display actual provider/payment states and amounts with currency/Sandbox distinctions and privacy restrictions.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Authorized payment transaction views display actual provider/payment states and amounts with currency/Sandbox distinctions and privacy restrictions. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Authorized Finance reports use actual persisted payment/settlement ledger amounts and states.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Dedicated Finance121 loaded deployed transactionledger; ordinaryAdmin deniedFinance API. This read-only pass did not execute money movement."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-REVENUE",
       "requestedChange": "Revenue summaries derive from successful recorded payments and do not fabricate collected revenue or mix unsupported currencies.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Revenue summaries derive from successful recorded payments and do not fabricate collected revenue or mix unsupported currencies. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Finance summary derives from recorded ledger values and preserves historical fee snapshots.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Deployed Finance summary showed actual gross111.10, fee11.07, net100.03INR at observation time; numbers are storedledger, not proof of real settlement."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-SETTLEMENTS",
       "requestedChange": "Settlement/payout controls show actual supported state; no production payout/refund success is claimed from Sandbox payments or missing bank/provider capability.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Settlement/payout controls show actual supported state; no production payout/refund success is claimed from Sandbox payments or missing bank/provider capability. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Actual eligibility/status/payout references remain visible without claiming unsupported real payouts.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Finance121 loaded actualpending/on-hold ledger; no payout/refund executed or claimed. Provider/bank execution remains external."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Real payout/refund execution requires live provider/bank capability; Sandbox payments do not prove real settlement."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Realprovider/bankpayoutexecutionnotproven bySandboxpayments.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ANALYTICS-USERS",
       "requestedChange": "User analytics/growth use observed DAU/MAU, explicit time windows and real retention cohorts rather than active-account counts or fabricated zeros.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "User analytics/growth use observed DAU/MAU, explicit time windows and real retention cohorts rather than active-account counts or fabricated zeros. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Observed signed-in member activity drives DAU/MAU and UTC returning-cohort ratios; missing cohorts remain null.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json",
@@ -554,20 +696,23 @@
         "scripts/admin-read-models-test.mjs"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "Current API observedUTCstart2026-10-03 with actualDAU/MAU; deployed UserAnalytics showed3/3 and awaitingpriorcohort, growth defined prior/currentUTC period."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-integrated-production-proof.json"
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-current-read-models-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ANALYTICS-PLATFORM",
       "requestedChange": "Platform activity metrics identify their observation start, UTC windows and available first-party observed visits.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Platform activity metrics identify their observation start, UTC windows and available first-party observed visits. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Observed DAU, explicit observation start and UTC day; stored message/report totals labelled all-time.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json",
@@ -575,54 +720,70 @@
         "scripts/admin-read-models-test.mjs"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "API observedDAU matches useranalytics. New explicitstart/UTC/all-time UIcopy committed96ba706; deployed recheck pending."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-integrated-production-proof.json"
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-current-read-models-proof.json"
       ],
-      "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "status": "PENDING_DEPLOYED_RETEST",
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Targeted UIregression changes requirefreshdeployment check.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ANALYTICS-ENGAGEMENT",
       "requestedChange": "Engagement reports use real participants/messages/ratings and explicitly represent unavailable metrics instead of invented conversion or peak-time data.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Engagement reports use real participants/messages/ratings and explicitly represent unavailable metrics instead of invented conversion or peak-time data. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Real joins/messages/bookmarks/Vibe shares with actualUTC join/message heatmap; conversion/Activityrating absent remains unavailable.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json",
         "scripts/admin-observed-usage-test.mjs",
         "scripts/admin-read-models-test.mjs"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current API conversionnull/ratingsnull; deployed oldcard mislabelEventShares fixed to VibeShares6d3230f awaiting fresh UIreleasecheck."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
-      "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "status": "PENDING_DEPLOYED_RETEST",
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Targeted UIregression changes requirefreshdeployment check.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ANALYTICS-EVENTS",
       "requestedChange": "Event analytics and top-event reports use actual Activity counts and applicable ratings/participants, without confusing host ratings with Activity ratings.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Event analytics and top-event reports use actual Activity counts and applicable ratings/participants, without confusing host ratings with Activity ratings. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Actual Activity counts/categories/participation; host memberrating is not substituted as Activityrating.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json",
         "scripts/admin-observed-usage-test.mjs",
         "scripts/admin-read-models-test.mjs"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current API topActivityratingsnull. Deployed EventAnalytics actualcounts/categories and TopEvents Not collected observed."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ANALYTICS-EVENT-VIEWS",
       "requestedChange": "Activity views/shares use actual authorized Activity observations; Vibe shares are not counted as Activity shares and cancelled share attempts do not count.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Activity views/shares use actual authorized Activity observations; Vibe shares are not counted as Activity shares and cancelled share attempts do not count. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Authorized member/Activity/UTC-day views/shares are separate and idempotent; Vibe shares excluded.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json",
@@ -630,60 +791,76 @@
         "scripts/admin-read-models-test.mjs"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "Current API unauthorizedprivateobservations denied, repeatedview/share once; actualview/share counts surfaced independently. Private rawtables denied member406."
       ],
       "screenshotProof": [],
       "technicalProof": [
-        "docs/chat001-admin-integrated-production-proof.json"
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-conflict-production-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ANALYTICS-HOSTS",
       "requestedChange": "Host performance uses the intended qualifying hosted/participant/rating data with explained derived metrics.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Host performance uses the intended qualifying hosted/participant/rating data with explained derived metrics. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Real hosted/approved-paid participation and storedmemberrating; score/completion formulas explained.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json",
         "scripts/admin-observed-usage-test.mjs",
         "scripts/admin-read-models-test.mjs"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current API includesactual119host. Deployed leaderboard loaded; new explicitrating\u00d720/completed\u00f7hosted copy96ba706 awaiting UIreleasecheck."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
-      "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "status": "PENDING_DEPLOYED_RETEST",
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Targeted UIregression changes requirefreshdeployment check.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-ANALYTICS-GEOGRAPHY",
       "requestedChange": "Geographic insights use actual available location data and do not fabricate missing IP/device geography.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Geographic insights use actual available location data and do not fabricate missing IP/device geography. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Declarednationality and savedActivitydisplaylocation replace inventeddevice/IP/city inference.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json",
         "scripts/admin-observed-usage-test.mjs",
         "scripts/admin-read-models-test.mjs"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Current adapter returns recordedfields; deployed screen states limitations and displays actualrecords."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-CATEGORY-CATALOG",
       "requestedChange": "Authorized Admin can add/edit/disable/archive/restore persisted categories while preserving historical references and denying new unavailable assignments.",
       "before": "Catalog management and unavailable-category historical assignment semantics were incomplete.",
-      "implemented": "Audited create/edit/order/disable/archive/restore, icons, active selection lists, and historical membership preservation.",
+      "implemented": "Admin persistedcategoryCRUD/icon/order/archive/restore with unavailable assignment guards and historicalpreservation.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "Production lifecycleAPI passedcreate/disable/archive/restore/rename/historicalordinaryedit; deniednewdisabledassignment/member/Finance. Deployeddescriptionedit survivedreload with validimage."
       ],
       "screenshotProof": [
         "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-dialog.png",
@@ -693,19 +870,21 @@
         "docs/chat001-admin-integrated-production-proof.json"
       ],
       "status": "PASS",
-      "remaining": ""
+      "remaining": "",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "VALIDATED_DEPLOYED_SCREENSHOT"
     },
     {
       "id": "ADMIN-CAMPAIGN-DRAFTS",
       "requestedChange": "Supported campaign and system-alert drafts, audience and lifecycle changes persist rather than reporting fake success.",
       "before": "Campaign forms cleared local state without persistent lifecycle.",
-      "implemented": "Versioned private campaign drafts, explicit recipients, audit reasons, schedule/cancel/archive.",
+      "implemented": "Private versioneddrafts persist template/campaign/reward/coupon state with reason/archive/restore and explicit audience.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "CurrentAPI draftfreshread/archive/conflict guards pass; stale409 returns147\u2013165ms unchangedrows. DeployedUI shows savedemail/push/inappdrafts."
       ],
       "screenshotProof": [],
       "technicalProof": [
@@ -713,41 +892,43 @@
         "docs/chat001-admin-conflict-production-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-CAMPAIGN-DELIVERY",
       "requestedChange": "Campaign delivery occurs only through a configured supported channel and intended audience, with real delivery state instead of clearing a fake form.",
       "before": "Delivery controls implied unsupported sends without stored results.",
-      "implemented": "Atomic in-app delivery to 1\u2013500 explicit eligible recipients, actual read totals, idempotency, current-role recheck and minute cron dispatch. External provider failures preserve drafts.",
+      "implemented": "Supportedinappdelivery and scheduledcron are atomic/idempotent/explicitrecipient; email/push remain truthfulunconfigured.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested.",
-        "Actual cron job1 delivered f3ebfed9-fa02-4fb4-a416-dc799aea3200 at08:32:00.073547Z to dedicated recipient120 exactly once; post-delivery replay remained one."
+        "Immediate1notificationrecipient120 withreadreceipt; actualcron08:32delivered scheduledcampaign exactlyonce and replaydidnotduplicate. Exactly1activecronjob. Email/pushfailure preservesdraft."
       ],
       "screenshotProof": [],
       "technicalProof": [
         "docs/chat001-admin-integrated-production-proof.json",
-        "docs/chat001-admin-conflict-production-proof.json",
         "docs/chat001-admin-production-technical-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Email/push delivery providers not configured; supported in-app delivery is verified."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Email/pushproviders notconfigured; inapp andactualcron verified.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-TEMPLATES",
       "requestedChange": "Notification/email template edits persist supported template content and clearly state whether a live provider uses them.",
       "before": "Template forms did not persist edits.",
-      "implemented": "Private versioned email/notification drafts persist edit/archive/restore; clear lifecycle-provider boundary.",
+      "implemented": "Shared notification/email template content persists; saving doesnotpretend toconfigureexternalprovider.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Template text saved through deployed UI and re-opened after reload; CUA DOM verified persistence. Screenshot returned stale pixels and must be recaptured."
+        "Template edited throughdeployedUI, savedandreopenedafterreload; updatedbodypresent inCUADOM. LaterPNGinvalidstalepixels; needsrecapture."
       ],
       "screenshotProof": [
         "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-edit.png"
@@ -756,104 +937,128 @@
         "docs/chat001-admin-integrated-production-proof.json",
         "docs/chat001-admin-conflict-production-proof.json"
       ],
-      "status": "PENDING_SCREENSHOT_RECAPTURE",
-      "remaining": ""
+      "status": "PENDING_PRODUCTION_VISUAL",
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-REWARD-RULES",
       "requestedChange": "Nitro reward-rule views/configuration reflect the authoritative implemented reward amounts and do not silently change client requirements.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Nitro reward-rule views/configuration reflect the authoritative implemented reward amounts and do not silently change client requirements. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "AuthoritativeapprovedNitro2/10/10/verification0rulesandactualledger; nounreviewedamountchanges.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Currentadapter and deployedrules table show participant2/referral10/PlayStore10/verification0."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-REWARD-CATALOG",
       "requestedChange": "Supported reward catalog configuration persists, while actual fulfillment remains distinguished from unavailable provider integration.",
       "before": "Catalog proposals were empty/nonpersistent.",
-      "implemented": "Persisted reward proposals; activation requires approved economics/provider.",
+      "implemented": "Versionedrewardproposalconfiguration persists; fulfillment/economics are explicitdependencies.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "CurrentAPI save/read/archive/staleguardpassed; deployed rewardproposalvisible and providerboundaryexplained."
       ],
       "screenshotProof": [],
       "technicalProof": [
         "docs/chat001-admin-integrated-production-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "No reward fulfillment provider/approved reward economics."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Fulfillmentprovider/approvedrewardeconomics missing.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-COUPONS",
       "requestedChange": "Supported coupon configuration/lifecycle persists and distinguishes configuration from actual redeemable provider fulfillment.",
       "before": "Coupon proposals were empty/nonpersistent.",
-      "implemented": "Persisted coupon proposals; no unsupported redemption claim.",
+      "implemented": "Versionedcouponproposals persist; nofakeactualredemption withoutprovider/economics.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "CurrentAPI save/read/archive/staleguardpassed; deployed couponproposalvisible."
       ],
       "screenshotProof": [],
       "technicalProof": [
         "docs/chat001-admin-integrated-production-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "No redeemable provider/approved economics."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Redemptionprovider/approvedeconomics missing.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-BADGE-CATALOG",
       "requestedChange": "Admin badge presentation shows the authoritative 22-badge definitions and legitimate progress/awards rather than editable fake rules.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Admin badge presentation shows the authoritative 22-badge definitions and legitimate progress/awards rather than editable fake rules. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
-      "localVerification": [
-        "docs/chat001-agent-admin-report.md",
-        "docs/chat001-integrated-local-verification.json"
-      ],
-      "productionVerification": [],
-      "screenshotProof": [],
-      "technicalProof": [],
-      "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
-    },
-    {
-      "id": "ADMIN-LEADERBOARD",
-      "requestedChange": "Rewards leaderboard uses actual qualifying Nitro/badge/profile records and correct identity presentation.",
-      "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Rewards leaderboard uses actual qualifying Nitro/badge/profile records and correct identity presentation. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
-      "localVerification": [
-        "docs/chat001-agent-admin-report.md",
-        "docs/chat001-integrated-local-verification.json"
-      ],
-      "productionVerification": [],
-      "screenshotProof": [],
-      "technicalProof": [],
-      "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
-    },
-    {
-      "id": "ADMIN-FEATURE-SETTINGS",
-      "requestedChange": "Feature settings reflect supported persisted/enforced behavior and explicitly identify immutable or unsupported settings without fake save feedback.",
-      "before": "Feature toggles had no persisted server enforcement.",
-      "implemented": "Four audited stored creation gates enforced by DB triggers; production pause tested only in rolled-back transaction.",
+      "implemented": "Achievementcatalog filters canonicalmetric-bearing22definitions in display_order, preserving separatelegacyverificationrows.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested.",
-        "Real authenticated Activity creation denied while gate false in one rollback-only transaction; all four gates remain enabled."
+        "Productionadapterfound25oldrows caused fix6d3230f; actualfixedsource againstproductionreturns22, unitadaptercheckslegacyexclusion/order/awardcount. Freshdeployed22imagepending."
+      ],
+      "screenshotProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "status": "PENDING_DEPLOYED_RETEST",
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Targeted UIregression changes requirefreshdeployment check.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
+    },
+    {
+      "id": "ADMIN-LEADERBOARD",
+      "requestedChange": "Rewards leaderboard uses actual qualifying Nitro/badge/profile records and correct identity presentation.",
+      "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
+      "implemented": "ActualpositiveNitro/referralledger overrolling7/30/alltime; spendingnotdeductedfromearned, restrictedmembers excluded.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Actualsourceadapter verifiedsort; deployed table/periodcontrols/explanatoryscope loaded withrealrecords."
+      ],
+      "screenshotProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "status": "PENDING_PRODUCTION_VISUAL",
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
+    },
+    {
+      "id": "ADMIN-FEATURE-SETTINGS",
+      "requestedChange": "Feature settings reflect supported persisted/enforced behavior and explicitly identify immutable or unsupported settings without fake save feedback.",
+      "before": "Feature toggles had no persisted server enforcement.",
+      "implemented": "FourpersistedAdmincreationgates enforceDBtriggers; immutable releaseconfiguration accuratelylabelled.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "All4productiongatesreadON; rollbacktransactionactivitiesdisabled actualcreate_activitydenied42501 thenallON. Allfourtriggerrowtypes testedreal localPostgres; no committedglobaldisable."
       ],
       "screenshotProof": [],
       "technicalProof": [
@@ -861,79 +1066,108 @@
         "docs/chat001-admin-production-technical-proof.json"
       ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-LANGUAGE-SETTINGS",
       "requestedChange": "Language settings reflect supported application language behavior and do not imply nonexistent translations or enforcement.",
       "before": "Language actions implied translations that were not implemented.",
-      "implemented": "English actual availability; translations require approved bundles, no fake saves.",
+      "implemented": "SupportedEnglishlanguage explicitlyshown; nofake untranslatedtoggles.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        "Deployedlanguageview Englishonly and clearadditionaltranslationdependency."
+      ],
       "screenshotProof": [],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "No approved extra-language translation bundles."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. Additionalapprovedtranslationbundlesmissing.",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     },
     {
       "id": "ADMIN-HEADER-SEARCH",
       "requestedChange": "Admin header search submits the current query, returns actual authorized matching data and updates when the query changes.",
       "before": "Changing header search on the same route could retain the previous query.",
-      "implemented": "Current URL query drives authorized member/Activity/report search, including repeated same-route changes.",
+      "implemented": "Headersearchusescurrentquery andsame-routeupdates correctly withauthorizedrealresults.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "UI queried QA Audit:3 members and1Activity; changed same-route query to Historical category:0members/1Activity. Correct results captured."
+        "Two deployedqueries QA Audit then Historical category changedmember/activityresults correctly; bothscreensvalid."
       ],
       "screenshotProof": [
         "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-search-first.png",
         "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-search-second.png"
       ],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
       "status": "PASS",
-      "remaining": ""
+      "remaining": "",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "VALIDATED_DEPLOYED_SCREENSHOT"
     },
     {
       "id": "ADMIN-HEADER-NOTIFICATIONS",
       "requestedChange": "Admin header notification/review indicator reflects actual pending work and opens its working destination.",
       "before": "Existing Admin capability audited against the canonical requested outcome; prior production evidence is retained separately where applicable.",
-      "implemented": "Admin header notification/review indicator reflects actual pending work and opens its working destination. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
-      "localVerification": [
-        "docs/chat001-agent-admin-report.md",
-        "docs/chat001-integrated-local-verification.json"
-      ],
-      "productionVerification": [],
-      "screenshotProof": [],
-      "technicalProof": [],
-      "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
-    },
-    {
-      "id": "ADMIN-HEADER-HELP-PROFILE",
-      "requestedChange": "Admin help/profile controls expose actual guidance and current account/role information.",
-      "before": "Header controls lacked complete working guidance/account behavior.",
-      "implemented": "Admin help/profile controls expose actual guidance and current account/role information. Implemented in the integrated source; acceptance scope below distinguishes actual proof from pending checks.",
+      "implemented": "Livependingreportindicator opens actualreviewqueue.",
       "localVerification": [
         "docs/chat001-agent-admin-report.md",
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Actual help dialog and signed-in Admin/email menu captured. Profile destination click was interrupted by browser detachment; destination still pending."
+        "Deployedbannerpendingcount5 andclickroutedPendingReports withstored5Vibereports afterload. Screenshotstaleexcluded."
+      ],
+      "screenshotProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "status": "PENDING_PRODUCTION_VISUAL",
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
+    },
+    {
+      "id": "ADMIN-HEADER-HELP-PROFILE",
+      "requestedChange": "Admin help/profile controls expose actual guidance and current account/role information.",
+      "before": "Header controls lacked complete working guidance/account behavior.",
+      "implemented": "Actualhelpdialogandcurrentauthenticatedadministrator profilemenu/dialog.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Helpimagevalid. Deployedprofiledialog showscurrentAdminemail/role/lastsign-in; screenshotstaleexcluded."
       ],
       "screenshotProof": [
         "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-help.png",
         "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-profile.png"
       ],
-      "technicalProof": [],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
       "status": "PENDING_PRODUCTION_VISUAL",
-      "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
+      "remaining": "Valid current deployed screenshot required; recorded DOM/API observations are not substituted as image proof. ",
+      "implementationStatus": "IMPLEMENTED",
+      "visualVerificationStatus": "PENDING_RECAPTURE"
     }
   ],
   "browserLimitation": "The original first8 captures are valid. Later Chrome background screenshots returned a stale Notification Templates frame although DOM/URL and real persisted mutations were correct. They are explicitly excluded in chat001-admin-screenshot-validation.json; recapture in isolated IAB is pending.",
-  "cleanup": "Fixtures119/120/121,Activity283,category27 and workspace docs retained pending screenshots. Finance QA authority must be revoked in final cleanup."
+  "cleanup": "Deferred until root completes IAB screenshot/recipient120 announcement acceptance. Preserve119/120/121/283/category27/documents/announcement3. Finance121 authority must be revoked bycleanup.",
+  "statusCounts": {
+    "EXTERNAL_DEPENDENCY": 2,
+    "PASS": 4,
+    "PENDING_DEPLOYED_RETEST": 5,
+    "PENDING_PRODUCTION_VISUAL": 41
+  },
+  "evidenceScope": "All52requirementsmapped. Only4currentlyhavecompletecurrentAPI+validatedimageacceptance inthisagentreport. OtherAPI/DOMbehaviorwasobserved but54stalePNGcaptures explicitlyinvalid; rootIABrecapture required."
 }
