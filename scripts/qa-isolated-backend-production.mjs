@@ -30,6 +30,7 @@ async function main() {
   const url=process.env.EXPO_PUBLIC_SUPABASE_URL;
   validateRelease(release,url);
   if(process.argv.includes('--invitations'))assert(release.appliedMigrations.includes('20261003082845'),'Invitation migration readiness required');
+  if(process.argv.includes('--safety-reminders'))assert(release.appliedMigrations.includes('20261003181703'),'Safety reminder migration readiness required');
   const secretsRoot=path.resolve(arg('--secrets-root'));
   const {createClient}=await import('@supabase/supabase-js');
   const options={auth:{persistSession:false,autoRefreshToken:false}};
@@ -94,6 +95,10 @@ async function main() {
     const phones=Array.from({length:100},(_,i)=>`120255501${String(i).padStart(2,'0')}`).filter(x=>!used.has(x)&&!used.has(x.slice(1)));assert(phones.length>=3);
     const host=await createUser('host',phones[0]),a=await createUser('buyer',phones[1]),b=await createUser('other',phones[2]),guard=await createUser('guard');
     const anon=make(); clients.push(anon);
+    if(process.argv.includes('--safety-reminders')){
+      const {runSafetyReminderChecks}=await import('./qa-isolated-safety-reminders-production.mjs');
+      await runSafetyReminderChecks({host,a,b,guard,anon,service,ok,rpc,pass,deny,row,manifest,persist,proof,runId});proof.status='PASS';return;
+    }
     if(process.argv.includes('--invitations')){
       const {runInvitationChecks}=await import('./qa-isolated-invitations-production.mjs');
       await runInvitationChecks({host,a,b,guard,anon,service,ok,rpc,pass,deny,row,manifest,persist,proof,runId});proof.status='PASS';return;

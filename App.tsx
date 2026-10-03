@@ -4147,6 +4147,9 @@ export function ActivityDetailScreen({
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [participantsOpen, setParticipantsOpen] = useState(false);
   const [ratingsOpen, setRatingsOpen] = useState(false);
+  const [safetyOpen, setSafetyOpen] = useState(false);
+  const [safetyBusy, setSafetyBusy] = useState(false);
+  const [safetyMessage, setSafetyMessage] = useState("");
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState("Spam or misleading");
   const [reportDetails, setReportDetails] = useState("");
@@ -4632,6 +4635,24 @@ export function ActivityDetailScreen({
     }
     requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.where}` });
   };
+  const safetyDetails = `My WeNitro Activity: ${activity.title}\n${activity.when}\n${activity.where}\n\nPlease keep these details. I will share my live location separately in my messaging app.`;
+  const runSafetyAction = async (action: "share" | "copy" | "call") => {
+    if (safetyBusy) return;
+    setSafetyBusy(true); setSafetyMessage("");
+    try {
+      if (action === "share") await Share.share({ title: activity.title, message: safetyDetails });
+      else if (action === "copy") { await Clipboard.setStringAsync(safetyDetails); setSafetyMessage("Activity details copied. Send them to someone you trust."); }
+      else {
+        const contact = await referenceDeltaService.getEmergencyContact();
+        if (!contact.phone_number || !/^[6-9]\d{9}$/.test(contact.phone_number)) {
+          setSafetyMessage("Add a trusted emergency contact before calling."); return;
+        }
+        await Linking.openURL(`tel:+91${contact.phone_number}`);
+      }
+    } catch (caught) {
+      setSafetyMessage(caught instanceof Error ? caught.message : "This safety action could not open. Try copying the details or check your saved contact.");
+    } finally { setSafetyBusy(false); }
+  };
   const filteredParticipants = (canHost ? participants : joinedParticipants).filter(participant => participantTab === 'All' || participantTab === 'Approved' && ['approved','going','paid'].includes(participant.status) || participantTab === 'Pending' && ['pending','waitlist','payment_required','payment_pending','approved_pending_payment'].includes(participant.status) || participantTab === 'Rejected' && participant.status === 'rejected');
   if (ratingsOpen && activityEnded && (isHost || joined)) return <ActivityRatings eventId={activity.id} viewerId={String(data.userId)} host={{ userId: String(activity.ownerId), name: activity.host, avatarUrl: activity.hostAvatar }} participants={participants} back={() => setRatingsOpen(false)} />;
   if (participantsOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}>
@@ -4665,6 +4686,7 @@ export function ActivityDetailScreen({
             <Icon name="arrow-back" color="#fff" />
           </Pressable>
           <View style={styles.detailTopActions}>
+            {canHost || joined ? <Pressable accessibilityRole="button" accessibilityLabel="SOS safety actions" style={styles.detailRound} onPress={() => { setSafetyMessage(""); setSafetyOpen(true); }}><Text style={{ color: "#FFF", fontSize: 10, fontWeight: "800" }}>SOS</Text></Pressable> : null}
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Share activity"
@@ -5041,6 +5063,16 @@ export function ActivityDetailScreen({
               </View>
             )}
       </View>
+      {safetyOpen ? <ReferenceSheet title="SOS · Stay connected" close={() => setSafetyOpen(false)}>
+        <Text style={[styles.detailBody, { color: palette.text }]}>Make sure to share your activity details and live location with someone you trust.</Text>
+        <Text style={[styles.detailBody, { color: palette.muted }]}>Share these details now. Use your messaging app to share live location. WeNitro does not track your location or contact emergency services.</Text>
+        <Text style={[styles.detailBody, { color: palette.muted }]}>Hosts and confirmed participants receive an in-app safety reminder around 10 minutes before the Activity starts. Background push delivery is not available in this build.</Text>
+        <Button label="Share Activity details" disabled={safetyBusy} onPress={() => void runSafetyAction("share")} />
+        <Button label="Copy Activity details" variant="outline" disabled={safetyBusy} onPress={() => void runSafetyAction("copy")} />
+        <Button label="Call trusted contact" variant="outline" disabled={safetyBusy} onPress={() => void runSafetyAction("call")} />
+        <Button label="Manage emergency contact" variant="outline" onPress={() => { setSafetyOpen(false); go("emergency"); }} />
+        {safetyMessage ? <Text accessibilityRole="alert" style={[styles.detailBody, { color: palette.text }]}>{safetyMessage}</Text> : null}
+      </ReferenceSheet> : null}
       {optionsOpen ? <ReferenceSheet title="Options" close={() => setOptionsOpen(false)}>
         <Pressable accessibilityRole="button" onPress={() => { setOptionsOpen(false); void shareActivity(); }} style={[styles.optionRow,{backgroundColor:palette.card}]}><Icon name="share-social-outline" /><Text style={[styles.optionText,{color:palette.text}]}>{activity.visibility === "private" && canHost ? "Share invite link" : "Share"}</Text></Pressable>
         {canHost || joined ? <Pressable accessibilityRole="button" onPress={() => { setOptionsOpen(false); void onOpenGroupChat(activity.id).catch(caught => Alert.alert('Group Chat unavailable', caught instanceof Error ? caught.message : 'This Activity has no associated group chat.')); }} style={[styles.optionRow,{backgroundColor:palette.card}]}><Icon name="chatbubbles-outline" /><Text style={[styles.optionText,{color:palette.text}]}>Group Chat</Text></Pressable> : null}
