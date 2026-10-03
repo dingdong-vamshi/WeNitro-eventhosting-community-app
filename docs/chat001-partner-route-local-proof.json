@@ -1,0 +1,49 @@
+{
+  "recordedAt": "2026-10-03T21:48:08.368687+00:00",
+  "status": "LOCAL_PASS_PRODUCTION_RETEST_PENDING",
+  "reportedRegressions": [
+    "Changing authenticated Partner route from #/partnerDashboard/280 to /297 retained280 content.",
+    "Cold reload of /297 displayed Partner account required for approved71 until Profile loaded Partner state."
+  ],
+  "rootCauses": [
+    "App content useMemo omitted partnerActivityId; the Dashboard also seeded selectedId/tab only at mount.",
+    "Partner routes correctly own ledger reads and skip workspace Profile hydration, but route authorization incorrectly depended on cached accountType populated only by Profile."
+  ],
+  "implemented": [
+    "Targeted PartnerAccessGate queries the authoritative Partner account RPC with a30-second deadline and loading/denied/error/retry UI. It does not infer approval from signup metadata or cached accountType.",
+    "Validated result hydrates Partner capability for the same current user. Account mismatch/disposal cancels state writes and blocks rendering old results.",
+    "Gate React key includes user, Partner screen and ActivityID; same-screen route changes unmount old Dashboard/Form state and dispose pending ledger effects. partnerActivityId now participates in App content memo dependencies."
+  ],
+  "localVerification": [
+    {
+      "command": "node scripts/partner-route-regression-test.mjs",
+      "status": "PASS",
+      "scope": "Executes actual access effect with approved/denied/error/timeout/disposal/mismatched-account data; actual App JSX branch keys/props280\u2192297; actual Dashboard ledger cleanup ignores late280response. Memo dependency assertion is source contract; no claim of real production browser navigation."
+    },
+    {
+      "commands": [
+        "partner-dashboard-loading-test",
+        "workspace-refresh-test",
+        "auth-bootstrap-regression-test",
+        "partner-v1-contract-test",
+        "partner-ecosystem-test",
+        "activity-deep-link-regression-test"
+      ],
+      "status": "PASS",
+      "scope": "Existing focused executable/source-contract suites retain their individual limitations."
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit --pretty false",
+      "status": "PASS"
+    }
+  ],
+  "productionVerification": [],
+  "screenshots": [],
+  "remainingProductionActions": [
+    "Hard reload #/partnerDashboard/297 as approved71 without visiting Profile: show checking state then correct297registrations.",
+    "Navigate existing same-origin hash280\u2192297 and browser Back/Forward: selected Activity/ledger must match current route.",
+    "Cold #/partnerRegistrationForm/297 as approved71 loads correctform; ordinarynonPartner remains denied."
+  ],
+  "externalMutations": false,
+  "deploymentPerformed": false
+}

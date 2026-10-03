@@ -1,3 +1,4 @@
+import { PartnerAccessGate } from './src/components/partner-access-gate';
 import { GoogleVenue } from './src/components/google-venue';
 import { googlePlaceIdUrl, clearExpiredGoogleCoordinates, googleCoordinateExpiryDelay } from './src/services/google-places';
 import { ActionConfirmationProvider, useActionConfirmation } from './src/components/reconstruction/action-confirmation';
@@ -9861,10 +9862,13 @@ export default function App() {
       setPartnerActivityId(undefined);
       go(result.can_host_paid ? (partnerHostingDraft?.userId === data.userId ? "createActivity" : "partnerDashboard") : "profile");
     }} />;
-    if (screen === "partnerDashboard") return data.accountType === "partner" && data.userId ? (
-      <PartnerDashboard userId={data.userId} dark={data.theme === "dark"} initialActivityId={partnerActivityId} onBack={() => { setPartnerActivityId(undefined); go("profile"); }} onOpenActivity={openActivity} onCreateActivity={() => go("createActivity")} onEditRegistrationForm={(id) => { setPartnerActivityId(id); go("partnerRegistrationForm", id); }} />
-    ) : <ScreenFrame title="Partner Dashboard" onBack={back}><Text>Partner account required.</Text></ScreenFrame>;
-    if (screen === "partnerRegistrationForm" && partnerActivityId) return data.accountType === "partner" ? <PartnerRegistrationFormScreen activityId={partnerActivityId} dark={data.theme === "dark"} onBack={() => go("partnerDashboard")} /> : <ScreenFrame title="Registration Form" onBack={back}><Text>Partner account required.</Text></ScreenFrame>;
+    if ((screen === "partnerDashboard" || screen === "partnerRegistrationForm") && data.userId) return (
+      <PartnerAccessGate key={`partner:${data.userId}:${screen}:${partnerActivityId || 'overview'}`} userId={data.userId} dark={data.theme === "dark"} onBack={back} onResolved={result => setData(current => current.userId !== data.userId ? current : ({ ...current, partnerProfile: result.profile, partnerEligible: result.eligible, partnerUnavailable: false, accountType: result.can_host_paid ? "partner" : "individual" }))}>
+        {screen === "partnerRegistrationForm" && partnerActivityId
+          ? <PartnerRegistrationFormScreen activityId={partnerActivityId} dark={data.theme === "dark"} onBack={() => go("partnerDashboard")} />
+          : <PartnerDashboard userId={data.userId} dark={data.theme === "dark"} initialActivityId={partnerActivityId} onBack={() => { setPartnerActivityId(undefined); go("profile"); }} onOpenActivity={openActivity} onCreateActivity={() => go("createActivity")} onEditRegistrationForm={(id) => { setPartnerActivityId(id); go("partnerRegistrationForm", id); }} />}
+      </PartnerAccessGate>
+    );
     if (screen === "createActivity") {
       const existing = editingActivityId ? data.activities.find(item => item.id === editingActivityId) : undefined;
       return <HostActivityScreen key={existing?.id || data.userId} userId={data.userId!} isPartner={data.accountType === "partner"} existing={existing} onBack={() => existing ? openActivity(existing.id) : go("host")} onDrafted={created => { const next = activityFromRemote(created); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); }} onCreated={created => { const next = activityFromRemote(created); setEditingActivityId(null); setData(current => ({ ...current, activities: [next, ...current.activities.filter(a => a.id !== next.id)] })); setHistory(items => [...items, 'activities']); setSelectedActivityId(next.id); setScreen('activityDetail'); pushWebRoute('activityDetail', next.id); }} />;
@@ -9959,7 +9963,7 @@ export default function App() {
         go={go}
       />
     );
-  }, [routeScreen, data, history, selectedActivityId, selectedCommunityId, selectedProfileId, selectedSquadOwnerId, selectedConversationId, selectedVibeId, activityCategoryFilter, introSeen, welcomeError, profileSetup, communitySuccess, messagesTab, messagesFilter, legacyMessages, communityPostsOpen, phoneSignupHandoff, activityRouteError]);
+  }, [routeScreen, data, history, partnerActivityId, selectedActivityId, selectedCommunityId, selectedProfileId, selectedSquadOwnerId, selectedConversationId, selectedVibeId, activityCategoryFilter, introSeen, welcomeError, profileSetup, communitySuccess, messagesTab, messagesFilter, legacyMessages, communityPostsOpen, phoneSignupHandoff, activityRouteError]);
 
   if (splashVisible || !fontsLoaded || !introChecked) return <SafeAreaProvider><View style={{ flex: 1, backgroundColor: "#6860F2" }}><StatusBar style="light" /><SplashScreen /></View></SafeAreaProvider>;
   if (!sessionChecked || authLoading || authError) return <SafeAreaProvider><ReferenceTheme.Provider value={data.theme}><ThemeContext.Provider value={data.theme}><View style={{ flex: 1, backgroundColor: data.theme === "dark" ? "#101824" : "#F7F7FB" }}><StatusBar style={data.theme === "dark" ? "light" : "dark"} /><FeedLoadingScreen error={authError} onRetry={() => void refreshAuthRef.current()} onLogout={() => void authService.signOut()} />{authIdentityRef.current && profileSetup?.profile.onboarding_completed && !authError ? <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"><TabBar active="feed" go={() => undefined} /></View> : null}</View></ThemeContext.Provider></ReferenceTheme.Provider></SafeAreaProvider>;
