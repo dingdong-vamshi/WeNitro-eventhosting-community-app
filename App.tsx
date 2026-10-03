@@ -4939,12 +4939,13 @@ export function ActivityDetailScreen({
               .sort((left, right) => Number(right.category === activity.category) - Number(left.category === activity.category))
               .slice(0, 8)
               .map((item) => (
-                <Pressable key={item.id} style={styles.recommendedCard} onPress={() => openActivity(item.id)}>
+                <Pressable key={item.id} style={[styles.recommendedCard, item.isPartner && styles.partnerActivityAccent]} onPress={() => openActivity(item.id)}>
                   <Image
                     source={{ uri: item.image }}
                     style={styles.recommendedImage}
                   />
                   <Text style={[styles.recommendedTitle, { color: palette.text }]}>{item.title}</Text>
+                  {item.isPartner ? <Text style={{ color: palette.accent, fontSize: 12, fontWeight: "800" }}>Partner activity</Text> : null}
                   <Text style={[styles.detailCardMuted, { color: palette.muted }]}>{item.when}</Text>
                 </Pressable>
               ))}
