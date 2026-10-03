@@ -75,9 +75,14 @@ const inboxSource = fs.readFileSync('src/components/reconstruction/messages.tsx'
 const inboxAst = ast(inboxSource, 'messages.tsx');
 const prefixMatcher = find(inboxAst, n => ts.isFunctionDeclaration(n) && n.name?.text === 'startsWithQuery');
 const peopleFilter = find(inboxAst, n => ts.isVariableDeclaration(n) && n.name.getText(inboxAst) === 'searchPeople');
-const filtered = evaluate(`${prefixMatcher.getText(inboxAst)}\nexports.people=${peopleFilter.initializer.getText(inboxAst)};`, {
-  exports: {}, query: 'Pri', conversations: [], people: [{id:1,fullname:'Atharv',username:'atharv'}, {id:2,fullname:'Priya Nair',username:'qa_two'}],
+const discoverPeople = (overrides = {}) => evaluate(`${prefixMatcher.getText(inboxAst)}\nexports.people=${peopleFilter.initializer.getText(inboxAst)};`, {
+  exports: {}, tab: 'Chats', filter: 'All', query: 'pRi', eligibleConversations: [], people: [{id:1,fullname:'Atharv',username:'atharv'}, {id:2,fullname:'Priya Nair',username:'qa_two'}], ...overrides,
 }).exports.people;
+const filtered = discoverPeople();
 assert.equal(filtered.length, 1, 'stale/group-picker people must filter immediately while remote search is pending');
 assert.equal(filtered[0].id, 2);
+assert.equal(discoverPeople({ filter: 'People' }).length, 1, 'People view retains matching new recipients');
+assert.equal(discoverPeople({ filter: 'Groups' }).length, 0, 'Group filter does not leak individual search suggestions');
+assert.equal(discoverPeople({ tab: 'Communities' }).length, 0, 'Community search does not show chat recipient suggestions');
+assert.equal(discoverPeople({ eligibleConversations: [{ userId: '2' }] }).length, 0, 'Existing conversation recipient is not duplicated as a new suggestion');
 console.log('PASS: realtime sender hydration/cache/retry; sender and poll mapping; UPDATE merge/vote refresh; session/cleanup guards; no per-message identity reads.');
