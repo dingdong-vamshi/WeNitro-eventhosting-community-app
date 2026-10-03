@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-03T18:04:41.041Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "migration": "20261003082759_admin_workspace_conflict_http_status",
+  "checks": [
+    {
+      "name": "admin_workspace_save",
+      "status": "PASS",
+      "httpStatus": 409,
+      "code": "PT409",
+      "elapsedMs": 165,
+      "rowUnchanged": true
+    },
+    {
+      "name": "admin_send_campaign",
+      "status": "PASS",
+      "httpStatus": 409,
+      "code": "PT409",
+      "elapsedMs": 147,
+      "rowUnchanged": true
+    },
+    {
+      "name": "admin_schedule_campaign",
+      "status": "PASS",
+      "httpStatus": 409,
+      "code": "PT409",
+      "elapsedMs": 154,
+      "rowUnchanged": true
+    },
+    {
+      "name": "Member cannot query private.app_daily_activity",
+      "status": "PASS",
+      "httpStatus": 406,
+      "code": "PGRST106",
+      "boundary": "Private schema is not exposed by PostgREST"
+    },
+    {
+      "name": "Member cannot query private.activity_daily_views",
+      "status": "PASS",
+      "httpStatus": 406,
+      "code": "PGRST106",
+      "boundary": "Private schema is not exposed by PostgREST"
+    },
+    {
+      "name": "Member cannot query private.activity_daily_shares",
+      "status": "PASS",
+      "httpStatus": 406,
+      "code": "PGRST106",
+      "boundary": "Private schema is not exposed by PostgREST"
+    }
+  ]
+}

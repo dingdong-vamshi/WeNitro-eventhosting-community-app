@@ -1,0 +1,342 @@
+{
+  "target": "cxsznhrkzqndhseodcyy",
+  "deployments": {
+    "app": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "admin": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+  },
+  "scope": "Authenticated production API checks; screenshots and cron job inspection are separate evidence.",
+  "runs": [
+    {
+      "at": "2026-10-03T08:24:22.735Z",
+      "mode": "--execute",
+      "status": "FAIL",
+      "checks": [
+        {
+          "name": "Member cannot manage categories",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Member cannot read workspace documents",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Member cannot read usage analytics",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Member cannot manage creation gates",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Finance cannot manage categories",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Finance cannot read workspace documents",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Finance cannot read usage analytics",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Finance cannot manage creation gates",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Admin category creation persists",
+          "status": "PASS"
+        },
+        {
+          "name": "Disabled category stays attached through unrelated historical Activity edit",
+          "status": "PASS"
+        },
+        {
+          "name": "Disabled category cannot be assigned to a new Activity",
+          "status": "PASS",
+          "details": {
+            "code": "22023"
+          }
+        },
+        {
+          "name": "Archived category state persists while the historical Activity reference survives",
+          "status": "PASS"
+        },
+        {
+          "name": "QA catalog fixtures are not offered by the selectable legacy catalog",
+          "status": "PASS"
+        },
+        {
+          "name": "Category restore and rename preserve the same historical category ID",
+          "status": "PASS"
+        },
+        {
+          "name": "A nonmember cannot observe/share the private QA Activity",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Private QA Activity share visibility is enforced",
+          "status": "PASS",
+          "details": {
+            "code": "42501"
+          }
+        },
+        {
+          "name": "Usage reports the explicit UTC observation window",
+          "status": "PASS",
+          "details": {
+            "timezone": "UTC",
+            "since": "2026-10-03",
+            "dau": 1,
+            "mau": 1,
+            "retention": {
+              "week": null,
+              "month": null,
+              "quarter": null
+            }
+          }
+        },
+        {
+          "name": "Repeated QA Activity views persist once per member and UTC day",
+          "status": "PASS"
+        },
+        {
+          "name": "Repeated Activity shares persist once independently of views",
+          "status": "PASS"
+        },
+        {
+          "name": "All four deployed creation gates are readable without changing global state",
+          "status": "PASS"
+        },
+        {
+          "name": "notification_template draft survives a fresh database read",
+          "status": "PASS"
+        }
+      ],
+      "error": "notification_template stale editor cannot overwrite a newer version"
+    },
+    {
+      "at": "2026-10-03T08:29:16.898Z",
+      "mode": "--resume-workspaces",
+      "status": "PASS",
+      "checks": [
+        {
+          "name": "notification_template draft survives a fresh database read",
+          "status": "PASS"
+        },
+        {
+          "name": "notification_template stale editor cannot overwrite a newer version",
+          "status": "PASS",
+          "details": {
+            "code": "PT409",
+            "httpStatus": 409
+          }
+        },
+        {
+          "name": "notification_template archive persists",
+          "status": "PASS"
+        },
+        {
+          "name": "email_template draft survives a fresh database read",
+          "status": "PASS"
+        },
+        {
+          "name": "email_template stale editor cannot overwrite a newer version",
+          "status": "PASS",
+          "details": {
+            "code": "PT409",
+            "httpStatus": 409
+          }
+        },
+        {
+          "name": "email_template archive persists",
+          "status": "PASS"
+        },
+        {
+          "name": "reward draft survives a fresh database read",
+          "status": "PASS"
+        },
+        {
+          "name": "reward stale editor cannot overwrite a newer version",
+          "status": "PASS",
+          "details": {
+            "code": "PT409",
+            "httpStatus": 409
+          }
+        },
+        {
+          "name": "reward archive persists",
+          "status": "PASS"
+        },
+        {
+          "name": "coupon draft survives a fresh database read",
+          "status": "PASS"
+        },
+        {
+          "name": "coupon stale editor cannot overwrite a newer version",
+          "status": "PASS",
+          "details": {
+            "code": "PT409",
+            "httpStatus": 409
+          }
+        },
+        {
+          "name": "coupon archive persists",
+          "status": "PASS"
+        },
+        {
+          "name": "email provider cannot claim a false send",
+          "status": "PASS",
+          "details": {
+            "code": "P0001",
+            "httpStatus": 400
+          }
+        },
+        {
+          "name": "email provider failure preserves the saved draft",
+          "status": "PASS"
+        },
+        {
+          "name": "push provider cannot claim a false send",
+          "status": "PASS",
+          "details": {
+            "code": "P0001",
+            "httpStatus": 400
+          }
+        },
+        {
+          "name": "push provider failure preserves the saved draft",
+          "status": "PASS"
+        },
+        {
+          "name": "Immediate in-app campaign delivered exactly once to the dedicated recipient",
+          "status": "PASS"
+        },
+        {
+          "name": "Unaddressed synthetic host cannot see the delivered message",
+          "status": "PASS"
+        },
+        {
+          "name": "Campaign delivery/read totals reflect stored member receipt",
+          "status": "PASS"
+        },
+        {
+          "name": "Cancellation clears a pending schedule while preserving the draft",
+          "status": "PASS"
+        },
+        {
+          "name": "Future schedule persists; delivery is not yet claimed",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T08:31:19.258Z",
+      "mode": "--observe-scheduled",
+      "status": "FAIL",
+      "checks": [],
+      "error": "Actual cron dispatch marked the scheduled campaign sent"
+    },
+    {
+      "at": "2026-10-03T17:59:57.743Z",
+      "mode": "--observe-scheduled",
+      "status": "PASS",
+      "checks": [
+        {
+          "name": "Actual cron dispatch marked the scheduled campaign sent",
+          "status": "PASS",
+          "details": {
+            "scheduledAt": "2026-10-03T08:31:16.745Z",
+            "sentAt": "2026-10-03T08:32:00.073547+00:00",
+            "lastError": null
+          }
+        },
+        {
+          "name": "Actual scheduled message reached only the dedicated recipient once",
+          "status": "PASS",
+          "details": {
+            "delivered": 1
+          }
+        },
+        {
+          "name": "Post-cron delivery replay does not duplicate the notification",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "fixtures": {
+    "categoryId": 27,
+    "eventId": 283,
+    "hostId": 119,
+    "recipientId": 120,
+    "financeId": 121,
+    "documentIds": [
+      {
+        "id": "491b4865-f1ae-4de4-ab84-3cfecb944e95",
+        "kind": "notification_template"
+      },
+      {
+        "id": "215e3381-5a47-41ad-ba00-e3429c389286",
+        "kind": "email_template"
+      },
+      {
+        "id": "3e1a8810-84d0-49a5-b1c4-741729e1e9fe",
+        "kind": "reward"
+      },
+      {
+        "id": "1930e2a9-2a4e-44cb-baea-cf254ef01220",
+        "kind": "coupon"
+      },
+      {
+        "id": "79f9f226-f702-49dd-9b0c-d3cebbe9d6ae",
+        "kind": "campaign"
+      },
+      {
+        "id": "5691af35-b7ba-41e1-8c7c-2cc7d0978087",
+        "kind": "campaign"
+      },
+      {
+        "id": "8de78377-8aa7-400d-be8f-93576cb3c068",
+        "kind": "campaign"
+      },
+      {
+        "id": "5f184c66-f13d-4397-b29b-3d3c8db38b6d",
+        "kind": "campaign"
+      },
+      {
+        "id": "f3ebfed9-fa02-4fb4-a416-dc799aea3200",
+        "kind": "campaign"
+      }
+    ],
+    "scheduledCampaignId": "f3ebfed9-fa02-4fb4-a416-dc799aea3200",
+    "scheduledAt": "2026-10-03T08:31:16.745Z"
+  }
+}

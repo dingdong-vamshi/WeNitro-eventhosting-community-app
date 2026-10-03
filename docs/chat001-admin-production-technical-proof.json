@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-03T18:05:49.498006+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "cron": {
+    "jobId": 1,
+    "jobName": "wenitro-admin-in-app-campaigns",
+    "schedule": "* * * * *",
+    "activeNamedJobs": 1,
+    "command": "select private.dispatch_due_admin_campaigns()",
+    "actualRun": {
+      "status": "succeeded",
+      "start": "2026-10-03T08:32:00.073408Z",
+      "end": "2026-10-03T08:32:00.104057Z"
+    },
+    "campaignId": "f3ebfed9-fa02-4fb4-a416-dc799aea3200",
+    "scheduledAt": "2026-10-03T08:31:16.745Z",
+    "sentAt": "2026-10-03T08:32:00.073547Z",
+    "deliveredCount": 1,
+    "onlyDedicatedRecipient120": true,
+    "manualDispatcherInvoked": false
+  },
+  "creationGates": {
+    "productionTest": "Admin temporarily disabled activities in one rollback-only transaction, dedicatedhost119 create_activity denied with42501 and expected paused message. Transaction rolled back.",
+    "afterRollback": {
+      "activities": true,
+      "communities": true,
+      "stories": true,
+      "vibes": true
+    },
+    "installedEnabledTriggers": 4,
+    "otherThreeGateRuntimeTests": "Real local PostgreSQL51-check suite; not toggled globally in production."
+  },
+  "authAuditTelemetry": {
+    "rows": 0,
+    "basis": "Read-only auth.audit_log_entries count on actual target18:04UTC, matching prior08:07 check. No rawIP/PII exported."
+  },
+  "staleRequestCleanup": {
+    "queryPids": [
+      331051,
+      331104,
+      331106
+    ],
+    "logMatch": "Three QA probe timings matched exact workspace40001 errors; guarded backend termination returned no rows after migration cleared loops.",
+    "result": "No arbitrary user sessions terminated."
+  }
+}
