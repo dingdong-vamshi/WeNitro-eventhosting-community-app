@@ -85,9 +85,10 @@ export function activityDiscoveryInput(
 
 export function activityPriceBadge(activity: {
   price?: string | null;
+  isPaid?: boolean;
   costsMayApply?: boolean;
   entryFeeRequired?: boolean;
 }) {
   const amount = Number(String(activity.price ?? '').replace(/[^0-9.]/g, ''));
-  return activity.costsMayApply || activity.entryFeeRequired || amount > 0 ? 'PAID' : 'FREE';
+  return activity.isPaid || activity.costsMayApply || activity.entryFeeRequired || amount > 0 ? 'PAID' : 'FREE';
 }

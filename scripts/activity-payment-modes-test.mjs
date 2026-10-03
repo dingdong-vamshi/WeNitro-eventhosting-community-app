@@ -16,8 +16,9 @@ function loadFunction(file, name, globals = {}) {
   vm.runInNewContext(compiled, sandbox);
   return sandbox.exports[name];
 }
+const activityDisplayPrice = loadFunction('src/domain/activity-pricing.ts', 'activityDisplayPrice');
 const map = loadFunction('src/components/reconstruction/feed-search.tsx', 'productionActivity', {
-  activityTime: () => 'Later',
+  activityTime: () => 'Later', activityDisplayPrice,
 });
 for (const [name, isPaid, paymentCollectionMode, priceInr] of [
   ['ordinary free', false, 'onsite', 0],
@@ -28,8 +29,17 @@ for (const [name, isPaid, paymentCollectionMode, priceInr] of [
   const activity = map({ id: name, title: name, isPaid, paymentCollectionMode, priceInr, coverUrl: 'https://example.test/cover.jpg' });
   assert.equal(activity.isPaid, isPaid, `${name}: paid state must survive list-to-detail mapping`);
   assert.equal(activity.paymentCollectionMode, paymentCollectionMode, `${name}: collection mode must survive mapping`);
-  assert.equal(activity.price, isPaid ? '₹250' : 'Free', `${name}: price label`);
+  assert.equal(activity.price, isPaid ? paymentCollectionMode === 'onsite' ? 'Costs may apply' : '₹250' : 'Free', `${name}: price label`);
 }
+
+assert.equal(activityDisplayPrice({isPaid:true,priceInr:0,paymentCollectionMode:'cashfree'}),'Price unavailable','Invalid paid legacy row cannot be advertised as Free');
+assert.equal(activityDisplayPrice({isPaid:false,priceInr:0,paymentCollectionMode:'onsite',costsMayApply:true}),'Costs may apply');
+const partner = map({id:'partner',title:'Partner event',coverUrl:'https://example.test/cover.jpg',owner:{fullName:'Priya Nair',username:'priya123',isPartner:true}});
+assert.equal(partner.host,'Priya Nair','Refreshed cards retain the full name');
+assert.equal(partner.isPartner,true,'Partner identity survives list mapping');
+const individual = map({id:'individual',title:'Individual event',coverUrl:'https://example.test/cover.jpg',owner:{username:'arjun123',isPartner:false}});
+assert.equal(individual.host,'arjun123','Username remains the missing-name fallback');
+assert.equal(individual.isPartner,false,'Ordinary host is not labelled Partner');
 
 const mode = loadFunction('src/components/hosting/host-activity-screen.tsx', 'hostPaymentCollectionMode');
 assert.equal(mode(undefined, false), 'onsite', 'ordinary new paid hosting is onsite');

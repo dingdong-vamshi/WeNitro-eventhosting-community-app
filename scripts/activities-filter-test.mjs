@@ -28,6 +28,7 @@ const tomorrow = activityDiscoveryInput({ ...base, quickFilter: 'Tomorrow' }, no
 assert.ok(Date.parse(tomorrow.startsAfter)-Date.parse(today.startsAfter) >= 23*60*60*1000);
 assert.equal(dateInputValue(new Date(2026, 8, 3)), '2026-09-03');
 assert.equal(activityPriceBadge({ price: 'Free' }), 'FREE');
+assert.equal(activityPriceBadge({ price: 'Price unavailable', isPaid: true }), 'PAID');
 assert.equal(activityPriceBadge({ price: '₹250' }), 'PAID');
 assert.equal(activityPriceBadge({ price: 'Free', entryFeeRequired: true }), 'PAID');
 

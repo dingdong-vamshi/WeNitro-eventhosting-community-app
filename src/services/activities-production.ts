@@ -418,7 +418,7 @@ const activityFromDb = (
     latitude: row.latitude == null ? null : Number(row.latitude),
     longitude: row.longitude == null ? null : Number(row.longitude),
     priceInr: Number.isFinite(price) ? price : 0,
-    isPaid: row.is_paid === true && price > 0,
+    isPaid: row.is_paid === true,
     paymentCollectionMode: row.payment_collection_mode === "onsite" ? "onsite" : "cashfree",
     costsMayApply: row.costs_may_apply === true,
     entryFeeRequired: row.entry_fee_required === true,
@@ -946,9 +946,9 @@ export const activitiesProductionService = {
         .lte("longitude", Math.min(180, longitude + longitudeDelta));
     }
     if (input.freeOnly || input.maxPriceInr === 0) {
-      query = query.eq("is_paid", false);
+      query = query.eq("is_paid", false).eq("costs_may_apply", false).eq("entry_fee_required", false);
     } else if ((input.minPriceInr ?? 0) > 0) {
-      query = query.eq("is_paid", true);
+      query = query.or("is_paid.eq.true,costs_may_apply.eq.true,entry_fee_required.eq.true");
     }
     if (input.genderPreference?.trim()) {
       query = query.eq("gender_preference", input.genderPreference.trim());

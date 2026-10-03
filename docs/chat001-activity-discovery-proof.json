@@ -1,0 +1,160 @@
+{
+  "at": "2026-10-03T05:36:12.172Z",
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "scope": "Actual application discovery service against live target, read-only",
+  "paid": [
+    {
+      "id": "271",
+      "platformPaid": false,
+      "costsMayApply": true,
+      "entryFeeRequired": false,
+      "mode": "onsite"
+    },
+    {
+      "id": "269",
+      "platformPaid": false,
+      "costsMayApply": true,
+      "entryFeeRequired": false,
+      "mode": "onsite"
+    },
+    {
+      "id": "252",
+      "platformPaid": false,
+      "costsMayApply": true,
+      "entryFeeRequired": false,
+      "mode": "onsite"
+    },
+    {
+      "id": "245",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
+    {
+      "id": "243",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
+    {
+      "id": "241",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
+    {
+      "id": "236",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": true,
+      "mode": "cashfree"
+    },
+    {
+      "id": "235",
+      "platformPaid": false,
+      "costsMayApply": true,
+      "entryFeeRequired": false,
+      "mode": "onsite"
+    },
+    {
+      "id": "234",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
+    {
+      "id": "219",
+      "platformPaid": false,
+      "costsMayApply": true,
+      "entryFeeRequired": false,
+      "mode": "onsite"
+    },
+    {
+      "id": "218",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "onsite"
+    },
+    {
+      "id": "212",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
+    {
+      "id": "209",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "onsite"
+    },
+    {
+      "id": "203",
+      "platformPaid": true,
+      "costsMayApply": true,
+      "entryFeeRequired": true,
+      "mode": "cashfree"
+    },
+    {
+      "id": "200",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
+    {
+      "id": "196",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
+    {
+      "id": "195",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    }
+  ],
+  "freeIds": [
+    "278",
+    "277",
+    "274",
+    "265",
+    "263",
+    "260",
+    "249",
+    "248",
+    "247",
+    "246",
+    "238",
+    "237",
+    "233",
+    "232",
+    "231",
+    "221",
+    "220",
+    "213",
+    "211",
+    "210",
+    "207",
+    "205",
+    "204",
+    "201",
+    "199",
+    "182"
+  ],
+  "checks": [
+    "Normal off-platform cost activity retained in Paid",
+    "Partner Cashfree activity retained in Paid",
+    "Free excludes every cost flag",
+    "Full host name and Partner source identity present"
+  ]
+}

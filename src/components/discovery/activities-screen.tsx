@@ -144,13 +144,13 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity, openPr
       {loading ? <ActivityIndicator color={c.accent} style={{ marginTop: 36 }} /> : rows.map(item => {
         const saved = data.savedIds.includes(`activity:${item.id}`);
         const participation = participationLabel(item.viewerStatus);
-        return <View key={item.id} style={{ backgroundColor: c.card, borderRadius: 17, borderWidth: 1, borderColor: c.border, overflow: 'hidden', marginBottom: 11 }}>
+        return <View key={item.id} style={{ backgroundColor: c.card, borderRadius: 17, borderWidth: item.isPartner ? 2 : 1, borderColor: item.isPartner ? c.accent : c.border, overflow: 'hidden', marginBottom: 11 }}>
           <View style={{ height: 148 }}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${item.title}`} onPress={() => openActivity(item.id)} style={({ pressed }) => ({ flex: 1, opacity: pressed ? .8 : 1 })}>
               {hasRealCover(item.image) ? <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} resizeMode="cover" style={{ width: '100%', height: '100%', backgroundColor: c.inset }} /> : <View style={{ width: '100%', height: '100%', backgroundColor: fallbackColor(`${item.id}:${item.title}`), alignItems: 'center', justifyContent: 'center', padding: 18 }}><Text style={{ color: '#FFF', fontSize: 31, fontWeight: '900', letterSpacing: 1 }}>{activityInitials(item.title)}</Text><Text numberOfLines={2} style={{ color: '#FFF', fontSize: 13, lineHeight: 18, fontWeight: '800', textAlign: 'center', marginTop: 8 }}>{item.title}</Text></View>}
               <View style={{ position: 'absolute', inset: 0, backgroundColor: '#06101D14' }} />
               <View style={{ position: 'absolute', top: 9, left: 9, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                <View style={{ borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#FFFFFFEE' }}><Text style={{ color: '#392CC3', fontSize: 11, fontWeight: '800' }}>{item.category || 'Activity'}</Text></View>
+                <View style={{ borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#FFFFFFEE' }}><Text style={{ color: '#392CC3', fontSize: 11, fontWeight: '800' }}>{item.isPartner ? `Partner · ${item.category || 'Activity'}` : item.category || 'Activity'}</Text></View>
                 {participation ? <View style={{ borderRadius: 13, paddingHorizontal: 8, paddingVertical: 5, backgroundColor: participation === 'Joined' ? '#159B67E8' : '#E08B27E8' }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{participation}</Text></View> : null}
               </View>
               <View style={{ position: 'absolute', right: 9, bottom: 9, borderRadius: 13, paddingHorizontal: 9, paddingVertical: 5, backgroundColor: '#07111FD9' }}><Text style={{ color: '#FFF', fontSize: 11, fontWeight: '800' }}>{paidActivity(item) ? `PAID · ${item.price}` : 'FREE'}</Text></View>

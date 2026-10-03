@@ -1,3 +1,4 @@
+import { activityDisplayPrice } from "./src/domain/activity-pricing";
 import { VerifiedBadge } from './src/components/verified-badge';
 import { ActivityRatings } from './src/components/activity-ratings';
 import { UserAvatar } from './src/components/user-avatar';
@@ -609,8 +610,8 @@ const activityFromRemote = (item: any): Activity => ({
   genderPreference: item.gender_preference ?? null,
   likeCount: Number(item.like_count ?? 0),
   where: item.location_name,
-  price: Number(item.price_inr) ? `₹${item.price_inr}` : item.costs_may_apply ? "Costs may apply" : "Free",
-  isPaid: item.is_paid === true && Number(item.price_inr) > 0,
+  price: activityDisplayPrice({ priceInr: Number(item.price_inr) || 0, isPaid: item.is_paid === true, paymentCollectionMode: item.payment_collection_mode === "onsite" ? "onsite" : "cashfree", costsMayApply: item.costs_may_apply === true, entryFeeRequired: item.entry_fee_required === true }),
+  isPaid: item.is_paid === true,
   paymentCollectionMode: item.payment_collection_mode === "onsite" ? "onsite" : "cashfree",
   costsMayApply: item.costs_may_apply === true,
   entryFeeRequired: item.entry_fee_required === true,
