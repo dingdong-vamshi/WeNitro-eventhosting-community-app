@@ -1,0 +1,98 @@
+{
+  "recordedAt": "2026-10-03T18:30:40.878568+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "scope": "Evidence-based provider gaps; source inspection and existing current public settings. No secrets read/printed, provider configuration changed, messages sent or unsupported outcomes invented.",
+  "items": [
+    {
+      "id": "AUTH_EMAIL_DELIVERY",
+      "status": "CURRENT_DELIVERY_AND_TEMPLATE_PROOF_MISSING",
+      "evidence": [
+        "docs/chat001-postdeploy-auth-provider-state.json"
+      ],
+      "known": "Email enabled and email autoconfirm false at18:04Z.",
+      "notEstablished": "Actual controlled inbox verification/recovery receipt, sender/domain/template branding, confirmation/reset route and subsequent new-password login.",
+      "exactReason": "Public provider flags cannot prove SMTP delivery or branding. No missing SMTP credential or broken delivery is inferred."
+    },
+    {
+      "id": "GOOGLE_AUTH",
+      "status": "CURRENT_INTERACTIVE_CALLBACK_PROOF_MISSING",
+      "evidence": [
+        "docs/chat001-postdeploy-auth-provider-state.json",
+        "src/services/google-auth.web.ts",
+        "src/services/google-auth.ts",
+        "docs/phase3-google-community-vibe-qa-2026-09-08.md"
+      ],
+      "known": "Google provider enabled. Web GIS/native Google SDK token exchange implementations exist.",
+      "notEstablished": "Fresh deployed-origin new/existing user consent/token/callback and physical native build exchange.",
+      "exactReason": "Historical FedCM browser failure happened before token issuance and does not prove Supabase rejected a token. Redirect callback and native ID-token flows must be evidenced separately."
+    },
+    {
+      "id": "PHONE_OTP",
+      "status": "PHYSICAL_DELIVERY_AND_OWNERSHIP_PROOF_MISSING",
+      "evidence": [
+        "docs/chat001-postdeploy-auth-provider-state.json",
+        "supabase/functions/send-sms/index.ts",
+        "scripts/sms-provider-diagnostics-test.mjs",
+        "supabase/functions/send-sms/payload_test.ts"
+      ],
+      "known": "Phone enabled, phone autoconfirm false. Send-SMS hook implements signed webhook verification, Fast2SMS OTP transport and optional Veriphone validation.",
+      "notEstablished": "Actual receipt by controlled physical number plus valid/invalid/expired/replayed codes and intended account mapping.",
+      "exactReason": "Synthetic phone_confirm fixtures prove downstream access controls only; they are not delivery or real ownership evidence. Required provider-secret presence/credit/template approval is not inferred from code."
+    },
+    {
+      "id": "MAPS_GOOGLE",
+      "status": "INTEGRATION_NOT_IMPLEMENTED",
+      "evidence": [
+        "src/services/activity-location.ts",
+        ".env.example"
+      ],
+      "known": "Current location search implements Photon, Nominatim and device geolocation. OAuth Google client IDs are unrelated to Maps/Places authorization.",
+      "notEstablished": "No Google Maps/Places request/SDK/Maps-key path found in current App source.",
+      "exactReason": "This is missing Google integration code as well as unevidenced client-authorized Maps setup, not merely a device verification hold. Requires authorized client Maps/Places project/API configuration and implementation; existing fallback is not Google Maps."
+    },
+    {
+      "id": "HUBBLE",
+      "status": "PROVIDER_INTEGRATION_NOT_IMPLEMENTED",
+      "evidence": [
+        "src/components/reconstruction/settings.tsx",
+        "/Users/vamshipendyala/Downloads/Must changesimplementations.pdf page37"
+      ],
+      "known": "Authoritative balance is read; minimum200 shown; provider unavailable message; no redemption request or points deduction.",
+      "notEstablished": "Actual authorized Hubble redemption.",
+      "exactReason": "Original source explicitly asks client for production link and setup call with developer. Provider link/account/API contract and completed integration remain needed; no success is fabricated."
+    },
+    {
+      "id": "AADHAAR",
+      "status": "LICENSED_PROVIDER_INTEGRATION_NOT_IMPLEMENTED",
+      "evidence": [
+        "src/components/reconstruction/profile-utilities.tsx"
+      ],
+      "known": "UI explicitly says Aadhaar unavailable. Trust rule reserves20 only for verified outcome.",
+      "notEstablished": "Licensed authorized provider, real user-consented verification and authenticated success callback.",
+      "exactReason": "No approved licensed-provider integration evidenced. Do not accept uploads/self-declarations as Aadhaar verification."
+    },
+    {
+      "id": "CASHFREE_REAL_MONEY",
+      "status": "SANDBOX_ONLY_WITH_REAL_FINANCIAL_OPERATIONS_UNPROVEN",
+      "evidence": [
+        "docs/chat001-hosted-checkout-proof.json",
+        "docs/chat001-backend-canonical-coverage.json"
+      ],
+      "known": "Actual hosted Sandbox provider success proof exists; synthetic service-finalizer tests are separately labelled.",
+      "notEstablished": "Production merchant activation, live-money refunds, payouts, bank settlement, dispute processing or tax/gateway policy acceptance.",
+      "exactReason": "No authorization/evidence of actual live transfer/refund/payout. Synthetic retained finance stays ON_HOLD and must never be paid out."
+    },
+    {
+      "id": "NATIVE_PUSH_AND_LOCATION",
+      "status": "UNSUPPORTED_CAPABILITY_NOT_PDF37_REQUIREMENT",
+      "evidence": [
+        "supabase/migrations/20261003181703_activity_safety_reminders.sql",
+        "App.tsx",
+        "/Users/vamshipendyala/Downloads/Must changesimplementations.pdf page37"
+      ],
+      "known": "Source37 requests10minute in-app safety reminder and functional SOS. Local implementation provides reminder and explicit share/copy/dialer actions.",
+      "notEstablished": "OS background push, persistent native notification, live tracking or automatic emergency-service dispatch.",
+      "exactReason": "These capabilities are not implemented or claimed; they are not part of the exact PDF37 clause and must not inflate missing client requirements."
+    }
+  ]
+}

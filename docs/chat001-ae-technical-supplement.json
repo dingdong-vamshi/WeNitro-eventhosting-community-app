@@ -3442,7 +3442,7 @@
         "B21-01"
       ],
       "requestedOutcome": "Actual Google Maps/Places integration uses the client's authorized configured account.",
-      "technicalStatus": "PROVIDER_INTEGRATION_UNVERIFIED",
+      "technicalStatus": "PROVIDER_INTEGRATION_NOT_IMPLEMENTED",
       "technicalProof": [],
       "localProof": [],
       "sourceInspection": [
@@ -3450,12 +3450,13 @@
           "file": "src/services/activity-location.ts",
           "line": 4,
           "match": "EXPO_PUBLIC",
-          "finding": "Google configuration-dependent location service with Photon/GPS fallback; no current successful client Google Maps/Places transaction attached."
+          "finding": "Current source implements Photon/Nominatim/GPS; no Google Maps/Places endpoint, SDK or Maps-key integration path exists. OAuth Google IDs are not Maps authorization."
         }
       ],
       "missingEvidence": [
         "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
-        "Actual client-authorized Google Maps/Places account and successful deployed integration are not proved here. Read current configuration without exposing keys; do not call fallback a Google PASS."
+        "Actual client-authorized Google Maps/Places account and successful deployed integration are not proved here. Read current configuration without exposing keys; do not call fallback a Google PASS.",
+        "Corrected deeper source audit: integration code is absent, not merely a configured provider awaiting verification. See docs/chat001-provider-holds-evidence.json."
       ],
       "acceptedScreenshots": []
     },
@@ -3625,8 +3626,7 @@
     "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED": 16,
     "CURRENT_DEPLOYED_TECHNICAL_COVERAGE": 25,
     "LOCAL_FIX_PENDING_DEPLOYMENT": 2,
-    "PROVIDER_INTEGRATION_NOT_IMPLEMENTED": 1,
-    "PROVIDER_INTEGRATION_UNVERIFIED": 1,
+    "PROVIDER_INTEGRATION_NOT_IMPLEMENTED": 2,
     "NO_BACKEND_ACCEPTANCE_CLAIM": 1
   }
 }

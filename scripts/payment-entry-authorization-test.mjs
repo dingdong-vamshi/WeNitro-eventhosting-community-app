@@ -46,6 +46,7 @@ try{
  ${functionSql('save_activity_entry_categories')}
  ${functionSql('prepare_activity_payment')}
  ${fs.readFileSync('supabase/migrations/20261003075132_payment_entry_authorization.sql','utf8')}
+ ${fs.readFileSync('supabase/migrations/20261003182405_participant_management_boundaries.sql','utf8').split('-- Keep late payment')[1].replace(/^/, '-- Keep late payment')}
  revoke all on function public.finalize_activity_payment(text,text,bigint,text,text,jsonb) from public,anon,authenticated;
  grant execute on function public.prepare_activity_payment(integer,bigint),public.save_activity_entry_categories(integer,jsonb) to authenticated;
  insert into public.tbl_events(id,created_by) select n,1 from generate_series(1,8)n;
@@ -107,6 +108,13 @@ try{
   assert.equal(sql(finalize(newOrder,'new-valid-'+financialState)),'PAYABLE');checks++;
   assert.equal(sql("select count(*) from public.tbl_event_participants where event_id=30 and status='approved';"),'1');checks++;
   sql('delete from public.tbl_partner_financial_events where event_id=30;delete from public.tbl_event_participants where event_id=30;delete from public.tbl_activity_payments where event_id=30;delete from public.tbl_activity_entry_categories where id=30;delete from public.tbl_events where id=30;');
+ }
+ for(const reason of ['HOST_REJECTED','HOST_WAITLISTED']){
+  sql(`insert into public.tbl_events(id,created_by) values(40,1);insert into public.tbl_event_participants(event_id,user_id,status) values(40,2,'rejected');insert into public.tbl_activity_payments(event_id,user_id,partner_user_id,provider_order_id,amount_paisa,currency,status,provider_status) values(40,2,1,'host-declined',1000,'INR','cancelled','${reason}');`);
+  assert.equal(sql(finalize('host-declined','host-declined-provider')),'REFUND_REQUIRED');checks++;
+  assert.equal(sql('select status from public.tbl_event_participants where event_id=40'),'left');checks++;
+  assert.equal(sql("select count(*) from public.tbl_partner_financial_events where event_id=40 and kind='REFUND'"),'1');checks++;
+  sql('delete from public.tbl_partner_financial_events where event_id=40;delete from public.tbl_event_participants where event_id=40;delete from public.tbl_activity_payments where event_id=40;delete from public.tbl_events where id=40;');
  }
  console.log(JSON.stringify({status:'PASS',checks,scope:'Actual PostgreSQL checkout SQL: canonical legacy overload, category amount/capacity, private access, invited access, ended/cancelled checkout and category edits, late finalization refund-required, category overbooking, banned buyer, service-only finalizer and replay idempotency; no provider calls'}));
 }finally{if(started)run('pg_ctl',['-D',path.join(dir,'db'),'-m','immediate','-w','stop']);fs.rmSync(dir,{recursive:true,force:true});}
