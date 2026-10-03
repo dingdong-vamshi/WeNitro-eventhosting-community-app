@@ -1,0 +1,97 @@
+{
+  "at": "2026-10-03T18:18:26.199Z",
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "adminDeployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Users adapter returns all three dedicated QA identities",
+      "status": "PASS",
+      "total": 3
+    },
+    {
+      "name": "Activity search returns dedicated Activity283",
+      "status": "PASS"
+    },
+    {
+      "name": "Observed user metrics have actual DAU/MAU and observation start",
+      "status": "PASS",
+      "dau": 4,
+      "mau": 4,
+      "observedSince": "2026-10-03"
+    },
+    {
+      "name": "Empty previous cohort remains unavailable rather than zero",
+      "status": "PASS"
+    },
+    {
+      "name": "Platform observed DAU matches user analytics",
+      "status": "PASS"
+    },
+    {
+      "name": "Unavailable conversion/rating not fabricated",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual Activity views and shares appear independently",
+      "status": "PASS",
+      "views": 2,
+      "shares": 1
+    },
+    {
+      "name": "Top Activities do not substitute host ratings",
+      "status": "PASS"
+    },
+    {
+      "name": "Host performance contains actual dedicated host",
+      "status": "PASS"
+    },
+    {
+      "name": "Geography adapter returns recorded fields",
+      "status": "PASS"
+    },
+    {
+      "name": "Authoritative badge catalog has22 definitions",
+      "status": "PASS",
+      "total": 22
+    },
+    {
+      "name": "Leaderboard sorted by actual earned ledger totals",
+      "status": "PASS"
+    },
+    {
+      "name": "Nitro rules preserve participant2 and referral10",
+      "status": "PASS"
+    },
+    {
+      "name": "Communities adapter reads actual records",
+      "status": "PASS",
+      "count": 28
+    },
+    {
+      "name": "Vibes adapter reads actual records",
+      "status": "PASS",
+      "count": 43
+    },
+    {
+      "name": "Stories and private verification adapters return authorized stored rows",
+      "status": "PASS",
+      "stories": 17,
+      "verification": 9
+    },
+    {
+      "name": "Audit adapter returns actual current Activity283 operations",
+      "status": "PASS"
+    },
+    {
+      "name": "Investigation cases use actual stored reports",
+      "status": "PASS"
+    },
+    {
+      "name": "Partner activity adapter contains only actual Partner hosts",
+      "status": "PASS",
+      "count": 42
+    }
+  ],
+  "scope": "Actual integrated Admin source adapters authenticated against production backend, read-only. Includes canonical badge query fix staged for the next coordinated UI deployment; this is API/source proof, not proof of the old deployed Admin bundle."
+}

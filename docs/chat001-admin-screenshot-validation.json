@@ -1,0 +1,565 @@
+{
+  "at": "2026-10-03T18:21:29.620121+00:00",
+  "valid": 8,
+  "invalid": 54,
+  "screenshots": [
+    {
+      "name": "dashboard",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-dashboard.png",
+      "url": "https://wenitro-admin-roan.vercel.app/dashboard",
+      "at": "2026-10-03T08:26:36.926Z",
+      "sha256": "34c2a95287bb9a62b72baf4baccf51d4e20f7f2e0c41e0f10e4d37e86ecc8479",
+      "status": "VALID_CURRENT_RELEASE_CAPTURE",
+      "reason": "Original screenshot matches the intended deployed screen."
+    },
+    {
+      "name": "category-dialog",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-dialog.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/categories",
+      "at": "2026-10-03T18:01:08.910Z",
+      "sha256": "def32f9b14ed9a99f7392585694ed65b7a0f28a129f4562af95a860ab8c600be",
+      "status": "VALID_CURRENT_RELEASE_CAPTURE",
+      "reason": "Original screenshot matches the intended deployed screen."
+    },
+    {
+      "name": "category-reloaded",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-reloaded.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/categories",
+      "at": "2026-10-03T18:01:24.975Z",
+      "sha256": "9401c2cfb40bf40a79cf8ee49f86e9a3f28c18ce75b3c49b074e1174cabb4344",
+      "status": "VALID_CURRENT_RELEASE_CAPTURE",
+      "reason": "Original screenshot matches the intended deployed screen."
+    },
+    {
+      "name": "search-first",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-search-first.png",
+      "url": "https://wenitro-admin-roan.vercel.app/search?q=QA%20Audit",
+      "at": "2026-10-03T18:01:40.084Z",
+      "sha256": "e7e18685f9b028d55c7a2283d311b562b77a1370cca8093807dcca33a5d9126e",
+      "status": "VALID_CURRENT_RELEASE_CAPTURE",
+      "reason": "Original screenshot matches the intended deployed screen."
+    },
+    {
+      "name": "search-second",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-search-second.png",
+      "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+      "at": "2026-10-03T18:01:42.556Z",
+      "sha256": "90d6d8b8b70cc5699b049976b8364462571549566f083642af25d29e88151507",
+      "status": "VALID_CURRENT_RELEASE_CAPTURE",
+      "reason": "Original screenshot matches the intended deployed screen."
+    },
+    {
+      "name": "header-help",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-help.png",
+      "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+      "at": "2026-10-03T18:01:47.862Z",
+      "sha256": "8a4c4efa6fd8a259edc1ef2a708d3dd7726b440d1271ce032900b9ce412c312b",
+      "status": "VALID_CURRENT_RELEASE_CAPTURE",
+      "reason": "Original screenshot matches the intended deployed screen."
+    },
+    {
+      "name": "header-profile",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-profile.png",
+      "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+      "at": "2026-10-03T18:01:49.169Z",
+      "sha256": "694c5ac7652ce4db423944b1bb3067cb3abcc8db52492c4c082e762d4ba22646",
+      "status": "VALID_CURRENT_RELEASE_CAPTURE",
+      "reason": "Original screenshot matches the intended deployed screen."
+    },
+    {
+      "name": "template-edit",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-edit.png",
+      "at": "2026-10-03T18:03:23.235Z",
+      "capture": "Native Chrome deployed Admin",
+      "sha256": "3e98cc2b7b6453ddc71045bf2662c4363baff2366bc3d9694b256fa454dc4b01",
+      "status": "VALID_CURRENT_RELEASE_CAPTURE",
+      "reason": "Original screenshot matches the intended deployed screen."
+    },
+    {
+      "name": "template-reloaded",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-reloaded.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:04:08.706Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "campaign-delivered",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-campaign-delivered.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:07:34.224Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "schedule-cancelled",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-schedule-cancelled.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:07:36.940Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "provider-email",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-provider-email.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:07:58.565Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "provider-push",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-provider-push.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:08:01.499Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "email-templates",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-email-templates.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:08:03.323Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "feature-controls",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-feature-controls.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:08:10.231Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "languages",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-languages.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:08:11.828Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "settings",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-settings.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:14:20.768Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "reward-catalog",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-reward-catalog.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:08:17.424Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "coupons",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-coupons.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:08:19.516Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-users",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-users.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:08:27.886Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-platform",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-platform.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:08:30.501Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-engagement-before-label-fix",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-engagement-before-label-fix.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:11:53.391Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-events",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-events.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:05.403Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-event-views",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-event-views.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:09.351Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-growth",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-growth.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:17.567Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-top-events",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-top-events.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:19.924Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-hosts",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-hosts.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:23.282Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "analytics-geography",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-geography.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:24.862Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "nitro-rules",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-nitro-rules.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:30.964Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "nitro-leaderboard",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-nitro-leaderboard.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:32.784Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "synthetic-user-profile",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-synthetic-user-profile.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:35.127Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "synthetic-activity",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-synthetic-activity.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:36.760Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "synthetic-participants",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-synthetic-participants.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:42.048Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "synthetic-user-history",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-synthetic-user-history.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:43.735Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "communities",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-communities.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:45.514Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "vibes",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-vibes.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:47.265Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "stories",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-stories.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:49.514Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "verification",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-verification.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:53.203Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "partner-review",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-partner-review.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:54.710Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "partner-activities",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-partner-activities.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:56.779Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "reports",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-reports.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:12:59.878Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "investigation",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-investigation.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:15:30.131Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "chat-reports",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-chat-reports.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:13:08.220Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "manual-media",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-manual-media.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:13:11.421Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "abuse-review",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-abuse-review.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:13:14.566Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "ip-provider-status",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-ip-provider-status.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:13:17.129Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "moderation-audit",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-moderation-audit.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:14:05.394Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "security-audit",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-security-audit.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:13:47.136Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "admin-role-boundary",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-admin-role-boundary.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:13:36.928Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "master-role-boundary",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-master-role-boundary.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:13:57.593Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "access-audit",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-access-audit.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:14:00.636Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "header-notifications",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-notifications.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:15:24.991Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "investigation-persisted",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-investigation-persisted.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:15:44.559Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "investigation-resolved",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-investigation-resolved.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:15:45.761Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "announcements",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-announcements.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:15:49.826Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "announcement-explicit-audience",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-announcement-explicit-audience.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:16:03.581Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "announcement-published",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-announcement-published.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:16:09.546Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "header-profile-detail",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-profile-detail.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:16:43.944Z",
+      "sha256": "994947d00fb77962c25307a5b90a8f23c038544d0e67ec0c83659d58001e8fae",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "finance-transactions",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-finance-transactions.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:17:25.281Z",
+      "sha256": "d488e5efb3f92ee112552ca3a7845d809a1e4c500ab7d715d913c205c0b46dcf",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "finance-revenue",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-finance-revenue.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:17:27.589Z",
+      "sha256": "d488e5efb3f92ee112552ca3a7845d809a1e4c500ab7d715d913c205c0b46dcf",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "finance-settlements",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-finance-settlements.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:17:30.489Z",
+      "sha256": "d488e5efb3f92ee112552ca3a7845d809a1e4c500ab7d715d913c205c0b46dcf",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    },
+    {
+      "name": "finance-moderation-denied",
+      "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-finance-moderation-denied.png",
+      "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+      "at": "2026-10-03T18:17:38.043Z",
+      "sha256": "d488e5efb3f92ee112552ca3a7845d809a1e4c500ab7d715d913c205c0b46dcf",
+      "status": "INVALID_STALE_SCREENSHOT",
+      "reason": "CUA screenshot returned the unchanged Notification Templates image or its Finance access-denied state while DOM and URL moved to other routes. Excluded from visual acceptance."
+    }
+  ]
+}

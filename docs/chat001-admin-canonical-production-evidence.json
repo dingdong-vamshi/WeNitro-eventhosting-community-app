@@ -747,17 +747,16 @@
         "docs/chat001-integrated-local-verification.json"
       ],
       "productionVerification": [
-        "Current integrated deployment authenticated API checks passed for this scope; the original stale-version regression is separately corrected and retested."
+        "Template text saved through deployed UI and re-opened after reload; CUA DOM verified persistence. Screenshot returned stale pixels and must be recaptured."
       ],
       "screenshotProof": [
-        "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-edit.png",
-        "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-reloaded.png"
+        "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-edit.png"
       ],
       "technicalProof": [
         "docs/chat001-admin-integrated-production-proof.json",
         "docs/chat001-admin-conflict-production-proof.json"
       ],
-      "status": "PASS",
+      "status": "PENDING_SCREENSHOT_RECAPTURE",
       "remaining": ""
     },
     {
@@ -935,6 +934,6 @@
       "remaining": "Current-release deployed UI interaction/screenshot and any unperformed lifecycle action remain pending."
     }
   ],
-  "browserLimitation": "Background CDP intermittently detached or rendered blank. Native fallback completed one template save, but was stopped when unrelated user browser window became active. Uncaptured checks are not passed.",
+  "browserLimitation": "The original first8 captures are valid. Later Chrome background screenshots returned a stale Notification Templates frame although DOM/URL and real persisted mutations were correct. They are explicitly excluded in chat001-admin-screenshot-validation.json; recapture in isolated IAB is pending.",
   "cleanup": "Fixtures119/120/121,Activity283,category27 and workspace docs retained pending screenshots. Finance QA authority must be revoked in final cleanup."
 }

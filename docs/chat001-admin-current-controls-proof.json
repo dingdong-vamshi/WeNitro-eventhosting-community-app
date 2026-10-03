@@ -1,0 +1,94 @@
+{
+  "at": "2026-10-03T18:06:49.158Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "adminDeployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+  "fixture": {
+    "host119": 119,
+    "recipient120": 120,
+    "finance121": 121,
+    "event283": 283
+  },
+  "checks": [
+    {
+      "name": "Ordinary Admin reads only own Admin identity",
+      "status": "PASS"
+    },
+    {
+      "name": "Member cannot list Admin identities",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance has finance identity",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance cannot moderate",
+      "status": "PASS"
+    },
+    {
+      "name": "Ordinary Admin denied finance-only data",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance can read authorized finance rows",
+      "status": "PASS"
+    },
+    {
+      "name": "Pin persists and host sees it",
+      "status": "PASS"
+    },
+    {
+      "name": "Unpin persists",
+      "status": "PASS"
+    },
+    {
+      "name": "Corrected category persists to member relation",
+      "status": "PASS"
+    },
+    {
+      "name": "Historical fixture category restored",
+      "status": "PASS"
+    },
+    {
+      "name": "Dedicated suspended host rejected with issued JWT",
+      "status": "PASS"
+    },
+    {
+      "name": "Dedicated suspended host rows hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "Restored host resumes issued session",
+      "status": "PASS"
+    },
+    {
+      "name": "Cancellation persisted",
+      "status": "PASS"
+    },
+    {
+      "name": "Cancellation retry no duplicate notifications",
+      "status": "PASS"
+    },
+    {
+      "name": "Unpaid restore persisted",
+      "status": "PASS"
+    },
+    {
+      "name": "Removed event hidden from host",
+      "status": "PASS"
+    },
+    {
+      "name": "Restored event visible to host",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual moderation audit retains actor target reason priorstate",
+      "status": "PASS"
+    },
+    {
+      "name": "Member denied moderation audit",
+      "status": "PASS"
+    }
+  ],
+  "restoration": "Dedicated host restored; Activity restored and unpinned; original category27 restored"
+}
