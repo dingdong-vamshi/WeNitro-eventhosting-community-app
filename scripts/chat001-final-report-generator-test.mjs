@@ -17,6 +17,20 @@ try{
  let assessments={requirements:[decision('ONE'),decision('TWO'),{...decision('THREE'),screenshotProof:[]},{id:'FOUR',status:'NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY',before:'No provider',implemented:'Truthful unavailable UI',reason:'Approved licensed provider absent.'}],processEntries:[{id:'FULL-LOCAL',status:'PASS'}]};write('docs/assessments.json',assessments);
  const accepted=buildReport({...options,assessmentFile:'docs/assessments.json',final:true});assert.equal(accepted.reportStatus,'FINAL_REQUIREMENT_RECONCILIATION');assert.deepEqual(accepted.finalOutcomeCounts,{PASS:3,NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY:1});
  assessments.requirements[1].screenshotProof=['qa-evidence/two.png'];write('docs/assessments.json',assessments);assert.throws(()=>buildReport({...options,assessmentFile:'docs/assessments.json',final:true}),/Final report refused/,'Excluded image must block final PASS');
- write('docs/chat001-production-ae-qa.json',{requirements:[{id:'UNKNOWN'}]});assert.throws(()=>buildReport(options),/Unknown canonical ID/);write('docs/chat001-production-ae-qa.json',{requirements:[{id:'ONE'},{id:'ONE'}]});assert.throws(()=>buildReport(options),/Duplicate ID/);write('docs/chat001-production-ae-qa.json',{requirements:[]});assert.throws(()=>buildReport({...options,expectedCount:309}),/Expected exactly 309/);
+ write('docs/chat001-production-ae-qa.json',{requirements:[{id:'UNKNOWN'}]});assert.throws(()=>buildReport(options),/Unknown canonical ID/);write('docs/chat001-production-ae-qa.json',{requirements:[{id:'ONE'},{id:'ONE'}]});assert.throws(()=>buildReport(options),/Duplicate ID/);write('docs/chat001-production-ae-qa.json',{requirements:[]});assert.throws(()=>buildReport({...options,expectedCount:308}),/Expected exactly 308/);
  console.log('PASS: report reconciler preserves exact unique IDs, owner scope and external holds, merges supplemental proofs without inflation, excludes stale screenshots, rejects incomplete final reports and unknown/duplicate IDs, and accepts explicit complete release-reviewed dispositions.');
 }finally{fs.rmSync(root,{recursive:true,force:true});}
+
+// Real canonical corrections retain every original clause without inventing a duplicate.
+const actualCanonical=JSON.parse(fs.readFileSync(new URL('../docs/chat001-canonical-requirements.json',import.meta.url),'utf8'));
+const realRows=actualCanonical.canonicalRequirements;const realIds=new Set(realRows.map(r=>r.id));
+assert.equal(realRows.length,308);assert.equal(realIds.size,308);assert.equal(actualCanonical.counts.distinctImplementationRequirementsIncludingBadges,308);
+assert.equal(actualCanonical.sourceClauseMappings.length,249);assert.equal(new Set(actualCanonical.sourceClauseMappings.map(r=>r.sourceClauseId)).size,249);
+assert(!realIds.has('CHAT-PLUS-DIRECT'));assert.deepEqual(actualCanonical.sourceClauseMappings.find(r=>r.sourceClauseId==='B27-01').canonicalRequirementIds,['CHAT-PLUS-GROUP']);
+assert.equal(actualCanonical.qaOwnerCounts.B_COMMUNITIES_CHAT_VIBES,48);
+const processIds=new Set(actualCanonical.processEntries.map(r=>r.id));
+for(const mapping of actualCanonical.sourceClauseMappings){assert(mapping.canonicalRequirementIds.length||mapping.processEntryIds.length);for(const id of mapping.canonicalRequirementIds)assert(realIds.has(id));for(const id of mapping.processEntryIds)assert(processIds.has(id));}
+assert.match(realRows.find(r=>r.id==='AUTH-TAGLINE').requestedOutcome,/purple.*splash/);
+assert.match(realRows.find(r=>r.id==='PARTNER-TERMS').requestedOutcome,/before filling/);
+assert.match(realRows.find(r=>r.id==='SOS-SAFETY-REMINDER').requestedOutcome,/Make sure to share your activity details and live location with someone you trust/);
+console.log('PASS actual canonical308 unique requirements,249 source clauses retained, B27 duplicate merged, exact splash and preserved Partner/SOS criteria');

@@ -36,6 +36,34 @@
       ],
       "reference": "Must changesimplementations.pdf pages32/37",
       "interpretation": "SOS means functional safety action and specified ten-minute reminder, not an invented native tracking requirement. Partner requires bullet instructions and agreement popup before filling fields, not only bottom checkbox."
+    },
+    {
+      "sourceClauseIds": [
+        "A02-01"
+      ],
+      "reference": "tmp/pdfs/must/page-02.jpg",
+      "interpretation": "The illustrated screen is the purple launch splash. Preserve the original first tagline and four examples, with a different line on successive normal loads. The later Google Welcome card is a different screen."
+    },
+    {
+      "sourceClauseIds": [
+        "B27-01"
+      ],
+      "reference": "tmp/pdfs/issues/page-27.jpg",
+      "interpretation": "The request says show this pop-up to create Group, not another page then again click plus. CHAT-PLUS-DIRECT was an erroneous duplicate DM-flow interpretation; it is removed and the same original clause remains mapped once to CHAT-PLUS-GROUP."
+    },
+    {
+      "sourceClauseIds": [
+        "B32-01"
+      ],
+      "reference": "tmp/pdfs/issues/page-32.jpg",
+      "interpretation": "The original asks newest-to-oldest reel order and a working three-dot menu. It does not request an added newest/all filter."
+    },
+    {
+      "sourceClauseIds": [
+        "A38-10"
+      ],
+      "reference": "tmp/pdfs/must/page-38.jpg",
+      "interpretation": "The choice is made while adding media inside an Activity. It is optional Vibes-feed placement of participant-only media, not merely handing a new Activity cover into a composer after creating the Activity."
     }
   ],
   "countDefinition": {
@@ -58,9 +86,9 @@
       "A": 40,
       "B": 39
     },
-    "distinctImplementationRequirementsExcludingBadges": 287,
+    "distinctImplementationRequirementsExcludingBadges": 286,
     "distinctBadgeRequirements": 22,
-    "distinctImplementationRequirementsIncludingBadges": 309,
+    "distinctImplementationRequirementsIncludingBadges": 308,
     "acceptanceGateEntries": 7,
     "separatorEntries": 2,
     "sourceClausesMappedOnlyToProcessOrSeparator": 7,
@@ -68,11 +96,11 @@
     "orphanedCanonicalRequirements": 0,
     "acceptedPasses": 0,
     "acceptedExternalHolds": 0,
-    "pendingIntegratedProduction": 309
+    "pendingIntegratedProduction": 308
   },
   "qaOwnerCounts": {
     "A_ONBOARDING_HOME_ACTIVITIES": 126,
-    "B_COMMUNITIES_CHAT_VIBES": 49,
+    "B_COMMUNITIES_CHAT_VIBES": 48,
     "C_PROFILE_VERIFICATION_BADGES": 54,
     "E_PARTNER_CASHFREE": 16,
     "D_ADMIN": 52,
@@ -299,12 +327,13 @@
       "sourceClauseIds": [
         "A02-01"
       ],
-      "requestedOutcome": "Welcome screen loads rotate the requested taglines.",
+      "requestedOutcome": "The purple WeNitro splash rotates the original requested taglines across loads without consecutive repeats; this requirement concerns the splash, not the later Google Welcome card.",
       "acceptanceCriteria": [
-        "Welcome screen loads rotate the requested taglines."
+        "The splash uses the original first line and four PDF example slogans: Find your perfect partner for every passion; Anything is possible with a partner; Don't go solo. Find your partner; Adventures are better together; From 5 AM runs to late-night study sessions.",
+        "Successive normal loads rotate without repeating the immediately previous slogan, including across launches when local preference storage is available."
       ],
       "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
-      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
       "localVerification": [],
       "productionVerification": [],
       "acceptedScreenshotProof": [],
@@ -314,7 +343,8 @@
         "deployed_interaction_and_screenshot",
         "authenticated_backend_proof_when_applicable"
       ],
-      "candidateEvidenceIds": []
+      "candidateEvidenceIds": [],
+      "sourceCorrection": "2026-10-04 original rendered PDF recheck: A02 splash, B27 direct Create Group popup, B32 chronological feed and three-dot menu, A38 optional feed placement during Activity media upload. No acceptance inferred."
     },
     {
       "id": "AUTH-EMAIL-BRAND",
@@ -3771,12 +3801,14 @@
       "sourceClauseIds": [
         "A38-10"
       ],
-      "requestedOutcome": "After creating an Activity, its media can optionally be passed to the Vibe composer without automatic publication.",
+      "requestedOutcome": "While adding a photo or video inside an Activity, let the uploader choose whether it also appears in the Vibes feed; Activity media remains accessible only to the intended eligible participants, not outsiders.",
       "acceptanceCriteria": [
-        "After creating an Activity, its media can optionally be passed to the Vibe composer without automatic publication."
+        "The Activity media composer presents the optional Show in Vibes choice before publication.",
+        "Saving persists the choice; opted-out media remains in the Activity media surface without appearing in the general Vibes feed.",
+        "Opting into the Vibes feed never makes participant-only Activity media public to outsiders."
       ],
       "qaOwner": "B_COMMUNITIES_CHAT_VIBES",
-      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
       "localVerification": [],
       "productionVerification": [],
       "acceptedScreenshotProof": [],
@@ -3786,7 +3818,8 @@
         "deployed_interaction_and_screenshot",
         "authenticated_backend_proof_when_applicable"
       ],
-      "candidateEvidenceIds": []
+      "candidateEvidenceIds": [],
+      "sourceCorrection": "2026-10-04 original rendered PDF recheck: A02 splash, B27 direct Create Group popup, B32 chronological feed and three-dot menu, A38 optional feed placement during Activity media upload. No acceptance inferred."
     },
     {
       "id": "COMM-ANONYMOUS-POST",
@@ -5247,37 +5280,15 @@
       ]
     },
     {
-      "id": "CHAT-PLUS-DIRECT",
-      "kind": "implementation",
-      "sourceClauseIds": [
-        "B27-01"
-      ],
-      "requestedOutcome": "Chat plus opens a functional direct-message recipient flow.",
-      "acceptanceCriteria": [
-        "Chat plus opens a functional direct-message recipient flow."
-      ],
-      "qaOwner": "B_COMMUNITIES_CHAT_VIBES",
-      "status": "PENDING_INTEGRATED_PRODUCTION",
-      "localVerification": [],
-      "productionVerification": [],
-      "acceptedScreenshotProof": [],
-      "acceptedTechnicalProof": [],
-      "requiredEvidence": [
-        "local_executable_or_visual_check",
-        "deployed_interaction_and_screenshot",
-        "authenticated_backend_proof_when_applicable"
-      ],
-      "candidateEvidenceIds": []
-    },
-    {
       "id": "CHAT-PLUS-GROUP",
       "kind": "implementation",
       "sourceClauseIds": [
         "B27-01"
       ],
-      "requestedOutcome": "Chat plus opens a functional create-group flow and creates the intended authorized group.",
+      "requestedOutcome": "Tapping Chat plus opens the Create Group popup directly, without navigating to another page and requiring a second plus tap; creating the group persists its authorized membership.",
       "acceptanceCriteria": [
-        "Chat plus opens a functional create-group flow and creates the intended authorized group."
+        "Chat plus opens the Create Group popup in one action, without a second navigation/plus step.",
+        "The existing group form creates the intended authorized group."
       ],
       "qaOwner": "B_COMMUNITIES_CHAT_VIBES",
       "status": "PENDING_INTEGRATED_PRODUCTION",
@@ -5290,7 +5301,8 @@
         "deployed_interaction_and_screenshot",
         "authenticated_backend_proof_when_applicable"
       ],
-      "candidateEvidenceIds": []
+      "candidateEvidenceIds": [],
+      "sourceCorrection": "2026-10-04 original rendered PDF recheck: A02 splash, B27 direct Create Group popup, B32 chronological feed and three-dot menu, A38 optional feed placement during Activity media upload. No acceptance inferred."
     },
     {
       "id": "PROFILE-LAYOUT",
@@ -5646,9 +5658,10 @@
       "sourceClauseIds": [
         "B32-01"
       ],
-      "requestedOutcome": "Vibes newest/all menu changes the intended content ordering/filter.",
+      "requestedOutcome": "Vibes appear in newest-to-oldest order and the three-dot menu exposes working supported actions; no invented newest/all filter is required.",
       "acceptanceCriteria": [
-        "Vibes newest/all menu changes the intended content ordering/filter."
+        "The Vibe feed orders eligible uploads newest to oldest.",
+        "The three-dot menu exposes working supported actions for the current Vibe and viewer."
       ],
       "qaOwner": "B_COMMUNITIES_CHAT_VIBES",
       "status": "PENDING_INTEGRATED_PRODUCTION",
@@ -5661,7 +5674,8 @@
         "deployed_interaction_and_screenshot",
         "authenticated_backend_proof_when_applicable"
       ],
-      "candidateEvidenceIds": []
+      "candidateEvidenceIds": [],
+      "sourceCorrection": "2026-10-04 original rendered PDF recheck: A02 splash, B27 direct Create Group popup, B32 chronological feed and three-dot menu, A38 optional feed placement during Activity media upload. No acceptance inferred."
     },
     {
       "id": "VIBE-DIRECT-CREATE",
@@ -8137,7 +8151,7 @@
     },
     {
       "sourceClauseId": "A02-01",
-      "requested": "Different rotating taglines on screen load",
+      "requested": "Original purple splash taglines change across screen loads",
       "canonicalRequirementIds": [
         "AUTH-TAGLINE"
       ],
@@ -9325,7 +9339,7 @@
     },
     {
       "sourceClauseId": "A38-10",
-      "requested": "optional activity media to Vibes",
+      "requested": "While adding Activity media, optionally show it in Vibes while retaining participant-only access",
       "canonicalRequirementIds": [
         "VIBE-FROM-ACTIVITY-MEDIA"
       ],
@@ -9992,9 +10006,8 @@
     },
     {
       "sourceClauseId": "B27-01",
-      "requested": "Chat plus opens direct/create-group flow",
+      "requested": "Chat plus opens the Create Group popup directly without another page or second plus tap",
       "canonicalRequirementIds": [
-        "CHAT-PLUS-DIRECT",
         "CHAT-PLUS-GROUP"
       ],
       "processEntryIds": []
@@ -10138,7 +10151,7 @@
     },
     {
       "sourceClauseId": "B32-01",
-      "requested": "Vibes vertical/newest/all menu",
+      "requested": "Vibes swipe vertically newest to oldest with working three-dot menu",
       "canonicalRequirementIds": [
         "VIBE-REELS",
         "VIBE-NEWEST"
@@ -11235,5 +11248,15 @@
     "noCanonicalRequirementWithoutProvenance": true,
     "noVerificationInvented": true,
     "candidateArtifactsMissingInPrimary": []
-  }
+  },
+  "canonicalCorrectionHistory": [
+    {
+      "removedId": "CHAT-PLUS-DIRECT",
+      "mergedInto": "CHAT-PLUS-GROUP",
+      "sourceClauseIds": [
+        "B27-01"
+      ],
+      "reason": "Original clause asks directly opening Create Group; the separate DM recipient flow was invented by the earlier mapping. No source clause or actual requested work is removed."
+    }
+  ]
 }
