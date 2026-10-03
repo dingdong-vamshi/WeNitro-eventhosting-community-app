@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-03T19:48:10.098780+00:00",
+  "at": "2026-10-03T20:51:06.378515+00:00",
   "purpose": "Coordinator-compatible D52 final-release contribution: scoped acceptance, exact external validation/provider dispositions, and any remaining nonterminal evidence gaps.",
   "target": "cxsznhrkzqndhseodcyy",
   "count": 52,
@@ -9,10 +9,11 @@
   },
   "releaseCompatibilityReview": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions.",
   "counts": {
-    "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 2,
-    "PARTIAL_EXTERNAL_DEPENDENCY": 1,
     "PASS": 48,
-    "PENDING_SCOPED_ACCEPTANCE": 1
+    "PARTIAL_EXTERNAL_DEPENDENCY": 1,
+    "PENDING_SCOPED_ACCEPTANCE": 1,
+    "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
+    "PENDING_DEPLOYED_RETEST": 1
   },
   "requirements": [
     {
@@ -1468,50 +1469,38 @@
     },
     {
       "id": "ADMIN-IP-MONITORING",
-      "status": "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY",
+      "status": "PENDING_DEPLOYED_RETEST",
       "proposalOnly": false,
       "requestedChange": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls.",
-      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
-      "implemented": "Unavailable telemetry/blocked-IP enforcement is explicit with working audit/account/report links.",
+      "before": "Page showed only an unavailable notice even though the existing Auth audit table could support a real bounded reader.",
+      "implemented": "Actual minimal Auth IP reader guarded by current Admin/Master plus active account authorization; search/Refresh/results/empty/error state UI, mapped-user navigation and aborted obsolete requests. No broad Auth table grant or fake risk/geolocation/IP-block enforcement.",
       "localVerification": [
-        "docs/chat001-agent-admin-report.md",
-        "docs/chat001-integrated-local-verification.json"
+        "docs/chat001-admin-auth-ip-regression.json"
       ],
       "productionVerification": [
-        "Read-only actual target auth.audit_log_entries aggregate had0 rows/usableIPobservations. Deployed IP page shows unavailable and actual fallbacklinks.",
-        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
         {
-          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
-          "screenshot": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-ip-monitoring.png",
-          "originalDeployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
-          "evidenceType": "VISUAL_STATE_WITH_LINKED_BEHAVIORAL_RECORDS"
+          "path": "docs/chat001-admin-auth-ip-regression.json",
+          "scope": "Read-only live schema/zero retained rows inspection only; newRPC not yet deployed."
         }
       ],
       "technicalProof": [
-        "docs/chat001-admin-production-technical-proof.json"
+        "docs/chat001-admin-auth-ip-regression.json"
       ],
-      "screenshotProof": [
-        {
-          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-ip-monitoring.png",
-          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
-          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
-          "at": "2026-10-03T18:34:44.260Z",
-          "url": "https://wenitro-admin-roan.vercel.app/security/ip-monitoring",
-          "visuallyReviewed": true,
-          "sha256": "3b2cb3b0165c771c0f1eb2cf28e6cfa12b389681f923a2cd6f6073c293d0911c"
-        }
-      ],
+      "screenshotProof": [],
       "acceptanceScope": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls.",
-      "reason": "Actual target Auth audit aggregate has zero retained rows; no login IP telemetry/enforcement service is configured. Real security/account links exist, but IP monitoring/blocking is not implemented.",
-      "remainingValidation": [],
-      "screenshotsReviewed": true,
+      "reason": "Local implementation and32realPostgres boundary checks, adapter/UI/cancellation tests, typecheck/lint/build passed. Migration/Admin deployment and read-only actual role/UI verification remain pending. Current source table has zero retained IP records; empty data is a scope limitation, not an external implementation dependency.",
+      "remainingValidation": [
+        "After coordinated deployment, run read-only actual Admin/Finance/member/anonymous tests; capture real empty page and Refresh. No fabricated audit rows or temporary live Master grant."
+      ],
+      "screenshotsReviewed": false,
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
-      "releaseReviewed": true,
+      "releaseReviewed": false,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions.",
+      "implementationStatus": "IMPLEMENTED"
     },
     {
       "id": "ADMIN-SECURITY-AUDIT",
