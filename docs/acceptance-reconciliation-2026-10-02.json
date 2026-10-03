@@ -433,6 +433,11 @@
       "productionVerified": true,
       "evidence": "qa-evidence/chat001/production-popular-partner-corrected.png",
       "tests": "82 threshold boundaries + independent22-rule DOCX expectations + free100/removal regression + live catalog/idempotency/privacy"
+    },
+    {
+      "item": "Admin scaffolding",
+      "state": "IN_PROGRESS",
+      "finding": "Source A36 requires existing Admin controls functional. Found placeholder secondary APIs and fake Create Admin/role-permission success. Account management repaired and backend deployed; frontend deployment in progress. Other pages still require reconciliation; not accepted."
     }
   ],
   "freshChecks": {
@@ -569,9 +574,12 @@
       "evidence": [
         "qa-evidence/chat001/production-paid-filter-normal-costs.png",
         "qa-evidence/chat001/production-partner-card-identity.png",
-        "qa-evidence/chat001/production-host-profile-destination.png"
+        "qa-evidence/chat001/production-host-profile-destination.png",
+        "qa-evidence/chat001/production-partner-compact-home.png",
+        "qa-evidence/chat001/production-partner-profile-list.png",
+        "qa-evidence/chat001/production-partner-recommendations-readable.png"
       ],
-      "scope": "Paid includes ordinary costs and Partner fees. Full name shown and actual host profile opens. Purple Partner label/border in Home and discovery main cards. Additional compact lists being aligned."
+      "scope": "Paid includes ordinary costs and Partner fees. Full name shown and host profile opens. Partner label and border across discovery, compact Home, Profile and recommended activities. Recommendations now 12px text with wrapping."
     },
     "cashfreeHostedSandbox": {
       "status": "PASS",
@@ -599,9 +607,64 @@
       "scope": "Private synthetic Sandbox QA activity. Admin Pin showed Featured/Unpin; corrected Social to Sports; member reload displayed Sports; restored Unpin and Social through UI.",
       "evidence": [
         "qa-evidence/chat001/production-admin-pinned-category-corrected.png",
-        "qa-evidence/chat001/production-admin-category-member-reflection.png"
+        "qa-evidence/chat001/production-admin-category-member-reflection.png",
+        "qa-evidence/chat001/production-admin-corrected-stats-restored-controls.png"
       ],
-      "pending": "Capture final restored state and member denial technical result for this exact fixture. Historical fresh member denial already exists for278."
+      "technicalProof": "docs/chat001-admin-controls-proof.json"
+    },
+    "profileSave": {
+      "status": "PASS",
+      "production": "Invalid empty name stays editable with error. Valid bio save returned Profile; temporary bio restored and confirmed after reload.",
+      "evidence": [
+        "qa-evidence/chat001/production-profile-invalid-save-stays-editable.png",
+        "qa-evidence/chat001/production-profile-save-returns-profile.png"
+      ]
+    },
+    "adminAccountManagement": {
+      "status": "PRODUCTION_UI_PENDING",
+      "local": "23 checks pass",
+      "technicalProof": "docs/chat001-admin-access-proof.json",
+      "live": "16 checks pass; QA accounts await UI and revocation",
+      "ownerDependency": "No permanent Super Admin in target. Client must identify intended owner; no existing role promoted.",
+      "productionUi": {
+        "status": "PASS",
+        "saved": "Synthetic inactive Finance Admin changed to suspended through deployed UI; saved status and matching private audit entry displayed. Self manage absent.",
+        "screenshots": [
+          "qa-evidence/chat001/production-admin-master-accounts.png",
+          "qa-evidence/chat001/production-admin-qa-access-suspended.png",
+          "qa-evidence/chat001/production-admin-access-audit.png"
+        ],
+        "limitation": "Privilege grant/revocation proven via authenticated API; UI change exercised suspension. No real owner assigned; QA Master cleanup pending."
+      }
+    },
+    "dateFilters": {
+      "status": "PASS web; native device interaction not yet exercised",
+      "commit": "2f7b1d9",
+      "deployment": "dpl_EMc84JES7XLYXNTMeHcwFVY1Z5vn",
+      "fix": "Home native selector had no onPress; web hidden date input did not reliably synchronize selected dates. Native picker wired; visible date inputs handle input/change on Home and Activities.",
+      "local": [
+        "typecheck PASS",
+        "production export PASS",
+        "activities-filter-test PASS"
+      ],
+      "production": "Home selected 4 Oct 2026 through 4 Oct 2026 + Free returned only QA event277 dated4Oct23:55. Reopened range retained values. Reset All clears dates/price/gender.",
+      "screenshots": [
+        "qa-evidence/chat001/production-home-date-free-filter.png",
+        "qa-evidence/chat001/production-home-date-free-results.png",
+        "qa-evidence/chat001/production-home-date-reset.png"
+      ]
+    },
+    "adminOperations": {
+      "status": "Backend PASS; UI audit ongoing",
+      "migrations": [
+        "20261003065531_admin_operational_controls",
+        "20261003070837_authenticated_safety_reports"
+      ],
+      "local": "29 SQL behavior checks PASS",
+      "live": "19 API behavior checks PASS; docs/chat001-admin-operations-proof.json",
+      "adminCommit": "4730df4",
+      "deployment": "dpl_9YPSodRqC2SYHq2Qruvx2sJd79Wd",
+      "reportDefect": "Ordinary authenticated Activity reports previously lacked INSERT/SELECT RLS. Owner-safe report policies now deployed and spoofed status forced open."
     }
   },
   "deployments": [
@@ -653,6 +716,15 @@
     {
       "commit": "029e72a",
       "id": "dpl_3cmHhvHbKsptz8Qh9DnewDgc5cy6"
+    },
+    {
+      "commit": "2086257",
+      "id": "dpl_AP9zP43xBDqvGKrkWoXnFdJHRxf5"
+    },
+    {
+      "repository": "admin",
+      "commit": "acc0467",
+      "id": "dpl_6FwCPARoBDMYWTQzY7SE5i4qwMwc"
     }
   ],
   "accessObservation": {

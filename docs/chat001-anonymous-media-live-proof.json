@@ -20,7 +20,9 @@
     "rangePlayback": true,
     "multipleRangesDenied": true,
     "unauthenticatedMintDenied": true,
-    "namedPostNotProxied": true
+    "namedPostNotProxied": true,
+    "authenticNaturalExpiryDenied": true,
+    "deletedPostRevokesFreshLink": true
   },
-  "scope": "Expired timestamp rejected in production; authentic token expiry and deleted-post revocation also tested with controlled clock/fixtures in local handler tests."
+  "scope": "Initial privacy/proxy checks plus authentic production expiry and deleted-post revocation completed; see docs/chat001-anonymous-media-expiry-proof.json. QA fixture cleaned after evidence."
 }

@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-03T07:29:36.581Z",
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "post": 36,
+  "room": 244,
+  "mintedAt": "2026-10-03T06:28:47.620Z",
+  "expiresAt": "2026-10-03T07:28:44.000Z",
+  "initialStatus": 200,
+  "authenticExpiredStatus": 403,
+  "freshBeforeDeletion": 200,
+  "afterSoftDeletion": 404,
+  "remintOmitted": true,
+  "memberFeedOmitted": true,
+  "fixtureMediaRemoved": true,
+  "scope": "Original unmodified production token was allowed to expire naturally. Only preidentified QA post36 and its QA media were cleaned."
+}

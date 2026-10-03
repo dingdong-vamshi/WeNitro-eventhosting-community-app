@@ -63,7 +63,8 @@
     "backend": "19 authenticated privacy/proxy tests passed; docs/chat001-anonymous-media-live-proof.json",
     "frontend": "Member71 fresh production reload displays post36 as Anonymous with visible logo. DOM image loaded through opaque community-media proxy; no Storage URL. Admin audit identifies author70.",
     "realtime": "Authenticated recipient received actual INSERT; retry same ID; own QA message soft-deleted. docs/chat001-live-regression.json",
-    "stability": "50/50 HTTP calls, zero4xx/5xx; worst1012ms"
+    "stability": "50/50 HTTP calls, zero4xx/5xx; worst1012ms",
+    "authenticExpiry": "Original one-hour token naturally expired:403; fresh token200 then404 after post soft-deletion; remint/feed omit removed post. docs/chat001-anonymous-media-expiry-proof.json"
   },
   "screenshotProof": [
     "qa-evidence/chat001/production-anonymous-photo-member.png",
@@ -74,5 +75,5 @@
     "This protects application identity metadata and paths, not identity deliberately revealed in user-written content or image pixels."
   ],
   "finalStatus": "PASS",
-  "fixtureCleanup": "Post36 retained temporarily for remaining UI evidence; only temporary Chat delivery fixture soft-deleted."
+  "fixtureCleanup": "Completed 2026-10-03T07:29:36Z. Only QA post36 soft-deleted and its named QA image removed after natural TTL expiry and post-deletion revocation proof."
 }

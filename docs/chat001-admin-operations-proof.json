@@ -1,0 +1,101 @@
+{
+  "at": "2026-10-03T07:04:24.497Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Member cannot suspend another account",
+      "status": "PASS"
+    },
+    {
+      "name": "Suspension rejects existing-session application identity",
+      "status": "PASS"
+    },
+    {
+      "name": "Suspension hides direct table access for issued token",
+      "status": "PASS"
+    },
+    {
+      "name": "Suspension persists in Admin users list",
+      "status": "PASS"
+    },
+    {
+      "name": "Restore re-enables original issued session",
+      "status": "PASS"
+    },
+    {
+      "name": "Member cannot invoke Admin activity moderation",
+      "status": "PASS"
+    },
+    {
+      "name": "In-app activity notice delivered to two QA recipients",
+      "status": "PASS"
+    },
+    {
+      "name": "QA participant can read delivered Admin notice",
+      "status": "PASS"
+    },
+    {
+      "name": "Cancel persisted",
+      "status": "PASS"
+    },
+    {
+      "name": "Cancellation retry does not duplicate notifications",
+      "status": "PASS"
+    },
+    {
+      "name": "Cancelled activity chat write rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Unpaid cancellation can be restored",
+      "status": "PASS"
+    },
+    {
+      "name": "Removed activity hidden from participant",
+      "status": "PASS"
+    },
+    {
+      "name": "Removed unpaid activity restored",
+      "status": "PASS"
+    },
+    {
+      "name": "Moderation audit records actor, target, reason and prior state",
+      "status": "PASS"
+    },
+    {
+      "name": "Member cannot read moderation audit",
+      "status": "PASS"
+    },
+    {
+      "name": "Member-created report cannot spoof resolved status",
+      "status": "PASS"
+    },
+    {
+      "name": "Member cannot review reports",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin review state persists",
+      "status": "PASS"
+    }
+  ],
+  "fixture": {
+    "eventId": 282,
+    "roomId": 245,
+    "visibility": "private",
+    "host": 70,
+    "participant": 71,
+    "reportId": 4
+  },
+  "restoration": "Temporary host restriction lifted; private unpaid activity retained for UI moderation and uncapped-capacity proof.",
+  "productionUi": {
+    "adminCommit": "4730df4",
+    "deployment": "dpl_9YPSodRqC2SYHq2Qruvx2sJd79Wd",
+    "interaction": "Private unpaid QA282 cancelled through Moderate dialog; table changed Upcoming to Cancelled. Restore selected, saved, table returned Upcoming.",
+    "screenshots": [
+      "qa-evidence/chat001/production-admin-qa-activity-cancelled.png",
+      "qa-evidence/chat001/production-admin-qa-activity-restored.png"
+    ]
+  }
+}
