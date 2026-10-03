@@ -1,3 +1,5 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { dateInputValue } from '../../domain/activity-discovery';
 import { activityDisplayPrice } from '../../domain/activity-pricing';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserAvatar } from '../user-avatar';
@@ -120,12 +122,19 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const [categories, setCategories] = useState<string[]>([]);
   const [draftCategories, setDraftCategories] = useState<string[]>([]);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [nativeDateField, setNativeDateField] = useState<'dateFrom' | 'dateTo' | null>(null);
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [price, setPrice] = useState('All');
   const [gender, setGender] = useState('All');
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [draft, setDraft] = useState({ dateFrom: '', dateTo: '', price: 'All', gender: 'All', verifiedOnly: false });
+  const updateDraftDate = (key: 'dateFrom' | 'dateTo', value: string) => setDraft(current => {
+    if (!value) return { ...current, [key]: '' };
+    if (key === 'dateFrom' && current.dateTo && value > current.dateTo) return { ...current, dateFrom: value, dateTo: value };
+    if (key === 'dateTo' && current.dateFrom && value < current.dateFrom) return { ...current, dateFrom: value, dateTo: value };
+    return { ...current, [key]: value };
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(data.activities.length === 0);
   const activityLoadState = feedActivityLoadState(loading || workspaceLoading, data.activities.length, error || workspaceError);
@@ -303,8 +312,15 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
         <ErrorLine text={error} />
       </View>
     </ScrollView>
-    {filterOpen && <Sheet title="Filters" close={() => setFilterOpen(false)} footer={<View style={{ flexDirection: 'row', gap: 10 }}><View style={{ flex: 1 }}><Button label="Reset All" onPress={() => { setDraftCategories([]); setDraft({ dateFrom:'', dateTo:'', price:'All', gender:'All', verifiedOnly:false }); }} /></View><View style={{ flex: 1 }}><Button label="Apply Filters" onPress={() => { setCategories(draftCategories); setDateFrom(draft.dateFrom); setDateTo(draft.dateTo); setPrice(draft.price); setGender(draft.gender); setVerifiedOnly(draft.verifiedOnly); setFilterOpen(false); }} /></View></View>}>
-      <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Date Filter</Text><View style={{ flexDirection:'row',gap:10 }}>{(['dateFrom','dateTo'] as const).map((key,index) => <View key={key} style={{ flex:1,gap:7 }}><Text style={{ color:c.muted,fontSize:12 }}>{index ? 'To' : 'From'}</Text>{Platform.OS==='web' ? <View style={{ minHeight:44,backgroundColor:c.card,borderWidth:1,borderColor:c.border,borderRadius:9,paddingHorizontal:12,flexDirection:'row',alignItems:'center',gap:8,overflow:'hidden' }}><Icon name="calendar-outline" color={c.muted} size={15}/><Text style={{ color:c.text,fontSize:12 }}>{draft[key] ? new Date(`${draft[key]}T12:00:00`).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}) : 'Today'}</Text>{React.createElement('input',{type:'date','aria-label':index?'Date to':'Date from',value:draft[key],onChange:(e:React.ChangeEvent<HTMLInputElement>)=>setDraft(v=>({...v,[key]:e.target.value})),style:{position:'absolute',inset:0,width:'100%',height:'100%',opacity:0,cursor:'pointer',colorScheme:useDarkColorScheme(c)}})}</View> : <Pressable style={{ backgroundColor:c.card,borderWidth:1,borderColor:c.border,borderRadius:9,padding:12 }}><Text style={{ color:c.text }}>{draft[key]||'Today'}</Text></Pressable>}</View>)}</View>
+    {filterOpen && <Sheet title="Filters" close={() => { setNativeDateField(null); setFilterOpen(false); }} footer={<View style={{ flexDirection: 'row', gap: 10 }}><View style={{ flex: 1 }}><Button label="Reset All" onPress={() => { setDraftCategories([]); setDraft({ dateFrom:'', dateTo:'', price:'All', gender:'All', verifiedOnly:false }); }} /></View><View style={{ flex: 1 }}><Button label="Apply Filters" onPress={() => { setCategories(draftCategories); setDateFrom(draft.dateFrom); setDateTo(draft.dateTo); setPrice(draft.price); setGender(draft.gender); setVerifiedOnly(draft.verifiedOnly); setFilterOpen(false); }} /></View></View>}>
+      <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Date Filter</Text>
+      <View style={{flexDirection:'row',gap:10}}>{(['dateFrom','dateTo'] as const).map((key,index)=><View key={key} style={{flex:1,gap:7}}><Text style={{color:c.muted,fontSize:12}}>{index?'To':'From'}</Text>
+      {Platform.OS==='web'?React.createElement('input',{type:'date','aria-label':index?'Date to':'Date from',value:draft[key],min:key==='dateTo'&&draft.dateFrom?draft.dateFrom:undefined,
+       onInput:(e:React.FormEvent<HTMLInputElement>)=>updateDraftDate(key,e.currentTarget.value),onChange:(e:React.ChangeEvent<HTMLInputElement>)=>updateDraftDate(key,e.target.value),
+       style:{boxSizing:'border-box',width:'100%',minWidth:0,minHeight:48,border:`1px solid ${c.border}`,borderRadius:9,padding:10,background:c.card,color:c.text,fontSize:13,fontFamily:'inherit',colorScheme:useDarkColorScheme(c)}}):
+       <Pressable accessibilityRole="button" accessibilityLabel={index?'Date to':'Date from'} onPress={()=>setNativeDateField(key)} style={{backgroundColor:c.card,borderWidth:1,borderColor:c.border,borderRadius:9,padding:12}}><Text style={{color:c.text}}>{draft[key]||'Select date'}</Text></Pressable>}
+      </View>)}</View>
+      {Platform.OS!=='web'&&nativeDateField&&<DateTimePicker mode="date" value={draft[nativeDateField]?new Date(`${draft[nativeDateField]}T12:00:00`):new Date()} onChange={(event,date)=>{const key=nativeDateField;setNativeDateField(null);if(event.type==='set'&&date&&key)updateDraftDate(key,dateInputValue(date));}}/>}
       <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Price</Text><Pills values={['All','Free','Paid']} selected={draft.price} onChange={value=>setDraft(v=>({...v,price:value}))} />
       <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Gender Preference</Text><Pills values={['All','Male','Female']} selected={draft.gender} onChange={value=>setDraft(v=>({...v,gender:value}))} /><Pressable accessibilityRole="radio" accessibilityState={{ checked:draft.gender==='Non-binary' }} onPress={()=>setDraft(v=>({...v,gender:'Non-binary'}))} style={{ alignSelf:'flex-start',backgroundColor:draft.gender==='Non-binary'?purple:c.card,borderRadius:20,paddingHorizontal:18,paddingVertical:9 }}><Text style={{ color:draft.gender==='Non-binary'?'#FFF':c.muted,fontSize:13 }}>Non-binary</Text></Pressable>
       <View style={{ flexDirection:'row',alignItems:'center',gap:12,paddingVertical:6 }}><View style={{ flex:1,gap:4 }}><Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Exclusive for Verified Users</Text><Text style={{ color:c.muted,fontSize:12, lineHeight: 18 }}>Show activities restricted to verified profiles.</Text></View><Switch accessibilityLabel="Exclusive for Verified Users" value={draft.verifiedOnly} onValueChange={value=>setDraft(v=>({...v,verifiedOnly:value}))} trackColor={{true:purple,false:c.border}} /></View>
@@ -312,7 +328,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
     </Sheet>}
   </Page>;
 }
-function useDarkColorScheme(c: ReturnType<typeof usePalette>) { return c.bg === '#101824' ? 'dark' : 'light'; }
+function useDarkColorScheme(c: ReturnType<typeof usePalette>) { return c.isDark ? 'dark' : 'light'; }
 export function productionActivity(a: Omit<ActivityListItem, 'viewerState'> & { viewerState?: ActivityListItem['viewerState'] }): Activity { return { id: a.id, title: a.title, category: a.category, when: activityTime(a.startsAt || undefined), where: a.locationName, latitude: a.latitude, longitude: a.longitude, price: activityDisplayPrice(a), isPaid: a.isPaid, paymentCollectionMode: a.paymentCollectionMode, costsMayApply: a.costsMayApply, entryFeeRequired: a.entryFeeRequired, seats: a.capacity || 0, joined: 0, image: a.coverUrl || Asset.fromModule(require('../../../assets/wenitro-logo-transparent.png')).uri, host: a.owner?.fullName || a.owner?.username || 'Host', isPartner: a.owner?.isPartner === true, hostAvatar: a.owner?.avatarUrl || undefined, hostVerified: a.owner?.isVerified, ownerId: a.ownerId, startsAt: a.startsAt || undefined, end: a.endsAt || undefined, endsAt: a.endsAt || undefined, closes: a.registrationClosesAt || undefined, registrationClosesAt: a.registrationClosesAt || undefined, status: a.status, description: a.description || '', visibility: a.visibility, activityType: a.activityType, joinType: a.joinType, communityId: a.communityId, locationInstruction: a.locationInstruction || undefined, externalUrl: a.externalUrl || undefined, verifiedOnly: a.verifiedOnly, ageMin: a.ageMin, ageMax: a.ageMax, genderPreference: a.genderPreference, viewerStatus: a.viewerState?.participation?.status === 'going' ? 'going' : a.viewerState?.participation?.status || null }; }
 type SearchScope = 'Activities' | 'People' | 'Communities';
 type SearchRow =

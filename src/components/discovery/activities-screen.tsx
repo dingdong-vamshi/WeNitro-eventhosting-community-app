@@ -181,11 +181,9 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity, openPr
           <View key={key} style={{ flex: 1, gap: 7 }}>
             <Text style={{ color: c.muted, fontSize: 12, fontWeight: '700' }}>{index ? 'To' : 'From'}</Text>
             {Platform.OS === 'web' ? (
-              <View style={{ minHeight: 48, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, borderRadius: 9, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
-                <Icon name="calendar-outline" color={c.muted} size={16} />
-                <Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>{dateLabel(draft[key])}</Text>
-                {React.createElement('input', { type: 'date', 'aria-label': index ? 'Date to' : 'Date from', value: draft[key], min: key === 'dateTo' && draft.dateFrom ? draft.dateFrom : undefined, onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateDraftDate(key, e.target.value), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', colorScheme: useDarkColorScheme(c) } })}
-              </View>
+              React.createElement('input', {type:'date','aria-label':index?'Date to':'Date from',value:draft[key],min:key==='dateTo'&&draft.dateFrom?draft.dateFrom:undefined,
+                onInput:(e:React.FormEvent<HTMLInputElement>)=>updateDraftDate(key,e.currentTarget.value),onChange:(e:React.ChangeEvent<HTMLInputElement>)=>updateDraftDate(key,e.target.value),
+                style:{boxSizing:'border-box',width:'100%',minWidth:0,minHeight:48,border:`1px solid ${c.border}`,borderRadius:9,padding:10,background:c.card,color:c.text,fontSize:13,fontFamily:'inherit',colorScheme:useDarkColorScheme(c)}})
             ) : (
               <Pressable accessibilityRole="button" accessibilityLabel={index ? 'Date to' : 'Date from'} onPress={() => setNativeDateField(key)} style={{ minHeight: 48, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, borderRadius: 9, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Icon name="calendar-outline" color={c.muted} size={16} />
