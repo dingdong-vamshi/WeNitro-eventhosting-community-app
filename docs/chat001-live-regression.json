@@ -1,0 +1,174 @@
+{
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "at": "2026-10-03T05:26:56.825Z",
+  "checks": [
+    "22 live badge rules",
+    "Repeated reads preserve award timestamps",
+    "Other profile progress and audit snapshot private",
+    "Correct Popular Partner criterion",
+    "Authenticated cross-user Realtime INSERT actually delivered",
+    "Retry keeps single message ID"
+  ],
+  "badges": [
+    {
+      "slug": "activity-explorer",
+      "threshold": 1,
+      "progress": 1,
+      "earned": true,
+      "description": "Join 1 qualifying activity."
+    },
+    {
+      "slug": "active-explorer",
+      "threshold": 5,
+      "progress": 5,
+      "earned": true,
+      "description": "Join 5 qualifying activities."
+    },
+    {
+      "slug": "adventure-seeker",
+      "threshold": 10,
+      "progress": 6,
+      "earned": false,
+      "description": "Join 10 qualifying activities."
+    },
+    {
+      "slug": "activity-pro",
+      "threshold": 25,
+      "progress": 6,
+      "earned": false,
+      "description": "Join 25 qualifying activities."
+    },
+    {
+      "slug": "first-time-host",
+      "threshold": 1,
+      "progress": 1,
+      "earned": true,
+      "description": "Complete 1 hosted activity."
+    },
+    {
+      "slug": "active-host",
+      "threshold": 5,
+      "progress": 2,
+      "earned": false,
+      "description": "Complete 5 hosted activities."
+    },
+    {
+      "slug": "experienced-host",
+      "threshold": 10,
+      "progress": 2,
+      "earned": false,
+      "description": "Complete 10 hosted activities."
+    },
+    {
+      "slug": "hosting-veteran",
+      "threshold": 25,
+      "progress": 2,
+      "earned": false,
+      "description": "Complete 25 hosted activities."
+    },
+    {
+      "slug": "community-starter",
+      "threshold": 1,
+      "progress": 1,
+      "earned": true,
+      "description": "Join 1 community."
+    },
+    {
+      "slug": "community-contributor",
+      "threshold": 5,
+      "progress": 4,
+      "earned": false,
+      "description": "Publish 5 qualifying community posts."
+    },
+    {
+      "slug": "conversation-starter",
+      "threshold": 10,
+      "progress": 4,
+      "earned": false,
+      "description": "Publish 10 qualifying community posts."
+    },
+    {
+      "slug": "community-explorer",
+      "threshold": 5,
+      "progress": 5,
+      "earned": true,
+      "description": "Join 5 communities."
+    },
+    {
+      "slug": "first-connector",
+      "threshold": 1,
+      "progress": 0,
+      "earned": false,
+      "description": "Invite 1 successfully referred member."
+    },
+    {
+      "slug": "network-builder",
+      "threshold": 5,
+      "progress": 0,
+      "earned": false,
+      "description": "Invite 5 successfully referred members."
+    },
+    {
+      "slug": "community-connector",
+      "threshold": 10,
+      "progress": 0,
+      "earned": false,
+      "description": "Invite 10 successfully referred members."
+    },
+    {
+      "slug": "first-activity",
+      "threshold": 1,
+      "progress": 1,
+      "earned": true,
+      "description": "Complete your first participation."
+    },
+    {
+      "slug": "10-activities",
+      "threshold": 10,
+      "progress": 3,
+      "earned": false,
+      "description": "Complete 10 participations."
+    },
+    {
+      "slug": "25-activities",
+      "threshold": 25,
+      "progress": 3,
+      "earned": false,
+      "description": "Complete 25 participations."
+    },
+    {
+      "slug": "50-activities",
+      "threshold": 50,
+      "progress": 3,
+      "earned": false,
+      "description": "Complete 50 participations."
+    },
+    {
+      "slug": "verified-partner",
+      "threshold": 1,
+      "progress": 1,
+      "earned": true,
+      "description": "Receive Admin approval as a Partner."
+    },
+    {
+      "slug": "active-partner",
+      "threshold": 5,
+      "progress": 2,
+      "earned": false,
+      "description": "Complete 5 paid Partner activities."
+    },
+    {
+      "slug": "popular-partner",
+      "threshold": 100,
+      "progress": 2,
+      "earned": false,
+      "description": "Welcome 100 qualifying participants."
+    }
+  ],
+  "realtime": {
+    "room": 194,
+    "messageId": 306,
+    "received": true,
+    "fixtureSoftDeleted": true
+  }
+}

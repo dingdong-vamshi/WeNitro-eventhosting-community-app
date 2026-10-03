@@ -4,121 +4,601 @@
   "baselineAppCommit": "51c7908",
   "baselineAdminCommit": "970d48b",
   "evidenceRule": "Each semicolon-separated requirement below needs an individual implementation, test, deployed-build and production-evidence record before acceptance. Prior reports are historical evidence, not current PASS.",
-  "sourceReview": {"mustChangesPagesVisuallyRead": 40, "issuesPagesVisuallyRead": 39, "badgesDocumentRead": true, "masterAndScreenshotAddendumRead": true},
+  "sourceReview": {
+    "mustChangesPagesVisuallyRead": 40,
+    "issuesPagesVisuallyRead": 39,
+    "badgesDocumentRead": true,
+    "masterAndScreenshotAddendumRead": true
+  },
   "sourceA": [
-    {"page":1,"requirements":"Restore functional Next (the source describes its absence as a bug); appropriate spacing; three old-app onboarding screens; Skip/swipe/dots/finish/replay"},
-    {"page":2,"requirements":"Different rotating taglines on screen load"},
-    {"page":3,"requirements":"WeNitro email branding; Confirm your Email Address wording; confirmation links and sender configuration"},
-    {"page":4,"requirements":"Google new/existing user login; target session/profile; provider configuration and separate external callback dependency"},
-    {"page":5,"requirements":"Forgot Password email; recovery redirect; reset; subsequent login"},
-    {"page":6,"requirements":"Phone new/existing signup; OTP send/verify; user mapping; verified state"},
-    {"page":7,"requirements":"Reduced hero height; remove outer blue surround; responsive visual proof"},
-    {"page":8,"requirements":"Lighter hero treatment without extra blue patch; uploaded user photos; varied deterministic avatar fallback"},
-    {"page":9,"requirements":"All Activities redesigned layout; search/notification icons; search only on tap; Filter beside Activities for You; no redundant description; image fallback and full coverage; Host name/photo opens profile"},
-    {"page":10,"requirements":"Non-overlapping timeline; sensible fonts; long-press Like reveals liker identities and profile navigation"},
-    {"page":11,"requirements":"Host/participant photos and initials; Message action; ended activity no edit/remove participant/leave with backend enforcement"},
-    {"page":12,"requirements":"Only eligible participants comment; backend restriction; commenter identity"},
-    {"page":13,"requirements":"Ended participant Rate Participants; nonparticipant Activity Ended; no leave"},
-    {"page":14,"requirements":"Cancel/delete hides activity chat; stale chat writes blocked; retained history policy"},
-    {"page":15,"requirements":"Cannot rate self; Host identified; correct No Show eligibility; Host excluded"},
-    {"page":16,"requirements":"Two Nitro per legitimate rating; multiple rewards; dark gold congratulations popup; Nitro history; duplicate prevention"},
-    {"page":17,"requirements":"Tribe/category pictures; no Find wording; tribe opens filtered Activities"},
-    {"page":18,"requirements":"Host Responsibly warning; explicit/misleading/hateful/discriminatory warning; prominent permanent account suspension consequence; Cancel/Continue; applicable backend content checks"},
-    {"page":19,"requirements":"Upload Responsibly before Activity/Vibe/Community and applicable media pickers; Cancel; Continue opens picker"},
-    {"page":20,"requirements":"Community logo and placement; Search beside Notification; consistent notification size; no permanent search; tap search/filter/back"},
-    {"page":21,"requirements":"Smaller Community cover; color fallback; community letter/avatar; member icon/count; Admin remove member"},
-    {"page":22,"requirements":"Members list visible icons/photos; fallback; profile navigation"},
-    {"page":23,"requirements":"Edit Community cover; upload persistence and storage authorization"},
-    {"page":24,"requirements":"Poll voter identities; Community Chat Back returns to originating Community"},
-    {"page":25,"requirements":"Verification adds Trust not Nitro; selfie camera evidence/review; phone architecture; badge only after intended stages"},
-    {"page":26,"requirements":"Inspect Aadhaar integration; approved licensed provider only; explicit hold if unavailable"},
-    {"page":27,"requirements":"No recurring Notifications error; repeated/reload/empty/multiple notification cases"},
-    {"page":28,"requirements":"Profile gallery up to three photos; view/add/change/delete/set primary; public gallery; backend maximum"},
-    {"page":29,"requirements":"Profile Community picture/icon; actual badge logic from newly supplied 22-badge document"},
-    {"page":30,"requirements":"No duplicate/self Squad members; backend/query deduplication"},
-    {"page":31,"requirements":"Save Edit Profile returns to Profile; failed save remains editable"},
-    {"page":32,"requirements":"Partner instructions; terms agreement before application; persisted agreement"},
-    {"page":33,"requirements":"Partner dashboard; participants; amount/details; multiple category prices; category selection; successful payment and required details before joined"},
-    {"page":34,"requirements":"Partner activity visual differentiation and badge across lists"},
-    {"page":35,"requirements":"Admin authenticated DB-backed data; Master/Admin controls; role enforcement"},
-    {"page":36,"requirements":"Pin upcoming activity; category correction; existing Admin controls operational; login announcement creation/audience/display/read receipt"},
-    {"page":37,"requirements":"Post-create activity detail; ended non-editable; Activity/Community/Vibe sharing; Community Created state; delete chat messages/media; default start now+10min/end start+1h/registration=start; SOS web/native distinction; NitroBot FAQ; support query; Play Store reward once without falsely proving review; Hubble threshold/hold"},
-    {"page":38,"requirements":"Co-host approve/reject/remove/edit; preserve original Host; demote Co-host and persist permission removal; unblock; readable blocked old history; first-signup policies; public Profile Vibes first; negative Nitro spend history; Partner external URL; optional activity media to Vibes; anonymous Community posts recipient privacy and Admin attribution; security/privacy; developer documentation"},
-    {"page":39,"requirements":"Record genuine ambiguities after code/source investigation"},
-    {"page":40,"requirements":"No known fixable regression in tested scope; evidence-backed quality acceptance"}
+    {
+      "page": 1,
+      "requirements": "Restore functional Next (the source describes its absence as a bug); appropriate spacing; three old-app onboarding screens; Skip/swipe/dots/finish/replay"
+    },
+    {
+      "page": 2,
+      "requirements": "Different rotating taglines on screen load"
+    },
+    {
+      "page": 3,
+      "requirements": "WeNitro email branding; Confirm your Email Address wording; confirmation links and sender configuration"
+    },
+    {
+      "page": 4,
+      "requirements": "Google new/existing user login; target session/profile; provider configuration and separate external callback dependency"
+    },
+    {
+      "page": 5,
+      "requirements": "Forgot Password email; recovery redirect; reset; subsequent login"
+    },
+    {
+      "page": 6,
+      "requirements": "Phone new/existing signup; OTP send/verify; user mapping; verified state"
+    },
+    {
+      "page": 7,
+      "requirements": "Reduced hero height; remove outer blue surround; responsive visual proof"
+    },
+    {
+      "page": 8,
+      "requirements": "Lighter hero treatment without extra blue patch; uploaded user photos; varied deterministic avatar fallback"
+    },
+    {
+      "page": 9,
+      "requirements": "All Activities redesigned layout; search/notification icons; search only on tap; Filter beside Activities for You; no redundant description; image fallback and full coverage; Host name/photo opens profile"
+    },
+    {
+      "page": 10,
+      "requirements": "Non-overlapping timeline; sensible fonts; long-press Like reveals liker identities and profile navigation"
+    },
+    {
+      "page": 11,
+      "requirements": "Host/participant photos and initials; Message action; ended activity no edit/remove participant/leave with backend enforcement"
+    },
+    {
+      "page": 12,
+      "requirements": "Only eligible participants comment; backend restriction; commenter identity"
+    },
+    {
+      "page": 13,
+      "requirements": "Ended participant Rate Participants; nonparticipant Activity Ended; no leave"
+    },
+    {
+      "page": 14,
+      "requirements": "Cancel/delete hides activity chat; stale chat writes blocked; retained history policy"
+    },
+    {
+      "page": 15,
+      "requirements": "Cannot rate self; Host identified; correct No Show eligibility; Host excluded"
+    },
+    {
+      "page": 16,
+      "requirements": "Two Nitro per legitimate rating; multiple rewards; dark gold congratulations popup; Nitro history; duplicate prevention"
+    },
+    {
+      "page": 17,
+      "requirements": "Tribe/category pictures; no Find wording; tribe opens filtered Activities"
+    },
+    {
+      "page": 18,
+      "requirements": "Host Responsibly warning; explicit/misleading/hateful/discriminatory warning; prominent permanent account suspension consequence; Cancel/Continue; applicable backend content checks"
+    },
+    {
+      "page": 19,
+      "requirements": "Upload Responsibly before Activity/Vibe/Community and applicable media pickers; Cancel; Continue opens picker"
+    },
+    {
+      "page": 20,
+      "requirements": "Community logo and placement; Search beside Notification; consistent notification size; no permanent search; tap search/filter/back"
+    },
+    {
+      "page": 21,
+      "requirements": "Smaller Community cover; color fallback; community letter/avatar; member icon/count; Admin remove member"
+    },
+    {
+      "page": 22,
+      "requirements": "Members list visible icons/photos; fallback; profile navigation"
+    },
+    {
+      "page": 23,
+      "requirements": "Edit Community cover; upload persistence and storage authorization"
+    },
+    {
+      "page": 24,
+      "requirements": "Poll voter identities; Community Chat Back returns to originating Community"
+    },
+    {
+      "page": 25,
+      "requirements": "Verification adds Trust not Nitro; selfie camera evidence/review; phone architecture; badge only after intended stages"
+    },
+    {
+      "page": 26,
+      "requirements": "Inspect Aadhaar integration; approved licensed provider only; explicit hold if unavailable"
+    },
+    {
+      "page": 27,
+      "requirements": "No recurring Notifications error; repeated/reload/empty/multiple notification cases"
+    },
+    {
+      "page": 28,
+      "requirements": "Profile gallery up to three photos; view/add/change/delete/set primary; public gallery; backend maximum"
+    },
+    {
+      "page": 29,
+      "requirements": "Profile Community picture/icon; actual badge logic from newly supplied 22-badge document"
+    },
+    {
+      "page": 30,
+      "requirements": "No duplicate/self Squad members; backend/query deduplication"
+    },
+    {
+      "page": 31,
+      "requirements": "Save Edit Profile returns to Profile; failed save remains editable"
+    },
+    {
+      "page": 32,
+      "requirements": "Partner instructions; terms agreement before application; persisted agreement"
+    },
+    {
+      "page": 33,
+      "requirements": "Partner dashboard; participants; amount/details; multiple category prices; category selection; successful payment and required details before joined"
+    },
+    {
+      "page": 34,
+      "requirements": "Partner activity visual differentiation and badge across lists"
+    },
+    {
+      "page": 35,
+      "requirements": "Admin authenticated DB-backed data; Master/Admin controls; role enforcement"
+    },
+    {
+      "page": 36,
+      "requirements": "Pin upcoming activity; category correction; existing Admin controls operational; login announcement creation/audience/display/read receipt"
+    },
+    {
+      "page": 37,
+      "requirements": "Post-create activity detail; ended non-editable; Activity/Community/Vibe sharing; Community Created state; delete chat messages/media; default start now+10min/end start+1h/registration=start; SOS web/native distinction; NitroBot FAQ; support query; Play Store reward once without falsely proving review; Hubble threshold/hold"
+    },
+    {
+      "page": 38,
+      "requirements": "Co-host approve/reject/remove/edit; preserve original Host; demote Co-host and persist permission removal; unblock; readable blocked old history; first-signup policies; public Profile Vibes first; negative Nitro spend history; Partner external URL; optional activity media to Vibes; anonymous Community posts recipient privacy and Admin attribution; security/privacy; developer documentation"
+    },
+    {
+      "page": 39,
+      "requirements": "Record genuine ambiguities after code/source investigation"
+    },
+    {
+      "page": 40,
+      "requirements": "No known fixable regression in tested scope; evidence-backed quality acceptance"
+    }
   ],
   "sourceB": [
-    {"page":1,"requirements":"Functional external legal links"},
-    {"page":2,"requirements":"Email verification tick; name validation including Unicode/profanity; backend validation"},
-    {"page":3,"requirements":"Social login artwork not dating-themed; appropriate contrast"},
-    {"page":4,"requirements":"Nitro Store naming; latest Home header without avatar or empty section"},
-    {"page":5,"requirements":"Exact four approved hero assets; correct CTA destinations; no duplicate overlays"},
-    {"page":6,"requirements":"Invite ten Nitro; How it works; readable terms; referral abuse/duplicate controls"},
-    {"page":7,"requirements":"Contact Support replaced with View More linking policy site"},
-    {"page":8,"requirements":"Nitro Points card matches Invite visual styling; blue/purple only"},
-    {"page":9,"requirements":"Readable smaller-screen fonts"},
-    {"page":10,"requirements":"Readable Activities layout; filters; Back returns Home"},
-    {"page":11,"requirements":"Activity date range/All/Free/Paid/gender filters; reset/apply actual results"},
-    {"page":12,"requirements":"Host edit/delete eligibility; Activity chat; compact FREE/JOINED status"},
-    {"page":13,"requirements":"Start now+10min; end at least one hour later; registration no later than start/no earlier than now; visible validation; time zones"},
-    {"page":14,"requirements":"Public/private by title; tags under About; round DPs; private activity RLS"},
-    {"page":15,"requirements":"Bold Host identity/photo; chat; Co-host"},
-    {"page":16,"requirements":"Consistent direct/activity Vibe composer"},
-    {"page":17,"requirements":"See All opens Activities"},
-    {"page":18,"requirements":"Activity Chat Back; block/unblock; old history remains; no Chat Video"},
-    {"page":19,"requirements":"Vibes reels layout; no redundant header/arrows; creator photo; linked Activity"},
-    {"page":20,"requirements":"Normal Paid ON/OFF only; no price/no Cashfree/no platform collection"},
-    {"page":21,"requirements":"Actual Google Maps integration using client account; accurately separate absent Maps API configuration from Photon fallback"},
-    {"page":22,"requirements":"Host does not report own Activity; edit/delete controls; contextual Back to Activities"},
-    {"page":23,"requirements":"Community design; Back All Communities; moderator selection and controls; backend permissions"},
-    {"page":24,"requirements":"Community Posts separate from Chat; no post Poll; post Video yes; compact Chat button; no redundant description"},
-    {"page":25,"requirements":"Chat/activity names; unread counts/filter; timestamps; DPs"},
-    {"page":26,"requirements":"Chat info/activity navigation; Poll creation/voting"},
-    {"page":27,"requirements":"Chat plus opens direct/create-group flow; user DPs"},
-    {"page":28,"requirements":"Profile design; Store/social plus; Trust/reviews/Karma; upcoming/completed Activities; three photos"},
-    {"page":29,"requirements":"Camera-only selfie; preview; verification Trust points"},
-    {"page":30,"requirements":"Trust max100; email/Google10 phone10 selfie10 Aadhaar20 social10 rating4+10; rating fall removes boost; ten Activities20/twenty Activities30 nonstacking; Nitro independent"},
-    {"page":31,"requirements":"Separator page; no standalone implementation requirement"},
-    {"page":32,"requirements":"Vibes vertical/newest/all menu; direct create; no arrows"},
-    {"page":33,"requirements":"Meaningful sharing metadata/thumbnail/WeNitro branding; external preview limitations explicit"},
-    {"page":34,"requirements":"Hide quiet-mode indicator when inactive"},
-    {"page":35,"requirements":"Community chats date/time/DP"},
-    {"page":36,"requirements":"Live case-insensitive chat search"},
-    {"page":37,"requirements":"All includes People and Groups; accurate unread; stories mark seen"},
-    {"page":38,"requirements":"Group avatar upload/preview/persistence/fallback"},
-    {"page":39,"requirements":"End page; no standalone implementation requirement"}
+    {
+      "page": 1,
+      "requirements": "Functional external legal links"
+    },
+    {
+      "page": 2,
+      "requirements": "Email verification tick; name validation including Unicode/profanity; backend validation"
+    },
+    {
+      "page": 3,
+      "requirements": "Social login artwork not dating-themed; appropriate contrast"
+    },
+    {
+      "page": 4,
+      "requirements": "Nitro Store naming; latest Home header without avatar or empty section"
+    },
+    {
+      "page": 5,
+      "requirements": "Exact four approved hero assets; correct CTA destinations; no duplicate overlays"
+    },
+    {
+      "page": 6,
+      "requirements": "Invite ten Nitro; How it works; readable terms; referral abuse/duplicate controls"
+    },
+    {
+      "page": 7,
+      "requirements": "Contact Support replaced with View More linking policy site"
+    },
+    {
+      "page": 8,
+      "requirements": "Nitro Points card matches Invite visual styling; blue/purple only"
+    },
+    {
+      "page": 9,
+      "requirements": "Readable smaller-screen fonts"
+    },
+    {
+      "page": 10,
+      "requirements": "Readable Activities layout; filters; Back returns Home"
+    },
+    {
+      "page": 11,
+      "requirements": "Activity date range/All/Free/Paid/gender filters; reset/apply actual results"
+    },
+    {
+      "page": 12,
+      "requirements": "Host edit/delete eligibility; Activity chat; compact FREE/JOINED status"
+    },
+    {
+      "page": 13,
+      "requirements": "Start now+10min; end at least one hour later; registration no later than start/no earlier than now; visible validation; time zones"
+    },
+    {
+      "page": 14,
+      "requirements": "Public/private by title; tags under About; round DPs; private activity RLS"
+    },
+    {
+      "page": 15,
+      "requirements": "Bold Host identity/photo; chat; Co-host"
+    },
+    {
+      "page": 16,
+      "requirements": "Consistent direct/activity Vibe composer"
+    },
+    {
+      "page": 17,
+      "requirements": "See All opens Activities"
+    },
+    {
+      "page": 18,
+      "requirements": "Activity Chat Back; block/unblock; old history remains; no Chat Video"
+    },
+    {
+      "page": 19,
+      "requirements": "Vibes reels layout; no redundant header/arrows; creator photo; linked Activity"
+    },
+    {
+      "page": 20,
+      "requirements": "Normal Paid ON/OFF only; no price/no Cashfree/no platform collection"
+    },
+    {
+      "page": 21,
+      "requirements": "Actual Google Maps integration using client account; accurately separate absent Maps API configuration from Photon fallback"
+    },
+    {
+      "page": 22,
+      "requirements": "Host does not report own Activity; edit/delete controls; contextual Back to Activities"
+    },
+    {
+      "page": 23,
+      "requirements": "Community design; Back All Communities; moderator selection and controls; backend permissions"
+    },
+    {
+      "page": 24,
+      "requirements": "Community Posts separate from Chat; no post Poll; post Video yes; compact Chat button; no redundant description"
+    },
+    {
+      "page": 25,
+      "requirements": "Chat/activity names; unread counts/filter; timestamps; DPs"
+    },
+    {
+      "page": 26,
+      "requirements": "Chat info/activity navigation; Poll creation/voting"
+    },
+    {
+      "page": 27,
+      "requirements": "Chat plus opens direct/create-group flow; user DPs"
+    },
+    {
+      "page": 28,
+      "requirements": "Profile design; Store/social plus; Trust/reviews/Karma; upcoming/completed Activities; three photos"
+    },
+    {
+      "page": 29,
+      "requirements": "Camera-only selfie; preview; verification Trust points"
+    },
+    {
+      "page": 30,
+      "requirements": "Trust max100; email/Google10 phone10 selfie10 Aadhaar20 social10 rating4+10; rating fall removes boost; ten Activities20/twenty Activities30 nonstacking; Nitro independent"
+    },
+    {
+      "page": 31,
+      "requirements": "Separator page; no standalone implementation requirement"
+    },
+    {
+      "page": 32,
+      "requirements": "Vibes vertical/newest/all menu; direct create; no arrows"
+    },
+    {
+      "page": 33,
+      "requirements": "Meaningful sharing metadata/thumbnail/WeNitro branding; external preview limitations explicit"
+    },
+    {
+      "page": 34,
+      "requirements": "Hide quiet-mode indicator when inactive"
+    },
+    {
+      "page": 35,
+      "requirements": "Community chats date/time/DP"
+    },
+    {
+      "page": 36,
+      "requirements": "Live case-insensitive chat search"
+    },
+    {
+      "page": 37,
+      "requirements": "All includes People and Groups; accurate unread; stories mark seen"
+    },
+    {
+      "page": 38,
+      "requirements": "Group avatar upload/preview/persistence/fallback"
+    },
+    {
+      "page": 39,
+      "requirements": "End page; no standalone implementation requirement"
+    }
   ],
-  "laterChanges": ["Blue/purple Invite/Nitro", "Normal Paid no price", "Partner payment separation", "Google Maps dependency", "Leave/Rejoin approval", "HOST · ORIGINAL CREATOR", "Remove/demote Co-host", "Photo/Poll no Video in Chats; Video in Vibes/Community Posts", "Host Responsibly suspension emphasis", "Anonymous rating identity/API privacy and Nitro idempotency"],
+  "laterChanges": [
+    "Blue/purple Invite/Nitro",
+    "Normal Paid no price",
+    "Partner payment separation",
+    "Google Maps dependency",
+    "Leave/Rejoin approval",
+    "HOST \u00b7 ORIGINAL CREATOR",
+    "Remove/demote Co-host",
+    "Photo/Poll no Video in Chats; Video in Vibes/Community Posts",
+    "Host Responsibly suspension emphasis",
+    "Anonymous rating identity/API privacy and Nitro idempotency"
+  ],
   "currentRepairs": [
-    {"item":"Onboarding Next", "state":"LOCAL_FIVE_WIDTHS_AND_PRODUCTION_NEXT_NEXT_FINISH_PASSED", "commit":"84d0901", "evidence":"qa-evidence/source-a-40-page/production-p01-next.png; production-p01-second-page.png; production-p01-finish.png", "productionVerified":true},
-    {"item":"Remove outer blue hero surround", "state":"PRODUCTION_SCREENSHOT_VERIFIED", "evidence":"qa-evidence/source-a-40-page/production-p07-blue-surround-removed.png", "productionVerified":true},
-    {"item":"Gold rating reward receipt", "state":"REAL_PRODUCTION_QA_ANONYMOUS_RATING_SUBMISSION_AWARDED_2_AND_SHOWED_GOLD_CONGRATULATIONS", "evidence":"qa-evidence/source-a-40-page/production-p16-gold-nitro-reward.png", "productionVerified":true},
-    {"item":"Deterministic avatar color and Unicode initials", "state":"LOCAL_BEHAVIOR_TEST_AND_PRODUCTION_HOME_FALLBACKS_VERIFIED", "productionVerified":true},
-    {"item":"Centralized 22-badge engine and Profile achievements", "state":"TARGET_MIGRATION_APPLIED_LOCAL_82_BOUNDARIES_LIVE_AUTHENTICATED_SECURITY_AND_ALL_22_PRODUCTION_DETAIL_SHEETS_VERIFIED", "migration":"20261002170748", "evidence":"qa-evidence/badges", "productionVerified":true, "scopeNote":"All threshold/anti-abuse scenarios used disposable local PostgreSQL. Live tests cover catalog, authenticated authorization, privacy, repeated-read idempotency, existing earned states and 22 UI detail sheets; not 22 separate production threshold mutations."},
-    {"item":"Profile community pictures", "state":"LOCAL_BATCHING_AND_PRODUCTION_OWN_FALLBACK_PUBLIC_REAL_IMAGE_VERIFIED", "commit":"68d5f03", "evidence":"qa-evidence/source-a-40-page/production-p29-community-fallbacks.png; production-p29-public-community-picture.png", "productionVerified":true},
-    {"item":"Community detail and member identity pictures/fallbacks; canonical community share and lazy share recipient loading", "state":"LOCAL_REGRESSION_AND_PRODUCTION_DIRECT_PAGE_SHARE_RECIPIENT_LOADING_PASSED", "commit":"88a7c57", "evidence":"qa-evidence/source-a-40-page/production-p21-community-avatar.png; production-p37-community-share-loaded.png", "productionVerified":true},
-    {"item":"Share recipient missing/broken photo initials", "state":"TYPECHECK_BUILD_REGRESSION_AND_PRODUCTION_FALLBACK_PHOTO_RENDER_PASSED", "commit":"280efb9", "evidence":"qa-evidence/source-a-40-page/production-share-recipient-initials.png", "productionVerified":true},
-    {"item":"Community deep-link discovery timeout", "state":"REMOVED_UNNECESSARY_FULL_DISCOVERY_FETCH_TARGETED_DETAIL_POSTS_CHAT_AND_RETURN_NAVIGATION_VERIFIED", "commit":"066acd9", "evidence":"qa-evidence/production-community-deep-link-no-discovery-warning.png", "productionVerified":true},
-    {"item":"Community Posts loading/empty distinction, fetch retry and missing-author photo fallback", "state":"TYPECHECK_BUILD_CONTRACTS_AND_PRODUCTION_LOADING_CONTENT_INITIALS_VERIFIED", "commit":"22fe47c", "evidence":"qa-evidence/production-community-post-author-fallback.png", "productionVerified":true, "scopeNote":"Successful production loading/content path verified. Error retry wiring covered by source contract; deliberate production network failure not injected."},
-    {"item":"Admin anonymous-post audit navigation", "state":"SIDEBAR_LINK_DEPLOYED_AND_CLICKED_FROM_DASHBOARD_QA_AUTHOR_ATTRIBUTION_VISIBLE", "repository":"admin", "commit":"f81e045", "evidence":"qa-evidence/production-admin-anonymous-audit-navigation.png", "productionVerified":true},
-    {"item":"Anonymous Community media path identity correlation", "state":"PRODUCTION_DEFECT_REPRODUCED_LOCAL_REPAIR_TESTED_NOT_DEPLOYED", "migration":"20261003050836_anonymous_community_media_privacy.sql", "productionVerified":false, "detail":"Anonymous post 36 in QA Community 244 redacts author fields but exposes an uploader-identifying media path through feed RPC, raw media_url column and direct Storage signing. Prepared RPC redaction, restrictive Storage RLS, opaque signed media proxy and batched client resolution. Target connector OAuth refresh/CLI target authorization currently prevents backend deployment. Do not deploy the dependent frontend before the backend."}
+    {
+      "item": "Onboarding Next",
+      "state": "LOCAL_FIVE_WIDTHS_AND_PRODUCTION_NEXT_NEXT_FINISH_PASSED",
+      "commit": "84d0901",
+      "evidence": "qa-evidence/source-a-40-page/production-p01-next.png; production-p01-second-page.png; production-p01-finish.png",
+      "productionVerified": true
+    },
+    {
+      "item": "Remove outer blue hero surround",
+      "state": "PRODUCTION_SCREENSHOT_VERIFIED",
+      "evidence": "qa-evidence/source-a-40-page/production-p07-blue-surround-removed.png",
+      "productionVerified": true
+    },
+    {
+      "item": "Gold rating reward receipt",
+      "state": "REAL_PRODUCTION_QA_ANONYMOUS_RATING_SUBMISSION_AWARDED_2_AND_SHOWED_GOLD_CONGRATULATIONS",
+      "evidence": "qa-evidence/source-a-40-page/production-p16-gold-nitro-reward.png",
+      "productionVerified": true
+    },
+    {
+      "item": "Deterministic avatar color and Unicode initials",
+      "state": "LOCAL_BEHAVIOR_TEST_AND_PRODUCTION_HOME_FALLBACKS_VERIFIED",
+      "productionVerified": true
+    },
+    {
+      "item": "Centralized 22-badge engine and Profile achievements",
+      "state": "TARGET_MIGRATION_APPLIED_LOCAL_82_BOUNDARIES_LIVE_AUTHENTICATED_SECURITY_AND_ALL_22_PRODUCTION_DETAIL_SHEETS_VERIFIED",
+      "migration": "20261002170748",
+      "evidence": "qa-evidence/badges",
+      "productionVerified": true,
+      "scopeNote": "All threshold/anti-abuse scenarios used disposable local PostgreSQL. Live tests cover catalog, authenticated authorization, privacy, repeated-read idempotency, existing earned states and 22 UI detail sheets; not 22 separate production threshold mutations."
+    },
+    {
+      "item": "Profile community pictures",
+      "state": "LOCAL_BATCHING_AND_PRODUCTION_OWN_FALLBACK_PUBLIC_REAL_IMAGE_VERIFIED",
+      "commit": "68d5f03",
+      "evidence": "qa-evidence/source-a-40-page/production-p29-community-fallbacks.png; production-p29-public-community-picture.png",
+      "productionVerified": true
+    },
+    {
+      "item": "Community detail and member identity pictures/fallbacks; canonical community share and lazy share recipient loading",
+      "state": "LOCAL_REGRESSION_AND_PRODUCTION_DIRECT_PAGE_SHARE_RECIPIENT_LOADING_PASSED",
+      "commit": "88a7c57",
+      "evidence": "qa-evidence/source-a-40-page/production-p21-community-avatar.png; production-p37-community-share-loaded.png",
+      "productionVerified": true
+    },
+    {
+      "item": "Share recipient missing/broken photo initials",
+      "state": "TYPECHECK_BUILD_REGRESSION_AND_PRODUCTION_FALLBACK_PHOTO_RENDER_PASSED",
+      "commit": "280efb9",
+      "evidence": "qa-evidence/source-a-40-page/production-share-recipient-initials.png",
+      "productionVerified": true
+    },
+    {
+      "item": "Community deep-link discovery timeout",
+      "state": "REMOVED_UNNECESSARY_FULL_DISCOVERY_FETCH_TARGETED_DETAIL_POSTS_CHAT_AND_RETURN_NAVIGATION_VERIFIED",
+      "commit": "066acd9",
+      "evidence": "qa-evidence/production-community-deep-link-no-discovery-warning.png",
+      "productionVerified": true
+    },
+    {
+      "item": "Community Posts loading/empty distinction, fetch retry and missing-author photo fallback",
+      "state": "TYPECHECK_BUILD_CONTRACTS_AND_PRODUCTION_LOADING_CONTENT_INITIALS_VERIFIED",
+      "commit": "22fe47c",
+      "evidence": "qa-evidence/production-community-post-author-fallback.png",
+      "productionVerified": true,
+      "scopeNote": "Successful production loading/content path verified. Error retry wiring covered by source contract; deliberate production network failure not injected."
+    },
+    {
+      "item": "Admin anonymous-post audit navigation",
+      "state": "SIDEBAR_LINK_DEPLOYED_AND_CLICKED_FROM_DASHBOARD_QA_AUTHOR_ATTRIBUTION_VISIBLE",
+      "repository": "admin",
+      "commit": "f81e045",
+      "evidence": "qa-evidence/production-admin-anonymous-audit-navigation.png",
+      "productionVerified": true
+    },
+    {
+      "item": "Anonymous Community media path identity correlation",
+      "state": "DEPLOYED_BACKEND_FRONTEND_AND_PRODUCTION_PRIVACY_VERIFIED",
+      "migration": "20261003050836_anonymous_community_media_privacy.sql",
+      "productionVerified": true,
+      "detail": "CHAT001 restored management access. Edge community-media v1, migration20261003050836, appc2da52c deployed.19 live security/proxy tests, rendered anonymous member image, Admin attribution and actual authenticated Chat realtime delivery pass. See docs/anonymous-media-repair-2026-10-03.json."
+    },
+    {
+      "item": "Popular Partner qualifying free participants",
+      "state": "MIGRATION_AND_PRODUCTION_CRITERION_VERIFIED",
+      "migration": "20261003052115",
+      "productionVerified": true,
+      "evidence": "qa-evidence/chat001/production-popular-partner-corrected.png",
+      "tests": "82 threshold boundaries + independent22-rule DOCX expectations + free100/removal regression + live catalog/idempotency/privacy"
+    }
   ],
-  "freshChecks": {"stability":{"rounds":5,"requests":50,"success":50,"http4xx":0,"http5xx":0,"realtime":"subscribed","worstLatencyMs":1162},"browserTimeout":"One Chrome cold session showed activities/communities deadline warnings; explicit Retry recovered. No persistent failure conclusion yet.","emailAccounts":"Both supplied QA credentials authenticate to target. Auth phone_confirmed_at absent for both; no verification bypass performed.","authUi":"Production logout, onboarding replay, wrong-password rejection, relogin and session restoration verified.","emailLifecycle":{"passed":13,"total":13,"activity":277,"chatRoom":243,"scope":"Normal-user create/request/reject/request/approve/leave/rejoin/deduplication/promote/edit/demote/permission-denial/comments/chat; production detail preserves HOST · ORIGINAL CREATOR."},"crossApp":{"passed":35,"total":35,"mode":"QA_CORE_ONLY=1; synthetic verification approval deliberately excluded","records":{"activity":278,"community":244,"post":34,"vibe":131,"story":28,"chatRoom":194,"chatMessage":300},"scope":"Email member/Admin login and existing roles; profile/interests/privacy persistence and restoration; Activity create/join/approve; Community create/join/post/reaction/comment; Vibe/Story video upload, storage verification, interactions; chat send/read; notification correlation/read; local session cleanup."},"adminUi":"Existing supplied Admin login succeeded; production dashboard displays the fresh QA Activity, Community and Vibe. Other Admin controls still require individual verification."},
-  "additionalFreshChecks": {
-    "profileGallery":{"qaUser":70,"backendChecks":["three owned PNG uploads render","primary plus two extras","fourth position denied","other-user deletion denied","public gallery readable","set-primary swaps without exceeding three"],"productionUi":["owner three-photo gallery and management preview","member 71 public three-photo gallery","public preview has no edit controls","public Profile opens Vibes first"],"cleanup":"Three script-owned Storage objects removed; primary restored to null and extra gallery restored to empty. No existing photos overwritten.","evidence":["qa-evidence/production-profile-three-photo-gallery.png","qa-evidence/production-profile-gallery-preview.png","qa-evidence/production-public-three-photo-gallery-vibes-first.png","qa-evidence/production-public-gallery-read-only-preview.png"]},
-    "hostForms":{"qaUser":71,"accountType":"existing approved Partner","productionUi":["prominent ACCOUNT CONSEQUENCES / permanent suspension","Partner Paid toggle shows category name/price/capacity, not normal off-platform mode","end is one hour after start; registration equals start","Partner HTTPS external URL field","Activity Upload Responsibly appears before picker; Cancel returns to draft"],"scope":"Unsubmitted form only. No activity published and no draft saved. This Partner-account form is not proof of the non-Partner form.","evidence":["qa-evidence/production-host-account-consequences.png","qa-evidence/production-partner-category-payment-form.png","qa-evidence/production-host-schedule-defaults.png","qa-evidence/production-activity-upload-warning.png"]},
-    "nitroHistoryUi":{"qaUser":70,"scope":"Production ledger shows the three +2 QA rating rewards. Historical legacy Email verification +10 remains; it was not rewritten or treated as proof of current verification reward logic.","evidence":"qa-evidence/production-nitro-rating-history.png"},
-    "cohostProductionUi":{"activity":277,"member":71,"state":"PROMOTION_AND_REMOVAL_BOTH_USER_APPROVED_CLICKED_AND_RELOAD_PERSISTENCE_VERIFIED","scope":"Original Host Arjun Sharma remains HOST · ORIGINAL CREATOR throughout. Remove Co-Host was visible after promotion/reload. After removal/reload Priya Nair remains APPROVED with role participant. Fresh member-authenticated update_activity was denied with Activity not found or not manageable; creator and content unchanged. Temporary elevated role removed.","evidence":["qa-evidence/production-cohost-promoted-reloaded.png","qa-evidence/production-cohost-removed-reloaded.png"]},
-    "adminAuthorization":"Supplied existing role is admin, not finance_admin/super_admin. Pin/category correction on fresh QA Activity 278 persisted, reflected to regular member, and were denied for member; original pin/category restored. Admin can read Partner applications, Vibe reports and verification; member denied. Both ordinary Admin and member correctly denied finance-only endpoint. No role changes.",
-    "adminUi":"Production dashboard, Activities, participant list (QA member 2 approved), verification queue, Partner review with masked payout and audit history, and private anonymous-post attribution viewed. Anonymous audit sidebar discoverability repaired in f81e045, deployed, and verified by clicking from Dashboard to the QA post and authorized author identity.",
-    "ratings":{"backendChecks":14,"events":[231,232],"scope":"Existing ended QA Activities; named and anonymous submissions each +2; repeated submission same rating ID and zero reward; exactly +4 ledger increase; recipient API anonymous identity fields absent; raw table inaccessible; backend rejects self-rating, Host No Show, ended leave/edit/remove.","productionUiEvent":233,"productionUi":"User-approved real anonymous rating submission; four stars saved; gold Congratulations +2 Nitro popup. Public Profile Reviews show Anonymous without profile button and named rater with profile button.","evidence":"qa-evidence/source-a-40-page/production-p16-gold-nitro-reward.png; production-anonymous-review-no-profile.png"},
-    "communityChat":{"checks":9,"community":244,"anonymousPost":35,"poll":36,"deletedTemporaryMessage":304,"scope":"Recipient identity redaction and raw-table denial; Admin attribution/member audit denial; Chat poll creation idempotency, vote and voter identity; backend Video/disguised Video rejection; block preserves old history/rejects new send; unblock restores send; own QA message deletion. Temporary block removed; existing history preserved."},
-    "deploymentBundles":"Fresh App entry bundle and 19 Admin entry-page scripts contain target reference and no old-project reference. This is the fetched entry-script set, not a claim that every lazy Admin route bundle was scanned.",
-    "communityProductionUi":"Community 244 cold direct link loads without full-discovery warning; Posts loads existing named and anonymous posts; named author has colored initials. Chat poll shows Priya Nair voted Morning; attachment sheet has Photo/Poll and no Video; Back returns to Community 244. Evidence: qa-evidence/production-community-chat-poll-photo-only.png.",
-    "localRetest":"Workspace refresh/loading, avatar batch/fallback, acceptance UI, client readiness, PDF source contracts, privacy mapper, discovery filters, payment-mode mapping, Chat UI, exact hero assets and deterministic avatar contrast passed. Disposable PostgreSQL acceptance backend suite passed. Typecheck and Vercel web builds passed.",
-    "privacyScope":"Anonymous rating recipient API/UI and text-only anonymous Community post author redaction pass in the stated scope. Anonymous Community media privacy FAIL is now reproduced on post 36: authorFieldsRedacted=true, mediaPathHidden=false, rawMediaColumnDenied=false, directStorageSigningDenied=false. Repair passes local handler, client-mapper, PostgreSQL/RLS tests, typecheck and production build but is NOT deployed. Full acceptance remains blocked, not PASS."
+  "freshChecks": {
+    "stability": {
+      "rounds": 5,
+      "requests": 50,
+      "success": 50,
+      "http4xx": 0,
+      "http5xx": 0,
+      "realtime": "subscribed",
+      "worstLatencyMs": 1162
+    },
+    "browserTimeout": "One Chrome cold session showed activities/communities deadline warnings; explicit Retry recovered. No persistent failure conclusion yet.",
+    "emailAccounts": "Both supplied QA credentials authenticate to target. Auth phone_confirmed_at absent for both; no verification bypass performed.",
+    "authUi": "Production logout, onboarding replay, wrong-password rejection, relogin and session restoration verified.",
+    "emailLifecycle": {
+      "passed": 13,
+      "total": 13,
+      "activity": 277,
+      "chatRoom": 243,
+      "scope": "Normal-user create/request/reject/request/approve/leave/rejoin/deduplication/promote/edit/demote/permission-denial/comments/chat; production detail preserves HOST \u00b7 ORIGINAL CREATOR."
+    },
+    "crossApp": {
+      "passed": 35,
+      "total": 35,
+      "mode": "QA_CORE_ONLY=1; synthetic verification approval deliberately excluded",
+      "records": {
+        "activity": 278,
+        "community": 244,
+        "post": 34,
+        "vibe": 131,
+        "story": 28,
+        "chatRoom": 194,
+        "chatMessage": 300
+      },
+      "scope": "Email member/Admin login and existing roles; profile/interests/privacy persistence and restoration; Activity create/join/approve; Community create/join/post/reaction/comment; Vibe/Story video upload, storage verification, interactions; chat send/read; notification correlation/read; local session cleanup."
+    },
+    "adminUi": "Existing supplied Admin login succeeded; production dashboard displays the fresh QA Activity, Community and Vibe. Other Admin controls still require individual verification."
   },
-  "deployments": [{"commit":"46205b7","id":"dpl_3tafsRnxWBFH3DUtHwj1c85RYqRf"},{"commit":"84d0901","id":"dpl_CRqwFvEsiG12kQ5P8ry54M8oPSNb"},{"commit":"68d5f03","id":"dpl_4egqKHHdwCzDkJBkPNJbJiHibgvS"},{"commit":"88a7c57","id":"dpl_4MJFZQdU2YLyFRX9ocFwo6nYFmGP"},{"commit":"280efb9","id":"dpl_GRgeDkhv4DkHRtTGTLbH8fDiF64K"},{"commit":"066acd9","id":"dpl_B1wjtXRmMxL8XGQt1CdZdESjHPVC"},{"commit":"22fe47c","id":"dpl_4LfF7mJ7bwqnrwnzQGac1goNg8qM"},{"repository":"admin","commit":"f81e045","id":"dpl_BzByJEETm5WtVXxHxsEAiGWXwqyK"}],
-  "accessObservation": {"targetDashboard":"authenticated, correct target, approved badge migration and authenticated SQL security checks succeeded", "supabaseMcp":"OAuth token refresh currently fails", "cli":"authenticated identity does not list target; no writes made through it"},
+  "additionalFreshChecks": {
+    "profileGallery": {
+      "qaUser": 70,
+      "backendChecks": [
+        "three owned PNG uploads render",
+        "primary plus two extras",
+        "fourth position denied",
+        "other-user deletion denied",
+        "public gallery readable",
+        "set-primary swaps without exceeding three"
+      ],
+      "productionUi": [
+        "owner three-photo gallery and management preview",
+        "member 71 public three-photo gallery",
+        "public preview has no edit controls",
+        "public Profile opens Vibes first"
+      ],
+      "cleanup": "Three script-owned Storage objects removed; primary restored to null and extra gallery restored to empty. No existing photos overwritten.",
+      "evidence": [
+        "qa-evidence/production-profile-three-photo-gallery.png",
+        "qa-evidence/production-profile-gallery-preview.png",
+        "qa-evidence/production-public-three-photo-gallery-vibes-first.png",
+        "qa-evidence/production-public-gallery-read-only-preview.png"
+      ]
+    },
+    "hostForms": {
+      "qaUser": 71,
+      "accountType": "existing approved Partner",
+      "productionUi": [
+        "prominent ACCOUNT CONSEQUENCES / permanent suspension",
+        "Partner Paid toggle shows category name/price/capacity, not normal off-platform mode",
+        "end is one hour after start; registration equals start",
+        "Partner HTTPS external URL field",
+        "Activity Upload Responsibly appears before picker; Cancel returns to draft"
+      ],
+      "scope": "Unsubmitted form only. No activity published and no draft saved. This Partner-account form is not proof of the non-Partner form.",
+      "evidence": [
+        "qa-evidence/production-host-account-consequences.png",
+        "qa-evidence/production-partner-category-payment-form.png",
+        "qa-evidence/production-host-schedule-defaults.png",
+        "qa-evidence/production-activity-upload-warning.png"
+      ]
+    },
+    "nitroHistoryUi": {
+      "qaUser": 70,
+      "scope": "Production ledger shows the three +2 QA rating rewards. Historical legacy Email verification +10 remains; it was not rewritten or treated as proof of current verification reward logic.",
+      "evidence": "qa-evidence/production-nitro-rating-history.png"
+    },
+    "cohostProductionUi": {
+      "activity": 277,
+      "member": 71,
+      "state": "PROMOTION_AND_REMOVAL_BOTH_USER_APPROVED_CLICKED_AND_RELOAD_PERSISTENCE_VERIFIED",
+      "scope": "Original Host Arjun Sharma remains HOST \u00b7 ORIGINAL CREATOR throughout. Remove Co-Host was visible after promotion/reload. After removal/reload Priya Nair remains APPROVED with role participant. Fresh member-authenticated update_activity was denied with Activity not found or not manageable; creator and content unchanged. Temporary elevated role removed.",
+      "evidence": [
+        "qa-evidence/production-cohost-promoted-reloaded.png",
+        "qa-evidence/production-cohost-removed-reloaded.png"
+      ]
+    },
+    "adminAuthorization": "Supplied existing role is admin, not finance_admin/super_admin. Pin/category correction on fresh QA Activity 278 persisted, reflected to regular member, and were denied for member; original pin/category restored. Admin can read Partner applications, Vibe reports and verification; member denied. Both ordinary Admin and member correctly denied finance-only endpoint. No role changes.",
+    "adminUi": "Production dashboard, Activities, participant list (QA member 2 approved), verification queue, Partner review with masked payout and audit history, and private anonymous-post attribution viewed. Anonymous audit sidebar discoverability repaired in f81e045, deployed, and verified by clicking from Dashboard to the QA post and authorized author identity.",
+    "ratings": {
+      "backendChecks": 14,
+      "events": [
+        231,
+        232
+      ],
+      "scope": "Existing ended QA Activities; named and anonymous submissions each +2; repeated submission same rating ID and zero reward; exactly +4 ledger increase; recipient API anonymous identity fields absent; raw table inaccessible; backend rejects self-rating, Host No Show, ended leave/edit/remove.",
+      "productionUiEvent": 233,
+      "productionUi": "User-approved real anonymous rating submission; four stars saved; gold Congratulations +2 Nitro popup. Public Profile Reviews show Anonymous without profile button and named rater with profile button.",
+      "evidence": "qa-evidence/source-a-40-page/production-p16-gold-nitro-reward.png; production-anonymous-review-no-profile.png"
+    },
+    "communityChat": {
+      "checks": 9,
+      "community": 244,
+      "anonymousPost": 35,
+      "poll": 36,
+      "deletedTemporaryMessage": 304,
+      "scope": "Recipient identity redaction and raw-table denial; Admin attribution/member audit denial; Chat poll creation idempotency, vote and voter identity; backend Video/disguised Video rejection; block preserves old history/rejects new send; unblock restores send; own QA message deletion. Temporary block removed; existing history preserved."
+    },
+    "deploymentBundles": "Fresh App entry bundle and 19 Admin entry-page scripts contain target reference and no old-project reference. This is the fetched entry-script set, not a claim that every lazy Admin route bundle was scanned.",
+    "communityProductionUi": "Community 244 cold direct link loads without full-discovery warning; Posts loads existing named and anonymous posts; named author has colored initials. Chat poll shows Priya Nair voted Morning; attachment sheet has Photo/Poll and no Video; Back returns to Community 244. Evidence: qa-evidence/production-community-chat-poll-photo-only.png.",
+    "localRetest": "Workspace refresh/loading, avatar batch/fallback, acceptance UI, client readiness, PDF source contracts, privacy mapper, discovery filters, payment-mode mapping, Chat UI, exact hero assets and deterministic avatar contrast passed. Disposable PostgreSQL acceptance backend suite passed. Typecheck and Vercel web builds passed.",
+    "privacyScope": "Anonymous rating and text Community identity proof retained. Anonymous media repair now deployed and production/API verified; see CHAT001 evidence."
+  },
+  "deployments": [
+    {
+      "commit": "46205b7",
+      "id": "dpl_3tafsRnxWBFH3DUtHwj1c85RYqRf"
+    },
+    {
+      "commit": "84d0901",
+      "id": "dpl_CRqwFvEsiG12kQ5P8ry54M8oPSNb"
+    },
+    {
+      "commit": "68d5f03",
+      "id": "dpl_4egqKHHdwCzDkJBkPNJbJiHibgvS"
+    },
+    {
+      "commit": "88a7c57",
+      "id": "dpl_4MJFZQdU2YLyFRX9ocFwo6nYFmGP"
+    },
+    {
+      "commit": "280efb9",
+      "id": "dpl_GRgeDkhv4DkHRtTGTLbH8fDiF64K"
+    },
+    {
+      "commit": "066acd9",
+      "id": "dpl_B1wjtXRmMxL8XGQt1CdZdESjHPVC"
+    },
+    {
+      "commit": "22fe47c",
+      "id": "dpl_4LfF7mJ7bwqnrwnzQGac1goNg8qM"
+    },
+    {
+      "repository": "admin",
+      "commit": "f81e045",
+      "id": "dpl_BzByJEETm5WtVXxHxsEAiGWXwqyK"
+    },
+    {
+      "commit": "c2da52c",
+      "id": "dpl_BzoHy2CAqKFDV9sSduvYfRnGotUr"
+    }
+  ],
+  "accessObservation": {
+    "targetDashboard": "Correct target",
+    "supabaseMcp": "Restored; actual migration and Edge deployment successful",
+    "cli": "Use target-authorized connector; stale CLI identity not used for remote writes"
+  },
   "acceptanceVerdict": "Not ready for final acceptance. Repair, live deployment and per-requirement production evidence are still in progress."
 }

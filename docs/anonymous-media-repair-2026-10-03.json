@@ -1,5 +1,5 @@
 {
-  "status": "BACKEND_DEPLOYED_VERIFIED_FRONTEND_DEPLOYMENT_IN_PROGRESS",
+  "status": "DEPLOYED_AND_PRODUCTION_VERIFIED",
   "target": "cxsznhrkzqndhseodcyy",
   "requestedChange": "Anonymous Community authors must not be identifiable by ordinary users through UI or APIs; authorized Admin attribution remains available.",
   "found": {
@@ -36,7 +36,7 @@
     "build": "npm run vercel-build passed"
   },
   "deployment": {
-    "completed": false,
+    "completed": true,
     "reason": "Management access restored in CHAT 001; backend deployed and live privacy checks pass.",
     "requiredOrder": [
       "Deploy community-media to target with verify_jwt=false; handler itself checks POST JWT/membership and GET signatures. Uses existing SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY runtime values; no new client/provider secret.",
@@ -52,13 +52,27 @@
       "edgeFunction": "community-media",
       "version": 1,
       "status": "ACTIVE"
+    },
+    "frontend": {
+      "commit": "c2da52c",
+      "id": "dpl_BzoHy2CAqKFDV9sSduvYfRnGotUr",
+      "url": "https://wenitro-app.vercel.app"
     }
   },
-  "productionVerification": "Backend live checks pass; dependent frontend deployment and screenshots pending.",
-  "screenshotProof": "Pending deployed repair. Technical privacy proof is required; a generic Anonymous screenshot alone cannot prove absence of API leakage.",
+  "productionVerification": {
+    "backend": "19 authenticated privacy/proxy tests passed; docs/chat001-anonymous-media-live-proof.json",
+    "frontend": "Member71 fresh production reload displays post36 as Anonymous with visible logo. DOM image loaded through opaque community-media proxy; no Storage URL. Admin audit identifies author70.",
+    "realtime": "Authenticated recipient received actual INSERT; retry same ID; own QA message soft-deleted. docs/chat001-live-regression.json",
+    "stability": "50/50 HTTP calls, zero4xx/5xx; worst1012ms"
+  },
+  "screenshotProof": [
+    "qa-evidence/chat001/production-anonymous-photo-member.png",
+    "qa-evidence/chat001/production-admin-anonymous-media-attribution.png"
+  ],
   "residualNotes": [
     "Already-issued legacy signed Storage URLs may remain valid until their original expiry. Previously disclosed identifiers cannot be retroactively erased.",
     "This protects application identity metadata and paths, not identity deliberately revealed in user-written content or image pixels."
   ],
-  "finalStatus": "NOT_ACCEPTED_PENDING_TARGET_DEPLOYMENT_AND_PRODUCTION_RETEST"
+  "finalStatus": "PASS",
+  "fixtureCleanup": "Post36 retained temporarily for remaining UI evidence; only temporary Chat delivery fixture soft-deleted."
 }

@@ -38,9 +38,19 @@ try {
  insert into public.tbl_users(id,auth_user_id) select n,('00000000-0000-0000-0000-'||lpad(n::text,12,'0'))::uuid from generate_series(1,110)n;
  insert into auth.users select auth_user_id,'qa'||id||'@example.test',null,now(),null from public.tbl_users;
  ${fs.readFileSync('supabase/migrations/20261002170748_client_badge_engine.sql', 'utf8')}
+ ${fs.readFileSync('supabase/migrations/20261003052115_popular_partner_qualifying_participants.sql', 'utf8')}
  `);
  const rules = JSON.parse(sql("select json_agg(json_build_object('slug',slug,'metric',metric,'threshold',threshold)) from public.tbl_badges;"));
- assert.equal(rules.length, 22);
+ // Independent expectations transcribed from the supplied WeNitro Badges document.
+ const expected = [
+ ['activity-explorer','joined',1],['active-explorer','joined',5],['adventure-seeker','joined',10],['activity-pro','joined',25],
+ ['first-time-host','hosted',1],['active-host','hosted',5],['experienced-host','hosted',10],['hosting-veteran','hosted',25],
+ ['community-starter','communities',1],['community-contributor','posts',5],['conversation-starter','posts',10],['community-explorer','communities',5],
+ ['first-connector','referrals',1],['network-builder','referrals',5],['community-connector','referrals',10],
+ ['first-activity','completed',1],['10-activities','completed',10],['25-activities','completed',25],['50-activities','completed',50],
+ ['verified-partner','partner',1],['active-partner','partner_hosted',5],['popular-partner','partner_participants',100]
+ ];
+ assert.deepEqual(rules.map(r=>[r.slug,r.metric,r.threshold]).sort(), expected.sort(), 'Client document catalog');
  const reset = `truncate public.tbl_user_badges,public.tbl_events,public.tbl_event_participants,public.tbl_activity_payments,public.tbl_chat_rooms,public.tbl_chat_participants,public.tbl_community_posts,public.tbl_referral_history,public.tbl_partner_profiles,private.badge_disqualifications;`;
  const fixture = (metric, n) => {
   if (metric==='joined'||metric==='completed') return `insert into public.tbl_events(id,created_by,event_end_time) select n,2,now()+interval '${metric==='joined'?'1':'-1'} day' from generate_series(1,${n})n; insert into public.tbl_event_participants select id,1,'approved' from public.tbl_events;`;
@@ -57,6 +67,20 @@ try {
   const result = sql(`${reset}${fixture(rule.metric,n)} select private.reconcile_client_badges(1); select count(*) from public.tbl_user_badges ub join public.tbl_badges b on b.id=ub.badge_id where b.slug='${rule.slug}' and ub.revoked_at is null;`).trim().split('\n').at(-1);
   assert.equal(result,n>=rule.threshold?'1':'0',`${rule.slug}: ${n}`); boundaries++;
  }
+ // Independent client-document scenario: Popular Partner includes free events;
+ // only Active Partner explicitly requires paid activities in the specification.
+ sql(`${reset}${fixture('partner_participants',100)}
+ update public.tbl_events set is_paid=false,payment_collection_mode='none';
+ truncate public.tbl_activity_payments;
+ do $$ begin
+ if (private.badge_metrics(1)->>'partner_participants')::int<>100 then raise exception 'Qualifying free participants excluded'; end if;
+ if (private.badge_metrics(1)->>'partner_hosted')::int<>0 then raise exception 'Free event counted for paid Active Partner'; end if;
+ perform private.reconcile_client_badges(1);
+ if not exists(select 1 from public.tbl_user_badges ub join public.tbl_badges b on b.id=ub.badge_id where b.slug='popular-partner' and ub.revoked_at is null) then raise exception 'Popular Partner not awarded'; end if;
+ update public.tbl_events set is_deleted=true;
+ perform private.reconcile_client_badges(1);
+ if exists(select 1 from public.tbl_user_badges ub join public.tbl_badges b on b.id=ub.badge_id where b.slug='popular-partner' and ub.revoked_at is null) then raise exception 'Removed Activity still counted'; end if;
+ end $$;`);
  sql(`${reset}${fixture('completed',25)}
  do $$ declare original timestamptz; snapshot jsonb; begin
  perform private.reconcile_client_badges(1);
