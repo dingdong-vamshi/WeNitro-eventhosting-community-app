@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-03T08:07:39.852308+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "mode": "read-only aggregate inspection",
+  "table": "auth.audit_log_entries",
+  "availableColumns": [
+    "instance_id",
+    "id",
+    "payload",
+    "created_at",
+    "ip_address"
+  ],
+  "auditEvents": 0,
+  "withNonemptyIpAddress": 0,
+  "loginActionEvents": 0,
+  "earliest": null,
+  "latest": null,
+  "conclusion": "No retained Auth audit or IP rows are available to populate IP monitoring. No client IP collection or enforceable IP blocking is currently configured.",
+  "privacy": "Only schema and aggregate counts inspected; no raw IPs or user payloads read."
+}

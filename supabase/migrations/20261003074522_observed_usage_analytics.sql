@@ -11,13 +11,29 @@ declare me integer:=public.current_app_user_id();today date:=(now() at time zone
 begin
  if me is null or auth.uid() is null then raise exception 'Sign in required' using errcode='42501';end if;
  if p_platform is null or p_platform not in ('web','ios','android','other') then raise exception 'Invalid platform';end if;
- if p_event_id is not null and not exists(select 1 from public.tbl_events e where e.id=p_event_id and not coalesce(e.is_deleted,false) and ((e.status='published' and e.visibility_type='public') or e.created_by=me or public.is_event_participant(e.id))) then raise exception 'Activity unavailable' using errcode='42501';end if;
+ if p_event_id is not null and not exists(select 1 from public.tbl_events e where e.id=p_event_id and not coalesce(e.is_deleted,false) and ((e.status='published' and e.visibility_type='public') or e.created_by=me or public.is_event_participant(e.id) or private.activity_squad_visible(e.id))) then raise exception 'Activity unavailable' using errcode='42501';end if;
  insert into private.app_daily_activity values(me,today,p_platform) on conflict do nothing;
  if p_event_id is not null then insert into private.activity_daily_views values(me,p_event_id,today) on conflict do nothing;end if;
 end $$;
 create function public.record_app_usage(p_platform text,p_event_id integer default null) returns void language sql security invoker set search_path='' as $$select private.record_usage(p_platform,p_event_id)$$;
 revoke all on function private.record_usage(text,integer),public.record_app_usage(text,integer) from public,anon;
 grant execute on function private.record_usage(text,integer),public.record_app_usage(text,integer) to authenticated;
+
+create table private.activity_daily_shares(user_id integer not null references public.tbl_users(id),event_id integer not null references public.tbl_events(id),day date not null,primary key(user_id,event_id,day));
+alter table private.activity_daily_shares enable row level security;
+revoke all on private.activity_daily_shares from public,anon,authenticated;
+create index activity_daily_shares_day on private.activity_daily_shares(day,event_id);
+create function private.record_activity_share(p_event_id integer) returns void language plpgsql security definer set search_path='' as $$
+declare me integer:=public.current_app_user_id();
+begin
+ if me is null or auth.uid() is null then raise exception 'Sign in required' using errcode='42501';end if;
+ if p_event_id is null then raise exception 'Activity required';end if;
+ if not exists(select 1 from public.tbl_events e where e.id=p_event_id and not coalesce(e.is_deleted,false) and ((e.status='published' and e.visibility_type='public') or e.created_by=me or public.is_event_participant(e.id) or private.activity_squad_visible(e.id))) then raise exception 'Activity unavailable' using errcode='42501';end if;
+ insert into private.activity_daily_shares values(public.current_app_user_id(),(p_event_id),(now() at time zone 'UTC')::date) on conflict do nothing;
+end $$;
+create function public.record_activity_share(p_event_id integer) returns void language sql security invoker set search_path='' as $$select private.record_activity_share(p_event_id)$$;
+revoke all on function private.record_activity_share(integer),public.record_activity_share(integer) from public,anon;
+grant execute on function private.record_activity_share(integer),public.record_activity_share(integer) to authenticated;
 
 create function private.usage_return_rate(p_days integer) returns numeric language sql stable security definer set search_path='' as $$
  with prior_users as(select distinct user_id from private.app_daily_activity where day>=(now() at time zone 'UTC')::date-2*p_days+1 and day<=(now() at time zone 'UTC')::date-p_days),current_users as(select distinct user_id from private.app_daily_activity where day>(now() at time zone 'UTC')::date-p_days)
@@ -34,6 +50,7 @@ begin
  'retention',jsonb_build_object('week',private.usage_return_rate(7),'month',private.usage_return_rate(30),'quarter',private.usage_return_rate(90)),
  'platforms',(select coalesce(jsonb_agg(x),'[]') from(select platform,count(*) visits from private.app_daily_activity where day>today-days group by platform)x),
  'daily',(select coalesce(jsonb_agg(x order by x.day),'[]') from(select day,count(distinct user_id) users from private.app_daily_activity where day>today-days group by day)x),
+ 'shares',(select coalesce(jsonb_agg(x order by x.day),'[]') from(select day,event_id,count(*) shares from private.activity_daily_shares where day>today-days group by day,event_id)x),
  'views',(select coalesce(jsonb_agg(x order by x.day),'[]') from(select day,event_id,count(*) views from private.activity_daily_views where day>today-days group by day,event_id)x));
 end $$;
 create function public.admin_usage_metrics(p_days integer default 30) returns jsonb language sql security invoker set search_path='' as $$select private.admin_usage_metrics(p_days)$$;
