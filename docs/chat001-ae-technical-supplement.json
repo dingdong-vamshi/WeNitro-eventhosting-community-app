@@ -1,0 +1,3632 @@
+{
+  "generatedAt": "2026-10-03T18:22:36.366341+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "scope": "A owner126 canonical rows; backend/local evidence reconciliation only. No UI actions or production writes during this supplement. Root acceptance file not edited.",
+  "count": 126,
+  "sourceCanonicalFile": "docs/chat001-production-ae-qa.json",
+  "relatedCoverage": "docs/chat001-backend-canonical-coverage.json",
+  "releaseRule": "Existing current production API evidence references Appbd6d314 release and applied82845. New invited-answer931a080 and SOS14e782d remain local fixes until root publishes the next release. Recheck actual release manifest before accepting them.",
+  "localRunnerRule": "Each cited check status was observed individually; no full-suite PASS inferred while other agents alter Admin/App.",
+  "originalSOS": {
+    "file": "/Users/vamshipendyala/Downloads/Must changesimplementations.pdf",
+    "page": 37,
+    "exactText": "Make SOS button functional by sending a notification just 10 mins before the activity kicks off. Message should be \u201cMake sure to share your activity details and live location with someone you trust.\u201d",
+    "sourceReviewed": "Text extracted with pypdf; page rendered with Poppler and visually inspected.",
+    "canonicalCorrection": [
+      "SOS-SAFETY-REMINDER: exact persisted message at start-minus10minute due boundary, eligible audience, no duplicates, no cancelled/deleted/left/ended delivery.",
+      "SOS-ACTION: functional foreground safety access and explicit share/contact actions.",
+      "Do not classify unimplemented native persistent tracking as a source37 external hold. Later explicit native delivery requirements, if any, need separate source trace."
+    ],
+    "implementation": {
+      "commit": "14e782d",
+      "migration": "20261003181703",
+      "localPostgresAssertions": 27,
+      "localUIHandlerAssertions": 29,
+      "productionQACommand": "node --env-file=<primary>/.env.local scripts/qa-isolated-backend-production.mjs --execute --safety-reminders --release <primary>/docs/chat001-integrated-release.json --secrets-root <primary>",
+      "productionStatus": "WAITING_FOR_COORDINATOR_DEPLOYMENT",
+      "timingLimit": "Named minute cron, first tick at/after start-minus10. Maximum1000 deliveries/run; backlog resumes before start. No native push or live tracking implemented."
+    }
+  },
+  "requirements": [
+    {
+      "id": "ONB-NEXT",
+      "sourceClauseIds": [
+        "A01-01"
+      ],
+      "requestedOutcome": "Next advances exactly one introductory slide and remains reachable.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-completion-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ONB-LAYOUT",
+      "sourceClauseIds": [
+        "A01-02"
+      ],
+      "requestedOutcome": "Introductory text and controls have appropriate spacing and remain usable on short and narrow screens.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ONB-CONTENT",
+      "sourceClauseIds": [
+        "A01-03"
+      ],
+      "requestedOutcome": "The three approved old-app introductory screens appear in their intended order.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ONB-SKIP",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "Skip exits the introduction through the intended onboarding transition.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-completion-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ONB-SWIPE",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "Swiping changes the introductory slide without breaking the selected page.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-completion-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ONB-DOTS",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "The introductory pagination dots show the current slide and permit page selection.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-completion-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ONB-FINISH",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "Finish completes the introduction and persists its completed state.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-completion-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ONB-REPLAY",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "The introduction can be replayed without corrupting account or completion state.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-completion-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-TAGLINE",
+      "sourceClauseIds": [
+        "A02-01"
+      ],
+      "requestedOutcome": "Welcome screen loads rotate the requested taglines.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-EMAIL-BRAND",
+      "sourceClauseIds": [
+        "A03-01",
+        "A03-02"
+      ],
+      "requestedOutcome": "Verification email uses WeNitro branding and the wording Confirm your Email Address.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled real inbox receipt, branded sender/template, confirmation/recovery navigation and new-password login are not established by this agent\u2019s current evidence. Do not infer missing SMTP credentials from enabled-provider metadata."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-EMAIL-CONFIRM",
+      "sourceClauseIds": [
+        "A03-03"
+      ],
+      "requestedOutcome": "A valid confirmation link completes email verification for the intended target account.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled real inbox receipt, branded sender/template, confirmation/recovery navigation and new-password login are not established by this agent\u2019s current evidence. Do not infer missing SMTP credentials from enabled-provider metadata."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-EMAIL-SENDER",
+      "sourceClauseIds": [
+        "A03-03"
+      ],
+      "requestedOutcome": "Verification and recovery mail use the configured sender and deliver through the intended email service.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled real inbox receipt, branded sender/template, confirmation/recovery navigation and new-password login are not established by this agent\u2019s current evidence. Do not infer missing SMTP credentials from enabled-provider metadata."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-GOOGLE-NEW",
+      "sourceClauseIds": [
+        "A04-01"
+      ],
+      "requestedOutcome": "A new Google sign-in creates one target-project identity and reaches the correct setup stage.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Fresh real Google consent/token/callback on the deployed origin for new and existing accounts remains unproven. Earlier embedded-browser FedCM failure does not establish a Supabase rejection; native ID-token and redirect flows are distinct."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-GOOGLE-EXISTING",
+      "sourceClauseIds": [
+        "A04-01"
+      ],
+      "requestedOutcome": "An existing Google sign-in restores the existing account without duplicate identity creation.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Fresh real Google consent/token/callback on the deployed origin for new and existing accounts remains unproven. Earlier embedded-browser FedCM failure does not establish a Supabase rejection; native ID-token and redirect flows are distinct."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-IDENTITY",
+      "sourceClauseIds": [
+        "A04-02",
+        "A06-03"
+      ],
+      "requestedOutcome": "Authentication resolves to the intended target Supabase session and matching application profile.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "exactPassedChecks": [
+            "Restored identity can resolve own profile",
+            "Deleted Auth identity cannot use retained JWT to sync verification",
+            "Deleted Auth identity cannot read profile with retained JWT"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-GOOGLE-PROVIDER",
+      "sourceClauseIds": [
+        "A04-03"
+      ],
+      "requestedOutcome": "Configured Google sign-in exchanges valid provider credentials and rejects invalid or cancelled attempts.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "google-oauth-web-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Fresh real Google consent/token/callback on the deployed origin for new and existing accounts remains unproven. Earlier embedded-browser FedCM failure does not establish a Supabase rejection; native ID-token and redirect flows are distinct."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-GOOGLE-REDIRECT",
+      "sourceClauseIds": [
+        "A04-03"
+      ],
+      "requestedOutcome": "The separate redirect-based Google callback is accepted by the client provider configuration and returns to the app.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "google-oauth-web-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Fresh real Google consent/token/callback on the deployed origin for new and existing accounts remains unproven. Earlier embedded-browser FedCM failure does not establish a Supabase rejection; native ID-token and redirect flows are distinct."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-RECOVERY-REQUEST",
+      "sourceClauseIds": [
+        "A05-01"
+      ],
+      "requestedOutcome": "Forgot Password requests a recovery email without disclosing unrelated account data.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled real inbox receipt, branded sender/template, confirmation/recovery navigation and new-password login are not established by this agent\u2019s current evidence. Do not infer missing SMTP credentials from enabled-provider metadata."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-RECOVERY-ROUTE",
+      "sourceClauseIds": [
+        "A05-02"
+      ],
+      "requestedOutcome": "Opening the recovery link reaches the password reset flow with the intended recovery session.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled real inbox receipt, branded sender/template, confirmation/recovery navigation and new-password login are not established by this agent\u2019s current evidence. Do not infer missing SMTP credentials from enabled-provider metadata."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-RECOVERY-RESET",
+      "sourceClauseIds": [
+        "A05-03"
+      ],
+      "requestedOutcome": "A valid recovery session can save a new password with visible validation and error handling.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled real inbox receipt, branded sender/template, confirmation/recovery navigation and new-password login are not established by this agent\u2019s current evidence. Do not infer missing SMTP credentials from enabled-provider metadata."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-RECOVERY-LOGIN",
+      "sourceClauseIds": [
+        "A05-04"
+      ],
+      "requestedOutcome": "The reset account can subsequently sign in using its new password.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled real inbox receipt, branded sender/template, confirmation/recovery navigation and new-password login are not established by this agent\u2019s current evidence. Do not infer missing SMTP credentials from enabled-provider metadata."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-PHONE-NEW",
+      "sourceClauseIds": [
+        "A06-01"
+      ],
+      "requestedOutcome": "A new phone account can complete signup after legitimate OTP verification.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled physical test-number delivery plus valid/invalid/expired/replayed OTP and mapping evidence is absent here. Synthetic service-created phone_confirm identities test downstream guards only, never real OTP."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-PHONE-EXISTING",
+      "sourceClauseIds": [
+        "A06-01"
+      ],
+      "requestedOutcome": "An existing phone account signs in to its existing profile instead of creating a duplicate.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled physical test-number delivery plus valid/invalid/expired/replayed OTP and mapping evidence is absent here. Synthetic service-created phone_confirm identities test downstream guards only, never real OTP."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-OTP-SEND",
+      "sourceClauseIds": [
+        "A06-02",
+        "A25-03"
+      ],
+      "requestedOutcome": "OTP sending uses the configured phone verification provider and reaches the controlled physical test number.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "sms-provider-diagnostics-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-predeployment-local-verification.json",
+          "check": "phone-otp-ui-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "edge-sms-tests",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled physical test-number delivery plus valid/invalid/expired/replayed OTP and mapping evidence is absent here. Synthetic service-created phone_confirm identities test downstream guards only, never real OTP."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-OTP-VERIFY",
+      "sourceClauseIds": [
+        "A06-02",
+        "A25-03"
+      ],
+      "requestedOutcome": "Valid delivered OTP verification succeeds while invalid, expired and replayed codes are rejected.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "sms-provider-diagnostics-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-predeployment-local-verification.json",
+          "check": "phone-otp-ui-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "edge-sms-tests",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled physical test-number delivery plus valid/invalid/expired/replayed OTP and mapping evidence is absent here. Synthetic service-created phone_confirm identities test downstream guards only, never real OTP."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-PHONE-STATE",
+      "sourceClauseIds": [
+        "A06-04"
+      ],
+      "requestedOutcome": "Phone-verified state reflects authenticated provider confirmation rather than a local or synthetic bypass.",
+      "technicalStatus": "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-postdeploy-auth-provider-state.json",
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "sms-provider-diagnostics-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-predeployment-local-verification.json",
+          "check": "phone-otp-ui-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "edge-sms-tests",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Controlled physical test-number delivery plus valid/invalid/expired/replayed OTP and mapping evidence is absent here. Synthetic service-created phone_confirm identities test downstream guards only, never real OTP."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HERO-SIZE",
+      "sourceClauseIds": [
+        "A07-01",
+        "A07-03"
+      ],
+      "requestedOutcome": "The Home hero has the requested reduced, responsive height.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HERO-BLUE-SURROUND",
+      "sourceClauseIds": [
+        "A07-02",
+        "A08-01"
+      ],
+      "requestedOutcome": "The Home hero has the approved lighter treatment without an extra outer blue surround or patch.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AVATAR-PHOTOS",
+      "sourceClauseIds": [
+        "A08-02",
+        "A11-01",
+        "A22-01",
+        "B15-01",
+        "B19-03",
+        "B25-04",
+        "B27-02",
+        "B35-01"
+      ],
+      "requestedOutcome": "User photos render for the relevant Home, Activity, member, Vibe, Profile and Chat identities rather than unrelated placeholder images.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "avatar-fallback-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AVATAR-FALLBACK",
+      "sourceClauseIds": [
+        "A08-03",
+        "A11-01",
+        "A22-02",
+        "B25-04",
+        "B27-02",
+        "B35-01"
+      ],
+      "requestedOutcome": "Missing or failed user photos display deterministic varied-color, Unicode-aware initials in the relevant identity surfaces.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "avatar-fallback-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AVATAR-SHAPE",
+      "sourceClauseIds": [
+        "B14-03"
+      ],
+      "requestedOutcome": "User display pictures use the requested round presentation.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "avatar-fallback-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-LIST-LAYOUT",
+      "sourceClauseIds": [
+        "A09-01",
+        "A09-05",
+        "B10-01"
+      ],
+      "requestedOutcome": "All Activities uses the requested readable card layout without the redundant description text.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-LIST-HEADER",
+      "sourceClauseIds": [
+        "A09-02",
+        "A09-04"
+      ],
+      "requestedOutcome": "Activities search and notification icons are present, with Filter beside Activities for You.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-SEARCH-TOGGLE",
+      "sourceClauseIds": [
+        "A09-03"
+      ],
+      "requestedOutcome": "Activity search stays collapsed until requested and opens a usable search input on tap.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-COVER",
+      "sourceClauseIds": [
+        "A09-06"
+      ],
+      "requestedOutcome": "Activity cards fill their intended cover area and show an intentional fallback when no cover is available.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-HOST-PROFILE",
+      "sourceClauseIds": [
+        "A09-07"
+      ],
+      "requestedOutcome": "Tapping the Activity host name or photo opens that host's correct profile.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-TIMELINE",
+      "sourceClauseIds": [
+        "A10-01"
+      ],
+      "requestedOutcome": "Activity timeline content and labels do not overlap.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "UI-TYPE-READABILITY",
+      "sourceClauseIds": [
+        "A10-02",
+        "B09-01"
+      ],
+      "requestedOutcome": "Text remains readable and uncut on smaller supported screens, including Activity details and recommendations.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-LIKERS-LIST",
+      "sourceClauseIds": [
+        "A10-03"
+      ],
+      "requestedOutcome": "Long-pressing an Activity Like action reveals the actual liker identities.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-LIKER-PROFILE",
+      "sourceClauseIds": [
+        "A10-03"
+      ],
+      "requestedOutcome": "Selecting a liker opens the corresponding profile.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-MESSAGE-HOST",
+      "sourceClauseIds": [
+        "A11-02",
+        "B15-02"
+      ],
+      "requestedOutcome": "The Activity host Message action opens the intended direct conversation.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-ENDED-EDIT",
+      "sourceClauseIds": [
+        "A11-03",
+        "A37-02"
+      ],
+      "requestedOutcome": "Ended Activities cannot be edited through the UI or direct authorized mutation attempts.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Completed activity blocks Host edit"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        },
+        {
+          "file": "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+          "exactPassedChecks": [
+            "completed Activity cannot issue invitation",
+            "cancelled Activity cannot issue invitation"
+          ],
+          "runStatus": "PASS",
+          "limit": "Additional invitation mutation guard; does not prove participant removal after natural end."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-ENDED-REMOVE",
+      "sourceClauseIds": [
+        "A11-03"
+      ],
+      "requestedOutcome": "Participants cannot be removed from an ended Activity through UI or backend mutation.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Production completed-Co-host mutation denial is covered, but direct ended participant-removal attempt is not in the cited production checks; retain a production proof gap."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-ENDED-LEAVE",
+      "sourceClauseIds": [
+        "A11-03",
+        "A13-03"
+      ],
+      "requestedOutcome": "An ended Activity cannot be left through UI or backend mutation.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Completed activity blocks leaving"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-COMMENT-ELIGIBILITY",
+      "sourceClauseIds": [
+        "A12-01",
+        "A12-02"
+      ],
+      "requestedOutcome": "Only the intended eligible host/participants may create Activity comments, with backend enforcement.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Pending participant cannot comment",
+            "Original Host approves participant",
+            "Comment returns actual participant author",
+            "Other member cannot delete participant comment"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-COMMENT-IDENTITY",
+      "sourceClauseIds": [
+        "A12-03"
+      ],
+      "requestedOutcome": "Activity comments display the correct commenter identity and avatar.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Comment returns actual participant author"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-ENDED-PARTICIPANT",
+      "sourceClauseIds": [
+        "A13-01"
+      ],
+      "requestedOutcome": "An eligible ended-Activity participant sees the Rate Participants action.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-ENDED-NONPARTICIPANT",
+      "sourceClauseIds": [
+        "A13-02"
+      ],
+      "requestedOutcome": "An ended Activity shows Activity Ended to a nonparticipant without a join or leave action.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "RATE-NO-SELF",
+      "sourceClauseIds": [
+        "A15-01"
+      ],
+      "requestedOutcome": "A participant cannot rate themselves through UI or backend.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "exactPassedChecks": [
+            "Self rating denied"
+          ],
+          "runStatus": "FAIL",
+          "limit": "This overall run is FAIL due to a later Realtime timeout. These exact checks passed before the timeout; do not turn the overall failed run into PASS. Fresh Realtime retry is separately recorded in docs/chat001-realtime-current-retry.json."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "RATE-HOST-LABEL",
+      "sourceClauseIds": [
+        "A15-02"
+      ],
+      "requestedOutcome": "The rating list clearly identifies the original Host.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "RATE-NO-SHOW",
+      "sourceClauseIds": [
+        "A15-03"
+      ],
+      "requestedOutcome": "No Show may be selected only for an eligible participant under the intended rating rules.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "exactPassedChecks": [
+            "Host cannot be marked No Show",
+            "Outsider cannot rate private activity"
+          ],
+          "runStatus": "FAIL",
+          "limit": "This overall run is FAIL due to a later Realtime timeout. These exact checks passed before the timeout; do not turn the overall failed run into PASS. Fresh Realtime retry is separately recorded in docs/chat001-realtime-current-retry.json."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "The cited deployed checks reject self/Host/outsider misuse. An eligible participant No Show acceptance still needs its own evidence."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "RATE-HOST-NO-SHOW",
+      "sourceClauseIds": [
+        "A15-04"
+      ],
+      "requestedOutcome": "The original Host cannot receive a No Show rating.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "exactPassedChecks": [
+            "Host cannot be marked No Show"
+          ],
+          "runStatus": "FAIL",
+          "limit": "This overall run is FAIL due to a later Realtime timeout. These exact checks passed before the timeout; do not turn the overall failed run into PASS. Fresh Realtime retry is separately recorded in docs/chat001-realtime-current-retry.json."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "RATE-REWARD",
+      "sourceClauseIds": [
+        "A16-01",
+        "A16-02"
+      ],
+      "requestedOutcome": "Each distinct legitimate participant rating earns exactly two Nitro, including more than one eligible rating.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "exactPassedChecks": [
+            "First anonymous rating awards exactly two Nitro",
+            "Anonymous rating balance increases only once"
+          ],
+          "runStatus": "FAIL",
+          "limit": "This overall run is FAIL due to a later Realtime timeout. These exact checks passed before the timeout; do not turn the overall failed run into PASS. Fresh Realtime retry is separately recorded in docs/chat001-realtime-current-retry.json."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Current production fixture proves one legitimate +2 and duplicate0. Multiple distinct rewarding ratings are covered locally but not individually established by that fixture."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "RATE-GOLD-RECEIPT",
+      "sourceClauseIds": [
+        "A16-03"
+      ],
+      "requestedOutcome": "A successful rewarding rating displays the dark gold congratulations receipt with the actual awarded amount.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "NITRO-HISTORY",
+      "sourceClauseIds": [
+        "A16-04",
+        "A38-08"
+      ],
+      "requestedOutcome": "Nitro history displays the persisted award/spend ledger with positive rewards and negative spending signs.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "exactPassedChecks": [
+            "Persisted Nitro increments once",
+            "Referee cannot read inviter history"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Current API proof establishes persisted referral reward and privacy; positive/negative displayed signs and actual spend ledger need dedicated UI/backend readback evidence."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "RATE-IDEMPOTENCY",
+      "sourceClauseIds": [
+        "A16-05"
+      ],
+      "requestedOutcome": "Retrying an existing rating does not duplicate either the rating or its Nitro award.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "exactPassedChecks": [
+            "Repeated anonymous rating awards zero Nitro",
+            "Anonymous rating balance increases only once"
+          ],
+          "runStatus": "FAIL",
+          "limit": "This overall run is FAIL due to a later Realtime timeout. These exact checks passed before the timeout; do not turn the overall failed run into PASS. Fresh Realtime retry is separately recorded in docs/chat001-realtime-current-retry.json."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "TRIBE-PRESENTATION",
+      "sourceClauseIds": [
+        "A17-01",
+        "A17-02"
+      ],
+      "requestedOutcome": "Tribe/category cards use the requested imagery and wording without the unwanted Find label.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "activities-filter-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "category-catalog-client-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "TRIBE-NAVIGATION",
+      "sourceClauseIds": [
+        "A17-03"
+      ],
+      "requestedOutcome": "Selecting a Tribe opens Activities filtered to that category.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-activity-discovery-proof.json",
+          "finding": "Actual discovery service read against target at07:35Z: date known QA277, paid includes onsite/Partner, free excludes cost flags, category/gender. This predates integrated08:21 release and is reuse evidence only; final deployed UI filtering remains pending."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "activities-filter-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "category-catalog-client-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-WARNING-CONTENT",
+      "sourceClauseIds": [
+        "A18-01",
+        "A18-02",
+        "A18-03"
+      ],
+      "requestedOutcome": "Host Responsibly includes the prohibited-content warning and prominently states permanent account suspension consequences.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-WARNING-CANCEL",
+      "sourceClauseIds": [
+        "A18-04"
+      ],
+      "requestedOutcome": "Cancelling Host Responsibly returns safely without proceeding to create the Activity.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-WARNING-CONTINUE",
+      "sourceClauseIds": [
+        "A18-04"
+      ],
+      "requestedOutcome": "Continuing Host Responsibly enters the hosting flow.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "CONTENT-BACKEND-CHECKS",
+      "sourceClauseIds": [
+        "A18-05",
+        "A38-12"
+      ],
+      "requestedOutcome": "Applicable backend content and authorization checks enforce the documented policy beyond a client-only warning.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "exactPassedChecks": [
+            "inactive existing session cannot sync verification",
+            "Banned identity retains no verification authority"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        },
+        {
+          "file": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "exactPassedChecks": [
+            "Reporter cannot spoof reviewed status",
+            "Reporter cannot impersonate another member",
+            "Member cannot review submitted report"
+          ],
+          "runStatus": "FAIL",
+          "limit": "This overall run is FAIL due to a later Realtime timeout. These exact checks passed before the timeout; do not turn the overall failed run into PASS. Fresh Realtime retry is separately recorded in docs/chat001-realtime-current-retry.json."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "validation-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Text/authorization guards and moderation reports are implemented. Semantic interpretation of every misleading/hateful image/video is not established; no licensed moderation provider or blanket automatic content safety is claimed."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "UPLOAD-WARNING",
+      "sourceClauseIds": [
+        "A19-01"
+      ],
+      "requestedOutcome": "Applicable Activity, Vibe, Community and other requested media pickers are preceded by Upload Responsibly.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "UPLOAD-WARNING-CANCEL",
+      "sourceClauseIds": [
+        "A19-02"
+      ],
+      "requestedOutcome": "Cancelling Upload Responsibly preserves the draft and does not open the picker.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "UPLOAD-WARNING-CONTINUE",
+      "sourceClauseIds": [
+        "A19-03"
+      ],
+      "requestedOutcome": "Continuing Upload Responsibly opens the intended picker and preserves selected media workflow.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "NOTIFICATIONS-LOAD",
+      "sourceClauseIds": [
+        "A27-01",
+        "A27-02"
+      ],
+      "requestedOutcome": "Notifications load, reload and reopen without recurring errors, distinguishing empty, multiple-item, loading and error states.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "src/services/notifications-production.ts",
+          "line": 86,
+          "match": "listPage",
+          "finding": "Actual notification service supports pagination; fresh repeated/empty/multiple/reload UI coverage is separate."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-CREATE-DESTINATION",
+      "sourceClauseIds": [
+        "A37-01"
+      ],
+      "requestedOutcome": "Publishing an Activity opens the created Activity's detail screen.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "host-activity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-START-DEFAULT",
+      "sourceClauseIds": [
+        "A37-06",
+        "B13-01"
+      ],
+      "requestedOutcome": "A new Activity starts with a default time ten minutes from the current time.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "host-activity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-END-DEFAULT",
+      "sourceClauseIds": [
+        "A37-06",
+        "B13-02"
+      ],
+      "requestedOutcome": "Default Activity end is one hour after start, and schedules reject end times less than the required duration.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "host-activity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-REGISTRATION-DEFAULT",
+      "sourceClauseIds": [
+        "A37-06"
+      ],
+      "requestedOutcome": "Default registration closes at the Activity start.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "host-activity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "SOS-ACTION",
+      "sourceClauseIds": [
+        "A37-07"
+      ],
+      "requestedOutcome": "The Activity SOS action opens functional safety guidance, activity sharing and access to the saved emergency contact without claiming automatic live tracking.",
+      "technicalStatus": "LOCAL_FIX_PENDING_DEPLOYMENT",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "scripts/activity-safety-reminder-postgres-test.mjs",
+          "checks": 27,
+          "status": "PASS",
+          "commit": "14e782d"
+        },
+        {
+          "file": "scripts/activity-safety-actions-test.mjs",
+          "checks": 29,
+          "status": "PASS",
+          "commit": "14e782d"
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "/Users/vamshipendyala/Downloads/Must changesimplementations.pdf",
+          "page": 37,
+          "finding": "Text extraction and rendered page visually reviewed. Exact requested implementation is a10minute pre-Activity reminder with supplied body; no live tracking/native persistent background requirement in this clause."
+        }
+      ],
+      "missingEvidence": [
+        "Local implementation committed14e782d, pending integrated deployment and gated real-cron/UI proof. Root has corrected the canonical split to source-backed SOS reminder and functional action, preserving counts. Native background push/live tracking are unsupported capabilities, not source37 unmet requirements."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "SOS-SAFETY-REMINDER",
+      "sourceClauseIds": [
+        "A37-07"
+      ],
+      "requestedOutcome": "Send confirmed eligible Activity members a safety notification ten minutes before start with the exact requested message: Make sure to share your activity details and live location with someone you trust.",
+      "technicalStatus": "LOCAL_FIX_PENDING_DEPLOYMENT",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "scripts/activity-safety-reminder-postgres-test.mjs",
+          "checks": 27,
+          "status": "PASS",
+          "commit": "14e782d"
+        },
+        {
+          "file": "scripts/activity-safety-actions-test.mjs",
+          "checks": 29,
+          "status": "PASS",
+          "commit": "14e782d"
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "/Users/vamshipendyala/Downloads/Must changesimplementations.pdf",
+          "page": 37,
+          "finding": "Text extraction and rendered page visually reviewed. Exact requested implementation is a10minute pre-Activity reminder with supplied body; no live tracking/native persistent background requirement in this clause."
+        }
+      ],
+      "missingEvidence": [
+        "Local implementation committed14e782d, pending integrated deployment and gated real-cron/UI proof. Root has corrected the canonical split to source-backed SOS reminder and functional action, preserving counts. Native background push/live tracking are unsupported capabilities, not source37 unmet requirements."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HELP-NITROBOT",
+      "sourceClauseIds": [
+        "A37-08"
+      ],
+      "requestedOutcome": "NitroBot answers the supported FAQ without pretending to access private account data or unsupported services.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "src/components/reconstruction/settings.tsx",
+          "line": 10,
+          "match": "export",
+          "finding": "Existing settings implementation; inspect named requirement behavior, not a blanket source PASS."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HELP-SUPPORT-QUERY",
+      "sourceClauseIds": [
+        "A37-09"
+      ],
+      "requestedOutcome": "A member can submit a support/feedback query and receive confirmation only after persistence succeeds.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-support-production-proof.json",
+          "finding": "Root recorded deployed Settings > NitroBot > Send Query, disabled empty submit, persisted row9/user116 at18:11:03Z and success only after persistence. This is root evidence, not a new agent UI check."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "src/components/reconstruction/settings.tsx",
+          "line": 10,
+          "match": "export",
+          "finding": "Existing settings implementation; inspect named requirement behavior, not a blanket source PASS."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "PLAY-STORE-REWARD",
+      "sourceClauseIds": [
+        "A37-10"
+      ],
+      "requestedOutcome": "The supported Play Store action awards its intended reward once without falsely claiming proof of a submitted review.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "src/components/reconstruction/settings.tsx",
+          "line": 10,
+          "match": "export",
+          "finding": "Existing settings implementation; inspect named requirement behavior, not a blanket source PASS."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Reward is an idempotent supported store-opening action, not proof of a submitted review. Fresh deployed reward mutation and retry receipt are not in this supplement."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "STORE-MINIMUM",
+      "sourceClauseIds": [
+        "A37-11"
+      ],
+      "requestedOutcome": "Hubble redemption eligibility requires at least 200 Nitro Points, using the current authoritative threshold.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "src/components/reconstruction/settings.tsx",
+          "line": 10,
+          "match": "export",
+          "finding": "Existing settings implementation; inspect named requirement behavior, not a blanket source PASS."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "STORE-REDEMPTION",
+      "sourceClauseIds": [
+        "A37-11"
+      ],
+      "requestedOutcome": "Actual Hubble redemption is available only with a working configured provider and a successful authorized redemption; an unavailable provider must not deduct points or report a redemption success.",
+      "technicalStatus": "PROVIDER_INTEGRATION_NOT_IMPLEMENTED",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "src/components/reconstruction/settings.tsx",
+          "line": 10,
+          "match": "export",
+          "finding": "Existing settings implementation; inspect named requirement behavior, not a blanket source PASS."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Original PDF37 explicitly asks client for production Hubble link and setup call. Current Store says provider unavailable and deducts no points. Actual configured authorized Hubble redemption remains not implemented/provider setup required."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "COHOST-PROMOTE",
+      "sourceClauseIds": [
+        "A38-01",
+        "B15-03"
+      ],
+      "requestedOutcome": "The authorized original Host can promote an eligible participant to Co-host.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Co-host edit preserves original Host"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "COHOST-APPROVE",
+      "sourceClauseIds": [
+        "A38-01"
+      ],
+      "requestedOutcome": "A Co-host can approve eligible registration requests within the allowed Activity state.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Cited production run confirms Co-host edit/demotion, not these three separate Co-host management actions. Do not promote shared local guard coverage to deployed PASS."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "COHOST-REJECT",
+      "sourceClauseIds": [
+        "A38-01"
+      ],
+      "requestedOutcome": "A Co-host can reject eligible registration requests within the allowed Activity state.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Cited production run confirms Co-host edit/demotion, not these three separate Co-host management actions. Do not promote shared local guard coverage to deployed PASS."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "COHOST-REMOVE",
+      "sourceClauseIds": [
+        "A38-01"
+      ],
+      "requestedOutcome": "A Co-host can remove eligible participants before the Activity ends, respecting protected Host/role boundaries.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Cited production run confirms Co-host edit/demotion, not these three separate Co-host management actions. Do not promote shared local guard coverage to deployed PASS."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "COHOST-EDIT",
+      "sourceClauseIds": [
+        "A38-01"
+      ],
+      "requestedOutcome": "A Co-host can edit the permitted Activity fields before the Activity ends.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Co-host edit preserves original Host",
+            "Demoted Co-host loses edit authority immediately"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "COHOST-ORIGINAL-HOST",
+      "sourceClauseIds": [
+        "A38-02",
+        "B15-01"
+      ],
+      "requestedOutcome": "The original creator remains clearly identified as HOST / ORIGINAL CREATOR after Co-host changes.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Co-host edit preserves original Host"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "COHOST-DEMOTE",
+      "sourceClauseIds": [
+        "A38-03"
+      ],
+      "requestedOutcome": "Demoting/removing a Co-host persists and immediately removes their backend management permissions.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Demoted Co-host loses edit authority immediately"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "POLICY-FIRST-SIGNUP",
+      "sourceClauseIds": [
+        "A38-06"
+      ],
+      "requestedOutcome": "First signup presents and records the required policy acceptance without reapplying it incorrectly to existing sessions.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "LEGAL-EXTERNAL",
+      "sourceClauseIds": [
+        "B01-01"
+      ],
+      "requestedOutcome": "Terms and privacy links open their actual approved external policy destinations.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-EMAIL-TICK",
+      "sourceClauseIds": [
+        "B02-01"
+      ],
+      "requestedOutcome": "The email field tick appears only when the entered address passes email-format validation; malformed email must not display the success tick. This indicator is not proof of confirmed email ownership.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-NAME-VALIDATION",
+      "sourceClauseIds": [
+        "B02-02",
+        "B02-03"
+      ],
+      "requestedOutcome": "Name validation supports legitimate Unicode names and rejects invalid/prohibited names on both client and backend paths.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "validation-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "src/utils/validation.ts",
+          "line": 59,
+          "match": "export",
+          "finding": "Unicode/client validation complements real SQL validation tests; screen appearance still requires deployed proof."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "AUTH-ARTWORK",
+      "sourceClauseIds": [
+        "B03-01",
+        "B03-02"
+      ],
+      "requestedOutcome": "Social sign-in uses the approved non-dating artwork with readable contrast.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "STORE-NAMING",
+      "sourceClauseIds": [
+        "B04-01"
+      ],
+      "requestedOutcome": "Store navigation and current UI use the authoritative Nitro Store naming.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOME-HEADER",
+      "sourceClauseIds": [
+        "B04-02"
+      ],
+      "requestedOutcome": "Home uses the latest requested header without the removed avatar or an empty redundant section.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HERO-ASSETS",
+      "sourceClauseIds": [
+        "B05-01",
+        "B05-03"
+      ],
+      "requestedOutcome": "The hero uses the four exact approved assets without duplicate masking/text overlays.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HERO-CTA-ACTIVITIES",
+      "sourceClauseIds": [
+        "B05-02"
+      ],
+      "requestedOutcome": "The Activities hero CTA opens Activities.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HERO-CTA-COMMUNITIES",
+      "sourceClauseIds": [
+        "B05-02"
+      ],
+      "requestedOutcome": "The Communities hero CTA opens Communities.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HERO-CTA-INVITE",
+      "sourceClauseIds": [
+        "B05-02"
+      ],
+      "requestedOutcome": "The Friends hero CTA opens Invite Squad.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HERO-CTA-STORE",
+      "sourceClauseIds": [
+        "B05-02"
+      ],
+      "requestedOutcome": "The Store hero CTA opens Nitro Store.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "REFERRAL-REWARD",
+      "sourceClauseIds": [
+        "B06-01"
+      ],
+      "requestedOutcome": "A legitimate successful referral earns the authoritative ten Nitro reward.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "exactPassedChecks": [
+            "New confirmed referral grants exactly ten Nitro",
+            "Persisted Nitro increments once"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "referral-reward-identity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "badge-engine-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "REFERRAL-EXPLANATION",
+      "sourceClauseIds": [
+        "B06-02",
+        "B06-03"
+      ],
+      "requestedOutcome": "Invite How it works and referral terms are readable and describe the actual qualifying reward behavior.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "referral-reward-identity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "badge-engine-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "REFERRAL-ANTI-ABUSE",
+      "sourceClauseIds": [
+        "A38-12",
+        "B06-04"
+      ],
+      "requestedOutcome": "Self-referrals, duplicate redemption and referral farming do not award illegitimate Nitro or qualifying badge progress.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "exactPassedChecks": [
+            "Same referral replay awards nothing",
+            "Cross-inviter retry awards nothing",
+            "Self referral rejected",
+            "Real referral earns connector badge"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "referral-reward-identity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "badge-engine-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "LEGAL-VIEW-MORE",
+      "sourceClauseIds": [
+        "B07-01"
+      ],
+      "requestedOutcome": "The policy screen replaces Contact Support with a working View More link to the corresponding policy site.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOME-NITRO-CARD",
+      "sourceClauseIds": [
+        "B08-01",
+        "B08-02"
+      ],
+      "requestedOutcome": "Nitro Points and Invite cards use the requested matching blue/purple visual styling.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "hero-brand-visual-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-home-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-BACK-HOME",
+      "sourceClauseIds": [
+        "B10-03"
+      ],
+      "requestedOutcome": "Back from the Activities screen returns Home.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "FILTER-DATE",
+      "sourceClauseIds": [
+        "B10-02",
+        "B11-01"
+      ],
+      "requestedOutcome": "Activity date-range filtering applies valid local-day bounds and returns matching actual results.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-activity-discovery-proof.json",
+          "finding": "Actual discovery service read against target at07:35Z: date known QA277, paid includes onsite/Partner, free excludes cost flags, category/gender. This predates integrated08:21 release and is reuse evidence only; final deployed UI filtering remains pending."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "activities-filter-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "category-catalog-client-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "FILTER-PRICE",
+      "sourceClauseIds": [
+        "B10-02",
+        "B11-01"
+      ],
+      "requestedOutcome": "All/Free/Paid filtering returns the appropriate free, onsite-cost and Partner-paid Activities.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-activity-discovery-proof.json",
+          "finding": "Actual discovery service read against target at07:35Z: date known QA277, paid includes onsite/Partner, free excludes cost flags, category/gender. This predates integrated08:21 release and is reuse evidence only; final deployed UI filtering remains pending."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "activities-filter-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "category-catalog-client-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "FILTER-GENDER",
+      "sourceClauseIds": [
+        "B10-02",
+        "B11-01"
+      ],
+      "requestedOutcome": "Gender preference filters change the returned Activity matches correctly.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-activity-discovery-proof.json",
+          "finding": "Actual discovery service read against target at07:35Z: date known QA277, paid includes onsite/Partner, free excludes cost flags, category/gender. This predates integrated08:21 release and is reuse evidence only; final deployed UI filtering remains pending."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "activities-filter-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "category-catalog-client-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "FILTER-APPLY",
+      "sourceClauseIds": [
+        "B11-02"
+      ],
+      "requestedOutcome": "Apply commits the selected filters and reopening the filter sheet retains the applied values.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "activities-filter-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "category-catalog-client-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "FILTER-RESET",
+      "sourceClauseIds": [
+        "B11-02"
+      ],
+      "requestedOutcome": "Reset All clears the requested date, price, gender, category and verification filters and subsequent results reflect the reset.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "activities-filter-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "category-catalog-client-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-HOST-EDIT",
+      "sourceClauseIds": [
+        "B12-01",
+        "B22-02"
+      ],
+      "requestedOutcome": "Only an eligible Host/Co-host sees and can use the Activity edit control within the permitted state.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Co-host edit preserves original Host",
+            "Demoted Co-host loses edit authority immediately",
+            "Completed activity blocks Host edit"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-HOST-DELETE",
+      "sourceClauseIds": [
+        "B12-01",
+        "B22-02"
+      ],
+      "requestedOutcome": "Only an eligible Host/authorized manager can cancel/delete an Activity, respecting payment and state restrictions.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-CHAT-OPEN",
+      "sourceClauseIds": [
+        "B12-02"
+      ],
+      "requestedOutcome": "Activity Chat opens the correct authorized Activity conversation.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Deleted activity blocks stale chat writes",
+            "Deleted activity disappears from member chat inbox"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-STATUS-CHIPS",
+      "sourceClauseIds": [
+        "B12-03"
+      ],
+      "requestedOutcome": "Activity cards/detail use the requested compact FREE/PAID/JOINED status presentation.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-REGISTRATION-BOUNDS",
+      "sourceClauseIds": [
+        "B13-03"
+      ],
+      "requestedOutcome": "Registration deadlines cannot precede now or exceed Activity start, with backend validation.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "host-activity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-SCHEDULE-ERRORS",
+      "sourceClauseIds": [
+        "B13-04"
+      ],
+      "requestedOutcome": "Invalid Activity schedules show visible actionable validation and preserve the editable draft.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "host-activity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "HOST-TIMEZONE",
+      "sourceClauseIds": [
+        "B13-05"
+      ],
+      "requestedOutcome": "Displayed and submitted Activity schedules preserve the intended local timezone and stored instant.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "host-activity-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-VISIBILITY-LABEL",
+      "sourceClauseIds": [
+        "B14-01"
+      ],
+      "requestedOutcome": "Public/private visibility is displayed beside the Activity title.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-TAGS-POSITION",
+      "sourceClauseIds": [
+        "B14-02"
+      ],
+      "requestedOutcome": "Activity tags are displayed beneath About as requested.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-ui-contract-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-PRIVATE-RLS",
+      "sourceClauseIds": [
+        "A38-12",
+        "B14-04"
+      ],
+      "requestedOutcome": "Private Activities and protected details are visible only to authorized hosts, participants or valid invite recipients under backend policies.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Private activity is hidden from outsider RLS",
+            "Private activity cannot be joined without invitation"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        },
+        {
+          "file": "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+          "exactPassedChecks": [
+            "Private former participant cannot self-rejoin without invitation",
+            "Fresh Host invitation restores private participation"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "acceptance-backend-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-HOST-IDENTITY",
+      "sourceClauseIds": [
+        "B15-01"
+      ],
+      "requestedOutcome": "Activity detail clearly shows the host's full identity and emphasized host styling.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-SEE-ALL",
+      "sourceClauseIds": [
+        "B17-01"
+      ],
+      "requestedOutcome": "See All Activities opens the Activities listing.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-CHAT-BACK",
+      "sourceClauseIds": [
+        "B18-01"
+      ],
+      "requestedOutcome": "Back from Activity Chat returns to the originating Activity context.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "MAPS-GOOGLE",
+      "sourceClauseIds": [
+        "B21-01"
+      ],
+      "requestedOutcome": "Actual Google Maps/Places integration uses the client's authorized configured account.",
+      "technicalStatus": "PROVIDER_INTEGRATION_UNVERIFIED",
+      "technicalProof": [],
+      "localProof": [],
+      "sourceInspection": [
+        {
+          "file": "src/services/activity-location.ts",
+          "line": 4,
+          "match": "EXPO_PUBLIC",
+          "finding": "Google configuration-dependent location service with Photon/GPS fallback; no current successful client Google Maps/Places transaction attached."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
+        "Actual client-authorized Google Maps/Places account and successful deployed integration are not proved here. Read current configuration without exposing keys; do not call fallback a Google PASS."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "MAPS-PROVIDER-CLARITY",
+      "sourceClauseIds": [
+        "B21-02"
+      ],
+      "requestedOutcome": "The location UI accurately distinguishes missing Google configuration from the available Photon/GPS fallback.",
+      "technicalStatus": "NO_BACKEND_ACCEPTANCE_CLAIM",
+      "technicalProof": [],
+      "localProof": [],
+      "sourceInspection": [
+        {
+          "file": "src/services/activity-location.ts",
+          "line": 4,
+          "match": "EXPO_PUBLIC",
+          "finding": "Google configuration-dependent location service with Photon/GPS fallback; no current successful client Google Maps/Places transaction attached."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-NO-SELF-REPORT",
+      "sourceClauseIds": [
+        "B22-01"
+      ],
+      "requestedOutcome": "A Host cannot report their own Activity through UI or backend.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "exactPassedChecks": [
+            "Host cannot report own activity"
+          ],
+          "runStatus": "FAIL",
+          "limit": "This overall run is FAIL due to a later Realtime timeout. These exact checks passed before the timeout; do not turn the overall failed run into PASS. Fresh Realtime retry is separately recorded in docs/chat001-realtime-current-retry.json."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-DETAIL-BACK",
+      "sourceClauseIds": [
+        "B22-03"
+      ],
+      "requestedOutcome": "Back from an Activity detail returns to its intended Activities context.",
+      "technicalStatus": "LOCAL_COVERAGE_ONLY",
+      "technicalProof": [],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "client-pdf-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "APP-CATEGORY-CATALOG",
+      "sourceClauseIds": [
+        "A36-03"
+      ],
+      "requestedOutcome": "App category selectors consume the shared active catalog, distinguish loading/error/empty states, support retry and retain unchanged historical selections safely.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "exactPassedChecks": [
+            "New archived selection fails atomically",
+            "Failed complete replacement preserves removed selections",
+            "Existing archived selection remains valid",
+            "Other member interests unchanged",
+            "Anonymous interest writes denied"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        }
+      ],
+      "localProof": [
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "admin-category-catalog-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "category-catalog-client-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "profile-interest-atomic-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "file": "docs/chat001-integrated-local-verification.json",
+          "check": "profile-catalog-recovery-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        }
+      ],
+      "sourceInspection": [
+        {
+          "file": "supabase/migrations/20261003075804_atomic_profile_interests.sql",
+          "line": 48,
+          "match": "create",
+          "finding": "Atomic complete-set interest replacement preserves historical unchanged selections and denies newly disabled assignments."
+        }
+      ],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    },
+    {
+      "id": "ACT-LEAVE-REJOIN",
+      "sourceClauseIds": [],
+      "requestedOutcome": "Leaving and rejoining an approval-based Activity re-enters the intended approval workflow without duplicate participation or bypassing approval.",
+      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalProof": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "exactPassedChecks": [
+            "Public activity leave and rejoin requires fresh Host approval"
+          ],
+          "runStatus": "PASS",
+          "limit": "Backend semantics only; no screenshot or full visual acceptance."
+        },
+        {
+          "file": "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+          "exactPassedChecks": [
+            "Private former participant cannot self-rejoin without invitation",
+            "Fresh Host invitation restores private participation",
+            "Fresh invitation reuses one participant row"
+          ],
+          "runStatus": "PASS",
+          "limit": "Host-issued fresh invitation is explicit approval; normal public self-rejoin is pending. Private access is not broadened for former attendees."
+        }
+      ],
+      "localProof": [],
+      "sourceInspection": [],
+      "missingEvidence": [
+        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior."
+      ],
+      "acceptedScreenshots": []
+    }
+  ],
+  "statusCounts": {
+    "LOCAL_COVERAGE_ONLY": 80,
+    "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED": 16,
+    "CURRENT_DEPLOYED_TECHNICAL_COVERAGE": 25,
+    "LOCAL_FIX_PENDING_DEPLOYMENT": 2,
+    "PROVIDER_INTEGRATION_NOT_IMPLEMENTED": 1,
+    "PROVIDER_INTEGRATION_UNVERIFIED": 1,
+    "NO_BACKEND_ACCEPTANCE_CLAIM": 1
+  }
+}
