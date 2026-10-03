@@ -1,0 +1,2641 @@
+{
+  "at": "2026-10-03T18:49:34.529005+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "purpose": "Coordinator proposal only; no final acceptance or new release approval. Existing mappings and canonical source are unchanged.",
+  "count": 52,
+  "releaseReviewed": false,
+  "release": {
+    "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+  },
+  "snapshotMetadataCounts": {
+    "newAdmin": 29,
+    "validatedOriginalAdmin": 8
+  },
+  "unknownScreenshotCanonicalIds": [
+    "ADMIN-VERIFY"
+  ],
+  "unknownIdRecommendation": "Root should correct ADMIN-VERIFY to ADMIN-VERIFICATION in its own metadata. No alias was silently applied here. Correct newer private-preview/rejected captures are used.",
+  "counts": {
+    "PASS": 29,
+    "PENDING_SCOPED_ACCEPTANCE": 16,
+    "PENDING_DEPLOYED_RETEST": 5,
+    "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 2
+  },
+  "routePlanCoverage": {
+    "totalEntries": 44,
+    "entriesWithRouteImage": 28,
+    "entriesWithoutRouteImage": 16,
+    "entries": [
+      {
+        "entry": 1,
+        "route": "/dashboard",
+        "canonicalIds": [
+          "ADMIN-LOGIN-DATA",
+          "ADMIN-DASHBOARD"
+        ],
+        "check": "Ordinary Admin; prior valid current-release dashboard image exists.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 2,
+        "route": "/settings/categories",
+        "canonicalIds": [
+          "ADMIN-CATEGORY-CATALOG"
+        ],
+        "check": "Search CHAT001; prior category-dialog/reloaded images valid. Synthetic category27 description persisted.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 3,
+        "route": "/search?q=Historical%20category",
+        "canonicalIds": [
+          "ADMIN-HEADER-SEARCH"
+        ],
+        "check": "Prior search-first/search-second images valid; two changed same-route queries verified.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 4,
+        "route": "/admins/roles",
+        "canonicalIds": [
+          "ADMIN-MASTER-ROLES",
+          "ADMIN-ROLE-ENFORCEMENT",
+          "ADMIN-ACCESS-AUDIT"
+        ],
+        "check": "Ordinary Admin correctly Access restricted. Master CRUD/audit baseline16PASS retained; permanentMasteridentity undecided; do not grant fresh authority solely for image.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 5,
+        "route": "/events/283",
+        "canonicalIds": [
+          "ADMIN-PIN",
+          "ADMIN-CATEGORY-CORRECTION",
+          "ADMIN-ACTIVITIES"
+        ],
+        "check": "Synthetic private Activity283; correct No participant limit/No limit/Not capped labels. API20PASS pinned/unpinned/category persisted to host session then restored. Current category intentionally corrected in controls test.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 6,
+        "route": "/users/119",
+        "canonicalIds": [
+          "ADMIN-USERS",
+          "ADMIN-USER-RESTRICTIONS"
+        ],
+        "check": "Synthetichost; account Active/restored. Followers Not tracked, real recentActivity. Buttonsrestriction can be inspected without mutating.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 7,
+        "route": "/users/119/activity",
+        "canonicalIds": [
+          "ADMIN-USERS"
+        ],
+        "check": "After newdeploy shows received ratingtimeline and Logins Not tracked, no fakezero. API ratings metadata authorizedAdmin only proven.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 8,
+        "route": "/events?search=Historical%20category",
+        "canonicalIds": [
+          "ADMIN-ACTIVITY-MODERATION"
+        ],
+        "check": "If URLsearchunsupported use visible searchinput; choose synthetic283. API cancel/delete/restore audited/retry idempotency verified. Do not mutate any other event.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 9,
+        "route": "/communities",
+        "canonicalIds": [
+          "ADMIN-COMMUNITIES",
+          "ADMIN-ANONYMOUS-AUDIT"
+        ],
+        "check": "ActualCommunityrecords. Anonymousauthor attribution proof is backend technical-only; do not expect authoridentityinpublicUI.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 10,
+        "route": "/content/vibes",
+        "canonicalIds": [
+          "ADMIN-VIBES"
+        ],
+        "check": "Actualrecordstable.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 11,
+        "route": "/content/stories",
+        "canonicalIds": [
+          "ADMIN-STORIES"
+        ],
+        "check": "Actualstoredexpiration/deletionstatus.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 12,
+        "route": "/verification",
+        "canonicalIds": [
+          "ADMIN-VERIFICATION"
+        ],
+        "check": "Private evidence metadata/reviewtable; no unrelated document opened or new approval necessary. Baselineprivateupload/reviewproof plusbackendcurrentauthorization.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 13,
+        "route": "/business",
+        "canonicalIds": [
+          "ADMIN-PARTNER-REVIEW"
+        ],
+        "check": "Actual applications/masked review. Use existing synthetic QAapplication for details only; no unrelated decision.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 14,
+        "route": "/moderation/investigation",
+        "canonicalIds": [
+          "ADMIN-REPORT-REVIEW",
+          "ADMIN-INVESTIGATION"
+        ],
+        "check": "Uncheck Open reports only; reportevent-4 synthetic resolved. CurrentUI successfully investigated then restoredresolved; notes CHAT001 deployed investigation QA complete. Profile/history/Activitylinks actual.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 15,
+        "route": "/moderation/chat-violations",
+        "canonicalIds": [
+          "ADMIN-MANUAL-MEDIA-REVIEW"
+        ],
+        "check": "Actualsubmittedtopic queue; no fakeclassifier/transcript.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 16,
+        "route": "/moderation/image-moderation",
+        "canonicalIds": [
+          "ADMIN-MANUAL-MEDIA-REVIEW",
+          "ADMIN-AUTO-MODERATION"
+        ],
+        "check": "Actualreportedmedia/manualworkflow; explicitclassifier unavailable.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 17,
+        "route": "/security/ip-monitoring",
+        "canonicalIds": [
+          "ADMIN-IP-MONITORING"
+        ],
+        "check": "ExplicitnoIPfeed/blockenforcement; workingsecurityaudit/account links. TargetAuthaudit0rows verifiedtechnical.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 18,
+        "route": "/security/security-logs",
+        "canonicalIds": [
+          "ADMIN-SECURITY-AUDIT"
+        ],
+        "check": "Wait actual table loaded; current283operation/restriction reasons and actor visible. Open one synthetic283 detail ifdesired.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 19,
+        "route": "/moderation/action-logs",
+        "canonicalIds": [
+          "ADMIN-USER-RESTRICTIONS",
+          "ADMIN-ACTIVITY-MODERATION",
+          "ADMIN-REPORT-REVIEW"
+        ],
+        "check": "Wait Loading audit gone; actualfixture119/283 and report4 auditoperations.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 20,
+        "route": "/business/sponsored-events",
+        "canonicalIds": [
+          "ADMIN-PARTNER-ACTIVITIES"
+        ],
+        "check": "Actual Partner-hostedActivities; ad-budget/impressions notconfigured truthful. Controlslink actual.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 21,
+        "route": "/business/transactions",
+        "canonicalIds": [
+          "ADMIN-TRANSACTIONS"
+        ],
+        "check": "Requires dedicated Finance121 login from fixturemanifest. Do not record financial event orconfigurepolicy.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 22,
+        "route": "/business/revenue",
+        "canonicalIds": [
+          "ADMIN-REVENUE"
+        ],
+        "check": "Finance121; actualledger summary.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 23,
+        "route": "/business/settlements",
+        "canonicalIds": [
+          "ADMIN-SETTLEMENTS"
+        ],
+        "check": "Finance121; actualpending/hold ledger; no payout/refund execution.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 24,
+        "route": "/analytics/user-analytics",
+        "canonicalIds": [
+          "ADMIN-ANALYTICS-USERS"
+        ],
+        "check": "Prior DOM UserAnalytics DAU/MAU/observationstart2026-10-03; retention Awaitingcohort. Growthroute /analytics/user-growth addsnullablecohort windowdefinition.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 25,
+        "route": "/analytics/platform-activity",
+        "canonicalIds": [
+          "ADMIN-ANALYTICS-PLATFORM"
+        ],
+        "check": "Newdeploy observedSinceUTCcopy; DAUactual; alltimecounterlabels.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 26,
+        "route": "/analytics/engagement",
+        "canonicalIds": [
+          "ADMIN-ANALYTICS-ENGAGEMENT"
+        ],
+        "check": "Newdeploy Vibe Shares label/card/chartCSV. Unavailableconversion/ratingexplicit.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 27,
+        "route": "/analytics/event-analytics",
+        "canonicalIds": [
+          "ADMIN-ANALYTICS-EVENTS"
+        ],
+        "check": "ActualActivitycounts/categories/cities; top-eventsroute shows Activityratings Not collected.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 28,
+        "route": "/analytics/event-engagement",
+        "canonicalIds": [
+          "ADMIN-ANALYTICS-EVENT-VIEWS"
+        ],
+        "check": "Actualauthorizeddailyviews/shares/UTC explanation, Vibesexcluded.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 29,
+        "route": "/analytics/host-performance",
+        "canonicalIds": [
+          "ADMIN-ANALYTICS-HOSTS"
+        ],
+        "check": "Newdeploy explainsrating\u00d720/completed\u00f7hosted; actualranking.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 30,
+        "route": "/analytics/geographic-insights",
+        "canonicalIds": [
+          "ADMIN-ANALYTICS-GEOGRAPHY"
+        ],
+        "check": "Actualdeclarednationality/saveddisplaylocation; noIPgeography.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 31,
+        "route": "/notifications/system-alerts",
+        "canonicalIds": [
+          "ADMIN-CAMPAIGN-DRAFTS",
+          "ADMIN-CAMPAIGN-DELIVERY"
+        ],
+        "check": "ExistingQAinappimmediate1delivered1read; scheduled1delivered0read actualcron08:32. Cancelledscheduledraft. Needsfresh screenshot; no send required.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 32,
+        "route": "/notifications/email",
+        "canonicalIds": [
+          "ADMIN-CAMPAIGN-DRAFTS",
+          "ADMIN-CAMPAIGN-DELIVERY"
+        ],
+        "check": "SavedQAdraft and emailprovider unavailable; nofake send. Push equivalent /notifications/push-campaigns.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 33,
+        "route": "/settings/notification-templates",
+        "canonicalIds": [
+          "ADMIN-TEMPLATES"
+        ],
+        "check": "Open [QA]CHAT001template edit; body Synthetic QA message saved and reloaded through deployed Admin. prior native template-edit imagevalid but reloaded screenshotstale.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 34,
+        "route": "/rewards/coins",
+        "canonicalIds": [
+          "ADMIN-REWARD-RULES"
+        ],
+        "check": "Actualauthoritative2/10/10/verification0; fixedreviewedcontract.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 35,
+        "route": "/rewards/catalog",
+        "canonicalIds": [
+          "ADMIN-REWARD-CATALOG"
+        ],
+        "check": "persistedQAproposal only, actualfulfillmentnotconfigured.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 36,
+        "route": "/rewards/coupons",
+        "canonicalIds": [
+          "ADMIN-COUPONS"
+        ],
+        "check": "PersistedQAproposal only, redemptionnotconfigured.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 37,
+        "route": "/rewards/badges",
+        "canonicalIds": [
+          "ADMIN-BADGE-CATALOG"
+        ],
+        "check": "Newdeploymentmustshow22canonicalmetricbadges, not25includinglegacyverification.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 38,
+        "route": "/rewards/leaderboard",
+        "canonicalIds": [
+          "ADMIN-LEADERBOARD"
+        ],
+        "check": "Actualrolling7/30day/alltimerewardledger; noreset.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 39,
+        "route": "/settings/features",
+        "canonicalIds": [
+          "ADMIN-FEATURE-SETTINGS"
+        ],
+        "check": "All4globalgatesON. Neverdisableglobally. RollbackSQLtestalreadyprovenactualcreate_activitydenyandrestoredtrue.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 40,
+        "route": "/settings/languages",
+        "canonicalIds": [
+          "ADMIN-LANGUAGE-SETTINGS"
+        ],
+        "check": "Englishonly, truthfuladditionaltranslationdependency.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 41,
+        "route": "/settings",
+        "canonicalIds": [
+          "ADMIN-FEATURE-SETTINGS"
+        ],
+        "check": "Wait countsloaded; realdeployedreleaseconfig and links.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 42,
+        "route": "/notifications",
+        "canonicalIds": [
+          "ANNOUNCEMENT-CREATE",
+          "ANNOUNCEMENT-AUDIENCE",
+          "ANNOUNCEMENT-DISPLAY",
+          "ANNOUNCEMENT-RECEIPT"
+        ],
+        "check": "Announcement3 [QA]CHAT001integratedAdminUIacceptance recipient120only active. RootAppIABrecipient120popup/ackpending; runner--after-ui-ack verifiesreceiptanddisables. Noalluserpublication.",
+        "routeImagePresent": true,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 43,
+        "route": "/moderation/pending-reports",
+        "canonicalIds": [
+          "ADMIN-HEADER-NOTIFICATIONS"
+        ],
+        "check": "Click bannerNotifications then wait reporttable; headerpendingcount5matches actualqueue. No needreview unrelatedreport.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      },
+      {
+        "entry": 44,
+        "route": "/dashboard",
+        "canonicalIds": [
+          "ADMIN-HEADER-HELP-PROFILE"
+        ],
+        "check": "Priorhelpimagevalid; actualprofiledialogshowscurrentAdminemail/role/lastsignin viaheader menu Admin profile. Needprofiledialog screenshotrecapture.",
+        "routeImagePresent": false,
+        "meaning": "Route presence only; this does not imply all interactions or final-release review passed."
+      }
+    ]
+  },
+  "requirements": [
+    {
+      "id": "ADMIN-LOGIN-DATA",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "The Admin session authenticates to the existing correct Supabase target and loads real authorized data.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Supabase-authenticated Admin session, live role lookup and authorized production readers replace disconnected display data.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Ordinary Admin signed in through the deployed login and loaded actual dashboard data. API identity matches current Admin role."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json",
+        "docs/chat001-admin-integrated-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-dashboard.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": "https://wenitro-admin-roan.vercel.app/dashboard",
+          "at": "2026-10-03T08:26:36.926Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "The Admin session authenticates to the existing correct Supabase target and loads real authorized data.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-MASTER-ROLES",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "An authorized Master can grant, change, suspend and revoke supported Admin roles on intended existing accounts.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Existing Master-only role management and restricted access audit retained; current-role checks govern grants, edits, suspension and revocation.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Earlier production16-check role lifecycle proof remains available. Current ordinary Admin UI denied /admins and /admins/roles. No fresh permanentMaster grant was made.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-access-proof.json",
+        "docs/chat001-admin-access-cleanup-proof.json",
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-role-boundary.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/admins/roles",
+          "at": "2026-10-03T18:37:10.821Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Current screenshot proves ordinary Admin denial only. Retained earlier 16-check Master lifecycle and authority cleanup do not supply a new-release Master UI walkthrough; permanent Master owner remains a client identity decision.",
+      "remainingValidation": [
+        "Current screenshot proves ordinary Admin denial only. Retained earlier 16-check Master lifecycle and authority cleanup do not supply a new-release Master UI walkthrough; permanent Master owner remains a client identity decision.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ROLE-ENFORCEMENT",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Admin/Master/Finance permissions are enforced by backend identity and live role state, including denial to members and revoked sessions.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Server role checks and UI route boundaries separate ordinary Admin, Master and Finance.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current API denied memberAdminidentity listing, Finance moderation, and ordinaryAdminFinance reads. Finance authorized rows loaded. Deployed Finance UI denied /users; ordinaryAdmin UI denied Master routes.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json",
+        "docs/chat001-admin-integrated-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-role-boundary.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/admins/roles",
+          "at": "2026-10-03T18:37:10.821Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Current live-role authorization, ordinary Admin versus Master/Finance denial, member denial and issued-session restriction tests; screenshot shows only the ordinary Admin boundary.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-PIN",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "An authorized Admin can pin and unpin upcoming Activities, reflected in member ordering and display.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Audited persisted Activity pin/unpin is reflected in authorized member reads.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current syntheticActivity283 pin true was visible to host119, then unpin false persisted. Deployed detail exposes Pin upcoming Activity control.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-activity.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/events/283",
+          "at": "2026-10-03T18:37:56.427Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "An authorized Admin can pin and unpin upcoming Activities, reflected in member ordering and display.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-CATEGORY-CORRECTION",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "An authorized Admin can correct an Activity category and members see the persisted correction.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Activity category correction persists the relation; unavailable historical categories survive unrelated edits.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current283 category correction reached host relation, then original27 was restored. Deployed detail offers existing-category correction.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json",
+        "docs/chat001-admin-integrated-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-activity.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/events/283",
+          "at": "2026-10-03T18:37:56.427Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "An authorized Admin can correct an Activity category and members see the persisted correction.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ANNOUNCEMENT-CREATE",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "An authorized Admin can create and disable a persisted login announcement.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Admin publication persists title/body/active window and explicit audience; disable is backed by RPC.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed Admin publication3 targeted only120, persisted row, then disabled after acceptance (current 9-check proof).",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Published synthetic announcement restricted to user120; earlier announcements inactive"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-announcement-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-announcement.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications",
+          "at": "2026-10-03T18:38:59.074Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-announcement-audience.png",
+          "scope": "Published synthetic announcement restricted to user120; earlier announcements inactive",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications",
+          "at": "2026-10-03T18:39:07.687Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "An authorized Admin can create and disable a persisted login announcement.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ANNOUNCEMENT-AUDIENCE",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Login announcements are returned only to their configured eligible audience during the active window.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Server filters login announcements by configured audience and current active window.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Recipient120 saw the actual popup;119 could neither load nor acknowledge it and could not read its raw row.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Published synthetic announcement restricted to user120; earlier announcements inactive",
+        "Actual login displays announcement3 restricted to controlled120"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-announcement-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-announcement.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications",
+          "at": "2026-10-03T18:38:59.074Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-announcement-audience.png",
+          "scope": "Published synthetic announcement restricted to user120; earlier announcements inactive",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications",
+          "at": "2026-10-03T18:39:07.687Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-recipient120-announcement.png",
+          "scope": "Actual login displays announcement3 restricted to controlled120",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T18:41:16.786Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptanceScope": "Login announcements are returned only to their configured eligible audience during the active window.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ANNOUNCEMENT-DISPLAY",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "An eligible login displays the actual announcement popup and its content.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "App login/load reads authorized announcements and renders their actual content.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Root isolated IAB captured the actual announcement3 popup for eligible recipient120 on deployed App.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Actual login displays announcement3 restricted to controlled120"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-announcement-proof.json",
+        "docs/chat001-announcement-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-announcement.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications",
+          "at": "2026-10-03T18:38:59.074Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-recipient120-announcement.png",
+          "scope": "Actual login displays announcement3 restricted to controlled120",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T18:41:16.786Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptanceScope": "An eligible login displays the actual announcement popup and its content.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ANNOUNCEMENT-RECEIPT",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Acknowledging a login announcement persists an idempotent read receipt and avoids unwanted redisplay.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Server acknowledgement stores one receipt and excludes acknowledged announcements.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Root clicked acknowledgement and reloaded; popup did not repeat. API confirmed one receipt and idempotent retry preserving its timestamp; test publication is disabled.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Reload after acknowledgement does not repeat announcement"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-announcement-proof.json",
+        "docs/chat001-announcement-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-announcement.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications",
+          "at": "2026-10-03T18:38:59.074Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-recipient120-after-ack.png",
+          "scope": "Reload after acknowledgement does not repeat announcement",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T18:41:28.737Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptanceScope": "Acknowledging a login announcement persists an idempotent read receipt and avoids unwanted redisplay.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ANONYMOUS-AUDIT",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Authorized Admin audit identifies an anonymous Community post's actual author while ordinary members are denied that attribution.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Restricted backend author audit preserves public anonymous presentation while allowing authorized investigation.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Existing anonymous Community audit proof retained. Current backend agent owns refreshed anonymous attribution/security tests; no ordinary identity disclosure is introduced by Admin history."
+      ],
+      "technicalProof": [
+        "docs/chat001-anonymous-media-live-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Community list screenshot does not show protected author attribution. Combine the backend current anonymous attribution proof with the restricted Admin audit interaction; never reveal author identity in ordinary Community UI.",
+      "remainingValidation": [
+        "Community list screenshot does not show protected author attribution. Combine the backend current anonymous attribution proof with the restricted Admin audit interaction; never reveal author identity in ordinary Community UI.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-DASHBOARD",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Dashboard summaries and entry routes load actual authorized counts and records, with visible loading/error states.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Dashboard counts, charts, navigation and refresh use actual authorized Supabase records.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed ordinary Admin dashboard loaded real counts; original dashboard screenshot visually verified correct."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-dashboard.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": "https://wenitro-admin-roan.vercel.app/dashboard",
+          "at": "2026-10-03T08:26:36.926Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Dashboard summaries and entry routes load actual authorized counts and records, with visible loading/error states.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-USERS",
+      "status": "PENDING_DEPLOYED_RETEST",
+      "proposalOnly": true,
+      "requestedChange": "Users listing, filters, profile details and activity history show real authorized account data without fabricated last-active/follower metrics.",
+      "before": "Follower count and last-active values were fabricated; latest verification could fail on multiple rows.",
+      "implemented": "Real user/profile/history readers with actual latest verification, no fabricated follower/last-active; new correction adds received rating metadata and unknown login telemetry.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "productionVerification": [
+        "Current adapter reads all3 QA identities and existing profile/history; current rating policy permitsAdmin metadata and denies member/Finance unrelated rows. New login Not tracked/rating-history UI awaiting release retest.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-current-announcement-proof.json",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-user.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/users/119",
+          "at": "2026-10-03T18:37:57.465Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+      "remainingValidation": [
+        "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ACTIVITIES",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Activity lists, status filters, detail and participant views use real records and correct uncapped capacity labels.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Activity lists/details/participants use real records and distinguish uncapped capacity.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current adapter finds283. Deployed detail and participants route show0 joined, No participant limit, No limit and Not capped.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-activity.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/events/283",
+          "at": "2026-10-03T18:37:56.427Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Synthetic Activity details are captured and API records are verified. Fresh participant-view screenshot remains absent from the supplied metadata.",
+      "remainingValidation": [
+        "Synthetic Activity details are captured and API records are verified. Fresh participant-view screenshot remains absent from the supplied metadata.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-COMMUNITIES",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Admin Community listing/details reflect actual Communities and memberships.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Community route reads real rooms and member counts.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current adapter returns stored Communities; deployed DOM showed28 actual records and saved visibility/member totals.",
+        "Loaded community membership counts and visibility"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-communities.png",
+          "scope": "Loaded community membership counts and visibility",
+          "url": "https://wenitro-admin-roan.vercel.app/communities",
+          "at": "2026-10-03T18:32:22.973Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Admin Community listing/details reflect actual Communities and memberships.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-VIBES",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Admin Vibe content and report review use actual Vibes with intended ownership and moderation boundaries.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Vibe list and report inbox read stored media posts and actual reports.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current adapter returns43 Vibes; deployed content and report views load real rows. No unrelated moderation performed.",
+        "Live Vibes list and moderation statuses"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-vibes.png",
+          "scope": "Live Vibes list and moderation statuses",
+          "url": "https://wenitro-admin-roan.vercel.app/content/vibes",
+          "at": "2026-10-03T18:33:00.620Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Admin Vibe content and report review use actual Vibes with intended ownership and moderation boundaries.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-STORIES",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Admin Story content view uses actual stored Stories and intended access controls.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Story route reads actual stored active, expired and deleted state.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current adapter read storedStories; deployed DOM showed17 records with their actual expiry/deletion state.",
+        "Live Stories list with expiry and active state"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-stories.png",
+          "scope": "Live Stories list with expiry and active state",
+          "url": "https://wenitro-admin-roan.vercel.app/content/stories",
+          "at": "2026-10-03T18:33:09.448Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Admin Story content view uses actual stored Stories and intended access controls.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-VERIFICATION",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Authorized Admin can inspect intended private verification evidence and persist an approved/rejected review with audit notes.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Authorized private submission retrieval and audited review remain connected; selfie approval does not imply all identity stages.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Root IAB opened synthetic120 submission31 through an authorized private signed preview, selected Reject, observed persisted rejected/Complete status, and checked that owner pending cleared without Trust/Nitro or identity approval. Formal lifecycle artifact is being finalized by App QA.",
+        "Authorized private submission31 preview shows controlled camera object; five-minute signed access; not biometric evidence",
+        "Synthetic object-photo31 rejected through deployed Admin; timestamp recorded and review complete"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-private-verification-preview.png",
+          "scope": "Authorized private submission31 preview shows controlled camera object; five-minute signed access; not biometric evidence",
+          "url": "https://wenitro-admin-roan.vercel.app/verification",
+          "at": "2026-10-03T18:42:17.201Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-verification-rejected.png",
+          "scope": "Synthetic object-photo31 rejected through deployed Admin; timestamp recorded and review complete",
+          "url": "https://wenitro-admin-roan.vercel.app/verification",
+          "at": "2026-10-03T18:42:24.829Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Current private preview and rejection lifecycle are verified with synthetic camera content. It is not real identity verification; approval branch and audit-note coverage require the applicable controlled test artifact before full approval/rejection acceptance.",
+      "remainingValidation": [
+        "Current private preview and rejection lifecycle are verified with synthetic camera content. It is not real identity verification; approval branch and audit-note coverage require the applicable controlled test artifact before full approval/rejection acceptance.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-PARTNER-REVIEW",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Actual application, masked settlement details, decisions and history use existing Partner review flow.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed ordinaryAdmin sees21 matching applications and actual statuses/filter options. New Partner preflight correction is separately tracked; existing review/payout secrets remain masked.",
+        "Partner application review list with current approved/pending status"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-partner-preflight-regression.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-partner-review.png",
+          "scope": "Partner application review list with current approved/pending status",
+          "url": "https://wenitro-admin-roan.vercel.app/business",
+          "at": "2026-10-03T18:34:03.871Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Current application list is captured. List loading alone does not prove application detail, agreement receipt, masked settlement fields, decision persistence and history; combine with a controlled Partner lifecycle proof.",
+      "remainingValidation": [
+        "Current application list is captured. List loading alone does not prove application detail, agreement receipt, masked settlement fields, decision persistence and history; combine with a controlled Partner lifecycle proof.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ACCESS-AUDIT",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Role grants, suspensions and revocations produce a restricted persistent audit trail; temporary test authority is revoked after QA.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Master role mutations retain restricted actor/target audit with temporary test authority cleanup.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Earlier16-check role/audit lifecycle plus revoked temporaryMaster cleanup retained. Current ordinaryAdmin UI denied /admins/activity-logs.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-access-proof.json",
+        "docs/chat001-admin-access-cleanup-proof.json",
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-role-boundary.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/admins/roles",
+          "at": "2026-10-03T18:37:10.821Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "The role-boundary screenshot proves denied access, not the restricted audit contents. Earlier role lifecycle and cleanup proof remain available; final coordinator must explicitly accept compatible prior evidence or capture an authorized audit view.",
+      "remainingValidation": [
+        "The role-boundary screenshot proves denied access, not the restricted audit contents. Earlier role lifecycle and cleanup proof remain available; final coordinator must explicitly accept compatible prior evidence or capture an authorized audit view.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-USER-RESTRICTIONS",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Authorized account restriction and restore controls persist their reason/duration and affect current-session access while protecting ineligible targets.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Audited reason/duration restrictions affect already-issued sessions; restore returns access.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current synthetic119 suspension denied identity and hid rows using existingJWT; restore immediately reopened issued session. Deployed profile remainedActive after restore.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-moderation-audit.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/moderation/action-logs",
+          "at": "2026-10-03T18:34:54.370Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-user.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/users/119",
+          "at": "2026-10-03T18:37:57.465Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Authorized account restriction and restore controls persist their reason/duration and affect current-session access while protecting ineligible targets.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ACTIVITY-MODERATION",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Authorized Activity warning/cancellation/deletion/restore controls persist and respect paid financial-state restrictions.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Actual Activity cancel/remove/restore operations persist and audit, with financial-state protections.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current unpaid283 cancellation persisted; repeat caused no duplicate notification; restore/remove/restore affected host visibility correctly. Parent/backend owns paidfinancial restriction proof.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-moderation-audit.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/moderation/action-logs",
+          "at": "2026-10-03T18:34:54.370Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Authorized Activity warning/cancellation/deletion/restore controls persist and respect paid financial-state restrictions.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-REPORT-REVIEW",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Safety Report investigation/resolution/dismissal persists actual report status and review notes with authorization and audit.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Actual report status/review notes persist with authorization and audit.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed investigation UI changed syntheticreportevent-4 to investigating, then resolved with explicit QA restoration note. No account restriction applied to shared70.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Resolved synthetic report event4 with actual reporter, target, linked Activity and review controls"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json",
+        "docs/chat001-admin-production-dom-observations.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-moderation-audit.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/moderation/action-logs",
+          "at": "2026-10-03T18:34:54.370Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-investigation.png",
+          "scope": "Resolved synthetic report event4 with actual reporter, target, linked Activity and review controls",
+          "url": "https://wenitro-admin-roan.vercel.app/moderation/investigation",
+          "at": "2026-10-03T18:38:57.568Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Synthetic report4 actual investigation, persisted resolved status and review note; authorization and audit verified by current API proof. No unrelated user report was altered.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-INVESTIGATION",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Investigation presents actual allegations/current account context and links usable profile/history/Activity moderation instead of fake risk scores or no-op actions.",
+      "before": "Investigation used placeholder evidence/actions.",
+      "implemented": "Actual submitted allegations and current account context replace invented risk scores; real profile/Activity links and review actions.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed Open reports only toggle revealed retained closedreportevent-4, current account context, profile/history and Activity282 links. Investigate/resolve persisted.",
+        "Resolved synthetic report event4 with actual reporter, target, linked Activity and review controls"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-production-dom-observations.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-investigation.png",
+          "scope": "Resolved synthetic report event4 with actual reporter, target, linked Activity and review controls",
+          "url": "https://wenitro-admin-roan.vercel.app/moderation/investigation",
+          "at": "2026-10-03T18:38:57.568Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Actual synthetic report4 context and usable profile/history/Activity navigation, with persisted manual investigation decision. No classifier or risk score is invented.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-MANUAL-MEDIA-REVIEW",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Chat/media/abuse review screens expose actual report evidence and working manual decisions, without pretending to have unsupported classifier output or missing transcripts.",
+      "before": "Media/chat/abuse controls used placeholder classification/actions.",
+      "implemented": "Topic-filtered actual reports and manual review replace fake chat/media classification.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed chat/media/abuse routes loaded their actual queues and stated missing classifier/transcript explicitly; no fabricated evidence or success.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-manual-media.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/moderation/image-moderation",
+          "at": "2026-10-03T18:34:43.454Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Actual reported-media screen and shared manual report workflow are verified. Chat/abuse topic routes still lack their fresh visible interaction proof.",
+      "remainingValidation": [
+        "Actual reported-media screen and shared manual report workflow are verified. Chat/abuse topic routes still lack their fresh visible interaction proof.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-AUTO-MODERATION",
+      "status": "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY",
+      "proposalOnly": true,
+      "requestedChange": "Automatic semantic image/message/abuse classification is represented as available only when a functioning configured classifier supplies actual findings.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Manual report review works; automatic classifier is explicitly unavailable.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed media/abuse UI states no configured automated image/message classifier; no automated verdict claimed.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-production-technical-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-manual-media.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/moderation/image-moderation",
+          "at": "2026-10-03T18:34:43.454Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "No configured semantic image/message classifier supplies actual findings. Manual report review works and the deployed screen states this limit.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-IP-MONITORING",
+      "status": "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY",
+      "proposalOnly": true,
+      "requestedChange": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Unavailable telemetry/blocked-IP enforcement is explicit with working audit/account/report links.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Read-only actual target auth.audit_log_entries aggregate had0 rows/usableIPobservations. Deployed IP page shows unavailable and actual fallbacklinks.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-production-technical-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-ip-monitoring.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/security/ip-monitoring",
+          "at": "2026-10-03T18:34:44.260Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "No retained Auth audit records/IP telemetry feed or IP enforcement service is available in the target project. Read-only aggregate found zero auth.audit_log_entries; the screen links real account/report/audit controls without claiming IP blocking.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-SECURITY-AUDIT",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Security/action logs show actual operations, support intended search/export and preserve restricted audit access.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Security/action logs read actual persisted operations with actor, target, reason and restricted access.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current API audit contained283 operations and denied member reads. Deployed audit tables loaded current119/283 mutations and persisted workspace/category edits.",
+        "Persisted synthetic Activity283 restore action with before/after detail and actor"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json",
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-security-audit.png",
+          "scope": "Persisted synthetic Activity283 restore action with before/after detail and actor",
+          "url": "https://wenitro-admin-roan.vercel.app/security/security-logs",
+          "at": "2026-10-03T18:36:35.098Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Actual synthetic operation detail is captured and authorization/persistence are API-proven. Search/export interaction is not established by a loaded table alone.",
+      "remainingValidation": [
+        "Actual synthetic operation detail is captured and authorization/persistence are API-proven. Search/export interaction is not established by a loaded table alone.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-PARTNER-ACTIVITIES",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "The Partner activity route lists actual Partner-hosted Activities and opens working Activity controls, without fabricated advertising sponsorship economics.",
+      "before": "Partner activity list used an empty placeholder.",
+      "implemented": "Actual Partner-hosted Activity list links existing controls; no fabricated ad sponsorship metrics.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Current adapter onlyreturns actualPartnerhosts; deployed list included actual QA297/282/280 rows and controls, with sponsorship/budget/impressions unavailable explanation.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-partner-activities.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/business/sponsored-events",
+          "at": "2026-10-03T18:37:11.519Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Actual Partner-hosted Activity list and working Activity destinations. Advertising budgets/impressions/provider sponsorship are unavailable and never shown as measured.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-TRANSACTIONS",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Authorized payment transaction views display actual provider/payment states and amounts with currency/Sandbox distinctions and privacy restrictions.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Authorized Finance reports use actual persisted payment/settlement ledger amounts and states.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Dedicated Finance121 loaded deployed transactionledger; ordinaryAdmin deniedFinance API. This read-only pass did not execute money movement."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Dedicated Finance121 route screenshot and displayed Sandbox/currency/state checks remain pending.",
+      "remainingValidation": [
+        "Dedicated Finance121 route screenshot and displayed Sandbox/currency/state checks remain pending.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-REVENUE",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Revenue summaries derive from successful recorded payments and do not fabricate collected revenue or mix unsupported currencies.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Finance summary derives from recorded ledger values and preserves historical fee snapshots.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployed Finance summary showed actual gross111.10, fee11.07, net100.03INR at observation time; numbers are storedledger, not proof of real settlement."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Dedicated Finance121 revenue screenshot and ledger reconciliation of displayed amounts remain pending.",
+      "remainingValidation": [
+        "Dedicated Finance121 revenue screenshot and ledger reconciliation of displayed amounts remain pending.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-SETTLEMENTS",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Settlement/payout controls show actual supported state; no production payout/refund success is claimed from Sandbox payments or missing bank/provider capability.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Actual eligibility/status/payout references remain visible without claiming unsupported real payouts.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Finance121 loaded actualpending/on-hold ledger; no payout/refund executed or claimed. Provider/bank execution remains external."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Dedicated Finance121 settlement screenshot remains pending. Actual bank payout/refund execution is not implemented without a configured provider and approved payout policy; no Sandbox payment is a real payout.",
+      "remainingValidation": [
+        "Dedicated Finance121 settlement screenshot remains pending. Actual bank payout/refund execution is not implemented without a configured provider and approved payout policy; no Sandbox payment is a real payout.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ANALYTICS-USERS",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "User analytics/growth use observed DAU/MAU, explicit time windows and real retention cohorts rather than active-account counts or fabricated zeros.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Observed signed-in member activity drives DAU/MAU and UTC returning-cohort ratios; missing cohorts remain null.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "scripts/admin-observed-usage-test.mjs",
+        "scripts/admin-read-models-test.mjs"
+      ],
+      "productionVerification": [
+        "Current API observedUTCstart2026-10-03 with actualDAU/MAU; deployed UserAnalytics showed3/3 and awaitingpriorcohort, growth defined prior/currentUTC period.",
+        "Loaded user analytics distinguish UTC observed activity/retention from registered totals."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-user-analytics.png",
+          "scope": "Loaded user analytics distinguish UTC observed activity/retention from registered totals.",
+          "url": "https://wenitro-admin-roan.vercel.app/analytics/user-analytics",
+          "at": "2026-10-03T18:24:07.308Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Real observed signed-in DAU/MAU with explicit UTC window and observation start; missing cohorts are null/Awaiting cohort rather than zero. No historical telemetry backfill or long-term retention claim.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ANALYTICS-PLATFORM",
+      "status": "PENDING_DEPLOYED_RETEST",
+      "proposalOnly": true,
+      "requestedChange": "Platform activity metrics identify their observation start, UTC windows and available first-party observed visits.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Observed DAU, explicit observation start and UTC day; stored message/report totals labelled all-time.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "scripts/admin-observed-usage-test.mjs",
+        "scripts/admin-read-models-test.mjs",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "productionVerification": [
+        "API observedDAU matches useranalytics. New explicitstart/UTC/all-time UIcopy committed96ba706; deployed recheck pending."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+      "remainingValidation": [
+        "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ANALYTICS-ENGAGEMENT",
+      "status": "PENDING_DEPLOYED_RETEST",
+      "proposalOnly": true,
+      "requestedChange": "Engagement reports use real participants/messages/ratings and explicitly represent unavailable metrics instead of invented conversion or peak-time data.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Real joins/messages/bookmarks/Vibe shares with actualUTC join/message heatmap; conversion/Activityrating absent remains unavailable.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "scripts/admin-observed-usage-test.mjs",
+        "scripts/admin-read-models-test.mjs",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "productionVerification": [
+        "Current API conversionnull/ratingsnull; deployed oldcard mislabelEventShares fixed to VibeShares6d3230f awaiting fresh UIreleasecheck."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+      "remainingValidation": [
+        "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ANALYTICS-EVENTS",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Event analytics and top-event reports use actual Activity counts and applicable ratings/participants, without confusing host ratings with Activity ratings.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Actual Activity counts/categories/participation; host memberrating is not substituted as Activityrating.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "scripts/admin-observed-usage-test.mjs",
+        "scripts/admin-read-models-test.mjs"
+      ],
+      "productionVerification": [
+        "Current API topActivityratingsnull. Deployed EventAnalytics actualcounts/categories and TopEvents Not collected observed."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Actual source adapter is tested against production; fresh Activity analytics/top-event visual proof remains pending.",
+      "remainingValidation": [
+        "Actual source adapter is tested against production; fresh Activity analytics/top-event visual proof remains pending.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ANALYTICS-EVENT-VIEWS",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Activity views/shares use actual authorized Activity observations; Vibe shares are not counted as Activity shares and cancelled share attempts do not count.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Authorized member/Activity/UTC-day views/shares are separate and idempotent; Vibe shares excluded.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "scripts/admin-observed-usage-test.mjs",
+        "scripts/admin-read-models-test.mjs"
+      ],
+      "productionVerification": [
+        "Current API unauthorizedprivateobservations denied, repeatedview/share once; actualview/share counts surfaced independently. Private rawtables denied member406."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-conflict-production-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Production authorized observations, daily deduplication and visibility denials are proven; fresh event-view/share screen proof remains pending.",
+      "remainingValidation": [
+        "Production authorized observations, daily deduplication and visibility denials are proven; fresh event-view/share screen proof remains pending.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ANALYTICS-HOSTS",
+      "status": "PENDING_DEPLOYED_RETEST",
+      "proposalOnly": true,
+      "requestedChange": "Host performance uses the intended qualifying hosted/participant/rating data with explained derived metrics.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Real hosted/approved-paid participation and storedmemberrating; score/completion formulas explained.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "scripts/admin-observed-usage-test.mjs",
+        "scripts/admin-read-models-test.mjs",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "productionVerification": [
+        "Current API includesactual119host. Deployed leaderboard loaded; new explicitrating\u00d720/completed\u00f7hosted copy96ba706 awaiting UIreleasecheck."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+      "remainingValidation": [
+        "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-ANALYTICS-GEOGRAPHY",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Geographic insights use actual available location data and do not fabricate missing IP/device geography.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Declarednationality and savedActivitydisplaylocation replace inventeddevice/IP/city inference.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "scripts/admin-observed-usage-test.mjs",
+        "scripts/admin-read-models-test.mjs"
+      ],
+      "productionVerification": [
+        "Current adapter returns recordedfields; deployed screen states limitations and displays actualrecords."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Actual source adapter uses declared nationality and saved Activity location; fresh geography screen proof remains pending.",
+      "remainingValidation": [
+        "Actual source adapter uses declared nationality and saved Activity location; fresh geography screen proof remains pending.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-CATEGORY-CATALOG",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Authorized Admin can add/edit/disable/archive/restore persisted categories while preserving historical references and denying new unavailable assignments.",
+      "before": "Catalog management and unavailable-category historical assignment semantics were incomplete.",
+      "implemented": "Admin persistedcategoryCRUD/icon/order/archive/restore with unavailable assignment guards and historicalpreservation.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Production lifecycleAPI passedcreate/disable/archive/restore/rename/historicalordinaryedit; deniednewdisabledassignment/member/Finance. Deployeddescriptionedit survivedreload with validimage."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-dialog.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": "https://wenitro-admin-roan.vercel.app/settings/categories",
+          "at": "2026-10-03T18:01:08.910Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-reloaded.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": "https://wenitro-admin-roan.vercel.app/settings/categories",
+          "at": "2026-10-03T18:01:24.975Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Authorized Admin can add/edit/disable/archive/restore persisted categories while preserving historical references and denying new unavailable assignments.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-CAMPAIGN-DRAFTS",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Supported campaign and system-alert drafts, audience and lifecycle changes persist rather than reporting fake success.",
+      "before": "Campaign forms cleared local state without persistent lifecycle.",
+      "implemented": "Private versioneddrafts persist template/campaign/reward/coupon state with reason/archive/restore and explicit audience.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "CurrentAPI draftfreshread/archive/conflict guards pass; stale409 returns147\u2013165ms unchangedrows. DeployedUI shows savedemail/push/inappdrafts.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-conflict-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-campaign-delivery.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications/system-alerts",
+          "at": "2026-10-03T18:37:00.375Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-email-provider.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications/email",
+          "at": "2026-10-03T18:37:00.999Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Persisted versioned drafts, explicit audience, archive/restore and HTTP409 stale-write conflicts; provider-disabled email/push retain content and truthfully reject delivery.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-CAMPAIGN-DELIVERY",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Campaign delivery occurs only through a configured supported channel and intended audience, with real delivery state instead of clearing a fake form.",
+      "before": "Delivery controls implied unsupported sends without stored results.",
+      "implemented": "Supportedinappdelivery and scheduledcron are atomic/idempotent/explicitrecipient; email/push remain truthfulunconfigured.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Immediate1notificationrecipient120 withreadreceipt; actualcron08:32delivered scheduledcampaign exactlyonce and replaydidnotduplicate. Exactly1activecronjob. Email/pushfailure preservesdraft.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-production-technical-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-campaign-delivery.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications/system-alerts",
+          "at": "2026-10-03T18:37:00.375Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-email-provider.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/notifications/email",
+          "at": "2026-10-03T18:37:00.999Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Actual in-app immediate delivery and scheduled delivery to explicit synthetic recipient120 only; one real pg_cron execution and replay deduplication. Email and push providers remain unconfigured, preserve drafts and cannot report success.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-TEMPLATES",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Notification/email template edits persist supported template content and clearly state whether a live provider uses them.",
+      "before": "Template forms did not persist edits.",
+      "implemented": "Shared notification/email template content persists; saving doesnotpretend toconfigureexternalprovider.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Template edited throughdeployedUI, savedandreopenedafterreload; updatedbodypresent inCUADOM. LaterPNGinvalidstalepixels; needsrecapture.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+        "Persisted synthetic template reopened with stored message body"
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-conflict-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-templates.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+          "at": "2026-10-03T18:37:11.962Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-template-reloaded.png",
+          "scope": "Persisted synthetic template reopened with stored message body",
+          "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+          "at": "2026-10-03T18:37:27.189Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-edit.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": null,
+          "at": "2026-10-03T18:03:23.235Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Notification/email template edits persist supported template content and clearly state whether a live provider uses them.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-REWARD-RULES",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Nitro reward-rule views/configuration reflect the authoritative implemented reward amounts and do not silently change client requirements.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "AuthoritativeapprovedNitro2/10/10/verification0rulesandactualledger; nounreviewedamountchanges.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Currentadapter and deployedrules table show participant2/referral10/PlayStore10/verification0.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-reward-rules.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/rewards/coins",
+          "at": "2026-10-03T18:35:57.640Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Nitro reward-rule views/configuration reflect the authoritative implemented reward amounts and do not silently change client requirements.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-REWARD-CATALOG",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Supported reward catalog configuration persists, while actual fulfillment remains distinguished from unavailable provider integration.",
+      "before": "Catalog proposals were empty/nonpersistent.",
+      "implemented": "Versionedrewardproposalconfiguration persists; fulfillment/economics are explicitdependencies.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "CurrentAPI save/read/archive/staleguardpassed; deployed rewardproposalvisible and providerboundaryexplained.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-reward-catalog.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/rewards/catalog",
+          "at": "2026-10-03T18:36:35.930Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Versioned catalog proposal persistence only. Approved redemption economics and a fulfillment provider are not configured; no issued reward or real fulfillment is claimed.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-COUPONS",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Supported coupon configuration/lifecycle persists and distinguishes configuration from actual redeemable provider fulfillment.",
+      "before": "Coupon proposals were empty/nonpersistent.",
+      "implemented": "Versionedcouponproposals persist; nofakeactualredemption withoutprovider/economics.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "CurrentAPI save/read/archive/staleguardpassed; deployed couponproposalvisible.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-coupons.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/rewards/coupons",
+          "at": "2026-10-03T18:36:36.533Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Versioned coupon proposal persistence only. Approved coupon economics and redeeming provider are not configured; no redeemable live coupon is claimed.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-BADGE-CATALOG",
+      "status": "PENDING_DEPLOYED_RETEST",
+      "proposalOnly": true,
+      "requestedChange": "Admin badge presentation shows the authoritative 22-badge definitions and legitimate progress/awards rather than editable fake rules.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Achievementcatalog filters canonicalmetric-bearing22definitions in display_order, preserving separatelegacyverificationrows.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "productionVerification": [
+        "Productionadapterfound25oldrows caused fix6d3230f; actualfixedsource againstproductionreturns22, unitadaptercheckslegacyexclusion/order/awardcount. Freshdeployed22imagepending."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json",
+        "docs/chat001-admin-regression-local-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+      "remainingValidation": [
+        "The local regression correction is not yet verified on the coordinated replacement deployment. Fresh deployed screenshot and behavior check are required.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-LEADERBOARD",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Rewards leaderboard uses actual qualifying Nitro/badge/profile records and correct identity presentation.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "ActualpositiveNitro/referralledger overrolling7/30/alltime; spendingnotdeductedfromearned, restrictedmembers excluded.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Actualsourceadapter verifiedsort; deployed table/periodcontrols/explanatoryscope loaded withrealrecords.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-leaderboard.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/rewards/leaderboard",
+          "at": "2026-10-03T18:36:59.807Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Rewards leaderboard uses actual qualifying Nitro/badge/profile records and correct identity presentation.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-FEATURE-SETTINGS",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Feature settings reflect supported persisted/enforced behavior and explicitly identify immutable or unsupported settings without fake save feedback.",
+      "before": "Feature toggles had no persisted server enforcement.",
+      "implemented": "FourpersistedAdmincreationgates enforceDBtriggers; immutable releaseconfiguration accuratelylabelled.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "All4productiongatesreadON; rollbacktransactionactivitiesdisabled actualcreate_activitydenied42501 thenallON. Allfourtriggerrowtypes testedreal localPostgres; no committedglobaldisable.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-admin-production-technical-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-feature-controls.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/settings/features",
+          "at": "2026-10-03T18:34:55.038Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Four persisted creation gates, four real local PostgreSQL trigger tests, production enabled state plus rollback-only Activity creation denial. No global production feature-disable was committed.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-LANGUAGE-SETTINGS",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Language settings reflect supported application language behavior and do not imply nonexistent translations or enforcement.",
+      "before": "Language actions implied translations that were not implemented.",
+      "implemented": "SupportedEnglishlanguage explicitlyshown; nofake untranslatedtoggles.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployedlanguageview Englishonly and clearadditionaltranslationdependency.",
+        "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-languages.png",
+          "scope": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately.",
+          "url": "https://wenitro-admin-roan.vercel.app/settings/languages",
+          "at": "2026-10-03T18:35:56.864Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "English support and truthful disabled/unavailable states only. Additional translation bundles are absent and are not represented as active languages.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-HEADER-SEARCH",
+      "status": "PASS",
+      "proposalOnly": true,
+      "requestedChange": "Admin header search submits the current query, returns actual authorized matching data and updates when the query changes.",
+      "before": "Changing header search on the same route could retain the previous query.",
+      "implemented": "Headersearchusescurrentquery andsame-routeupdates correctly withauthorizedrealresults.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Two deployedqueries QA Audit then Historical category changedmember/activityresults correctly; bothscreensvalid."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-search-first.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": "https://wenitro-admin-roan.vercel.app/search?q=QA%20Audit",
+          "at": "2026-10-03T18:01:40.084Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-search-second.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+          "at": "2026-10-03T18:01:42.556Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Admin header search submits the current query, returns actual authorized matching data and updates when the query changes.",
+      "reason": "No missing implementation within the stated scope; final replacement-release review remains outstanding.",
+      "remainingValidation": [
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-HEADER-NOTIFICATIONS",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Admin header notification/review indicator reflects actual pending work and opens its working destination.",
+      "before": "This existing capability required production acceptance and authorized-data validation; no additional pre-fix defect is asserted for this row.",
+      "implemented": "Livependingreportindicator opens actualreviewqueue.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Deployedbannerpendingcount5 andclickroutedPendingReports withstored5Vibereports afterload. Screenshotstaleexcluded."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-read-models-proof.json"
+      ],
+      "screenshotProof": [],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "DOM navigation and actual pending count were observed; all earlier relevant Chrome images were stale and excluded. Fresh header-to-queue interaction image remains pending.",
+      "remainingValidation": [
+        "DOM navigation and actual pending count were observed; all earlier relevant Chrome images were stale and excluded. Fresh header-to-queue interaction image remains pending.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    },
+    {
+      "id": "ADMIN-HEADER-HELP-PROFILE",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "proposalOnly": true,
+      "requestedChange": "Admin help/profile controls expose actual guidance and current account/role information.",
+      "before": "Header controls lacked complete working guidance/account behavior.",
+      "implemented": "Actualhelpdialogandcurrentauthenticatedadministrator profilemenu/dialog.",
+      "localVerification": [
+        "docs/chat001-agent-admin-report.md",
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "productionVerification": [
+        "Helpimagevalid. Deployedprofiledialog showscurrentAdminemail/role/lastsign-in; screenshotstaleexcluded."
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-current-controls-proof.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-help.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+          "at": "2026-10-03T18:01:47.862Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-profile.png",
+          "scope": "Original screenshot matches the intended deployed screen.",
+          "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+          "at": "2026-10-03T18:01:49.169Z",
+          "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+        }
+      ],
+      "acceptanceScope": "Only the concrete API/UI observations recorded below are established; remaining scope is stated in reason.",
+      "reason": "Help and profile menu images are valid. The actual account/role/last-sign-in profile dialog still needs its correct screenshot.",
+      "remainingValidation": [
+        "Help and profile menu images are valid. The actual account/role/last-sign-in profile dialog still needs its correct screenshot.",
+        "Coordinator must review the final replacement App/Admin release before final acceptance."
+      ],
+      "screenshotsReviewed": false,
+      "screenshotReviewProvenance": "Root reports actual isolated IAB captures matched visible page; previous eight Chrome images were explicitly validated. Final coordinator image review remains unset.",
+      "releaseReviewed": false,
+      "release": {
+        "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+        "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+      }
+    }
+  ]
+}
