@@ -43,7 +43,7 @@ async function main(){
  };
  try{
   const signed=await client.auth.signInWithPassword({email:recipient.email,password:recipient.password});assert(!signed.error&&signed.data.user?.id===recipient.authId,'QA authentication failed');authenticated=true;baseline=await rewards();
-  const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD1sAAAAASUVORK5CYII=','base64');
+  const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNIC7kFAAK4AZWkHdrFAAAAAElFTkSuQmCC','base64');
   const upload=await client.storage.from('vibes').upload(fixture.mediaPath,png,{contentType:'image/png',upsert:false});assert(!upload.error,'Synthetic media upload failed');
   const created=await client.rpc('vibe_create',{p_event_id:null,p_media_path:fixture.mediaPath,p_media_type:'photo',p_caption:fixture.caption,p_hashtags:[],p_visibility:'public',p_show_in_vibes:true});assert(!created.error,'Synthetic public Vibe creation failed');
   const id=Number(created.data?.id);assert(Number.isSafeInteger(id)&&id>0);proof.fixture.vibeId=id;fs.writeFileSync(journal,JSON.stringify({...fixture,vibeId:id},null,2));
