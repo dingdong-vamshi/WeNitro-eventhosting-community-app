@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-03T20:06:10.339819+00:00",
+  "status": "LOCAL_PASS_PRODUCTION_RETEST_PENDING",
+  "baseAppCommit": "08b8bb8",
+  "requestedChanges": [
+    "Stable Vibe creator display name and Activity title after refresh",
+    "Visible private Activity invite sharing through chat, clipboard and external share",
+    "Owner public-profile route Squad metric consistent with own profile; unavailable counts remain unknown for other users",
+    "Clipboard failures do not report copied success"
+  ],
+  "implemented": [
+    "Authenticated RLS title lookup for actual referenced event IDs; canonical name precedence in both App mapping paths.",
+    "Host/co-host creates invite and opens ShareToChat sheet. Shared text retains invitation token and recipients redeem through existing guarded RPC before navigation. Private content is not exposed through public card-sharing.",
+    "Partial chat delivery retry retains completed room results, avoiding duplicate successful-room sends.",
+    "Web Share undefined resolution counts as completion; dismissed/AbortError do not. Failure is visible inline with selectable link and Copy fallback.",
+    "Owner metric checks authenticated identity before and after my_profile_metrics; other profile counts are not inferred from RLS-filtered zero rows.",
+    "SOS and Share clipboard false result shows selectable fallback instead of copied success."
+  ],
+  "localVerification": [
+    {
+      "suite": "scripts/vibe-metadata-share-regression-test.mjs",
+      "checks": 36,
+      "status": "PASS"
+    },
+    {
+      "suite": "scripts/activity-safety-actions-test.mjs",
+      "checks": 31,
+      "status": "PASS"
+    },
+    {
+      "suite": "scripts/activity-vibe-visibility-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "suite": "scripts/phase3-vibe-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "suite": "scripts/activity-share-observation-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "suite": "scripts/phase5-profile-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "suite": "scripts/chat-ui-regression-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "suite": "scripts/chat-realtime-regression-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "suite": "scripts/frontend-safe-overrides-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "suite": "npm run typecheck",
+      "status": "PASS"
+    }
+  ],
+  "productionVerification": [
+    "Only read-only pre-fix metadata diagnosis; actual new UI release and screenshot retest remains coordinator-owned."
+  ],
+  "technicalProof": [
+    "docs/chat001-vibe135-metadata-readback.json"
+  ],
+  "requiredProductionRetest": [
+    "Reload Vibe135 after paged discovery; full name and authorized title persist.",
+    "Private Activity300 Host Share opens visible sheet; select recipient, send invite; recipient redeems via guarded flow.",
+    "Copy link shows success only on successful clipboard write; unsupported external share has inline fallback.",
+    "Own-profile/public-route120 Squad count1; other public views show unavailable where no public metric is authorized."
+  ],
+  "financialReadback": {
+    "at": "2026-10-03T20:02:53.483Z",
+    "orderId": "wn_297_116_07ff0548003d4e09822f",
+    "cfPaymentId": "1460000138672958464",
+    "orderStatus": "ACTIVE",
+    "paymentStatus": "PENDING",
+    "paymentGroup": "net_banking",
+    "source": "Official Cashfree Sandbox GET order/payments; no provider or database mutation",
+    "redirectUrlAvailable": false,
+    "sensitiveResponse": "Ignored primary/tmp/chat001-cashfree297-provider-readback.json; never commit customer/session credentials."
+  }
+}

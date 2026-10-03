@@ -8,6 +8,7 @@ export type InternalShareEntity = {
   preview: string;
   thumbnailUrl?: string | null;
   creatorName?: string | null;
+  inviteUrl?: string;
 };
 
 type ShareRequestListener = (entity: InternalShareEntity) => void;
@@ -38,11 +39,20 @@ export function subscribeToSharedContentNavigation(listener: NavigationListener)
   };
 }
 
-export async function shareEntityExternally(entity: InternalShareEntity) {
+export function shareEntityUrl(entity: InternalShareEntity) {
+  if (entity.inviteUrl) {
+    if (entity.kind !== "activity" || !/^(?:https?:\/\/[^\s#]+#\/activity-invite\/|wenitro:\/\/activity\/invite\/)[0-9a-f-]{36}$/i.test(entity.inviteUrl)) throw new Error("Invalid Activity invite link.");
+    return entity.inviteUrl;
+  }
   const base = "https://wenitro-app.vercel.app";
   const canonicalUrl = entity.kind === "vibe"
     ? `${base}/share/vibe/${encodeURIComponent(entity.id)}`
     : `${base}/#/${entity.kind.replace("_", "-")}/${encodeURIComponent(entity.id)}`;
+  return canonicalUrl;
+}
+
+export async function shareEntityExternally(entity: InternalShareEntity) {
+  const canonicalUrl = shareEntityUrl(entity);
   const caption = `${entity.title}\n\n${entity.preview}\n\n${canonicalUrl}\n\nShared from WeNitro`;
   try {
     const result = await Share.share({
@@ -50,7 +60,7 @@ export async function shareEntityExternally(entity: InternalShareEntity) {
       url: canonicalUrl,
       message: Platform.OS === "ios" ? `${entity.title}\n\n${entity.preview}\n\nShared from WeNitro` : caption,
     });
-    return result.action === Share.sharedAction;
+    return (Platform.OS === "web" && result == null) || result?.action === Share.sharedAction;
   } catch (error) {
     if (error && typeof error === 'object' && 'name' in error && error.name === 'AbortError') return false;
     throw error;

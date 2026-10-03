@@ -1,9 +1,9 @@
+import * as Clipboard from "expo-clipboard";
 import { recordActivityShare } from '../services/activity-usage';
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Image,
   Modal,
   Pressable,
@@ -15,7 +15,7 @@ import {
 } from "react-native";
 
 import { chatService } from "../services/wenitro";
-import { shareEntityExternally, type InternalShareEntity } from "../services/internal-share";
+import { shareEntityExternally, shareEntityUrl, type InternalShareEntity } from "../services/internal-share";
 import type { ChatMessage } from "../services/realtime-chat";
 import { MobileOverlayFrame } from "./mobile-app-shell";
 import { UserAvatar } from "./user-avatar";
@@ -75,17 +75,19 @@ export function ShareToChatModal({
   onSent: (roomIds: string[], messages: ChatMessage[], targets: ResolvedShareTarget[]) => void;
 }) {
   const c = usePalette();
+  const sentInvites = useRef(new Map<string, ChatMessage>());
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [sending, setSending] = useState(false);
   const [feedback, setFeedback] = useState<{ tone: "error" | "success"; text: string } | null>(null);
 
   useEffect(() => {
+    sentInvites.current.clear();
     setQuery("");
     setSelected([]);
     setSending(false);
     setFeedback(null);
-  }, [entity?.kind, entity?.id]);
+  }, [entity?.kind, entity?.id, entity?.inviteUrl]);
 
   const allTargets = useMemo(() => {
     const directUserIds = new Set(
@@ -149,7 +151,19 @@ export function ShareToChatModal({
       })));
       const roomIds = resolved.map(target => target.roomId);
       const uniqueRoomIds = [...new Set(roomIds)];
-      const messages = await chatService.share(uniqueRoomIds, entity.kind, entity.id);
+      const messages: ChatMessage[] = [];
+      if (entity.inviteUrl) {
+        const link = shareEntityUrl(entity);
+        for (const roomId of uniqueRoomIds) {
+          let message = sentInvites.current.get(roomId);
+          if (!message) {
+            const sent = await chatService.sendMessage(roomId, `Private Activity invitation: ${entity.title}\n\n${link}`);
+            message = { ...sent, id: Number(sent.id) };
+            sentInvites.current.set(roomId, message);
+          }
+          messages.push(message);
+        }
+      } else messages.push(...await chatService.share(uniqueRoomIds, entity.kind, entity.id));
       onSent(uniqueRoomIds, messages, resolved.filter((target, index, all) => all.findIndex(item => item.roomId === target.roomId) === index));
       setSelected([]);
       setFeedback({ tone: "success", text: `Sent to ${uniqueRoomIds.length} chat${uniqueRoomIds.length === 1 ? "" : "s"}.` });
@@ -167,8 +181,17 @@ export function ShareToChatModal({
       const shared = await shareEntityExternally(entity);
       if (shared && entity.kind === 'activity') void recordActivityShare(entity.id);
     } catch (error) {
-      Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.");
+      setFeedback({ tone: "error", text: error instanceof Error ? error.message : "Could not share. Use Copy link below." });
     }
+  };
+
+  const copyLink = async () => {
+    if (!entity) return;
+    try {
+      if (!await Clipboard.setStringAsync(shareEntityUrl(entity))) throw new Error("Clipboard unavailable. Select and copy the displayed link.");
+      setFeedback({ tone: "success", text: "Link copied." });
+      if (entity.kind === 'activity') void recordActivityShare(entity.id);
+    } catch (error) { setFeedback({ tone: "error", text: error instanceof Error ? error.message : "Select and copy the displayed link." }); }
   };
 
   return (
@@ -226,9 +249,10 @@ export function ShareToChatModal({
           </ScrollView>
           {feedback ? <View accessibilityRole="alert" style={[styles.feedback, { backgroundColor: feedback.tone === "success" ? (c.isDark ? "#163B2D" : "#E2F7EC") : (c.isDark ? "#4A2229" : "#FDECEF") }]}><Ionicons name={feedback.tone === "success" ? "checkmark-circle" : "alert-circle"} size={19} color={feedback.tone === "success" ? "#23956B" : c.danger} /><Text style={[styles.feedbackText, { color: feedback.tone === "success" ? (c.isDark ? "#9AE6C5" : "#176848") : c.danger }]}>{feedback.text}</Text></View> : null}
           <Pressable accessibilityRole="button" accessibilityLabel="Send shared item" accessibilityState={{ disabled: !selected.length || sending }} onPress={send} disabled={!selected.length || sending} style={[styles.send, (!selected.length || sending) && styles.sendDisabled]}>
-            {sending ? <ActivityIndicator color="#fff" /> : <Ionicons name={feedback?.tone === "success" ? "checkmark-circle" : "send"} size={20} color="#fff" />}
-            <Text style={styles.sendText}>{sending ? "Sending..." : feedback?.tone === "success" ? "Sent" : `Send${selected.length ? ` (${selected.length})` : ""}`}</Text>
+            {sending ? <ActivityIndicator color="#fff" /> : <Ionicons name={feedback?.text.startsWith("Sent to ") ? "checkmark-circle" : "send"} size={20} color="#fff" />}
+            <Text style={styles.sendText}>{sending ? "Sending..." : feedback?.text.startsWith("Sent to ") ? "Sent" : `Send${selected.length ? ` (${selected.length})` : ""}`}</Text>
           </Pressable>
+          {entity ? <View style={{ paddingHorizontal: 12, gap: 8 }}><Text selectable style={{ color: c.muted, fontSize: 12 }}>{shareEntityUrl(entity)}</Text><Pressable accessibilityRole="button" accessibilityLabel="Copy share link" onPress={() => void copyLink()} style={{ paddingVertical: 12 }}><Text style={{ color: c.accent, fontWeight: "700" }}>Copy link</Text></Pressable></View> : null}
           <Pressable accessibilityRole="button" accessibilityLabel="Share externally" style={styles.external} onPress={shareExternally}>
             <Ionicons name="share-outline" size={20} color={c.accent} />
             <Text style={[styles.externalText, { color: c.accent }]}>Share externally</Text>

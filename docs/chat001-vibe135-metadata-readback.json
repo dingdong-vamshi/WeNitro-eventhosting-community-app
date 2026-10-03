@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-03T19:55:09.387Z",
+  "source": "Read-only authenticated120",
+  "vibe": {
+    "id": 135,
+    "event_id": 300,
+    "user_id": 120,
+    "visibility": "activity",
+    "show_in_vibes": true,
+    "caption": "[QA] Participant feed video moment"
+  },
+  "author": {
+    "id": 120,
+    "username": "qa_chat001_integrated_recipient_1791015725247_d39975f2d89b",
+    "fullname": "QA Audit recipient"
+  },
+  "event": {
+    "id": 300,
+    "title": "[QA] CHAT001 private media and safety acceptance",
+    "status": "published"
+  },
+  "diagnosis": {
+    "author": "App hydration preferred username over full_name; optimistic compose had used name.",
+    "eventTitle": "Vibe service did not load event title; App depended on current paged discovery activities.",
+    "implementation": "New service reads allowed event titles with ordinary authenticated tbl_events RLS; App uses full_name first and service title. No backend grants altered."
+  }
+}

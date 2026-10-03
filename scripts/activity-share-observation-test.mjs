@@ -12,6 +12,7 @@ const activity={kind:'activity',id:'123',title:'Test activity',preview:'Tomorrow
 assert.equal(await share.shareEntityExternally(activity),true);
 assert.equal(payload.url,'https://wenitro-app.vercel.app/#/activity/123');
 assert.match(payload.message,/Shared from WeNitro/);
+outcome=undefined;assert.equal(await share.shareEntityExternally(activity),true,'Web Share returns undefined on successful completion');
 outcome={action:'dismissedAction'};assert.equal(await share.shareEntityExternally(activity),false);
 outcome=Object.assign(new Error('Cancelled'),{name:'AbortError'});assert.equal(await share.shareEntityExternally(activity),false);
 outcome=new Error('Device share failure');await assert.rejects(share.shareEntityExternally(activity),/Device share failure/);
@@ -21,7 +22,7 @@ for(const id of ['bad','0','-1','1.5','9007199254740992']) await usage.recordAct
 assert.equal(observations.length,0);
 await usage.recordActivityShare('123');assert.deepEqual(observations,[{name:'record_activity_share',args:{p_event_id:123}}]);
 const app=fs.readFileSync('App.tsx','utf8'),modal=fs.readFileSync('src/components/ShareToChatModal.tsx','utf8');
-assert.match(app,/result.action === Share.sharedAction\) void recordActivityShare\(activity.id\)/);
+assert.match(app,/requestInternalShare\(\{ kind: "activity", id: activity.id,[^\n]+inviteUrl: link/);
 assert.match(app,/shareEntity\?\.kind === "activity" && messages.length\) void recordActivityShare/);
 assert.match(modal,/shared && entity.kind === 'activity'\) void recordActivityShare/);
 console.log('PASS behavioral: successful share, dismissal, Web AbortError, real error propagation, canonical payload; invalid IDs ignored and observation failure nonblocking. Three source guards additionally locate post-success observation calls. No remote writes.');

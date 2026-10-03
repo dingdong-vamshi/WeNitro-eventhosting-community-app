@@ -276,6 +276,17 @@ export function ReferenceProfile({ data, setData, go, openActivity, openDraft, o
  {contact && <ContactSheet contact={contact} close={() => setContact(null)} />}{uploadNotice}</>;
 }
 
+async function ownSquadMetric(viewedUserId: number) {
+ const identity = await supabase.rpc('get_current_app_user_id');
+ if (identity.error) return { count: null, error: identity.error };
+ if (Number(identity.data) !== viewedUserId) return { count: null, error: null };
+ const result = await supabase.rpc('my_profile_metrics');
+ const currentIdentity = await supabase.rpc('get_current_app_user_id');
+ if (currentIdentity.error || Number(currentIdentity.data) !== viewedUserId) return { count: null, error: currentIdentity.error };
+ const metric = result.data && typeof result.data === 'object' && !Array.isArray(result.data) ? result.data as Record<string, unknown> : {};
+ return { count: result.error || typeof metric.squad !== 'number' ? null : metric.squad, error: result.error };
+}
+
 export function ReferenceMemberProfile({ id, back, onConversation, onOpenActivity, onOpenVibe, onOpenSquad, onOpenCommunity, onOpenProfile }: { id: string; back: () => void; onConversation: (id: string, person: any) => void; onOpenActivity: (activity: Activity) => void; onOpenVibe: (id: string) => void; onOpenSquad: (id: string) => void; onOpenCommunity: (id: string) => void; onOpenProfile: (id: string) => void }) {
  const [person, setPerson] = useState<any>(null), [metrics, setMetrics] = useState<Metrics | null>(null), [links, setLinks] = useState<SocialLinks>({}), [vibes, setVibes] = useState<VibeReel[]>([]), [reviews, setReviews] = useState<ProfileReview[]>([]), [hosted, setHosted] = useState<Activity[]>([]), [tab, setTab] = useState<Tab>('My Vibes'), [error, setError] = useState(''), [loading, setLoading] = useState(true), [contact, setContact] = useState(false), [busy, setBusy] = useState(false), [gallery, setGallery] = useState<GalleryItem[]>([]), [preview, setPreview] = useState<string | null>(null);
  const [vibesLoaded, setVibesLoaded] = useState(false), [reviewsLoaded, setReviewsLoaded] = useState(false), [tabLoading, setTabLoading] = useState(false), [tabError, setTabError] = useState(''), [tabRetry, setTabRetry] = useState(0), [vibeCursor, setVibeCursor] = useState<string | null>(null);
@@ -291,7 +302,7 @@ export function ReferenceMemberProfile({ id, back, onConversation, onOpenActivit
   const [m, a, squad, photos, joined, trust] = await Promise.all([
    supabase.from('tbl_users').select('id,rating,points,isverified').eq('id', userId).maybeSingle(),
    activitiesProductionService.listPublicHosted(id, { pageSize: 20 }),
-   supabase.from('tbl_friends').select('id', { count: 'exact', head: true }).or(`user_id.eq.${userId},friend_id.eq.${userId}`),
+   ownSquadMetric(userId),
    referenceDeltaService.listPublicProfilePhotos(userId),
    supabase.from('tbl_event_participants').select('id', { count: 'exact', head: true }).eq('user_id', userId).in('status', ['going', 'approved', 'paid']),
    Promise.resolve(supabase.rpc('profile_trust_score', { p_user_id: userId })).catch(() => ({ data: null, error: null })),

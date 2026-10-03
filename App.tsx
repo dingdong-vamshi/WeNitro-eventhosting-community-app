@@ -8,7 +8,7 @@ import { ReferenceEditProfile } from './src/components/reconstruction/edit-profi
 import { SocialProfilesScreen } from './src/components/reconstruction/social-profiles';
 import { ReferenceInviteSquad } from './src/components/reconstruction/invite-squad';
 import { captureReferral, redeemPendingReferral } from './src/services/referrals';
-import { captureActivityInvite, createActivityInvite, redeemPendingActivityInvite } from './src/services/activity-invites';
+import { activityInviteTokenFromUrl, captureActivityInvite, createActivityInvite, redeemPendingActivityInvite } from './src/services/activity-invites';
 import { ReferenceCollection } from "./src/components/reconstruction/collections";
 import { CommunityInfo } from "./src/components/community/community-info";
 import { ReferenceFeed, ReferenceSearch } from "./src/components/reconstruction/feed-search";
@@ -684,7 +684,7 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
   const activities: Activity[] = remote.activities.map(activityFromRemote);
   const vibes: Vibe[] = remote.vibes.map((item: any) => ({
     id: item.id,
-    author: item.profiles?.username || item.profiles?.full_name || "",
+    author: item.profiles?.full_name || item.profiles?.username || "",
     authorId: item.owner_id ? String(item.owner_id) : undefined,
     authorAvatar: runtimeString(item.profiles, ["profile_image", "avatar_url", "avatar"]),
     activityId: item.event_id ? String(item.event_id) : undefined,
@@ -852,11 +852,11 @@ function hydrateRemoteData(remote: any, fallback: AppData): AppData {
 function vibeFromReel(reel: VibeReel, data: Pick<AppData, "userId" | "activities">): Vibe {
   return {
     id: reel.id,
-    author: reel.author?.username || reel.author?.full_name || "WeNitro member",
+    author: reel.author?.full_name || reel.author?.username || "WeNitro member",
     authorId: reel.userId || undefined,
     authorAvatar: reel.author?.avatar_url || undefined,
     activityId: reel.activityId || undefined,
-    event: data.activities.find((activity) => activity.id === reel.activityId)?.title || "",
+    event: reel.activityTitle || data.activities.find((activity) => activity.id === reel.activityId)?.title || "",
     text: reel.caption,
     hashtags: reel.hashtags,
     likes: reel.likeCount,
@@ -4631,8 +4631,7 @@ export function ActivityDetailScreen({
     if (activity.visibility === "private") {
       try {
         const link = await createActivityInvite(activity.id);
-        const result = await Share.share({ title: activity.title, message: `Join my private WeNitro Activity: ${activity.title}\n\n${link}`, url: link });
-        if (result.action === Share.sharedAction) void recordActivityShare(activity.id);
+        requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: "Private invitation — open the link to request access.", inviteUrl: link });
       } catch (caught) {
         if (caught && typeof caught === "object" && "name" in caught && caught.name === "AbortError") return;
         Alert.alert("Invite could not be shared", caught instanceof Error ? caught.message : "Please try again.");
@@ -4647,7 +4646,7 @@ export function ActivityDetailScreen({
     setSafetyBusy(true); setSafetyMessage("");
     try {
       if (action === "share") await Share.share({ title: activity.title, message: safetyDetails });
-      else if (action === "copy") { await Clipboard.setStringAsync(safetyDetails); setSafetyMessage("Activity details copied. Send them to someone you trust."); }
+      else if (action === "copy") { if (!await Clipboard.setStringAsync(safetyDetails)) throw new Error("Clipboard unavailable. Select and copy the Activity details shown below."); setSafetyMessage("Activity details copied. Send them to someone you trust."); }
       else {
         const contact = await referenceDeltaService.getEmergencyContact();
         if (!contact.phone_number || !/^[6-9]\d{9}$/.test(contact.phone_number)) {
@@ -5064,6 +5063,7 @@ export function ActivityDetailScreen({
         <Text style={[styles.detailBody, { color: palette.text }]}>Make sure to share your activity details and live location with someone you trust.</Text>
         <Text style={[styles.detailBody, { color: palette.muted }]}>Share these details now. Use your messaging app to share live location. WeNitro does not track your location or contact emergency services.</Text>
         <Text style={[styles.detailBody, { color: palette.muted }]}>Hosts and confirmed participants receive an in-app safety reminder around 10 minutes before the Activity starts. Background push delivery is not available in this build.</Text>
+        <Text selectable style={{ color: palette.muted, fontSize: 12 }}>{safetyDetails}</Text>
         <Button label="Share Activity details" disabled={safetyBusy} onPress={() => void runSafetyAction("share")} />
         <Button label="Copy Activity details" variant="outline" disabled={safetyBusy} onPress={() => void runSafetyAction("copy")} />
         <Button label="Call trusted contact" variant="outline" disabled={safetyBusy} onPress={() => void runSafetyAction("call")} />
@@ -5096,6 +5096,15 @@ export function ActivityDetailScreen({
 function ChatMessageVideo({ uri }: { uri: string }) {
   const player = useVideoPlayer(uri);
   return <VideoView player={player} style={styles.dynamicMessageImage} contentFit="cover" nativeControls />;
+}
+
+async function redeemChatInvitation(text: string) {
+  const link = text.split(/\s+/).find(part => activityInviteTokenFromUrl(part));
+  if (!link) throw new Error("This message has no valid Activity invitation.");
+  await captureActivityInvite(link);
+  const id = await redeemPendingActivityInvite();
+  if (!id) throw new Error("This invitation is no longer available.");
+  openSharedContent({ version: 1, kind: "activity", entityId: id, parentId: null, title: "Activity invitation", preview: "", deepLink: `wenitro://activity/${id}`, sharedBy: 0, thumbnailBucket: null, thumbnailPath: null, thumbnailUrl: null });
 }
 
 export function ChatScreen({
@@ -5132,6 +5141,7 @@ export function ChatScreen({
   const [groupPhoto, setGroupPhoto] = useState<string | null>(null);
   const [groupMembers, setGroupMembers] = useState<string[]>([]);
   const [chatStatus, setChatStatus] = useState("offline");
+  const [inviteError, setInviteError] = useState("");
   const [typing, setTyping] = useState(false);
   const [messageCursors, setMessageCursors] = useState<
     Record<string, { createdAt: string; id: number } | null | undefined>
@@ -5139,7 +5149,7 @@ export function ChatScreen({
   const [loadingOlder, setLoadingOlder] = useState(false);
   const threadScroll = useRef<ScrollView>(null);
   const followLatest = useRef(true);
-  useEffect(() => { followLatest.current = true; }, [selectedConversationId]);
+  useEffect(() => { followLatest.current = true; setInviteError(""); }, [selectedConversationId]);
   const [groupInfoOpen, setGroupInfoOpen] = useState(false);
   const [groupInfoLoading, setGroupInfoLoading] = useState(false);
   const [groupInfoError, setGroupInfoError] = useState('');
@@ -5805,6 +5815,7 @@ export function ChatScreen({
           style={[styles.chatThreadScroll, { backgroundColor: palette.bg }]}
           contentContainerStyle={styles.chatThreadContent}
         >
+          {inviteError ? <Text accessibilityRole="alert" style={{ color: palette.danger, padding: 12 }}>{inviteError}</Text> : null}
           {messageCursors[selected.id] ? (
             <Pressable
               disabled={loadingOlder}
@@ -5858,6 +5869,10 @@ export function ChatScreen({
                   {message.text}
                 </Text>
               ) : null}
+              {message.text && !message.share && message.text.split(/\s+/).some(part => activityInviteTokenFromUrl(part)) ? <Pressable accessibilityRole="button" accessibilityLabel="Open Activity invitation" onPress={() => {
+                setInviteError("");
+                void redeemChatInvitation(message.text).catch(error => setInviteError(error instanceof Error ? error.message : "Invitation unavailable. Please try again."));
+              }} style={{ paddingVertical: 10 }}><Text style={{ color: palette.accent, fontWeight: "700" }}>Open Activity invitation</Text></Pressable> : null}
               <View style={styles.dynamicMessageMeta}>
                 {message.mine ? <Pressable accessibilityRole="button" accessibilityLabel="Delete message" onPress={() => void deleteOwnMessage(message)} hitSlop={8}><Icon name="trash-outline" color="rgba(255,255,255,.72)" size={14} /></Pressable> : null}
                 <Text

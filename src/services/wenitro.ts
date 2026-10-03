@@ -614,6 +614,7 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
       id: reel.id,
       owner_id: reel.userId,
       event_id: reel.activityId,
+      activity_title: reel.activityTitle,
       caption: reel.caption || "WeNitro Vibe",
       media_url: reel.mediaUrl,
       media_type: reel.mediaType,

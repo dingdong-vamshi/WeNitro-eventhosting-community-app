@@ -36,6 +36,7 @@ export type VibeProfile = {
 export type VibeReel = {
   id: string;
   activityId: string | null;
+  activityTitle?: string | null;
   userId: string;
   mediaUrl: string;
   mediaType: VibeMediaType;
@@ -307,6 +308,17 @@ async function profilesFor(ids: number[]) {
   return profiles;
 }
 
+// Resolve titles through the caller's ordinary RLS access, independently of
+// the paged discovery feed. Denied/missing Activities never gain a title here.
+async function activityTitlesFor(ids: number[]) {
+  const titles = new Map<number, string>();
+  if (!ids.length) return titles;
+  const { data, error } = await supabase.from("tbl_events").select("id,title").in("id", [...new Set(ids)]);
+  if (error) throw error;
+  for (const row of data ?? []) if (row.title) titles.set(row.id, row.title);
+  return titles;
+}
+
 export async function uploadVibeMedia(
   media: VibeMediaInput,
   mediaType: VibeMediaType,
@@ -376,8 +388,9 @@ export async function listReels(
   const hasMore = rows.length > pageSize;
   const pageRows = rows.slice(0, pageSize);
   const vibeIds = pageRows.map((row) => row.id);
-  const [profiles, likesResult, commentsResult] = await Promise.all([
+  const [profiles, titles, likesResult, commentsResult] = await Promise.all([
     profilesFor(pageRows.flatMap((row) => (row.user_id ? [row.user_id] : []))),
+    activityTitlesFor(pageRows.flatMap((row) => row.event_id === null ? [] : [row.event_id])),
     legacyUserId && vibeIds.length
       ? supabase
           .from("tbl_vibe_likes")
@@ -416,6 +429,7 @@ export async function listReels(
       return {
         id: String(row.id),
         activityId: row.event_id === null ? null : String(row.event_id),
+        activityTitle: row.event_id === null ? null : titles.get(row.event_id) ?? null,
         userId: row.user_id === null ? "" : String(row.user_id),
         mediaUrl,
         mediaType: row.media_type === "video" ? "video" : "image",
@@ -461,8 +475,9 @@ export async function getReel(vibeId: string): Promise<VibeReel> {
   if (error) throw error;
   if (!data) throw new Error("This Vibe is unavailable or no longer visible to you.");
   const row = data as LegacyVibe;
-  const [profiles, likedResult, commentsResult] = await Promise.all([
+  const [profiles, titles, likedResult, commentsResult] = await Promise.all([
     profilesFor(row.user_id ? [row.user_id] : []),
+    activityTitlesFor(row.event_id === null ? [] : [row.event_id]),
     legacyUserId ? supabase.from("tbl_vibe_likes").select("vibe_id").eq("vibe_id", row.id).eq("user_id", legacyUserId).maybeSingle() : Promise.resolve({ data: null, error: null }),
     supabase.from("tbl_vibe_comments").select("id", { count: "exact", head: true }).eq("vibe_id", row.id),
   ]);
@@ -470,6 +485,7 @@ export async function getReel(vibeId: string): Promise<VibeReel> {
   return {
     id: String(row.id),
     activityId: row.event_id === null ? null : String(row.event_id),
+    activityTitle: row.event_id === null ? null : titles.get(row.event_id) ?? null,
     userId: row.user_id === null ? "" : String(row.user_id),
     mediaUrl: await signedMediaUrl(row.media_url),
     mediaType: row.media_type === "video" ? "video" : "image",
