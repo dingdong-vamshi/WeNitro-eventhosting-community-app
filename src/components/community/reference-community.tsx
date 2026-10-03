@@ -7,7 +7,7 @@ import { useEvent } from 'expo';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { VideoView, useVideoPlayer } from 'expo-video';
-import { HOST_CATEGORIES } from '../../domain/host-activity';
+import { useActivityCategories } from '../../hooks/use-activity-categories';
 import { supabase } from '../../lib/supabase';
 import { communityService, uploadMedia } from '../../services/wenitro';
 import { communitiesProductionService, editCommunity, communityPoll, communityPollVoters, type CommunityDetail, type CommunityPoll, type CommunityPollVoter } from '../../services/communities-production';
@@ -26,6 +26,7 @@ const useCommunityStyles = () => { const c = usePalette(); const s = React.useMe
 
 export function CreateCommunitySheet({ onClose, onCreated, initial }: { initial?: CommunityDetail; onClose: () => void; onCreated: (community: CreatedCommunity) => void }) {
   const { c, s } = useCommunityStyles();
+  const catalog = useActivityCategories();
   const insets = useSafeAreaInsets();
   const [name, setName] = useState(initial?.name || ''), [description, setDescription] = useState(initial?.description || ''), [category, setCategory] = useState(initial?.category || '');
   const [avatar, setAvatar] = useState(initial?.imageUrl || ''), [cover, setCover] = useState(initial?.coverUrl || '');
@@ -83,7 +84,7 @@ export function CreateCommunitySheet({ onClose, onCreated, initial }: { initial?
         </ScrollView>
       </View>
     </KeyboardAvoidingView></MobileOverlayFrame>
-    <Modal transparent visible={categoryOpen} animationType="fade" onRequestClose={() => setCategoryOpen(false)}><MobileOverlayFrame><View style={s.categoryOverlay}><View style={s.categoryMenu}><View style={s.sheetHeader}><Text style={s.title}>Interest Category</Text><Pressable accessibilityRole="button" accessibilityLabel="Close categories" onPress={() => setCategoryOpen(false)} style={s.iconButton}><Icon name="close" /></Pressable></View><TextInput accessibilityLabel="Search categories" placeholder="Search categories" placeholderTextColor={c.muted} value={search} onChangeText={setSearch} style={[s.input, { margin: 14 }]} /><ScrollView keyboardShouldPersistTaps="handled">{HOST_CATEGORIES.filter(option => option.toLowerCase().includes(search.toLowerCase())).map(option => <Pressable accessibilityRole="button" key={option} onPress={() => { setCategory(option); setCategoryOpen(false); setSearch(''); }} style={[s.categoryOption, option === category && { backgroundColor: c.isDark ? '#5145B8' : '#EEEAFE' }]}><Text style={[s.body, option === category && !c.isDark && { color: c.accent }]}>{option}</Text>{option === category ? <Icon name="checkmark" color={c.accent} /> : null}</Pressable>)}{!HOST_CATEGORIES.some(option => option.toLowerCase().includes(search.toLowerCase())) ? <Text style={[s.muted, { padding: 18 }]}>No categories found</Text> : null}</ScrollView></View></View></MobileOverlayFrame></Modal>
+    <Modal transparent visible={categoryOpen} animationType="fade" onRequestClose={() => setCategoryOpen(false)}><MobileOverlayFrame><View style={s.categoryOverlay}><View style={s.categoryMenu}><View style={s.sheetHeader}><Text style={s.title}>Interest Category</Text><Pressable accessibilityRole="button" accessibilityLabel="Close categories" onPress={() => setCategoryOpen(false)} style={s.iconButton}><Icon name="close" /></Pressable></View><TextInput accessibilityLabel="Search categories" placeholder="Search categories" placeholderTextColor={c.muted} value={search} onChangeText={setSearch} style={[s.input, { margin: 14 }]} /><ScrollView keyboardShouldPersistTaps="handled">{catalog.names.filter(option => option.toLowerCase().includes(search.toLowerCase())).map(option => <Pressable accessibilityRole="button" key={option} onPress={() => { setCategory(option); setCategoryOpen(false); setSearch(''); }} style={[s.categoryOption, option === category && { backgroundColor: c.isDark ? '#5145B8' : '#EEEAFE' }]}><Text style={[s.body, option === category && !c.isDark && { color: c.accent }]}>{option}</Text>{option === category ? <Icon name="checkmark" color={c.accent} /> : null}</Pressable>)}{!catalog.names.some(option => option.toLowerCase().includes(search.toLowerCase())) ? <Text style={[s.muted, { padding: 18 }]}>No categories found</Text> : null}</ScrollView></View></View></MobileOverlayFrame></Modal>
     {pendingUpload ? <Sheet title="Upload Responsibly" close={() => setPendingUpload(null)}><Text style={{ color: c.muted, fontSize: 13, lineHeight: 20 }}>Upload only media relevant to this community. Inappropriate, explicit, hateful, or unrelated content may result in permanent account suspension.</Text><Button label="Continue" onPress={() => { const target = pendingUpload; setPendingUpload(null); void pick(target); }} /><Button label="Cancel" variant="outline" onPress={() => setPendingUpload(null)} /></Sheet> : null}
     {crop ? <CoverEditor uri={crop.uri} square={crop.target === 'avatar'} onCancel={() => setCrop(null)} onSave={uri => { if (crop.target === 'avatar') setAvatar(uri); else setCover(uri); setCrop(null); }} /> : null}
   </Modal>;

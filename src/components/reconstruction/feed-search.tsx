@@ -13,7 +13,7 @@ import { communitiesProductionService, type CommunitySummary } from '../../servi
 import { activityService, loadActivityParticipantCounts } from '../../services/wenitro';
 import { supabase } from '../../lib/supabase';
 import { activityLocationService } from '../../services/activity-location';
-import { INTEREST_CATEGORIES } from '../../domain/interest-categories';
+import { useActivityCategories } from '../../hooks/use-activity-categories';
 import { viewerCanListActivity } from '../../domain/activity-visibility';
 import { MOBILE_APP_MAX_WIDTH } from '../mobile-app-shell';
 import { Action, BrandBar, Button, ErrorLine, Header, Icon, Page, Pills, SearchField, SectionHeading, Sheet, Skeleton, ui, usePalette, purple } from './ui';
@@ -119,6 +119,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const [appActive, setAppActive] = useState(AppState.currentState === 'active');
   const [reduceMotion, setReduceMotion] = useState(false);
   const [filter, setFilter] = useState('All');
+  const catalog = useActivityCategories();
   const [categories, setCategories] = useState<string[]>([]);
   const [draftCategories, setDraftCategories] = useState<string[]>([]);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -281,7 +282,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
         {data.people.length ? <><SectionHeading title="People to Discover" action="Find people" onAction={() => go('search')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 16 }}>{data.people.slice(0, 8).map(person => <Pressable accessibilityRole="button" accessibilityLabel={`Open profile ${person.name}`} onPress={() => openProfile?.(person.id)} key={person.id} style={{ width: 70, alignItems: 'center', gap: 6 }}><UserAvatar uri={person.avatar} name={person.name} identity={person.id} size={58} /><Text numberOfLines={1} style={{ color: c.text, width: 70, textAlign: 'center', fontSize: 12, fontWeight: '800' }}>{person.name} <VerifiedBadge userId={person.id} size={11} /></Text></Pressable>)}</ScrollView></> : null}
         {communityCards.length ? <><SectionHeading title="Communities" action="Explore all" onAction={() => go('communities')} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>{communityCards.map(room => <Pressable accessibilityRole="button" accessibilityLabel={`Open community ${room.name}`} onPress={() => openCommunity ? openCommunity(room.id) : go('communities')} key={room.id} style={{ width: 154, height: 148, borderRadius: 17, overflow: 'hidden', backgroundColor: c.card, borderWidth: 1, borderColor: c.border }}>{room.image ? <Image source={{ uri: room.image }} style={{ height: 86, width: '100%' }} /> : <View style={{ height: 86, backgroundColor: c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name="people" color={c.accent} size={30} /></View>}<View style={{ padding: 9 }}><Text style={{ color: c.text, fontSize: 13, fontWeight: '800' }} numberOfLines={1}>{room.name}</Text><Text style={{ color: c.muted, fontSize: 12, fontWeight: '600', marginTop: 3 }}>{room.memberCount} members</Text></View></Pressable>)}</ScrollView></> : null}
         <SectionHeading title="Discover Your Tribe" />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 9 }}>{(data.interests.length ? data.interests : INTEREST_CATEGORIES).filter(value => !/qa|automation|test/i.test(value)).slice(0, 7).map((value, index) => <Pressable accessibilityRole="button" accessibilityLabel={`Browse ${value} activities`} onPress={() => openActivitiesCategory ? openActivitiesCategory(value) : go('activities')} key={value} style={{ width: 118, height: 82, borderRadius: 16, overflow: 'hidden', justifyContent: 'flex-end' }}><Image source={TRIBE_IMAGES[index % TRIBE_IMAGES.length]} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} resizeMode="cover" /><LinearGradient pointerEvents="none" colors={['transparent', 'rgba(10, 13, 35, .82)']} style={{ position: 'absolute', inset: 0 }} /><Text style={{ color: '#FFF', fontSize: 13, lineHeight: 17, fontWeight: '800', padding: 11 }} numberOfLines={2}>{value}</Text></Pressable>)}</ScrollView>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 9 }}>{(data.interests.some(value=>catalog.names.includes(value)) ? data.interests.filter(value=>catalog.names.includes(value)) : catalog.names).slice(0, 7).map((value, index) => <Pressable accessibilityRole="button" accessibilityLabel={`Browse ${value} activities`} onPress={() => openActivitiesCategory ? openActivitiesCategory(value) : go('activities')} key={value} style={{ width: 118, height: 82, borderRadius: 16, overflow: 'hidden', justifyContent: 'flex-end' }}><Image source={TRIBE_IMAGES[index % TRIBE_IMAGES.length]} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} resizeMode="cover" /><LinearGradient pointerEvents="none" colors={['transparent', 'rgba(10, 13, 35, .82)']} style={{ position: 'absolute', inset: 0 }} /><Text style={{ color: '#FFF', fontSize: 13, lineHeight: 17, fontWeight: '800', padding: 11 }} numberOfLines={2}>{value}</Text></Pressable>)}</ScrollView>
         <View style={{ marginTop: 18, minHeight: 142, borderRadius: 22, padding: 18, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', gap: 15 }}>
           <LinearGradient pointerEvents="none" colors={['#3420B8', '#6847F5']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={{ position: 'absolute', inset: 0 }} />
           <View style={{ width: 58, height: 58, borderRadius: 19, backgroundColor: '#FFFFFF24', alignItems: 'center', justifyContent: 'center' }}><Icon name="people" color="#FFFFFF" size={29} /></View>
@@ -324,7 +325,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
       <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Price</Text><Pills values={['All','Free','Paid']} selected={draft.price} onChange={value=>setDraft(v=>({...v,price:value}))} />
       <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Gender Preference</Text><Pills values={['All','Male','Female']} selected={draft.gender} onChange={value=>setDraft(v=>({...v,gender:value}))} /><Pressable accessibilityRole="radio" accessibilityState={{ checked:draft.gender==='Non-binary' }} onPress={()=>setDraft(v=>({...v,gender:'Non-binary'}))} style={{ alignSelf:'flex-start',backgroundColor:draft.gender==='Non-binary'?purple:c.card,borderRadius:20,paddingHorizontal:18,paddingVertical:9 }}><Text style={{ color:draft.gender==='Non-binary'?'#FFF':c.muted,fontSize:13 }}>Non-binary</Text></Pressable>
       <View style={{ flexDirection:'row',alignItems:'center',gap:12,paddingVertical:6 }}><View style={{ flex:1,gap:4 }}><Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Exclusive for Verified Users</Text><Text style={{ color:c.muted,fontSize:12, lineHeight: 18 }}>Show activities restricted to verified profiles.</Text></View><Switch accessibilityLabel="Exclusive for Verified Users" value={draft.verifiedOnly} onValueChange={value=>setDraft(v=>({...v,verifiedOnly:value}))} trackColor={{true:purple,false:c.border}} /></View>
-      <Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Categories</Text><View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 9 }}>{INTEREST_CATEGORIES.filter(value => !/qa|automation|test/i.test(value)).map(value => { const selected = draftCategories.includes(value); return <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: selected }} key={value} onPress={() => setDraftCategories(current => selected ? current.filter(item => item !== value) : [...current, value])} style={{ width: '47%', minHeight: 58, borderWidth: 1, borderColor: selected ? '#8E7CFF' : c.border, backgroundColor: selected ? '#6D5AEF24' : c.card, borderRadius: 10, padding: 10, justifyContent: 'center' }}><Text style={{ color: selected ? '#A99CFF' : c.text, fontSize: 12, fontWeight: '600' }}>{value}</Text></Pressable>; })}</View>
+      <ErrorLine text={catalog.error}/><Text style={{ color:c.text,fontWeight:'700',fontSize:14 }}>Categories</Text><View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 9 }}>{catalog.names.map(value => { const selected = draftCategories.includes(value); return <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: selected }} key={value} onPress={() => setDraftCategories(current => selected ? current.filter(item => item !== value) : [...current, value])} style={{ width: '47%', minHeight: 58, borderWidth: 1, borderColor: selected ? '#8E7CFF' : c.border, backgroundColor: selected ? '#6D5AEF24' : c.card, borderRadius: 10, padding: 10, justifyContent: 'center' }}><Text style={{ color: selected ? '#A99CFF' : c.text, fontSize: 12, fontWeight: '600' }}>{value}</Text></Pressable>; })}</View>
     </Sheet>}
   </Page>;
 }
@@ -414,6 +415,7 @@ function SearchCommunityResult({ row, open }: { row: Extract<SearchRow, { kind: 
 
 export function ReferenceSearch({ back, openActivity, openProfile, openCommunity, setData }: { back: () => void; openActivity: (id: string) => void; openProfile: (id: string) => void; openCommunity: (id: string) => void; setData: React.Dispatch<React.SetStateAction<AppData>> }) {
  const c = usePalette();
+ const catalog = useActivityCategories();
  const [scope, setScope] = useState<SearchScope>('Activities');
  const [query, setQuery] = useState('');
  const [category, setCategory] = useState('All');
@@ -461,7 +463,7 @@ export function ReferenceSearch({ back, openActivity, openProfile, openCommunity
  }, [scope, cleanQuery, category, page]);
 
  const title = cleanQuery ? `${scope} matching “${cleanQuery}”` : scope === 'Activities' ? 'Activities to Explore' : scope === 'People' ? 'People to Discover' : 'Communities to Explore';
- const shownCategories = ['All', ...INTEREST_CATEGORIES.filter(value => !/qa|automation|test/i.test(value)).slice(0, categoriesOpen ? 18 : 7)];
+ const shownCategories = ['All', ...catalog.names.slice(0, categoriesOpen ? catalog.names.length : 7)];
  const result = (row: SearchRow) => row.kind === 'activity'
   ? <SearchActivityResult key={`activity:${row.id}`} row={row} open={() => openActivity(row.id)} />
   : row.kind === 'person'

@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-03T07:36:55.691Z",
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "status": "PASS",
+  "checks": [
+    "Resolved event report retained and mapped to Activity282",
+    "Status filtering excludes resolved reports from pending",
+    "Real Activity moderation and report reviews appear in security audit",
+    "Active Auth restriction and exact audit reason populate blocked users",
+    "Blocked count uses actual Auth restriction",
+    "Restored user disappears from restriction list"
+  ],
+  "scope": "Actual Admin api.ts adapters with authenticated ordinary Admin; QA70 restriction restored in finally."
+}

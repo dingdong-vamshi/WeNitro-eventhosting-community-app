@@ -1,0 +1,27 @@
+import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import assert from 'node:assert/strict';import {spawnSync} from 'node:child_process';
+const root=fs.mkdtempSync(path.join(os.tmpdir(),'wn-category-'));let started=false;const run=(bin,args,input)=>{const r=spawnSync(bin,args,{input,encoding:'utf8',maxBuffer:2e6});if(r.error||r.status)throw Error(r.error?.message||r.stderr||r.stdout);return r.stdout;};const sql=q=>run('psql',['-h',root,'-p','55445','-d','postgres','-v','ON_ERROR_STOP=1','-Atq'],q);
+try{run('initdb',['-D',root+'/db','-A','trust','--no-locale','-E','UTF8']);run('pg_ctl',['-D',root+'/db','-l',root+'/server.log','-o',`-F -h '' -k ${root} -p 55445`,'-w','start']);started=true;
+sql(`create role anon;create role authenticated;create schema auth;create schema private;grant usage on schema auth,private to authenticated;create function auth.uid() returns uuid language sql as $$select nullif(current_setting('qa.uid',true),'')::uuid$$;
+create function public.is_wenitro_admin() returns boolean language sql as $$select auth.uid()='00000000-0000-0000-0000-000000000001'::uuid$$;
+create table public.tbl_categories(id serial primary key,name varchar(255),created_at timestamp default now(),image_url text);
+insert into public.tbl_categories(name) values('Career '),('Social');
+create table private.admin_operation_audit(id serial primary key,actor_id uuid,target_type text,target_id integer,action text,reason text,previous_state jsonb,next_state jsonb);
+alter table private.admin_operation_audit enable row level security;
+create table public.tbl_event_categories(event_id int,category_id int references public.tbl_categories(id));
+create table public.tbl_chat_rooms(id int,category_id int references public.tbl_categories(id));
+create table public.tbl_user_interests(user_id int,category_id int references public.tbl_categories(id));
+grant select,insert,update,delete on public.tbl_categories to authenticated;grant select on public.tbl_categories to anon;grant select,insert,update on public.tbl_event_categories,public.tbl_chat_rooms,public.tbl_user_interests to authenticated;
+alter table public.tbl_categories enable row level security;create policy category_read on public.tbl_categories for select to anon,authenticated using(true);`);
+sql(fs.readFileSync('supabase/migrations/20261003074100_admin_category_catalog.sql','utf8'));
+const as=(n,q)=>sql(`set role authenticated;select set_config('qa.uid','00000000-0000-0000-0000-${String(n).padStart(12,'0')}',false);`+q).trim().split('\n').at(-1);let checks=0;const equal=(n,q,w)=>{assert.equal(as(n,q),w);checks++;};const denied=(n,q,re)=>{assert.throws(()=>as(n,q),re);checks++;};const save=(id,name,enabled=true,archived=false)=>`select public.admin_save_category(${id},'${name}','⭐','QA description',5,${enabled},${archived},'QA category change')->>'id';`;
+equal(2,"select name from public.tbl_categories where id=1;",'Career');
+denied(2,save('null','New Category'),/Administrator/);denied(2,"insert into public.tbl_categories(name) values('Injected');",/permission denied/);
+equal(1,save('null','New Category'),'3');equal(2,"select name from public.tbl_categories where id=3;",'New Category');
+denied(1,save('null',' new category '),/duplicate key/);denied(1,save('null','X'),/check constraint/);
+equal(1,save(3,'Renamed Category'),'3');equal(2,"insert into public.tbl_event_categories values(5,3) returning category_id;",'3');
+equal(1,save(3,'Renamed Category',false),'3');denied(2,"insert into public.tbl_event_categories values(6,3);",/available category/);denied(2,"insert into public.tbl_chat_rooms values(9,3);",/available category/);denied(2,"insert into public.tbl_user_interests values(2,3);",/available category/);
+equal(2,"select c.name from public.tbl_event_categories e join public.tbl_categories c on c.id=e.category_id where event_id=5;",'Renamed Category');
+equal(1,save(3,'Renamed Category',true,true),'3');denied(2,"insert into public.tbl_event_categories values(6,3);",/available category/);equal(1,save(3,'Renamed Category',true,false),'3');equal(2,"insert into public.tbl_event_categories values(6,3) returning category_id;",'3');
+const before=sql('select count(*) from private.admin_operation_audit;').trim();as(1,save(3,'Renamed Category',true,false));assert.equal(sql('select count(*) from private.admin_operation_audit;').trim(),before);checks++;denied(2,'select * from private.admin_operation_audit;',/permission denied/);
+console.log(JSON.stringify({status:'PASS',checks,scope:'Local real Postgres: catalog CRUD, normalized uniqueness, role denial, disabled/archive assignment guards, preserved history, restoration, audit and idempotence'}));
+}finally{if(started)run('pg_ctl',['-D',root+'/db','-m','immediate','-w','stop']);fs.rmSync(root,{recursive:true,force:true});}

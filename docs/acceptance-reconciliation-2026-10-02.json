@@ -732,5 +732,20 @@
     "supabaseMcp": "Restored; actual migration and Edge deployment successful",
     "cli": "Use target-authorized connector; stale CLI identity not used for remote writes"
   },
-  "acceptanceVerdict": "Not ready for final acceptance. Repair, live deployment and per-requirement production evidence are still in progress."
+  "acceptanceVerdict": "Not ready for final acceptance. Repair, live deployment and per-requirement production evidence are still in progress.",
+  "workflow": {
+    "updatedAt": "2026-10-03T07:40:47.044432+00:00",
+    "stage": "BATCH_LOCAL_AUDIT_AND_IMPLEMENTATION",
+    "instruction": "Audit all remaining requirements; complete all local fixes; full local regression/typecheck/build/backend/security/cross-user/badge/Admin/payment verification; only then commit/push/deploy backend before dependent App/Admin, followed by complete production acceptance/screenshots. No per-fix deployments.",
+    "alreadyInFlightDeployment": "Admin3a2920a deployment dpl_2wDVvbHUo6ncyBnZCLQeZUpNAd87 completed before workflow change. No new deployment started afterward.",
+    "ordinaryAuditBacklog": [
+      "Admin category management persistence and shared client taxonomy",
+      "Admin campaigns/alerts/templates lifecycle with truthful provider states",
+      "Admin analytics and user details must not fabricate metrics",
+      "Admin rewards/rules/catalog and provider boundaries",
+      "Admin remaining inert controls and settings behavior",
+      "Remaining distinct PDF requirements and visual evidence inventory",
+      "Full local suite and SQL/Edge cross-user regressions"
+    ]
+  }
 }

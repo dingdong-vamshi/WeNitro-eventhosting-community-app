@@ -1,3 +1,4 @@
+import { useActivityCategories } from '../../hooks/use-activity-categories';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, BackHandler, Image, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,7 +9,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { activityService } from '../../services/wenitro';
 import { activityLocationService } from '../../services/activity-location';
 import { listActivityEntryCategories } from '../../services/payments';
-import { AGE_PRESETS, GENDER_OPTIONS, HOST_CATEGORIES, ageError, draftFromActivity, hasMeaningfulHostDraft, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, withFreshHostSchedule, type HostActivitySource, type HostDraft, type HostLocation } from '../../domain/host-activity';
+import { AGE_PRESETS, GENDER_OPTIONS, ageError, draftFromActivity, hasMeaningfulHostDraft, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, withFreshHostSchedule, type HostActivitySource, type HostDraft, type HostLocation } from '../../domain/host-activity';
 import CoverEditor from './cover-editor';
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from '../mobile-app-shell';
 import { BrandBar, usePalette as useReferencePalette } from '../reconstruction/ui';
@@ -121,6 +122,7 @@ export function hostPaymentCollectionMode(existing: HostPaymentSource | null | u
   return alreadyPaid && existing?.paymentCollectionMode ? existing.paymentCollectionMode : isPartner ? 'cashfree' : 'onsite';
 }
 export function HostActivityScreen({ userId, isPartner, existing, onBack, onCreated, onDrafted }: { userId: string; isPartner: boolean; existing?: HostPaymentSource | null; onBack: () => void; onCreated: (activity: Awaited<ReturnType<typeof activityService.create>>) => void; onDrafted?: (activity: Awaited<ReturnType<typeof activityService.createDraft>>) => void }) {
+  const catalog = useActivityCategories();
   const { c, s } = useHostTheme();
   const platformPayment = hostPaymentCollectionMode(existing, isPartner) === 'cashfree';
   const [draft, setDraft] = useState<HostDraft>(() => existing ? draftFromActivity(existing) : newHostDraft()), [step, setStep] = useState(0), [loaded, setLoaded] = useState(false);
@@ -294,7 +296,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
       </View>}
       {step === 2 && <View style={{ marginTop: 30, gap: 28 }}>
         <Pressable accessibilityRole="button" accessibilityLabel="Choose category" onPress={() => setCategoryOpen(v => !v)} style={[s.inputShell, categoryOpen && { borderColor: c.purple }]}><Text style={[s.body, { flex: 1 }, !draft.category && { color: c.muted }]}>{draft.category || 'Search and select categories...'}</Text><Glyph name="chevron-down" size={16} color={c.muted} /></Pressable>
-        {categoryOpen && <View style={s.categories}><Control label="Search categories" icon="search-outline" value={categorySearch} onChangeText={setCategorySearch} placeholder="Search..." /><ScrollView nestedScrollEnabled style={{ maxHeight: 320 }} keyboardShouldPersistTaps="handled">{HOST_CATEGORIES.filter(v => v.toLowerCase().includes(categorySearch.toLowerCase())).map(cat => <Option key={cat} label={cat} selected={draft.category === cat} onPress={() => { patch({ category: cat }); setCategoryOpen(false); }} />)}{!HOST_CATEGORIES.some(v => v.toLowerCase().includes(categorySearch.toLowerCase())) && <Text style={[s.small, { padding: 18 }]}>No categories found</Text>}</ScrollView></View>}
+        {categoryOpen && <View style={s.categories}>{catalog.error ? <Text style={s.error}>{catalog.error}</Text> : null}<Control label="Search categories" icon="search-outline" value={categorySearch} onChangeText={setCategorySearch} placeholder="Search..." /><ScrollView nestedScrollEnabled style={{ maxHeight: 320 }} keyboardShouldPersistTaps="handled">{catalog.names.filter(v => v.toLowerCase().includes(categorySearch.toLowerCase())).map(cat => <Option key={cat} label={cat} selected={draft.category === cat} onPress={() => { patch({ category: cat }); setCategoryOpen(false); }} />)}{!catalog.names.some(v => v.toLowerCase().includes(categorySearch.toLowerCase())) && <Text style={[s.small, { padding: 18 }]}>No categories found</Text>}</ScrollView></View>}
         <Pressable accessibilityRole="button" accessibilityLabel={draft.location ? 'Change location' : 'Add Location'} onPress={() => setLocationOpen(true)} style={s.location}><View style={s.locationIcon}><Glyph name="location-outline" size={24} /></View><View style={{ flex: 1, gap: 4 }}><Text style={s.settingTitle}>{draft.location?.label || 'Add Location'}</Text><Text style={s.small}>{draft.location ? 'Tap to change location' : 'Where is this meetup happening?'}</Text></View><Glyph name="chevron-forward" size={17} color={c.muted} /></Pressable>
         <View style={{ gap: 12 }}><Text style={[s.body, { fontSize: 12 }]}>Location Instructions</Text><TextInput accessibilityLabel="Location Instructions" value={draft.locationInstruction} onChangeText={locationInstruction => patch({ locationInstruction })} multiline maxLength={1000} placeholder="e.g., Meet near the red bench, Room 404..." placeholderTextColor={c.muted} style={s.instructions} /></View>
         {platformPayment ? <View style={{ gap: 12 }}><Text style={[s.body, { fontSize: 12 }]}>Partner External URL (optional)</Text><Control label="Partner External URL" icon="link-outline" autoCapitalize="none" keyboardType="url" value={draft.externalUrl} onChangeText={externalUrl => patch({ externalUrl })} maxLength={2048} placeholder="https://your-business.example/activity" /><Text style={s.small}>Only HTTPS links are accepted. WeNitro payment amounts still come from the server.</Text></View> : null}

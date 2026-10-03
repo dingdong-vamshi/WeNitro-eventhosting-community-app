@@ -18,7 +18,13 @@ try{
  assert(free.items.length>0&&free.items.every(a=>!a.isPaid&&!a.costsMayApply&&!a.entryFeeRequired));
  assert.equal(paid.items.find(a=>a.ownerId==='71').owner.fullName,'Priya Nair');
  assert.equal(paid.items.find(a=>a.ownerId==='71').owner.isPartner,true);
- const evidence={at:new Date().toISOString(),target:new URL(url).hostname,scope:'Actual application discovery service against live target, read-only',paid:paid.items.map(a=>({id:a.id,platformPaid:a.isPaid,costsMayApply:a.costsMayApply,entryFeeRequired:a.entryFeeRequired,mode:a.paymentCollectionMode})),freeIds:free.items.map(a=>a.id),checks:['Normal off-platform cost activity retained in Paid','Partner Cashfree activity retained in Paid','Free excludes every cost flag','Full host name and Partner source identity present']};
+ const from=new Date('2026-10-04T00:00:00+05:30').toISOString(),to=new Date('2026-10-04T23:59:59.999+05:30').toISOString();
+ const dated=await service.discover({startsAfter:from,startsBefore:to,freeOnly:true,upcomingOnly:false,pageSize:100});
+ assert(dated.items.some(a=>String(a.id)==='277'));assert(dated.items.every(a=>a.startsAt>=from&&a.startsAt<=to));
+ const social=await service.discover({categories:['Social'],upcomingOnly:false,pageSize:100});assert(social.items.length>0);assert(social.items.every(a=>a.category==='Social'));
+ const female=await service.discover({genderPreference:'female',upcomingOnly:false,pageSize:100});assert(female.items.every(a=>a.genderPreference==='female'));
+ const verified=await service.discover({verifiedOnly:true,upcomingOnly:false,pageSize:100});assert(verified.items.every(a=>a.verifiedOnly));
+ const evidence={at:new Date().toISOString(),target:new URL(url).hostname,scope:'Actual application discovery service against live target, read-only',paid:paid.items.map(a=>({id:a.id,platformPaid:a.isPaid,costsMayApply:a.costsMayApply,entryFeeRequired:a.entryFeeRequired,mode:a.paymentCollectionMode})),freeIds:free.items.map(a=>a.id),checks:['Normal off-platform cost activity retained in Paid','Partner Cashfree activity retained in Paid','Free excludes every cost flag','Full host name and Partner source identity present','Date bounds return only correct local day including known QA277','Social category excludes other categories','Female preference query excludes other values; empty result valid','Verified-only query excludes unrestricted rows; empty result valid'],additional:{datedIds:dated.items.map(a=>a.id),socialCount:social.items.length,femaleCount:female.items.length,verifiedCount:verified.items.length}};
  fs.writeFileSync('docs/chat001-activity-discovery-proof.json',JSON.stringify(evidence,null,2)+'\n');
  console.log('PASS: actual discovery service returns correct Paid/Free rows and host identity from live target.');
 }finally{await supabase.auth.signOut({scope:'local'});}

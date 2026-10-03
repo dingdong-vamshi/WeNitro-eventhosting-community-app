@@ -2,7 +2,7 @@ import type { User } from "@supabase/supabase-js";
 import type { AccountType } from "./auth-production";
 
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
-import { INTEREST_CATEGORIES } from "../domain/interest-categories";
+import { listActiveCategories } from "./category-catalog";
 
 const AVATAR_BUCKET = "avatars";
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
@@ -734,14 +734,7 @@ export const profileProductionService = {
   },
 
   async listAvailableInterests(): Promise<Interest[]> {
-    requireBackend();
-    const { data, error } = await supabase
-      .from("tbl_categories")
-      .select("id,name")
-      .order("name", { ascending: true });
-    if (error) throw error;
-    return (data ?? []).map(mapInterest).map(item => ({ ...item, name: item.name.trim() }))
-      .filter(item => INTEREST_CATEGORIES.some(name => name === item.name));
+    return (await listActiveCategories()).map(mapInterest);
   },
 
   async setInterests(interestIds: Array<number | string>): Promise<Interest[]> {

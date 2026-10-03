@@ -1,3 +1,4 @@
+import { useUsageObservation } from './src/hooks/use-usage-observation';
 import { activityDisplayPrice } from "./src/domain/activity-pricing";
 import { VerifiedBadge } from './src/components/verified-badge';
 import { ActivityRatings } from './src/components/activity-ratings';
@@ -9134,6 +9135,7 @@ export default function App() {
   const authGenerationRef = useRef(0);
   const workspaceLoadedSectionsRef = useRef(new Set<WorkspaceSection>());
   const activityRouteDetailsRef = useRef<{ activityId: string; details: Awaited<ReturnType<typeof activityService.getDetails>> } | null>(null);
+  useUsageObservation(data.mode === 'authenticated' && data.onboarded ? data.userId : null, screen === 'activityDetail' ? selectedActivityId : null);
   useEffect(() => {
     const timer = setTimeout(() => setSplashVisible(false), 1500);
     let active = true;

@@ -1,0 +1,82 @@
+{
+  "at": "2026-10-03T06:44:17.421Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Master reads actual administrator list",
+      "status": "PASS"
+    },
+    {
+      "name": "Ordinary Admin sees own account only",
+      "status": "PASS"
+    },
+    {
+      "name": "Member cannot list administrators",
+      "status": "PASS"
+    },
+    {
+      "name": "Ordinary Admin cannot grant roles",
+      "status": "PASS"
+    },
+    {
+      "name": "User-editable metadata cannot grant authority",
+      "status": "PASS"
+    },
+    {
+      "name": "Master cannot change own access",
+      "status": "PASS"
+    },
+    {
+      "name": "Role grant persisted",
+      "status": "PASS"
+    },
+    {
+      "name": "Repeated assignment is idempotent",
+      "status": "PASS"
+    },
+    {
+      "name": "Exactly one audit entry for grant and retry",
+      "status": "PASS"
+    },
+    {
+      "name": "Revoked Admin denied without refreshing existing JWT",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance role reads its own account",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance role cannot moderate",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance role cannot grant administrator access",
+      "status": "PASS"
+    },
+    {
+      "name": "Inactive Finance denied with existing JWT",
+      "status": "PASS"
+    },
+    {
+      "name": "Member cannot read administrator access audit",
+      "status": "PASS"
+    },
+    {
+      "name": "Unauthenticated administrator access denied",
+      "status": "PASS"
+    }
+  ],
+  "fixtures": "Isolated synthetic accounts only; permanent Master owner assignment not performed",
+  "screenshots": [],
+  "cleanup": {
+    "at": "2026-10-03T07:40:28.608Z",
+    "checks": [
+      {
+        "name": "QA Master and QA member access revoked",
+        "status": "PASS"
+      }
+    ]
+  }
+}

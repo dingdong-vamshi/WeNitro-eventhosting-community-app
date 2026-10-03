@@ -5,7 +5,7 @@ import type { Activity, AppData, Screen } from '../../../App';
 import { activitiesProductionService } from '../../services/activities-production';
 import { activityLocationService } from '../../services/activity-location';
 import { activityService } from '../../services/wenitro';
-import { INTEREST_CATEGORIES } from '../../domain/interest-categories';
+import { useActivityCategories } from '../../hooks/use-activity-categories';
 import { activityDiscoveryInput, activityPriceBadge, dateInputValue, type ActivityGenderFilter, type ActivityPriceFilter, type ActivityQuickFilter } from '../../domain/activity-discovery';
 import { viewerCanListActivity } from '../../domain/activity-visibility';
 import { Button, ErrorLine, Icon, Page, Pills, SearchField, Sheet, usePalette, purple } from '../reconstruction/ui';
@@ -27,6 +27,7 @@ const activityInitials = (value: string) => value.trim().split(/\s+/).slice(0, 2
 const hasRealCover = (image: Activity['image']) => Boolean(image && !(typeof image === 'string' && /wenitro-logo-transparent/i.test(image)));
 
 export function ClientActivitiesScreen({ data, setData, go, openActivity, openProfile, initialCategory = '' }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (screen: Screen) => void; openActivity: (id: string) => void; openProfile?: (id: string) => void; initialCategory?: string }) {
+  const catalog = useActivityCategories();
   const c = usePalette();
   const [filter, setFilter] = useState<Filter>('All');
   const [query, setQuery] = useState('');
@@ -218,7 +219,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity, openPr
       </View>
       <Text style={{ color: c.text, fontWeight: '800', fontSize: 15 }}>Categories</Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 9 }}>
-        {INTEREST_CATEGORIES.filter(value => !/qa|automation|test/i.test(value)).map(value => {
+        {catalog.names.map(value => {
           const selected = draftCategories.includes(value);
           return <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: selected }} key={value} onPress={() => setDraftCategories(current => selected ? current.filter(item => item !== value) : [...current, value])} style={{ width: '47%', minHeight: 58, borderWidth: 1, borderColor: selected ? '#8E7CFF' : c.border, backgroundColor: selected ? '#6D5AEF24' : c.card, borderRadius: 10, padding: 10, justifyContent: 'center' }}>
             <Text style={{ color: selected ? '#A99CFF' : c.text, fontSize: 13, fontWeight: '700' }}>{value}</Text>

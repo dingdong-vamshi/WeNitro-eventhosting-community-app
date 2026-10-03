@@ -1,8 +1,22 @@
 {
-  "at": "2026-10-03T05:36:12.172Z",
+  "at": "2026-10-03T07:35:44.054Z",
   "target": "cxsznhrkzqndhseodcyy.supabase.co",
   "scope": "Actual application discovery service against live target, read-only",
   "paid": [
+    {
+      "id": "280",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
+    {
+      "id": "279",
+      "platformPaid": true,
+      "costsMayApply": false,
+      "entryFeeRequired": false,
+      "mode": "cashfree"
+    },
     {
       "id": "271",
       "platformPaid": false,
@@ -124,6 +138,7 @@
     }
   ],
   "freeIds": [
+    "282",
     "278",
     "277",
     "274",
@@ -155,6 +170,18 @@
     "Normal off-platform cost activity retained in Paid",
     "Partner Cashfree activity retained in Paid",
     "Free excludes every cost flag",
-    "Full host name and Partner source identity present"
-  ]
+    "Full host name and Partner source identity present",
+    "Date bounds return only correct local day including known QA277",
+    "Social category excludes other categories",
+    "Female preference query excludes other values; empty result valid",
+    "Verified-only query excludes unrestricted rows; empty result valid"
+  ],
+  "additional": {
+    "datedIds": [
+      "277"
+    ],
+    "socialCount": 10,
+    "femaleCount": 0,
+    "verifiedCount": 3
+  }
 }
