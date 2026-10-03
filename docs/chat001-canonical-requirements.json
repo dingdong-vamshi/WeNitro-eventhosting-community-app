@@ -27,6 +27,15 @@
       ],
       "reference": "tmp/pdfs/issues/page-30.jpg",
       "interpretation": "Original text says Selfie Upload -10 and 10 Activities Joined -20, 20+ Activities Joined -30. The production plan previously described completed participations; root inspected private.trust_score_for and trust-score-database-test.mjs and confirmed current implementation instead counts approved/going/paid joins without an end-time criterion. Selfie points use an approved-evidence review gate; this pipeline interpretation is stated explicitly rather than silently treating any raw upload as verified. Final integrated proof remains pending."
+    },
+    {
+      "sourceClauseIds": [
+        "A37-07",
+        "A32-01",
+        "A32-02"
+      ],
+      "reference": "Must changesimplementations.pdf pages32/37",
+      "interpretation": "SOS means functional safety action and specified ten-minute reminder, not an invented native tracking requirement. Partner requires bullet instructions and agreement popup before filling fields, not only bottom checkbox."
     }
   ],
   "countDefinition": {
@@ -2530,12 +2539,12 @@
       "sourceClauseIds": [
         "A32-01"
       ],
-      "requestedOutcome": "Partner application displays the requested instructions and eligibility details.",
+      "requestedOutcome": "Show readable bullet-point Partner instructions before the application fields, explaining required details, payout destination and approval.",
       "acceptanceCriteria": [
-        "Partner application displays the requested instructions and eligibility details."
+        "Show readable bullet-point Partner instructions before the application fields, explaining required details, payout destination and approval."
       ],
       "qaOwner": "E_PARTNER_CASHFREE",
-      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
       "localVerification": [],
       "productionVerification": [],
       "acceptedScreenshotProof": [],
@@ -2545,7 +2554,8 @@
         "deployed_interaction_and_screenshot",
         "authenticated_backend_proof_when_applicable"
       ],
-      "candidateEvidenceIds": []
+      "candidateEvidenceIds": [],
+      "sourceCorrection": "2026-10-03 original PDFs re-read: exact A37 safety reminder and A32 before-entry Terms replace earlier broadened/softened interpretations."
     },
     {
       "id": "PARTNER-TERMS",
@@ -2554,12 +2564,12 @@
         "A32-02",
         "A32-03"
       ],
-      "requestedOutcome": "Partner application requires agreement before submission and persists the accepted terms record.",
+      "requestedOutcome": "Present the Partner Terms agreement popup before filling the application. Gate fields until agreement, preserve a current own prior receipt, and persist accepted policy version atomically on submission.",
       "acceptanceCriteria": [
-        "Partner application requires agreement before submission and persists the accepted terms record."
+        "Present the Partner Terms agreement popup before filling the application. Gate fields until agreement, preserve a current own prior receipt, and persist accepted policy version atomically on submission."
       ],
       "qaOwner": "E_PARTNER_CASHFREE",
-      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
       "localVerification": [],
       "productionVerification": [],
       "acceptedScreenshotProof": [],
@@ -2569,7 +2579,8 @@
         "deployed_interaction_and_screenshot",
         "authenticated_backend_proof_when_applicable"
       ],
-      "candidateEvidenceIds": []
+      "candidateEvidenceIds": [],
+      "sourceCorrection": "2026-10-03 original PDFs re-read: exact A37 safety reminder and A32 before-entry Terms replace earlier broadened/softened interpretations."
     },
     {
       "id": "PARTNER-DASHBOARD",
@@ -3278,40 +3289,17 @@
       ]
     },
     {
-      "id": "SOS-WEB",
+      "id": "SOS-ACTION",
       "kind": "implementation",
       "sourceClauseIds": [
         "A37-07"
       ],
-      "requestedOutcome": "Web SOS clearly provides its supported foreground/emergency-contact behavior without claiming native background tracking.",
+      "requestedOutcome": "The Activity SOS action opens functional safety guidance, activity sharing and access to the saved emergency contact without claiming automatic live tracking.",
       "acceptanceCriteria": [
-        "Web SOS clearly provides its supported foreground/emergency-contact behavior without claiming native background tracking."
+        "The Activity SOS action opens functional safety guidance, activity sharing and access to the saved emergency contact without claiming automatic live tracking."
       ],
       "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
-      "status": "PENDING_INTEGRATED_PRODUCTION",
-      "localVerification": [],
-      "productionVerification": [],
-      "acceptedScreenshotProof": [],
-      "acceptedTechnicalProof": [],
-      "requiredEvidence": [
-        "local_executable_or_visual_check",
-        "deployed_interaction_and_screenshot",
-        "authenticated_backend_proof_when_applicable"
-      ],
-      "candidateEvidenceIds": []
-    },
-    {
-      "id": "SOS-NATIVE",
-      "kind": "implementation",
-      "sourceClauseIds": [
-        "A37-07"
-      ],
-      "requestedOutcome": "Native SOS background behavior is implemented and verified on a supported native device before being represented as available.",
-      "acceptanceCriteria": [
-        "Native SOS background behavior is implemented and verified on a supported native device before being represented as available."
-      ],
-      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
-      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
       "localVerification": [],
       "productionVerification": [],
       "acceptedScreenshotProof": [],
@@ -3322,9 +3310,31 @@
         "authenticated_backend_proof_when_applicable"
       ],
       "candidateEvidenceIds": [],
-      "candidateDependencyIds": [
-        "NATIVE_BACKGROUND_SOS_BUILD_AND_DEVICE"
-      ]
+      "sourceCorrection": "2026-10-03 original PDFs re-read: exact A37 safety reminder and A32 before-entry Terms replace earlier broadened/softened interpretations."
+    },
+    {
+      "id": "SOS-SAFETY-REMINDER",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-07"
+      ],
+      "requestedOutcome": "Send confirmed eligible Activity members a safety notification ten minutes before start with the exact requested message: Make sure to share your activity details and live location with someone you trust.",
+      "acceptanceCriteria": [
+        "Send confirmed eligible Activity members a safety notification ten minutes before start with the exact requested message: Make sure to share your activity details and live location with someone you trust."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "sourceCorrection": "2026-10-03 original PDFs re-read: exact A37 safety reminder and A32 before-entry Terms replace earlier broadened/softened interpretations."
     },
     {
       "id": "HELP-NITROBOT",
@@ -9197,10 +9207,10 @@
     },
     {
       "sourceClauseId": "A37-07",
-      "requested": "SOS web/native distinction",
+      "requested": "Functional SOS and exact safety notification ten minutes before the Activity starts.",
       "canonicalRequirementIds": [
-        "SOS-WEB",
-        "SOS-NATIVE"
+        "SOS-ACTION",
+        "SOS-SAFETY-REMINDER"
       ],
       "processEntryIds": []
     },
@@ -10290,7 +10300,7 @@
     },
     {
       "id": "N06",
-      "requested": "HOST · ORIGINAL CREATOR",
+      "requested": "HOST \u00b7 ORIGINAL CREATOR",
       "canonicalRequirementIds": [
         "COHOST-ORIGINAL-HOST"
       ]
@@ -10394,13 +10404,6 @@
       "id": "CLIENT_GOOGLE_MAPS_PLACES_CREDENTIALS",
       "canonicalRequirementIds": [
         "MAPS-GOOGLE"
-      ],
-      "status": "REQUIRES_CURRENT_EVIDENCE_AND_FINAL_CLASSIFICATION"
-    },
-    {
-      "id": "NATIVE_BACKGROUND_SOS_BUILD_AND_DEVICE",
-      "canonicalRequirementIds": [
-        "SOS-NATIVE"
       ],
       "status": "REQUIRES_CURRENT_EVIDENCE_AND_FINAL_CLASSIFICATION"
     },
@@ -10527,7 +10530,7 @@
       "path": "qa-evidence/production-cohost-promoted-reloaded.png",
       "artifactType": "screenshot",
       "provenance": "docs/acceptance-reconciliation-2026-10-02.json#/additionalFreshChecks/cohostProductionUi",
-      "scope": "Original Host Arjun Sharma remains HOST · ORIGINAL CREATOR throughout. Remove Co-Host was visible after promotion/reload. After removal/reload Priya Nair remains APPROVED with role participant. Fresh member-authenticated update_activity was denied with Activity not found or not manageable; creator and content unchanged. Temporary elevated role removed.",
+      "scope": "Original Host Arjun Sharma remains HOST \u00b7 ORIGINAL CREATOR throughout. Remove Co-Host was visible after promotion/reload. After removal/reload Priya Nair remains APPROVED with role participant. Fresh member-authenticated update_activity was denied with Activity not found or not manageable; creator and content unchanged. Temporary elevated role removed.",
       "existsInPrimaryCheckout": true,
       "reviewStatus": "CANDIDATE_NOT_REVIEWED_FOR_FINAL_BUILD"
     },
@@ -10536,7 +10539,7 @@
       "path": "qa-evidence/production-cohost-removed-reloaded.png",
       "artifactType": "screenshot",
       "provenance": "docs/acceptance-reconciliation-2026-10-02.json#/additionalFreshChecks/cohostProductionUi",
-      "scope": "Original Host Arjun Sharma remains HOST · ORIGINAL CREATOR throughout. Remove Co-Host was visible after promotion/reload. After removal/reload Priya Nair remains APPROVED with role participant. Fresh member-authenticated update_activity was denied with Activity not found or not manageable; creator and content unchanged. Temporary elevated role removed.",
+      "scope": "Original Host Arjun Sharma remains HOST \u00b7 ORIGINAL CREATOR throughout. Remove Co-Host was visible after promotion/reload. After removal/reload Priya Nair remains APPROVED with role participant. Fresh member-authenticated update_activity was denied with Activity not found or not manageable; creator and content unchanged. Temporary elevated role removed.",
       "existsInPrimaryCheckout": true,
       "reviewStatus": "CANDIDATE_NOT_REVIEWED_FOR_FINAL_BUILD"
     },
