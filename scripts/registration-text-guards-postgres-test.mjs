@@ -92,5 +92,11 @@ try {
  const fixtureResults=JSON.parse(fixtureProof.split('\n').at(-1));
  eq(fixtureResults.length,12);eq(fixtureResults.every(row=>row.outcome.startsWith('PASS:')),true);
  eq(sql('select label from tbl_activity_registration_questions where id=999'),'Entry name');
+ // Exact production rollback script: approved participant on a controlled ended fixture.
+ sql(`alter table tbl_events add column created_by int,add column event_end_time timestamptz,add column is_deleted bool default false,add column is_cancelled bool default false,add column title text;
+ insert into tbl_events(id,created_by,event_end_time,title) values(233,70,now()-interval '1 day','[QA] local rollback fixture');
+ create table tbl_event_participants(event_id int,user_id int,status text);insert into tbl_event_participants values(233,71,'approved');`);
+ const feedbackProof=JSON.parse(sql(fs.readFileSync('scripts/sql/qa-feedback-text-guard-rollback.sql','utf8')));
+ eq(feedbackProof.forbidden_comment_update,'PASS: generic22023');eq(feedbackProof.cleanup,'PASS: inserted row absent after subtransaction rollback');eq(sql('select count(*) from tbl_event_feedback where id=-103032054'),'0');
  console.log(JSON.stringify({status:'PASS',checks,scope:'Actual PostgreSQL tables, existing unchanged guard and new migration. Pre-fix reproduction; label/JSON-option/category/answer/feedback/Partner/Community insert and update denial, NFKC, innocent substrings, normal saves, unchanged legacy fields, clean replacement, statement rollback and unchanged private execution grant.'}));
 } finally {if(started)run('pg_ctl',['-D',dir+'/db','-m','immediate','-w','stop']);fs.rmSync(dir,{recursive:true,force:true});}
