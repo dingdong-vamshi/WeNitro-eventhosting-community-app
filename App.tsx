@@ -5703,6 +5703,17 @@ export function ChatScreen({
     openConversation(group.id);
   };
 
+  const openConversationInfo = () => {
+    if (!selected) return;
+    if (selected.type === 'People') { if (selected.userId) onOpenProfile?.(selected.userId); return; }
+    if (selected.activityId && onOpenActivity) { onOpenActivity(selected.activityId); return; }
+    setGroupInfo(null);
+    setGroupInfoQuery('');
+    setGroupInfoOpen(true);
+  };
+  const conversationInfoLabel = selected?.type === 'Groups'
+    ? selected.activityId ? `Open ${selected.name} activity` : `Open ${selected.name} group information`
+    : `Open ${selected?.name || 'member'}'s profile`;
   useEffect(() => {
     if (!groupInfoOpen || !selected || selected.type !== 'Groups' || !isBackendId(selected.id)) return;
     let active = true; setGroupInfoLoading(true); setGroupInfoError('');
@@ -5726,7 +5737,28 @@ export function ChatScreen({
     return () => { active = false; };
   }, [selected?.id, selectedPollKey, pollRevision]);
 
-  if (selected && groupInfoOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}><View style={{ width:'100%',maxWidth,alignSelf:'center',flex:1 }}><View style={{minHeight:61,borderBottomWidth:1,borderColor:palette.border,flexDirection:'row',alignItems:'center'}}><Pressable accessibilityRole="button" accessibilityLabel="Back to group chat" onPress={()=>setGroupInfoOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text}/></Pressable><Text style={{color:palette.text,fontSize:18,fontWeight:'800'}}>Group Info</Text></View>{groupInfoLoading?<ActivityIndicator color="#7060EF" style={{marginTop:80}}/>:<ScrollView contentContainerStyle={{padding:18,gap:16,paddingBottom:38}}><View style={{alignItems:'center',gap:10,paddingVertical:9}}>{selected.avatar?<Image source={{uri:selected.avatar}} style={{width:86,height:86,borderRadius:43}}/>:<View style={{width:86,height:86,borderRadius:43,backgroundColor:palette.card,alignItems:'center',justifyContent:'center'}}><Icon name="people" color="#7060EF" size={36}/></View>}<Text style={{color:palette.text,fontSize:20,fontWeight:'800'}}>{selected.name}</Text><Text style={{color:palette.muted,fontSize:11}}>{groupInfo?.members.length ?? selected.memberCount} participants</Text></View><View style={{backgroundColor:palette.card,borderRadius:14,borderWidth:1,borderColor:palette.border,padding:15,gap:14}}><View style={{flexDirection:'row',gap:10}}><Icon name="calendar-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>DATE</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.date}</Text></View></View><View style={{flexDirection:'row',gap:10}}><Icon name="location-outline" color="#7060EF"/><View><Text style={{color:palette.muted,fontSize:9}}>LOCATION</Text><Text style={{color:palette.text,fontSize:12}}>{groupInfo?.location}</Text></View></View>{groupInfo?.eventId&&onOpenActivity?<Button label="View Activity Page" onPress={()=>onOpenActivity(groupInfo.eventId!)}/>:null}</View><TextInput accessibilityLabel="Search participants" value={groupInfoQuery} onChangeText={setGroupInfoQuery} placeholder="Search participants..." placeholderTextColor={palette.muted} style={{minHeight:46,borderRadius:12,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,color:palette.text,paddingHorizontal:13} as any}/>{groupInfo?.members.filter(member=>`${member.profiles?.full_name||''} ${member.profiles?.username||''}`.toLowerCase().includes(groupInfoQuery.toLowerCase())).map(member=><Pressable accessibilityRole="button" key={member.user_id} disabled={!onOpenProfile} onPress={()=>onOpenProfile?.(String(member.user_id))} style={{minHeight:64,flexDirection:'row',alignItems:'center',gap:12,borderBottomWidth:1,borderColor:palette.border}}>{member.profiles?.avatar_url?<Image source={{uri:member.profiles.avatar_url}} style={{width:44,height:44,borderRadius:22}}/>:<Icon name="person-circle-outline" color={palette.muted} size={44}/>}<View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:13,fontWeight:'700'}}>{member.profiles?.full_name||member.profiles?.username||'Member'} <VerifiedBadge userId={member.user_id} /></Text><Text style={{color:palette.muted,fontSize:10}}>@{member.profiles?.username||'member'}</Text></View><Text style={{color:'#8E7CFF',fontSize:9}}>{member.role||'member'}</Text></Pressable>)}{groupInfoError?<Text style={{color:'#F47786',fontSize:12}}>{groupInfoError}</Text>:null}</ScrollView>}</View></SafeAreaView>;
+  if (selected && groupInfoOpen) return <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}>
+    <View style={{ width: '100%', maxWidth, alignSelf: 'center', flex: 1 }}>
+      <View style={{ minHeight: 61, borderBottomWidth: 1, borderColor: palette.border, flexDirection: 'row', alignItems: 'center' }}>
+        <Pressable accessibilityRole="button" accessibilityLabel="Back to group chat" onPress={() => setGroupInfoOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text} /></Pressable>
+        <Text style={{ color: palette.text, fontSize: 18, fontWeight: '800' }}>Group Info</Text>
+      </View>
+      {groupInfoLoading ? <ActivityIndicator color="#7060EF" style={{ marginTop: 80 }} /> : <ScrollView contentContainerStyle={{ padding: 18, gap: 16, paddingBottom: 38 }}>
+        <View style={{ alignItems: 'center', gap: 10, paddingVertical: 9 }}><UserAvatar uri={selected.avatar} name={selected.name} identity={selected.id} size={86} /><Text style={{ color: palette.text, fontSize: 20, fontWeight: '800' }}>{selected.name}</Text><Text style={{ color: palette.muted, fontSize: 11 }}>{groupInfo?.members.length ?? selected.memberCount} members</Text></View>
+        {groupInfo?.eventId ? <View style={{ backgroundColor: palette.card, borderRadius: 14, borderWidth: 1, borderColor: palette.border, padding: 15, gap: 14 }}>
+          <View style={{ flexDirection: 'row', gap: 10 }}><Icon name="calendar-outline" color="#7060EF" /><View><Text style={{ color: palette.muted, fontSize: 9 }}>DATE</Text><Text style={{ color: palette.text, fontSize: 12 }}>{groupInfo.date}</Text></View></View>
+          <View style={{ flexDirection: 'row', gap: 10 }}><Icon name="location-outline" color="#7060EF" /><View><Text style={{ color: palette.muted, fontSize: 9 }}>LOCATION</Text><Text style={{ color: palette.text, fontSize: 12 }}>{groupInfo.location}</Text></View></View>
+          {onOpenActivity ? <Button label="View Activity Page" onPress={() => onOpenActivity(groupInfo.eventId!)} /> : null}
+        </View> : null}
+        <TextInput accessibilityLabel="Search participants" value={groupInfoQuery} onChangeText={setGroupInfoQuery} placeholder="Search participants..." placeholderTextColor={palette.muted} style={{ minHeight: 46, borderRadius: 12, backgroundColor: palette.card, borderWidth: 1, borderColor: palette.border, color: palette.text, paddingHorizontal: 13 } as any} />
+        {groupInfo?.members.filter(member => `${member.profiles?.full_name || ''} ${member.profiles?.username || ''}`.toLowerCase().includes(groupInfoQuery.toLowerCase())).map(member => <Pressable accessibilityRole="button" accessibilityLabel={`Open ${member.profiles?.full_name || member.profiles?.username || 'member'} profile`} key={member.user_id} disabled={!onOpenProfile} onPress={() => onOpenProfile?.(String(member.user_id))} style={{ minHeight: 64, flexDirection: 'row', alignItems: 'center', gap: 12, borderBottomWidth: 1, borderColor: palette.border }}>
+          <UserAvatar uri={member.profiles?.avatar_url} name={member.profiles?.full_name || member.profiles?.username || 'Member'} identity={String(member.user_id)} size={44} />
+          <View style={{ flex: 1, gap: 4 }}><Text style={{ color: palette.text, fontSize: 13, fontWeight: '700' }}>{member.profiles?.full_name || member.profiles?.username || 'Member'} <VerifiedBadge userId={member.user_id} /></Text><Text style={{ color: palette.muted, fontSize: 10 }}>@{member.profiles?.username || 'member'}</Text></View><Text style={{ color: '#8E7CFF', fontSize: 9 }}>{member.role || 'member'}</Text>
+        </Pressable>)}
+        {groupInfoError ? <Text accessibilityRole="alert" style={{ color: '#F47786', fontSize: 12 }}>{groupInfoError}</Text> : null}
+      </ScrollView>}
+    </View>
+  </SafeAreaView>;
 
   if (selected)
     return (
@@ -5744,21 +5776,10 @@ export function ChatScreen({
           >
             <Icon name="arrow-back" color={palette.icon} />
           </Pressable>
-          <Pressable accessibilityRole="button" accessibilityLabel={`Open ${selected.name}'s profile`} disabled={!selected.userId || !onOpenProfile} onPress={() => selected.userId && onOpenProfile?.(selected.userId)}>
+          <Pressable accessibilityRole="button" accessibilityLabel={conversationInfoLabel} disabled={selected.type === 'People' && (!selected.userId || !onOpenProfile)} onPress={openConversationInfo}>
             <UserAvatar uri={selected.avatar} name={selected.name} size={42} />
           </Pressable>
-          <Pressable accessibilityRole="button" accessibilityLabel={selected.type === 'Groups' ? `Open ${selected.name} activity` : `Open ${selected.name}'s profile`} disabled={selected.type !== 'Groups' && (!selected.userId || !onOpenProfile)} onPress={() => {
-            if (selected.type !== 'Groups') { if (selected.userId) onOpenProfile?.(selected.userId); return; }
-            const openLinkedActivity = async () => {
-              if (selected.activityId && onOpenActivity) { onOpenActivity(selected.activityId); return; }
-              if (isBackendId(selected.id)) {
-                const room = await supabase.from('tbl_chat_rooms').select('event_id').eq('id', Number(selected.id)).maybeSingle();
-                if (room.data?.event_id && onOpenActivity) { onOpenActivity(String(room.data.event_id)); return; }
-              }
-              setGroupInfoOpen(true);
-            };
-            void openLinkedActivity().catch(() => setGroupInfoOpen(true));
-          }} style={styles.messageBody}>
+          <Pressable accessibilityRole="button" accessibilityLabel={conversationInfoLabel} disabled={selected.type === 'People' && (!selected.userId || !onOpenProfile)} onPress={openConversationInfo} style={styles.messageBody}>
             <Text style={[styles.chatThreadName, { color: palette.text }]} numberOfLines={1}>
               {selected.name} {selected.type === "People" && <VerifiedBadge userId={selected.userId} />}
             </Text>
@@ -5774,17 +5795,7 @@ export function ChatScreen({
                   : ""}
             </Text>
           </Pressable>
-          {selected.type === 'Groups' ? <Pressable accessibilityRole="button" accessibilityLabel="Open activity page" onPress={() => {
-            const openLinkedActivity = async () => {
-              if (selected.activityId && onOpenActivity) { onOpenActivity(selected.activityId); return; }
-              if (isBackendId(selected.id)) {
-                const room = await supabase.from('tbl_chat_rooms').select('event_id').eq('id', Number(selected.id)).maybeSingle();
-                if (room.data?.event_id && onOpenActivity) { onOpenActivity(String(room.data.event_id)); return; }
-              }
-              setGroupInfoOpen(true);
-            };
-            void openLinkedActivity().catch(() => setGroupInfoOpen(true));
-          }} style={styles.chatHeaderButton}><Icon name="information-circle-outline" color={palette.icon}/></Pressable> : null}
+          {selected.type === 'Groups' ? <Pressable accessibilityRole="button" accessibilityLabel={selected.activityId ? 'Open activity page' : 'Open group information'} onPress={openConversationInfo} style={styles.chatHeaderButton}><Icon name="information-circle-outline" color={palette.icon} /></Pressable> : null}
         </View>
         <ScrollView
           ref={threadScroll}
