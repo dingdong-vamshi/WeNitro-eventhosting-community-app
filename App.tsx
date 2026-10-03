@@ -1597,7 +1597,7 @@ function LoginScreen({ go, setData, onPhoneSignup }: {
   return (
     <AuthCard>
       <View style={styles.loginHeading}>
-        <Text style={styles.authEyebrow}>WELCOME BACK</Text>
+        <Text style={[styles.authEyebrow, { color: palette.isDark ? '#B5ABFF' : palette.accent }]}>WELCOME BACK</Text>
         <Text style={[styles.formTitle, { color: palette.text }]}>Log in to WeNitro</Text>
         <Text style={[styles.formIntro, { color: palette.muted }]}>Sign in with your existing account.</Text>
       </View>
@@ -1751,7 +1751,7 @@ function SignupScreen({ go, setData, initialPhone = "" }: {
   }
   return (
     <AuthCard>
-      <Text style={styles.authEyebrow}>JOIN THE COMMUNITY</Text>
+      <Text style={[styles.authEyebrow, { color: palette.isDark ? '#B5ABFF' : palette.accent }]}>JOIN THE COMMUNITY</Text>
       <Text style={[styles.formTitle, { color: palette.text }]}>Create your account</Text>
       <Text style={[styles.formIntro, { color: palette.muted }]}>Find people who share your interests.</Text>
       <Text style={[styles.label, { color: palette.muted }]}>I am joining as</Text>
