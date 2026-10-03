@@ -41,3 +41,14 @@ export async function redeemPendingActivityInvite(): Promise<string | null> {
  const eventId = data && typeof data === 'object' ? Number((data as Record<string, unknown>).event_id) : NaN;
  return Number.isSafeInteger(eventId) && eventId > 0 ? String(eventId) : null;
 }
+
+// Signed-in chat invitations are redeemed directly. They must not survive in the
+// anonymous login handoff store if the account changes during the request.
+export async function redeemActivityInviteUrl(url: string): Promise<string | null> {
+ const token = activityInviteTokenFromUrl(url);
+ if (!token) throw new Error('Invalid Activity invitation.');
+ const { data, error } = await (supabase.rpc as unknown as (name: string, args: Record<string, unknown>) => PromiseLike<{ data: unknown; error: { message: string } | null }>)('redeem_activity_invite', { p_token: token });
+ if (error) throw error;
+ const eventId = data && typeof data === 'object' ? Number((data as Record<string, unknown>).event_id) : NaN;
+ return Number.isSafeInteger(eventId) && eventId > 0 ? String(eventId) : null;
+}

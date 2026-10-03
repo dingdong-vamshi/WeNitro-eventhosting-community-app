@@ -15,7 +15,7 @@ import {
 } from "react-native";
 
 import { chatService } from "../services/wenitro";
-import { shareEntityExternally, shareEntityUrl, type InternalShareEntity } from "../services/internal-share";
+import { captureShareScope, shareEntityExternally, shareEntityUrl, type InternalShareEntity } from "../services/internal-share";
 import type { ChatMessage } from "../services/realtime-chat";
 import { MobileOverlayFrame } from "./mobile-app-shell";
 import { UserAvatar } from "./user-avatar";
@@ -76,17 +76,24 @@ export function ShareToChatModal({
 }) {
   const c = usePalette();
   const sentInvites = useRef(new Map<string, ChatMessage>());
+  const operationGeneration = useRef(0);
+  const beginOperation = () => {
+    const generation = operationGeneration.current, isCurrentActor = captureShareScope();
+    return () => generation === operationGeneration.current && isCurrentActor();
+  };
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [sending, setSending] = useState(false);
   const [feedback, setFeedback] = useState<{ tone: "error" | "success"; text: string } | null>(null);
 
   useEffect(() => {
+    operationGeneration.current++;
     sentInvites.current.clear();
     setQuery("");
     setSelected([]);
     setSending(false);
     setFeedback(null);
+    return () => { operationGeneration.current++; };
   }, [entity?.kind, entity?.id, entity?.inviteUrl]);
 
   const allTargets = useMemo(() => {
@@ -136,6 +143,8 @@ export function ShareToChatModal({
 
   const send = async () => {
     if (!entity || !selected.length || sending) return;
+    const isCurrentOperation = beginOperation();
+    if (!isCurrentOperation()) return;
     setSending(true);
     setFeedback(null);
     try {
@@ -149,27 +158,32 @@ export function ShareToChatModal({
         userId: target.userId,
         roomType: target.roomType,
       })));
+      if (!isCurrentOperation()) return;
       const roomIds = resolved.map(target => target.roomId);
       const uniqueRoomIds = [...new Set(roomIds)];
       const messages: ChatMessage[] = [];
       if (entity.inviteUrl) {
         const link = shareEntityUrl(entity);
         for (const roomId of uniqueRoomIds) {
+          if (!isCurrentOperation()) return;
           let message = sentInvites.current.get(roomId);
           if (!message) {
             const sent = await chatService.sendMessage(roomId, `Private Activity invitation: ${entity.title}\n\n${link}`);
+            if (!isCurrentOperation()) return;
             message = { ...sent, id: Number(sent.id) };
             sentInvites.current.set(roomId, message);
           }
           messages.push(message);
         }
       } else messages.push(...await chatService.share(uniqueRoomIds, entity.kind, entity.id));
+      if (!isCurrentOperation()) return;
       onSent(uniqueRoomIds, messages, resolved.filter((target, index, all) => all.findIndex(item => item.roomId === target.roomId) === index));
       setSelected([]);
       setFeedback({ tone: "success", text: `Sent to ${uniqueRoomIds.length} chat${uniqueRoomIds.length === 1 ? "" : "s"}.` });
       setSending(false);
-      setTimeout(onClose, 800);
+      setTimeout(() => { if (isCurrentOperation()) onClose(); }, 800);
     } catch (error) {
+      if (!isCurrentOperation()) return;
       setFeedback({ tone: "error", text: error instanceof Error ? error.message : "Could not share. Please try again." });
       setSending(false);
     }
@@ -177,21 +191,28 @@ export function ShareToChatModal({
 
   const shareExternally = async () => {
     if (!entity) return;
+    const isCurrentOperation = beginOperation();
+    if (!isCurrentOperation()) return;
     try {
       const shared = await shareEntityExternally(entity);
+      if (!isCurrentOperation()) return;
       if (shared && entity.kind === 'activity') void recordActivityShare(entity.id);
     } catch (error) {
+      if (!isCurrentOperation()) return;
       setFeedback({ tone: "error", text: error instanceof Error ? error.message : "Could not share. Use Copy link below." });
     }
   };
 
   const copyLink = async () => {
     if (!entity) return;
+    const isCurrentOperation = beginOperation();
+    if (!isCurrentOperation()) return;
     try {
       if (!await Clipboard.setStringAsync(shareEntityUrl(entity))) throw new Error("Clipboard unavailable. Select and copy the displayed link.");
+      if (!isCurrentOperation()) return;
       setFeedback({ tone: "success", text: "Link copied." });
       if (entity.kind === 'activity') void recordActivityShare(entity.id);
-    } catch (error) { setFeedback({ tone: "error", text: error instanceof Error ? error.message : "Select and copy the displayed link." }); }
+    } catch (error) { if (!isCurrentOperation()) return; setFeedback({ tone: "error", text: error instanceof Error ? error.message : "Select and copy the displayed link." }); }
   };
 
   return (

@@ -1,0 +1,62 @@
+{
+  "recordedAt": "2026-10-03T20:30:33.780363+00:00",
+  "baseCommit": "a18738e",
+  "status": "LOCAL_VERIFIED_PENDING_COORDINATOR_RELEASE",
+  "before": "Source-extracted delayed private invite creation reproduced an owner invite token being emitted after switching to a different actor. Pending share callbacks lacked equivalent identity invalidation.",
+  "implemented": [
+    "Root synchronously invalidates share identity scopes and closes the sheet whenever Auth identity changes. Logout and sign-in to the same account also invalidate old generations; same-identity refresh remains valid.",
+    "Delayed private invite creation suppresses obsolete success/error. Share modal guards recipient resolution, sequential invite sends, public share completion, errors, external/clipboard completion and delayed dismissal against session and modal-generation changes.",
+    "Account-keyed share modal clears per-room retry cache; root callback refuses to merge messages into another account workspace.",
+    "Authenticated chat invitation redemption goes directly to the existing authorized RPC without persisting its token in the anonymous login handoff store; stale results cannot navigate."
+  ],
+  "localVerification": [
+    {
+      "command": "node scripts/share-identity-regression-test.mjs",
+      "status": "PASS",
+      "checks": 41,
+      "scope": "Actual extracted callbacks plus real share-scope implementation; deferred operations cross account, logout/login, modal replacement and failure boundaries."
+    },
+    {
+      "command": "node scripts/vibe-metadata-share-regression-test.mjs",
+      "status": "PASS",
+      "checks": 36
+    },
+    {
+      "command": "node scripts/activity-likers-sheet-test.mjs",
+      "status": "PASS",
+      "checks": 22
+    },
+    {
+      "command": "node scripts/activity-share-observation-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "node scripts/profile-community-avatars-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "node scripts/auth-identity-reuse-test.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "status": "PASS"
+    },
+    {
+      "command": "node scripts/activity-invite-lifecycle-test.mjs",
+      "status": "PASS",
+      "checks": 42
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASS"
+    }
+  ],
+  "productionVerification": [],
+  "screenshotProof": [],
+  "limitations": [
+    "No production mutation or deployment. Coordinator owns final integrated gate and actual deployed acceptance.",
+    "Already dispatched authorized backend requests are not retroactively undone; guards prevent subsequent recipient dispatch and stale client delivery/navigation. Existing RPC authorization and RLS remain in force."
+  ],
+  "schemaChanges": false
+}

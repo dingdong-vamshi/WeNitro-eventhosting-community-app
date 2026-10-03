@@ -11,6 +11,17 @@ export type InternalShareEntity = {
   inviteUrl?: string;
 };
 
+// Invalidates asynchronous share work synchronously when the root accepts a new session.
+let shareIdentity: string | null = null;
+let shareGeneration = 0;
+export function setShareIdentity(identity: string | null) {
+  if (identity !== shareIdentity) { shareIdentity = identity; shareGeneration++; }
+}
+export function captureShareScope() {
+  const identity = shareIdentity, generation = shareGeneration;
+  return () => identity !== null && identity === shareIdentity && generation === shareGeneration;
+}
+
 type ShareRequestListener = (entity: InternalShareEntity) => void;
 type NavigationListener = (payload: ChatSharePayload) => void;
 
@@ -18,6 +29,7 @@ const shareRequestListeners = new Set<ShareRequestListener>();
 const navigationListeners = new Set<NavigationListener>();
 
 export function requestInternalShare(entity: InternalShareEntity) {
+  if (!captureShareScope()()) return;
   shareRequestListeners.forEach((listener) => listener(entity));
 }
 

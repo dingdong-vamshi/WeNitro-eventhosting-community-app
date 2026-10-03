@@ -10,7 +10,7 @@ import { ReferenceEditProfile } from './src/components/reconstruction/edit-profi
 import { SocialProfilesScreen } from './src/components/reconstruction/social-profiles';
 import { ReferenceInviteSquad } from './src/components/reconstruction/invite-squad';
 import { captureReferral, redeemPendingReferral } from './src/services/referrals';
-import { activityInviteTokenFromUrl, captureActivityInvite, createActivityInvite, redeemPendingActivityInvite } from './src/services/activity-invites';
+import { activityInviteTokenFromUrl, captureActivityInvite, createActivityInvite, redeemPendingActivityInvite, redeemActivityInviteUrl } from './src/services/activity-invites';
 import { ReferenceCollection } from "./src/components/reconstruction/collections";
 import { CommunityInfo } from "./src/components/community/community-info";
 import { ReferenceFeed, ReferenceSearch } from "./src/components/reconstruction/feed-search";
@@ -123,6 +123,8 @@ import {
   openSharedContent,
   requestInternalShare,
   shareEntityExternally,
+  captureShareScope,
+  setShareIdentity,
   subscribeToInternalShareRequests,
   subscribeToSharedContentNavigation,
   type InternalShareEntity,
@@ -4592,6 +4594,8 @@ export function ActivityDetailScreen({
   const canHost = isHost || isCohost || String(activity.ownerId || "") === String(data.userId || "");
   const canComment = canHost || joined;
   const shareActivity = async () => {
+    const isCurrentShare = captureShareScope();
+    if (!isCurrentShare()) return;
     if (activity.visibility === "private" && !canHost) {
       Alert.alert("Private Activity", "Only a host or co-host can create an invite link.");
       return;
@@ -4599,9 +4603,11 @@ export function ActivityDetailScreen({
     if (activity.visibility === "private") {
       try {
         const link = await createActivityInvite(activity.id);
+        if (!isCurrentShare()) return;
         requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: "Private invitation — open the link to request access.", inviteUrl: link });
       } catch (caught) {
         if (caught && typeof caught === "object" && "name" in caught && caught.name === "AbortError") return;
+        if (!isCurrentShare()) return;
         Alert.alert("Invite could not be shared", caught instanceof Error ? caught.message : "Please try again.");
       }
       return;
@@ -5070,10 +5076,12 @@ function ChatMessageVideo({ uri }: { uri: string }) {
 }
 
 async function redeemChatInvitation(text: string) {
+  const isCurrentShare = captureShareScope();
+  if (!isCurrentShare()) return;
   const link = text.split(/\s+/).find(part => activityInviteTokenFromUrl(part));
   if (!link) throw new Error("This message has no valid Activity invitation.");
-  await captureActivityInvite(link);
-  const id = await redeemPendingActivityInvite();
+  const id = await redeemActivityInviteUrl(link);
+  if (!isCurrentShare()) return;
   if (!id) throw new Error("This invitation is no longer available.");
   openSharedContent({ version: 1, kind: "activity", entityId: id, parentId: null, title: "Activity invitation", preview: "", deepLink: `wenitro://activity/${id}`, sharedBy: 0, thumbnailBucket: null, thumbnailPath: null, thumbnailUrl: null });
 }
@@ -9388,6 +9396,8 @@ export default function App() {
       if (authIdentityRef.current === id) return;
       running?.controller.abort();
       authIdentityRef.current = id;
+      setShareIdentity(id);
+      setShareEntity(null);
       authGenerationRef.current += 1;
       workspaceLoadedSectionsRef.current.clear();
       running = null;
@@ -9974,6 +9984,7 @@ export default function App() {
         {content}
         {data.mode === "authenticated" && data.onboarded && data.userId ? <LoginAnnouncements key={`login-announcements:${data.userId}`} userId={data.userId} /> : null}
         <ShareToChatModal
+          key={`share:${data.userId || "signed-out"}`}
           entity={shareEntity}
           conversations={data.conversations}
           people={data.people}
@@ -9982,6 +9993,7 @@ export default function App() {
           onRetryTargets={() => setShareTargetsRetry(value => value + 1)}
           onClose={() => setShareEntity(null)}
           onSent={(roomIds, messages, resolvedTargets) => {
+            if (!data.userId || authIdentityRef.current === null) return;
             const mapped = messages.map((message) => {
               const item = chatMessageFromRemote(message, data.userId);
               if (item.share && !item.share.thumbnailUrl && shareEntity?.thumbnailUrl) {
@@ -9990,6 +10002,7 @@ export default function App() {
               return item;
             });
             setData((current) => {
+              if (current.mode !== "authenticated" || current.userId !== data.userId) return current;
               const updated = current.conversations.map((conversation) => {
                 const messageIndex = roomIds.indexOf(conversation.id);
                 const message = messageIndex >= 0 ? mapped[messageIndex] : undefined;
