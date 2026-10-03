@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-03T18:23:05.425Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "announcementId": 3,
+  "recipient": 120,
+  "phase": "BEFORE_UI_ACK",
+  "checks": [
+    {
+      "name": "Deployed Admin UI publication persisted with only dedicated QA120 audience",
+      "status": "PASS"
+    },
+    {
+      "name": "Dedicated non-recipient119 cannot load announcement",
+      "status": "PASS"
+    },
+    {
+      "name": "Non-recipient cannot acknowledge",
+      "status": "PASS"
+    },
+    {
+      "name": "Raw targeted announcement hidden from ordinary member",
+      "status": "PASS"
+    },
+    {
+      "name": "Intended QA120 recipient can load unacknowledged announcement",
+      "status": "PASS"
+    },
+    {
+      "name": "Authorized Admin can read actual received-rating metadata without selecting rater identity",
+      "status": "PASS"
+    },
+    {
+      "name": "member cannot use Admin rating-history access for unrelated rated member",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance cannot use Admin rating-history access for unrelated rated member",
+      "status": "PASS"
+    }
+  ]
+}
