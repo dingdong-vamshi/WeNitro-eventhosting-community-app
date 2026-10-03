@@ -1630,5 +1630,18 @@
     ],
     "outcome": "Activity300correctname visibleinrealinbox, directnamesalso visible",
     "reviewed": true
+  },
+  {
+    "name": "chat-video-preview-release585",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/chat-video-preview-release585.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T22:43:34.219720+00:00",
+    "account": 71,
+    "deployment": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
+    "requirements": [
+      "SHARE-VIBE"
+    ],
+    "outcome": "Final deployed video preview placeholder and correct creator/title. Actual screenshot reviewed; no extracted frame claim.",
+    "reviewed": true
   }
 ]

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-03T22:43:34.219720+00:00",
+  "release": {
+    "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+  },
+  "appCommit": "58514c7e4d87e7cf4a51d3f1ef562fcb6934fee1",
+  "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
+  "uiComparison": {
+    "from": "fc0257f",
+    "to": "58514c7e4d87e7cf4a51d3f1ef562fcb6934fee1",
+    "changedAppSourcePaths": [],
+    "meaning": "App UI, assets, dependencies and configuration listed above are unchanged. Existing production screenshots retain original capture identity; compatibility does not imply recapture or a previously untested interaction."
+  },
+  "changedHostingAndBackend": "Public Vibe preview author/audience guards and no-store headers. Edge4 and final canonical Vercel route passed nine live checks plus four exact fixture cleanup/reward-preservation checks.",
+  "productionProof": "docs/chat001-public-vibe-og-production-proof.json",
+  "localGate": "docs/chat001-production-regression-local-verification.json",
+  "knownAccessBlocker": "Computer-use tool still reports macOS locked. Browser button interactions are blocked by an outstanding older native Delete message confirmation; supported navigation and screenshots work. No operating-system protection was bypassed.",
+  "remainingScope": "Ordinary interactive production checks stay pending, separately from provider, genuine identity, mailbox and device prerequisites."
+}

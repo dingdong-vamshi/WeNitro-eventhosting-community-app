@@ -4,7 +4,7 @@
   "target": "cxsznhrkzqndhseodcyy",
   "count": 16,
   "release": {
-    "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
     "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
   },
   "counts": {
@@ -40,12 +40,13 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
       "excludedPriorEvidence": "Old instructions/bottom-checkbox screenshots predate corrected pre-entry gate and cannot satisfy original PDF32.",
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-TERMS",
@@ -81,12 +82,13 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
       "excludedPriorEvidence": "Old instructions/bottom-checkbox screenshots predate corrected pre-entry gate and cannot satisfy original PDF32.",
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-DASHBOARD",
@@ -131,12 +133,13 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
       "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately.",
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-PARTICIPANTS",
@@ -200,11 +203,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-PAYMENT-DETAILS",
@@ -260,11 +264,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-CATEGORY-PRICES",
@@ -317,11 +322,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-CATEGORY-SELECTION",
@@ -373,11 +379,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-REQUIRED-ANSWERS",
@@ -431,12 +438,13 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
       "excludedPriorEvidence": "integrated-invited-payment-form-regression.png records an actual failure later repaired; never positive acceptance proof.",
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-PAID-JOIN",
@@ -492,11 +500,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-LIST-IDENTITY",
@@ -558,12 +567,13 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
       "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately.",
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "PARTNER-EXTERNAL-URL",
@@ -598,11 +608,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "HOST-NORMAL-PAID",
@@ -647,12 +658,13 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
       "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately.",
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-PAYMENT-PRIVACY",
@@ -691,11 +703,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-PAYMENT-IDEMPOTENCY",
@@ -749,11 +762,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-PAYMENT-AMOUNT",
@@ -792,11 +806,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-PAYMENT-STATE",
@@ -852,11 +867,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields.",
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     }
   ],
   "priorMetadataCorrections": "Owner dashboard/unpaid/required-question identity now correctly71; canonical category IDs corrected in current root metadata.",

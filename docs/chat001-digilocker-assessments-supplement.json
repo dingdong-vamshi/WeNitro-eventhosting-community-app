@@ -12,7 +12,7 @@
       "localVerification": [
         "docs/chat001-digilocker-local-proof.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current gate includes DigiLocker14Edge/58PG/26UI and15verifier boundaries; not live provider identity evidence."
@@ -62,7 +62,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Supported Sandbox DigiLocker integration is deployed and deliberately disabled. Authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials and registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance remain external prerequisites. Remote credential absence was not established. No real Aadhaar verification or resulting live +20 award is claimed.",
@@ -87,7 +87,8 @@
         "path": "docs/chat001-backend-hotfix-compatibility-proposed.json",
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "scope": "Disabled UI and backend/Trust source identical to accepted96f1ecf state; real provider flow still excluded."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "TRUST-AADHAAR",
@@ -99,7 +100,7 @@
       "localVerification": [
         "docs/chat001-digilocker-local-proof.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current gate includes DigiLocker14Edge/58PG/26UI and15verifier boundaries; not live provider identity evidence."
@@ -149,7 +150,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Supported Sandbox DigiLocker integration is deployed and deliberately disabled. Authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials and registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance remain external prerequisites. Remote credential absence was not established. No real Aadhaar verification or resulting live +20 award is claimed.",
@@ -172,7 +173,15 @@
         "path": "docs/chat001-backend-hotfix-compatibility-proposed.json",
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "scope": "Disabled UI and backend/Trust source identical to accepted96f1ecf state; real provider flow still excluded."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     }
-  ]
+  ],
+  "release": {
+    "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+  },
+  "counts": {
+    "PARTIAL_EXTERNAL_DEPENDENCY": 2
+  }
 }

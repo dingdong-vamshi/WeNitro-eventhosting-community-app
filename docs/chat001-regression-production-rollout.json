@@ -192,5 +192,16 @@
     "deploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
     "localGate": "docs/chat001-production-regression-local-verification.json",
     "productionProof": "docs/chat001-partner-preview-production-retest.json"
+  },
+  "finalPublicPreviewCorrection": {
+    "appCommit": "58514c7e4d87e7cf4a51d3f1ef562fcb6934fee1",
+    "appDeployment": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
+    "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
+    "adminDeployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "shareVibeVersion": 4,
+    "publicPreviewChecks": 9,
+    "fixtureCleanupChecks": 4,
+    "proof": "docs/chat001-public-vibe-og-production-proof.json",
+    "localGate": "docs/chat001-production-regression-local-verification.json"
   }
 }

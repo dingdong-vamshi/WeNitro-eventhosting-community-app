@@ -1,18 +1,56 @@
 {
-  "at": "2026-10-03T22:33:31.851Z",
+  "at": "2026-10-03T22:40:23.149Z",
   "target": "cxsznhrkzqndhseodcyy",
   "release": {
-    "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
     "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
     "shareVibeVersion": 4
   },
-  "status": "FAIL",
-  "checks": [],
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Disposable standalone public Vibe returns HTML 200",
+      "status": "PASS"
+    },
+    {
+      "name": "Public preview is not cached",
+      "status": "PASS"
+    },
+    {
+      "name": "Public caption present",
+      "status": "PASS"
+    },
+    {
+      "name": "Public canonical and deep link present",
+      "status": "PASS"
+    },
+    {
+      "name": "Public image metadata present",
+      "status": "PASS"
+    },
+    {
+      "name": "Owned image uses target signed Storage URL",
+      "status": "PASS"
+    },
+    {
+      "name": "Existing private Activity Vibe remains 404",
+      "status": "PASS"
+    },
+    {
+      "name": "Private response has no OG metadata or signed URL",
+      "status": "PASS"
+    },
+    {
+      "name": "Public OG image capability returns exactly the synthetic owned PNG",
+      "status": "PASS",
+      "sha256": "d08cba5cc933be22121aa2334aead8106377e8ff5a090d75198be46d0d4739c4"
+    }
+  ],
   "cleanup": [
     {
       "name": "Exact synthetic Vibe deleted and anonymous preview now 404",
       "status": "PASS",
-      "vibeId": 137
+      "vibeId": 138
     },
     {
       "name": "Exact synthetic media removed",
@@ -29,11 +67,11 @@
   ],
   "fixture": {
     "ownerId": 120,
-    "runId": "e7c28cb2-772f-4294-9f9a-af834c0211f9",
+    "runId": "5ad1fbed-2e53-4ccf-9cdb-7410883c8555",
     "mediaKind": "synthetic one-pixel PNG",
-    "vibeId": 137
+    "vibeId": 138
   },
   "scope": "Synthetic public fixture only; no actual private media or real identity/provider data.",
-  "reason": "Scoped assertion: Public preview is not cached",
-  "finishedAt": "2026-10-03T22:33:38.719Z"
+  "htmlSha256": "a095452e0f0bf7e357c7645f118c84ac40816267dede23708334e353a8b5f684",
+  "finishedAt": "2026-10-03T22:40:35.202Z"
 }

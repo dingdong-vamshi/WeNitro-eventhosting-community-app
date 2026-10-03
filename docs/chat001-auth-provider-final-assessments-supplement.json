@@ -54,7 +54,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "A controlled real inbox message is still required to establish rendered template branding. Prior configuration evidence is accepted; current SMTP/template secrets are not exposed by available read-only tools.",
@@ -78,7 +78,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-EMAIL-CONFIRM",
@@ -115,7 +116,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "No valid confirmation link from a controlled real inbox was opened for the intended account in retained evidence. Owner-controlled inbox interaction is needed; no new identity or consent was created for this audit.",
@@ -139,7 +140,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-EMAIL-SENDER",
@@ -176,7 +178,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Rendered sender and intended delivery service need a controlled inbox receipt. Prior docs described optional custom SMTP credentials as not supplied, but present tools do not establish current SMTP configuration. Do not claim broken or missing SMTP from provider flags.",
@@ -200,7 +202,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-RECOVERY-REQUEST",
@@ -248,7 +251,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Actual delivery to an owner-controlled real inbox remains untested; test-address rejection is not evidence of universal mail failure.",
@@ -272,7 +275,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-RECOVERY-ROUTE",
@@ -320,7 +324,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Opening an actual received recovery link with its intended recovery session was not recorded. Link generation is configuration proof, not clicked-link execution.",
@@ -344,7 +348,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-RECOVERY-RESET",
@@ -381,7 +386,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "No controlled actual recovery session was used to save a new password. This requires owner-controlled mailbox/account interaction; current task explicitly excludes credential reset.",
@@ -405,7 +410,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-RECOVERY-LOGIN",
@@ -442,7 +448,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Login after an actual recovery password change has not been demonstrated. Ordinary existing-password login is not evidence of post-reset login.",
@@ -466,7 +472,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-GOOGLE-NEW",
@@ -532,7 +539,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "The retained successful observation does not identify an independently fresh Google identity or its setup-stage transition. An owner-controlled Google account/new-user provider interaction is required to distinguish this branch; no provider-secret failure is asserted.",
@@ -556,7 +563,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-GOOGLE-EXISTING",
@@ -622,7 +630,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Prior session restoration does not prove a second independent provider sign-in returned the same existing identity. Controlled Google chooser interaction is needed for that exact branch; source remains unchanged.",
@@ -646,7 +654,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-GOOGLE-PROVIDER",
@@ -706,7 +715,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Actual primary GIS valid exchange is proven and local cancellation/invalid exchange tests pass. Live chooser cancellation/error UI remains unexercised in retained evidence. Mac lock is a temporary test-access block, not missing Google configuration or an external implementation dependency.",
@@ -730,7 +739,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-GOOGLE-REDIRECT",
@@ -790,7 +800,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Actual prior redirect probe returned redirect_uri_mismatch for https://cxsznhrkzqndhseodcyy.supabase.co/auth/v1/callback. Owner must authorize that exact URI on the same Google Web OAuth client, preserving existing Firebase handler, then retest. No evidence of later console correction exists; current settings do not expose that allowlist.",
@@ -814,7 +824,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-PHONE-NEW",
@@ -869,7 +880,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "New-account completion with genuinely delivered physical OTP remains unproven. Requires owner-controlled physical number/device, not fabricated phone confirmation.",
@@ -893,7 +904,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-PHONE-EXISTING",
@@ -948,7 +960,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Physical OTP login into a pre-existing controlled phone identity has not been demonstrated; no duplicate-profile conclusion can be drawn from synthetic downstream fixtures.",
@@ -972,7 +984,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-OTP-SEND",
@@ -1039,7 +1052,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "The prior diagnostics intentionally sent no SMS. Template acceptance, full send path, actual controlled-number delivery and current credit sufficiency remain unproven; only controlled physical-number testing can close them.",
@@ -1063,7 +1076,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-OTP-VERIFY",
@@ -1130,7 +1144,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Valid delivered OTP and invalid/expired/replayed real-code branches remain unexercised. Requires controlled physical delivery; synthetic confirmed fixtures cannot substitute.",
@@ -1154,7 +1168,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "AUTH-PHONE-STATE",
@@ -1220,7 +1235,7 @@
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "A genuine physical OTP resulting in the intended account's confirmed state remains unverified. No synthetic fixture is claimed as ownership proof.",
@@ -1244,7 +1259,8 @@
         },
         "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
         "statusPreserved": true
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     }
   ],
   "scopeClarifications": [
@@ -1254,7 +1270,7 @@
     "No blanket absent-credentials diagnosis. Native Google SDK device test is not silently added to these web criteria."
   ],
   "release": {
-    "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
     "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
   }
 }

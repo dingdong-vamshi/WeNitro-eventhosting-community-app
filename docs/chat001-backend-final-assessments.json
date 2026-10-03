@@ -27,7 +27,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -36,7 +36,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -71,7 +71,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Read current README, API/database historical notices, E2E notice and new provider runbooks. Existing architecture/release guidance remains compatible; current provider activation/disabled evidence is added through named runbooks, not inferred from historical docs."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-ANONYMOUS-MEDIA",
@@ -94,7 +95,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -103,7 +104,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -126,7 +127,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Opaque media Edge handler and Community service/anonymous-media migration byte-identical. New Community share-preview component renders already-authorized URLs and does not replace anonymous-post capabilities or expose paths."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-MEDIA-CAPABILITY",
@@ -150,7 +152,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -159,7 +161,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -186,7 +188,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Capability handler/migration and signed-URL service byte-identical. Old real expiry/tamper/HEAD/range/deletion proof remains valid for unchanged contract; fixture36 is not reused and no new expiry wait claimed."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-ANONYMOUS-RATING",
@@ -209,7 +212,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -218,7 +221,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -242,7 +245,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Anonymous rating/legacy projection migrations unchanged; latest six migrations do not alter recipient/raw-table access. Keep only named passed checks from musp6fp8, which remains overall FAIL due separate Realtime timeout."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-PROFILE-ACCOUNT-SWITCH",
@@ -272,7 +276,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -281,7 +285,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -308,7 +312,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Profile service unchanged. Profile file changed only own-Squad metric branch with identity recheck; unrelated sharing adds stronger actor invalidation. Current117 gate includes actual identity/phase5/profile/service races. No fresh browser race claimed."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-PROFILE-INTEREST-ATOMICITY",
@@ -331,7 +336,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -340,7 +345,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -363,7 +368,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Atomic interests SQL and Profile service unchanged; new migrations do not replace set_my_interests or category guards. Existing deployed rollback/preservation/cross-user proof plus current profile-interest test remain scoped."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-REPORT-SUBMISSION",
@@ -386,7 +392,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -395,7 +401,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -419,7 +425,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Authenticated report contract unchanged and new text guard intentionally does not filter private report evidence. Preserve named successful report checks and overall failed-run limitation."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-BADGE-ELIGIBILITY",
@@ -449,7 +456,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -458,7 +465,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -485,7 +492,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "22-rule engine and reference adapter unchanged; new migrations leave qualifying status/payment/Host/ban/post/referral filters intact. Current117 reruns actual badge-engine boundaries. No claim all thresholds newly earned."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-BADGE-IDEMPOTENCY",
@@ -515,7 +523,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -524,7 +532,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -551,7 +559,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "22-rule engine unchanged; no new Nitro/achievement ledger grant path in six newer migrations. DigiLocker changes only trusted verification signal, not Nitro or achievement rules. Existing actual referral/reconciliation and current local test retain scope."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-BADGE-READ-PRIVACY",
@@ -584,7 +593,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -593,7 +602,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -620,7 +629,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement/public projections unchanged. Aadhaar source now private ledger helper; actual deployed ordinary-ledger denial/zero rows/unchanged score and local58 demonstrate boundary, while public Trust still returns only intended aggregate fields. Do not claim whole Trust runtime unchanged."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-STORAGE-OWNERSHIP",
@@ -656,7 +666,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -665,7 +675,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -696,7 +706,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "New migrations do not alter Storage policies; signed-URL service unchanged. Latest share-preview renderer uses supplied signed URI unchanged and avoids fetching video as image; no public URL conversion. Existing actual cross-user Storage and linked Activity privacy proof retained."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "SEC-OBSERVATION-AUTH",
@@ -727,7 +738,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -736,7 +747,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -767,7 +778,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Observed usage migration unchanged; new Admin IP read is separate and Admin-only. Existing current-member/view/share visibility and private analytics grant/role evidence retains scope."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-01",
@@ -803,7 +815,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -812,7 +824,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -855,7 +867,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-02",
@@ -891,7 +904,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -900,7 +913,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -943,7 +956,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-03",
@@ -979,7 +993,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -988,7 +1002,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1031,7 +1045,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-04",
@@ -1067,7 +1082,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1076,7 +1091,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1119,7 +1134,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-05",
@@ -1155,7 +1171,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1164,7 +1180,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1208,7 +1224,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-06",
@@ -1244,7 +1261,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1253,7 +1270,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1297,7 +1314,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-07",
@@ -1333,7 +1351,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1342,7 +1360,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1386,7 +1404,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-08",
@@ -1422,7 +1441,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1431,7 +1450,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1475,7 +1494,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-09",
@@ -1511,7 +1531,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1520,7 +1540,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1563,7 +1583,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-10",
@@ -1599,7 +1620,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1608,7 +1629,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1651,7 +1672,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-11",
@@ -1687,7 +1709,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1696,7 +1718,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1739,7 +1761,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-12",
@@ -1775,7 +1798,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1784,7 +1807,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1827,7 +1850,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-13",
@@ -1863,7 +1887,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1872,7 +1896,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -1915,7 +1939,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-14",
@@ -1951,7 +1976,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -1960,7 +1985,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2003,7 +2028,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-15",
@@ -2039,7 +2065,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -2048,7 +2074,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2091,7 +2117,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-16",
@@ -2127,7 +2154,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -2136,7 +2163,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2179,7 +2206,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-17",
@@ -2215,7 +2243,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -2224,7 +2252,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2267,7 +2295,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-18",
@@ -2303,7 +2332,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -2312,7 +2341,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2355,7 +2384,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-19",
@@ -2391,7 +2421,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -2400,7 +2430,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2443,7 +2473,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-20",
@@ -2479,7 +2510,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -2488,7 +2519,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2531,7 +2562,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-21",
@@ -2567,7 +2599,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -2576,7 +2608,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2619,7 +2651,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     },
     {
       "id": "BADGE-22",
@@ -2655,7 +2688,7 @@
       "localVerification": [
         "docs/chat001-integrated-local-verification.json",
         {
-          "path": "docs/chat001-production-regression-local-verification.json",
+          "path": "docs/chat001-local-verification-117.json",
           "status": "PASS",
           "checks": 117,
           "scope": "Current complete gate for testedApp e8727e0; fc0257f adds evidence/docs only. Existing test and live evidence limitations preserved."
@@ -2664,7 +2697,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "",
@@ -2708,7 +2741,8 @@
         "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
         "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
         "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
-      }
+      },
+      "finalReleaseCompatibility": "docs/chat001-final-release-compatibility.json"
     }
   ],
   "releaseCompatibility": "docs/chat001-backend-hotfix-compatibility-proposed.json",
@@ -2724,5 +2758,12 @@
     "leakedPasswordWarning": 1,
     "privateRlsInfo": 11,
     "limit": "These warnings/info remain documented; scopedPASS is not zero-vulnerability certification."
+  },
+  "release": {
+    "appDeploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+  },
+  "counts": {
+    "PASS": 34
   }
 }

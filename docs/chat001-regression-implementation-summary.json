@@ -1,5 +1,5 @@
 {
-  "status": "COMPLETE_LOCAL_GATE_117_PASS_APP_HOTFIX_DEPLOYMENT_AND_TARGETED_RETEST_PENDING",
+  "status": "IMPLEMENTED_AND_DEPLOYED_WITH_ACCEPTANCE_GAPS_EXPLICIT",
   "items": [
     {
       "change": "Vibe identity and Activity metadata",
@@ -114,11 +114,12 @@
       ],
       "localProof": "docs/chat001-public-vibe-og-hardening.json",
       "completeLocalGate": "docs/chat001-production-regression-local-verification.json",
-      "productionStatus": "Edge v4 active; Vercel no-store correction awaiting this push and production retest.",
-      "knownProductionFailure": "docs/chat001-public-vibe-og-cache-header-failure.json"
+      "productionStatus": "DEPLOYED_PRODUCTION_RETEST_PASS",
+      "knownProductionFailure": "docs/chat001-public-vibe-og-cache-header-failure.json",
+      "productionProof": "docs/chat001-public-vibe-og-production-proof.json"
     }
   ],
-  "productionVisualAcceptance": "Latest Appfc0257f andAdmin03d20e5 production evidence retained. Partner cold routes/activityswitch/back-forward/registrationform and sharedvideopreview actual screenshots pass. Remaining userinteractions and provider/deviceconditions remain explicit in308report; no blanket finalacceptance.",
+  "productionVisualAcceptance": "Current App58514c7/Admin03d20e5 are READY. All confirmed correction regressions have scoped production retests. Uncompleted interactions, genuine identity/device checks and provider activation remain explicit in the308requirement report.",
   "localVerification": {
     "status": "PASS",
     "checks": 119,
@@ -197,8 +198,9 @@
     "notNeeded": "No repeat synthetic badge awards, hosted payment, identity/session creation, provider activation or additional production mutation is required to close this backend review."
   },
   "finalCorrectionRelease": {
-    "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
-    "deploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
-    "proof": "docs/chat001-partner-preview-production-retest.json"
+    "appCommit": "58514c7e4d87e7cf4a51d3f1ef562fcb6934fee1",
+    "deploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
+    "shareVibeVersion": 4,
+    "proof": "docs/chat001-public-vibe-og-production-proof.json"
   }
 }

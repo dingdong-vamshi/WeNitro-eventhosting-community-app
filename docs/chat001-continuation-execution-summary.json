@@ -1,0 +1,40 @@
+{
+  "asOf": "2026-10-03T22:46:34.782414+00:00",
+  "requestedChange": "Complete the two PDFs, all22badge rules, Admin, Partner/payments and backend/security acceptance using local batching followed by deployed verification.",
+  "implementationAreas": 17,
+  "implementationDetail": "docs/chat001-regression-implementation-summary.json",
+  "localVerification": {
+    "status": "PASS",
+    "checks": 119,
+    "report": "docs/chat001-production-regression-local-verification.json"
+  },
+  "productionVerification": {
+    "appCommit": "58514c7e4d87e7cf4a51d3f1ef562fcb6934fee1",
+    "appDeployment": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
+    "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
+    "adminDeployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "shareVibeVersion": 4,
+    "publicPreviewChecks": 9,
+    "fixtureCleanupChecks": 4,
+    "proof": "docs/chat001-public-vibe-og-production-proof.json"
+  },
+  "requirementCounts": {
+    "PASS": 227,
+    "PENDING_EVIDENCE_VALIDATION": 59,
+    "PARTIAL_EXTERNAL_DEPENDENCY": 21,
+    "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1
+  },
+  "evidenceCounts": {
+    "acceptedRequirements": 227,
+    "acceptedRequirementsWithReviewedScreenshot": 211,
+    "requirementsWithReviewedScreenshotState": 219,
+    "acceptedRequirementsWithExistingTechnicalArtifact": 165,
+    "requirementsWithExistingTechnicalArtifact": 222
+  },
+  "remainingNormalAcceptanceItems": 59,
+  "zeroNormalFixableFailuresCertified": false,
+  "baselineSplit": "No complete comparable baseline supports an exact already-correct versus fixed requirement split. Seventeen documented implementation/correction areas are not counted as seventeen distinct requirements.",
+  "unavoidableBlocker": "Computer-use tool reports macOS is locked; an outstanding older native Delete message confirmation blocks browser clicks. Unlock the Mac and dismiss that confirmation to resume the remaining interactive checks.",
+  "externalBoundaries": "Twenty-two requirement dispositions remain partial or unavailable because they require real inbox/OTP/provider identities, consenting camera/verification evidence, provider authorization/configuration, or an unselected semantic moderation/redemption integration. Exact per-requirement reasons are in Section6.",
+  "clientReadySummary": "Not ready for final client acceptance. Code corrections are deployed and the full local suite passes, but59ordinary production acceptance items and22external/owner-dependent dispositions remain. No fresh prompt is needed; all context and evidence are preserved."
+}
