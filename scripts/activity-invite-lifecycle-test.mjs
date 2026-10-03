@@ -10,6 +10,7 @@ try{
  create function public.get_current_app_user_id() returns int language sql as $$select current_setting('qa.user')::int$$;
  create table public.tbl_events(id int primary key,created_by int default 1,status text default 'published',is_deleted bool default false,is_cancelled bool default false,event_end_time timestamptz default now()+interval '2 days',registration_close_time timestamptz default now()+interval '1 day',max_participants int default 10,is_paid bool default false,payment_collection_mode text default 'onsite',join_type text default 'approval');
  create table public.tbl_activity_invites(id bigint generated always as identity,event_id int,token_hash text,created_by int,expires_at timestamptz,max_uses int,uses_count int default 0,revoked_at timestamptz);
+ create table public.tbl_activity_payments(event_id int,user_id int,status text,financial_status text);
  create table public.tbl_event_participants(id bigint generated always as identity,event_id int,user_id int,status text,invited_by int,responded_at timestamptz,joined_at timestamptz,unique(event_id,user_id));
  create function private.can_manage_activity(int,int) returns bool language sql as $$select exists(select 1 from public.tbl_events where id=$1 and created_by=$2)$$;
  create function private.activity_occupied_count(int,int) returns int language sql as $$select count(*)::int from public.tbl_event_participants where event_id=$1 and user_id<>$2 and status in('approved','going','payment_required')$$;
@@ -31,6 +32,13 @@ try{
  const free=token(6);eq(redeem(2,free),'approved');eq(redeem(2,free),'approved');eq(sql('select uses_count from public.tbl_activity_invites where event_id=6'),'1');
  sql("update public.tbl_event_participants set status='left',joined_at=null where event_id=6;");const fresh=token(6);eq(redeem(2,fresh),'approved');
  sql("update public.tbl_events set is_paid=true,payment_collection_mode='cashfree' where id=7;");const paid=token(7);eq(redeem(2,paid),'payment_required');eq(sql("select count(*) from public.tbl_event_participants where event_id=7 and joined_at is not null"),'0');eq(redeem(2,paid),'payment_required');eq(sql('select uses_count from public.tbl_activity_invites where event_id=7'),'1');
+ sql('update public.tbl_activity_invites set max_uses=1 where event_id=7;');
+ for(const state of ['PAYABLE','SETTLED','ON_HOLD']){
+  sql(`update public.tbl_event_participants set status='approved',joined_at=now() where event_id=7;delete from public.tbl_activity_payments;insert into public.tbl_activity_payments values(7,2,'paid','${state}');`);
+  eq(redeem(2,paid),'approved');eq(sql('select uses_count from public.tbl_activity_invites where event_id=7'),'1');eq(sql("select count(*) from public.tbl_event_participants where event_id=7 and status='approved' and joined_at is not null"),'1');
+ }
+ assert.throws(()=>redeem(3,paid),/invalid or expired/);checks++;
+ sql("update public.tbl_activity_invites set max_uses=null where event_id=7;update public.tbl_activity_payments set financial_status='REFUND_REQUIRED';");eq(redeem(2,paid),'payment_required');
  sql("update public.tbl_events set is_paid=true,payment_collection_mode='onsite' where id=8;");eq(redeem(2,token(8)),'approved');
  assert.throws(()=>as(2,'select public.create_activity_invite(9);'),/Only a host or co-host/);checks++;
  const expires=token(10);sql("update public.tbl_activity_invites set expires_at=now()-interval '1 second' where event_id=10;");assert.throws(()=>redeem(2,expires),/invalid or expired/);checks++;
