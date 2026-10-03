@@ -3889,11 +3889,15 @@
       "acceptedScreenshotProof": [],
       "acceptedTechnicalProof": [],
       "requiredEvidence": [
-        "local_executable_or_visual_check",
-        "deployed_interaction_and_screenshot",
-        "authenticated_backend_proof_when_applicable"
+        "local_documentation_artifact_check",
+        "production_technical_references_when_applicable",
+        "implemented_architecture_and_deployment_order_review"
       ],
-      "candidateEvidenceIds": []
+      "candidateEvidenceIds": [],
+      "evidenceRequirementCorrection": {
+        "source": "Original PDF A page38 clauseA38-13; extracted primary tmp/pdfs/must.txt lines2386-2391.",
+        "reason": "Source asks developer contact and coding details stored in one place for other developers to understand and refer to. This is a documentation artifact requirement, not a client UI or screenshot requirement. Counts, requested outcome and source mapping unchanged."
+      }
     },
     {
       "id": "LEGAL-EXTERNAL",

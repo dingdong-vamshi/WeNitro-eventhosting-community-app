@@ -1,0 +1,651 @@
+{
+  "at": "2026-10-03T20:37:26.693Z",
+  "status": "WORKING_INCOMPLETE_NOT_FINAL_ACCEPTANCE",
+  "canonicalCount": 308,
+  "validatedCounts": {
+    "PASS": 218,
+    "PENDING_EVIDENCE_VALIDATION": 70,
+    "PARTIAL_EXTERNAL_DEPENDENCY": 18,
+    "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 2
+  },
+  "requirementsNeedingReconciliation": 70,
+  "pendingProcessGates": [
+    "GATE-RESPONSIVE-PROOF",
+    "GATE-NO-FIXABLE-FAILURES",
+    "GATE-EVIDENCE-ACCEPTANCE"
+  ],
+  "knownPendingCanonicalPatch": "DOC-DEVELOPER screenshot-only mismatch fixed narrowly in accompanying canonical commit; this validation snapshot uses primary before integration.",
+  "gaps": [
+    {
+      "id": "ONB-SWIPE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Historical production swipe recorded, but no exact deployed gesture screenshot/action pair is linked after Next-button restoration. One real swipe plus selected-dot capture closes this.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ONB-DOTS",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Visible selected dot is captured; tap another dot and record the actual destination slide.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "AUTH-TAGLINE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Capture two successive real splash loads with different original-PDF slogans on current release; local persisted nonrepeat test is already PASS.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "AUTH-GOOGLE-PROVIDER",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Actual primary GIS valid exchange is proven and local cancellation/invalid exchange tests pass. Live chooser cancellation/error UI remains unexercised in the retained evidence; the current Mac lock is a temporary test-access block, not missing Google configuration or an external implementation dependency.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "AVATAR-PHOTOS",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Current owner/comment input photos and participant initials are captured; finish cross-surface loaded/broken-photo review rather than claiming every identity path from one screenshot.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-LIKERS-LIST",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "On Activity300, like as a controlled member then long-press Like; capture actual liker list.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-LIKER-PROFILE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "From actual Activity liker list select controlled liker and verify matching profile.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-ENDED-EDIT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-ENDED-REMOVE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-ENDED-LEAVE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-ENDED-PARTICIPANT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-ENDED-NONPARTICIPANT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-CANCELLED-HIDDEN",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "After root finishes Activity300, cancel it and capture removed active inbox entry. Backend cancellation/write denials already proven.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-RETAINED-HISTORY",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Chat253: block controlledpeer, confirm earlier text remains readable; unblock and confirm same retained history. Deleted-Activity history follows actual authorization policy, not blanket public readability.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "RATE-HOST-LABEL",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "RATE-HOST-NO-SHOW",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "TRIBE-PRESENTATION",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "TRIBE-NAVIGATION",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CONTENT-BACKEND-CHECKS",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Original A18 requires profanity checks in every text box and pictures. Main UGC deterministic text/RLS guards are implemented, but Host custom registration label/options and entry-category name lack the same guard; reported to backend owner for ordinary fix. Actual semantic picture classification has no configured provider/integration and must remain a precise partial external dependency after text coverage is fixed.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "UPLOAD-WARNING",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "First-signup Profile Completion warning was newly added; earlier Profile/Activity/Vibe warning evidence does not prove this new route.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "UPLOAD-WARNING-CANCEL",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "On first-signup Profile Completion cancel warning and confirm no picker/draft loss; ordinary Activity cancel already captured.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "UPLOAD-WARNING-CONTINUE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "On first-signup Profile Completion continue to intended picker; selected media after regular Profile warning was previously proven.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "COMM-REMOVE-MEMBER",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Community252 owner120 removes controlled peer71 after role/profile/chat proofs; confirm member count and peer loses member capabilities.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "VERIFY-SELFIE-CAMERA",
+      "owner": "C_PROFILE_VERIFICATION_BADGES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Existing screenshot proves camera-only controls, and local picker checks prove camera API branch. Genuine device camera capture remains to exercise; do not substitute library media or approve the synthetic object.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "VERIFY-SELFIE-PREVIEW",
+      "owner": "C_PROFILE_VERIFICATION_BADGES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "On a camera-capable authorized test device capture a genuine selfie, inspect preview before submit/cancel. Current120 object was uploaded through API and is not capture-preview evidence.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "VERIFY-STAGED-BADGE",
+      "owner": "C_PROFILE_VERIFICATION_BADGES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Local trusted-stage gating and current pending/rejected no-badge are proven. Legitimate successful completion and profile badge transition require genuine verification stages; no fake approval.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "SQUAD-DEDUP",
+      "owner": "C_PROFILE_VERIFICATION_BADGES",
+      "proposed": "PENDING_REGRESSION_RETEST",
+      "reason": "Actual120 Your Squad shows peer70 once and excludes self; owncounter1 captured. Public profile counter0 regression is being fixed; retain fixture47–49 and verify publiccount after final correction before global Profile/Squad acceptance.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "PARTNER-PARTICIPANTS",
+      "owner": "E_PARTNER_CASHFREE",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid₹12.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "PARTNER-PAYMENT-DETAILS",
+      "owner": "E_PARTNER_CASHFREE",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid₹12.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-CREATE-DESTINATION",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Prior actual UI Activity creation recorded but screenshot/action attribution should be linked; API-created300 does not prove the publish UI transition.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "SHARE-ACTIVITY",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Use controlled Activity share -> synthetic chat; open rendered title/context/link and correct Activity destination; external share preview metadata scope separate.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "SHARE-COMMUNITY",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Community252 Share -> controlled chat253; open correct Community with meaningful title/context.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "SHARE-VIBE",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_REGRESSION_RETEST",
+      "reason": "Actual share reaches recipient71 with meaningful caption/creator and opens authorized135. Preview-image/creator hydration follow-up is currently owned by backend agent; retest final combined regression release before full visual share acceptance.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-DELETE-MESSAGE",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Chat253 delete own controlled text, reload both actors: removed/tombstone; preserve other-user messages.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-DELETE-MEDIA",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Chat253 Share Photo safe object -> send once -> owner delete -> reload. Current API covers storage owner boundaries; link deleted-capability proof where applicable.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "HOST-START-DEFAULT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Capture newly opened Host form actual start approximately current+10min; previous crop did not show numeric fields.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "HOST-END-DEFAULT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Capture numeric start/end showing +1h on new Host form; previous ledger observes it but crop omitted values.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "HOST-REGISTRATION-DEFAULT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Capture new Host form deadline equal start; do not use expired draft defaults.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "SOS-ACTION",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "SOS sheet and guidance are visible. Prior Copy details toast is not clipboard proof: actual clipboard read was empty. Retest corrected copy result and Manage emergency contact navigation after regression deployment; no emergency call required.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "SOS-SAFETY-REMINDER",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Backend scheduled reminder proof must be linked to actual eligible recipient notification and precise10minute copy; no native push claim.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "COHOST-APPROVE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Existing actual authenticated production mutation/reload results are retained. Missing exact visual action/result attribution must be linked or captured; do not replay already passed destructive management merely to inflate tests.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "COHOST-REJECT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Existing actual authenticated production mutation/reload results are retained. Missing exact visual action/result attribution must be linked or captured; do not replay already passed destructive management merely to inflate tests.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "COHOST-REMOVE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Existing actual authenticated production mutation/reload results are retained. Missing exact visual action/result attribution must be linked or captured; do not replay already passed destructive management merely to inflate tests.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "COHOST-EDIT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Existing actual authenticated production mutation/reload results are retained. Missing exact visual action/result attribution must be linked or captured; do not replay already passed destructive management merely to inflate tests.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-BLOCK",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Chat253 Block opens actionable confirmation; commit controlled peer block, send denied, oldhistory remains; then unblock.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-UNBLOCK",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Unblock same controlled peer and send one QA text; reload shows permitted communication and oldhistory retained.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "POLICY-FIRST-SIGNUP",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "DOC-DEVELOPER",
+      "owner": "F_BACKEND_SECURITY",
+      "proposed": "PASS",
+      "reason": "",
+      "validation": [
+        "PASS lacks an existing, non-excluded deployed screenshot."
+      ]
+    },
+    {
+      "id": "REFERRAL-EXPLANATION",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Old screenshot predates verified-unique-account qualification text fix. Capture current Invite Squad How it works and terms.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "HOME-NITRO-CARD",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-BACK-HOME",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Actual All Activities Back→Home screenshot/action needed.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-HOST-EDIT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Existing actual authenticated production mutation/reload results are retained. Missing exact visual action/result attribution must be linked or captured; do not replay already passed destructive management merely to inflate tests.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-HOST-DELETE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Cancel private free QA Activity300 only after media/chat proof; verify actual disappearance and denied stale mutation.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-CHAT-OPEN",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Open Activity300 Chat255 and record correct title/member context.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "VIBE-COMPOSER",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "New Activity composer OFF/ON controls and photo/video submit proven; direct-feed composer must still be opened on current release.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-SEE-ALL",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Actual Home See All Activities→listing action needed.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-CHAT-BACK",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Back from Chat255 must return originating Activity300.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "MAPS-GOOGLE",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION",
+      "reason": "Google Maps/Places integration code is not implemented; source currently uses Photon/Nominatim/GPS. Client-authorized Maps project/API configuration plus implementation are required. This is not merely a native-device test hold.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-NO-SELF-REPORT",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-DETAIL-BACK",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Actual Activity300 Back→intended originating listing action needed.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-NAMES",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Direct/group names proven; capture actual Activity255 title in inbox/header.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-UNREAD",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Direct253 unread2→read cleared proven; Activity255 unread/filter/clear remains.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-TIMESTAMPS",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Direct message time/date proven; capture Activity/group message timestamp and Community list date (not time) if still unmapped.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "CHAT-INFO-NAVIGATION",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Current Group254 Info/member profile is proven. Activity255 info→exactActivity300 remains to record.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "VIBE-NEWEST",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Actual video135→olderQA reel chronology and verticalnavigation captured. Open More vibe options and execute a safe action; named-creator hydration fix is separately pending.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "VIBE-DIRECT-CREATE",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Post a vibe from feed opens current composer with intended joined/hosted Activity; combine with new A38 upload sequence.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "STORY-SEEN",
+      "owner": "B_COMMUNITIES_CHAT_VIBES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Create one controlled story if none; view or Mark all seen, reload, verify persisted ring state. Failed/new incoming IDs are covered by actual local race test; do not infer from screenshot.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ADMIN-PARTNER-REVIEW",
+      "owner": "D_ADMIN",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Admin receipt code and live RLS/API are verified. After coordinated Admin deployment, capture108 existing version/time and legacy71 no-record state. Actual masked payout/history and security export already have proof; those are not still missing.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ADMIN-IP-MONITORING",
+      "owner": "D_ADMIN",
+      "proposed": "PENDING_LOCAL_IMPLEMENTATION",
+      "reason": "Zero retained Auth audit rows does not establish an external implementation dependency. Existing auth.audit_log_entries can support a bounded Admin-only reader; real empty/results/refresh UI and authorization tests are now required locally. No new geolocation/anomaly/IP-blocking service is inferred from A36.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    },
+    {
+      "id": "ACT-LEAVE-REJOIN",
+      "owner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "proposed": "PENDING_SCOPED_ACCEPTANCE",
+      "reason": "Existing actual authenticated production mutation/reload results are retained. Missing exact visual action/result attribution must be linked or captured; do not replay already passed destructive management merely to inflate tests.",
+      "validation": [
+        "Assessment is not a final terminal outcome."
+      ]
+    }
+  ],
+  "warnings": []
+}
