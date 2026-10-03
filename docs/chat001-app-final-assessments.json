@@ -1,13 +1,14 @@
 {
-  "at": "2026-10-03T20:03:30.384482+00:00",
+  "at": "2026-10-03T20:08:48.099627+00:00",
   "scope": "A126 plus B/C80 guide-schema subset; excludes22BADGE rows owned by backend. Scoped PASS only; unresolved normal actions are pending, not external holds.",
   "count": 206,
   "counts": {
-    "PASS": 109,
-    "PENDING_SCOPED_ACCEPTANCE": 91,
+    "PASS": 112,
+    "PENDING_SCOPED_ACCEPTANCE": 86,
     "PARTIAL_EXTERNAL_DEPENDENCY": 3,
     "PENDING_VISUAL_PROOF": 1,
     "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
+    "PENDING_REGRESSION_RETEST": 2,
     "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION": 1
   },
   "release": {
@@ -16,8 +17,8 @@
   },
   "metadataSnapshot": {
     "path": "qa-evidence/chat001/integrated-ae-screenshots.json",
-    "sha256": "ddb65f8fed175ffe7ed74d800af8e3f74e570303b481addac9d34212e96e9ea3",
-    "records": 101
+    "sha256": "bf0e07fae6c266b441c7058c70c5fce26ea9d5a6a31b3f08ba4177ef518be5d1",
+    "records": 110
   },
   "coordinatorScreenshotReviewStillNeeded": [],
   "requirements": [
@@ -1142,7 +1143,7 @@
     },
     {
       "id": "AUTH-IDENTITY",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A04-02",
         "A06-03"
@@ -1150,7 +1151,7 @@
       "requestedChange": "Authentication resolves to the intended target Supabase session and matching application profile.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "Reachable onboarding/authentication flow is connected to the active application route; the linked local tests and production observations bound the specific requirement.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion.",
+      "acceptanceScope": "Previously observed real email login/logout/wrongpassword/relogin/sessionrestore and unique Google-target mapping; current controlled70/71/120 Auth\u2192legacy identity validated in ordinary sign-ins. No new-v-existing Google distinction or realOTP asserted.",
       "localVerification": [
         {
           "check": "auth-identity-reuse-test",
@@ -1189,6 +1190,11 @@
           "source": "docs/acceptance-reconciliation-2026-10-02.json/freshChecks/authUi",
           "scopeLimit": "Email authentication/session only, not legitimate phone verification.",
           "priorRelease": true
+        },
+        {
+          "at": "2026-10-03",
+          "outcome": "Previously observed real email login/logout/wrongpassword/relogin/sessionrestore and unique Google-target mapping; current controlled70/71/120 Auth\u2192legacy identity validated in ordinary sign-ins. No new-v-existing Google distinction or realOTP asserted.",
+          "source": "docs/chat001-bc-activity-fixture-proof.json"
         }
       ],
       "technicalProof": [
@@ -1209,21 +1215,28 @@
         {
           "path": "docs/acceptance-reconciliation-2026-10-02.json",
           "scope": "Original recorded production observation: Production logout, wrong-password rejection, relogin and session restore observed."
+        },
+        {
+          "path": "docs/chat001-bc-activity-fixture-proof.json",
+          "scope": "Allthree ordinary Auth sessions validated get_current_app_user_id120/70/71 before any fixture operation."
         }
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/profile-owner.png",
+          "scope": "Actual authenticated70 ownerProfile shows correct Arjun identity after login; current API auth legacyID assertion separately retained."
+        }
+      ],
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion.",
+      "reason": "",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "AUTH-GOOGLE-PROVIDER",
@@ -6995,7 +7008,7 @@
     },
     {
       "id": "SQUAD-DEDUP",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PENDING_REGRESSION_RETEST",
       "sourceClauseIds": [
         "A30-01",
         "A30-02"
@@ -7022,21 +7035,51 @@
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
         }
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Controlled reciprocal and self fixture resolves once to Arjun70, self omitted.",
+          "at": "2026-10-03T19:56:03.002Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "outcome": "Owner profile Squad1 matches unique Arjun70 list; Nitro remains0.",
+          "at": "2026-10-03T19:56:42.147Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        }
+      ],
       "technicalProof": [
         {
           "path": "docs/chat001-squad-fixture-proof.json",
           "scope": "Synthetic Admin fixture listdedup/self exclusion; metrics correction follow-up separate."
         }
       ],
-      "screenshotProof": [],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/release-squad120-deduplicated.png",
+          "scope": "Controlled reciprocal and self fixture resolves once to Arjun70, self omitted.",
+          "at": "2026-10-03T19:56:03.002Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/squad/120",
+          "canonicalAliasCorrectedFrom": "SQUAD-LIST"
+        },
+        {
+          "path": "qa-evidence/chat001/release-squad120-counter.png",
+          "scope": "Owner profile Squad1 matches unique Arjun70 list; Nitro remains0.",
+          "at": "2026-10-03T19:56:42.147Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "canonicalAliasCorrectedFrom": "SQUAD-COUNT"
+        }
+      ],
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Actual authorized synthetic reciprocal/self fixture rows47\u201349 yield one peer70 via API; capture Your Squad120 and metric1 after deployed correction, then cleanup only recorded IDs.",
+      "reason": "Actual120 Your Squad shows peer70 once and excludes self; owncounter1 captured. Public profile counter0 regression is being fixed; retain fixture47\u201349 and verify publiccount after final correction before global Profile/Squad acceptance.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
@@ -7292,9 +7335,25 @@
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
         }
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Moderator71 sharedCommunity252 toowner120; meaningfultitle/description and ViewinWeNitrocard present.",
+          "at": "2026-10-03T20:06:47.509Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        }
+      ],
       "technicalProof": [],
-      "screenshotProof": [],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/release-chat253-community-shared.png",
+          "scope": "Moderator71 sharedCommunity252 toowner120; meaningfultitle/description and ViewinWeNitrocard present.",
+          "at": "2026-10-03T20:06:47.509Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "canonicalAliasCorrectedFrom": null
+        }
+      ],
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
@@ -7310,7 +7369,7 @@
     },
     {
       "id": "SHARE-VIBE",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PENDING_REGRESSION_RETEST",
       "sourceClauseIds": [
         "A37-03",
         "B33-01",
@@ -7332,16 +7391,46 @@
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
         }
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Recipient71 receives actualVibe135 meaningful caption and creatorQA Auditrecipient; card opensauthorizedVibe.",
+          "at": "2026-10-03T20:04:37.956Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "outcome": "Recipient71 opens sharedVibe135 and authorizedvideo. Newestcontrolledvideo appears before olderQAactivityVibes.",
+          "at": "2026-10-03T20:04:50.763Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        }
+      ],
       "technicalProof": [],
-      "screenshotProof": [],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/release-chat253-vibe-shared.png",
+          "scope": "Recipient71 receives actualVibe135 meaningful caption and creatorQA Auditrecipient; card opensauthorizedVibe.",
+          "at": "2026-10-03T20:04:37.956Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/chat/253",
+          "canonicalAliasCorrectedFrom": null
+        },
+        {
+          "path": "qa-evidence/chat001/release-vibe135-recipient.png",
+          "scope": "Recipient71 opens sharedVibe135 and authorizedvideo. Newestcontrolledvideo appears before olderQAactivityVibes.",
+          "at": "2026-10-03T20:04:50.763Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "canonicalAliasCorrectedFrom": null
+        }
+      ],
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "New authorized Vibe More vibe options -> Share to Chat253; open correct Vibe/creator/context; exercise copy/external action without messaging real users.",
+      "reason": "Actual share reaches recipient71 with meaningful caption/creator and opens authorized135. Preview-image/creator hydration follow-up is currently owned by backend agent; retest final combined regression release before full visual share acceptance.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
@@ -7745,6 +7834,12 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 116,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "outcome": "Safety sheet offers share/copy/contact; copied controlled Activity300 details. No emergency call made. Real reminder separately proven.",
+          "at": "2026-10-03T19:55:00.381Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -7755,6 +7850,14 @@
           "at": "2026-10-03T18:12:13.588Z",
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "url": "https://wenitro-app.vercel.app/#/emergency"
+        },
+        {
+          "path": "qa-evidence/chat001/release-activity300-sos.png",
+          "scope": "Safety sheet offers share/copy/contact; copied controlled Activity300 details. No emergency call made. Real reminder separately proven.",
+          "at": "2026-10-03T19:55:00.381Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "canonicalAliasCorrectedFrom": "ACT-SOS"
         }
       ],
       "screenshotsReviewed": false,
@@ -7763,7 +7866,7 @@
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Open Activity300 SOS; capture guidance, share/copy action and emergency-contact destination without claiming tracking or dispatch.",
+      "reason": "ActualActivity300 SOS sheet and Copy details success captured. One Manage emergency contact navigation remains to prove requested saved-contact access; no call or fake emergency required.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
@@ -12027,7 +12130,7 @@
     },
     {
       "id": "VIBE-REELS",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "B19-01",
         "B19-02",
@@ -12037,7 +12140,7 @@
       "requestedChange": "Vibes uses the requested vertical reels layout without obsolete arrows or redundant header.",
       "before": "Client-requested acceptance gap: Vibes uses the requested vertical reels layout without obsolete arrows or redundant header.",
       "implemented": "Vibes uses a shared real media composer, optional Activity association, reel viewing and content actions backed by Vibe services. Upload/playback and navigation acceptance require the listed UI actions.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Actual video playback and full-height layout proven; one real vertical swipe to adjacent reel remains.",
+      "acceptanceScope": "Vibes uses the requested vertical reels layout without obsolete arrows or redundant header. Actual current video135 opensActivity300; recipient71 opens135 and one verticalscroll advances to olderQA reel. Existing creator-label regression is separately pending under identity acceptance, not accepted here.",
       "localVerification": [
         {
           "suite": "scripts/phase3-vibe-test.mjs",
@@ -12057,6 +12160,18 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "outcome": "Recipient71 opens sharedVibe135 and authorizedvideo. Newestcontrolledvideo appears before olderQAactivityVibes.",
+          "at": "2026-10-03T20:04:50.763Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "outcome": "One vertical scroll advances from newest135 to olderQA BadmintonVibe; no arrow controls. Authorlabel regression separatelytracked.",
+          "at": "2026-10-03T20:05:00.919Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12067,31 +12182,45 @@
           "at": "2026-10-03T19:46:07.852Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "url": "https://wenitro-app.vercel.app/#/vibe/135"
+        },
+        {
+          "path": "qa-evidence/chat001/release-vibe135-recipient.png",
+          "scope": "Recipient71 opens sharedVibe135 and authorizedvideo. Newestcontrolledvideo appears before olderQAactivityVibes.",
+          "at": "2026-10-03T20:04:50.763Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "canonicalAliasCorrectedFrom": null
+        },
+        {
+          "path": "qa-evidence/chat001/release-vibe-vertical-next.png",
+          "scope": "One vertical scroll advances from newest135 to olderQA BadmintonVibe; no arrow controls. Authorlabel regression separatelytracked.",
+          "at": "2026-10-03T20:05:00.919Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "canonicalAliasCorrectedFrom": null
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Actual video playback and full-height layout proven; one real vertical swipe to adjacent reel remains.",
+      "reason": "",
       "evidenceCompatibility": "Fresh changed-surface screenshots explicitly identify dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR. Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Actual video playback and full-height layout proven; one real vertical swipe to adjacent reel remains."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "VIBE-ACTIVITY-LINK",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "B19-04"
       ],
       "requestedChange": "A linked Vibe opens its correct Activity.",
       "before": "Client-requested acceptance gap: A linked Vibe opens its correct Activity.",
       "implemented": "Vibes uses a shared real media composer, optional Activity association, reel viewing and content actions backed by Vibe services. Upload/playback and navigation acceptance require the listed UI actions.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: On current linked Vibe View activity opens exact linked controlled Activity.",
+      "acceptanceScope": "A linked Vibe opens its correct Activity. Actual current video135 opensActivity300; recipient71 opens135 and one verticalscroll advances to olderQA reel. Existing creator-label regression is separately pending under identity acceptance, not accepted here.",
       "localVerification": [
         {
           "suite": "scripts/phase3-vibe-test.mjs",
@@ -12111,6 +12240,12 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "outcome": "Video135 View activity opens original private Activity300 with both media items.",
+          "at": "2026-10-03T19:54:40.445Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12120,21 +12255,20 @@
           "scope": "Video135 View activity opens original private Activity300 with both media items.",
           "at": "2026-10-03T19:54:40.445Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-          "url": "https://wenitro-app.vercel.app/#/activity/300"
+          "url": "https://wenitro-app.vercel.app/#/activity/300",
+          "canonicalAliasCorrectedFrom": null
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "On current linked Vibe View activity opens exact linked controlled Activity.",
+      "reason": "",
       "evidenceCompatibility": "Fresh changed-surface screenshots explicitly identify dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR. Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "On current linked Vibe View activity opens exact linked controlled Activity."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "MAPS-GOOGLE",
@@ -12422,6 +12556,12 @@
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "account": 120,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "outcome": "Moderator71 saved description addition; production reload retains it while originalcreator120 remainsowner.",
+          "at": "2026-10-03T20:05:58.078Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
         }
       ],
       "technicalProof": [],
@@ -12432,6 +12572,14 @@
           "at": "2026-10-03T19:42:43.451Z",
           "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
           "url": "https://wenitro-app.vercel.app/#/community/252"
+        },
+        {
+          "path": "qa-evidence/chat001/release-community252-moderator-edit.png",
+          "scope": "Moderator71 saved description addition; production reload retains it while originalcreator120 remainsowner.",
+          "at": "2026-10-03T20:05:58.078Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/community/252",
+          "canonicalAliasCorrectedFrom": null
         }
       ],
       "screenshotsReviewed": false,
@@ -14428,16 +14576,32 @@
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
         }
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "One vertical scroll advances from newest135 to olderQA BadmintonVibe; no arrow controls. Authorlabel regression separatelytracked.",
+          "at": "2026-10-03T20:05:00.919Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        }
+      ],
       "technicalProof": [],
-      "screenshotProof": [],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/release-vibe-vertical-next.png",
+          "scope": "One vertical scroll advances from newest135 to olderQA BadmintonVibe; no arrow controls. Authorlabel regression separatelytracked.",
+          "at": "2026-10-03T20:05:00.919Z",
+          "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+          "url": "https://wenitro-app.vercel.app/#/vibe/135",
+          "canonicalAliasCorrectedFrom": null
+        }
+      ],
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "With two known timestamps confirm newest-to-oldest order and functional More vibe options; no newest/all dropdown is requested.",
+      "reason": "Actual video135\u2192olderQA reel chronology and verticalnavigation captured. Open More vibe options and execute a safe action; named-creator hydration fix is separately pending.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
@@ -15178,11 +15342,6 @@
       "action": "Prior primary Google sign-in is genuine; separate new-versus-existing account and cancelled/invalid provider branches are not distinguished in that observation. Complete controlled provider run or preserve exact limited acceptance."
     },
     {
-      "id": "AUTH-IDENTITY",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-    },
-    {
       "id": "AUTH-GOOGLE-PROVIDER",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Prior primary Google sign-in is genuine; separate new-versus-existing account and cancelled/invalid provider branches are not distinguished in that observation. Complete controlled provider run or preserve exact limited acceptance."
@@ -15374,8 +15533,8 @@
     },
     {
       "id": "SQUAD-DEDUP",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Actual authorized synthetic reciprocal/self fixture rows47\u201349 yield one peer70 via API; capture Your Squad120 and metric1 after deployed correction, then cleanup only recorded IDs."
+      "status": "PENDING_REGRESSION_RETEST",
+      "action": "Actual120 Your Squad shows peer70 once and excludes self; owncounter1 captured. Public profile counter0 regression is being fixed; retain fixture47\u201349 and verify publiccount after final correction before global Profile/Squad acceptance."
     },
     {
       "id": "ACT-CREATE-DESTINATION",
@@ -15394,8 +15553,8 @@
     },
     {
       "id": "SHARE-VIBE",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "New authorized Vibe More vibe options -> Share to Chat253; open correct Vibe/creator/context; exercise copy/external action without messaging real users."
+      "status": "PENDING_REGRESSION_RETEST",
+      "action": "Actual share reaches recipient71 with meaningful caption/creator and opens authorized135. Preview-image/creator hydration follow-up is currently owned by backend agent; retest final combined regression release before full visual share acceptance."
     },
     {
       "id": "CHAT-DELETE-MESSAGE",
@@ -15425,7 +15584,7 @@
     {
       "id": "SOS-ACTION",
       "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Open Activity300 SOS; capture guidance, share/copy action and emergency-contact destination without claiming tracking or dispatch."
+      "action": "ActualActivity300 SOS sheet and Copy details success captured. One Manage emergency contact navigation remains to prove requested saved-contact access; no call or fake emergency required."
     },
     {
       "id": "SOS-SAFETY-REMINDER",
@@ -15543,16 +15702,6 @@
       "action": "Back from Chat255 must return originating Activity300."
     },
     {
-      "id": "VIBE-REELS",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Actual video playback and full-height layout proven; one real vertical swipe to adjacent reel remains."
-    },
-    {
-      "id": "VIBE-ACTIVITY-LINK",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "On current linked Vibe View activity opens exact linked controlled Activity."
-    },
-    {
       "id": "MAPS-GOOGLE",
       "status": "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION",
       "action": "Google Maps/Places integration code is not implemented; source currently uses Photon/Nominatim/GPS. Client-authorized Maps project/API configuration plus implementation are required. This is not merely a native-device test hold."
@@ -15600,7 +15749,7 @@
     {
       "id": "VIBE-NEWEST",
       "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "With two known timestamps confirm newest-to-oldest order and functional More vibe options; no newest/all dropdown is requested."
+      "action": "Actual video135\u2192olderQA reel chronology and verticalnavigation captured. Open More vibe options and execute a safe action; named-creator hydration fix is separately pending."
     },
     {
       "id": "VIBE-DIRECT-CREATE",
@@ -15655,7 +15804,7 @@
         },
         {
           "id": "SOS-ACTION",
-          "reason": "Open Activity300 SOS; capture guidance, share/copy action and emergency-contact destination without claiming tracking or dispatch."
+          "reason": "ActualActivity300 SOS sheet and Copy details success captured. One Manage emergency contact navigation remains to prove requested saved-contact access; no call or fake emergency required."
         },
         {
           "id": "ACT-CHAT-OPEN",
@@ -15765,29 +15914,19 @@
       "route": "Vibe135 / Vibes feed",
       "actions": "View Activity opens300; Share URL; verticalswipe adjacentreel; newestchronology and3dot action; direct-feed composer open.",
       "requirements": [
-        "VIBE-ACTIVITY-LINK",
         "SHARE-VIBE",
-        "VIBE-REELS",
         "VIBE-NEWEST",
         "VIBE-DIRECT-CREATE",
         "VIBE-COMPOSER"
       ],
       "details": [
         {
-          "id": "VIBE-ACTIVITY-LINK",
-          "reason": "On current linked Vibe View activity opens exact linked controlled Activity."
-        },
-        {
           "id": "SHARE-VIBE",
-          "reason": "New authorized Vibe More vibe options -> Share to Chat253; open correct Vibe/creator/context; exercise copy/external action without messaging real users."
-        },
-        {
-          "id": "VIBE-REELS",
-          "reason": "Actual video playback and full-height layout proven; one real vertical swipe to adjacent reel remains."
+          "reason": "Actual share reaches recipient71 with meaningful caption/creator and opens authorized135. Preview-image/creator hydration follow-up is currently owned by backend agent; retest final combined regression release before full visual share acceptance."
         },
         {
           "id": "VIBE-NEWEST",
-          "reason": "With two known timestamps confirm newest-to-oldest order and functional More vibe options; no newest/all dropdown is requested."
+          "reason": "Actual video135\u2192olderQA reel chronology and verticalnavigation captured. Open More vibe options and execute a safe action; named-creator hydration fix is separately pending."
         },
         {
           "id": "VIBE-DIRECT-CREATE",
@@ -15825,7 +15964,7 @@
       "details": [
         {
           "id": "SQUAD-DEDUP",
-          "reason": "Actual authorized synthetic reciprocal/self fixture rows47\u201349 yield one peer70 via API; capture Your Squad120 and metric1 after deployed correction, then cleanup only recorded IDs."
+          "reason": "Actual120 Your Squad shows peer70 once and excludes self; owncounter1 captured. Public profile counter0 regression is being fixed; retain fixture47\u201349 and verify publiccount after final correction before global Profile/Squad acceptance."
         }
       ]
     },
@@ -16065,7 +16204,6 @@
       "route": "Activity/Profile/filter/catalog",
       "actions": "Link existingauthoritativeAPI checks and exactcontrols; catalogerror/race tests arelocalfailureinjection, notlivefaultscreenshots.",
       "requirements": [
-        "AUTH-IDENTITY",
         "AVATAR-PHOTOS",
         "CONTENT-BACKEND-CHECKS",
         "REFERRAL-REWARD",
@@ -16075,10 +16213,6 @@
         "SOS-SAFETY-REMINDER"
       ],
       "details": [
-        {
-          "id": "AUTH-IDENTITY",
-          "reason": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-        },
         {
           "id": "AVATAR-PHOTOS",
           "reason": "Current owner/comment input photos and participant initials are captured; finish cross-surface loaded/broken-photo review rather than claiming every identity path from one screenshot."

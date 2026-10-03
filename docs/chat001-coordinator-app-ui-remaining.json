@@ -1,0 +1,352 @@
+{
+  "at": "2026-10-03T20:08:48.099627+00:00",
+  "snapshotCount": 110,
+  "note": "Coordinator route batches. Actual prior API checks and explicit prior UI observations remain accepted within scope; never rerun destructive mutations just for count. Existing screenshots lacking exact state are not fabricated. Detailed206 rows in chat001-app-final-assessments.json.",
+  "knownRegressionRetests": [
+    "Public Squad count after authorized metric correction, keep47\u201349.",
+    "Vibe creator and shared thumbnail hydration after combined release.",
+    "Admin Partner Terms receipt separateAdminowner."
+  ],
+  "nextUI": [
+    {
+      "route": "Activity300 / Chat255",
+      "actors": [
+        120,
+        70,
+        71
+      ],
+      "actions": [
+        "SOS Manage emergency contact (copy alreadydone).",
+        "Like\u2192longpresslikers\u2192profile.",
+        "Chat255 title/info/back; memberunread\u2192filter/readclear.",
+        "Cancel300 LAST\u2192activechatremoved/stalesenddenied."
+      ],
+      "ids": [
+        "SOS-ACTION",
+        "ACT-LIKERS-LIST",
+        "ACT-LIKER-PROFILE",
+        "ACT-CHAT-OPEN",
+        "ACT-CHAT-BACK",
+        "CHAT-INFO-NAVIGATION",
+        "CHAT-NAMES",
+        "CHAT-TIMESTAMPS",
+        "CHAT-UNREAD",
+        "CHAT-CANCELLED-HIDDEN",
+        "CHAT-CANCELLED-WRITES",
+        "ACT-HOST-DELETE"
+      ]
+    },
+    {
+      "route": "Chat253",
+      "actors": [
+        120,
+        71
+      ],
+      "actions": [
+        "Deleteowntextandphoto, reload.",
+        "Blockpeer\u2192retainedhistory/read/senddenied\u2192unblock/send."
+      ],
+      "ids": [
+        "CHAT-DELETE-MESSAGE",
+        "CHAT-DELETE-MEDIA",
+        "CHAT-BLOCK",
+        "CHAT-UNBLOCK",
+        "CHAT-RETAINED-HISTORY"
+      ]
+    },
+    {
+      "route": "Community252",
+      "actors": [
+        120,
+        71
+      ],
+      "actions": [
+        "Sharecard actualrecipient (unlesspriorproofaccepted).",
+        "Moderator71 allowedaction anddeniedprivilegedrolechange.",
+        "Remove71 afterallcommunityproof, verifycount/capabilities."
+      ],
+      "ids": [
+        "SHARE-COMMUNITY",
+        "COMM-MODERATOR-ROLE",
+        "COMM-REMOVE-MEMBER"
+      ]
+    },
+    {
+      "route": "Vibes135 + Messages Stories",
+      "actors": [
+        120,
+        71
+      ],
+      "actions": [
+        "Morevibeoptions safeaction; directfeedcomposeropen.",
+        "OnecontrolledStory view/Markallseen\u2192reload.",
+        "Retestsharethumbnailafterupcomingfix."
+      ],
+      "ids": [
+        "VIBE-NEWEST",
+        "VIBE-COMPOSER",
+        "VIBE-DIRECT-CREATE",
+        "STORY-SEEN",
+        "SHARE-VIBE"
+      ]
+    },
+    {
+      "route": "Home/Host/Settings signed-in",
+      "actors": [
+        120
+      ],
+      "actions": [
+        "InviteSquad currentverifiedqualificationcopy.",
+        "NewHostnumericdefaults current+10/end+1/deadline=start.",
+        "HomeSeeAll\u2192Activity\u2192Back\u2192Home; Tribe image/name\u2192categoryfilter.",
+        "CurrentNotificationsreload, FAQ/query/PlayStore earlierproof mayonlyneedstateimage; nonegativespendfabrication."
+      ],
+      "ids": [
+        "REFERRAL-EXPLANATION",
+        "HOST-START-DEFAULT",
+        "HOST-END-DEFAULT",
+        "HOST-REGISTRATION-DEFAULT",
+        "ACT-SEE-ALL",
+        "ACT-BACK-HOME",
+        "ACT-DETAIL-BACK",
+        "TRIBE-PRESENTATION",
+        "TRIBE-NAVIGATION",
+        "HOME-NITRO-CARD",
+        "NOTIFICATIONS-LOAD",
+        "HELP-NITROBOT",
+        "HELP-SUPPORT-QUERY",
+        "PLAY-STORE-REWARD",
+        "NITRO-HISTORY"
+      ]
+    },
+    {
+      "route": "Ended231/233/272 and old277 management",
+      "actors": [
+        70,
+        71
+      ],
+      "actions": [
+        "Priorcompleted UI + backenddenials are explicitlyrecorded; onlyrecover/screenshotmissingexact Hostlabel/disabledcontrols/CTAstate.",
+        "Do notre-rate forNitro. Preservepastdates."
+      ],
+      "ids": [
+        "ACT-ENDED-EDIT",
+        "ACT-ENDED-REMOVE",
+        "ACT-ENDED-LEAVE",
+        "ACT-ENDED-PARTICIPANT",
+        "ACT-ENDED-NONPARTICIPANT",
+        "RATE-HOST-LABEL",
+        "RATE-HOST-NO-SHOW",
+        "COHOST-APPROVE",
+        "COHOST-REJECT",
+        "COHOST-REMOVE",
+        "COHOST-EDIT",
+        "ACT-HOST-EDIT",
+        "ACT-LEAVE-REJOIN"
+      ]
+    },
+    {
+      "route": "Signed-out/firstsignup",
+      "actors": [
+        "controllednewaccount"
+      ],
+      "actions": [
+        "Twoactualsplashloads, page-dot tap/swipe.",
+        "NewProfileCompletion UploadResponsibly cancel/continue.",
+        "PreserveearlieractualDOB/policyreceipt proof; no fakeemailownership."
+      ],
+      "ids": [
+        "AUTH-TAGLINE",
+        "ONB-SWIPE",
+        "ONB-DOTS",
+        "UPLOAD-WARNING",
+        "UPLOAD-WARNING-CANCEL",
+        "UPLOAD-WARNING-CONTINUE",
+        "POLICY-FIRST-SIGNUP"
+      ]
+    }
+  ],
+  "providerOrDeviceActionsSeparate": [
+    {
+      "title": "Real email delivery/recovery",
+      "actor": "Controlled real inbox",
+      "route": "Auth signup/recovery",
+      "actions": "Delivery/template/sender/confirm and recoveryreset/relogin actualcycle; do notinfermissingSMTP.",
+      "requirements": [
+        "AUTH-EMAIL-BRAND",
+        "AUTH-EMAIL-CONFIRM",
+        "AUTH-EMAIL-SENDER",
+        "AUTH-RECOVERY-REQUEST",
+        "AUTH-RECOVERY-ROUTE",
+        "AUTH-RECOVERY-RESET",
+        "AUTH-RECOVERY-LOGIN"
+      ],
+      "details": [
+        {
+          "id": "AUTH-EMAIL-BRAND",
+          "reason": "Requires a controlled real inbox verification/recovery cycle and exact sender/template/link/reset/login outcome. Enabled provider/template source does not prove delivery; no broken SMTP or absent credential is inferred."
+        },
+        {
+          "id": "AUTH-EMAIL-CONFIRM",
+          "reason": "Requires a controlled real inbox verification/recovery cycle and exact sender/template/link/reset/login outcome. Enabled provider/template source does not prove delivery; no broken SMTP or absent credential is inferred."
+        },
+        {
+          "id": "AUTH-EMAIL-SENDER",
+          "reason": "Requires a controlled real inbox verification/recovery cycle and exact sender/template/link/reset/login outcome. Enabled provider/template source does not prove delivery; no broken SMTP or absent credential is inferred."
+        },
+        {
+          "id": "AUTH-RECOVERY-REQUEST",
+          "reason": "Requires a controlled real inbox verification/recovery cycle and exact sender/template/link/reset/login outcome. Enabled provider/template source does not prove delivery; no broken SMTP or absent credential is inferred."
+        },
+        {
+          "id": "AUTH-RECOVERY-ROUTE",
+          "reason": "Requires a controlled real inbox verification/recovery cycle and exact sender/template/link/reset/login outcome. Enabled provider/template source does not prove delivery; no broken SMTP or absent credential is inferred."
+        },
+        {
+          "id": "AUTH-RECOVERY-RESET",
+          "reason": "Requires a controlled real inbox verification/recovery cycle and exact sender/template/link/reset/login outcome. Enabled provider/template source does not prove delivery; no broken SMTP or absent credential is inferred."
+        },
+        {
+          "id": "AUTH-RECOVERY-LOGIN",
+          "reason": "Requires a controlled real inbox verification/recovery cycle and exact sender/template/link/reset/login outcome. Enabled provider/template source does not prove delivery; no broken SMTP or absent credential is inferred."
+        }
+      ]
+    },
+    {
+      "title": "Google provider distinctions",
+      "actor": "Controlled Googleidentities",
+      "route": "Google login",
+      "actions": "PriorGISworks; distinguishnew/existing andinvalid/cancel. Redirectrequiresclientconsolecallbackfix.",
+      "requirements": [
+        "AUTH-GOOGLE-NEW",
+        "AUTH-GOOGLE-EXISTING",
+        "AUTH-GOOGLE-PROVIDER",
+        "AUTH-GOOGLE-REDIRECT"
+      ],
+      "details": [
+        {
+          "id": "AUTH-GOOGLE-NEW",
+          "reason": "Prior primary Google sign-in is genuine; separate new-versus-existing account and cancelled/invalid provider branches are not distinguished in that observation. Complete controlled provider run or preserve exact limited acceptance."
+        },
+        {
+          "id": "AUTH-GOOGLE-EXISTING",
+          "reason": "Prior primary Google sign-in is genuine; separate new-versus-existing account and cancelled/invalid provider branches are not distinguished in that observation. Complete controlled provider run or preserve exact limited acceptance."
+        },
+        {
+          "id": "AUTH-GOOGLE-PROVIDER",
+          "reason": "Prior primary Google sign-in is genuine; separate new-versus-existing account and cancelled/invalid provider branches are not distinguished in that observation. Complete controlled provider run or preserve exact limited acceptance."
+        },
+        {
+          "id": "AUTH-GOOGLE-REDIRECT",
+          "reason": "Primary GIS login previously worked. Separate Google redirect probe returned redirect_uri_mismatch; client Web OAuth project must authorize exact target callback. No fresh successful redirect callback claimed."
+        }
+      ]
+    },
+    {
+      "title": "Physical phone verification",
+      "actor": "Controlled physical number",
+      "route": "Phone signup/signin",
+      "actions": "Actualdelivery,valid/invalid/expired/replay andexisting/newmapping; nofakeconfirmedidentity.",
+      "requirements": [
+        "AUTH-PHONE-NEW",
+        "AUTH-PHONE-EXISTING",
+        "AUTH-OTP-SEND",
+        "AUTH-OTP-VERIFY",
+        "AUTH-PHONE-STATE"
+      ],
+      "details": [
+        {
+          "id": "AUTH-PHONE-NEW",
+          "reason": "Actual controlled physical-number OTP delivery/ownership and intended account mapping are unproven. Synthetic confirmed flags and provider authentication checks cannot substitute; implementation is present."
+        },
+        {
+          "id": "AUTH-PHONE-EXISTING",
+          "reason": "Actual controlled physical-number OTP delivery/ownership and intended account mapping are unproven. Synthetic confirmed flags and provider authentication checks cannot substitute; implementation is present."
+        },
+        {
+          "id": "AUTH-OTP-SEND",
+          "reason": "Actual controlled physical-number OTP delivery/ownership and intended account mapping are unproven. Synthetic confirmed flags and provider authentication checks cannot substitute; implementation is present."
+        },
+        {
+          "id": "AUTH-OTP-VERIFY",
+          "reason": "Actual controlled physical-number OTP delivery/ownership and intended account mapping are unproven. Synthetic confirmed flags and provider authentication checks cannot substitute; implementation is present."
+        },
+        {
+          "id": "AUTH-PHONE-STATE",
+          "reason": "Actual controlled physical-number OTP delivery/ownership and intended account mapping are unproven. Synthetic confirmed flags and provider authentication checks cannot substitute; implementation is present."
+        }
+      ]
+    },
+    {
+      "title": "Genuine camera/verification",
+      "actor": "Authorized actualperson/device",
+      "route": "Verification +Admin",
+      "actions": "Actualcamera preview/cancel/submission and legitimateapprovalstage; synthetic120rejectproved onlyreject.",
+      "requirements": [
+        "VERIFY-SELFIE-CAMERA",
+        "VERIFY-SELFIE-PREVIEW",
+        "VERIFY-SELFIE-REVIEW",
+        "VERIFY-STAGED-BADGE"
+      ],
+      "details": [
+        {
+          "id": "VERIFY-SELFIE-CAMERA",
+          "reason": "Existing screenshot proves camera-only controls, and local picker checks prove camera API branch. Genuine device camera capture remains to exercise; do not substitute library media or approve the synthetic object."
+        },
+        {
+          "id": "VERIFY-SELFIE-PREVIEW",
+          "reason": "On a camera-capable authorized test device capture a genuine selfie, inspect preview before submit/cancel. Current120 object was uploaded through API and is not capture-preview evidence."
+        },
+        {
+          "id": "VERIFY-SELFIE-REVIEW",
+          "reason": "Pending\u2192private Admin preview\u2192Reject\u2192owner unverified/noaward is proven. Legitimate approval of real camera evidence remains separate; do not approve synthetic object31."
+        },
+        {
+          "id": "VERIFY-STAGED-BADGE",
+          "reason": "Local trusted-stage gating and current pending/rejected no-badge are proven. Legitimate successful completion and profile badge transition require genuine verification stages; no fake approval."
+        }
+      ]
+    },
+    {
+      "title": "Explicit provider implementation dependencies",
+      "actor": "Client authorizedprovider",
+      "route": "Maps/Hubble/Aadhaar",
+      "actions": "Exactmissingimplementation/clientsetup retained separately; no broadproviderunavailabilityclaim.",
+      "requirements": [
+        "MAPS-GOOGLE",
+        "STORE-REDEMPTION",
+        "VERIFY-AADHAAR",
+        "TRUST-AADHAAR"
+      ],
+      "details": [
+        {
+          "id": "MAPS-GOOGLE",
+          "reason": "Google Maps/Places integration code is not implemented; source currently uses Photon/Nominatim/GPS. Client-authorized Maps project/API configuration plus implementation are required. This is not merely a native-device test hold."
+        },
+        {
+          "id": "STORE-REDEMPTION",
+          "reason": "Authoritative200minimum and non-deducting unavailable UI exist. Original PDF explicitly requires client Hubble production link/setup; authorized provider account/API contract and integration remain missing. No redemption success claimed."
+        },
+        {
+          "id": "VERIFY-AADHAAR",
+          "reason": "Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed."
+        },
+        {
+          "id": "TRUST-AADHAAR",
+          "reason": "Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed."
+        }
+      ]
+    }
+  ],
+  "recordedPriorProductionThatShouldNotBeRepeatedBlindly": {
+    "file": "docs/client-acceptance-checklist.json",
+    "sections": [
+      "emailQa Auth: realbrowserlogin/logout/wrongpassword/restore andnewsignuppolicyDOB",
+      "pages11/13/15: completed272UI and270mutations/ratingHost/NoShow",
+      "emailQa Home: carousel/Tribe andcomputedgradients",
+      "emailQa Support/rewards: actualFAQ,querypersistence andonce-onlyreward",
+      "additionalFreshChecks.hostForms: end+1/deadline=start unsubmittedPartnerform (numericimagecropped)"
+    ],
+    "limits": "Priorobservations are actualrecords, not freshproof. Screenshot requirement still needs applicableimage; providerflags do notproveemail/OTPdelivery."
+  }
+}
