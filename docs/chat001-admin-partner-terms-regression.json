@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-03T20:08:44.435946+00:00",
+  "status": "LOCAL_PASS_AWAITING_COORDINATED_DEPLOYMENT",
+  "requestedChange": "Authorized Partner reviewers can inspect the already-recorded Terms policy version and acceptance time.",
+  "before": "Actual deployed applicant108 review displayed business details, masked UPI and review history but omitted an existing Terms receipt.",
+  "implemented": {
+    "adminCommit": "75cdf4f",
+    "backendCommit": "e2790f7",
+    "migration": "20261003195913_admin_partner_terms_receipt",
+    "details": [
+      "SELECT-only Admin/Master RLS policy using current Auth authority; owner-only access retained.",
+      "Admin queries only policy_version and accepted_at for the requested applicant.",
+      "Receipt card has real values, missing-receipt state, loading, and retryable error state.",
+      "No legal acceptance, approval, award or payout state is created or changed."
+    ]
+  },
+  "localVerification": [
+    {
+      "command": "node scripts/admin-partner-terms-postgres-test.mjs",
+      "status": "PASS",
+      "checks": 19,
+      "scope": "Real PostgreSQL applied actual migration and current Admin helper. Owner/Admin/Master permitted read; unrelated member/Finance/anonymous/inactive/banned/deleted Auth denied. No owner/Admin/Master direct insert/update/delete."
+    },
+    {
+      "command": "QA_ADMIN_ROOT=<Admin checkout> node scripts/admin-partner-terms-ui-test.mjs",
+      "status": "PASS",
+      "scope": "Execute actual adapter; render actual component receipt/null/loading/error states."
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "status": "PASS"
+    },
+    {
+      "command": "npx eslint src/lib/partner-admin.ts src/components/admin/partner-application-detail-screen.tsx",
+      "status": "PASS"
+    },
+    {
+      "command": "npx next build --webpack",
+      "status": "BUILD_COMPLETED",
+      "scope": "Compiled successfully, TypeScript completed, 70/70 pages generated and route table printed. Post-build wrapper could not assign zsh reserved variable status; log proves build finished."
+    }
+  ],
+  "environmentLimitations": [
+    "Default Turbopack build rejects isolated worktree node_modules symlink outside its filesystem root. Webpack build completed using same source/dependencies."
+  ],
+  "productionVerification": {
+    "status": "PENDING",
+    "required": [
+      "Apply migration then deploy Admin.",
+      "Use ordinary Admin /business/108 to verify persisted receipt version/time beside masked payout/history; no consent or approval action.",
+      "Verify a legacy applicant without receipt displays no-record message."
+    ]
+  }
+}
