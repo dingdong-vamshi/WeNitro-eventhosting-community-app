@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {validateRelease,validateFixture,verifyPublicPreview,target} from './qa-public-vibe-og-production.mjs';
+const release={projectId:target,readyForProductionQA:true,appDeploymentId:'dpl_test',shareVibeVersion:4};const url=`https://${target}.supabase.co`;
+validateRelease(release,url,'dpl_test',4);
+for(const args of [[release,'https://wrong.supabase.co','dpl_test',4],[release,url,'dpl_wrong',4],[{...release,shareVibeVersion:3},url,'dpl_test',3],[{...release,readyForProductionQA:false},url,'dpl_test',4]])assert.throws(()=>validateRelease(...args));
+const runId='aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa';const f={ownerId:120,authId:'owner',runId,mediaPath:`owner/qa-public-og/${runId}.png`,caption:`QA public preview example ${runId}`};validateFixture(f,'owner');for(const bad of [{ownerId:70},{authId:'other'},{mediaPath:'owner/private.png'},{caption:'real caption'},{runId:'../../anything'}])assert.throws(()=>validateFixture({...f,...bad},'owner'));
+const html=`<meta property="og:image" content="${url}/storage/v1/object/sign/vibes/owner/test.png?token=not-real">${f.caption} /share/vibe/999 /#/vibe/999`;
+const response=(id,body=html,status=200)=>Promise.resolve(id===135?new Response('Vibe not found',{status:404}):new Response(body,{status,headers:{'cache-control':'no-store'}}));
+assert.equal((await verifyPublicPreview(response,999,f.caption)).checks.length,8);
+await assert.rejects(()=>verifyPublicPreview(id=>response(id,html.replace(target,'wrong')),999,f.caption));
+await assert.rejects(()=>verifyPublicPreview(()=>response(999),999,f.caption));
+const plan=JSON.parse(execFileSync(process.execPath,['scripts/qa-public-vibe-og-production.mjs'],{encoding:'utf8'}));assert.equal(plan.status,'PLAN_ONLY');
+console.log('PASS: public OG verifier release/target/ownership gates, public/private responses, no-execute default (15 guard/response assertions).');

@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-03T22:27:51.139001+00:00",
+  "status": "LOCAL_IMPLEMENTED_TESTED_AWAITING_COORDINATOR_EDGE_DEPLOYMENT",
+  "baseAppCommit": "fc0257f",
+  "scope": "Only share-vibe Edge runtime. No App/Admin runtime, schema, Auth account or existing media changes.",
+  "finding": {
+    "deployedVersionReviewed": 3,
+    "sourceGap": "Anonymous server-role public-Vibe lookup did not verify author lifecycle/Auth ban and relied on database normalization for Activity-linked rows.",
+    "actualLeakDemonstrated": false,
+    "readOnlyProductionProof": "docs/chat001-public-vibe-og-readonly-proof.json",
+    "publicStandaloneRowsAtInspection": 0,
+    "privateKnownFixtureIdsDenied": [
+      99,
+      135
+    ]
+  },
+  "implementation": [
+    "Require standalone public row independently before author lookup; even legacy/mis-set parent-linked public row fails closed.",
+    "Require matching active, nondeleted, nondeactivated author and matching current existing nondeleted/unbanned Auth record. Backend errors return generic404 before media signing.",
+    "Only authorized public image/poster produces OG image; video source uses branded fallback. HTML escapes public caption/creator and excludes private identity fields.",
+    "HTML no-store; newly issued Storage image capability expires after300seconds instead of24hours. Previously issued capabilities and third-party preview caches cannot be retroactively revoked by this endpoint."
+  ],
+  "localVerification": {
+    "denoHandlerTests": {
+      "passed": 37,
+      "command": "deno test --allow-env --node-modules-dir=none supabase/functions/share-vibe/handler_test.ts"
+    },
+    "edgeTypecheck": "PASS deno check --node-modules-dir=none supabase/functions/share-vibe/index.ts",
+    "existingClientPDFContract": "PASS node scripts/client-pdf-regression-test.mjs",
+    "productionVerifierSafety": "PASS node scripts/public-vibe-og-production-safety-test.mjs",
+    "testHarnessNote": "Plain deno check initially hit existing node_modules package resolution; repository full-suite --node-modules-dir=none succeeds."
+  },
+  "productionFixturePlan": {
+    "status": "PREPARED_NOT_EXECUTED",
+    "script": "scripts/qa-public-vibe-og-production.mjs",
+    "actor": "Existing authorized QA120 only; local session signout preserves root browser sessions.",
+    "media": "New synthetic one-pixel PNG under exact Auth-owner/qa-public-og/randomUUID.png path, never existing/private media.",
+    "writes": "Authenticated upload + standalone public vibe_create; finally exact-owned unique-caption/path row removed via vibe_delete and exact new object removed.",
+    "gates": [
+      "Default PLAN_ONLY no credentials/network",
+      "Exact project, recorded ready release/Appdeployment, explicit shareVibeVersion>=4",
+      "Exact owner120 and owned unique fixture path/caption checked before cleanup"
+    ],
+    "rewardSafety": {
+      "readOnlyTriggerReviewAt": "2026-10-03T22:27:51.139414+00:00",
+      "actualDeployedTriggers": [
+        "enforce_activity_media_audience",
+        "enforce_vibe_activity_eligibility",
+        "guard_ugc_text",
+        "platform_vibe_gate"
+      ],
+      "review": "All four deployed trigger function definitions and actual vibe_create/vibe_delete inspected read-only; no reward writes/calls. Standalone event_id null allowed by existing eligibility contract.",
+      "runtime": "Snapshot actual tbl_user_badges, list_my_nitro_history and my_trust_score before creating fixture and compare after cleanup; fail if any changed. Never silently restore/revoke rewards."
+    },
+    "expectedProof": [
+      "Anonymous public200 and syntheticcaption/canonical/deeplink",
+      "SignedOGimage actual200 image/png equals exact synthetic source bytes; URL remains in memory, never report",
+      "Private135 remains404 with no OG/capability",
+      "Deleted fixture404 and exactStorageabsence",
+      "QA120 badge/Nitro/Trust unchanged"
+    ]
+  },
+  "remaining": [
+    "Root integration and complete local gate",
+    "Coordinator Edge-only rollout + manifest shareVibeVersion",
+    "Execute gated scoped fixture verifier and commit actual sanitized result; publicpositive production acceptance not yet claimed"
+  ]
+}

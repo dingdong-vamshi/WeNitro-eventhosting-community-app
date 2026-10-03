@@ -42,7 +42,8 @@ const publicProfile = profile.slice(profile.indexOf('export function ReferenceMe
 assert.ok(publicProfile.indexOf('setPerson(p.data)') >= 0 && publicProfile.indexOf('setPerson(p.data)') < publicProfile.indexOf('activitiesProductionService.listPublicHosted(id'), 'Public profile identity must render before secondary profile queries finish.');
 includesAll(share, ['https://wenitro-app.vercel.app', '/share/vibe/']);
 includesAll(app, ['recordShare(vibe.id, "copy_link")', 'recordShare(vibe.id, "external")']);
-includesAll(edge, ['og:title', 'og:description', 'og:image', '.eq("visibility", "public")']);
+includesAll(edge, ['.eq("visibility", "public")']);
+includesAll(read('supabase/functions/share-vibe/handler.ts'), ['og:title', 'og:description', 'og:image']);
 assert.match(vercel, /share\/vibe\/:id/);
 
 includesAll(security, [

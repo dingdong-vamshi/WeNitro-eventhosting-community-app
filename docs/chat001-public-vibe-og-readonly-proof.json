@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-03T22:15:51.405Z",
+  "status": "PARTIAL_READONLY_NEGATIVE_PATH_PROOF",
+  "checks": [
+    {
+      "vibeId": 99,
+      "status": 404,
+      "hasOgImage": false,
+      "hasOgDescription": false,
+      "responseSha256": "c87a9ccb5450505f82fc060458fd0c5d6d7d0418d64780f3bc361a8bbe1b9f58",
+      "noSignedUrl": true
+    },
+    {
+      "vibeId": 135,
+      "status": 404,
+      "hasOgImage": false,
+      "hasOgDescription": false,
+      "responseSha256": "c87a9ccb5450505f82fc060458fd0c5d6d7d0418d64780f3bc361a8bbe1b9f58",
+      "noSignedUrl": true
+    }
+  ],
+  "knownFixtureContext": "99 is formerpublicQA nowactivity-only underA38;135 isprivateActivity300media. No positivepublicOG claim; controlledpublicstandalonequery returnednone.",
+  "deployedEdgeVersion": 3,
+  "source": "Actual anonymousGET via deployed App canonical share URL; no token/signedURL/body printed or stored.",
+  "limitations": [
+    "No controlled public standalone Vibe exists in inspectedQA cohort70/71/116/120",
+    "Current Edge service-role query checks publicvisibility only; Activity-linked publicrows are prevented/backfilled by current database audience trigger. Author-active/ban checks absent inEdge source."
+  ],
+  "aggregateReadOnlyDatabaseInspection": {
+    "publicRows": 0,
+    "publicStandaloneRows": 0,
+    "publicParentLinkedRows": 0,
+    "publicInactiveOrDeletedAuthorRows": 0,
+    "publicBannedAuthorRows": 0,
+    "scope": "Count-only aggregate read, no real-user content collected."
+  }
+}
