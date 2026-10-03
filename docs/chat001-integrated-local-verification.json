@@ -1,0 +1,867 @@
+{
+  "startedAt": "2026-10-03T08:15:58.177Z",
+  "appCommit": "7159d5c276a2bfa2f715f3fe21c30ba264f32e1b",
+  "adminCommit": "b2e74a3554714ae09ab87b11aafe4b1f3d941f9e",
+  "status": "PASS",
+  "scope": "Executable local PostgreSQL/Edge/client tests, source contracts, typechecks, Expo Doctor, App production export, Admin lint/build. Production API/UI verification is separate.",
+  "checks": [
+    {
+      "name": "acceptance-backend-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/acceptance-backend-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1003,
+      "log": "tmp/chat001-integrated-local/acceptance-backend-test.log"
+    },
+    {
+      "name": "acceptance-ui-contract-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/acceptance-ui-contract-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 36,
+      "log": "tmp/chat001-integrated-local/acceptance-ui-contract-test.log"
+    },
+    {
+      "name": "account-status-rpc-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/account-status-rpc-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1526,
+      "log": "tmp/chat001-integrated-local/account-status-rpc-test.log"
+    },
+    {
+      "name": "activities-filter-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/activities-filter-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 253,
+      "log": "tmp/chat001-integrated-local/activities-filter-test.log"
+    },
+    {
+      "name": "activity-checkout-terms-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/activity-checkout-terms-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 803,
+      "log": "tmp/chat001-integrated-local/activity-checkout-terms-test.log"
+    },
+    {
+      "name": "activity-deep-link-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/activity-deep-link-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 27,
+      "log": "tmp/chat001-integrated-local/activity-deep-link-regression-test.log"
+    },
+    {
+      "name": "activity-history-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/activity-history-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 293,
+      "log": "tmp/chat001-integrated-local/activity-history-test.log"
+    },
+    {
+      "name": "activity-payment-modes-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/activity-payment-modes-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 268,
+      "log": "tmp/chat001-integrated-local/activity-payment-modes-test.log"
+    },
+    {
+      "name": "activity-price-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/activity-price-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 238,
+      "log": "tmp/chat001-integrated-local/activity-price-test.log"
+    },
+    {
+      "name": "activity-share-observation-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/activity-share-observation-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 227,
+      "log": "tmp/chat001-integrated-local/activity-share-observation-test.log"
+    },
+    {
+      "name": "admin-account-management-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/admin-account-management-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1050,
+      "log": "tmp/chat001-integrated-local/admin-account-management-test.log"
+    },
+    {
+      "name": "admin-category-catalog-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/admin-category-catalog-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1404,
+      "log": "tmp/chat001-integrated-local/admin-category-catalog-test.log"
+    },
+    {
+      "name": "admin-observed-usage-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/admin-observed-usage-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1201,
+      "log": "tmp/chat001-integrated-local/admin-observed-usage-test.log"
+    },
+    {
+      "name": "admin-operational-controls-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/admin-operational-controls-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1242,
+      "log": "tmp/chat001-integrated-local/admin-operational-controls-test.log"
+    },
+    {
+      "name": "admin-read-models-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/admin-read-models-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 383,
+      "log": "tmp/chat001-integrated-local/admin-read-models-test.log"
+    },
+    {
+      "name": "admin-workspace-operations-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/admin-workspace-operations-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1379,
+      "log": "tmp/chat001-integrated-local/admin-workspace-operations-test.log"
+    },
+    {
+      "name": "anonymous-media-db-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/anonymous-media-db-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 841,
+      "log": "tmp/chat001-integrated-local/anonymous-media-db-test.log"
+    },
+    {
+      "name": "auth-bootstrap-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/auth-bootstrap-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 390,
+      "log": "tmp/chat001-integrated-local/auth-bootstrap-regression-test.log"
+    },
+    {
+      "name": "auth-identity-reuse-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/auth-identity-reuse-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 300,
+      "log": "tmp/chat001-integrated-local/auth-identity-reuse-test.log"
+    },
+    {
+      "name": "avatar-fallback-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/avatar-fallback-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 224,
+      "log": "tmp/chat001-integrated-local/avatar-fallback-test.log"
+    },
+    {
+      "name": "badge-engine-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 2430,
+      "log": "tmp/chat001-integrated-local/badge-engine-test.log"
+    },
+    {
+      "name": "cashfree-modal-completion-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/cashfree-modal-completion-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 220,
+      "log": "tmp/chat001-integrated-local/cashfree-modal-completion-test.log"
+    },
+    {
+      "name": "cashfree-webhook-target-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/cashfree-webhook-target-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 234,
+      "log": "tmp/chat001-integrated-local/cashfree-webhook-target-test.log"
+    },
+    {
+      "name": "category-catalog-client-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/category-catalog-client-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 228,
+      "log": "tmp/chat001-integrated-local/category-catalog-client-test.log"
+    },
+    {
+      "name": "chat-inbox-merge-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/chat-inbox-merge-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 301,
+      "log": "tmp/chat001-integrated-local/chat-inbox-merge-test.log"
+    },
+    {
+      "name": "chat-realtime-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/chat-realtime-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 350,
+      "log": "tmp/chat001-integrated-local/chat-realtime-regression-test.log"
+    },
+    {
+      "name": "chat-ui-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/chat-ui-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 265,
+      "log": "tmp/chat001-integrated-local/chat-ui-regression-test.log"
+    },
+    {
+      "name": "client-home-profile-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/client-home-profile-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 26,
+      "log": "tmp/chat001-integrated-local/client-home-profile-test.log"
+    },
+    {
+      "name": "client-pdf-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/client-pdf-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 28,
+      "log": "tmp/chat001-integrated-local/client-pdf-regression-test.log"
+    },
+    {
+      "name": "client-readiness-contract-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/client-readiness-contract-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 25,
+      "log": "tmp/chat001-integrated-local/client-readiness-contract-test.log"
+    },
+    {
+      "name": "community-anonymous-media-service-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/community-anonymous-media-service-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 274,
+      "log": "tmp/chat001-integrated-local/community-anonymous-media-service-test.log"
+    },
+    {
+      "name": "community-permissions-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/community-permissions-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 265,
+      "log": "tmp/chat001-integrated-local/community-permissions-test.log"
+    },
+    {
+      "name": "feed-loading-state-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/feed-loading-state-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 237,
+      "log": "tmp/chat001-integrated-local/feed-loading-state-test.log"
+    },
+    {
+      "name": "frontend-safe-overrides-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/frontend-safe-overrides-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 31,
+      "log": "tmp/chat001-integrated-local/frontend-safe-overrides-test.log"
+    },
+    {
+      "name": "google-oauth-web-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/google-oauth-web-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 249,
+      "log": "tmp/chat001-integrated-local/google-oauth-web-test.log"
+    },
+    {
+      "name": "hero-brand-visual-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/hero-brand-visual-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 62,
+      "log": "tmp/chat001-integrated-local/hero-brand-visual-test.log"
+    },
+    {
+      "name": "host-activity-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/host-activity-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 305,
+      "log": "tmp/chat001-integrated-local/host-activity-test.log"
+    },
+    {
+      "name": "messages-search-performance-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/messages-search-performance-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 288,
+      "log": "tmp/chat001-integrated-local/messages-search-performance-test.log"
+    },
+    {
+      "name": "onboarding-completion-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/onboarding-completion-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 25,
+      "log": "tmp/chat001-integrated-local/onboarding-completion-test.log"
+    },
+    {
+      "name": "onboarding-google-auth-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/onboarding-google-auth-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 239,
+      "log": "tmp/chat001-integrated-local/onboarding-google-auth-test.log"
+    },
+    {
+      "name": "onboarding-profile-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/onboarding-profile-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 268,
+      "log": "tmp/chat001-integrated-local/onboarding-profile-test.log"
+    },
+    {
+      "name": "partner-auth-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/partner-auth-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 156,
+      "log": "tmp/chat001-integrated-local/partner-auth-test.log"
+    },
+    {
+      "name": "partner-dashboard-loading-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/partner-dashboard-loading-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 236,
+      "log": "tmp/chat001-integrated-local/partner-dashboard-loading-test.log"
+    },
+    {
+      "name": "partner-ecosystem-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/partner-ecosystem-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 237,
+      "log": "tmp/chat001-integrated-local/partner-ecosystem-test.log"
+    },
+    {
+      "name": "partner-submit-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/partner-submit-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 284,
+      "log": "tmp/chat001-integrated-local/partner-submit-regression-test.log"
+    },
+    {
+      "name": "partner-v1-contract-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/partner-v1-contract-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 27,
+      "log": "tmp/chat001-integrated-local/partner-v1-contract-test.log"
+    },
+    {
+      "name": "payment-entry-authorization-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1368,
+      "log": "tmp/chat001-integrated-local/payment-entry-authorization-test.log"
+    },
+    {
+      "name": "payment-registration-confirmation-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/payment-registration-confirmation-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 289,
+      "log": "tmp/chat001-integrated-local/payment-registration-confirmation-test.log"
+    },
+    {
+      "name": "phase3-vibe-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/phase3-vibe-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 220,
+      "log": "tmp/chat001-integrated-local/phase3-vibe-test.log"
+    },
+    {
+      "name": "phase4-privacy-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/phase4-privacy-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 259,
+      "log": "tmp/chat001-integrated-local/phase4-privacy-test.log"
+    },
+    {
+      "name": "phase5-profile-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/phase5-profile-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 298,
+      "log": "tmp/chat001-integrated-local/phase5-profile-test.log"
+    },
+    {
+      "name": "profile-catalog-recovery-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/profile-catalog-recovery-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 311,
+      "log": "tmp/chat001-integrated-local/profile-catalog-recovery-test.log"
+    },
+    {
+      "name": "profile-community-avatars-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/profile-community-avatars-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 271,
+      "log": "tmp/chat001-integrated-local/profile-community-avatars-test.log"
+    },
+    {
+      "name": "profile-interest-atomic-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/profile-interest-atomic-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 870,
+      "log": "tmp/chat001-integrated-local/profile-interest-atomic-test.log"
+    },
+    {
+      "name": "profile-social-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/profile-social-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 225,
+      "log": "tmp/chat001-integrated-local/profile-social-test.log"
+    },
+    {
+      "name": "referral-reward-identity-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/referral-reward-identity-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1010,
+      "log": "tmp/chat001-integrated-local/referral-reward-identity-test.log"
+    },
+    {
+      "name": "registration-questions-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/registration-questions-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 228,
+      "log": "tmp/chat001-integrated-local/registration-questions-test.log"
+    },
+    {
+      "name": "sms-provider-diagnostics-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/sms-provider-diagnostics-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 245,
+      "log": "tmp/chat001-integrated-local/sms-provider-diagnostics-test.log"
+    },
+    {
+      "name": "storage-signing-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/storage-signing-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 231,
+      "log": "tmp/chat001-integrated-local/storage-signing-regression-test.log"
+    },
+    {
+      "name": "supabase-repair-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/supabase-repair-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 25,
+      "log": "tmp/chat001-integrated-local/supabase-repair-regression-test.log"
+    },
+    {
+      "name": "trust-score-database-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1120,
+      "log": "tmp/chat001-integrated-local/trust-score-database-test.log"
+    },
+    {
+      "name": "validation-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/validation-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 241,
+      "log": "tmp/chat001-integrated-local/validation-test.log"
+    },
+    {
+      "name": "vibe-share-attribution-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/vibe-share-attribution-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1107,
+      "log": "tmp/chat001-integrated-local/vibe-share-attribution-test.log"
+    },
+    {
+      "name": "workspace-loading-regression-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/workspace-loading-regression-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 291,
+      "log": "tmp/chat001-integrated-local/workspace-loading-regression-test.log"
+    },
+    {
+      "name": "workspace-refresh-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/workspace-refresh-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 225,
+      "log": "tmp/chat001-integrated-local/workspace-refresh-test.log"
+    },
+    {
+      "name": "edge-core-tests",
+      "command": [
+        "deno",
+        "test",
+        "--allow-env",
+        "supabase/functions/onboarding-date_test.ts",
+        "supabase/functions/community-media/handler.test.ts",
+        "supabase/functions/_shared/cashfree.test.ts"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 586,
+      "log": "tmp/chat001-integrated-local/edge-core-tests.log"
+    },
+    {
+      "name": "edge-sms-tests",
+      "command": [
+        "deno",
+        "test",
+        "--allow-env",
+        "--config",
+        "supabase/functions/send-sms/deno.json",
+        "supabase/functions/send-sms/payload_test.ts"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 47,
+      "log": "tmp/chat001-integrated-local/edge-sms-tests.log"
+    },
+    {
+      "name": "cashfree-edge-typecheck",
+      "command": [
+        "deno",
+        "check",
+        "supabase/functions/cashfree-create-order/index.ts",
+        "supabase/functions/cashfree-verify-payment/index.ts",
+        "supabase/functions/cashfree-webhook/index.ts"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 174,
+      "log": "tmp/chat001-integrated-local/cashfree-edge-typecheck.log"
+    },
+    {
+      "name": "app-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 54016,
+      "log": "tmp/chat001-integrated-local/app-typecheck.log"
+    },
+    {
+      "name": "expo-doctor",
+      "command": [
+        "npx",
+        "--yes",
+        "expo-doctor"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 3722,
+      "log": "tmp/chat001-integrated-local/expo-doctor.log"
+    },
+    {
+      "name": "app-production-export",
+      "command": [
+        "npm",
+        "run",
+        "vercel-build"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 2055,
+      "log": "tmp/chat001-integrated-local/app-production-export.log"
+    },
+    {
+      "name": "phone-otp-ui-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/phone-otp-ui-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 5619,
+      "log": "tmp/chat001-integrated-local/phone-otp-ui-test.log"
+    },
+    {
+      "name": "admin-admin-review-read-models-test",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "scripts/admin-review-read-models-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 271,
+      "log": "tmp/chat001-integrated-local/admin-admin-review-read-models-test.log"
+    },
+    {
+      "name": "admin-typecheck",
+      "command": [
+        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 4294,
+      "log": "tmp/chat001-integrated-local/admin-typecheck.log"
+    },
+    {
+      "name": "admin-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 5518,
+      "log": "tmp/chat001-integrated-local/admin-lint.log"
+    },
+    {
+      "name": "admin-production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 5678,
+      "log": "tmp/chat001-integrated-local/admin-production-build.log"
+    }
+  ],
+  "finishedAt": "2026-10-03T08:17:49.433Z",
+  "passed": 76,
+  "failed": 0
+}

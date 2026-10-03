@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-03T08:03:30.145Z",
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "httpStatus": 200,
+  "providers": {
+    "email": true,
+    "phone": true,
+    "google": true,
+    "apple": false
+  },
+  "signupDisabled": false,
+  "emailAutoconfirm": false,
+  "phoneAutoconfirm": false,
+  "scope": "Read-only public Auth settings. Enabled provider is not proof of physical OTP/email delivery or every OAuth callback.",
+  "dashboardAccess": "Current Chrome account redirects to old-project organization and denies target; target MCP connector remains available. No old-project changes."
+}

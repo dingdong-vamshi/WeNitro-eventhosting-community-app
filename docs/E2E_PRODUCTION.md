@@ -1,4 +1,6 @@
-# WeNitro Production Web Smoke Suite
+# Historical demo smoke suite
+
+This document describes the older demo-oriented smoke script, not the current production acceptance gate. Its demo entry, obsolete Vibe next control and old URL may no longer match the current application. Do not count it as authenticated production acceptance. Use `docs/chat001-production-qa-plan.md`, `docs/acceptance-reconciliation-2026-10-02.json` and the integrated local runner documented in the root README.
 
 `scripts/e2e-production.mjs` is a standalone Playwright smoke suite for the Expo web build. It uses the app's explicit demo entry point and tests the real mobile UI without requiring Playwright Test configuration.
 
@@ -42,7 +44,7 @@ node scripts/e2e-production.mjs
 Run against another local, preview, or production deployment:
 
 ```bash
-BASE_URL=https://wenitro1.vercel.app node scripts/e2e-production.mjs
+BASE_URL=https://wenitro-app.vercel.app node scripts/e2e-production.mjs
 ```
 
 Show the browser while debugging:

@@ -1,0 +1,235 @@
+{
+  "recordedAt": "2026-10-03T07:55:04.120894+00:00",
+  "status": "UPSTREAM_TOOLCHAIN_ADVISORIES_REMAIN",
+  "doesNotMean": "This is not a zero-vulnerability npm audit result. Runtime reachability must be distinguished from dependency presence.",
+  "projects": {
+    "app": {
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 18,
+        "critical": 0,
+        "total": 18
+      },
+      "dependencies": {
+        "prod": 550,
+        "dev": 3,
+        "optional": 12,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 563
+      },
+      "affectedPackages": [
+        {
+          "name": "@expo/cli",
+          "severity": "high",
+          "range": "<=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "@expo/code-signing-certificates",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "@expo/metro",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "@expo/metro-config",
+          "severity": "high",
+          "range": ">=0.21.0-canary-20250630-547cd82",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "@expo/metro-file-map",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "@react-native-community/datetimepicker",
+          "severity": "high",
+          "range": ">=8.2.0",
+          "isDirect": true,
+          "advisories": []
+        },
+        {
+          "name": "@react-native-google-signin/google-signin",
+          "severity": "high",
+          "range": ">=9.0.0",
+          "isDirect": true,
+          "advisories": []
+        },
+        {
+          "name": "@react-native/community-cli-plugin",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "@react-native/virtualized-lists",
+          "severity": "high",
+          "range": ">=0.85.0-nightly-20260108-1236b6be4",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "braces",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        {
+          "name": "expo",
+          "severity": "high",
+          "range": ">=45.0.0-beta.1",
+          "isDirect": true,
+          "advisories": []
+        },
+        {
+          "name": "metro",
+          "severity": "high",
+          "range": ">=0.71.0",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "metro-config",
+          "severity": "high",
+          "range": ">=0.71.0",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "metro-file-map",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "metro-transform-worker",
+          "severity": "high",
+          "range": ">=0.71.0",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "micromatch",
+          "severity": "high",
+          "range": ">=0.2.0",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "node-forge",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": [
+            "https://github.com/advisories/GHSA-86w9-cpqp-85rv"
+          ]
+        },
+        {
+          "name": "react-native",
+          "severity": "high",
+          "range": ">=0.73.0-nightly-20230506-1af868c52",
+          "isDirect": true,
+          "advisories": []
+        }
+      ]
+    },
+    "admin": {
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 5,
+        "critical": 0,
+        "total": 5
+      },
+      "dependencies": {
+        "prod": 265,
+        "dev": 370,
+        "optional": 84,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 672
+      },
+      "affectedPackages": [
+        {
+          "name": "@next/eslint-plugin-next",
+          "severity": "high",
+          "range": ">=14.3.0-canary.0",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "braces",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        {
+          "name": "eslint-config-next",
+          "severity": "high",
+          "range": ">=14.3.0-canary.0",
+          "isDirect": true,
+          "advisories": []
+        },
+        {
+          "name": "fast-glob",
+          "severity": "high",
+          "range": "*",
+          "isDirect": false,
+          "advisories": []
+        },
+        {
+          "name": "micromatch",
+          "severity": "high",
+          "range": ">=0.2.0",
+          "isDirect": false,
+          "advisories": []
+        }
+      ]
+    }
+  },
+  "references": [
+    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "https://github.com/advisories/GHSA-86w9-cpqp-85rv"
+  ],
+  "registryLatest": {
+    "braces": "3.0.3",
+    "node-forge": "1.4.0"
+  },
+  "upstreamPatchedVersions": "Both reviewed advisories list None on 2026-10-03.",
+  "scope": {
+    "braces": "App Metro/file discovery and Admin ESLint glob dependencies. No direct App/src/API import found. Repository-controlled patterns, not an intentional member-facing pattern-evaluation endpoint.",
+    "node-forge": "App Expo CLI and @expo/code-signing-certificates tooling. No direct App/src/API import found. Not used by WeNitro Cashfree signature validation."
+  },
+  "decision": "Retain SDK57/Next16 compatibility. npm audit suggestions involve unsupported major downgrades and are not accepted as a safe remediation. Re-evaluate current registry patches at release; do not claim fully clean dependency audit.",
+  "supabasePasswordAdvisor": {
+    "finding": "Leaked password protection disabled",
+    "providerRequirement": "Supabase documents this control as Pro Plan and above. No billing upgrade authorized or performed.",
+    "source": "https://supabase.com/docs/guides/auth/password-security",
+    "projectPlanEvidence": "Prior target dashboard screenshot qa-evidence/badges/live-authenticated-security.png shows Free; recheck dashboard entitlement before final acceptance.",
+    "status": "ENTITLEMENT_RECHECK_PENDING"
+  }
+}

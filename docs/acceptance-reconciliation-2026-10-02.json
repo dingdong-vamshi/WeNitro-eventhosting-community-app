@@ -621,10 +621,10 @@
       ]
     },
     "adminAccountManagement": {
-      "status": "PRODUCTION_UI_PENDING",
+      "status": "PRODUCTION_UI_AND_API_PASS_QA_PRIVILEGES_REVOKED",
       "local": "23 checks pass",
       "technicalProof": "docs/chat001-admin-access-proof.json",
-      "live": "16 checks pass; QA accounts await UI and revocation",
+      "live": "16 authorization checks passed; separate cleanup proof confirms both QA roles inactive and old token denied",
       "ownerDependency": "No permanent Super Admin in target. Client must identify intended owner; no existing role promoted.",
       "productionUi": {
         "status": "PASS",
@@ -634,8 +634,9 @@
           "qa-evidence/chat001/production-admin-qa-access-suspended.png",
           "qa-evidence/chat001/production-admin-access-audit.png"
         ],
-        "limitation": "Privilege grant/revocation proven via authenticated API; UI change exercised suspension. No real owner assigned; QA Master cleanup pending."
-      }
+        "limitation": "No permanent real owner assigned; client owner identity still required. Temporary QA Master and managed member privileges revoked."
+      },
+      "cleanupProof": "docs/chat001-admin-access-cleanup-proof.json"
     },
     "dateFilters": {
       "status": "PASS web; native device interaction not yet exercised",
@@ -734,8 +735,8 @@
   },
   "acceptanceVerdict": "Not ready for final acceptance. Repair, live deployment and per-requirement production evidence are still in progress.",
   "workflow": {
-    "updatedAt": "2026-10-03T07:40:47.044432+00:00",
-    "stage": "BATCH_LOCAL_AUDIT_AND_IMPLEMENTATION",
+    "updatedAt": "2026-10-03T08:08:38.256390+00:00",
+    "stage": "PARALLEL_LOCAL_AUDIT_AND_IMPLEMENTATION",
     "instruction": "Audit all remaining requirements; complete all local fixes; full local regression/typecheck/build/backend/security/cross-user/badge/Admin/payment verification; only then commit/push/deploy backend before dependent App/Admin, followed by complete production acceptance/screenshots. No per-fix deployments.",
     "alreadyInFlightDeployment": "Admin3a2920a deployment dpl_2wDVvbHUo6ncyBnZCLQeZUpNAd87 completed before workflow change. No new deployment started afterward.",
     "ordinaryAuditBacklog": [
@@ -746,6 +747,36 @@
       "Admin remaining inert controls and settings behavior",
       "Remaining distinct PDF requirements and visual evidence inventory",
       "Full local suite and SQL/Edge cross-user regressions"
-    ]
+    ],
+    "parallelOwners": {
+      "app_pdf_regression": "Both PDFs, App UI, Profile presentation; isolated App worktree",
+      "backend_badges_payments": "Backend, security, badges, Trust logic, Partner/Cashfree; isolated App worktree",
+      "admin_completion": "All Admin functionality and Admin SQL; isolated Admin and App worktrees",
+      "root": "Requirements/evidence reconciliation, integration, full local suite, deployment coordination"
+    },
+    "integrationPolicy": "Local checkpoint/agent commits allowed. No push or deployment until all local implementations merged and full local suite clean. Deploy migrations then Edge Functions then App then Admin, followed by parallel production QA.",
+    "localCheckpoint": {
+      "app": "a47519f",
+      "admin": "149618c"
+    },
+    "readyAgentCommits": {
+      "app": [
+        "9540b8c",
+        "ba6b520",
+        "433f6cc"
+      ],
+      "backend": [
+        "0441fbd"
+      ],
+      "adminReview": [
+        "29068b2"
+      ]
+    },
+    "stillLocal": [
+      "Cashfree received-payment versus confirmed-registration response/UI and unfulfilled paid category capacity",
+      "Admin scheduled in-app campaigns and final integration verification",
+      "Atomic canonical requirement counts and evidence mapping"
+    ],
+    "productionQaIsolation": "App QA tabs share authentication on the same origin. Use canonical App and immutable production-deployment URL as separate verified origins; Admin separate origin; API agents isolate mutation fixtures. Do not suspend shared70/71/116 during concurrent UI QA."
   }
 }

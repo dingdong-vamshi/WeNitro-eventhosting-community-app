@@ -1,12 +1,7 @@
-# WeNitro PostgreSQL setup
+# Historical schema reference
 
-The SQL files are ordered and idempotent for a fresh Supabase/PostgreSQL database:
+`schema.sql` and `seed.sql` preserve an earlier schema design. They are not the deployment source for the current WeNitro production project and must not be replayed over it.
 
-```bash
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f database/schema.sql
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f database/seed.sql
-```
+The active integer-keyed schema, policies, RPCs and changes are in `supabase/migrations/`; history and baseline constraints are documented in `supabase/MIGRATION_BASELINE.md`. Current production uses Supabase Auth, Data API/RPCs, Storage and Realtime via `src/services/`. AsyncStorage is client persistence/demo state, not the production database.
 
-`schema.sql` creates the profile, activity, participation, comment, vibe, community, interest, badge, like, save, and follow models used by the UI. Every public table has RLS enabled. Data API grants are explicit so the schema remains compatible with Supabase projects where new public tables are not exposed automatically.
-
-The Expo demo currently persists its interactive state with AsyncStorage. When a Supabase project is provisioned, the frontend should use a publishable key and the Data API; never ship a database password or service-role key in the React Native client.
+Use the root README for local development, batch deployment order and acceptance verification. Production clients use only the publishable key; server secrets never belong in the browser or native bundle.

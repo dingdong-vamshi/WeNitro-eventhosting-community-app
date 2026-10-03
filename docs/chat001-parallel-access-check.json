@@ -1,0 +1,73 @@
+{
+  "at": "2026-10-03T08:03:47.809Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "projectStatus": "ACTIVE_HEALTHY",
+  "databaseVersion": "17.6.1.171",
+  "connector": "Supabase",
+  "databaseManagementRead": "PASS",
+  "edgeManagementRead": "PASS",
+  "migrationManagementRead": "PASS",
+  "deploymentCapability": "Previously exercised successfully in this continuation; no new write performed during parallel local phase.",
+  "functions": [
+    {
+      "name": "share-vibe",
+      "version": 3,
+      "status": "ACTIVE",
+      "verifyJwt": false
+    },
+    {
+      "name": "send-sms",
+      "version": 4,
+      "status": "ACTIVE",
+      "verifyJwt": false
+    },
+    {
+      "name": "cashfree-create-order",
+      "version": 4,
+      "status": "ACTIVE",
+      "verifyJwt": true
+    },
+    {
+      "name": "cashfree-verify-payment",
+      "version": 3,
+      "status": "ACTIVE",
+      "verifyJwt": true
+    },
+    {
+      "name": "cashfree-webhook",
+      "version": 3,
+      "status": "ACTIVE",
+      "verifyJwt": false
+    },
+    {
+      "name": "community-media",
+      "version": 1,
+      "status": "ACTIVE",
+      "verifyJwt": false
+    }
+  ],
+  "migrationCount": 111,
+  "lastApplied": [
+    {
+      "version": "20261003050836",
+      "name": "anonymous_community_media_privacy"
+    },
+    {
+      "version": "20261003052115",
+      "name": "popular_partner_qualifying_participants"
+    },
+    {
+      "version": "20261003064250",
+      "name": "admin_account_management"
+    },
+    {
+      "version": "20261003065531",
+      "name": "admin_operational_controls"
+    },
+    {
+      "version": "20261003070837",
+      "name": "authenticated_safety_reports"
+    }
+  ],
+  "pendingBatchDeployment": true
+}

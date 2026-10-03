@@ -1,6 +1,6 @@
-# WeNitro Community API Routes
+# Historical WeNitro Community API Design
 
-The Expo demo uses the same resource shapes locally through AsyncStorage. These routes are the backend contract for a Supabase/PostgreSQL deployment. Authentication is a Supabase JWT in `Authorization: Bearer <token>` and PostgreSQL RLS remains the final authorization boundary.
+This directory contains a historical OpenAPI design, not deployed `/api/v1` handlers. The current App calls Supabase through `src/services/*-production.ts`, public RPCs backed by migrations, Storage, Realtime and Edge Functions. Do not implement or deploy this older UUID-era contract over the current integer-keyed schema without an explicit migration design. See the root README and `supabase/MIGRATION_BASELINE.md` for the active architecture.
 
 | Method | Route | Purpose |
 | --- | --- | --- |

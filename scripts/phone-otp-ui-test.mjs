@@ -24,7 +24,7 @@ try {
     await route.abort();
   });
 
-  await page.goto("http://localhost:8081/#/signup");
+  await page.goto(`${process.env.QA_APP_BASE_URL || "http://localhost:8081"}/#/signup`);
   const skipIntro = page.getByText("Skip", { exact: true }).first();
   const phoneTab = page.getByText("Phone", { exact: true });
   await Promise.race([
