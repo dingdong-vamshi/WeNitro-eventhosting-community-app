@@ -1,6 +1,7 @@
 -- Acceptance template only. Do not run before coordinator readiness.
 -- Substitute ADMIN_AUTH_UUID, HOST_AUTH_UUID and QA_EVENT_PAYLOAD_JSON from the
 -- dedicated ignored fixture manifest. Validate UUIDs before substitution.
+-- Escape each single quote in serialized fixture JSON as two single quotes.
 -- Execute this entire file as one SQL transaction. Nothing below is committed.
 begin;
 select set_config('request.jwt.claim.sub','ADMIN_AUTH_UUID',true);

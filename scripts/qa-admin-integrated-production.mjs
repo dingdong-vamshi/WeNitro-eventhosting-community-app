@@ -47,10 +47,12 @@ try{
  const signedIn=await ok(admin.auth.signInWithPassword({email:qa.QA_EMAIL_ADMIN,password:qa.QA_PASSWORD_ADMIN}));
  if(mode==='--cleanup'){
   assert(fixture,'No fixture manifest');
-  for(const ref of fixture.documents||[]){const row=await getDoc(ref.kind,ref.id);if(!row||row.archived)continue;await saveDoc(row,row.payload,true);}
-  if(fixture.eventId)await rpc(admin,'admin_moderate_activity',{p_event_id:fixture.eventId,p_action:'delete_event',p_reason:'CHAT001 dedicated fixture cleanup after acceptance'});
-  if(fixture.categoryId)await saveCategory(false,true);
-  for(const label of ['finance','recipient','host']){const person=fixture[label];if(!person)continue;await ok(service.auth.admin.updateUserById(person.authId,{app_metadata:{role:'',admin_status:'inactive',qa_fixture:true}}));await ok(service.from('tbl_users').update({is_active:0,deactivated_at:new Date().toISOString()}).eq('id',person.userId).eq('auth_user_id',person.authId));}
+  const cleanupErrors=[];const attempt=async(label,action)=>{try{await action();}catch(error){cleanupErrors.push(`${label}: ${error instanceof Error?error.message:String(error)}`);}};
+  for(const ref of fixture.documents||[])await attempt(`archive ${ref.id}`,async()=>{const row=await getDoc(ref.kind,ref.id);if(row&&!row.archived)await saveDoc(row,row.payload,true);});
+  if(fixture.eventId)await attempt('remove private Activity',()=>rpc(admin,'admin_moderate_activity',{p_event_id:fixture.eventId,p_action:'delete_event',p_reason:'CHAT001 dedicated fixture cleanup after acceptance'}));
+  if(fixture.categoryId)await attempt('archive QA category',()=>saveCategory(false,true));
+  for(const label of ['finance','recipient','host']){const person=fixture[label];if(!person)continue;await attempt(`revoke ${label} authority`,()=>ok(service.auth.admin.updateUserById(person.authId,{app_metadata:{role:'',admin_status:'inactive',qa_fixture:true}})));if(person.userId)await attempt(`deactivate ${label}`,()=>ok(service.from('tbl_users').update({is_active:0,deactivated_at:new Date().toISOString()}).eq('id',person.userId).eq('auth_user_id',person.authId)));}
+  assert.equal(cleanupErrors.length,0,cleanupErrors.join('; '));
   fixture.cleanedAt=new Date().toISOString();saveFixture();pass('All dedicated campaigns archived and schedules cancelled; category archived; private unpaid Activity removed; synthetic identities deactivated and Finance authority revoked',true);saveProof('PASS');console.log(JSON.stringify({status:'PASS',mode,checks:checks.length}));
  }else{
   if(mode==='--execute'){
@@ -94,7 +96,8 @@ try{
    pass('Disabled category stays attached through unrelated historical Activity edit',(await ok(admin.from('tbl_event_categories').select('category_id').eq('event_id',fixture.eventId))).some(r=>r.category_id===fixture.categoryId));
    await denied('Disabled category cannot be assigned to a new Activity',host.rpc('create_activity',{p_payload:{...fixture.eventPayload,title:'[QA] Must reject disabled category'},p_status:'published'}),/available category/i);
    await saveCategory(true,true);await rpc(host,'update_activity',{p_event_id:fixture.eventId,p_patch:{description:'Historical archived category preserved during ordinary edit.',category:fixture.categoryName}});
-   pass('Archived category is omitted from the selectable legacy catalog',!(await rpc(host,'list_interest_catalog')).some(c=>c.id===fixture.categoryId));
+   pass('Archived category state persists while the historical Activity reference survives',!!(await ok(admin.from('tbl_categories').select('archived_at').eq('id',fixture.categoryId).single())).archived_at&&(await ok(admin.from('tbl_event_categories').select('category_id').eq('event_id',fixture.eventId))).some(r=>r.category_id===fixture.categoryId));
+   pass('QA catalog fixtures are not offered by the selectable legacy catalog',!(await rpc(host,'list_interest_catalog')).some(c=>c.id===fixture.categoryId));
    fixture.categoryName+=' restored';await saveCategory(true,false);saveFixture();
    pass('Category restore and rename preserve the same historical category ID',(await ok(admin.from('tbl_categories').select('name,archived_at,is_enabled').eq('id',fixture.categoryId).single())).name===fixture.categoryName);
    await rpc(host,'record_app_usage',{p_platform:'web',p_event_id:fixture.eventId});await rpc(host,'record_app_usage',{p_platform:'web',p_event_id:fixture.eventId});
