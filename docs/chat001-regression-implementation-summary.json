@@ -1,0 +1,82 @@
+{
+  "status": "IMPLEMENTED_LOCAL_PENDING_FINAL_GATE_AND_DEPLOYMENT",
+  "items": [
+    {
+      "change": "Vibe identity and Activity metadata",
+      "implementation": "Hydrate authorized creator full name and linked Activity title; preserve private media boundaries.",
+      "commit": "853d4c8"
+    },
+    {
+      "change": "Private Activity sharing",
+      "implementation": "Host/cohost can open invite share sheet, send invitation to authorized chat and redeem through authorized RPC.",
+      "commit": "853d4c8"
+    },
+    {
+      "change": "Sharing across account transitions",
+      "implementation": "Invalidate in-flight mint, recipient resolution, send, clipboard and navigation callbacks when initiating account changes.",
+      "commit": "2858a3a",
+      "localProof": "docs/chat001-share-identity-regression.json"
+    },
+    {
+      "change": "Truthful SOS clipboard result",
+      "implementation": "Check clipboard return value and provide selectable detail fallback when copying fails.",
+      "commit": "853d4c8"
+    },
+    {
+      "change": "Own public-route Squad count",
+      "implementation": "Use authorized deduplicated own metric; do not expose private metric for another account.",
+      "commit": "853d4c8"
+    },
+    {
+      "change": "Admin Partner Terms receipt",
+      "implementation": "Admin-only receipt read policy and version/time/loading/error/retry/no-receipt UI.",
+      "appCommit": "83115f8",
+      "adminCommit": "e4a6625",
+      "productionBackendProof": "docs/chat001-admin-partner-terms-production-proof.json"
+    },
+    {
+      "change": "Destructive confirmations",
+      "implementation": "Replace eight native confirmation paths with cancellable in-app controls that invalidate across navigation/account changes.",
+      "commit": "0ec4f23"
+    },
+    {
+      "change": "Activity liker navigation",
+      "implementation": "Accessible liker sheet with profile links, pagination and safe loading/error/empty handling.",
+      "commit": "a18738e"
+    },
+    {
+      "change": "Additional persisted text moderation fields",
+      "implementation": "Use existing deterministic guard for registration labels/options/answers, entry names, Activity feedback, public Partner name/description and Community rules/tags. Preserve unrelated legacy edits; no image classifier claim.",
+      "commit": "28e7dcb",
+      "localProof": "docs/chat001-registration-text-guards-regression.json"
+    },
+    {
+      "change": "Admin authentication IP records",
+      "implementation": "Bounded Admin/Master-only retained authentication IP read viewer, actor-scoped cancelable query, honest loading/error/empty states; no geography, risk scoring or fabricated data.",
+      "status": "IMPLEMENTED_LOCAL",
+      "appCommit": "d2b7951",
+      "adminCommit": "03d20e5",
+      "localProof": "docs/chat001-admin-auth-ip-regression.json"
+    },
+    {
+      "change": "Web camera-only selfie capture",
+      "implementation": "HTTPS getUserMedia capture to JPEG with explicit preview/retake/cancel and track/lifecycle cleanup, preserving native camera behavior. No web gallery fallback.",
+      "status": "IMPLEMENTED_LOCAL",
+      "commit": "a8e0b77",
+      "localProof": "docs/chat001-live-selfie-camera-local-proof.json"
+    },
+    {
+      "change": "Sandbox DigiLocker Aadhaar verification",
+      "implementation": "Disabled consent-bound hosted integration, private session ledger, production-only UIDAI-issued Aadhaar metadata verification; test results cannot award Trust. Requires authorized provider activation and consenting live acceptance.",
+      "commit": "81414bc",
+      "localProof": "docs/chat001-digilocker-local-proof.json"
+    },
+    {
+      "change": "Google venue coordinate retention",
+      "implementation": "Durable Place IDs and source, fixed labels, private service-only 28-day coordinate receipts, DB-enforced create/update binding and hourly expired-coordinate purge. Names and addresses stay transient.",
+      "commit": "abc21aa",
+      "localProof": "docs/chat001-google-place-retention-local-proof.json"
+    }
+  ],
+  "productionVisualAcceptance": "Pending deployment and actual interaction. Locked Mac/native browser confirmation blocks current browser input; no screenshot substituted."
+}

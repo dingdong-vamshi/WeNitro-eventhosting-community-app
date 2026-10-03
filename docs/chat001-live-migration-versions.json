@@ -1,0 +1,95 @@
+{
+  "at": "2026-10-03T20:38:00Z",
+  "projectId": "cxsznhrkzqndhseodcyy",
+  "scope": "Actual migration registry versions returned by Supabase. MCP apply_migration assigns a deployment timestamp; these are distinct from local source filename timestamps recorded in earlier rollout artifacts.",
+  "migrations": [
+    {
+      "version": "20261003050836",
+      "name": "anonymous_community_media_privacy"
+    },
+    {
+      "version": "20261003052115",
+      "name": "popular_partner_qualifying_participants"
+    },
+    {
+      "version": "20261003064250",
+      "name": "admin_account_management"
+    },
+    {
+      "version": "20261003065531",
+      "name": "admin_operational_controls"
+    },
+    {
+      "version": "20261003070837",
+      "name": "authenticated_safety_reports"
+    },
+    {
+      "version": "20261003081827",
+      "name": "admin_category_catalog"
+    },
+    {
+      "version": "20261003081830",
+      "name": "observed_usage_analytics"
+    },
+    {
+      "version": "20261003081832",
+      "name": "payment_entry_authorization"
+    },
+    {
+      "version": "20261003081834",
+      "name": "account_status_rpc_enforcement"
+    },
+    {
+      "version": "20261003081836",
+      "name": "admin_workspace_operations"
+    },
+    {
+      "version": "20261003081839",
+      "name": "referral_identity_reward_guard"
+    },
+    {
+      "version": "20261003081841",
+      "name": "atomic_profile_interests"
+    },
+    {
+      "version": "20261003081843",
+      "name": "scheduled_admin_campaigns"
+    },
+    {
+      "version": "20261003082857",
+      "name": "admin_workspace_conflict_http_status"
+    },
+    {
+      "version": "20261003175954",
+      "name": "activity_invite_lifecycle_guard"
+    },
+    {
+      "version": "20261003193028",
+      "name": "invited_registration_answers"
+    },
+    {
+      "version": "20261003193030",
+      "name": "activity_safety_reminders"
+    },
+    {
+      "version": "20261003193033",
+      "name": "participant_management_boundaries"
+    },
+    {
+      "version": "20261003193035",
+      "name": "active_join_retry_idempotency"
+    },
+    {
+      "version": "20261003193037",
+      "name": "activity_media_feed_choice"
+    },
+    {
+      "version": "20261003194415",
+      "name": "squad_metric_excludes_self"
+    },
+    {
+      "version": "20261003201003",
+      "name": "admin_partner_terms_receipt"
+    }
+  ]
+}

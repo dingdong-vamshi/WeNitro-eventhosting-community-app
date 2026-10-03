@@ -231,5 +231,18 @@
     "source": "https://supabase.com/docs/guides/auth/password-security",
     "projectPlanEvidence": "Prior target dashboard screenshot qa-evidence/badges/live-authenticated-security.png shows Free; recheck dashboard entitlement before final acceptance.",
     "status": "ENTITLEMENT_RECHECK_PENDING"
+  },
+  "preRegressionReleaseRecheck": {
+    "at": "2026-10-03T20:42:09.569325+00:00",
+    "registryLatest": {
+      "braces": "3.0.3",
+      "node-forge": "1.4.0"
+    },
+    "advisoryPatchedVersions": {
+      "GHSA-vfj7-8cjw-p6xm": "None",
+      "GHSA-86w9-cpqp-85rv": "None"
+    },
+    "method": "npm view versions plus direct GitHub Advisory Database pages",
+    "decision": "No published patched release available; retain documented toolchain exposure limits and do not claim a zero-vulnerability audit."
   }
 }
