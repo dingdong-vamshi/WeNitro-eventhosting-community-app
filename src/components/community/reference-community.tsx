@@ -1,3 +1,4 @@
+import { useActionConfirmation } from '../reconstruction/action-confirmation';
 import { CategoryCatalogStatus } from '../category-catalog-status';
 import { VerifiedBadge } from '../verified-badge';
 import React, { useEffect, useRef, useState } from 'react';
@@ -93,6 +94,7 @@ export function CreateCommunitySheet({ onClose, onCreated, initial }: { initial?
 
 export function CommunityConversation({ id, userId, name, avatar, success, onDismissSuccess, onBack, onInfo, onMessage }: { id: string; userId: string; name: string; avatar?: string; success: boolean; onDismissSuccess: () => void; onBack: () => void; onInfo: () => void; onMessage: (message: ChatMessage) => void }) {
   const { c, s } = useCommunityStyles();
+  const confirmAction = useActionConfirmation();
   const [messages, setMessages] = useState<ChatMessage[]>([]), [cursor, setCursor] = useState<MessageCursor | null>(null);
   const [body, setBody] = useState(''), [attachment, setAttachment] = useState(''), [loading, setLoading] = useState(true), [sending, setSending] = useState(false), [error, setError] = useState('');
   const [metadata, setMetadata] = useState<{ name: string; avatar?: string; memberCount: number | null }>({ name, avatar, memberCount: null }), [retry, setRetry] = useState(0), [historyLoading, setHistoryLoading] = useState(false);
@@ -172,14 +174,7 @@ export function CommunityConversation({ id, userId, name, avatar, success, onDis
         setMessages(current => current.filter(item => item.id !== message.id));
       } catch (e) { setError(errorText(e)); }
     };
-    if (Platform.OS === 'web') {
-      if (window.confirm('Delete this message and its attached media?')) await remove();
-      return;
-    }
-    Alert.alert('Delete message?', 'This removes your message and attached media for everyone.', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: () => void remove() },
-    ]);
+    if (await confirmAction({ title: 'Delete message?', message: 'This removes your message and attached media for everyone.', action: 'Delete' })) await remove();
   };
   const pick = async (type: 'image' | 'video') => { setOptionsOpen(false); try {
     if (!await confirmUpload()) return;

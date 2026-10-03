@@ -1,3 +1,4 @@
+import { ActionConfirmationProvider, useActionConfirmation } from './src/components/reconstruction/action-confirmation';
 import { recordActivityShare } from './src/services/activity-usage';
 import { useUsageObservation } from './src/hooks/use-usage-observation';
 import { activityDisplayPrice } from "./src/domain/activity-pricing";
@@ -2913,6 +2914,7 @@ function VibesScreen({
   openActivity: (id: string) => void;
 }) {
   const palette = usePalette();
+  const confirmAction = useActionConfirmation();
   const listRef = useRef<FlatList<Vibe>>(null);
   const openedTarget = useRef<string | null>(null);
   const [vibeIndex, setVibeIndex] = useState(0);
@@ -3162,16 +3164,7 @@ function VibesScreen({
         );
       }
     };
-    if (Platform.OS === "web") {
-      if (window.confirm("Delete this Vibe and its uploaded media?")) {
-        await remove();
-      }
-      return;
-    }
-    Alert.alert("Delete Vibe?", "This removes the Vibe and its uploaded media.", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => void remove() },
-    ]);
+    if (await confirmAction({ title: "Delete Vibe?", message: "This removes the Vibe and its uploaded media.", action: "Delete" })) await remove();
   };
   const commentCount = vibe.comments?.length ?? 0;
   const actions: [IconName, string, () => void][] = [
@@ -4119,6 +4112,7 @@ export function ActivityDetailScreen({
   onEdit: () => void;
 }) {
   const palette = usePalette();
+  const confirmAction = useActionConfirmation();
   const detailScrollRef = useRef<ScrollView>(null);
   const isPaidActivity = Boolean(activity.isPaid || activity.costsMayApply || activity.entryFeeRequired || (activity.price !== "Free" && Number(activity.price.replace(/[^0-9.]/g, "")) > 0));
   const requiresPlatformPayment = Boolean(activity.isPaid && activity.paymentCollectionMode === "cashfree");
@@ -4390,17 +4384,10 @@ export function ActivityDetailScreen({
       setJoining(false);
     }
   };
-  const withdrawPaymentReservation = () => {
-    const confirm = () => void join(true);
-    if (Platform.OS === "web") {
-      if (window.confirm("Withdraw from this paid Activity and release your reserved place?")) confirm();
-      return;
-    }
-    Alert.alert("Withdraw from Activity?", "Your unpaid reservation will be released. You can request to join again while registration is open.", [
-      { text: "Keep reservation", style: "cancel" },
-      { text: "Withdraw", style: "destructive", onPress: confirm },
-    ]);
+  const withdrawPaymentReservation = async () => {
+    if (await confirmAction({ title: "Withdraw from Activity?", message: "Your unpaid reservation will be released. You can request to join again while registration is open.", action: "Withdraw", cancel: "Keep reservation" })) await join(true);
   };
+
   const submitRegistration = async (answers: RegistrationAnswer[]) => {
     setJoining(true); setJoinError("");
     try {
@@ -4551,16 +4538,10 @@ export function ActivityDetailScreen({
       );
     }
   };
-  const confirmDeleteActivity = () => {
-    if (Platform.OS === "web") {
-      if (window.confirm("Delete this activity? Participants will no longer be able to join.")) void cancelActivity();
-      return;
-    }
-    Alert.alert("Delete activity?", "Participants will no longer be able to join.", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => void cancelActivity() },
-    ]);
+  const confirmDeleteActivity = async () => {
+    if (await confirmAction({ title: "Delete activity?", message: "Participants will no longer be able to join.", action: "Delete" })) await cancelActivity();
   };
+
   const openMap = async () => {
     const query = activity.latitude != null && activity.longitude != null
       ? `${activity.latitude},${activity.longitude}`
@@ -5125,6 +5106,7 @@ export function ChatScreen({
   onLeaveThread?: () => void;
 }) {
   const palette = usePalette();
+  const confirmAction = useActionConfirmation();
   const [activeSegment, setActiveSegment] = useState<
     "All" | "People" | "Groups"
   >("All");
@@ -5491,14 +5473,7 @@ export function ChatScreen({
         Alert.alert("Message not deleted", caught instanceof Error ? caught.message : "Please try again.");
       }
     };
-    if (Platform.OS === "web") {
-      if (window.confirm("Delete this message and its attached media?")) await remove();
-      return;
-    }
-    Alert.alert("Delete message?", "This removes your message and attached media for everyone.", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => void remove() },
-    ]);
+    if (await confirmAction({ title: "Delete message?", message: "This removes your message and attached media for everyone.", action: "Delete" })) await remove();
   };
   const pickMessageMedia = async (kind: "images" | "videos") => {
     setAttachmentsOpen(false);
@@ -5634,14 +5609,7 @@ export function ChatScreen({
         );
       }
     };
-    if (Platform.OS === "web") {
-      if (window.confirm("Delete this Story and its uploaded media?")) await remove();
-      return;
-    }
-    Alert.alert("Delete Story?", "This removes the Story and its uploaded media.", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => void remove() },
-    ]);
+    if (await confirmAction({ title: "Delete Story?", message: "This removes the Story and its uploaded media.", action: "Delete" })) await remove();
   };
   const createGroup = async () => {
     if (!groupPhoto)
@@ -5896,7 +5864,7 @@ export function ChatScreen({
         {attachmentsOpen ? <ReferenceSheet title="Chat Options" close={() => setAttachmentsOpen(false)}>
           <Pressable accessibilityRole="button" onPress={() => void pickMessageMedia("images")} style={styles.optionRow}><Icon name="image-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Share Photo</Text></Pressable>
           <Pressable accessibilityRole="button" onPress={() => { setAttachmentsOpen(false); setPollOpen(true); }} style={styles.optionRow}><Icon name="stats-chart-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Create Poll</Text></Pressable>
-          {selected.type === "People" && selected.userId ? <Pressable accessibilityRole="button" onPress={() => {
+          {selected.type === "People" && selected.userId ? <Pressable accessibilityRole="button" onPress={async () => {
             const block = async () => {
               try {
                 await privacyService.blockUser(selected.userId!);
@@ -5909,8 +5877,8 @@ export function ChatScreen({
                 Alert.alert("Could not block chat", caught instanceof Error ? caught.message : "Please try again.");
               }
             };
-            if (Platform.OS === "web") { if (window.confirm(`Block chat with ${selected.name}?`)) void block(); }
-            else Alert.alert("Block chat?", "They will not be able to message you from this conversation.", [{ text: "Cancel", style: "cancel" }, { text: "Block", style: "destructive", onPress: () => void block() }]);
+            setAttachmentsOpen(false);
+            if (await confirmAction({ title: "Block chat?", message: `Block ${selected.name}? They will not be able to message you from this conversation.`, action: "Block" })) await block();
           }} style={styles.optionRow}><Icon name="ban-outline" color="#F47786" size={24} /><Text style={[styles.optionText, { color: "#F47786" }]}>Block Chat</Text></Pressable> : null}
           <Pressable accessibilityRole="button" onPress={() => setAttachmentsOpen(false)} style={styles.optionCancel}><Text style={styles.optionText}>Cancel</Text></Pressable>
         </ReferenceSheet> : null}
@@ -10000,6 +9968,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
     <ReferenceTheme.Provider value={data.theme}><ThemeContext.Provider value={data.theme}>
+      <ActionConfirmationProvider scope={`${data.userId}:${screen}:${selectedActivityId}:${selectedConversationId}`}>
       <UnreadContext.Provider
         value={{
           notifications: notificationUnreadCount,
@@ -10064,6 +10033,7 @@ export default function App() {
         ) : null}
       </View>
       </UnreadContext.Provider>
+      </ActionConfirmationProvider>
     </ThemeContext.Provider></ReferenceTheme.Provider>
     </SafeAreaProvider>
   );

@@ -1,3 +1,4 @@
+import { useActionConfirmation } from './action-confirmation';
 import { VerifiedBadge } from '../verified-badge';
 import { UserAvatar } from '../user-avatar';
 import React, { useEffect, useState } from 'react';
@@ -48,6 +49,7 @@ function startsWithQuery(haystack: string, query: string) {
 
 export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openConversation, startConversation, openCommunity, createCommunity, setData }: { data: AppData; tab: string; setTab: (tab: string) => void; filter: string; setFilter: (filter: string) => void; openProfile: (id: string) => void; openConversation: (id: string) => void; startConversation: (person: { id: number; username: string; fullname: string; profile_image: string }) => Promise<void>; openCommunity: (c: CommunitySummary) => void; createCommunity: () => void; setData: React.Dispatch<React.SetStateAction<AppData>>; openLegacy?: () => void }) {
   const c = usePalette();
+  const confirmAction = useActionConfirmation();
   const [query, setQuery] = useState('');
   const [rows, setRows] = useState<CommunitySummary[]>([]);
   const [page, setPage] = useState(1);
@@ -94,7 +96,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
       Alert.alert('Story not uploaded', caught instanceof Error ? caught.message : 'Please try again.');
     } finally { setStoryBusy(false); }
   };
-  const deleteStory = () => {
+  const deleteStory = async () => {
     if (!storyPreview?.mine || storyBusy) return;
     const id = storyPreview.id;
     const remove = async () => {
@@ -106,8 +108,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
       } catch (caught) { Alert.alert('Story not deleted', caught instanceof Error ? caught.message : 'Please try again.'); }
       finally { setStoryBusy(false); }
     };
-    if (Platform.OS === 'web') { if (window.confirm('Delete your story and its media?')) void remove(); }
-    else Alert.alert('Delete story?', 'This removes your story and its media.', [{ text: 'Cancel', style: 'cancel' }, { text: 'Delete', style: 'destructive', onPress: () => void remove() }]);
+    if (await confirmAction({ title: 'Delete story?', message: 'This removes your story and its media.', action: 'Delete' })) await remove();
   };
 
   useEffect(() => {

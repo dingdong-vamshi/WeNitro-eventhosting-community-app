@@ -1,0 +1,55 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import ts from 'typescript';
+const source = fs.readFileSync('src/components/reconstruction/action-confirmation.tsx', 'utf8');
+const ast = ts.createSourceFile('confirmation.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+const declaration = ast.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === 'createConfirmationController');
+const context = { exports: {} };
+vm.runInNewContext(ts.transpileModule(declaration.getText(ast), { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, context);
+let scope = '71:chat:253', visible;
+const control = context.exports.createConfirmationController(value => { visible = value; }, () => scope);
+const options = { title: 'Delete message?', message: 'Removes it for everyone.' };
+let writes = 0;
+const pending = control.request(options).then(accepted => { if (accepted) writes++; return accepted; });
+assert.equal(writes, 0, 'opening confirmation cannot mutate content');
+assert.equal(await control.request(options), false, 'double click does not queue a second deletion');
+control.respond(visible.id, false);
+assert.equal(await pending, false);
+assert.equal(writes, 0, 'Cancel must preserve content');
+const confirmed = control.request(options).then(accepted => { if (accepted) writes++; return accepted; });
+const id = visible.id;
+control.respond(id, true); control.respond(id, true);
+assert.equal(await confirmed, true);
+assert.equal(writes, 1, 'confirmed action executes at most once');
+assert.equal(visible, null);
+const stale = control.request(options);
+scope = '120:chat:253';
+control.respond(visible.id, true);
+assert.equal(await stale, false, 'account change before effect cleanup cannot approve old request');
+const abandoned = control.request(options);
+control.cancel();
+assert.equal(await abandoned, false, 'navigation/unmount safely declines');
+const next = control.request(options);
+control.respond(id, true);
+assert.notEqual(visible, null, 'stale modal response cannot approve later action');
+control.cancel(); await next;
+for (const path of ['App.tsx', 'src/components/community/reference-community.tsx', 'src/components/reconstruction/messages.tsx']) {
+  assert.doesNotMatch(fs.readFileSync(path, 'utf8'), /window\.confirm\(/, `${path} must not block the embedded browser with native confirmation`);
+}
+// Exercise actual App deletion closure with its confirmation and production service boundary.
+const app = fs.readFileSync('App.tsx', 'utf8');
+const appAst = ts.createSourceFile('App.tsx', app, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+function find(node, predicate) { if (predicate(node)) return node; return ts.forEachChild(node, n => find(n, predicate)); }
+const removal = find(appAst, n => ts.isVariableDeclaration(n) && n.name.getText(appAst) === 'deleteOwnMessage');
+let accepted = false, removed = [], messages = [{ id: '1', mine: true }, { id: '2', mine: false }];
+const sandbox = { exports: {}, selected: { id: '253' }, confirmAction: async () => accepted, isSupabaseConfigured: true, isBackendId: () => true, chatService: { deleteMessage: async id => { removed.push(id); } }, updateConversation: (id, fn) => { assert.equal(id, '253'); messages = fn({ messages }).messages; }, Alert: { alert() { throw Error('Unexpected delete failure'); } } };
+vm.runInNewContext(ts.transpileModule(`exports.remove=${removal.initializer.getText(appAst)}`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, sandbox);
+await sandbox.exports.remove(messages[0]);
+assert.equal(removed.length, 0); assert.equal(messages.length, 2);
+accepted = true;
+await sandbox.exports.remove(messages[1]);
+assert.equal(removed.length, 0, 'other member message cannot invoke delete');
+await sandbox.exports.remove(messages[0]);
+assert.deepEqual(removed, ['1']); assert.equal(messages[0].id, '2');
+console.log('PASS: explicit confirmation, Cancel/dismiss, duplicate/stale/account/navigation guards; actual own-message mutation occurs only after consent; no browser-blocking confirms.');
