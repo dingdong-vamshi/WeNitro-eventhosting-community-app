@@ -1,0 +1,864 @@
+{
+  "runId": "mus4isau-9ef89f",
+  "target": "cxsznhrkzqndhseodcyy",
+  "release": {
+    "projectId": "cxsznhrkzqndhseodcyy",
+    "readyForProductionQA": true,
+    "at": "2026-10-03T08:21:32.253Z",
+    "appCommit": "bd6d314872e1227246ef8b1bdfd566ceff32842b",
+    "adminCommit": "b2e74a3554714ae09ab87b11aafe4b1f3d941f9e",
+    "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "appUrl": "https://wenitro-app.vercel.app",
+    "appImmutableUrl": "https://wenitro-fjsmkg874-vamshi-krishna-pendyalas-projects.vercel.app",
+    "adminUrl": "https://wenitro-admin-roan.vercel.app",
+    "cashfreeVerifyVersion": 4,
+    "cashfreeCreateVersion": 5,
+    "cashfreeWebhookVersion": 4,
+    "appliedMigrations": [
+      "20261003074100",
+      "20261003074522",
+      "20261003075132",
+      "20261003075305",
+      "20261003075439",
+      "20261003075444",
+      "20261003075804",
+      "20261003080410"
+    ],
+    "rollout": [
+      {
+        "name": "admin_category_catalog",
+        "file": "supabase/migrations/20261003074100_admin_category_catalog.sql",
+        "at": "2026-10-03T08:18:28.072Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "observed_usage_analytics",
+        "file": "supabase/migrations/20261003074522_observed_usage_analytics.sql",
+        "at": "2026-10-03T08:18:30.286Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "payment_entry_authorization",
+        "file": "supabase/migrations/20261003075132_payment_entry_authorization.sql",
+        "at": "2026-10-03T08:18:32.732Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "account_status_rpc_enforcement",
+        "file": "supabase/migrations/20261003075305_account_status_rpc_enforcement.sql",
+        "at": "2026-10-03T08:18:34.684Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "admin_workspace_operations",
+        "file": "supabase/migrations/20261003075439_admin_workspace_operations.sql",
+        "at": "2026-10-03T08:18:36.933Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "referral_identity_reward_guard",
+        "file": "supabase/migrations/20261003075444_referral_identity_reward_guard.sql",
+        "at": "2026-10-03T08:18:39.285Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "atomic_profile_interests",
+        "file": "supabase/migrations/20261003075804_atomic_profile_interests.sql",
+        "at": "2026-10-03T08:18:41.446Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "scheduled_admin_campaigns",
+        "file": "supabase/migrations/20261003080410_scheduled_admin_campaigns.sql",
+        "at": "2026-10-03T08:18:43.677Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-create-order",
+        "at": "2026-10-03T08:18:50.910Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"d2a93ad1-e6fb-4df0-9a29-980fed08441e\",\"slug\":\"cashfree-create-order\",\"name\":\"cashfree-create-order\",\"status\":\"ACTIVE\",\"version\":5,\"created_at\":1790774490535,\"updated_at\":1791015530314,\"verify_jwt\":true,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_d2a93ad1-e6fb-4df0-9a29-980fed08441e_5/source/supabase/functions/cashfree-create-order/index.ts\",\"ezbr_sha256\":\"bf6d09df40eb6e797733bf3d1e1b03a19181d42c31a1bc5eb8d6559431610e3d\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-verify-payment",
+        "at": "2026-10-03T08:18:54.295Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"bc96d529-1c9e-45a3-8596-16f8705fa2c3\",\"slug\":\"cashfree-verify-payment\",\"name\":\"cashfree-verify-payment\",\"status\":\"ACTIVE\",\"version\":4,\"created_at\":1790774493278,\"updated_at\":1791015533735,\"verify_jwt\":true,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_bc96d529-1c9e-45a3-8596-16f8705fa2c3_4/source/supabase/functions/cashfree-verify-payment/index.ts\",\"ezbr_sha256\":\"6f2b98dc389cbb0121efd7be3b63fafdc38d7f5223ff84e39f7920034b620aa0\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-webhook",
+        "at": "2026-10-03T08:18:57.303Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"b86c1c42-3433-4269-ac6b-8f9785eb09c7\",\"slug\":\"cashfree-webhook\",\"name\":\"cashfree-webhook\",\"status\":\"ACTIVE\",\"version\":4,\"created_at\":1790774495878,\"updated_at\":1791015536792,\"verify_jwt\":false,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_b86c1c42-3433-4269-ac6b-8f9785eb09c7_4/source/supabase/functions/cashfree-webhook/index.ts\",\"ezbr_sha256\":\"cf5031f069c7527d1192f3c3b8be1a87895366eb501e93a8bb8cb6416e124f8a\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ],
+    "releaseNotes": "Git-linked production deployments were triggered by the authorized pushes. Database migrations and Edge Functions completed before App became READY; Admin became READY after App. A redundant manual queued App deployment dpl_57dXGWTGqWTbgGkBeeXDRKTgRUgc was canceled without becoming live. No manual Admin duplicate was created.",
+    "localGate": {
+      "checks": 76,
+      "failed": 0,
+      "report": "docs/chat001-integrated-local-verification.json"
+    }
+  },
+  "startedAt": "2026-10-03T08:22:08.070Z",
+  "source": "Deployed REST/RPC/Edge APIs with synthetic isolated fixtures",
+  "providerPaymentEvidence": false,
+  "checks": [
+    {
+      "name": "inactive existing session cannot sync verification",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "inactive existing session has no story data",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "inactive existing session cannot read own profile through RLS",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "deleted existing session cannot sync verification",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "deleted existing session has no story data",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "deleted existing session cannot read own profile through RLS",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "deactivated existing session cannot sync verification",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "deactivated existing session has no story data",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "deactivated existing session cannot read own profile through RLS",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "Banned identity retains no verification authority",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Restored identity can resolve own profile",
+      "status": "PASS",
+      "actual": 125
+    },
+    {
+      "name": "Deleted Auth identity cannot use retained JWT to sync verification",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Deleted Auth identity cannot read profile with retained JWT",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "New confirmed referral grants exactly ten Nitro",
+      "status": "PASS",
+      "actual": 10
+    },
+    {
+      "name": "Same referral replay awards nothing",
+      "status": "PASS",
+      "actual": false
+    },
+    {
+      "name": "Cross-inviter retry awards nothing",
+      "status": "PASS",
+      "actual": false
+    },
+    {
+      "name": "Self referral rejected",
+      "status": "PASS",
+      "code": "P0001"
+    },
+    {
+      "name": "Persisted Nitro increments once",
+      "status": "PASS",
+      "actual": 10
+    },
+    {
+      "name": "Referee cannot read inviter history",
+      "status": "PASS",
+      "actual": false
+    },
+    {
+      "name": "New archived selection fails atomically",
+      "status": "PASS",
+      "code": "22023"
+    },
+    {
+      "name": "Failed complete replacement preserves removed selections",
+      "status": "PASS",
+      "actual": [
+        28,
+        29
+      ]
+    },
+    {
+      "name": "Existing archived selection remains valid",
+      "status": "PASS",
+      "actual": [
+        28
+      ]
+    },
+    {
+      "name": "Other member interests unchanged",
+      "status": "PASS",
+      "actual": [
+        29
+      ]
+    },
+    {
+      "name": "Anonymous interest writes denied",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "All22 current achievements returned",
+      "status": "PASS",
+      "actual": 22
+    },
+    {
+      "name": "All22 unique achievement slugs",
+      "status": "PASS",
+      "actual": 22
+    },
+    {
+      "name": "Real referral earns connector badge",
+      "status": "PASS",
+      "actual": true
+    },
+    {
+      "name": "Reconciliation preserves earned timestamp",
+      "status": "PASS",
+      "actual": "2026-10-03T08:22:25.745201+00:00"
+    },
+    {
+      "name": "Public achievements hide private progress",
+      "status": "PASS",
+      "actual": true
+    },
+    {
+      "name": "Anonymous achievement reads denied",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Public Trust total matches owner",
+      "status": "PASS",
+      "actual": 20
+    },
+    {
+      "name": "Public Trust hides verification breakdown",
+      "status": "PASS",
+      "actual": [
+        "activities_joined",
+        "rating",
+        "total"
+      ]
+    },
+    {
+      "name": "Synthetic confirmed email and phone give twenty Trust independent of ten referral Nitro",
+      "status": "PASS",
+      "actual": 20
+    },
+    {
+      "name": "Synthetic Partner capability enabled",
+      "status": "PASS",
+      "actual": true
+    },
+    {
+      "name": "Outsider cannot see private tier prices",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Late paid finalizer returns final refund-required ledger",
+      "status": "PASS",
+      "actual": "REFUND_REQUIRED"
+    },
+    {
+      "name": "Deployed Edge reports money received without a seat",
+      "status": "PASS",
+      "actual": {
+        "paid": true,
+        "registrationConfirmed": false,
+        "refundRequired": true
+      }
+    },
+    {
+      "name": "Paid refund replay stays unconfirmed",
+      "status": "PASS",
+      "actual": false
+    },
+    {
+      "name": "Outsider cannot see private tier prices",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Unverified phone cannot prepare checkout",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Legacy checkout overload cannot skip selected category",
+      "status": "PASS",
+      "code": "P0001"
+    },
+    {
+      "name": "Live category reservation prevents overbooking",
+      "status": "PASS",
+      "code": "P0001"
+    },
+    {
+      "name": "Late provider success cannot displace current reservation",
+      "status": "PASS",
+      "actual": "REFUND_REQUIRED"
+    },
+    {
+      "name": "Refund-required buyer cannot pay again",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Refund-required payment does not occupy category seat",
+      "status": "PASS",
+      "actual": "PAYABLE"
+    },
+    {
+      "name": "Deployed Edge confirms paid approved seat",
+      "status": "PASS",
+      "actual": true
+    },
+    {
+      "name": "Exactly one admitted participant persists",
+      "status": "PASS",
+      "actual": [
+        124
+      ]
+    },
+    {
+      "name": "Members cannot call service-only finalizer",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Other member payment ledger remains private",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "Provider replay preserves same paid row",
+      "status": "PASS",
+      "actual": 44
+    },
+    {
+      "name": "Payment financial event remains idempotent",
+      "status": "PASS",
+      "actual": 1
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "Private synthetic activities hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic paid ledger held",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic settlements held",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic categories archived",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic host authority revoked and login banned",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic host profile deactivated",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic buyer authority revoked and login banned",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic buyer profile deactivated",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic other authority revoked and login banned",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic other profile deactivated",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic guard authority revoked and login banned",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic guard profile deactivated",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic deleted-auth profile deactivated",
+      "status": "PASS"
+    }
+  ],
+  "catalog": [
+    {
+      "id": 4,
+      "icon": "🧭",
+      "name": "Activity Explorer",
+      "slug": "activity-explorer",
+      "category": "Explorer",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 1,
+      "description": "Join 1 qualifying activity."
+    },
+    {
+      "id": 5,
+      "icon": "🗺️",
+      "name": "Active Explorer",
+      "slug": "active-explorer",
+      "category": "Explorer",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 5,
+      "description": "Join 5 qualifying activities."
+    },
+    {
+      "id": 6,
+      "icon": "🌍",
+      "name": "Adventure Seeker",
+      "slug": "adventure-seeker",
+      "category": "Explorer",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 10,
+      "description": "Join 10 qualifying activities."
+    },
+    {
+      "id": 7,
+      "icon": "🏆",
+      "name": "Activity Pro",
+      "slug": "activity-pro",
+      "category": "Explorer",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 25,
+      "description": "Join 25 qualifying activities."
+    },
+    {
+      "id": 8,
+      "icon": "🎤",
+      "name": "First-Time Host",
+      "slug": "first-time-host",
+      "category": "Host",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 1,
+      "description": "Complete 1 hosted activity."
+    },
+    {
+      "id": 9,
+      "icon": "⭐",
+      "name": "Active Host",
+      "slug": "active-host",
+      "category": "Host",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 5,
+      "description": "Complete 5 hosted activities."
+    },
+    {
+      "id": 10,
+      "icon": "🏆",
+      "name": "Experienced Host",
+      "slug": "experienced-host",
+      "category": "Host",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 10,
+      "description": "Complete 10 hosted activities."
+    },
+    {
+      "id": 11,
+      "icon": "👑",
+      "name": "Hosting Veteran",
+      "slug": "hosting-veteran",
+      "category": "Host",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 25,
+      "description": "Complete 25 hosted activities."
+    },
+    {
+      "id": 12,
+      "icon": "💬",
+      "name": "Community Starter",
+      "slug": "community-starter",
+      "category": "Community",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 1,
+      "description": "Join 1 community."
+    },
+    {
+      "id": 13,
+      "icon": "🗣️",
+      "name": "Community Contributor",
+      "slug": "community-contributor",
+      "category": "Community",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 5,
+      "description": "Publish 5 qualifying community posts."
+    },
+    {
+      "id": 14,
+      "icon": "💡",
+      "name": "Conversation Starter",
+      "slug": "conversation-starter",
+      "category": "Community",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 10,
+      "description": "Publish 10 qualifying community posts."
+    },
+    {
+      "id": 15,
+      "icon": "🌐",
+      "name": "Community Explorer",
+      "slug": "community-explorer",
+      "category": "Community",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 5,
+      "description": "Join 5 communities."
+    },
+    {
+      "id": 16,
+      "icon": "🫂",
+      "name": "First Connector",
+      "slug": "first-connector",
+      "category": "Connector",
+      "progress": 1,
+      "earned_at": "2026-10-03T08:22:25.745201+00:00",
+      "threshold": 1,
+      "description": "Invite 1 successfully referred member."
+    },
+    {
+      "id": 17,
+      "icon": "🔗",
+      "name": "Network Builder",
+      "slug": "network-builder",
+      "category": "Connector",
+      "progress": 1,
+      "earned_at": null,
+      "threshold": 5,
+      "description": "Invite 5 successfully referred members."
+    },
+    {
+      "id": 18,
+      "icon": "🌟",
+      "name": "Community Connector",
+      "slug": "community-connector",
+      "category": "Connector",
+      "progress": 1,
+      "earned_at": null,
+      "threshold": 10,
+      "description": "Invite 10 successfully referred members."
+    },
+    {
+      "id": 19,
+      "icon": "🎯",
+      "name": "First Activity",
+      "slug": "first-activity",
+      "category": "Milestone",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 1,
+      "description": "Complete your first participation."
+    },
+    {
+      "id": 20,
+      "icon": "🎯",
+      "name": "10 Activities",
+      "slug": "10-activities",
+      "category": "Milestone",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 10,
+      "description": "Complete 10 participations."
+    },
+    {
+      "id": 21,
+      "icon": "🎯",
+      "name": "25 Activities",
+      "slug": "25-activities",
+      "category": "Milestone",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 25,
+      "description": "Complete 25 participations."
+    },
+    {
+      "id": 22,
+      "icon": "🎯",
+      "name": "50 Activities",
+      "slug": "50-activities",
+      "category": "Milestone",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 50,
+      "description": "Complete 50 participations."
+    },
+    {
+      "id": 23,
+      "icon": "🏢",
+      "name": "Verified Partner",
+      "slug": "verified-partner",
+      "category": "Partner",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 1,
+      "description": "Receive Admin approval as a Partner."
+    },
+    {
+      "id": 24,
+      "icon": "🎯",
+      "name": "Active Partner",
+      "slug": "active-partner",
+      "category": "Partner",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 5,
+      "description": "Complete 5 paid Partner activities."
+    },
+    {
+      "id": 25,
+      "icon": "👥",
+      "name": "Popular Partner",
+      "slug": "popular-partner",
+      "category": "Partner",
+      "progress": 0,
+      "earned_at": null,
+      "threshold": 100,
+      "description": "Welcome 100 qualifying participants."
+    }
+  ],
+  "trust": {
+    "owner": {
+      "total": 20,
+      "rating": 0,
+      "social_linked": false,
+      "email_verified": true,
+      "phone_verified": true,
+      "selfie_verified": false,
+      "aadhaar_verified": false,
+      "activities_joined": 0
+    },
+    "public": {
+      "total": 20,
+      "rating": 0,
+      "activities_joined": 0
+    }
+  },
+  "financial": {
+    "fixturesOnly": true,
+    "lateReceipt": {
+      "orderId": "wn_285_123_63dbf0cd9d0f42eeb4b1",
+      "status": "paid",
+      "paid": true,
+      "financialStatus": "REFUND_REQUIRED",
+      "registrationConfirmed": false,
+      "refundRequired": true
+    },
+    "accepted": {
+      "orderId": "wn_286_124_26c782c78e0d40c38aac",
+      "status": "paid",
+      "paid": true,
+      "financialStatus": "PAYABLE",
+      "registrationConfirmed": true,
+      "refundRequired": false
+    },
+    "participants": [
+      {
+        "user_id": 123,
+        "status": "left"
+      },
+      {
+        "user_id": 124,
+        "status": "approved"
+      }
+    ],
+    "events": [
+      {
+        "payment_id": 42,
+        "kind": "REFUND",
+        "status": "REQUIRED",
+        "amount_paisa": 1
+      },
+      {
+        "payment_id": 43,
+        "kind": "REFUND",
+        "status": "REQUIRED",
+        "amount_paisa": 1
+      },
+      {
+        "payment_id": 44,
+        "kind": "PAYMENT",
+        "status": "SUCCEEDED",
+        "amount_paisa": 1
+      }
+    ]
+  },
+  "status": "PASS",
+  "finishedAt": "2026-10-03T08:22:50.853Z",
+  "fixtureIds": {
+    "users": [
+      {
+        "label": "host",
+        "id": 122
+      },
+      {
+        "label": "buyer",
+        "id": 123
+      },
+      {
+        "label": "other",
+        "id": 124
+      },
+      {
+        "label": "guard",
+        "id": 125
+      },
+      {
+        "label": "deleted-auth",
+        "id": 126
+      }
+    ],
+    "events": [
+      285,
+      286
+    ],
+    "categories": [
+      28,
+      29,
+      30
+    ]
+  }
+}

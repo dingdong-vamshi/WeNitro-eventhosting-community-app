@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-03T18:05:36.255Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "scope": "Only qa.chat001.backend.* identities and explicitly labelled provider_transaction_exists=false financial fixtures; shared QA users excluded",
+  "cleanup": {
+    "remaining_active_profiles": 0,
+    "remaining_storage_objects": 0,
+    "remaining_visible_activities": 0,
+    "synthetic_paid_rows_not_held": 0,
+    "remaining_unbanned_identities": 0,
+    "synthetic_settlements_not_held": 0
+  }
+}

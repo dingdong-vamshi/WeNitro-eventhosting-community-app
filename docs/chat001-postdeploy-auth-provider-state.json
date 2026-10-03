@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-03T18:04:32.370Z",
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "httpStatus": 200,
+  "providers": {
+    "email": true,
+    "phone": true,
+    "google": true,
+    "apple": false
+  },
+  "signupDisabled": false,
+  "emailAutoconfirm": false,
+  "phoneAutoconfirm": false,
+  "scope": "Read-only current public Auth settings. Enabled providers do not prove delivered mail, SMS or OAuth callback. Leaked-password protection warning remains in security advisors."
+}

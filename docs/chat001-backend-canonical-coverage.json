@@ -1,0 +1,901 @@
+{
+  "at": "2026-10-03T18:06:43.691268+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "release": {
+    "projectId": "cxsznhrkzqndhseodcyy",
+    "readyForProductionQA": true,
+    "at": "2026-10-03T08:21:32.253Z",
+    "appCommit": "bd6d314872e1227246ef8b1bdfd566ceff32842b",
+    "adminCommit": "b2e74a3554714ae09ab87b11aafe4b1f3d941f9e",
+    "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "appUrl": "https://wenitro-app.vercel.app",
+    "appImmutableUrl": "https://wenitro-fjsmkg874-vamshi-krishna-pendyalas-projects.vercel.app",
+    "adminUrl": "https://wenitro-admin-roan.vercel.app",
+    "cashfreeVerifyVersion": 4,
+    "cashfreeCreateVersion": 5,
+    "cashfreeWebhookVersion": 4,
+    "appliedMigrations": [
+      "20261003074100",
+      "20261003074522",
+      "20261003075132",
+      "20261003075305",
+      "20261003075439",
+      "20261003075444",
+      "20261003075804",
+      "20261003080410",
+      "20261003082759",
+      "20261003082845"
+    ],
+    "rollout": [
+      {
+        "name": "admin_category_catalog",
+        "file": "supabase/migrations/20261003074100_admin_category_catalog.sql",
+        "at": "2026-10-03T08:18:28.072Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "observed_usage_analytics",
+        "file": "supabase/migrations/20261003074522_observed_usage_analytics.sql",
+        "at": "2026-10-03T08:18:30.286Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "payment_entry_authorization",
+        "file": "supabase/migrations/20261003075132_payment_entry_authorization.sql",
+        "at": "2026-10-03T08:18:32.732Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "account_status_rpc_enforcement",
+        "file": "supabase/migrations/20261003075305_account_status_rpc_enforcement.sql",
+        "at": "2026-10-03T08:18:34.684Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "admin_workspace_operations",
+        "file": "supabase/migrations/20261003075439_admin_workspace_operations.sql",
+        "at": "2026-10-03T08:18:36.933Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "referral_identity_reward_guard",
+        "file": "supabase/migrations/20261003075444_referral_identity_reward_guard.sql",
+        "at": "2026-10-03T08:18:39.285Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "atomic_profile_interests",
+        "file": "supabase/migrations/20261003075804_atomic_profile_interests.sql",
+        "at": "2026-10-03T08:18:41.446Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "scheduled_admin_campaigns",
+        "file": "supabase/migrations/20261003080410_scheduled_admin_campaigns.sql",
+        "at": "2026-10-03T08:18:43.677Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-create-order",
+        "at": "2026-10-03T08:18:50.910Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"d2a93ad1-e6fb-4df0-9a29-980fed08441e\",\"slug\":\"cashfree-create-order\",\"name\":\"cashfree-create-order\",\"status\":\"ACTIVE\",\"version\":5,\"created_at\":1790774490535,\"updated_at\":1791015530314,\"verify_jwt\":true,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_d2a93ad1-e6fb-4df0-9a29-980fed08441e_5/source/supabase/functions/cashfree-create-order/index.ts\",\"ezbr_sha256\":\"bf6d09df40eb6e797733bf3d1e1b03a19181d42c31a1bc5eb8d6559431610e3d\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-verify-payment",
+        "at": "2026-10-03T08:18:54.295Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"bc96d529-1c9e-45a3-8596-16f8705fa2c3\",\"slug\":\"cashfree-verify-payment\",\"name\":\"cashfree-verify-payment\",\"status\":\"ACTIVE\",\"version\":4,\"created_at\":1790774493278,\"updated_at\":1791015533735,\"verify_jwt\":true,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_bc96d529-1c9e-45a3-8596-16f8705fa2c3_4/source/supabase/functions/cashfree-verify-payment/index.ts\",\"ezbr_sha256\":\"6f2b98dc389cbb0121efd7be3b63fafdc38d7f5223ff84e39f7920034b620aa0\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-webhook",
+        "at": "2026-10-03T08:18:57.303Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"b86c1c42-3433-4269-ac6b-8f9785eb09c7\",\"slug\":\"cashfree-webhook\",\"name\":\"cashfree-webhook\",\"status\":\"ACTIVE\",\"version\":4,\"created_at\":1790774495878,\"updated_at\":1791015536792,\"verify_jwt\":false,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_b86c1c42-3433-4269-ac6b-8f9785eb09c7_4/source/supabase/functions/cashfree-webhook/index.ts\",\"ezbr_sha256\":\"cf5031f069c7527d1192f3c3b8be1a87895366eb501e93a8bb8cb6416e124f8a\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ],
+    "releaseNotes": "Git-linked production deployments were triggered by the authorized pushes. Database migrations and Edge Functions completed before App became READY; Admin became READY after App. A redundant manual queued App deployment dpl_57dXGWTGqWTbgGkBeeXDRKTgRUgc was canceled without becoming live. No manual Admin duplicate was created.",
+    "localGate": {
+      "checks": 76,
+      "failed": 0,
+      "report": "docs/chat001-predeployment-local-verification.json"
+    },
+    "productionRegressions": [
+      {
+        "name": "Admin stale-version optimistic conflict returned retryable SQLSTATE",
+        "fixCommit": "791b6d0",
+        "migration": "20261003082759_admin_workspace_conflict_http_status",
+        "localChecks": 51,
+        "deployed": true,
+        "productionRetest": "PENDING"
+      },
+      {
+        "name": "Expired Activity invitation and verified-paid invite replay",
+        "commits": [
+          "4a8ea9f",
+          "493bf9c"
+        ],
+        "migration": "20261003082845_activity_invite_lifecycle_guard",
+        "localChecks": {
+          "invitations": 42,
+          "paymentLifecycle": 47
+        },
+        "deployed": true,
+        "productionRetest": "PENDING"
+      }
+    ],
+    "postRegressionLocalGate": "docs/chat001-integrated-local-verification.json"
+  },
+  "countMeaning": "12 canonical F rows and16 E rows mapped without treating partial backend evidence as complete visual/provider acceptance. Assertion counts are not requirement counts.",
+  "canonicalCoverage": [
+    {
+      "id": "PARTNER-INSTRUCTIONS",
+      "requestedOutcome": "Partner application displays the requested instructions and eligibility details.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [],
+      "resultAndLimits": "Visual wording belongs to coordinator/UI proof; this backend run does not claim it.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-TERMS",
+      "requestedOutcome": "Partner application requires agreement before submission and persists the accepted terms record.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "scripts/partner-submit-regression-test.mjs",
+        "scripts/partner-v1-contract-test.mjs"
+      ],
+      "resultAndLimits": "Existing local contract and persisted prior terms evidence remain references; new application/UI submission is coordinator-owned. Synthetic approved Partner fixture is explicitly not real review/terms evidence.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-DASHBOARD",
+      "requestedOutcome": "An approved Partner can open their actual dashboard and manage only their authorized activities.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "resultAndLimits": "Synthetic fixture capability can_host_paid confirmed; dashboard screenshots and actual authorized registration display remain coordinator-owned.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-PARTICIPANTS",
+      "requestedOutcome": "Partner dashboard participant details reflect real registrations and payment/join states.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+      ],
+      "resultAndLimits": "Actual participant table states persist exactly one approved seat after valid ledger, left/payment_required for unfulfilled. Real hosted checkout and dashboard detail proof coordinator-owned.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-PAYMENT-DETAILS",
+      "requestedOutcome": "The chosen registration's payable amount, selected category and required details are correctly displayed.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "resultAndLimits": "One-paisa synthetic server tier is persisted and used by prepare/finalizer; user-visible selected amount/details require coordinator hosted fixture297 proof.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-CATEGORY-PRICES",
+      "requestedOutcome": "A Partner can configure multiple distinct entry categories with server-stored prices and applicable capacities.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "resultAndLimits": "Current deployed category save/capacity and trusted price used; local real PostgreSQL47 assertions cover alternate tiers and state guards.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-CATEGORY-SELECTION",
+      "requestedOutcome": "A participant selects an eligible entry category and checkout uses its current server price.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "resultAndLimits": "Legacy missing-category checkout denied and current selected tier required; UI selection screenshot coordinator-owned.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-REQUIRED-ANSWERS",
+      "requestedOutcome": "Required registration answers must be valid and persisted before paid registration can secure participation.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "scripts/registration-questions-test.mjs"
+      ],
+      "resultAndLimits": "Local question validation/registration tests; coordinator fresh hosted fixture297 has required answer and must supply final live proof. This agent does not claim a live required-answer positive from empty-form fixtures.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-PAID-JOIN",
+      "requestedOutcome": "Joined/seat-secured confirmation requires both legitimate successful payment and approved qualifying participation; refund-required reconciliation must not claim a secured seat.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+        "scripts/payment-registration-confirmation-test.mjs"
+      ],
+      "resultAndLimits": "Deployed Edgev4 returns paid=true but registrationConfirmed=false/refundRequired=true for ineligible received payment; eligible ledger+approved seat true.90 local Edge/client/App assertions. Synthetic provider references are not hosted Cashfree payment proof.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-LIST-IDENTITY",
+      "requestedOutcome": "Partner activities are visually differentiated with the requested Partner identity across discovery, Home, Profile and recommendation lists.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [],
+      "resultAndLimits": "Visual list identity across surfaces belongs to coordinator/UI proof.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "PARTNER-EXTERNAL-URL",
+      "requestedOutcome": "Partner activities can persist and open a safe external website URL.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [],
+      "resultAndLimits": "Existing safe-URL backend/client checks and coordinator UI proof; no new external navigation claim by this agent.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "DOC-DEVELOPER",
+      "requestedOutcome": "Developer documentation explains the implemented architecture, deployment order, provider dependencies and operational constraints.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "README.md",
+        "api/README.md",
+        "database/README.md",
+        "docs/E2E_PRODUCTION.md"
+      ],
+      "resultAndLimits": "Coordinator owns updated developer/deployment/provider documentation; this agent documents invitation and provider/fixture distinctions. Documentation review is separate from runtime proof.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "HOST-NORMAL-PAID",
+      "requestedOutcome": "A normal non-Partner host gets only the Paid ON/OFF cost classification, with no amount field, Cashfree checkout or platform collection.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "resultAndLimits": "Existing dual-payment implementation and local/primary regression evidence; coordinator UI must show no platform amount/checkout for ordinary host.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-ANONYMOUS-MEDIA",
+      "requestedOutcome": "Anonymous Community media delivery does not leak an author-identifying owner/storage path to recipient clients.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+      ],
+      "resultAndLimits": "Current deployed feed redacts author and returns opaque marker; authorized Edge image renders without owner/storage path.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-MEDIA-CAPABILITY",
+      "requestedOutcome": "Anonymous-media capabilities require authorized minting, reject tampering, expire naturally and fail after source soft deletion; direct private Storage paths remain protected.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-anonymous-media-expiry-proof.json"
+      ],
+      "resultAndLimits": "Current deployed mint, tampering, HEAD/range, raw/direct Storage denial and soft-delete revocation pass. Original authentic one-hour expiry proof reused because capability implementation unchanged; deleted fixture36 was not reused.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-ANONYMOUS-RATING",
+      "requestedOutcome": "Anonymous participant ratings redact recipient-visible author identity and deny unauthorized raw-table access while preserving legitimate named reviews.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json"
+      ],
+      "resultAndLimits": "First31 checks passed before unrelated Realtime timeout: recipient review omits rater/time/event fields, raw identity is hidden; legitimate named review shows intended rater. Duplicate rating yields0 Nitro; self/Host-No-Show/outsider denied.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-PROFILE-ACCOUNT-SWITCH",
+      "requestedOutcome": "Profile loading/saving/media/interest operations cannot apply a prior account's data to a newly signed-in account; mutations remain bound to their initiating authenticated identity.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "scripts/auth-identity-reuse-test.mjs",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+      ],
+      "resultAndLimits": "Local executable identity/race tests plus deployed isolated ownership, revoked/deleted identity, cross-user gallery/interest/payment denials. Browser account-switch race is not claimed as replayed by this API agent.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-PROFILE-INTEREST-ATOMICITY",
+      "requestedOutcome": "Interest updates are atomic: an unavailable new category must roll back without deleting previously saved interests, while unchanged historical IDs remain preservable.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "scripts/profile-interest-atomic-test.mjs"
+      ],
+      "resultAndLimits": "Deployed stale new archived assignment fails and preserves old selection; unchanged archived selection retained; other member unaffected.13 real PostgreSQL local assertions.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-REPORT-SUBMISSION",
+      "requestedOutcome": "Eligible authenticated members can submit their own safety reports, cannot spoof another reporter or reviewed status, and cannot report prohibited self/Host targets.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json"
+      ],
+      "resultAndLimits": "Current deployed own report persists as open despite supplied resolved; reporter impersonation, self/Host/private-outsider reporting and member review denied. Own synthetic report removed in cleanup.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-PAYMENT-PRIVACY",
+      "requestedOutcome": "Payment orders, personal registration details and provider secrets remain restricted to authorized participants, hosts and permitted finance/Admin access.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+      ],
+      "resultAndLimits": "Other member cannot read payment row, service finalizer inaccessible, private tier prices hidden; provider secrets never exposed. Registration answer privacy final hosted evidence coordinator-owned.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-PAYMENT-IDEMPOTENCY",
+      "requestedOutcome": "Duplicate payment callbacks/reconciliation cannot duplicate paid registration, ledger records or a seat.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+      ],
+      "resultAndLimits": "Paid finalize replay returns same row, one financial event and one seat; Edge retries do not call provider for terminal paid rows; paid invite replay preserves admitted seat/use count1.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-PAYMENT-AMOUNT",
+      "requestedOutcome": "Checkout uses trusted current server amount/category/capacity and rejects forged, missing, stale or unauthorized order inputs.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "resultAndLimits": "Server-derived tier amount/capacity, missing category/private/phone denial deployed; forged amount/conflicting provider replay validation covered by real local PostgreSQL suite.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-PAYMENT-STATE",
+      "requestedOutcome": "Ended/cancelled/removed/suspended or otherwise ineligible registration cannot newly secure a paid seat; real paid-but-ineligible states require explicit reconciliation instead of false success.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+        "scripts/payment-entry-authorization-test.mjs"
+      ],
+      "resultAndLimits": "Deployed completed/capacity late payment becomes REFUND_REQUIRED with no seat; ended/closed invitation guards applied and natural deadline tested; local47 covers cancelled/removed/banned and exact end-clock boundary.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-BADGE-ELIGIBILITY",
+      "requestedOutcome": "Badge progress excludes the documented failed/cancelled/removed/suspended/ineligible activity, membership, post and referral states.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "scripts/badge-engine-test.mjs",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "resultAndLimits": "Local22-rule/82-boundary/exclusion checks plus actual deployed22-rule catalog/current states and real referral award. Does not manufacture every earned production threshold.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-BADGE-IDEMPOTENCY",
+      "requestedOutcome": "Badge evaluation/refresh persists legitimate earned state/timestamps without duplicate awards or reward farming.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "resultAndLimits": "Current deployed legitimate referral earns First Connector; repeated reconciliation preserves earned timestamp. Referral repeat/cross-inviter grant0. Broader thresholds are local executable cases.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-BADGE-READ-PRIVACY",
+      "requestedOutcome": "Badge and Trust APIs disclose only intended self/public metrics and enforce current identity/authorization.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "resultAndLimits": "Current owner/public badge progress and Trust privacy validated; anonymous achievement access denied. Owner70 Trust20 matches public viewer71.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-STORAGE-OWNERSHIP",
+      "requestedOutcome": "Profile, Community, Vibe and Chat media writes/deletes are limited to authorized owners/managers and intended content access.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+      ],
+      "resultAndLimits": "Current owner upload/read/delete and cross-user overwrite/delete denial across avatars, communities, vibes and messages. Gallery fourth-slot denial and anonymous direct-path denial tested. Public avatar CDN cache may retain old bytes after object deletion; authoritative remove response/listing checked.",
+      "acceptedScreenshotProof": []
+    },
+    {
+      "id": "SEC-OBSERVATION-AUTH",
+      "requestedOutcome": "Usage/view/share observation APIs derive the authenticated member and verify Activity visibility; raw/private analytics are not writable or readable by ordinary clients.",
+      "scope": "Backend technical contribution; coordinator must combine required deployed UI/provider evidence before final acceptance",
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+        "docs/chat001-postdeploy-security-structure.json"
+      ],
+      "resultAndLimits": "Admin agent deployed21-check initial segment proves Member/Finance analytics denial and private Activity view/share42501; host observations deduplicate. This agent verifies private raw schema not exposed plus no member SELECT/INSERT grants on observation table.",
+      "acceptedScreenshotProof": []
+    }
+  ],
+  "profileBadgeTrustBackendContribution": [
+    {
+      "id": "VERIFY-TRUST-NOT-NITRO",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "PROFILE-GALLERY-LIMIT",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json"
+      ],
+      "resultAndLimits": "Current deployed gallery3 limit, cross-user mutation denial, primary swap, deletion and Storage ownership. Visual interaction screenshots owned by UI agent."
+    },
+    {
+      "id": "PROFILE-PHOTO-VIEW",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json"
+      ],
+      "resultAndLimits": "Current deployed gallery3 limit, cross-user mutation denial, primary swap, deletion and Storage ownership. Visual interaction screenshots owned by UI agent."
+    },
+    {
+      "id": "PROFILE-PHOTO-ADD",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json"
+      ],
+      "resultAndLimits": "Current deployed gallery3 limit, cross-user mutation denial, primary swap, deletion and Storage ownership. Visual interaction screenshots owned by UI agent."
+    },
+    {
+      "id": "PROFILE-PHOTO-CHANGE",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json"
+      ],
+      "resultAndLimits": "Current deployed gallery3 limit, cross-user mutation denial, primary swap, deletion and Storage ownership. Visual interaction screenshots owned by UI agent."
+    },
+    {
+      "id": "PROFILE-PHOTO-DELETE",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json"
+      ],
+      "resultAndLimits": "Current deployed gallery3 limit, cross-user mutation denial, primary swap, deletion and Storage ownership. Visual interaction screenshots owned by UI agent."
+    },
+    {
+      "id": "PROFILE-PHOTO-PRIMARY",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json"
+      ],
+      "resultAndLimits": "Current deployed gallery3 limit, cross-user mutation denial, primary swap, deletion and Storage ownership. Visual interaction screenshots owned by UI agent."
+    },
+    {
+      "id": "PROFILE-GALLERY-PUBLIC",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json"
+      ],
+      "resultAndLimits": "Current deployed gallery3 limit, cross-user mutation denial, primary swap, deletion and Storage ownership. Visual interaction screenshots owned by UI agent."
+    },
+    {
+      "id": "PROFILE-TRUST-VIEW",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "PROFILE-REVIEWS",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json"
+      ],
+      "resultAndLimits": "Current deployed anonymous/named review semantics among31 passing checks before unrelated Realtime timeout."
+    },
+    {
+      "id": "TRUST-MAX",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "TRUST-EMAIL",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "TRUST-PHONE",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "TRUST-SELFIE",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "TRUST-AADHAAR",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "TRUST-SOCIAL",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "TRUST-RATING",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "TRUST-ACTIVITIES",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/trust-score-database-test.mjs"
+      ],
+      "resultAndLimits": "23 real PostgreSQL Trust assertions; owner/public current70 baseline plus synthetic email/phone contribution separate from Nitro. Actual OTP/selfie/Aadhaar provider verification is not simulated as client acceptance."
+    },
+    {
+      "id": "BADGE-01",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-02",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-03",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-04",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-05",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-06",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-07",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-08",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-09",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-10",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-11",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-12",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-13",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-14",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-15",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-16",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-17",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-18",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-19",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-20",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-21",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    },
+    {
+      "id": "BADGE-22",
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json",
+        "scripts/badge-engine-test.mjs"
+      ],
+      "resultAndLimits": "Current22-rule catalog/locked-earned values/privacy; local full criteria/boundaries. UI agent captures all22 detail screenshots. No manufactured production thresholds."
+    }
+  ],
+  "runtimeExceptions": [
+    {
+      "proof": "docs/chat001-isolated-backend-production-mus4m9xf-34c71c.json",
+      "explanation": "Harness used old p_payload argument; corrected to current p_patch. No product failure."
+    },
+    {
+      "proof": "docs/chat001-isolated-backend-production-mus4nd33-d79aeb.json",
+      "explanation": "Private left-member self-rejoin denial is intentional; fresh explicit Host invitation later verified in18-pass invitation run."
+    },
+    {
+      "proof": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+      "explanation": "First31 rating/report/activity assertions pass, then Realtime INSERT delivery timed out. Fresh isolated retry passed with actual INSERT319; full prior49-pass social run also delivered INSERT. Not silently relabelled complete PASS.",
+      "retry": "docs/chat001-realtime-current-retry.json"
+    },
+    {
+      "proof": "docs/chat001-isolated-backend-production-musp9wgb-7fa247.json",
+      "explanation": "Cached avatar bytes remained retrievable immediately after deletion. Correct authoritative object removal/listing test passes in28-check Storage run; no claim of immediate public CDN invalidation."
+    }
+  ],
+  "securityHolds": [
+    "135 public authenticated SECURITY DEFINER advisories remain; current call graph/hashes and targeted behavior reviewed, not blanket-dismissed or claimed fully branch-proven.",
+    "Leaked-password protection disabled warning remains. Public Auth settings show providers enabled, not actual delivery/OAuth completion.",
+    "8 private-table RLS/no-policy INFO entries correspond to service/SECDEF internal tables; member raw grants/exposure denied.",
+    "Dependency advisories in root tooling review remain upstream holds; this report does not claim npm security clean."
+  ],
+  "externalHolds": [
+    "Actual hosted Cashfree Sandbox repeat coordinator-owned; synthetic service-finalizer rows are not provider payment proof.",
+    "No real-money refund, payout or bank transfer executed. Synthetic ledger/settlements ON_HOLD.",
+    "Actual mailbox/SMS receipt, Google callback and approved licensed Aadhaar integration must have separate evidence; this agent provides no fabricated provider PASS."
+  ],
+  "cleanupProof": "docs/chat001-isolated-fixture-cleanup-audit.json",
+  "screenshots": "None produced by backend API agent; UI agents must attach current deployed screenshots."
+}

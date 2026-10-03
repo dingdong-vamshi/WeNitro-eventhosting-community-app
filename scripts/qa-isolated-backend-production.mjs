@@ -29,6 +29,7 @@ async function main() {
   const release=JSON.parse(fs.readFileSync(arg('--release'),'utf8'));
   const url=process.env.EXPO_PUBLIC_SUPABASE_URL;
   validateRelease(release,url);
+  if(process.argv.includes('--invitations'))assert(release.appliedMigrations.includes('20261003082845'),'Invitation migration readiness required');
   const secretsRoot=path.resolve(arg('--secrets-root'));
   const {createClient}=await import('@supabase/supabase-js');
   const options={auth:{persistSession:false,autoRefreshToken:false}};
@@ -44,14 +45,14 @@ async function main() {
   const runId=previous?.runId??Date.now().toString(36)+'-'+randomBytes(3).toString('hex');
   const runDir=path.join(secretsRoot,'tmp'); fs.mkdirSync(runDir,{recursive:true});
   const manifestPath=cleanupFile??path.join(runDir,`chat001-backend-${runId}.json`);
-  const manifest=previous??{runId,target,createdAt:new Date().toISOString(),users:[],events:[],categories:[]};
+  const manifest=previous??{runId,target,createdAt:new Date().toISOString(),users:[],events:[],categories:[],rooms:[],objects:[],posts:[]};
   const persist=()=>fs.writeFileSync(manifestPath,JSON.stringify(manifest,null,2),{mode:0o600}); persist();
   const proof={runId,target,release,startedAt:manifest.createdAt,source:'Deployed REST/RPC/Edge APIs with synthetic isolated fixtures',providerPaymentEvidence:false,checks:[],cleanup:[]};
   const clients=[];
   const ok=async p=>{const r=await p;if(r.error)throw Object.assign(new Error(r.error.message),{code:r.error.code});return r.data;};
   const rpc=(c,n,a={})=>ok(c.rpc(n,a));
   const pass=(name,actual,expected)=>{assert.deepEqual(actual,expected,name);proof.checks.push({name,status:'PASS',actual});};
-  const deny=async(name,p,pattern)=>{const r=await p;assert(r.error,name);if(pattern)assert.match(r.error.message,pattern,name);proof.checks.push({name,status:'PASS',code:r.error.code??null});};
+  const deny=async(name,p,pattern)=>{const r=await p;assert(r.error,name);assert(!['PGRST202','PGRST203','PGRST204','42703','42P01','42883'].includes(r.error.code),`${name}: invalid test request cannot count as denial`);if(pattern)assert.match(r.error.message,pattern,name);proof.checks.push({name,status:'PASS',code:r.error.code??null});};
   const row=data=>Array.isArray(data)?data[0]:data;
   const createUser=async(label,phone)=>{
     const email=`qa.chat001.backend.${runId}.${label}@example.com`,password=randomBytes(24).toString('base64url');
@@ -68,6 +69,10 @@ async function main() {
     if(manifest.events.length){const owned=await ok(service.from('tbl_events').select('id,title').in('id',manifest.events));assert.equal(owned.length,manifest.events.length);assert(owned.every(e=>e.title.startsWith(`[QA] ${runId} `)));}
     if(manifest.categories.length){const owned=await ok(service.from('tbl_categories').select('id,name').in('id',manifest.categories));assert.equal(owned.length,manifest.categories.length);assert(owned.every(c=>c.name.startsWith(`QA ${runId} `)));}
     const attempt=async(name,p)=>{try{await ok(p);proof.cleanup.push({name,status:'PASS'});}catch(e){proof.cleanup.push({name,status:'FAIL',code:e.code??null});}};
+    for(const obj of manifest.objects??[]){assert(manifest.users.some(u=>obj.path.startsWith(u.id+'/')));await attempt('Synthetic storage object removed',service.storage.from(obj.bucket).remove([obj.path]));}
+    if(manifest.reports?.length)await attempt('Synthetic safety reports removed',service.from('tbl_event_reports').delete().in('id',manifest.reports));
+    if(manifest.posts?.length)await attempt('Synthetic community posts hidden',service.from('tbl_community_posts').update({deleted_at:new Date().toISOString()}).in('id',manifest.posts));
+    if(manifest.rooms?.length)await attempt('Synthetic rooms remain private',service.from('tbl_chat_rooms').update({visibility:'private'}).in('id',manifest.rooms));
     if(manifest.events.length){
       await attempt('Private synthetic activities hidden',service.from('tbl_events').update({is_deleted:true}).in('id',manifest.events));
       await attempt('Synthetic paid ledger held',service.from('tbl_activity_payments').update({financial_status:'ON_HOLD'}).in('event_id',manifest.events).eq('status','paid'));
@@ -78,6 +83,7 @@ async function main() {
       if(!u.authDeleted)await attempt(`Synthetic ${u.label} authority revoked and login banned`,service.auth.admin.updateUserById(u.id,{ban_duration:'876000h',app_metadata:{role:'',admin_status:'inactive',qa_fixture:true}}));
       await attempt(`Synthetic ${u.label} profile deactivated`,service.from('tbl_users').update({is_active:0}).eq(u.userId?'id':'auth_user_id',u.userId??u.id));
     }
+    for(const c of clients)c.realtime.disconnect();
     await Promise.allSettled(clients.map(c=>c.auth.signOut({scope:'local'})));
     manifest.cleanup=proof.cleanup;persist();
   };
@@ -88,6 +94,18 @@ async function main() {
     const phones=Array.from({length:100},(_,i)=>`120255501${String(i).padStart(2,'0')}`).filter(x=>!used.has(x)&&!used.has(x.slice(1)));assert(phones.length>=3);
     const host=await createUser('host',phones[0]),a=await createUser('buyer',phones[1]),b=await createUser('other',phones[2]),guard=await createUser('guard');
     const anon=make(); clients.push(anon);
+    if(process.argv.includes('--invitations')){
+      const {runInvitationChecks}=await import('./qa-isolated-invitations-production.mjs');
+      await runInvitationChecks({host,a,b,guard,anon,service,ok,rpc,pass,deny,row,manifest,persist,proof,runId});proof.status='PASS';return;
+    }
+    if(process.argv.includes('--storage')){
+      const {runStorageChecks}=await import('./qa-isolated-storage-production.mjs');
+      await runStorageChecks({host,a,b,guard,anon,service,ok,rpc,pass,deny,row,manifest,persist,proof,runId});proof.status='PASS';return;
+    }
+    if(process.argv.includes('--social')){
+      const {runSocialChecks}=await import('./qa-isolated-social-production.mjs');
+      await runSocialChecks({host,a,b,guard,anon,service,ok,rpc,pass,deny,row,manifest,persist,proof,runId});proof.status='PASS';return;
+    }
     // Keep the same JWT throughout every transition; no sign-in or refresh hides stale-token bugs.
     for(const [label,patch] of [['inactive',{is_active:0}],['deleted',{is_delete:1}],['deactivated',{deactivated_at:new Date().toISOString()}]]){
       await ok(service.from('tbl_users').update(patch).eq('id',guard.userId));

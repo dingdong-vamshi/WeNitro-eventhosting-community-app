@@ -1,0 +1,1884 @@
+{
+  "at": "2026-10-03T18:04:31.823Z",
+  "project": "cxsznhrkzqndhseodcyy",
+  "scope": "Current post-regression public authenticated SECURITY DEFINER surface; hashes/call graph assist review and are not proof of each branch.",
+  "functions": [
+    {
+      "signature": "accept_signup_policies(text)",
+      "definition_hash": "8eabac8cf9777ef0f7d017715c83ac8f",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.accept_signup_policies",
+        "public.get_current_app_user_id",
+        "public.tbl_signup_policy_acceptances"
+      ]
+    },
+    {
+      "signature": "acknowledge_login_announcement(bigint)",
+      "definition_hash": "e325d1674b05352c1ed09f2d95e08de2",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.acknowledge_login_announcement",
+        "public.tbl_login_announcement_receipts",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "admin_access_logs()",
+      "definition_hash": "5e257c654adccaca325562d20c2d5ec1",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_access_logs",
+        "private.current_admin_role"
+      ]
+    },
+    {
+      "signature": "admin_accounts()",
+      "definition_hash": "a26fa45925d5c8d34a55a97bc1c2c50c",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_accounts",
+        "private.current_admin_role"
+      ]
+    },
+    {
+      "signature": "admin_correct_activity_category(integer,integer)",
+      "definition_hash": "79360d0d64ea12b613f84c468146662f",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_event_categories",
+        "public.get_current_app_user_id",
+        "public.admin_correct_activity_category",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_create_login_announcement(text,text,timestamp with time zone,timestamp with time zone,integer[])",
+      "definition_hash": "1164d5bbf0514a10ddc53b65ccbc5b58",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_login_announcements",
+        "public.get_current_app_user_id",
+        "public.is_wenitro_admin",
+        "public.admin_create_login_announcement"
+      ]
+    },
+    {
+      "signature": "admin_disable_login_announcement(bigint)",
+      "definition_hash": "c89214dfecba8b6442dc18374fbf246e",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_disable_login_announcement",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_get_partner_finance_config()",
+      "definition_hash": "5804e617c88a76c822fda86336efa8da",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_get_partner_finance_config",
+        "public.admin_get_partner_finance_config"
+      ]
+    },
+    {
+      "signature": "admin_list_anonymous_community_posts(integer,bigint)",
+      "definition_hash": "12f8804642d3dbe035179f3d83ba3fc6",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_list_anonymous_community_posts",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_list_partner_application_history(integer)",
+      "definition_hash": "d0d53934ec82045bdcc2b99c12c0fdfc",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_list_partner_application_history",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_list_partner_applications(text)",
+      "definition_hash": "d4043de4d6467abc24323e5862478d11",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_list_partner_applications",
+        "public.admin_list_partner_applications"
+      ]
+    },
+    {
+      "signature": "admin_list_partner_finance(text)",
+      "definition_hash": "a6c4f48fea94b4f98e6eccc03725aed5",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_list_partner_finance",
+        "public.admin_list_partner_finance"
+      ]
+    },
+    {
+      "signature": "admin_list_users()",
+      "definition_hash": "f47864338677e445610f390f3be564d2",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_list_users",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_list_verifications(text,integer,integer)",
+      "definition_hash": "2f088ad1f2da93ed00058bf2ae9f1b73",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_list_verifications",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_list_vibe_reports()",
+      "definition_hash": "c4ee9ca8df094555dc17ed7777d9b3ef",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_list_vibe_reports",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_moderate_activity(integer,text,text)",
+      "definition_hash": "669047cfc87d797ffc186a36613fd2e1",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.is_wenitro_admin",
+        "public.admin_moderate_activity",
+        "public.current_app_user_id",
+        "private.admin_operation_audit",
+        "public.tbl_notifications",
+        "public.admin_moderate_user"
+      ]
+    },
+    {
+      "signature": "admin_moderate_user(integer,text,text)",
+      "definition_hash": "9af9cce5899a87b0bd324f4d91e5b9a5",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_operation_audit",
+        "public.admin_moderate_user",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_operation_logs()",
+      "definition_hash": "f0ca3eda66f5fe92f037071245c8d10d",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_operation_logs",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_record_partner_financial_event(bigint,text,text,bigint,text,text,text,jsonb)",
+      "definition_hash": "507b08b438ea7d69b56ce38e5f97eb35",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_record_partner_financial_event",
+        "private.admin_record_partner_financial_event"
+      ]
+    },
+    {
+      "signature": "admin_review_partner_application(integer,text,text)",
+      "definition_hash": "a199f55945241877d4630014e2c99f55",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_review_partner_application",
+        "private.admin_review_partner_application"
+      ]
+    },
+    {
+      "signature": "admin_review_report(text,integer,text,text)",
+      "definition_hash": "cffb862fb71a239e5526fcc619aa61f0",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_operation_audit",
+        "public.admin_review_report",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_review_verification(integer,text,text)",
+      "definition_hash": "018ea214cc77db1baedb47455336b7fc",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.sync_verification_rewards",
+        "public.is_wenitro_admin",
+        "public.admin_review_verification"
+      ]
+    },
+    {
+      "signature": "admin_review_vibe_report(bigint,text)",
+      "definition_hash": "1463f73f03025ec949bcc8da27ab1356",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_review_vibe_report",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_search_partner_applications(text,text,text,timestamp with time zone,timestamp with time zone)",
+      "definition_hash": "ee01be1ce3a2e6b754e31b955ca448f9",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_search_partner_applications",
+        "public.admin_search_partner_applications"
+      ]
+    },
+    {
+      "signature": "admin_set_account_access(text,text,text,text)",
+      "definition_hash": "4a48f0c511348ac237bf090bf68e92a1",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_access_audit",
+        "public.admin_set_account_access",
+        "private.current_admin_role"
+      ]
+    },
+    {
+      "signature": "admin_set_activity_pinned(integer,boolean)",
+      "definition_hash": "946a889c50af7e8945f4ef29d419e549",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.admin_set_activity_pinned",
+        "public.get_current_app_user_id",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "admin_update_partner_finance_config(integer,boolean,integer,text,integer,text)",
+      "definition_hash": "fd8184adc7e77027cd43b5cca9f88daa",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_update_partner_finance_config",
+        "public.admin_update_partner_finance_config"
+      ]
+    },
+    {
+      "signature": "admin_update_partner_settlement(bigint,text,text,text)",
+      "definition_hash": "b9948ecf080b9d87082585f1aba2effc",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.admin_update_partner_settlement",
+        "public.admin_update_partner_settlement"
+      ]
+    },
+    {
+      "signature": "assert_chat_membership(integer)",
+      "definition_hash": "8dee764fe5fb882c54e16f5397e79716",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.assert_chat_membership",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "block_chat_user(integer)",
+      "definition_hash": "059403084cba62b5a3a39c1db37e7305",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.block_chat_user",
+        "public.get_current_app_user_id",
+        "public.tbl_user_blocks"
+      ]
+    },
+    {
+      "signature": "can_read_event(integer)",
+      "definition_hash": "2d722cef4ffe8ac2efdbeb76de37cd5b",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.current_app_user_id",
+        "public.can_read_event",
+        "private.activity_squad_visible"
+      ]
+    },
+    {
+      "signature": "cancel_activity(integer)",
+      "definition_hash": "35e6e8a7490b188cbb52be52894fa4be",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.queue_required_refund",
+        "private.enqueue_notification",
+        "public.tbl_partner_finance_audit",
+        "public.get_current_app_user_id",
+        "public.cancel_activity",
+        "private.can_manage_activity"
+      ]
+    },
+    {
+      "signature": "claim_play_store_rating_reward()",
+      "definition_hash": "fc98190a75ff268705590a2fa3f12df6",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.claim_play_store_rating_reward",
+        "public.get_current_app_user_id",
+        "public.tbl_user_points_history"
+      ]
+    },
+    {
+      "signature": "community_create_post_comment(bigint,text,bigint)",
+      "definition_hash": "80b7e20286a727fd991c234304876cd9",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_community_post_comments",
+        "public.get_current_app_user_id",
+        "public.community_create_post_comment",
+        "public.is_chat_member"
+      ]
+    },
+    {
+      "signature": "community_create_post_v2(integer,text,text,text,text,text,boolean)",
+      "definition_hash": "957f1a89f2a881bbeb641f3699e89844",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": []
+    },
+    {
+      "signature": "community_create_post(integer,text,text,text,text,text)",
+      "definition_hash": "34bf92cebd942e62f453eb4c346489eb",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.community_create_post",
+        "public.community_create_post"
+      ]
+    },
+    {
+      "signature": "community_create(text,text,text,text,text[],text[],text,text,text)",
+      "definition_hash": "aeec49295586a409aa55c383b5685112",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_categories",
+        "public.tbl_chat_participants",
+        "public.get_current_app_user_id",
+        "public.tbl_chat_rooms",
+        "public.community_create"
+      ]
+    },
+    {
+      "signature": "community_join(integer)",
+      "definition_hash": "4952f78fdd417b419c6e0f3010d73ff9",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_community_join_requests",
+        "public.community_join",
+        "public.tbl_chat_participants",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "community_leave(integer)",
+      "definition_hash": "75592b93aed48b210d1b3004a18f8804",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.community_leave",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "community_list_post_comments(bigint,integer,integer)",
+      "definition_hash": "b2325641a2030d5ab6f3400ee3f74d1a",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.community_list_post_comments",
+        "public.is_chat_member"
+      ]
+    },
+    {
+      "signature": "community_list_posts(integer,integer,integer)",
+      "definition_hash": "9ef47ec277e65aa0a1868e1acce22780",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.community_list_posts",
+        "public.assert_chat_membership",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "community_manage(integer,text,jsonb)",
+      "definition_hash": "46e8fbb196a8e8360dec05e5d02eb850",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.community_manage",
+        "public.community_manage"
+      ]
+    },
+    {
+      "signature": "community_poll_voters(integer,integer)",
+      "definition_hash": "1dfa8f6adaa504c7c65a71fae3d9d1da",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.assert_chat_membership",
+        "public.community_poll_voters"
+      ]
+    },
+    {
+      "signature": "community_poll(text,integer,jsonb)",
+      "definition_hash": "f8ece249903c4514a076d6093eb7272c",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.community_poll",
+        "private.community_poll"
+      ]
+    },
+    {
+      "signature": "community_remove_member(integer,integer)",
+      "definition_hash": "08e64d3cc7de86764e347c3c21eef2a0",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.community_manager",
+        "private.enqueue_notification",
+        "public.get_current_app_user_id",
+        "public.community_remove_member"
+      ]
+    },
+    {
+      "signature": "community_set_post_reaction(bigint,text)",
+      "definition_hash": "f7077cbdee8d37b5526949c43a79249b",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.community_set_post_reaction",
+        "public.tbl_community_post_reactions",
+        "public.get_current_app_user_id",
+        "public.is_chat_member"
+      ]
+    },
+    {
+      "signature": "create_activity_comment(integer,text,bigint)",
+      "definition_hash": "fe91a9c4046813cb50a4bff679e0a804",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.can_read_event",
+        "public.get_current_app_user_id",
+        "public.create_activity_comment",
+        "public.tbl_event_comments"
+      ]
+    },
+    {
+      "signature": "create_activity_invite(integer,timestamp with time zone,integer)",
+      "definition_hash": "d5d4950cbb87c0dad862eccc8b2c0c4e",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.assert_activity_mutable",
+        "public.tbl_activity_invites",
+        "public.create_activity_invite",
+        "public.get_current_app_user_id",
+        "private.can_manage_activity"
+      ]
+    },
+    {
+      "signature": "create_activity(jsonb,text)",
+      "definition_hash": "d27ea9f3713d4c8f6284556f83d27e22",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_events",
+        "public.tbl_categories",
+        "public.tbl_event_categories",
+        "public.get_current_app_user_id",
+        "private.save_activity_registration_questions",
+        "public.create_activity"
+      ]
+    },
+    {
+      "signature": "create_direct_chat_room(integer)",
+      "definition_hash": "87e6f129c2d1dcd2fbefeb99bf6a58c1",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.create_direct_chat_room",
+        "private.users_blocked",
+        "private.may_message",
+        "public.tbl_chat_participants",
+        "public.get_current_app_user_id",
+        "public.tbl_chat_rooms"
+      ]
+    },
+    {
+      "signature": "create_group_chat_room(text,integer[],text)",
+      "definition_hash": "1653fe1538184f12bbf18cc6e65f18b3",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.create_group_chat_room",
+        "private.create_group_chat_room_secure"
+      ]
+    },
+    {
+      "signature": "create_group_chat_room(text,integer[])",
+      "definition_hash": "1c2fb317db224827df12b94554514075",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.create_group_chat_room",
+        "private.create_group_chat_room_secure"
+      ]
+    },
+    {
+      "signature": "create_story(text,text,text,timestamp with time zone)",
+      "definition_hash": "d42deabda93d7f86ed25b322cf96f65e",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.create_story",
+        "public.tbl_stories"
+      ]
+    },
+    {
+      "signature": "create_verification_draft(text)",
+      "definition_hash": "7c3f1a2bb25f61d37fb1f8e94b057d61",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.create_verification_draft",
+        "public.get_current_app_user_id",
+        "public.tbl_user_verification"
+      ]
+    },
+    {
+      "signature": "current_app_user_id()",
+      "definition_hash": "5a675c9425357a3db88f6f729f293e07",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.current_app_user_id",
+        "private.account_is_allowed"
+      ]
+    },
+    {
+      "signature": "delete_activity_comment(bigint)",
+      "definition_hash": "81587be3e6155d9edff3221b48581c1c",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.delete_activity_comment",
+        "public.get_current_app_user_id",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "delete_my_primary_profile_photo()",
+      "definition_hash": "b5b24ba76c217d0ee14d25e0ce201371",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.delete_my_primary_profile_photo"
+      ]
+    },
+    {
+      "signature": "delete_my_profile_photo(bigint)",
+      "definition_hash": "83215c6584d2994d0b0cbc4151dd4733",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.delete_my_profile_photo"
+      ]
+    },
+    {
+      "signature": "delete_own_chat_message(bigint)",
+      "definition_hash": "75c3dbcb0bff5df5e59ab0d1c4b8ee6f",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.delete_own_chat_message",
+        "public.assert_chat_membership",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "delete_story(bigint)",
+      "definition_hash": "e2bfed679424fd2d7a619da58bd5fcbe",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.delete_story"
+      ]
+    },
+    {
+      "signature": "discard_verification_draft(integer)",
+      "definition_hash": "4ea1c9baa1463b3334b3c9753a4d1645",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.discard_verification_draft"
+      ]
+    },
+    {
+      "signature": "ensure_activity_chat(integer)",
+      "definition_hash": "b0782afb846ce55d193b3fd9d277f3e4",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_chat_participants",
+        "public.get_current_app_user_id",
+        "public.tbl_chat_rooms",
+        "public.ensure_activity_chat",
+        "public.is_event_participant",
+        "private.can_manage_activity",
+        "public.is_chat_member"
+      ]
+    },
+    {
+      "signature": "finalize_verification(integer,text,text,integer)",
+      "definition_hash": "8476083417d0ab9f6901fb50d6003249",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.finalize_verification",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "get_current_app_user_id()",
+      "definition_hash": "4195e2cfff85240df3976739fc53d654",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.current_app_user_id",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "get_current_legacy_user_id()",
+      "definition_hash": "75e067879e531d3edb2442e6c3cf9351",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_legacy_user_id",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "get_my_emergency_contact()",
+      "definition_hash": "38ce1fdaa7ea0dc70bd5d70755196066",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.get_my_emergency_contact"
+      ]
+    },
+    {
+      "signature": "get_my_partner_profile()",
+      "definition_hash": "7c1a68b6af2ada70aed3eb31eb08cde1",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.get_my_partner_profile",
+        "public.get_my_partner_profile"
+      ]
+    },
+    {
+      "signature": "get_my_profile()",
+      "definition_hash": "1e0a9f887d82a49951da16f61708b436",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.get_my_profile"
+      ]
+    },
+    {
+      "signature": "get_partner_dashboard()",
+      "definition_hash": "5f46e0c0922adfea5c78ce5fb2fb63a7",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.get_partner_dashboard",
+        "public.get_partner_dashboard"
+      ]
+    },
+    {
+      "signature": "get_partner_registrations(integer)",
+      "definition_hash": "73753cce007991ffceeb5ae78e0c0146",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_partner_registrations",
+        "private.get_partner_registrations"
+      ]
+    },
+    {
+      "signature": "get_partner_transactions(integer)",
+      "definition_hash": "928c7c0ffd8f7043d053dc4564e77723",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.get_partner_transactions",
+        "public.get_partner_transactions"
+      ]
+    },
+    {
+      "signature": "get_user_privacy_settings()",
+      "definition_hash": "8edff74b150787deffafd359ccad9816",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_user_privacy_settings",
+        "public.get_current_app_user_id",
+        "public.get_user_privacy_settings"
+      ]
+    },
+    {
+      "signature": "is_chat_member(integer)",
+      "definition_hash": "f4a9b50d1c30acf3466de515f24f8d19",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.current_app_user_id",
+        "public.is_chat_member"
+      ]
+    },
+    {
+      "signature": "is_event_participant(integer)",
+      "definition_hash": "aa8b58f679a81e14644a5b498862b8fa",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.current_app_user_id",
+        "public.is_event_participant"
+      ]
+    },
+    {
+      "signature": "is_wenitro_admin()",
+      "definition_hash": "6f361a7cbf73442553beaa6339cf8369",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.current_admin_role",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "list_active_stories(integer,timestamp with time zone,bigint)",
+      "definition_hash": "5fbbd8da57fc401c7cbc8506baa25b03",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.current_app_user_id",
+        "public.list_active_stories",
+        "private.account_is_allowed"
+      ]
+    },
+    {
+      "signature": "list_activity_comments(integer,integer,integer)",
+      "definition_hash": "392849f9c7a23447b87beb4bdd48d189",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.can_read_event",
+        "public.list_activity_comments",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "list_activity_entry_categories(integer)",
+      "definition_hash": "649edec26bd6fb785b99eb90135576a0",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.registration_event_visible",
+        "public.list_activity_entry_categories",
+        "public.get_current_app_user_id",
+        "private.can_manage_activity"
+      ]
+    },
+    {
+      "signature": "list_activity_participant_ratings(integer)",
+      "definition_hash": "4d8bc9d42b185c3bd4ac1418aa90cf30",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.list_activity_participant_ratings"
+      ]
+    },
+    {
+      "signature": "list_badge_catalog()",
+      "definition_hash": "803189bf1bedf26781e481b216928443",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.list_badge_catalog"
+      ]
+    },
+    {
+      "signature": "list_chat_inbox(integer)",
+      "definition_hash": "e5a542318a9647187e7223971768e09d",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.list_chat_inbox",
+        "private.users_blocked",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "list_chat_messages(integer,timestamp with time zone,bigint,integer,boolean)",
+      "definition_hash": "53d19d526ffebc6a8393469626efd203",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.assert_chat_membership",
+        "public.list_chat_messages"
+      ]
+    },
+    {
+      "signature": "list_chat_participants(integer)",
+      "definition_hash": "a33b030c3f9867f1c8dab78a1c1cba08",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.assert_chat_membership",
+        "public.list_chat_participants"
+      ]
+    },
+    {
+      "signature": "list_discoverable_people(integer)",
+      "definition_hash": "20f83a0b87f1bdc9a2b7882da9e457de",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.can_read_profile",
+        "public.get_current_app_user_id",
+        "public.list_discoverable_people"
+      ]
+    },
+    {
+      "signature": "list_my_badges()",
+      "definition_hash": "6d8f082c76875082763888540f5e4c10",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.list_my_badges"
+      ]
+    },
+    {
+      "signature": "list_my_blocked_users()",
+      "definition_hash": "344b95d129abee27414d783ff1a70946",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.list_my_blocked_users"
+      ]
+    },
+    {
+      "signature": "list_my_interests()",
+      "definition_hash": "eb49d6d48bbfc3dc95e9edc85280751d",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.list_my_interests",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "list_my_nitro_history()",
+      "definition_hash": "bfe9e4aa51a429e9ab7152ca7b0e62a2",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.list_my_nitro_history",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "list_my_squad()",
+      "definition_hash": "9864bc569f2344840371a93de9d001eb",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.list_my_squad",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "list_my_stories(boolean)",
+      "definition_hash": "89182c242141dd6576187b2322b2c1ba",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.list_my_stories"
+      ]
+    },
+    {
+      "signature": "list_user_notifications(integer,integer)",
+      "definition_hash": "08834fd6fd00fc6ee64540fa3a505652",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.list_user_notifications",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "list_user_verifications()",
+      "definition_hash": "b9bcf904aa0bd09be854b0e67b0f3d3d",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.list_user_verifications"
+      ]
+    },
+    {
+      "signature": "mark_activity_participant_no_show(integer,integer)",
+      "definition_hash": "858146df15fd86e1cf0b493a902aadf8",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.save_participant_rating",
+        "public.mark_activity_participant_no_show"
+      ]
+    },
+    {
+      "signature": "mark_all_notifications_read()",
+      "definition_hash": "a838a480b6811051ffff80a0b4fd4c81",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.mark_all_notifications_read",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "mark_chat_read(integer,timestamp with time zone)",
+      "definition_hash": "8cb35de8085d159b8e609ac56d675071",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.mark_chat_read",
+        "public.assert_chat_membership",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "mark_notification_read(integer)",
+      "definition_hash": "0ceffb6104628310de8741c9f0abcec2",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.mark_notification_read",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "mark_story_viewed(bigint)",
+      "definition_hash": "0ce59b3900cd0aaebc1cc676f10e6a0e",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_story_views",
+        "public.mark_story_viewed",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "my_login_announcements()",
+      "definition_hash": "6a230cbf1a532ddbae11d7abf90c77dd",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.my_login_announcements"
+      ]
+    },
+    {
+      "signature": "my_trust_score()",
+      "definition_hash": "fe6d396636e132a351116cb39b9cd887",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.my_trust_score",
+        "private.trust_score_for"
+      ]
+    },
+    {
+      "signature": "prepare_activity_payment(integer,bigint)",
+      "definition_hash": "712b0261e63feda38773cf9eecb310e5",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.prepare_activity_payment",
+        "private.assert_activity_mutable",
+        "public.tbl_activity_payments",
+        "public.tbl_event_participants",
+        "public.get_current_app_user_id",
+        "private.assert_registration_complete",
+        "private.activity_occupied_count",
+        "private.has_active_partner"
+      ]
+    },
+    {
+      "signature": "profile_reviews(integer)",
+      "definition_hash": "fe5e4a475f444bcedf35e05c3ba61e24",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.can_read_profile",
+        "public.profile_reviews"
+      ]
+    },
+    {
+      "signature": "profile_trust_score(integer)",
+      "definition_hash": "f8928ba3a0c8506d164d018c8e9c9e58",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.can_read_profile",
+        "public.profile_trust_score",
+        "private.trust_score_for"
+      ]
+    },
+    {
+      "signature": "promote_my_profile_photo(integer,text,text)",
+      "definition_hash": "13ae112c626407c48c3d255664d4cd90",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_user_profile_photos",
+        "public.get_current_app_user_id",
+        "public.promote_my_profile_photo"
+      ]
+    },
+    {
+      "signature": "rate_activity_participant(integer,integer,integer,integer,integer,text,boolean)",
+      "definition_hash": "f010026cc9d86996a3c446f348544c71",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.save_participant_rating",
+        "public.rate_activity_participant"
+      ]
+    },
+    {
+      "signature": "rate_activity_participant(integer,integer,integer,integer,integer,text)",
+      "definition_hash": "433cf53cdeca334c5aa5f4c2aa1fbaf2",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.save_participant_rating",
+        "public.rate_activity_participant"
+      ]
+    },
+    {
+      "signature": "redeem_activity_invite(text)",
+      "definition_hash": "fbd2f664abf2219b398a5b18e073ab0f",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.assert_activity_mutable",
+        "public.redeem_activity_invite",
+        "public.tbl_event_participants",
+        "public.get_current_app_user_id",
+        "private.activity_occupied_count"
+      ]
+    },
+    {
+      "signature": "redeem_referral(integer)",
+      "definition_hash": "3880ccb14b1fbac52bca019d7073b02b",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.redeem_referral",
+        "public.get_current_app_user_id",
+        "private.badge_referral_identity",
+        "public.tbl_referral_history",
+        "private.badge_valid_user"
+      ]
+    },
+    {
+      "signature": "remove_my_squad_member(integer)",
+      "definition_hash": "442b048530b2a057ffdd2d169bf43d26",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.remove_my_squad_member"
+      ]
+    },
+    {
+      "signature": "report_vibe(bigint,text,text)",
+      "definition_hash": "26850cf9f8739e3bd6d5c60b3319fa50",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.report_vibe",
+        "public.get_current_app_user_id",
+        "public.is_event_participant",
+        "public.tbl_vibe_reports"
+      ]
+    },
+    {
+      "signature": "request_join_activity(integer,text)",
+      "definition_hash": "668a70ec42ad4f8c7d8a5896609abb3d",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.request_join_activity",
+        "private.assert_activity_mutable",
+        "public.tbl_event_participants",
+        "public.get_current_app_user_id",
+        "private.assert_registration_complete",
+        "private.activity_occupied_count"
+      ]
+    },
+    {
+      "signature": "respond_activity_join(integer,integer,text)",
+      "definition_hash": "0890c98555c859a177bca93157eba908",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.assert_activity_mutable",
+        "public.respond_activity_join",
+        "private.enqueue_notification",
+        "public.get_current_app_user_id",
+        "private.activity_occupied_count",
+        "private.can_manage_activity"
+      ]
+    },
+    {
+      "signature": "save_activity_entry_categories(integer,jsonb)",
+      "definition_hash": "1761b2935c4b8285538dcce5992aab4b",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.assert_activity_mutable",
+        "public.list_activity_entry_categories",
+        "public.get_current_app_user_id",
+        "public.tbl_activity_entry_categories",
+        "private.has_active_partner",
+        "public.save_activity_entry_categories",
+        "private.can_manage_activity"
+      ]
+    },
+    {
+      "signature": "save_my_emergency_contact(text,text,text)",
+      "definition_hash": "f4f5e19a5540620f8aef346fddf5f432",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.save_my_emergency_contact",
+        "public.get_current_app_user_id",
+        "public.tbl_emergency_contacts"
+      ]
+    },
+    {
+      "signature": "save_my_partner_profile(text,text,text)",
+      "definition_hash": "6409eb09aa645d3d87856ab174eca386",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.save_my_partner_profile",
+        "public.save_my_partner_profile"
+      ]
+    },
+    {
+      "signature": "save_my_profile_photo(integer,text,text)",
+      "definition_hash": "6b5ef70b2e3cf45bf701dea5cd3c5667",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.save_my_profile_photo",
+        "public.tbl_user_profile_photos",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "send_chat_message(integer,uuid,text,text,text)",
+      "definition_hash": "69bb7952eed66d10d6a0554c940a4bd5",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.send_chat_message",
+        "public.assert_chat_membership",
+        "private.users_blocked",
+        "public.get_current_app_user_id",
+        "public.tbl_messages"
+      ]
+    },
+    {
+      "signature": "send_chat_share(integer[],uuid[],text,bigint)",
+      "definition_hash": "e75b748935a02989620148763f135be9",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.assert_chat_membership",
+        "public.send_chat_share",
+        "public.get_current_app_user_id",
+        "public.is_event_participant",
+        "public.tbl_messages",
+        "public.is_chat_member"
+      ]
+    },
+    {
+      "signature": "set_activity_cohost(integer,integer,boolean)",
+      "definition_hash": "783450e10bd0623b955e104eb8f847ca",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.assert_activity_mutable",
+        "public.set_activity_cohost",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "set_my_interests(integer[])",
+      "definition_hash": "089fcdc115c6f7a1967a4de6493ff8e5",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_user_interests",
+        "public.set_my_interests",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "set_partner_activity_external_url(integer,text)",
+      "definition_hash": "022cea8ef63cebd5075d25fc8c86e1fc",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.set_partner_activity_external_url",
+        "private.has_active_partner",
+        "private.can_manage_activity"
+      ]
+    },
+    {
+      "signature": "submit_my_live_photo(text)",
+      "definition_hash": "7ee5adb0fa0b1435fcd1df665e3b3e2e",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.submit_my_live_photo",
+        "private.sync_verification_rewards",
+        "private.account_is_allowed",
+        "public.tbl_user_verification"
+      ]
+    },
+    {
+      "signature": "submit_partner_application(jsonb)",
+      "definition_hash": "89750372634a1fe2e9f270f007658664",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.submit_partner_application",
+        "private.submit_partner_application",
+        "public.get_current_app_user_id",
+        "public.tbl_partner_terms_acceptances"
+      ]
+    },
+    {
+      "signature": "sync_my_phone_verification()",
+      "definition_hash": "31f3642ec50b2bd42a2a8b9b5f0a3e94",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.sync_my_phone_verification",
+        "public.get_current_app_user_id",
+        "public.tbl_user_verification"
+      ]
+    },
+    {
+      "signature": "sync_my_verification()",
+      "definition_hash": "0e54a7ab4a8b52b19d008fd3a14d2894",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "private.sync_verification_rewards",
+        "public.sync_my_verification",
+        "private.account_is_allowed"
+      ]
+    },
+    {
+      "signature": "unblock_chat_user(integer)",
+      "definition_hash": "d33d16af06f4f067f0ab0e286bbdead1",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.unblock_chat_user",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "update_activity_comment(bigint,text)",
+      "definition_hash": "de133ce1a7b502c7a42b456876b9b3fe",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.update_activity_comment",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "signature": "update_activity(integer,jsonb)",
+      "definition_hash": "df62e303086ae17b25aa62881e13c740",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.update_activity",
+        "public.tbl_categories",
+        "private.assert_activity_mutable",
+        "public.tbl_event_categories",
+        "public.get_current_app_user_id",
+        "private.save_activity_registration_questions",
+        "private.can_manage_activity"
+      ]
+    },
+    {
+      "signature": "update_my_profile(jsonb)",
+      "definition_hash": "8a16680722403f46a0130ddca8029a17",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.get_my_profile",
+        "public.update_my_profile"
+      ]
+    },
+    {
+      "signature": "update_user_privacy_settings(text,text,text,text,boolean)",
+      "definition_hash": "ad5b19095f5672ef9c91ff34cc5eb300",
+      "configuration": [
+        "search_path=\"\""
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_user_privacy_settings",
+        "public.get_current_app_user_id",
+        "public.update_user_privacy_settings"
+      ]
+    },
+    {
+      "signature": "vibe_create_comment(bigint,text,integer)",
+      "definition_hash": "3440db30f4c5c92ca1b0e1f00d43ee98",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_vibe_comments",
+        "public.vibe_create_comment"
+      ]
+    },
+    {
+      "signature": "vibe_create(bigint,text,text,text,text[],text)",
+      "definition_hash": "d4c4bf65d9688d1e5c07e442c1373508",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.vibe_create",
+        "public.get_current_app_user_id",
+        "public.tbl_activity_vibes"
+      ]
+    },
+    {
+      "signature": "vibe_delete_comment(integer)",
+      "definition_hash": "5def6295d28a442b4e20b0254ae10186",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.vibe_delete_comment"
+      ]
+    },
+    {
+      "signature": "vibe_delete(bigint)",
+      "definition_hash": "6f7e88834578414074c7a16b04e3a30d",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.vibe_delete",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "vibe_set_liked(bigint,boolean)",
+      "definition_hash": "f32c081d2a74a67f4a34d6324187c4d0",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.vibe_set_liked",
+        "public.tbl_vibe_likes",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "signature": "vibe_track_share(bigint,text)",
+      "definition_hash": "65298c3468d9e64efa5038be71229b5a",
+      "configuration": [
+        "search_path=public"
+      ],
+      "anonymous_execute": false,
+      "authenticated_execute": true,
+      "calls": [
+        "public.tbl_vibe_shares",
+        "public.vibe_track_share",
+        "public.get_current_app_user_id"
+      ]
+    }
+  ]
+}

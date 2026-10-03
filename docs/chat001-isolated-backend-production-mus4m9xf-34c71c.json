@@ -1,0 +1,309 @@
+{
+  "runId": "mus4m9xf-34c71c",
+  "target": "cxsznhrkzqndhseodcyy",
+  "release": {
+    "projectId": "cxsznhrkzqndhseodcyy",
+    "readyForProductionQA": true,
+    "at": "2026-10-03T08:21:32.253Z",
+    "appCommit": "bd6d314872e1227246ef8b1bdfd566ceff32842b",
+    "adminCommit": "b2e74a3554714ae09ab87b11aafe4b1f3d941f9e",
+    "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "appUrl": "https://wenitro-app.vercel.app",
+    "appImmutableUrl": "https://wenitro-fjsmkg874-vamshi-krishna-pendyalas-projects.vercel.app",
+    "adminUrl": "https://wenitro-admin-roan.vercel.app",
+    "cashfreeVerifyVersion": 4,
+    "cashfreeCreateVersion": 5,
+    "cashfreeWebhookVersion": 4,
+    "appliedMigrations": [
+      "20261003074100",
+      "20261003074522",
+      "20261003075132",
+      "20261003075305",
+      "20261003075439",
+      "20261003075444",
+      "20261003075804",
+      "20261003080410"
+    ],
+    "rollout": [
+      {
+        "name": "admin_category_catalog",
+        "file": "supabase/migrations/20261003074100_admin_category_catalog.sql",
+        "at": "2026-10-03T08:18:28.072Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "observed_usage_analytics",
+        "file": "supabase/migrations/20261003074522_observed_usage_analytics.sql",
+        "at": "2026-10-03T08:18:30.286Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "payment_entry_authorization",
+        "file": "supabase/migrations/20261003075132_payment_entry_authorization.sql",
+        "at": "2026-10-03T08:18:32.732Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "account_status_rpc_enforcement",
+        "file": "supabase/migrations/20261003075305_account_status_rpc_enforcement.sql",
+        "at": "2026-10-03T08:18:34.684Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "admin_workspace_operations",
+        "file": "supabase/migrations/20261003075439_admin_workspace_operations.sql",
+        "at": "2026-10-03T08:18:36.933Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "referral_identity_reward_guard",
+        "file": "supabase/migrations/20261003075444_referral_identity_reward_guard.sql",
+        "at": "2026-10-03T08:18:39.285Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "atomic_profile_interests",
+        "file": "supabase/migrations/20261003075804_atomic_profile_interests.sql",
+        "at": "2026-10-03T08:18:41.446Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "scheduled_admin_campaigns",
+        "file": "supabase/migrations/20261003080410_scheduled_admin_campaigns.sql",
+        "at": "2026-10-03T08:18:43.677Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"success\":true}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-create-order",
+        "at": "2026-10-03T08:18:50.910Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"d2a93ad1-e6fb-4df0-9a29-980fed08441e\",\"slug\":\"cashfree-create-order\",\"name\":\"cashfree-create-order\",\"status\":\"ACTIVE\",\"version\":5,\"created_at\":1790774490535,\"updated_at\":1791015530314,\"verify_jwt\":true,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_d2a93ad1-e6fb-4df0-9a29-980fed08441e_5/source/supabase/functions/cashfree-create-order/index.ts\",\"ezbr_sha256\":\"bf6d09df40eb6e797733bf3d1e1b03a19181d42c31a1bc5eb8d6559431610e3d\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-verify-payment",
+        "at": "2026-10-03T08:18:54.295Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"bc96d529-1c9e-45a3-8596-16f8705fa2c3\",\"slug\":\"cashfree-verify-payment\",\"name\":\"cashfree-verify-payment\",\"status\":\"ACTIVE\",\"version\":4,\"created_at\":1790774493278,\"updated_at\":1791015533735,\"verify_jwt\":true,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_bc96d529-1c9e-45a3-8596-16f8705fa2c3_4/source/supabase/functions/cashfree-verify-payment/index.ts\",\"ezbr_sha256\":\"6f2b98dc389cbb0121efd7be3b63fafdc38d7f5223ff84e39f7920034b620aa0\"}"
+            }
+          ],
+          "isError": false
+        }
+      },
+      {
+        "name": "cashfree-webhook",
+        "at": "2026-10-03T08:18:57.303Z",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"id\":\"b86c1c42-3433-4269-ac6b-8f9785eb09c7\",\"slug\":\"cashfree-webhook\",\"name\":\"cashfree-webhook\",\"status\":\"ACTIVE\",\"version\":4,\"created_at\":1790774495878,\"updated_at\":1791015536792,\"verify_jwt\":false,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_b86c1c42-3433-4269-ac6b-8f9785eb09c7_4/source/supabase/functions/cashfree-webhook/index.ts\",\"ezbr_sha256\":\"cf5031f069c7527d1192f3c3b8be1a87895366eb501e93a8bb8cb6416e124f8a\"}"
+            }
+          ],
+          "isError": false
+        }
+      }
+    ],
+    "releaseNotes": "Git-linked production deployments were triggered by the authorized pushes. Database migrations and Edge Functions completed before App became READY; Admin became READY after App. A redundant manual queued App deployment dpl_57dXGWTGqWTbgGkBeeXDRKTgRUgc was canceled without becoming live. No manual Admin duplicate was created.",
+    "localGate": {
+      "checks": 76,
+      "failed": 0,
+      "report": "docs/chat001-integrated-local-verification.json"
+    }
+  },
+  "startedAt": "2026-10-03T08:24:50.883Z",
+  "source": "Deployed REST/RPC/Edge APIs with synthetic isolated fixtures",
+  "providerPaymentEvidence": false,
+  "checks": [
+    {
+      "name": "Private activity is hidden from outsider RLS",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "name": "Private activity cannot be joined without invitation",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Invited approval activity join remains pending",
+      "status": "PASS",
+      "actual": "pending"
+    },
+    {
+      "name": "Pending participant cannot comment",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Outsider cannot approve someone else",
+      "status": "PASS",
+      "code": "42501"
+    },
+    {
+      "name": "Original Host approves participant",
+      "status": "PASS",
+      "actual": "approved"
+    },
+    {
+      "name": "Comment returns actual participant author",
+      "status": "PASS",
+      "actual": 128
+    },
+    {
+      "name": "Other member cannot delete participant comment",
+      "status": "PASS",
+      "code": "42501"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "Private synthetic activities hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic paid ledger held",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic settlements held",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic host authority revoked and login banned",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic host profile deactivated",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic buyer authority revoked and login banned",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic buyer profile deactivated",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic other authority revoked and login banned",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic other profile deactivated",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic guard authority revoked and login banned",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic guard profile deactivated",
+      "status": "PASS"
+    }
+  ],
+  "status": "FAIL",
+  "failure": {
+    "message": "Could not find the function public.update_activity(p_event_id, p_payload) in the schema cache",
+    "code": "PGRST202"
+  },
+  "finishedAt": "2026-10-03T08:25:02.143Z",
+  "fixtureIds": {
+    "users": [
+      {
+        "label": "host",
+        "id": 127
+      },
+      {
+        "label": "buyer",
+        "id": 128
+      },
+      {
+        "label": "other",
+        "id": 129
+      },
+      {
+        "label": "guard",
+        "id": 130
+      }
+    ],
+    "events": [
+      287
+    ],
+    "categories": []
+  }
+}

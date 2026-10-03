@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-03T18:01:54.384Z",
+  "run": "musp6fp8-9fe1f2",
+  "room": 250,
+  "attempt": 2,
+  "events": [
+    {
+      "status": "SUBSCRIBED"
+    },
+    {
+      "id": 319,
+      "fields": [
+        "id",
+        "content",
+        "is_read",
+        "poll_id",
+        "room_id",
+        "client_id",
+        "edited_at",
+        "media_url",
+        "sender_id",
+        "created_at",
+        "deleted_at",
+        "reply_to_id",
+        "is_delivered",
+        "message_type",
+        "share_payload",
+        "thumbnail_url"
+      ],
+      "errors": null
+    },
+    {
+      "status": "CLOSED"
+    }
+  ],
+  "sentId": 319,
+  "status": "PASS",
+  "cleanup": "isolated identities re-banned/deactivated"
+}

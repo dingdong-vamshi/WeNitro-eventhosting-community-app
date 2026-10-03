@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-03T18:05:10.499387+00:00",
+  "project": "cxsznhrkzqndhseodcyy",
+  "paid_service_only": true,
+  "public_tables_without_rls": [],
+  "anonymous_security_definer": [],
+  "public_views_without_invoker": [],
+  "public_authenticated_security_definer": 135,
+  "interpretation": "Structural inspection is not proof of every SECURITY DEFINER authorization branch. Deployed isolated behavioral checks cover affected identity/payment/profile/social paths. Advisor warning inventory remains visible.",
+  "scope": "Fresh structural SQL after applied migrations 20261003082759 and 20261003082845",
+  "schema_and_private_acl": {
+    "authenticated_public_create": false,
+    "anonymous_public_create": false,
+    "authenticated_private_create": false,
+    "member_private_workspace_select": false,
+    "member_private_observation_select": false,
+    "member_private_observation_insert": false
+  }
+}
