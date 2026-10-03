@@ -4735,12 +4735,13 @@
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion.",
+      "reason": "Original A18 requires profanity checks in every text box and pictures. Main UGC deterministic text/RLS guards are implemented, but Host custom registration label/options and entry-category name lack the same guard; reported to backend owner for ordinary fix. Actual semantic picture classification has no configured provider/integration and must remain a precise partial external dependency after text coverage is fixed.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
         "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-      ]
+      ],
+      "sourceReview": "Actual original tmp/pdfs/must/page-18.jpg reopened: \"Profanity check should be also there in every text box\" and \"Same for pictures as well.\""
     },
     {
       "id": "UPLOAD-WARNING",
