@@ -207,7 +207,7 @@
       "ids": [
         "MAPS-GOOGLE"
       ],
-      "scope": "Provider setup plus implementation missing; Photon/Nominatim/GPS fallback is separate."
+      "scope": "Disabled local Google Places adapter and transient attributed discovery links now implemented and mock-tested (docs/chat001-google-places-local-proof.json). Client account/API/policy activation and Google-backed saved venue place-ID/source persistence plus permitted dynamic resolution across all readers remain incomplete; existing OSM/GPS venues are separate."
     },
     {
       "category": "Aadhaar provider",

@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { activityService } from '../../services/wenitro';
 import { activityLocationService } from '../../services/activity-location';
+import { googlePlacesEnabled, googlePlaceUrl, searchGooglePlaces, type GooglePlacesResult } from '../../services/google-places';
 import { listActivityEntryCategories } from '../../services/payments';
 import { AGE_PRESETS, GENDER_OPTIONS, ageError, draftFromActivity, hasMeaningfulHostDraft, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, withFreshHostSchedule, type HostActivitySource, type HostDraft, type HostLocation } from '../../domain/host-activity';
 import CoverEditor from './cover-editor';
@@ -79,13 +80,24 @@ function ScheduleField({ label, value, onChange, error }: { label: string; value
 function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => void; onClose: () => void }) {
   const { c, s } = useHostTheme();
   const [search, setSearch] = useState(''), [results, setResults] = useState<HostLocation[]>([]), [error, setError] = useState(''), [busy, setBusy] = useState(false);
+  const [googleResults, setGoogleResults] = useState<GooglePlacesResult>({ places: [], status: googlePlacesEnabled ? 'ready' : 'disabled' });
+  const [googleBusy, setGoogleBusy] = useState(false);
   const currentRequest = useRef<AbortController | null>(null);
   const generation = useRef(0);
   useEffect(() => {
     const id = ++generation.current; const controller = new AbortController(); currentRequest.current?.abort(); currentRequest.current = controller;
-    setResults([]); setError(''); setBusy(false);
+    setResults([]); setError(''); setBusy(false); setGoogleBusy(false);
+    setGoogleResults({ places: [], status: googlePlacesEnabled ? 'ready' : 'disabled' });
     const timer = setTimeout(async () => {
       if (search.trim().length < 2 || id !== generation.current) return; setBusy(true);
+      if (googlePlacesEnabled) {
+        setGoogleBusy(true);
+        void searchGooglePlaces(search, controller.signal).then(value => {
+          if (id === generation.current) setGoogleResults(value);
+        }).catch(() => {
+          if (!controller.signal.aborted && id === generation.current) setGoogleResults({ places: [], status: 'unavailable' });
+        }).finally(() => { if (id === generation.current) setGoogleBusy(false); });
+      }
       try { const rows = await activityLocationService.search(search, controller.signal); if (id === generation.current) setResults(rows); }
       catch (e) { if (!controller.signal.aborted && id === generation.current) setError(e instanceof Error ? e.message : 'Could not search locations.'); }
       finally { if (id === generation.current) setBusy(false); }
@@ -94,15 +106,29 @@ function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => 
   }, [search]);
   useEffect(() => () => currentRequest.current?.abort(), []);
   const current = async () => {
-    const id = ++generation.current; currentRequest.current?.abort(); const controller = new AbortController(); currentRequest.current = controller; setBusy(true); setError('');
+    const id = ++generation.current; currentRequest.current?.abort(); const controller = new AbortController(); currentRequest.current = controller; setBusy(true); setError(''); setGoogleBusy(false); setGoogleResults({ places: [], status: googlePlacesEnabled ? 'ready' : 'disabled' });
     try { const place = await activityLocationService.current(controller.signal); if (id === generation.current) onSelect(place); }
-    catch (e) { if (!controller.signal.aborted) setError(e instanceof Error ? e.message : 'Could not locate you.'); }
+    catch (e) { if (!controller.signal.aborted && id === generation.current) setError(e instanceof Error ? e.message : 'Could not locate you.'); }
     finally { if (id === generation.current) setBusy(false); }
   };
   return <Modal transparent visible animationType="slide" onRequestClose={onClose}><MobileOverlayFrame><SafeAreaView style={s.root} edges={['top', 'bottom']}><View style={s.header}><Pressable accessibilityRole="button" accessibilityLabel="Close location search" onPress={onClose} style={s.back}><Glyph name="close" color={c.text} /></Pressable><Text style={[s.headerTitle, { textAlign: 'center' }]}>Search Location</Text><View style={{ width: 40 }} /></View>
     <View style={{ padding: 18 }}><Control label="Search Location" icon="search-outline" value={search} onChangeText={setSearch} placeholder="Venue, street, landmark, or area..." autoCapitalize="none" /><Pressable accessibilityRole="button" disabled={busy} onPress={() => void current()} style={[s.inline, { minHeight: 56 }]}><Glyph name="locate-outline" size={18} /><Text style={s.settingTitle}>Use Current Location</Text></Pressable></View>
     {busy && <ActivityIndicator color={c.purple} />}{error ? <Text accessibilityRole="alert" style={s.error}>{error}</Text> : null}
-    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 24 }}>{results.map((r, i) => <Pressable key={`${r.label}:${r.latitude}:${r.longitude}:${i}`} accessibilityRole="button" onPress={() => onSelect(r)} style={[s.option, { paddingHorizontal: 0, alignItems: 'flex-start' }]}><Glyph name="navigate-outline" size={18} /><View style={{ flex: 1, gap: 5, marginLeft: 9 }}><Text style={s.settingTitle}>{r.label}</Text><Text style={s.small}>{r.latitude.toFixed(6)}, {r.longitude.toFixed(6)}</Text></View></Pressable>)}{!busy && !error && search.trim().length >= 2 && !results.length ? <Text style={s.small}>No matching venues or addresses. Try a landmark, street, or PIN code.</Text> : null}</ScrollView>
+    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 24 }}>
+      {googleBusy ? <Text style={s.small}>Searching Google Maps…</Text> : null}
+      {googleResults.places.length ? <View style={{ borderWidth: 1, borderColor: c.border, padding: 12, marginBottom: 16, gap: 10 }}>
+        <Text style={{ fontSize: 14, fontWeight: '400', color: c.isDark ? '#FFFFFF' : '#1F1F1F' }} {...(Platform.OS === 'web' ? { translate: 'no' } : {})}>Google Maps</Text>
+        <Text style={s.small}>Explore these suggestions in Google Maps. To save your Activity venue, select an OpenStreetMap result below.</Text>
+        {googleResults.places.map(place => <View key={place.id} style={{ gap: 4, paddingVertical: 8 }}>
+          <Pressable accessibilityRole="link" accessibilityLabel={`View ${place.title} on Google Maps`} onPress={() => { void Linking.openURL(googlePlaceUrl(place)).catch(() => setError('Could not open Google Maps. Please try again.')); }}>
+            <Text style={s.settingTitle}>{place.title}</Text><Text style={s.small}>{place.address}</Text><Text style={[s.small, { color: c.purple }]}>View on Google Maps ↗</Text>
+          </Pressable>
+          {place.attributions.map((attribution, i) => <Text key={i} style={s.small} onPress={attribution.uri ? () => { void Linking.openURL(attribution.uri!).catch(() => setError('Could not open the attribution link.')); } : undefined}>{attribution.provider}</Text>)}
+        </View>)}
+      </View> : null}
+      <Text style={[s.small, { marginBottom: 12 }]}>{googleResults.status === 'disabled' ? 'Venue selection uses OpenStreetMap. Google Maps search is not enabled.' : googleResults.status === 'unavailable' ? 'Google Maps search is unavailable. You can still select an OpenStreetMap venue.' : 'Select your Activity venue from OpenStreetMap.'}</Text>
+      {results.map((r, i) => <Pressable key={`${r.label}:${r.latitude}:${r.longitude}:${i}`} accessibilityRole="button" onPress={() => onSelect(r)} style={[s.option, { paddingHorizontal: 0, alignItems: 'flex-start' }]}><Glyph name="navigate-outline" size={18} /><View style={{ flex: 1, gap: 5, marginLeft: 9 }}><Text style={s.settingTitle}>{r.label}</Text><Text style={s.small}>{r.latitude.toFixed(6)}, {r.longitude.toFixed(6)}</Text></View></Pressable>)}{!busy && !error && search.trim().length >= 2 && !results.length ? <Text style={s.small}>No matching venues or addresses. Try a landmark, street, or PIN code.</Text> : null}</ScrollView>
+    {googlePlacesEnabled ? <View style={{ alignItems: 'center', padding: 8, gap: 4 }}><Text style={s.small}>Search text is sent to Google Maps when its search is enabled.</Text><Text style={s.small} onPress={() => { void Linking.openURL('https://policies.google.com/privacy'); }}>Google Privacy Policy</Text><Text style={s.small} onPress={() => { void Linking.openURL('https://maps.google.com/help/terms_maps/'); }}>Google Maps Terms</Text></View> : null}
     <Text onPress={() => void Linking.openURL('https://www.openstreetmap.org/copyright')} style={[s.small, { textAlign: 'center', padding: 12 }]}>Location data © OpenStreetMap contributors</Text>
   </SafeAreaView></MobileOverlayFrame></Modal>;
 }

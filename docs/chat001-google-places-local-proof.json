@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-03T21:01:20.317280+00:00",
+  "scope": "Local Google Places adapter and transient discovery; not Google-backed saved Activity venues.",
+  "implementation": [
+    "Server-only Google Places Text Search (New) adapter at fixed Google endpoint; exact narrow response field mask and bounded query/results; validated signed-in non-anonymous caller.",
+    "Explicit GOOGLE_PLACES_ENABLED=true AND nonempty GOOGLE_PLACES_API_KEY are required before provider traffic; the public client additionally requires EXPO_PUBLIC_GOOGLE_PLACES_ENABLED=true. No keys or environment settings were changed.",
+    "Only user-entered search text goes to Google; no automatic GPS bias, account ID, Supabase token or arbitrary request fields forwarded.",
+    "No-store responses, no client result cache, provider errors sanitized, cancellation/timeout handling; account changes discard stale client responses.",
+    "Host search retains its selectable OSM/GPS flow unchanged. Configured Google suggestions render in a distinct transient section with Google Maps and third-party attribution and external View on Google Maps actions. They cannot enter HostDraft or Activity persistence.",
+    "Explicit missing/unavailable Google labels and Google terms/privacy links."
+  ],
+  "localVerification": [
+    {
+      "command": "node scripts/google-places-adapter-test.mjs",
+      "status": "PASS",
+      "kind": "executable mocked HTTP/Edge/client plus actual rendered LocationSearch callbacks",
+      "scope": "Missing flags/key produce zero auth/provider calls; auth/validation/errors/timeouts/cancel; exact field mapping; no secret/GPS forwarding; no cache; account switch; actual Google action opens Maps while only OSM row calls onSelect."
+    },
+    {
+      "command": "node scripts/host-activity-test.mjs",
+      "status": "PASS",
+      "kind": "existing executable host/service regression",
+      "scope": "Existing OSM provider/GPS fallback and host validation remain working without Google configuration."
+    },
+    {
+      "command": "deno check supabase/functions/google-places/index.ts",
+      "status": "PASS",
+      "kind": "typecheck"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit --pretty false",
+      "status": "PASS",
+      "kind": "App typecheck"
+    }
+  ],
+  "productionVerification": [],
+  "screenshots": [],
+  "googleRequestsMade": 0,
+  "providerSpendAuthorizedOrIncurred": false,
+  "deploymentPerformed": false,
+  "requiredBeforeActivation": [
+    "Client-authorized Google Cloud project, Places API (New) activation/billing, appropriately restricted server API key and quota/budget configuration. A Text Search request can be billable. Do not set flags merely because a key is found.",
+    "Deploy the disabled Edge function with authentication and explicitly configure both flags only after account authorization. Server key must never use EXPO_PUBLIC prefix.",
+    "Confirm application Terms/Privacy incorporate the Google requirements, appropriate Google agreement/billing-region rules and acceptable permitted data uses. Current UI links alone are not a legal review.",
+    "Review actual attributed UI and perform authorized provider end-to-end/error/denial tests with the configured client account."
+  ],
+  "notImplemented": [
+    {
+      "scope": "Persisting and publishing Google-selected Activity venues",
+      "reason": "Current HostDraft/Activity database/readers durably store venue label and coordinates, use those fields for discovery filters, share/detail and drafts. Google Text Search content cannot simply be put into those fields.",
+      "remainingCode": "A Google place-ID field and source discriminator in Activity persistence; ID-only Google drafts; authenticated on-demand Places resolution for all venue consumers with attribution and permitted caching lifecycle; filtering/sharing behavior and migration of every reader. Existing OSM durable venues must retain their current meaning. This architecture is not included in this bounded adapter change and is not labeled credential-only.",
+      "externalDecision": "Confirm the authorized client agreement and intended Google-backed saved-location behavior before implementing the durable data contract."
+    }
+  ],
+  "sources": [
+    "https://developers.google.com/maps/documentation/places/web-service/text-search",
+    "https://developers.google.com/maps/documentation/places/web-service/policies",
+    "https://developers.google.com/maps/api-security-best-practices",
+    "https://supabase.com/docs/guides/functions/auth",
+    "https://docs.expo.dev/versions/v57.0.0/",
+    "https://docs.expo.dev/versions/v57.0.0/sdk/location/"
+  ]
+}
