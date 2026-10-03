@@ -1,0 +1,53 @@
+{
+  "recordedAt": "2026-10-03T20:22:09.603624+00:00",
+  "requirement": "ACT-LIKER-PROFILE",
+  "status": "LOCAL_VERIFIED_PRODUCTION_ACCEPTANCE_PENDING",
+  "baseCommit": "fad96ab",
+  "before": "Activity likes opened a native Alert containing names without profile navigation.",
+  "implemented": [
+    "Activity likes sheet with avatars and actionable profile rows; closes before profile navigation.",
+    "Visible accessible View Activity likes button alongside existing Like long-press.",
+    "Loading, empty, retryable error and incremental 50-row pagination states.",
+    "Account/Activity-keyed sheet and request invalidation prevent stale closed-sheet responses.",
+    "Authenticated existing liker query retains event filter and RLS, with full-name-first and avatar projection."
+  ],
+  "localVerification": [
+    {
+      "command": "node scripts/activity-likers-sheet-test.mjs",
+      "outcome": "PASS",
+      "checks": 22,
+      "runtime": "Node 22.21.1",
+      "scope": "Actual extracted service and rendered component harness; authorization failure, identity fallback, paging, avatar/profile navigation, empty/loading/error/retry, unmounted stale response and App entry wiring."
+    },
+    {
+      "command": "node scripts/client-pdf-regression-test.mjs",
+      "outcome": "PASS"
+    },
+    {
+      "command": "node scripts/activity-price-test.mjs",
+      "outcome": "PASS"
+    },
+    {
+      "command": "npm run typecheck",
+      "outcome": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "outcome": "PASS"
+    }
+  ],
+  "productionReadOnlyReview": {
+    "target": "cxsznhrkzqndhseodcyy",
+    "table": "tbl_event_likes",
+    "policies": [
+      "RESTRICTIVE authenticated account_is_allowed guard",
+      "PERMISSIVE authenticated can_read_event(event_id) SELECT",
+      "Existing authenticated own-row policy",
+      "Existing Admin policy"
+    ],
+    "scope": "Structural policy review only; no new actual production acceptance inferred."
+  },
+  "productionVerification": [],
+  "screenshotProof": [],
+  "remaining": "Coordinator must deploy the integrated regression batch, then capture actual deployed likes-sheet/profile-navigation acceptance. No database schema or grants changed; no production mutation or deployment performed by this change."
+}

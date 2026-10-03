@@ -1,4 +1,5 @@
 import { ActionConfirmationProvider, useActionConfirmation } from './src/components/reconstruction/action-confirmation';
+import { ActivityLikersSheet } from './src/components/activity-likers-sheet';
 import { recordActivityShare } from './src/services/activity-usage';
 import { useUsageObservation } from './src/hooks/use-usage-observation';
 import { activityDisplayPrice } from "./src/domain/activity-pricing";
@@ -4146,6 +4147,7 @@ export function ActivityDetailScreen({
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [participantsOpen, setParticipantsOpen] = useState(false);
+  const [likersOpen, setLikersOpen] = useState(false);
   const [ratingsOpen, setRatingsOpen] = useState(false);
   const [safetyOpen, setSafetyOpen] = useState(false);
   const [safetyBusy, setSafetyBusy] = useState(false);
@@ -4422,22 +4424,7 @@ export function ActivityDetailScreen({
       );
     }
   };
-  const showLikers = async () => {
-    try {
-      const likers = await activityService.listLikers(activity.id);
-      Alert.alert(
-        likers.length ? `Liked by ${likers.length}` : "No likes yet",
-        likers.length
-          ? likers.map((item) => item.name).join("\n")
-          : "Be the first to like this Activity.",
-      );
-    } catch (caught) {
-      Alert.alert(
-        "Likes could not load",
-        caught instanceof Error ? caught.message : "Please try again.",
-      );
-    }
-  };
+  const showLikers = () => setLikersOpen(true);
   const toggleSave = async () => {
     try {
       if (isSupabaseConfigured)
@@ -4986,7 +4973,9 @@ export function ActivityDetailScreen({
         </View>
       </ScrollView>
       <View style={[styles.detailBottomActions, { backgroundColor: palette.bg, borderTopColor: palette.border }]}>
-            <Pressable
+            <View style={{ gap: 2 }}><Pressable
+              accessibilityRole="button"
+              accessibilityLabel={liked ? "Unlike Activity" : "Like Activity"}
               style={[styles.likeButton, { borderColor: palette.accent, backgroundColor: liked ? palette.inset : 'transparent' }]}
               onPress={toggleLike}
               onLongPress={() => void showLikers()}
@@ -4995,7 +4984,7 @@ export function ActivityDetailScreen({
             >
               <Icon name={liked ? "heart" : "heart-outline"} color={palette.accent} />
               <Text style={[styles.likeButtonText, { color: palette.accent }]}>Like</Text>
-            </Pressable>
+            </Pressable><Pressable accessibilityRole="button" accessibilityLabel="View Activity likes" onPress={showLikers} style={{ minHeight: 32, paddingHorizontal: 8, justifyContent: "center", alignItems: "center" }}><Text style={{ color: palette.accent, fontSize: 11, fontWeight: "700" }}>View likes</Text></Pressable></View>
             {activityEnded ? (
               <View style={{ flex: 1 }}><Button label={isHost || joined ? "Rate Participants" : "Activity Ended"} disabled={!isHost && !joined} onPress={() => setRatingsOpen(true)} /></View>
             ) : canHost ? (
@@ -5040,6 +5029,7 @@ export function ActivityDetailScreen({
               </View>
             )}
       </View>
+      {likersOpen ? <ActivityLikersSheet key={`${data.userId}:${activity.id}`} activityId={activity.id} onClose={() => setLikersOpen(false)} onOpenProfile={id => { setLikersOpen(false); openProfile(id); }} /> : null}
       {safetyOpen ? <ReferenceSheet title="SOS · Stay connected" close={() => setSafetyOpen(false)}>
         <Text style={[styles.detailBody, { color: palette.text }]}>Make sure to share your activity details and live location with someone you trust.</Text>
         <Text style={[styles.detailBody, { color: palette.muted }]}>Share these details now. Use your messaging app to share live location. WeNitro does not track your location or contact emergency services.</Text>

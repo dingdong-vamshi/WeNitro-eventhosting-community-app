@@ -1378,23 +1378,26 @@ export const activityService = {
   setLiked(activityId: string, liked: boolean) {
     return activitiesProductionService.setLiked(activityId, liked);
   },
-  async listLikers(activityId: string) {
+  async listLikers(activityId: string, offset = 0) {
     const { data: likes, error } = await supabase
       .from("tbl_event_likes")
       .select("user_id")
       .eq("event_id", Number(activityId))
       .order("id", { ascending: true })
-      .limit(50);
+      .range(offset, offset + 49);
     if (error) throw error;
     const ids = [...new Set((likes ?? []).map((row) => Number(row.user_id)))];
     if (!ids.length) return [];
     const { data: profiles, error: profileError } = await supabase
       .from("tbl_users")
-      .select("id,username,fullname")
+      .select("id,username,fullname,profile_image")
       .in("id", ids);
     if (profileError) throw profileError;
-    const names = new Map((profiles ?? []).map((profile) => [Number(profile.id), profile.fullname || profile.username]));
-    return ids.map((id) => ({ userId: String(id), name: names.get(id) || "WeNitro member" }));
+    const byId = new Map((profiles ?? []).map((profile) => [Number(profile.id), profile]));
+    return ids.map((id) => {
+      const profile = byId.get(id);
+      return { userId: String(id), name: profile?.fullname || profile?.username || "WeNitro member", avatarUrl: publicAvatar(profile?.profile_image) };
+    });
   },
   setSaved(activityId: string, saved: boolean) {
     return activitiesProductionService.setSaved(activityId, saved);
