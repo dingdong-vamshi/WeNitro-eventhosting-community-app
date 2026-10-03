@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-03T20:07:16.103281+00:00",
+  "at": "2026-10-03T20:10:43.436254+00:00",
   "purpose": "Final-release E16 contribution awaiting root hosted297 and new preflight/external-link visual proof. Preserves exact prior compatible nonpayment scopes; no fabricated success.",
   "target": "cxsznhrkzqndhseodcyy",
   "count": 16,
@@ -8,8 +8,8 @@
     "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
   },
   "counts": {
-    "PASS": 5,
-    "PENDING_SCOPED_ACCEPTANCE": 11
+    "PASS": 6,
+    "PENDING_SCOPED_ACCEPTANCE": 10
   },
   "requirements": [
     {
@@ -506,7 +506,7 @@
     },
     {
       "id": "PARTNER-EXTERNAL-URL",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Partner activities can persist and open a safe external website URL.",
       "before": "Partner external link persistence and safe opening required acceptance.",
@@ -521,20 +521,26 @@
         "scripts/partner-ecosystem-test.mjs",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
-      "technicalProof": [],
-      "screenshotProof": [],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Safe HTTPS field/validation implemented and prior Partner draft field observed. No exact deployed persisted-and-opened external URL action proof located; capture a controlled harmless HTTPS destination.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "productionVerification": [
+        "qa-evidence/chat001/integrated-ae-screenshots.json",
+        "docs/chat001-partner-external-url-fixture.json"
+      ],
+      "technicalProof": [
+        "docs/chat001-partner-external-url-fixture.json"
+      ],
+      "screenshotProof": [
+        "qa-evidence/chat001/release-partner234-external-url.png",
+        "qa-evidence/chat001/release-partner234-external-arrival.png"
+      ],
+      "acceptanceScope": "Persisted Partner external URL displays and opens its exact harmless HTTPS destination from deployed Activity234. This does not assert destination availability for arbitrary third-party URLs.",
+      "reason": "Personally inspected the actual Partner234 website link and loaded external Example Domain screenshot. Root recorded the newly opened IAB tab at the exact stored HTTPS URL; delayed tab discovery supersedes the earlier pending-arrival note.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Safe HTTPS field/validation implemented and prior Partner draft field observed. No exact deployed persisted-and-opened external URL action proof located; capture a controlled harmless HTTPS destination."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "HOST-NORMAL-PAID",

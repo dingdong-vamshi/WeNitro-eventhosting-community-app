@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-03T20:10:43.436254+00:00",
+  "purpose": "Normalize five unknown screenshot requirement labels to existing canonical308 IDs without editing shared capture metadata, changing criteria or promoting evidence status.",
+  "metadataFiles": [
+    "qa-evidence/chat001/integrated-ae-screenshots.json",
+    "qa-evidence/chat001/integrated-iab-admin-screenshots.json"
+  ],
+  "aliases": {
+    "ACT-SOS": "SOS-ACTION",
+    "SQUAD-LIST": "SQUAD-DEDUP",
+    "SQUAD-COUNT": "SQUAD-DEDUP",
+    "PARTNER-TERMS-FIRST": "PARTNER-TERMS",
+    "ADMIN-SECURITY-LOGS": "ADMIN-SECURITY-AUDIT"
+  },
+  "occurrences": {
+    "ACT-SOS": [
+      {
+        "source": "qa-evidence/chat001/integrated-ae-screenshots.json",
+        "screenshot": "release-activity300-sos"
+      }
+    ],
+    "SQUAD-LIST": [
+      {
+        "source": "qa-evidence/chat001/integrated-ae-screenshots.json",
+        "screenshot": "release-squad120-deduplicated"
+      }
+    ],
+    "SQUAD-COUNT": [
+      {
+        "source": "qa-evidence/chat001/integrated-ae-screenshots.json",
+        "screenshot": "release-squad120-counter"
+      }
+    ],
+    "PARTNER-TERMS-FIRST": [
+      {
+        "source": "qa-evidence/chat001/integrated-ae-screenshots.json",
+        "screenshot": "release-partner-preflight-terms"
+      },
+      {
+        "source": "qa-evidence/chat001/integrated-ae-screenshots.json",
+        "screenshot": "release-partner-preflight-instructions"
+      }
+    ],
+    "ADMIN-SECURITY-LOGS": [
+      {
+        "source": "qa-evidence/chat001/integrated-iab-admin-screenshots.json",
+        "screenshot": "release-admin-security-search"
+      }
+    ]
+  },
+  "unresolvedIds": [],
+  "scopeNotes": {
+    "ACT-SOS": "Safety sheet/copy action maps only to SOS-ACTION; this screenshot does not prove scheduled SOS-SAFETY-REMINDER.",
+    "SQUAD-LIST/SQUAD-COUNT": "List deduplication and matching profile count are two views of the same SQUAD-DEDUP requirement.",
+    "PARTNER-TERMS-FIRST": "Pre-entry agreement requirement canonical name is PARTNER-TERMS.",
+    "ADMIN-SECURITY-LOGS": "Filtered audit/export requirement canonical name is ADMIN-SECURITY-AUDIT."
+  }
+}
