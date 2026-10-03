@@ -23,7 +23,7 @@ function harness(options = {}) {
   const clearTimeout = id => timers.delete(id);
   const deadlines = {};
   new Function('exports', 'setTimeout', 'clearTimeout', compile(fs.readFileSync('src/services/request-deadline.ts', 'utf8')))(deadlines, setTimeout, clearTimeout);
-  const state = { data: { mode: 'unauthenticated' }, authLoading: false, authError: '', workspaceError: '', sessionChecked: false, profileCalls: 0, workspaceCalls: 0, bootstrapCalls: 0, signals: [], validatedUsers: [] };
+  const state = { data: { mode: 'unauthenticated' }, authLoading: false, authError: '', workspaceError: '', sessionChecked: false, profileCalls: 0, workspaceCalls: 0, bootstrapCalls: 0, signals: [], validatedUsers: [], shareIdentity: null, shareEntity: { id: 'stale-share' } };
   const noop = () => {};
   const dep = {
     loaded: true, isSupabaseConfigured: true, initialData: { mode: 'unauthenticated' }, initialWebRoute: null, Platform: { OS: 'web' },
@@ -32,6 +32,7 @@ function harness(options = {}) {
     setData: next => { state.data = typeof next === 'function' ? next(state.data) : next; },
     setAuthLoading: value => { state.authLoading = value; }, setAuthError: value => { state.authError = value; },
     setWorkspaceError: value => { state.workspaceError = value; }, setWorkspaceLoading: value => { state.workspaceLoading = value; }, setSessionChecked: value => { state.sessionChecked = value; },
+    setShareIdentity: value => { state.shareIdentity = value; }, setShareEntity: value => { state.shareEntity = value; },
     setProfileSetup: noop, setScreen: noop, setHistory: noop, setWelcomeError: noop, setIntroSeen: noop,
     bootstrapSession: async () => { state.bootstrapCalls++; return options.bootstrap ? options.bootstrap() : { status: 'authenticated', user: { id: 'auth-7' } }; },
     profileOnboardingService: { load: (signal, validatedUser) => { state.profileCalls++; state.signals.push(signal); state.validatedUsers.push(validatedUser); return options.profile ? options.profile(signal, state.profileCalls) : Promise.resolve(profile(7)); } },
@@ -50,6 +51,8 @@ function harness(options = {}) {
 }
 
 const normal = harness(); await flush();
+assert.equal(normal.state.authError, '', 'The real effect must bootstrap without a missing harness dependency');
+assert.equal(normal.state.shareIdentity, 'auth-7'); assert.equal(normal.state.shareEntity, null, 'Account bootstrap clears stale share state');
 assert.equal(normal.state.profileCalls, 1); assert.equal(normal.state.workspaceCalls, 1);
 assert.equal(normal.state.data.nitro, 14, 'Cold Feed uses the existing bootstrap balance without opening Profile');
 assert.equal(normal.state.data.trustScore, 20);
@@ -99,6 +102,7 @@ assert.equal(switching.state.data.userId, '8');
 assert.equal(switching.state.data.nitro, 16, 'Account switching never retains another user balance');
 switching.event('SIGNED_OUT'); await flush();
 assert.equal(switching.state.data.mode, 'unauthenticated');
+assert.equal(switching.state.shareIdentity, null); assert.equal(switching.state.shareEntity, null, 'Sign-out clears sharing identity and payload');
 switching.cleanup();
 
 let bootstrapAttempt = 0;
