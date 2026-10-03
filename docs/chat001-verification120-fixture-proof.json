@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-03T18:36:19.290Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "userId": 120,
+  "verificationId": 31,
+  "status": "PASS_REJECTED_AND_PRIVATE_OBJECT_CLEANED",
+  "media": {
+    "source": "assets/photos/camera.jpg",
+    "description": "Repository photograph of a camera object; no person, biometric or identity document.",
+    "sha256": "8595324617e28387daf15391db7503f11c80fe6fd97b89e4f94a0241c25734ee",
+    "bytes": 22856,
+    "privateBucket": "verification"
+  },
+  "before": {
+    "verificationRows": 0,
+    "trust": 10,
+    "nitro": 0,
+    "isverified": 0
+  },
+  "after": {
+    "status": "submitted",
+    "livePhotoVerified": false,
+    "livePhotoPending": true,
+    "trust": 10,
+    "nitro": 0,
+    "isverified": 0
+  },
+  "assertions": [
+    "Owner authenticated ID120 before write",
+    "Existing verification list empty; nothing overwritten",
+    "Private owner Storage upload succeeded",
+    "Actual submit_my_live_photo sets submitted/pending, never approved",
+    "No Trust or Nitro increase; profile verification badge unchanged",
+    "Root UI rejection independently confirmed via owner API",
+    "Rejected submission awards no Trust or Nitro and clears pending",
+    "Only the tracked private object removed; list confirms absent; rejected audit row preserved"
+  ],
+  "afterReview": {
+    "at": "2026-10-03T18:45:58.669Z",
+    "status": "rejected",
+    "livePhotoVerified": false,
+    "livePhotoPending": false,
+    "trust": 10,
+    "nitro": 0,
+    "isverified": 0,
+    "auditRowRetained": true,
+    "privateObjectRemoved": true
+  },
+  "uiEvidence": [
+    "qa-evidence/chat001/iab-verification120-pending.png",
+    "qa-evidence/chat001/iab-admin-private-verification-preview.png",
+    "qa-evidence/chat001/iab-admin-verification-rejected.png"
+  ]
+}

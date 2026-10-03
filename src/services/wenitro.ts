@@ -680,12 +680,14 @@ export const vibeService = {
     mediaUri: string;
     mediaType?: "image" | "video";
     activityId?: string;
+    showInVibes?: boolean;
   }) {
     const result = await vibesProductionService.create({
       caption: input.caption,
       media: { uri: input.mediaUri },
       mediaType: input.mediaType ?? "image",
       activityId: input.activityId,
+      showInVibes: input.showInVibes ?? true,
     });
     const resultRow = result && typeof result === "object" ? (result as Row) : {};
     const id = String(resultRow.id ?? resultRow.vibe_id ?? "");

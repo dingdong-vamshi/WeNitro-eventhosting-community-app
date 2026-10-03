@@ -555,6 +555,7 @@ export type Database = {
           thumbnail_url: string | null
           updated_at: string
           user_id: number | null
+          show_in_vibes: boolean
           visibility: string
           width: number | null
         }
@@ -571,6 +572,7 @@ export type Database = {
           thumbnail_url?: string | null
           updated_at?: string
           user_id?: number | null
+          show_in_vibes?: boolean
           visibility?: string
           width?: number | null
         }
@@ -587,6 +589,7 @@ export type Database = {
           thumbnail_url?: string | null
           updated_at?: string
           user_id?: number | null
+          show_in_vibes?: boolean
           visibility?: string
           width?: number | null
         }
@@ -4203,6 +4206,7 @@ export type Database = {
           p_hashtags: string[]
           p_media_path: string
           p_media_type: string
+          p_show_in_vibes?: boolean
           p_visibility: string
         }
         Returns: Json

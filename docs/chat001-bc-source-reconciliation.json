@@ -1,0 +1,1632 @@
+{
+  "schemaVersion": 1,
+  "status": "SOURCE_RECONCILIATION_NOT_PRODUCTION_ACCEPTANCE",
+  "scope": "B/C 103 prior canonical rows, 102 real distinct after one source misread removed",
+  "countCorrection": {
+    "previousDistinctAllOwners": 309,
+    "correctedDistinctAllOwners": 308,
+    "sourceClausesUnchanged": 249,
+    "excludedMisread": "CHAT-PLUS-DIRECT",
+    "note": "Root owns final canonical/report reconciliation; this additive review does not edit master index."
+  },
+  "corrections": [
+    {
+      "id": "CHAT-PLUS-DIRECT",
+      "action": "EXCLUDE_DUPLICATE_MISREAD_REQUIREMENT",
+      "mergeInto": "CHAT-PLUS-GROUP",
+      "source": "B27-01",
+      "originalImage": "tmp/pdfs/issues/page-27.jpg",
+      "reason": "Direct means the plus opens Create Group immediately, not direct-message recipient creation. Existing active Create a group opens its sheet directly, with member UserAvatar rows.",
+      "distinctCountDelta": -1
+    },
+    {
+      "id": "VIBE-NEWEST",
+      "action": "CORRECT_ACCEPTANCE_WORDING",
+      "source": "B32-01",
+      "originalImage": "tmp/pdfs/issues/page-32.jpg",
+      "requestedOutcome": "Vibes appear latest to oldest; the three-dot menu offers functional actions for the selected Vibe. No newest/all menu is requested.",
+      "implementation": "VibesScreen sorts createdAt descending; selected-Vibe menu has Share to Chat, Share externally, Copy link, View activity, Delete owned Vibe or Report another Vibe.",
+      "distinctCountDelta": 0
+    },
+    {
+      "id": "VIBE-FROM-ACTIVITY-MEDIA",
+      "action": "CORRECT_ACCEPTANCE_WORDING_AND_FIX",
+      "source": "A38-10",
+      "originalImage": "tmp/pdfs/must/page-38.jpg",
+      "requestedOutcome": "While adding a photo/video inside an Activity, choose whether it appears in Vibes; only participants may view it. This is not an automatic prompt after Activity creation.",
+      "implementation": "Activity composer defaults showInVibes=false and explicit toggle; participants-only copy. RPC flag forwarded; global/Profile lists filter show_in_vibes=true; Activity list includes both. SQL dependency20261003185740 enforces participant-only linked media regardless of forged visibility.",
+      "distinctCountDelta": 0
+    },
+    {
+      "id": "CHAT-TIMESTAMPS",
+      "action": "CLARIFY_SOURCE_SCOPE",
+      "source": "B35-01",
+      "originalImage": "tmp/pdfs/issues/page-35.jpg",
+      "requestedOutcome": "Community list displays dates, not time, and identity photos; actual conversation messages retain date groups/time labels. B25 focuses Activity name, notifications and unread filter.",
+      "implementation": "ReferenceMessages inboxDate uses calendar dates; CommunityConversation groups by day and displays per-message local time.",
+      "distinctCountDelta": 0
+    }
+  ],
+  "localTests": {
+    "executableComponents": [
+      "scripts/messages-search-performance-test.mjs",
+      "scripts/community-discovery-ui-test.mjs",
+      "scripts/community-cover-edit-test.mjs",
+      "scripts/activity-vibe-visibility-test.mjs"
+    ],
+    "typecheck": "PASS",
+    "sourceOnlyChecksDoNotProve": "Production appearance, cross-user interactions, hardware camera capture, real provider verification.",
+    "additionalServiceAndDomain": [
+      "scripts/phase3-vibe-test.mjs",
+      "scripts/avatar-fallback-test.mjs"
+    ],
+    "expoWebExport": "PASS: npm run vercel-build Expo export bundled613modules and emitted web bundles before packaging",
+    "vercelPackaging": "Not passed in symlinked worktree: ENOENT dist/assets/node_modules/@expo-google-fonts/manrope because Metro emits resolved external node_modules paths. Parent must run production packaging in primary real dependency checkout. No build script/dependency changes."
+  },
+  "requirements": [
+    {
+      "canonicalId": "CHAT-CANCELLED-HIDDEN",
+      "sourceClauseIds": [
+        "A14-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-CANCELLED-WRITES",
+      "sourceClauseIds": [
+        "A14-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-RETAINED-HISTORY",
+      "sourceClauseIds": [
+        "A14-03",
+        "A38-05",
+        "B18-03"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-HEADER",
+      "sourceClauseIds": [
+        "A20-01",
+        "A20-02",
+        "A20-03",
+        "B23-01"
+      ],
+      "sourceAudit": "NORMAL_GAP_REPAIRED_LOCALLY",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "Active CommunitiesScreen retained centered text logo/oversized notification icon. Replaced header with shared BrandBar correct image/logo, adjacent controls."
+    },
+    {
+      "canonicalId": "COMM-SEARCH-TOGGLE",
+      "sourceClauseIds": [
+        "A20-04",
+        "A20-05"
+      ],
+      "sourceAudit": "NORMAL_GAP_REPAIRED_LOCALLY",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "Active CommunitiesScreen always exposed search. Added hidden/open/close/reset flow."
+    },
+    {
+      "canonicalId": "COMM-SEARCH-FILTER",
+      "sourceClauseIds": [
+        "A20-05"
+      ],
+      "sourceAudit": "NORMAL_GAP_REPAIRED_LOCALLY",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "Filter glyph was decorative. Added category filtering composed with case-insensitive query and All/Joined/Created."
+    },
+    {
+      "canonicalId": "COMM-COVER",
+      "sourceClauseIds": [
+        "A21-01",
+        "A21-02",
+        "B23-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-AVATAR",
+      "sourceClauseIds": [
+        "A21-03",
+        "A29-01"
+      ],
+      "sourceAudit": "NORMAL_GAP_REPAIRED_LOCALLY",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "All Communities used empty image URIs. Added UserAvatar identity fallback for empty story/card images."
+    },
+    {
+      "canonicalId": "COMM-MEMBER-COUNT",
+      "sourceClauseIds": [
+        "A21-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-REMOVE-MEMBER",
+      "sourceClauseIds": [
+        "A21-05",
+        "B23-03",
+        "B23-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-MEMBER-PROFILE",
+      "sourceClauseIds": [
+        "A22-03"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-COVER-EDIT",
+      "sourceClauseIds": [
+        "A23-01",
+        "A23-02"
+      ],
+      "sourceAudit": "NORMAL_GAP_REPAIRED_LOCALLY",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "CreateCommunitySheet cover picker was accidentally under !initial. Exposed picker during edit; existing patch persists cover."
+    },
+    {
+      "canonicalId": "POLL-VOTER-IDENTITY",
+      "sourceClauseIds": [
+        "A24-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/reference-community.tsx: PollComposer / PollCard",
+        "src/services/communities-production.ts: communityPoll / communityPollVoters"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-CHAT-BACK",
+      "sourceClauseIds": [
+        "A24-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VERIFY-TRUST-NOT-NITRO",
+      "sourceClauseIds": [
+        "A25-01",
+        "B29-03",
+        "B30-05"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: ReferenceVerification",
+        "src/services/verification-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VERIFY-SELFIE-CAMERA",
+      "sourceClauseIds": [
+        "A25-02",
+        "B29-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: ReferenceVerification",
+        "src/services/verification-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VERIFY-SELFIE-PREVIEW",
+      "sourceClauseIds": [
+        "A25-02",
+        "B29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: ReferenceVerification",
+        "src/services/verification-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VERIFY-SELFIE-REVIEW",
+      "sourceClauseIds": [
+        "A25-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: ReferenceVerification",
+        "src/services/verification-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VERIFY-STAGED-BADGE",
+      "sourceClauseIds": [
+        "A25-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: ReferenceVerification",
+        "src/services/verification-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VERIFY-AADHAAR",
+      "sourceClauseIds": [
+        "A26-01",
+        "A26-02",
+        "A26-03"
+      ],
+      "sourceAudit": "EXTERNAL_PROVIDER_NOT_CONFIGURED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: ReferenceVerification",
+        "src/services/verification-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "Licensed Aadhaar provider required; no fabricated verification. Existing UI honestly unavailable."
+    },
+    {
+      "canonicalId": "PROFILE-GALLERY-LIMIT",
+      "sourceClauseIds": [
+        "A28-01",
+        "A28-04",
+        "B28-05"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-PHOTO-VIEW",
+      "sourceClauseIds": [
+        "A28-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-PHOTO-ADD",
+      "sourceClauseIds": [
+        "A28-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-PHOTO-CHANGE",
+      "sourceClauseIds": [
+        "A28-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-PHOTO-DELETE",
+      "sourceClauseIds": [
+        "A28-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-PHOTO-PRIMARY",
+      "sourceClauseIds": [
+        "A28-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-GALLERY-PUBLIC",
+      "sourceClauseIds": [
+        "A28-03"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "SQUAD-DEDUP",
+      "sourceClauseIds": [
+        "A30-01",
+        "A30-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/squad.tsx",
+        "src/services/profile-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-SAVE-SUCCESS",
+      "sourceClauseIds": [
+        "A31-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-SAVE-FAILURE",
+      "sourceClauseIds": [
+        "A31-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "SHARE-ACTIVITY",
+      "sourceClauseIds": [
+        "A37-03",
+        "B33-01",
+        "B33-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: ShareToChatModal handlers / Activity / Community / Vibe shares",
+        "src/services/internal-share.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "SHARE-COMMUNITY",
+      "sourceClauseIds": [
+        "A37-03",
+        "B33-01",
+        "B33-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: ShareToChatModal handlers / Activity / Community / Vibe shares",
+        "src/services/internal-share.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "SHARE-VIBE",
+      "sourceClauseIds": [
+        "A37-03",
+        "B33-01",
+        "B33-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: ShareToChatModal handlers / Activity / Community / Vibe shares",
+        "src/services/internal-share.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-CREATED-STATE",
+      "sourceClauseIds": [
+        "A37-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-DELETE-MESSAGE",
+      "sourceClauseIds": [
+        "A37-05"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-DELETE-MEDIA",
+      "sourceClauseIds": [
+        "A37-05"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-BLOCK",
+      "sourceClauseIds": [
+        "B18-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-UNBLOCK",
+      "sourceClauseIds": [
+        "A38-04",
+        "B18-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-PUBLIC-VIBES-FIRST",
+      "sourceClauseIds": [
+        "A38-07"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VIBE-FROM-ACTIVITY-MEDIA",
+      "sourceClauseIds": [
+        "A38-10"
+      ],
+      "sourceAudit": "NORMAL_GAP_REPAIRED_LOCALLY",
+      "implementationLocations": [
+        "App.tsx: VibesScreen / PostVibeEntry / PostVibeScreen / ActivityDetailScreen",
+        "src/services/wenitro.ts: vibeService",
+        "src/services/vibes-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "Activity composer defaults showInVibes=false and explicit toggle; participants-only copy. RPC flag forwarded; global/Profile lists filter show_in_vibes=true; Activity list includes both. SQL dependency20261003185740 enforces participant-only linked media regardless of forged visibility."
+    },
+    {
+      "canonicalId": "COMM-ANONYMOUS-POST",
+      "sourceClauseIds": [
+        "A38-11",
+        "A38-12"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VIBE-COMPOSER",
+      "sourceClauseIds": [
+        "B16-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: VibesScreen / PostVibeEntry / PostVibeScreen / ActivityDetailScreen",
+        "src/services/wenitro.ts: vibeService",
+        "src/services/vibes-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-NO-VIDEO",
+      "sourceClauseIds": [
+        "A38-12",
+        "B18-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VIBE-REELS",
+      "sourceClauseIds": [
+        "B19-01",
+        "B19-02",
+        "B32-01",
+        "B32-03"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: VibesScreen / PostVibeEntry / PostVibeScreen / ActivityDetailScreen",
+        "src/services/wenitro.ts: vibeService",
+        "src/services/vibes-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VIBE-ACTIVITY-LINK",
+      "sourceClauseIds": [
+        "B19-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: VibesScreen / PostVibeEntry / PostVibeScreen / ActivityDetailScreen",
+        "src/services/wenitro.ts: vibeService",
+        "src/services/vibes-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-BACK-LIST",
+      "sourceClauseIds": [
+        "B23-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-MODERATOR-ROLE",
+      "sourceClauseIds": [
+        "B23-03",
+        "B23-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-POSTS-SEPARATE",
+      "sourceClauseIds": [
+        "B24-01",
+        "B24-04",
+        "B24-05"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-POST-NO-POLL",
+      "sourceClauseIds": [
+        "B24-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "COMM-POST-VIDEO",
+      "sourceClauseIds": [
+        "B24-03"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/community-info.tsx",
+        "src/components/community/reference-community.tsx",
+        "App.tsx: CommunitiesScreen / CommunityDetailScreen",
+        "src/services/communities-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-NAMES",
+      "sourceClauseIds": [
+        "B25-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-UNREAD",
+      "sourceClauseIds": [
+        "B25-02",
+        "B37-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-TIMESTAMPS",
+      "sourceClauseIds": [
+        "B25-03",
+        "B35-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-INFO-NAVIGATION",
+      "sourceClauseIds": [
+        "B26-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "POLL-CREATE",
+      "sourceClauseIds": [
+        "B26-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/reference-community.tsx: PollComposer / PollCard",
+        "src/services/communities-production.ts: communityPoll / communityPollVoters"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "POLL-VOTE",
+      "sourceClauseIds": [
+        "B26-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/community/reference-community.tsx: PollComposer / PollCard",
+        "src/services/communities-production.ts: communityPoll / communityPollVoters"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-PLUS-DIRECT",
+      "sourceClauseIds": [
+        "B27-01"
+      ],
+      "sourceAudit": "EXCLUDED_SOURCE_MISREAD",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "replacement": "CHAT-PLUS-GROUP"
+    },
+    {
+      "canonicalId": "CHAT-PLUS-GROUP",
+      "sourceClauseIds": [
+        "B27-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-LAYOUT",
+      "sourceClauseIds": [
+        "B28-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-STORE",
+      "sourceClauseIds": [
+        "B28-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-SOCIAL",
+      "sourceClauseIds": [
+        "B28-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-TRUST-VIEW",
+      "sourceClauseIds": [
+        "B28-03"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-REVIEWS",
+      "sourceClauseIds": [
+        "B28-03"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-UPCOMING",
+      "sourceClauseIds": [
+        "B28-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "PROFILE-COMPLETED",
+      "sourceClauseIds": [
+        "B28-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx",
+        "src/components/reconstruction/edit-profile.tsx",
+        "src/components/reconstruction/social-profiles.tsx",
+        "src/components/reconstruction/profile-utilities.tsx",
+        "src/services/profile-production.ts",
+        "src/services/reference-delta.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "TRUST-MAX",
+      "sourceClauseIds": [
+        "B30-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx: TrustCard",
+        "src/domain/profile-signals.ts",
+        "supabase/migrations: private.trust_score_for"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "TRUST-EMAIL",
+      "sourceClauseIds": [
+        "B30-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx: TrustCard",
+        "src/domain/profile-signals.ts",
+        "supabase/migrations: private.trust_score_for"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "TRUST-PHONE",
+      "sourceClauseIds": [
+        "B30-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx: TrustCard",
+        "src/domain/profile-signals.ts",
+        "supabase/migrations: private.trust_score_for"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "TRUST-SELFIE",
+      "sourceClauseIds": [
+        "B30-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx: TrustCard",
+        "src/domain/profile-signals.ts",
+        "supabase/migrations: private.trust_score_for"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "TRUST-AADHAAR",
+      "sourceClauseIds": [
+        "B30-02"
+      ],
+      "sourceAudit": "EXTERNAL_PROVIDER_NOT_CONFIGURED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx: TrustCard",
+        "src/domain/profile-signals.ts",
+        "supabase/migrations: private.trust_score_for"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "Licensed Aadhaar provider required; no fabricated verification. Existing UI honestly unavailable."
+    },
+    {
+      "canonicalId": "TRUST-SOCIAL",
+      "sourceClauseIds": [
+        "B30-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx: TrustCard",
+        "src/domain/profile-signals.ts",
+        "supabase/migrations: private.trust_score_for"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "TRUST-RATING",
+      "sourceClauseIds": [
+        "B30-02",
+        "B30-03"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx: TrustCard",
+        "src/domain/profile-signals.ts",
+        "supabase/migrations: private.trust_score_for"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "TRUST-ACTIVITIES",
+      "sourceClauseIds": [
+        "B30-04"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile.tsx: TrustCard",
+        "src/domain/profile-signals.ts",
+        "supabase/migrations: private.trust_score_for"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VIBE-NEWEST",
+      "sourceClauseIds": [
+        "B32-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: VibesScreen / PostVibeEntry / PostVibeScreen / ActivityDetailScreen",
+        "src/services/wenitro.ts: vibeService",
+        "src/services/vibes-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VIBE-DIRECT-CREATE",
+      "sourceClauseIds": [
+        "B32-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: VibesScreen / PostVibeEntry / PostVibeScreen / ActivityDetailScreen",
+        "src/services/wenitro.ts: vibeService",
+        "src/services/vibes-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-QUIET-INDICATOR",
+      "sourceClauseIds": [
+        "B34-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-LIVE-SEARCH",
+      "sourceClauseIds": [
+        "B36-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "CHAT-ALL-TYPES",
+      "sourceClauseIds": [
+        "B37-01"
+      ],
+      "sourceAudit": "NORMAL_GAP_REPAIRED_LOCALLY",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx",
+        "App.tsx: ChatScreen / ConversationScreen / App routing",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "Active ReferenceMessages lacked reachable All/People/Groups despite legacy code. Fixed filters/counts from deduplicated non-Community set; Activities unread preserved."
+    },
+    {
+      "canonicalId": "STORY-SEEN",
+      "sourceClauseIds": [
+        "B37-03"
+      ],
+      "sourceAudit": "NORMAL_GAP_REPAIRED_LOCALLY",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx: markStorySeen / markAllStoriesSeen",
+        "src/services/stories-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json",
+      "finding": "Mark-all already called backend, but completion marked newly arriving stories without an RPC and could update a switched account. Now only successful captured IDs update the initiating account. Actual component deferred-request tests cover failures/new arrival/account switch."
+    },
+    {
+      "canonicalId": "GROUP-AVATAR",
+      "sourceClauseIds": [
+        "B38-01"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/messages.tsx: createGroup / group photo picker",
+        "src/services/realtime-chat.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "VIBE-VIDEO",
+      "sourceClauseIds": [],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "App.tsx: VibesScreen / PostVibeEntry / PostVibeScreen / ActivityDetailScreen",
+        "src/services/wenitro.ts: vibeService",
+        "src/services/vibes-production.ts"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-01",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-02",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-03",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-04",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-05",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-06",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-07",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-08",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-09",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-10",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-11",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-12",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-13",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-14",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-15",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-16",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-17",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-18",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-19",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-20",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-21",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    },
+    {
+      "canonicalId": "BADGE-22",
+      "sourceClauseIds": [
+        "A29-02"
+      ],
+      "sourceAudit": "REACHABLE_IMPLEMENTATION_REVIEWED",
+      "implementationLocations": [
+        "src/components/reconstruction/profile-utilities.tsx: badge details",
+        "src/services/reference-delta.ts",
+        "docs/chat001-agent-backend-report.md: 22 engine rules and 82 boundary checks"
+      ],
+      "productionAcceptance": "NOT_INFERRED_FROM_SOURCE_REVIEW",
+      "evidenceHandoff": "docs/chat001-production-bc-qa.json"
+    }
+  ],
+  "additionalAppSourceFixes": [
+    {
+      "canonicalId": "AVATAR-FALLBACK",
+      "source": "A11",
+      "implementation": "ActivityDetail inline participant stack and host participant rows now use existing UserAvatar for deterministic identity colors, missing and broken-image fallback. Comment composer already uses UserAvatar.",
+      "validation": [
+        "scripts/avatar-fallback-test.mjs",
+        "TypeScript"
+      ],
+      "scope": "Parent/Admin independent A-source review requested this bounded change while App.tsx owned here."
+    }
+  ],
+  "dependencies": [
+    {
+      "backendMigrationVersion": "20261003185740",
+      "owner": "backend_badges_payments",
+      "contract": "show_in_vibes defaulttrue; seven-argument vibe_create including p_show_in_vibes; participant-only linked media; old six-argument compatibility wrapper",
+      "integration": "Deploy backend before this App client; exact committed filename/commit supplied by owner."
+    }
+  ],
+  "productionRemaining": "No local code/source test upgrades production acceptance. Root must deploy coordinated SQL/App and capture changed All Communities header/search/category, Edit Community cover save/reload, All/People/Groups counts and A38 toggle states. Original2120832 evidence file remains prior-release partial history; root final merger supersedes with current screenshots/API proof."
+}

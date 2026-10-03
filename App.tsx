@@ -18,7 +18,7 @@ import { ReferenceProfile, ReferenceMemberProfile } from "./src/components/recon
 import { ReferenceSquad } from "./src/components/reconstruction/squad";
 import { ReferenceSettings, ReferencePrivacy, ReferenceUtility, ReferenceStore } from "./src/components/reconstruction/settings";
 import { ReferenceActivityHistory, ReferenceEmergencyContact, ReferenceNitroHistory, ReferenceVerification } from "./src/components/reconstruction/profile-utilities";
-import { ReferenceTheme, ReferenceNavigation, Sheet as ReferenceSheet, usePalette, Page, Header as ReferenceHeader, Field as ReferenceField, Button as ReconstructionButton, ErrorLine, SearchField } from "./src/components/reconstruction/ui";
+import { ReferenceTheme, ReferenceNavigation, BrandBar, Sheet as ReferenceSheet, usePalette, Page, Header as ReferenceHeader, Field as ReferenceField, Button as ReconstructionButton, ErrorLine, SearchField } from "./src/components/reconstruction/ui";
 import { referenceDeltaService } from "./src/services/reference-delta";
 import { CreateCommunitySheet, CommunityConversation, PollComposer, PollCard, VibeEntryState } from "./src/components/community/reference-community";
 import { communityPoll, type CommunityPoll } from "./src/services/communities-production";
@@ -3903,6 +3903,7 @@ function PostVibeScreen({
     initialActivityId && data.activities.some(item => item.id === initialActivityId) ? initialActivityId : data.activities[0]?.id || "",
   );
   const [posting, setPosting] = useState(false);
+  const [showInVibes, setShowInVibes] = useState(!initialActivityId);
   const [uploadWarningOpen, setUploadWarningOpen] = useState(false);
   const postLock = useRef(false);
   const hasEvents = data.activities.length > 0;
@@ -3950,6 +3951,7 @@ function PostVibeScreen({
           caption: text.trim(),
           mediaUri,
           mediaType,
+          showInVibes,
           activityId: isBackendId(selectedActivity.id)
             ? selectedActivity.id
             : undefined,
@@ -3959,7 +3961,7 @@ function PostVibeScreen({
       }
       setData((d) => ({
         ...d,
-        vibes: [
+        vibes: showInVibes ? [
           {
             id,
             author: d.name,
@@ -3977,7 +3979,7 @@ function PostVibeScreen({
             mine: true,
           },
           ...d.vibes,
-        ],
+        ] : d.vibes,
       }));
       if (initialActivityId) back();
       else go("vibes");
@@ -3997,7 +3999,7 @@ function PostVibeScreen({
     <Page>
       <ReferenceHeader title="Post Vibe" back={back} />
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 36, gap: 16 }}>
-        <Text style={{ color: palette.muted, fontSize: 14, fontWeight: "600", lineHeight: 20, marginTop: 4 }}>Share a real moment from an activity with people nearby.</Text>
+        <Text style={{ color: palette.muted, fontSize: 14, fontWeight: "600", lineHeight: 20, marginTop: 4 }}>Share a real moment with the people in this activity.</Text>
         <ErrorLine text={listError} />
         {!hasEvents ? (
           <View style={{ alignItems: "center", paddingVertical: 48, gap: 10 }}>
@@ -4061,11 +4063,15 @@ function PostVibeScreen({
                 style={{ minHeight: 96, textAlignVertical: "top", fontSize: 15, fontWeight: "600" }}
               />
               <View style={styles.rowBetween}>
-                <Text style={{ color: palette.muted, fontSize: 13, fontWeight: "600" }}>Public · Visible in Nearby</Text>
+                <Text style={{ color: palette.muted, fontSize: 13, fontWeight: "600" }}>Activity participants only</Text>
                 <Text style={{ color: palette.muted, fontSize: 13, fontWeight: "600" }}>{text.length}/2200</Text>
               </View>
             </View>
-            <ReconstructionButton label={posting ? "Posting..." : "Post Vibe"} busy={posting} onPress={() => void post()} />
+            {lockedToActivity ? <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <Switch accessibilityLabel="Show in Vibes" value={showInVibes} onValueChange={setShowInVibes} disabled={posting} />
+              <View style={{ flex: 1, gap: 4 }}><Text style={{ color: palette.text, fontSize: 14, fontWeight: '700' }}>Show in Vibes</Text><Text style={{ color: palette.muted, fontSize: 12, lineHeight: 18 }}>{showInVibes ? 'Also show this moment in Vibes for activity participants.' : 'Keep this moment inside the activity.'} Only the host and joined participants can view it.</Text></View>
+            </View> : null}
+            <ReconstructionButton label={posting ? "Posting..." : lockedToActivity && !showInVibes ? "Add to Activity" : "Post Vibe"} busy={posting} onPress={() => void post()} />
           </>
         )}
       </ScrollView>
@@ -4850,13 +4856,7 @@ export function ActivityDetailScreen({
                       accessibilityLabel={`Open ${participant.name}'s profile`}
                       onPress={() => openProfile(participant.userId)}
                     >
-                      {participant.avatarUrl ? (
-                        <Image source={{ uri: participant.avatarUrl }} style={[styles.commentAvatar, { marginLeft: index ? -8 : 0, borderWidth: 2, borderColor: palette.card }]} />
-                      ) : (
-                        <View style={[styles.commentAvatar, { marginLeft: index ? -8 : 0, backgroundColor: "#6654DA", alignItems: "center", justifyContent: "center", borderWidth: 2, borderColor: palette.card }]}>
-                          <Text style={{ color: "#fff", fontSize: 11, fontWeight: "700" }}>{participant.name[0]}</Text>
-                        </View>
-                      )}
+                      <View style={{ marginLeft: index ? -8 : 0, borderWidth: 2, borderRadius: 20, borderColor: palette.card }}><UserAvatar uri={participant.avatarUrl} name={participant.name} identity={participant.userId} size={32} /></View>
                     </Pressable>
                   ))}
                 </View>
@@ -4877,10 +4877,7 @@ export function ActivityDetailScreen({
             {canHost ? participants.map((participant) => (
               <View key={participant.id} style={styles.rowBetween}>
                 <Pressable accessibilityRole="button" accessibilityLabel={`Open ${participant.name}'s profile`} onPress={() => openProfile(participant.userId)} style={styles.row}>
-                  <Image
-                    source={mediaSource(participant.avatarUrl || (runtimeString(participant, ["avatar", "profileImage", "profile_image"]) ?? neutralAvatar))}
-                    style={styles.commentAvatar}
-                  />
+                  <UserAvatar uri={participant.avatarUrl || runtimeString(participant, ["avatar", "profileImage", "profile_image"])} name={participant.name} identity={participant.userId} size={32} />
                   <View>
                     <Text style={[styles.detailCardTitle, { color: palette.text }]}>{participant.name} <VerifiedBadge userId={participant.userId} /></Text>
                     <Text style={[styles.detailCardMuted, { color: palette.muted }]}>
@@ -4971,11 +4968,11 @@ export function ActivityDetailScreen({
               <Icon name="people" color="#fff" />
             </View>
             <View style={styles.messageBody}>
-              <Text style={[styles.detailSectionTitle, { color: palette.text }]}>Show in Vibes</Text>
-              <Text style={[styles.detailCardMuted, { color: palette.muted }]}>Max 25MB · Share moments from this activity</Text>
+              <Text style={[styles.detailSectionTitle, { color: palette.text }]}>Activity moments</Text>
+              <Text style={[styles.detailCardMuted, { color: palette.muted }]}>Max 25MB · Photos and videos for participants</Text>
             </View>
-            <Pressable style={styles.smallPrimary} onPress={() => void onAddVibes(activity.id)}>
-              <Text style={styles.smallPrimaryText}>Show in Vibes</Text>
+            <Pressable accessibilityRole="button" accessibilityLabel="Add Activity photo or video" style={styles.smallPrimary} onPress={() => void onAddVibes(activity.id)}>
+              <Text style={styles.smallPrimaryText}>Add photo or video</Text>
             </Pressable>
             </View>
           </View>
@@ -7192,6 +7189,10 @@ export function CommunitiesScreen({
   const palette = usePalette();
   const { notifications } = React.useContext(UnreadContext);
   const [query, setQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [category, setCategory] = useState("All");
+  const categories = ["All", ...new Set(data.communities.map(item => item.category).filter(Boolean))];
   const [filter, setFilter] = useState("All");
   const normalized = query.trim().toLowerCase();
   const visible = data.communities.filter(
@@ -7199,6 +7200,7 @@ export function CommunitiesScreen({
       (filter === "All" ||
         (filter === "Joined" && item.membership === "joined") ||
         (filter === "Created" && item.membership === "created")) &&
+      (category === "All" || item.category === category) &&
       (!normalized ||
         `${item.name} ${item.category} ${item.tags.join(" ")}`
           .toLowerCase()
@@ -7221,28 +7223,15 @@ export function CommunitiesScreen({
         contentContainerStyle={[styles.communityListScreen, { backgroundColor: palette.bg }]}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.communityBrandRow}>
-          <View style={{ width: 35 }} />
-          <View style={styles.communityBrand}>
-            <Text style={styles.communityBrandMark}>W</Text>
-            <Text style={[styles.communityBrandName, { color: palette.text }]}>WeNitro</Text>
+        <BrandBar location="" notificationCount={notifications} go={next => next === 'search' ? setSearchOpen(true) : go(next)} />
+        {searchOpen ? <View style={{ gap: 8 }}>
+          <View style={[styles.communitySearch, { backgroundColor: palette.input, borderWidth: 1, borderColor: palette.border }]}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Close community search" onPress={() => { setSearchOpen(false); setFiltersOpen(false); setQuery(''); setCategory('All'); }} hitSlop={8}><Icon name="arrow-back" color={palette.icon} size={22} /></Pressable>
+            <TextInput accessibilityLabel="Search communities" value={query} onChangeText={setQuery} placeholder="Search Community" placeholderTextColor={palette.muted} autoCapitalize="none" autoCorrect={false} style={[styles.communitySearchInput, { color: palette.text }]} />
+            <Pressable accessibilityRole="button" accessibilityLabel="Filter communities by category" accessibilityState={{ expanded: filtersOpen }} onPress={() => setFiltersOpen(value => !value)} hitSlop={8}><Icon name="options-outline" color={category === 'All' ? palette.iconMuted : palette.accent} size={22} /></Pressable>
           </View>
-          <Pressable onPress={() => go("notifications")}>
-            <Icon name="notifications-outline" color={palette.icon} size={27} />
-            {notifications > 0 ? <View style={styles.notificationBadge} /> : null}
-          </Pressable>
-        </View>
-        <View style={[styles.communitySearch, { backgroundColor: palette.input, borderWidth: 1, borderColor: palette.border }]}>
-          <Icon name="search" color={palette.iconMuted} size={24} />
-          <TextInput
-            value={query}
-            onChangeText={setQuery}
-            placeholder="Search Community"
-            placeholderTextColor={palette.muted}
-            style={[styles.communitySearchInput, { color: palette.text }]}
-          />
-          <Icon name="options-outline" color={palette.iconMuted} size={23} />
-        </View>
+          {filtersOpen ? <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>{categories.map(value => <Pressable key={value} accessibilityRole="tab" accessibilityLabel={`Community category ${value}`} accessibilityState={{ selected: category === value }} onPress={() => setCategory(value)} style={{ paddingVertical: 9, paddingHorizontal: 14, borderRadius: 18, backgroundColor: category === value ? palette.accent : palette.card }}><Text style={{ color: category === value ? '#FFF' : palette.text }}>{value}</Text></Pressable>)}</ScrollView> : null}
+        </View> : null}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -7272,10 +7261,7 @@ export function CommunitiesScreen({
                 colors={["#1910C2", "#4E46E5"]}
                 style={styles.communityStoryRing}
               >
-                <Image
-                  source={{ uri: item.image }}
-                  style={[styles.communityStoryImage, { borderColor: palette.bg }]}
-                />
+                <UserAvatar uri={item.image} name={item.name} identity={item.id} size={56} />
               </LinearGradient>
               <Text style={[styles.communityStoryText, { color: palette.text }]} numberOfLines={2}>
                 {item.name}
@@ -7309,10 +7295,7 @@ export function CommunitiesScreen({
         {visible.map((item) => (
           <View key={item.id} style={[styles.communityListCard, { backgroundColor: palette.card, borderColor: palette.border }]}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Open community ${item.name} cover`} onPress={() => openCommunity(item.id)}>
-              <Image
-                source={{ uri: item.image }}
-                style={styles.communityCardImage}
-              />
+              {item.image ? <Image source={{ uri: item.image }} style={styles.communityCardImage} /> : <View style={[styles.communityCardImage, { backgroundColor: palette.inset, alignItems: 'center', justifyContent: 'center' }]}><UserAvatar name={item.name} identity={item.id} size={54} /></View>}
               <View style={styles.communityMiniBadge}>
                 <Icon name="people" color="#fff" size={14} />
               </View>

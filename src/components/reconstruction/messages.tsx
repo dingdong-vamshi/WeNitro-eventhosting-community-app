@@ -197,19 +197,29 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
     return () => { active = false; clearTimeout(timer); };
   }, [tab, query]);
 
-  const conversations = data.conversations.filter((r) =>
-    r.roomType !== 'community'
-    && !data.communities.some((cm) => cm.id === r.id)
-    && (tab === 'Chats' ? r.type === 'People' : r.type === 'Groups')
-    && startsWithQuery(r.name, query)
-    && (tab !== 'Groups' || filter !== 'Unread' || r.unread > 0),
+  const eligibleConversations = [...new Map(data.conversations
+    .filter(row => row.roomType !== 'community' && !data.communities.some(community => community.id === row.id))
+    .map(row => [row.id, row])).values()];
+  const matchingConversations = eligibleConversations.filter(row => startsWithQuery(row.name, query));
+  const chatCounts = {
+    All: matchingConversations.length,
+    People: matchingConversations.filter(row => row.type === 'People').length,
+    Groups: matchingConversations.filter(row => row.type === 'Groups').length,
+  };
+  const conversations = matchingConversations.filter(row =>
+    tab === 'Chats'
+      ? filter === 'All' || row.type === filter
+      : row.type === 'Groups' && (filter !== 'Unread' || row.unread > 0),
   );
-  const searchPeople = people.filter((person) => startsWithQuery(`${person.fullname || ''} ${person.username || ''}`, query) && !conversations.some((conversation) => conversation.userId === String(person.id)));
+  const searchPeople = tab === 'Chats' && filter !== 'Groups'
+    ? people.filter(person => startsWithQuery(`${person.fullname || ''} ${person.username || ''}`, query)
+      && !eligibleConversations.some(conversation => conversation.userId === String(person.id)))
+    : [];
   const visibleTab = tab === 'Groups' ? 'Activities' : tab;
   const tabCounts = {
-    Chats: data.conversations.filter((item) => item.type === 'People').length,
-    Activities: data.conversations.filter((item) => item.type === 'Groups' && item.roomType !== 'community' && !data.communities.some((community) => community.id === item.id)).length,
-    Communities: new Set([...data.communities.map((item) => item.id), ...rows.map((item) => item.id)]).size,
+    Chats: eligibleConversations.length,
+    Activities: eligibleConversations.filter(item => item.type === 'Groups').length,
+    Communities: new Set([...data.communities.map(item => item.id), ...rows.map(item => item.id)]).size,
   };
   const groupPeople = data.people.length
     ? data.people.map((person) => ({ id: person.id, name: person.name, username: person.username, avatar: person.avatar }))
@@ -252,7 +262,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
     if (story.viewed) return;
     try {
       if (isBackendId(story.id)) await storiesProductionService.markViewed(story.id);
-      setData((current) => ({ ...current, stories: current.stories.map((item) => item.id === story.id ? { ...item, viewed: true } : item) }));
+      setData((current) => current.userId !== data.userId ? current : ({ ...current, stories: current.stories.map((item) => item.id === story.id ? { ...item, viewed: true } : item) }));
     } catch (caught) {
       Alert.alert('Story view not saved', caught instanceof Error ? caught.message : 'Please try again.');
     }
@@ -264,7 +274,8 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
     setMarkingStories(true);
     const results = await Promise.allSettled(unseen.map((story) => isBackendId(story.id) ? storiesProductionService.markViewed(story.id) : Promise.resolve()));
     const failed = new Set(unseen.filter((_, index) => results[index].status === 'rejected').map((story) => story.id));
-    setData((current) => ({ ...current, stories: current.stories.map((story) => failed.has(story.id) ? story : { ...story, viewed: true }) }));
+    const savedIds = new Set(unseen.filter((_, index) => results[index].status === 'fulfilled').map(story => story.id));
+    setData((current) => current.userId !== data.userId ? current : ({ ...current, stories: current.stories.map((story) => savedIds.has(story.id) ? { ...story, viewed: true } : story) }));
     if (failed.size) Alert.alert('Some stories could not be marked seen', 'Please check your connection and try again.');
     setMarkingStories(false);
   };
@@ -295,6 +306,15 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
           style={{ flex: 1, color: c.text, fontSize: 12, height: 40 } as any}
         />
       </View>
+      {tab === 'Chats' && (
+        <View style={{ flexDirection: 'row', paddingHorizontal: 14, paddingBottom: 6, gap: 7 }}>
+          {(['All', 'People', 'Groups'] as const).map(value => (
+            <Pressable key={value} accessibilityRole="tab" accessibilityLabel={`${value} chats (${chatCounts[value]})`} accessibilityState={{ selected: filter === value }} onPress={() => setFilter(value)} style={{ minHeight: 32, paddingHorizontal: 16, borderRadius: 16, backgroundColor: filter === value ? c.accent : c.inset, justifyContent: 'center' }}>
+              <Text style={{ color: filter === value ? '#FFF' : c.muted, fontSize: 11, fontWeight: '600' }}>{value} {chatCounts[value]}</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
       {tab === 'Communities' && (
         <View style={{ flexDirection: 'row', paddingHorizontal: 14, paddingBottom: 6, gap: 7 }}>
           {['All', 'Joined', 'Created'].map((value) => (

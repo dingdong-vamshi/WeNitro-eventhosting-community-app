@@ -4,7 +4,7 @@ import ts from 'typescript';
 
 // Execute the real component's effects with an in-memory hook scheduler. This
 // verifies request counts/races without browser sessions or production writes.
-const hooks = [], timers = new Map(), inboxCalls = [], discoveries = [];
+const hooks = [], timers = new Map(), inboxCalls = [], discoveries = [], seenRequests = [];
 let cursor = 0, dirty = true, effects = [], tree, nextTimer = 1, foreground;
 const deferred = () => { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; };
 const react = {
@@ -34,12 +34,12 @@ const palette = new Proxy({}, { get: () => '#fff' });
 const ui = new Proxy({ usePalette: () => palette, ui: {}, purple: '#6650f5' }, { get: (target, key) => key in target ? target[key] : noop });
 const dependencies = {
   react: { __esModule: true, default: react, ...react },
-  'react-native': new Proxy({}, { get: (_, key) => key }),
+  'react-native': new Proxy({ Alert: { alert() {} } }, { get: (target, key) => target[key] || key }),
   'expo-image-picker': {}, '../verified-badge': { VerifiedBadge: noop }, '../user-avatar': { UserAvatar: noop },
   'expo-video': { VideoView: noop, useVideoPlayer: noop },
   '../../services/communities-production': { communitiesProductionService: { discover(input) { const request = { ...deferred(), input }; discoveries.push(request); return request.promise; } } },
   '../../lib/supabase': { isSupabaseConfigured: true, supabase: backend },
-  '../../services/realtime-chat': {}, '../../services/stories-production': {},
+  '../../services/realtime-chat': {}, '../../services/stories-production': { storiesProductionService: { markViewed(id) { const request = { ...deferred(), id }; seenRequests.push(request); return request.promise; } } },
   '../../services/app-freshness': { subscribeToAppForeground(callback) { foreground = callback; return () => { foreground = undefined; }; } },
   './ui': ui,
   './responsible-upload': { useResponsibleUpload: () => ({ confirmUpload: async () => false, uploadNotice: null }) },
@@ -51,7 +51,7 @@ new Function('exports', 'require', 'setTimeout', 'clearTimeout', ts.transpile(fs
 const props = {
   data: { userId: '44', people: [], conversations: [], communities: [], stories: [] }, tab: 'Communities', filter: 'All',
   setFilter(value) { if (props.filter !== value) { props.filter = value; dirty = true; } },
-  setTab(value) { props.tab = value; dirty = true; }, setData: noop, openProfile: noop, openConversation: noop, startConversation: noop, openCommunity: noop, createCommunity: noop,
+  setTab(value) { props.tab = value; dirty = true; }, setData(update) { props.data = typeof update === 'function' ? update(props.data) : update; dirty = true; }, openProfile: noop, openConversation: noop, startConversation: noop, openCommunity: noop, createCommunity: noop,
 };
 const flush = async () => {
   for (let step = 0; step < 20; step++) {
@@ -108,4 +108,46 @@ props.data = { ...props.data, userId: '56', stories: [] }; dirty = true; await f
 assert.equal(find(tree, node => node.props.label === 'Delete my story'), null, 'Story preview is cleared across account changes');
 await find(tree, node => node.props.accessibilityLabel === 'Add story').props.onPress(); await flush();
 assert.ok(find(tree, node => node.props.title === 'Upload Responsibly'), 'Story upload shows responsibility warning before the gallery');
-console.log('PASS: typing/pagination make zero extra inbox reads; foreground refresh, stale-response guards, abort cleanup, page deduplication and account isolation are preserved. No remote writes.');
+// Exercise the actual reachable Chats component, not the legacy All-count source.
+const chatRow = (id, name, type, roomType, unread = 0) => ({ id, name, type, roomType, unread, avatar: 'https://example.com/avatar.png', userId: type === 'People' ? '70' : undefined, messages: [] });
+props.data = { ...props.data, conversations: [
+  chatRow('1', 'Arjun', 'People', 'personal'),
+  chatRow('2', 'Alpha group', 'Groups', 'group', 2),
+  chatRow('3', 'Activity room', 'Groups', 'activity'),
+  chatRow('4', 'Community excluded', 'Groups', 'community'),
+  chatRow('5', 'Known community excluded', 'Groups', 'group'),
+  chatRow('2', 'Alpha group', 'Groups', 'group', 2),
+], communities: [{ id: '5' }] };
+props.tab = 'Chats'; dirty = true; await flush();
+const hasChat = name => !!find(tree, node => node.type === 'Text' && node.children.includes(name));
+assert.ok(find(tree, node => node.props.accessibilityLabel === 'All chats (3)'));
+assert.ok(find(tree, node => node.props.accessibilityLabel === 'People chats (1)'));
+assert.ok(find(tree, node => node.props.accessibilityLabel === 'Groups chats (2)'));
+assert.ok(hasChat('Arjun') && hasChat('Alpha group') && hasChat('Activity room'), 'All includes direct, group and Activity chats');
+assert.ok(!hasChat('Community excluded') && !hasChat('Known community excluded'), 'Community rooms stay in Communities');
+find(tree, node => node.props.accessibilityLabel === 'People chats (1)').props.onPress(); await flush();
+assert.ok(hasChat('Arjun') && !hasChat('Alpha group'), 'People filter changes actual rows');
+find(tree, node => node.props.accessibilityLabel === 'Groups chats (2)').props.onPress(); await flush();
+assert.ok(!hasChat('Arjun') && hasChat('Alpha group') && hasChat('Activity room'), 'Groups filter changes actual rows');
+find(tree, node => node.props.accessibilityLabel === 'Search chats or users').props.onChangeText('aLpH'); await flush();
+assert.ok(find(tree, node => node.props.accessibilityLabel === 'All chats (1)'));
+assert.ok(find(tree, node => node.props.accessibilityLabel === 'People chats (0)'));
+assert.ok(find(tree, node => node.props.accessibilityLabel === 'Groups chats (1)'));
+assert.ok(hasChat('Alpha group') && !hasChat('Activity room'), 'Mixed-case search and displayed counts share the same matching set');
+props.tab = 'Groups'; dirty = true; await flush(); props.filter = 'Unread'; dirty = true; await flush();
+assert.ok(hasChat('Alpha group') && !hasChat('Activity room'), 'Existing Activities unread filter remains intact');
+console.log('PASS: actual Chats All=People+Groups filters/counts, duplicate/community exclusions, case-insensitive search and Activities unread; typing/pagination request bounds, stale responses, foreground refresh, account isolation and Story behavior. No remote writes.');
+
+// A mark-all request may race another incoming story or an account change.
+props.tab = 'Chats'; props.data = { ...props.data, stories: [{ id: '81', authorId: '70', name: 'Alpha', viewed: false }, { id: '82', authorId: '71', name: 'Beta', viewed: false }] }; dirty = true; await flush();
+const markAll = () => find(tree, node => node.type === 'Pressable' && find(node, child => child.type === 'Text' && child.children.includes('Mark all seen')));
+markAll().props.onPress(); await flush();
+assert.deepEqual(seenRequests.map(request => request.id), ['81', '82']);
+props.data = { ...props.data, stories: [...props.data.stories, { id: '83', authorId: '71', name: 'New arrival', viewed: false }] }; dirty = true; await flush();
+seenRequests[0].resolve(); seenRequests[1].reject(new Error('Offline')); await flush();
+assert.deepEqual(props.data.stories.map(story => story.viewed), [true, false, false], 'Only successfully saved IDs are seen; failed and newly arrived Stories stay unseen');
+markAll().props.onPress(); await flush();
+props.data = { ...props.data, userId: '999', stories: [{ id: '82', authorId: '71', name: 'Other viewer', viewed: false }] }; dirty = true; await flush();
+seenRequests[2].resolve(); seenRequests[3].resolve(); await flush();
+assert.equal(props.data.stories[0].viewed, false, 'Old account mark-all cannot update new account state');
+console.log('PASS actual Mark all seen: persisted successes only, failure retry, incoming-story race and account isolation.');

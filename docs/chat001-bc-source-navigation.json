@@ -1,0 +1,189 @@
+{
+  "status": "SOURCE_BACKED_UI_HANDOFF_NOT_ACCEPTANCE",
+  "scope": "Root exclusive reliable IAB; source selectors apply after grouped regression deploy where noted. Do not change other agents sessions.",
+  "fixturePreservation": {
+    "user120": "Synthetic Admin recipient; verification31 rejected, object cleaned/audit preserved. Root gallery photos/social/community252 remain under root control.",
+    "community252": "Root-created [QA] Chat001 UI acceptance; do not delete until posts/chat/roles proof finished.",
+    "otherMembers": "Use only approved synthetic fixture users (70/71/116 only with root coordination); never message real people."
+  },
+  "routes": {
+    "ownProfile": "#/profile",
+    "publicProfile": "#/profile/{userId}",
+    "community": "#/community/{communityId}",
+    "communityInvite": "#/community/join/{communityId}",
+    "allCommunities": "#/communities",
+    "chat": "#/chat/{roomId}",
+    "activity": "#/activity/{activityId}",
+    "vibe": "#/vibe/{vibeId}",
+    "createCommunity": "#/createCommunity",
+    "directVibe": "#/postVibe",
+    "verification": "#/verification",
+    "social": "#/socialLinks",
+    "history": "#/activityHistory",
+    "shop": "#/shop"
+  },
+  "actions": [
+    {
+      "requirements": [
+        "COMM-HEADER",
+        "COMM-SEARCH-TOGGLE",
+        "COMM-SEARCH-FILTER"
+      ],
+      "route": "#/communities",
+      "afterRegressionDeploy": true,
+      "steps": [
+        "Header Search opens hidden Search communities input.",
+        "Filter communities by category opens Community category {name} tabs; text+category filter actual cards.",
+        "Close community search clears query/category and restores list; Notifications opens actual notification page."
+      ]
+    },
+    {
+      "requirements": [
+        "COMM-CREATED-STATE",
+        "COMM-AVATAR"
+      ],
+      "route": "#/createCommunity",
+      "steps": [
+        "Community Title >=3, Description >=10, Interest Category -> actual category.",
+        "Optional Upload community image / Upload community cover image -> responsibility Continue -> chooser -> crop.",
+        "CREATE COMMUNITY -> Community Created! -> View Community. Root already created252; use it rather than duplicate."
+      ]
+    },
+    {
+      "requirements": [
+        "COMM-COVER-EDIT"
+      ],
+      "route": "#/community/252",
+      "afterRegressionDeploy": true,
+      "steps": [
+        "Community settings -> Edit Community Profile -> Change community cover image (or Upload community cover image when blank).",
+        "Continue -> actual IAB file chooser -> crop save -> Save Changes -> reload detail and verify cover."
+      ]
+    },
+    {
+      "requirements": [
+        "COMM-MEMBER-COUNT",
+        "COMM-MEMBER-PROFILE",
+        "COMM-MODERATOR-ROLE",
+        "COMM-REMOVE-MEMBER"
+      ],
+      "route": "#/community/252",
+      "steps": [
+        "Approved synthetic peer joins via community detail; owner reload confirms actual count.",
+        "Tap member opens Member role if manageable; View profile opens correct member.",
+        "Select Moderator and authorized permission toggles; Save role. Reload/assert privileges via independent account.",
+        "Owner Remove member -> confirm; reload count and denied peer controls."
+      ]
+    },
+    {
+      "requirements": [
+        "COMM-POSTS-SEPARATE",
+        "COMM-POST-NO-POLL",
+        "COMM-POST-VIDEO",
+        "COMM-ANONYMOUS-POST"
+      ],
+      "route": "#/community/252",
+      "steps": [
+        "Community Posts opens separate post list. Composer offers Photo/Video, no Poll.",
+        "Post anonymously switch; enter unique QA title/body, choose allowed small video if needed, publish once.",
+        "Synthetic peer sees Anonymous with no author navigation; Admin can identify separately.",
+        "Back -> detail -> Open Chat proves separate content."
+      ]
+    },
+    {
+      "requirements": [
+        "POLL-CREATE",
+        "POLL-VOTE",
+        "POLL-VOTER-IDENTITY",
+        "CHAT-NO-VIDEO",
+        "CHAT-DELETE-MESSAGE",
+        "CHAT-DELETE-MEDIA",
+        "CHAT-TIMESTAMPS",
+        "COMM-CHAT-BACK"
+      ],
+      "route": "#/community/252",
+      "steps": [
+        "Open Chat -> Add photo or poll -> Create Poll; Poll question, Option 1, Option 2 -> Post Poll.",
+        "Vote as authorized synthetic member -> View poll voters.",
+        "Community message -> Send message; owner Delete message confirms persisted deletion.",
+        "Share Photo -> Continue -> choose safe object; send; delete own photo message; backend checks stale capability separately.",
+        "Back to messages action from this entry returns originating Community."
+      ]
+    },
+    {
+      "requirements": [
+        "CHAT-PLUS-GROUP",
+        "GROUP-AVATAR",
+        "CHAT-ALL-TYPES",
+        "CHAT-LIVE-SEARCH",
+        "CHAT-UNREAD",
+        "STORY-SEEN"
+      ],
+      "route": "#/chat",
+      "steps": [
+        "Chats -> Create a group opens popup directly; this is not a DM chooser.",
+        "Add group photo -> choose/crop; Group name >=3; select at least two approved synthetic contacts; Create Group \u00b7 {n} selected.",
+        "After deploy All chats (n), People chats (n), Groups chats (n) have consistent actual counts, query composes. Activities tab retains Unread.",
+        "Mark all seen affects persisted successes; then reload. Existing own stories can be viewed/deleted using owner control."
+      ]
+    },
+    {
+      "requirements": [
+        "VIBE-REELS",
+        "VIBE-NEWEST",
+        "VIBE-ACTIVITY-LINK",
+        "VIBE-DIRECT-CREATE",
+        "SHARE-VIBE"
+      ],
+      "route": "#/vibe/{allowedVibeId}",
+      "steps": [
+        "Vertical scroll/swipe to next reel; feed order newest\u2192oldest (no requested newest/all dropdown).",
+        "More vibe options -> Share to Chat / Share externally / Copy link / View activity; Delete vibe only owner, Report vibe other permitted viewer.",
+        "Post a vibe -> shared composer; selected Activity remains correct."
+      ]
+    },
+    {
+      "requirements": [
+        "VIBE-FROM-ACTIVITY-MEDIA",
+        "VIBE-COMPOSER",
+        "VIBE-VIDEO"
+      ],
+      "route": "#/activity/{syntheticHostedOrJoinedActivity}",
+      "afterRegressionDeploy": true,
+      "steps": [
+        "Activity media entry -> composer locked to Activity; photo/video preview.",
+        "Show in Vibes toggle affects feed inclusion only; participants-only authorization is preserved. Test off (Activity-only) and on (authorized Vibes feed), with peer and outsider backend proof."
+      ]
+    },
+    {
+      "requirements": [
+        "PROFILE-GALLERY-LIMIT",
+        "PROFILE-GALLERY-PUBLIC",
+        "PROFILE-PHOTO-VIEW",
+        "PROFILE-PHOTO-ADD",
+        "PROFILE-PHOTO-CHANGE",
+        "PROFILE-PHOTO-DELETE",
+        "PROFILE-PHOTO-PRIMARY"
+      ],
+      "route": "#/profile",
+      "steps": [
+        "Root already tested120 add3/promote/reload/change/delete; preserve two remaining until public-profile screenshot.",
+        "Other synthetic identity -> #/profile/120 -> tap existing photo; no Choose/Change/Delete/Set as primary controls."
+      ]
+    },
+    {
+      "requirements": [
+        "BADGE-19",
+        "PROFILE-TRUST-VIEW",
+        "PROFILE-REVIEWS",
+        "VERIFY-SELFIE-REVIEW"
+      ],
+      "route": "#/profile",
+      "steps": [
+        "Root recaptured BADGE-19 actual modal. Owner Trust Score opens private breakdown; public profile only public signals.",
+        "Reviews use actual named/anonymous ratings; no fabricated zero for failed loads.",
+        "Verification120 pending/private preview/rejected proved; fake object never approved; hardware camera capture and legitimate approval are not implied."
+      ]
+    }
+  ]
+}

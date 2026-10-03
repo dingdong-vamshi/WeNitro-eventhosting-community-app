@@ -73,6 +73,7 @@ export type CreateVibeInput = {
   activityId?: string | null;
   hashtags?: string[];
   visibility?: VibeVisibility;
+  showInVibes?: boolean;
 };
 export type VibeCommentChange = RealtimePostgresChangesPayload<Record<string, unknown>>;
 
@@ -355,6 +356,7 @@ export async function listReels(
     query = query.eq("user_id", integerId(options.userId, "userId"));
   }
   if (options.activityId) query = query.eq("event_id", integerId(options.activityId, "activityId"));
+  else query = query.eq("show_in_vibes", true);
   if (options.cursor) {
     const cursor = decodeCursor(options.cursor);
     query = query.or(
@@ -493,7 +495,8 @@ export async function createVibe(input: CreateVibeInput) {
     p_media_type: input.mediaType,
     p_caption: cleanCaption(input.caption),
     p_hashtags: cleanHashtags(input.hashtags),
-    p_visibility: input.visibility ?? (eventId ? "activity" : "public"),
+    p_visibility: eventId ? "activity" : input.visibility ?? "public",
+    p_show_in_vibes: eventId ? input.showInVibes ?? true : true,
   });
   if (error) {
     await supabase.storage.from(VIBES_BUCKET).remove([upload.path]);
