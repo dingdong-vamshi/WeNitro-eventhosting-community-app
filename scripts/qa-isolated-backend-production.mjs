@@ -2,6 +2,7 @@
 // Synthetic financial fixtures are NOT evidence of a Cashfree provider payment.
 import fs from 'node:fs';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 
@@ -179,4 +180,4 @@ async function main() {
     console.log(JSON.stringify({status:proof.status,checks:proof.checks.length,cleanup:proof.cleanup,proofPath}));
   }
 }
-if(process.argv[1] && path.resolve(process.argv[1])===path.resolve(new URL(import.meta.url).pathname)) await main();
+if(process.argv[1] && fs.realpathSync(process.argv[1])===fs.realpathSync(fileURLToPath(import.meta.url))) await main();
