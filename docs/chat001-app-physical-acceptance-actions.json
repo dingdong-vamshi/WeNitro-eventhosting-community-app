@@ -1,0 +1,237 @@
+{
+  "at": "2026-10-03T20:36:18.054875+00:00",
+  "scope": "A126 + B/C102 excluding22 badges =206; auth16 supplement overlaid conceptually, not overwritten. Not final308 acceptance.",
+  "assessmentPrecedence": [
+    "docs/chat001-app-final-assessments.json",
+    "docs/chat001-auth-provider-final-assessments-supplement.json"
+  ],
+  "counts": {
+    "distinctRequirements": 206,
+    "scopedPass": 123,
+    "browserInteractionRequirements": 59,
+    "browserBatches": 8,
+    "identityProviderOrImplementationDependencies": 24,
+    "allRemaining": 83
+  },
+  "physicalBlocker": "Coordinator reports native confirmation has blocked the IAB/Mac UI and device is locked. This is an environment blocker for the actions below; implementation/proof still not accepted by implication. Confirmation fix requires grouped deploy/retest.",
+  "browserBatches": [
+    {
+      "title": "Activity300 and associated Chat255",
+      "canonicalIds": [
+        "ACT-LIKERS-LIST",
+        "ACT-LIKER-PROFILE",
+        "CHAT-CANCELLED-HIDDEN",
+        "SHARE-ACTIVITY",
+        "SOS-ACTION",
+        "SOS-SAFETY-REMINDER",
+        "ACT-HOST-EDIT",
+        "ACT-HOST-DELETE",
+        "ACT-CHAT-OPEN",
+        "ACT-CHAT-BACK",
+        "ACT-NO-SELF-REPORT",
+        "CHAT-NAMES",
+        "CHAT-UNREAD",
+        "CHAT-TIMESTAMPS",
+        "CHAT-INFO-NAVIGATION"
+      ],
+      "actions": [
+        "After regression deployment: controlled participant likes300; Host long-press opens actual liker list; select member profile.",
+        "From300 open255, record real title/member count and timestamp, send one marked QA text from other controlled member, observe unread \u2192 open/read clears; Info and Back return to300.",
+        "Share300 to controlled chat and open its correctly titled card. Open SOS, verify actual clipboard bytes (not toast alone), navigate to saved emergency-contact screen.",
+        "Host120 opens edit, saves a harmless QA-only description change, confirms no self-report option. Cancel300 LAST and capture active inbox removal; destructive confirmation Cancel must preserve first.",
+        "Safety reminder needs actual eligible controlled recipient notification with10-minute wording. Existing300 starts2026-10-04T19:37Z, so do not assert its reminder is due now or mutate its date only for proof. Link prior genuine scheduled API proof or prepare a separate controlled due fixture."
+      ],
+      "alreadyProvenDoNotRepeatBlindly": "Authorized host/member setup and direct Chat255 three-member load are established. Deployed stale-write denial and private audience/RLS already passed; do not invent a chat-button defect while native app-modal blocks every click."
+    },
+    {
+      "title": "Direct Chat253: owned deletion, block and shared content",
+      "canonicalIds": [
+        "CHAT-RETAINED-HISTORY",
+        "SHARE-COMMUNITY",
+        "SHARE-VIBE",
+        "CHAT-DELETE-MESSAGE",
+        "CHAT-DELETE-MEDIA",
+        "CHAT-BLOCK",
+        "CHAT-UNBLOCK"
+      ],
+      "actions": [
+        "After confirmation fix: delete only own marked QA text; Cancel first, then confirm, reload both actors. Send a safe photo and owner-delete it; backend capability boundary already tested.",
+        "Block controlled peer71/120 through in-app confirmation; capture old history still readable and write denied, then unblock in Privacy and send one QA text.",
+        "Open already-delivered Community252 share card. Retest corrected Vibe135 creator/thumbnail and open from recipient."
+      ],
+      "alreadyProvenDoNotRepeatBlindly": "Actual direct delivery, poll/vote/voter identity, read receipts and Community/Vibe card delivery are already captured. Do not recreate polls or claim that an unopened card proves its destination."
+    },
+    {
+      "title": "Community252 final removal",
+      "canonicalIds": [
+        "COMM-REMOVE-MEMBER"
+      ],
+      "actions": [
+        "Owner120 removes controlled71 only after all Community proof. Record member count and peer loss of member capabilities."
+      ],
+      "alreadyProvenDoNotRepeatBlindly": "Creation, cover edit, video playback, member profile, chat Back and actual Moderator71 edit/reload already passed."
+    },
+    {
+      "title": "Vibes, Stories and identity-photo regression",
+      "canonicalIds": [
+        "AVATAR-PHOTOS",
+        "VIBE-COMPOSER",
+        "VIBE-NEWEST",
+        "VIBE-DIRECT-CREATE",
+        "STORY-SEEN"
+      ],
+      "actions": [
+        "Open direct-feed composer after updated release and verify same composer/selected Activity association; Activity-linked OFF/ON submissions are already proven.",
+        "Open Vibe More options and execute a safe action. Verify corrected creator identity/photo against real Profile; old actual photo rendering on Profile/Activity/member/chat is retained.",
+        "Create one marked safe controlled Story if needed; view or Mark all seen, reload and record persisted state."
+      ],
+      "alreadyProvenDoNotRepeatBlindly": "Vertical135\u2192older reel navigation, actual video play, Activity media OFF/ON persistence/privacy, gallery/primary roundtrip and local Story races already passed."
+    },
+    {
+      "title": "Home, Tribe and hosting/navigation",
+      "canonicalIds": [
+        "TRIBE-PRESENTATION",
+        "TRIBE-NAVIGATION",
+        "ACT-CREATE-DESTINATION",
+        "HOST-START-DEFAULT",
+        "HOST-END-DEFAULT",
+        "HOST-REGISTRATION-DEFAULT",
+        "REFERRAL-EXPLANATION",
+        "HOME-NITRO-CARD",
+        "ACT-BACK-HOME",
+        "ACT-SEE-ALL",
+        "ACT-DETAIL-BACK"
+      ],
+      "actions": [
+        "Capture Home Nitro card and Tribe image/name, select Tribe and confirm correct category-filtered Activities. Home See All \u2192 Activity detail \u2192 Back \u2192 Home records exact navigation.",
+        "Open a fresh Host form (not expired draft); capture actual numeric start now+10min, end start+1h, registration deadline=start.",
+        "Publish one clearly marked private free QA Activity with future dates and capture automatic created-detail destination. Do not use API-created300 as publish-UI proof.",
+        "Open Invite Squad and capture current verified-unique-new-account qualification copy."
+      ],
+      "alreadyProvenDoNotRepeatBlindly": "Earlier actual Fitness Tribe navigation and Activity creation are recorded, but no exact retained deployed screenshots isolate those actions. Existing schedule-error images do not show default values. FAQ/query/notifications/Nitro/PlayStore are reconciled and need no repeated mutation."
+    },
+    {
+      "title": "Ended Activity and co-host control views",
+      "canonicalIds": [
+        "ACT-ENDED-EDIT",
+        "ACT-ENDED-REMOVE",
+        "ACT-ENDED-LEAVE",
+        "ACT-ENDED-PARTICIPANT",
+        "ACT-ENDED-NONPARTICIPANT",
+        "RATE-HOST-LABEL",
+        "RATE-HOST-NO-SHOW",
+        "COHOST-APPROVE",
+        "COHOST-REJECT",
+        "COHOST-REMOVE",
+        "COHOST-EDIT",
+        "ACT-LEAVE-REJOIN"
+      ],
+      "actions": [
+        "Use existing completed231/233 or272; capture Host/member/nonmember ended controls, Rate Participants vs Activity Ended, original Host label, and Host No Show absent. Do not submit another rating for more Nitro.",
+        "For co-host management, capture actual permitted controls with controlled future fixture after role assignment; existing authenticated approve/reject/remove/edit and demotion denial are valid technical proof.",
+        "Capture approval-based Leave/rejoin pending state on a controlled non-paid fixture; one participant row/no approval bypass already proven by actual API."
+      ],
+      "alreadyProvenDoNotRepeatBlindly": "Original completed270/272 production observations and named API mutation denials are retained. Rating-ready PNG proves regular-member No Show and rating UI; it does NOT depict Host label or Host exclusion. Promoted/removed screenshots prove role identity, not every management action."
+    },
+    {
+      "title": "Intro and first-signup warning",
+      "canonicalIds": [
+        "ONB-SWIPE",
+        "ONB-DOTS",
+        "AUTH-TAGLINE",
+        "UPLOAD-WARNING",
+        "UPLOAD-WARNING-CANCEL",
+        "UPLOAD-WARNING-CONTINUE",
+        "POLICY-FIRST-SIGNUP"
+      ],
+      "actions": [
+        "Two real splash loads for nonrepeat original slogans; one intro swipe and dot tap with resulting slide captured.",
+        "Use a controlled fresh onboarding fixture for Profile Completion Upload Responsibly Cancel/Continue; preserve draft and open intended picker.",
+        "Capture actual policy acceptance UI and link existing persisted first-signup receipt/private/idempotent API proof."
+      ],
+      "alreadyProvenDoNotRepeatBlindly": "Next/Finish/replay/layout, regular Activity upload Cancel and actual Profile upload Continue all passed. Those cannot silently stand in for newly added first-signup warning. A fresh controlled fixture can be set up without pretending a real inbox verification happened."
+    },
+    {
+      "title": "Public Squad metric final retest",
+      "canonicalIds": [
+        "SQUAD-DEDUP"
+      ],
+      "actions": [
+        "Keep rows47\u201349 until final own/public Profile count and Your Squad list each show one distinct peer70; then coordinator restores only inserted QA rows."
+      ],
+      "alreadyProvenDoNotRepeatBlindly": "Actual own counter1 and deduplicated list already captured; public counter0 was a real regression assigned for correction."
+    }
+  ],
+  "separateDependencies": [
+    {
+      "category": "Controlled identity/provider interactions",
+      "ids": [
+        "AUTH-EMAIL-BRAND",
+        "AUTH-EMAIL-CONFIRM",
+        "AUTH-EMAIL-SENDER",
+        "AUTH-RECOVERY-REQUEST",
+        "AUTH-RECOVERY-ROUTE",
+        "AUTH-RECOVERY-RESET",
+        "AUTH-RECOVERY-LOGIN",
+        "AUTH-GOOGLE-NEW",
+        "AUTH-GOOGLE-EXISTING",
+        "AUTH-GOOGLE-PROVIDER",
+        "AUTH-GOOGLE-REDIRECT",
+        "AUTH-PHONE-NEW",
+        "AUTH-PHONE-EXISTING",
+        "AUTH-OTP-SEND",
+        "AUTH-OTP-VERIFY",
+        "AUTH-PHONE-STATE"
+      ],
+      "source": "docs/chat001-auth-provider-final-assessments-supplement.json",
+      "scope": "Auth16 supplement takes precedence over prior pending placeholders. Existing valid Google exchange and SMS provider credential check remain proven. Real inbox, physical OTP and exact OAuth chooser/redirect outcomes stay limited. Auth reviewer read-only/no-reset scope is not a new global user prohibition."
+    },
+    {
+      "category": "Real camera evidence and completed identity stage",
+      "ids": [
+        "VERIFY-SELFIE-CAMERA",
+        "VERIFY-SELFIE-PREVIEW",
+        "VERIFY-STAGED-BADGE"
+      ],
+      "scope": "Needs controlled camera-capable device/genuine capture. Staged full badge also depends on legitimate verification stages including unavailable Aadhaar; never approve camera-object31."
+    },
+    {
+      "category": "Text guard correction plus image classifier",
+      "ids": [
+        "CONTENT-BACKEND-CHECKS"
+      ],
+      "scope": "Ordinary Host question/options/category text gap reported to backend owner for fix. Actual picture classifier remains unimplemented/unconfigured; working report/RLS/text guard cannot substitute."
+    },
+    {
+      "category": "Google Maps/Places",
+      "ids": [
+        "MAPS-GOOGLE"
+      ],
+      "scope": "Provider setup plus implementation missing; Photon/Nominatim/GPS fallback is separate."
+    },
+    {
+      "category": "Aadhaar provider",
+      "ids": [
+        "VERIFY-AADHAAR",
+        "TRUST-AADHAAR"
+      ],
+      "scope": "Licensed provider credentials/integration absent; no fake approved Aadhaar."
+    },
+    {
+      "category": "Hubble redemption",
+      "ids": [
+        "STORE-REDEMPTION"
+      ],
+      "scope": "Client-authorized provider setup/API contract plus redemption integration missing; no fabricated spend."
+    }
+  ],
+  "reconciledThisPass": [
+    "VERIFY-SELFIE-REVIEW: actual pending/private review/rejection/noaward lifecycle accepted; genuine capture and successful identity approval remain separate."
+  ],
+  "validation": {
+    "everyNonPassMappedExactlyOnce": true,
+    "duplicateBrowserIds": false,
+    "noProviderBranchFabricated": true,
+    "noNewProductionMutation": true
+  }
+}

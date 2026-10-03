@@ -3,8 +3,8 @@
   "scope": "A126 plus B/C80 guide-schema subset; excludes22BADGE rows owned by backend. Scoped PASS only; unresolved normal actions are pending, not external holds.",
   "count": 206,
   "counts": {
-    "PASS": 122,
-    "PENDING_SCOPED_ACCEPTANCE": 77,
+    "PASS": 123,
+    "PENDING_SCOPED_ACCEPTANCE": 76,
     "PARTIAL_EXTERNAL_DEPENDENCY": 3,
     "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
     "PENDING_REGRESSION_RETEST": 2,
@@ -6284,14 +6284,14 @@
     },
     {
       "id": "VERIFY-SELFIE-REVIEW",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A25-02"
       ],
       "requestedChange": "Submitted selfie evidence follows the actual review/approval state rather than claiming unreviewed approval.",
       "before": "Client-requested acceptance gap: Submitted selfie evidence follows the actual review/approval state rather than claiming unreviewed approval.",
       "implemented": "Private owner submission enters pending; authorized Admin preview/reject/approve pipeline and owner status reflect recorded review; rejected evidence gives no Trust/Nitro.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Pending\u2192private Admin preview\u2192Reject\u2192owner unverified/noaward is proven. Legitimate approval of real camera evidence remains separate; do not approve synthetic object31.",
+      "acceptanceScope": "Actual synthetic evidence follows pending \u2192 private authorized Admin preview \u2192 Reject \u2192 owner pending cleared/unverified. Trust and Nitro do not increase; audit row31 retained and private fixture object removed. No real camera capture or successful identity approval is claimed.",
       "localVerification": [
         {
           "suite": "scripts/phase5-profile-test.mjs",
@@ -6396,18 +6396,20 @@
           "url": "https://wenitro-app.vercel.app/#/verification"
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Pending\u2192private Admin preview\u2192Reject\u2192owner unverified/noaward is proven. Legitimate approval of real camera evidence remains separate; do not approve synthetic object31.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Pending\u2192private Admin preview\u2192Reject\u2192owner unverified/noaward is proven. Legitimate approval of real camera evidence remains separate; do not approve synthetic object31."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "The review pipeline and owner presentation are unchanged in the selected release; actual current-target row31 lifecycle and inspected deployed screenshots establish review-state correctness. The separate camera/preview/complete-stage requirements retain their limitations.",
+      "screenshotReviewProvenance": {
+        "reviewer": "App audit agent",
+        "method": "Actual pending/rejected App PNGs inspected; Admin private preview and rejection confirmed by coordinator and recorded lifecycle proof.",
+        "at": "2026-10-03T20:36:18.050342+00:00"
+      },
+      "remainingValidation": []
     },
     {
       "id": "VERIFY-STAGED-BADGE",
