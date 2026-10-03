@@ -49,7 +49,7 @@ const auth = load('src/services/auth-production.ts', {
   '../lib/supabase': backend, './request-deadline': deadline,
   'expo-linking': {}, 'react-native': { Platform: { OS: 'web' } }, '../utils/validation': {},
 });
-const profile = load('src/services/profile-production.ts', { '../lib/supabase': backend, '../domain/interest-categories': { INTEREST_CATEGORIES: [] } });
+const profile = load('src/services/profile-production.ts', { '../lib/supabase': backend, '../domain/interest-categories': { INTEREST_CATEGORIES: [] }, './category-catalog': { listActiveCategories: async () => [] } });
 const onboarding = load('src/services/profile-onboarding.ts', {
   '../lib/supabase': backend, './auth-production': auth, './profile-production': profile, '../utils/onboarding': {},
 });

@@ -738,50 +738,15 @@ export const profileProductionService = {
   },
 
   async setInterests(interestIds: Array<number | string>): Promise<Interest[]> {
-    const userId = await currentLegacyUserId();
-    const selected = [
-      ...new Set(interestIds.map((id) => positiveInteger(id, "interest id"))),
-    ];
+    await currentUser();
+    const selected = [...new Set(interestIds.map(id => positiveInteger(id, "interest id")))];
     if (selected.length > 50) throw new Error("Select no more than 50 interests.");
-
-    const { data: catalog, error: catalogError } = selected.length
-      ? await supabase.from("tbl_categories").select("id,name").in("id", selected)
-      : { data: [], error: null };
-    if (catalogError) throw catalogError;
-    if ((catalog ?? []).length !== selected.length) {
-      throw new Error("One or more interests are unavailable.");
-    }
-    const { data: currentRows, error: currentError } = await supabase
-      .from("tbl_user_interests")
-      .select("category_id")
-      .eq("user_id", userId);
-    if (currentError) throw currentError;
-    const current = new Set(
-      (currentRows ?? []).map((row) => Number(row.category_id)),
-    );
-    const additions = selected.filter((id) => !current.has(id));
-    const removals = [...current].filter((id) => !selected.includes(id));
-
-    if (removals.length) {
-      const { error } = await supabase
-        .from("tbl_user_interests")
-        .delete()
-        .eq("user_id", userId)
-        .in("category_id", removals);
-      if (error) throw error;
-    }
-    if (additions.length) {
-      const { error } = await supabase.from("tbl_user_interests").insert(
-        additions.map((categoryId) => ({
-          user_id: userId,
-          category_id: categoryId,
-        })),
-      );
-      if (error) throw error;
-    }
-    return (catalog ?? [])
-      .map(mapInterest)
-      .sort((a, b) => a.name.localeCompare(b.name));
+    // One transaction keeps existing interests intact if a newly selected category
+    // was disabled after the form loaded. The RPC preserves unchanged old IDs.
+    const { data, error } = await supabase.rpc("set_my_interests", { p_category_ids: selected });
+    if (error) throw error;
+    if (!Array.isArray(data)) throw new Error("Interests could not be confirmed. Please reload your profile.");
+    return data.map(mapInterest).sort((a, b) => a.name.localeCompare(b.name));
   },
 
   listSaved(options?: CursorOptions) {

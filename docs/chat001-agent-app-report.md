@@ -133,3 +133,11 @@ Legend: `UI` = existing implementation inspected through relevant components/con
 - Final deployment depends on Admin's category-preservation and observed-analytics RPC migrations; do not deploy this App branch alone.
 - Scope includes no new provider setup: SMTP sender, alternate Google redirect configuration, physical SMS receipt, licensed Aadhaar, client Google Maps keys, native background SOS and Hubble remain to be assessed using exact current evidence by root.
 - Native share-sheet dismissal and native date-picker/camera interactions require the supported native environment; web source/behavior tests cannot substitute for actual native screenshots.
+
+## Follow-up focused review
+
+Executable component testing reproduced stale profile/catalog responses reaching a different signed-in account. The follow-up uses a per-effect active guard and category request generations, clears old fields on account change, and loads optional categories independently so they cannot hang the whole form. Each save freezes its initiating auth subject rather than consulting a mutable expected-subject ref after asynchronous steps.
+
+The category guard also exposed non-atomic interest updates: a disabled new choice could fail after prior interests were already deleted. The client now uses the existing transactional `set_my_interests` RPC; the backend agent owns serialization and PostgreSQL rollback/preservation proof. `profile-catalog-recovery-test.mjs` executes the actual component with controlled async responses and the actual service with an offline RPC double. It verifies independent form loading, account-switch cleanup, stale profile/catalog/error rejection, one transactional write, deduplication, validation and error propagation.
+
+Two further existing profile-service test doubles (`phase4-privacy-test`, `auth-identity-reuse-test`) were updated for the category import and passed without weakening identity/privacy assertions.

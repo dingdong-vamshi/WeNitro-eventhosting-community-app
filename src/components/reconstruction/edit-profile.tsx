@@ -27,21 +27,36 @@ export function ReferenceEditProfile({ data, setData, back, onSaved, onSocialPro
  const [busy, setBusy] = useState(false), [error, setError] = useState(''), [success, setSuccess] = useState(false), [availability, setAvailability] = useState('');
  const [selector, setSelector] = useState<'gender' | 'country' | 'date' | null>(null), [query, setQuery] = useState('');
  const lock = useRef(false), expectedAuth = useRef(''), originalInterests = useRef<number[]>([]), availabilityRequest = useRef(0);
- const mounted = useRef(true);
+ const mounted = useRef(true), catalogRequest = useRef(0);
+ const retryCatalog = async () => {
+  const request = ++catalogRequest.current;
+  setCatalogLoading(true); setCatalogError('');
+  try {
+   const options = await profiles.listAvailableInterests();
+   if (mounted.current && request === catalogRequest.current) setCatalog(options);
+  } catch (e) {
+   if (mounted.current && request === catalogRequest.current) setCatalogError(message(e));
+  } finally {
+   if (mounted.current && request === catalogRequest.current) setCatalogLoading(false);
+  }
+ };
  useEffect(() => {
+  let active = true;
   mounted.current = true;
-  void Promise.all([profiles.loadProfile(), profiles.listAvailableInterests().catch(e => { if (mounted.current) setCatalogError(message(e)); return [] as Interest[]; }).finally(() => { if (mounted.current) setCatalogLoading(false); }), supabase.auth.getSession(), referenceDeltaService.listProfilePhotos()]).then(([details, options, auth, gallery]) => {
+  expectedAuth.current = ''; lock.current = false; setBusy(false); setValues(null); setOriginal(null); setError(''); setCatalog([]); setHistoricalInterests([]); setInterests([]); setPhotos([]); setPendingAvatar(null);
+  // Optional categories never delay the editable account fields.
+  void retryCatalog();
+  void Promise.all([profiles.loadProfile(), supabase.auth.getSession(), referenceDeltaService.listProfilePhotos()]).then(([details, auth, gallery]) => {
+   if (!active) return;
    if (auth.error || !auth.data.session?.user || String(details.profile.id) !== data.userId) throw new Error('Please reopen Edit Profile after signing in.');
-   if (!mounted.current) return;
    expectedAuth.current = auth.data.session.user.id; setEmail(auth.data.session.user.email || '');
    const initial = formValues(details.profile); setValues(initial); setOriginal(initial); setAvatar(details.profile.avatar_url || '');
-   setCatalog(options); setHistoricalInterests(details.interests); setPhotos(gallery); const ids = details.interests.map(i => i.id); setInterests(ids); originalInterests.current = ids;
-  }).catch(e => { if (mounted.current) setError(message(e)); });
-  return () => { mounted.current = false; availabilityRequest.current++; };
+   setHistoricalInterests(details.interests); setPhotos(gallery); const ids = details.interests.map(i => i.id); setInterests(ids); originalInterests.current = ids;
+  }).catch(e => { if (active) setError(message(e)); });
+  return () => { active = false; mounted.current = false; catalogRequest.current++; availabilityRequest.current++; };
  }, [data.userId]);
- const retryCatalog = async () => { setCatalogLoading(true); setCatalogError(''); try { const options = await profiles.listAvailableInterests(); if (mounted.current) setCatalog(options); } catch (e) { if (mounted.current) setCatalogError(message(e)); } finally { if (mounted.current) setCatalogLoading(false); } };
  const patch = (key: keyof Values, value: string) => { setValues(current => current && ({ ...current, [key]: value })); setSuccess(false); if (key === 'username') { availabilityRequest.current++; setAvailability(''); } };
- const sameIdentity = async () => { const auth = await supabase.auth.getSession(); if (auth.error || auth.data.session?.user.id !== expectedAuth.current) throw new Error('Your signed-in account changed. Reopen Edit Profile before saving.'); };
+ const sameIdentity = async (expected: string) => { const auth = await supabase.auth.getSession(); if (!expected || auth.error || auth.data.session?.user.id !== expected) throw new Error('Your signed-in account changed. Reopen Edit Profile before saving.'); };
  const checkUsername = async () => {
   const request = ++availabilityRequest.current;
   if (!values || values.username === original?.username) return;
@@ -83,6 +98,7 @@ export function ReferenceEditProfile({ data, setData, back, onSaved, onSocialPro
  };
  const save = async () => {
   if (lock.current || !values || !original) return;
+  const saveAuthId = expectedAuth.current;
   lock.current = true; setBusy(true); setError(''); setSuccess(false);
   try {
    const changes: ProfileEditInput = {};
@@ -99,14 +115,14 @@ export function ReferenceEditProfile({ data, setData, back, onSaved, onSocialPro
     if (key === 'nationality' && value && !COUNTRIES.some(c => c.code === value)) throw new Error('Choose a nationality from the country list.');
     (changes as Record<string, string | null>)[key] = value;
    }
-   await sameIdentity();
+   await sameIdentity(saveAuthId);
    if (changes.username && !(await profileOnboardingService.checkUsername(changes.username)).available) throw new Error('That username is already taken. Choose another.');
-   await sameIdentity();
+   await sameIdentity(saveAuthId);
    if (Object.keys(changes).length) await profiles.editProfile(changes);
-   if ([...interests].sort().join(',') !== [...originalInterests.current].sort().join(',')) { await sameIdentity(); await profiles.setInterests(interests); }
-   if (pendingAvatar) { await sameIdentity(); await profiles.uploadAvatar(pendingAvatar, expectedAuth.current); }
-   await sameIdentity();
-   const details = await profiles.loadProfile(); await sameIdentity();
+   if ([...interests].sort().join(',') !== [...originalInterests.current].sort().join(',')) { await sameIdentity(saveAuthId); await profiles.setInterests(interests); }
+   if (pendingAvatar) { await sameIdentity(saveAuthId); await profiles.uploadAvatar(pendingAvatar, saveAuthId); }
+   await sameIdentity(saveAuthId);
+   const details = await profiles.loadProfile(); await sameIdentity(saveAuthId);
    if (!mounted.current) return;
    const p = details.profile, next = formValues(p);
    setValues(next); setOriginal(next); setAvatar(p.avatar_url || ''); setPendingAvatar(null); originalInterests.current = details.interests.map(i => i.id); setInterests(originalInterests.current);
@@ -117,8 +133,8 @@ export function ReferenceEditProfile({ data, setData, back, onSaved, onSocialPro
    }));
    setSuccess(true);
    onSaved();
-  } catch (e) { if (mounted.current) setError(message(e)); }
-  finally { lock.current = false; if (mounted.current) setBusy(false); }
+  } catch (e) { if (mounted.current && expectedAuth.current === saveAuthId) setError(message(e)); }
+  finally { if (expectedAuth.current === saveAuthId) { lock.current = false; if (mounted.current) setBusy(false); } }
  };
  const label = (text: string) => <Text style={{ color: c.text, fontSize: 13, fontWeight: '500', marginBottom: 8 }}>{text}</Text>;
  const field = (key: keyof Values, title: string, maxLength?: number, placeholder?: string, multiline = false) => <View>{label(title)}<Field accessibilityLabel={title.split(' (')[0]} value={values?.[key] || ''} onChangeText={v => patch(key, v)} editable={!busy} maxLength={maxLength} placeholder={placeholder} multiline={multiline} autoCapitalize={key === 'username' ? 'none' : 'sentences'} onBlur={key === 'username' ? () => void checkUsername() : undefined} style={multiline ? { minHeight: key === 'about' ? 112 : 70, textAlignVertical: 'top' } : undefined} /></View>;
