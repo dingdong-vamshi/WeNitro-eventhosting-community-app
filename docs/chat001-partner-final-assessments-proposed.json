@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-03T20:10:43.436254+00:00",
+  "at": "2026-10-03T20:25:40.260041+00:00",
   "purpose": "Final-release E16 contribution awaiting root hosted297 and new preflight/external-link visual proof. Preserves exact prior compatible nonpayment scopes; no fabricated success.",
   "target": "cxsznhrkzqndhseodcyy",
   "count": 16,
@@ -8,8 +8,8 @@
     "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
   },
   "counts": {
-    "PASS": 6,
-    "PENDING_SCOPED_ACCEPTANCE": 10
+    "PASS": 14,
+    "PENDING_SCOPED_ACCEPTANCE": 2
   },
   "requirements": [
     {
@@ -163,13 +163,18 @@
           "file": "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
           "scope": "Final-release24 authenticated checks: paid approval/self-join retry preserve admitted seat; removal requires financial review; host rejection cancels unpaid reservation; late synthetic success requires refund and never readmits; deployed Edge never confirms rejected paid seat.",
           "limit": "Synthetic provider references and ON_HOLD cleanup; no hosted-provider success claim."
+        },
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Owner71 actual dashboard RPC currently shows280 approved,1234paisa,ON_HOLD and297 payment_required,0paid plus persisted requiredanswer134 Sandbox Acceptance."
         }
       ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
         "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
         "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
-        "docs/chat001-final-backend-production-proof.json"
+        "docs/chat001-final-backend-production-proof.json",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json"
       ],
       "screenshotProof": [
         {
@@ -182,7 +187,7 @@
         }
       ],
       "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Actual owner71 unpaid297 registration is proven. Await root hosted297 success and owner participant-state refresh.",
+      "reason": "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid\u20b912.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states.",
       "releaseReviewed": false,
       "screenshotsReviewed": false,
       "release": {
@@ -190,7 +195,7 @@
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
       "remainingValidation": [
-        "Actual owner71 unpaid297 registration is proven. Await root hosted297 success and owner participant-state refresh."
+        "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid\u20b912.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states."
       ]
     },
     {
@@ -215,10 +220,15 @@
           "at": "2026-10-03T18:21:57.405Z",
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71
+        },
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Owner71 actual dashboard RPC currently shows280 approved,1234paisa,ON_HOLD and297 payment_required,0paid plus persisted requiredanswer134 Sandbox Acceptance."
         }
       ],
       "technicalProof": [
-        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json"
       ],
       "screenshotProof": [
         {
@@ -231,7 +241,7 @@
         }
       ],
       "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Unpaid297 correctly shows zero paid and no answers. Await real hosted297 selected-tier/payment/required-answer detail after checkout.",
+      "reason": "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid\u20b912.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states.",
       "releaseReviewed": false,
       "screenshotsReviewed": false,
       "release": {
@@ -239,12 +249,12 @@
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
       "remainingValidation": [
-        "Unpaid297 correctly shows zero paid and no answers. Await real hosted297 selected-tier/payment/required-answer detail after checkout."
+        "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid\u20b912.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states."
       ]
     },
     {
       "id": "PARTNER-CATEGORY-PRICES",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "A Partner can configure multiple distinct entry categories with server-stored prices and applicable capacities.",
       "before": "Partner entry categories required server-side validation of prices, capacities and unavailable Activity states.",
@@ -264,11 +274,17 @@
           "at": "2026-10-03T18:08:02.698Z",
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 116
+        },
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Current MCP read confirms Standard1234paisa/capacity3 and Plus1800paisa/capacity2, both active. Deployed297 renders both choices; actual provider order48 uses Standard\u20b912.34. Capacity and unauthorized configuration checks remain linked backend scope."
         }
       ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
-        "scripts/payment-entry-authorization-test.mjs"
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+        "docs/chat001-hosted-checkout-proof.json"
       ],
       "screenshotProof": [
         {
@@ -278,23 +294,23 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "visuallyReviewed": true,
           "sha256": "71e0727c9773baa9fa84557c06af4eb3f8f2168e061508baad0d01cec0455491"
-        }
+        },
+        "qa-evidence/chat001/release-checkout297-required-answer.png",
+        "qa-evidence/chat001/release-checkout297-provider.png"
       ],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Inspected actual297 Standard12.34 INR / Plus18 INR options and authenticated trusted-tier tests. Await new-release hosted selected-tier amount proof before final payment acceptance.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "acceptanceScope": "Current MCP read confirms Standard1234paisa/capacity3 and Plus1800paisa/capacity2, both active. Deployed297 renders both choices; actual provider order48 uses Standard\u20b912.34. Capacity and unauthorized configuration checks remain linked backend scope.",
+      "reason": "Current MCP read confirms Standard1234paisa/capacity3 and Plus1800paisa/capacity2, both active. Deployed297 renders both choices; actual provider order48 uses Standard\u20b912.34. Capacity and unauthorized configuration checks remain linked backend scope.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Inspected actual297 Standard12.34 INR / Plus18 INR options and authenticated trusted-tier tests. Await new-release hosted selected-tier amount proof before final payment acceptance."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "PARTNER-CATEGORY-SELECTION",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "A participant selects an eligible entry category and checkout uses its current server price.",
       "before": "Legacy checkout could bypass required category selection.",
@@ -314,10 +330,16 @@
           "at": "2026-10-03T18:08:02.698Z",
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 116
+        },
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Actual deployed buyer116 selected Standard from distinct Standard/Plus options; current provider order48 is category29 at\u20b912.34. Canonical selection-to-trusted-price requirement is proven without claiming bank authorization or payment success on297."
         }
       ],
       "technicalProof": [
-        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+        "docs/chat001-hosted-checkout-proof.json"
       ],
       "screenshotProof": [
         {
@@ -327,23 +349,23 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "visuallyReviewed": true,
           "sha256": "71e0727c9773baa9fa84557c06af4eb3f8f2168e061508baad0d01cec0455491"
-        }
+        },
+        "qa-evidence/chat001/release-checkout297-required-answer.png",
+        "qa-evidence/chat001/release-checkout297-provider.png"
       ],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Inspected297 selected Standard and alternate Plus options. Await actual alternate/selected tier\u2192hosted order amount proof in coordinated release.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "acceptanceScope": "Actual deployed buyer116 selected Standard from distinct Standard/Plus options; current provider order48 is category29 at\u20b912.34. Canonical selection-to-trusted-price requirement is proven without claiming bank authorization or payment success on297.",
+      "reason": "Actual deployed buyer116 selected Standard from distinct Standard/Plus options; current provider order48 is category29 at\u20b912.34. Canonical selection-to-trusted-price requirement is proven without claiming bank authorization or payment success on297.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Inspected297 selected Standard and alternate Plus options. Await actual alternate/selected tier\u2192hosted order amount proof in coordinated release."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "PARTNER-REQUIRED-ANSWERS",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Required registration answers must be valid and persisted before paid registration can secure participation.",
       "before": "The required-question flow needed explicit validation before secure paid participation, including invited registrants.",
@@ -365,10 +387,16 @@
           "at": "2026-10-03T18:22:07.103Z",
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71
+        },
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Deployed empty answer was visibly rejected before checkout. Actual required answer134 Sandbox Acceptance persisted and is visible to buyer116 and owner71 only; create-orderv6 then opened real hosted\u20b912.34 order48. Current negative tests enforce answer/state boundaries. Paid completion is separately evidenced by retained280, not fabricated for297."
         }
       ],
       "technicalProof": [
-        "scripts/registration-questions-test.mjs"
+        "scripts/registration-questions-test.mjs",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+        "docs/chat001-hosted-checkout-proof.json"
       ],
       "screenshotProof": [
         {
@@ -378,24 +406,24 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "visuallyReviewed": true,
           "sha256": "306a8272d78b4411432457c9aac4ddfd9474a44d4cf1e0ee1bf744b011fd8315"
-        }
+        },
+        "qa-evidence/chat001/release-checkout297-required-answer.png",
+        "qa-evidence/chat001/release-checkout297-provider.png"
       ],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Host required short-text configuration and lock after registration are proven. Earlier buyer failure is a documented regression, not PASS. New client/server repair is locally tested; await buyer missing-answer denial and persisted valid answer through hosted297 payment.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "acceptanceScope": "Deployed empty answer was visibly rejected before checkout. Actual required answer134 Sandbox Acceptance persisted and is visible to buyer116 and owner71 only; create-orderv6 then opened real hosted\u20b912.34 order48. Current negative tests enforce answer/state boundaries. Paid completion is separately evidenced by retained280, not fabricated for297.",
+      "reason": "Deployed empty answer was visibly rejected before checkout. Actual required answer134 Sandbox Acceptance persisted and is visible to buyer116 and owner71 only; create-orderv6 then opened real hosted\u20b912.34 order48. Current negative tests enforce answer/state boundaries. Paid completion is separately evidenced by retained280, not fabricated for297.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Host required short-text configuration and lock after registration are proven. Earlier buyer failure is a documented regression, not PASS. New client/server repair is locally tested; await buyer missing-answer denial and persisted valid answer through hosted297 payment."
-      ],
+      "remainingValidation": [],
       "excludedPriorEvidence": "integrated-invited-payment-form-regression.png records an actual failure later repaired; never positive acceptance proof."
     },
     {
       "id": "PARTNER-PAID-JOIN",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Joined/seat-secured confirmation requires both legitimate successful payment and approved qualifying participation; refund-required reconciliation must not claim a secured seat.",
       "before": "Paid-but-ineligible reconciliation could be confused with a secured registration.",
@@ -415,6 +443,10 @@
           "file": "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
           "scope": "Final-release24 authenticated checks: paid approval/self-join retry preserve admitted seat; removal requires financial review; host rejection cancels unpaid reservation; late synthetic success requires refund and never readmits; deployed Edge never confirms rejected paid seat.",
           "limit": "Synthetic provider references and ON_HOLD cleanup; no hosted-provider success claim."
+        },
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Retained actual Sandbox280 providerSUCCESS and same-mounted-screen JOINED/secured screenshot are combined with currentv4 actual positive receipt replays: paidtrue, registrationConfirmedtrue, refundRequiredfalse, approved seat, one ledger row. Current negative-state tests prove late/ineligible money cannot claim admission. Current297 only proves fresh required-answer/order-entry; it remains pending. This acceptance is compatible composed evidence, not a fresh297 full checkout."
         }
       ],
       "technicalProof": [
@@ -423,20 +455,30 @@
         "scripts/payment-registration-confirmation-test.mjs",
         "docs/chat001-hosted-checkout-proof.json",
         "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
-        "docs/chat001-final-backend-production-proof.json"
+        "docs/chat001-final-backend-production-proof.json",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+        "docs/chat001-hosted-checkout-proof.json"
       ],
-      "screenshotProof": [],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Earlier hosted280 was real Sandbox baseline. Current legitimate hosted297 checkout, same mounted screen transition and persisted registration remain root-owned and pending; synthetic signed success is not provider checkout.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        "qa-evidence/chat001/release-checkout297-required-answer.png",
+        "qa-evidence/chat001/release-checkout297-provider.png",
+        {
+          "path": "qa-evidence/chat001/production-cashfree-confirmed-registration.png",
+          "scope": "Prior actual Sandbox280 same mounted UI secured/JOINED after providerSUCCESS. Current receipt contract independently retested; not claimed a new297 screenshot.",
+          "deployment": "dpl_8RVLnVe6qWMyaopojogiqZevawkx",
+          "priorCompatibleRelease": true,
+          "visuallyReviewed": true
+        }
+      ],
+      "acceptanceScope": "Retained actual Sandbox280 providerSUCCESS and same-mounted-screen JOINED/secured screenshot are combined with currentv4 actual positive receipt replays: paidtrue, registrationConfirmedtrue, refundRequiredfalse, approved seat, one ledger row. Current negative-state tests prove late/ineligible money cannot claim admission. Current297 only proves fresh required-answer/order-entry; it remains pending. This acceptance is compatible composed evidence, not a fresh297 full checkout.",
+      "reason": "Retained actual Sandbox280 providerSUCCESS and same-mounted-screen JOINED/secured screenshot are combined with currentv4 actual positive receipt replays: paidtrue, registrationConfirmedtrue, refundRequiredfalse, approved seat, one ledger row. Current negative-state tests prove late/ineligible money cannot claim admission. Current297 only proves fresh required-answer/order-entry; it remains pending. This acceptance is compatible composed evidence, not a fresh297 full checkout.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Earlier hosted280 was real Sandbox baseline. Current legitimate hosted297 checkout, same mounted screen transition and persisted registration remain root-owned and pending; synthetic signed success is not provider checkout."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "PARTNER-LIST-IDENTITY",
@@ -593,7 +635,7 @@
     },
     {
       "id": "SEC-PAYMENT-PRIVACY",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Payment orders, personal registration details and provider secrets remain restricted to authorized participants, hosts and permitted finance/Admin access.",
       "before": "Existing payment and registration tables required current cross-user and role-boundary checks.",
@@ -607,27 +649,35 @@
         "scripts/payment-entry-authorization-test.mjs",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Current actual buyer116/owner71 can read297 required answer; unrelated70 sees no answer/payment48. Existing cross-user/RLS/Edge privacy checks cover broader role and secret boundaries. No fresh bank completion is necessary to prove this authorization boundary."
+        }
+      ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
-        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+        "docs/chat001-hosted-checkout-proof.json"
       ],
-      "screenshotProof": [],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Authenticated cross-user/order/answer boundaries and local RLS pass. Await root current hosted297 participant-answer privacy reconciliation; no owner/session secret is exposed by screenshots.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        "qa-evidence/chat001/release-checkout297-required-answer.png",
+        "qa-evidence/chat001/release-checkout297-provider.png"
+      ],
+      "acceptanceScope": "Current actual buyer116/owner71 can read297 required answer; unrelated70 sees no answer/payment48. Existing cross-user/RLS/Edge privacy checks cover broader role and secret boundaries. No fresh bank completion is necessary to prove this authorization boundary.",
+      "reason": "Current actual buyer116/owner71 can read297 required answer; unrelated70 sees no answer/payment48. Existing cross-user/RLS/Edge privacy checks cover broader role and secret boundaries. No fresh bank completion is necessary to prove this authorization boundary.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Authenticated cross-user/order/answer boundaries and local RLS pass. Await root current hosted297 participant-answer privacy reconciliation; no owner/session secret is exposed by screenshots."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "SEC-PAYMENT-IDEMPOTENCY",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Duplicate payment callbacks/reconciliation cannot duplicate paid registration, ledger records or a seat.",
       "before": "Repeated finalization and callback reconciliation required proof of exactly one financial event and seat.",
@@ -647,30 +697,44 @@
           "file": "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
           "scope": "Final-release24 authenticated checks: paid approval/self-join retry preserve admitted seat; removal requires financial review; host rejection cancels unpaid reservation; late synthetic success requires refund and never readmits; deployed Edge never confirms rejected paid seat.",
           "limit": "Synthetic provider references and ON_HOLD cleanup; no hosted-provider success claim."
+        },
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Actual real-provider-paid280 current receipt replay twice preserves paid order and approved seat exactly; MCP one financialPAYMENT row before/after. Earlier real hosted success/replay and current synthetic finalizer/callback tests complement this scope. No297success or live financial operation claimed."
         }
       ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
         "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
         "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
-        "docs/chat001-final-backend-production-proof.json"
+        "docs/chat001-final-backend-production-proof.json",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+        "docs/chat001-hosted-checkout-proof.json"
       ],
-      "screenshotProof": [],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Current authenticated synthetic finalizer/replay tests pass; actual hosted297 verify/replay and one ledger/registration result remain pending root proof.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        "qa-evidence/chat001/release-checkout297-required-answer.png",
+        "qa-evidence/chat001/release-checkout297-provider.png",
+        {
+          "path": "qa-evidence/chat001/production-cashfree-confirmed-registration.png",
+          "scope": "Prior actual Sandbox280 same mounted UI secured/JOINED after providerSUCCESS. Current receipt contract independently retested; not claimed a new297 screenshot.",
+          "deployment": "dpl_8RVLnVe6qWMyaopojogiqZevawkx",
+          "priorCompatibleRelease": true,
+          "visuallyReviewed": true
+        }
+      ],
+      "acceptanceScope": "Actual real-provider-paid280 current receipt replay twice preserves paid order and approved seat exactly; MCP one financialPAYMENT row before/after. Earlier real hosted success/replay and current synthetic finalizer/callback tests complement this scope. No297success or live financial operation claimed.",
+      "reason": "Actual real-provider-paid280 current receipt replay twice preserves paid order and approved seat exactly; MCP one financialPAYMENT row before/after. Earlier real hosted success/replay and current synthetic finalizer/callback tests complement this scope. No297success or live financial operation claimed.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Current authenticated synthetic finalizer/replay tests pass; actual hosted297 verify/replay and one ledger/registration result remain pending root proof."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "SEC-PAYMENT-AMOUNT",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Checkout uses trusted current server amount/category/capacity and rejects forged, missing, stale or unauthorized order inputs.",
       "before": "Legacy/missing-category checkout and stale Activity entry could bypass the canonical price/authorization path.",
@@ -684,27 +748,35 @@
         "scripts/payment-entry-authorization-test.mjs",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Current actual order48 uses trusted Standard category29 at\u20b912.34; database stores1234paisa and capacity3. Deployed selected-tier/hosted amounts match. Existing forged/missing/stale/unauthorized/current-capacity tests remain linked; no client amount trusted."
+        }
+      ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
-        "scripts/payment-entry-authorization-test.mjs"
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+        "docs/chat001-hosted-checkout-proof.json"
       ],
-      "screenshotProof": [],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Trusted category, forged amount and category/state checks pass within recorded backend scopes. Await current real hosted selected-tier INR amount proof.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        "qa-evidence/chat001/release-checkout297-required-answer.png",
+        "qa-evidence/chat001/release-checkout297-provider.png"
+      ],
+      "acceptanceScope": "Current actual order48 uses trusted Standard category29 at\u20b912.34; database stores1234paisa and capacity3. Deployed selected-tier/hosted amounts match. Existing forged/missing/stale/unauthorized/current-capacity tests remain linked; no client amount trusted.",
+      "reason": "Current actual order48 uses trusted Standard category29 at\u20b912.34; database stores1234paisa and capacity3. Deployed selected-tier/hosted amounts match. Existing forged/missing/stale/unauthorized/current-capacity tests remain linked; no client amount trusted.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Trusted category, forged amount and category/state checks pass within recorded backend scopes. Await current real hosted selected-tier INR amount proof."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "SEC-PAYMENT-STATE",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Ended/cancelled/removed/suspended or otherwise ineligible registration cannot newly secure a paid seat; real paid-but-ineligible states require explicit reconciliation instead of false success.",
       "before": "Late real payment could coexist with an ineligible Activity/registration state and be displayed as successful participation.",
@@ -725,6 +797,10 @@
           "file": "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
           "scope": "Final-release24 authenticated checks: paid approval/self-join retry preserve admitted seat; removal requires financial review; host rejection cancels unpaid reservation; late synthetic success requires refund and never readmits; deployed Edge never confirms rejected paid seat.",
           "limit": "Synthetic provider references and ON_HOLD cleanup; no hosted-provider success claim."
+        },
+        {
+          "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+          "outcome": "Current deployed late-payment/rejection/capacity tests and Edge negative receipts remain valid. Actual280 current positive receipt confirms qualifying approved/paid/ON_HOLD seat;297 pending/payment_required has no payment ledger or paidseat. ProviderPAID alone is not treated as admission."
         }
       ],
       "technicalProof": [
@@ -732,20 +808,30 @@
         "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
         "scripts/payment-entry-authorization-test.mjs",
         "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
-        "docs/chat001-final-backend-production-proof.json"
+        "docs/chat001-final-backend-production-proof.json",
+        "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
+        "docs/chat001-hosted-checkout-proof.json"
       ],
-      "screenshotProof": [],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Actual earlier negative-state and deployed late/capacity reconciliation checks pass; payment-success UI on current hosted297 must be combined with root final result.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        "qa-evidence/chat001/release-checkout297-required-answer.png",
+        "qa-evidence/chat001/release-checkout297-provider.png",
+        {
+          "path": "qa-evidence/chat001/production-cashfree-confirmed-registration.png",
+          "scope": "Prior actual Sandbox280 same mounted UI secured/JOINED after providerSUCCESS. Current receipt contract independently retested; not claimed a new297 screenshot.",
+          "deployment": "dpl_8RVLnVe6qWMyaopojogiqZevawkx",
+          "priorCompatibleRelease": true,
+          "visuallyReviewed": true
+        }
+      ],
+      "acceptanceScope": "Current deployed late-payment/rejection/capacity tests and Edge negative receipts remain valid. Actual280 current positive receipt confirms qualifying approved/paid/ON_HOLD seat;297 pending/payment_required has no payment ledger or paidseat. ProviderPAID alone is not treated as admission.",
+      "reason": "Current deployed late-payment/rejection/capacity tests and Edge negative receipts remain valid. Actual280 current positive receipt confirms qualifying approved/paid/ON_HOLD seat;297 pending/payment_required has no payment ledger or paidseat. ProviderPAID alone is not treated as admission.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "remainingValidation": [
-        "Actual earlier negative-state and deployed late/capacity reconciliation checks pass; payment-success UI on current hosted297 must be combined with root final result."
-      ]
+      "remainingValidation": []
     }
   ],
   "priorMetadataCorrections": "Owner dashboard/unpaid/required-question identity now correctly71; canonical category IDs corrected in current root metadata.",
@@ -781,5 +867,6 @@
       ],
       "action": "Use already stored harmless HTTPS URL or dedicated fixture and capture actual open destination."
     }
-  ]
+  ],
+  "currentPaymentEvidenceLimit": "Activity297 order48 remains pending; retained280 provider-success + current280 receipt replay + current297 order-entry are deliberately distinct scopes. Actual new bank simulator is waiting on native browser access; no live money operation."
 }

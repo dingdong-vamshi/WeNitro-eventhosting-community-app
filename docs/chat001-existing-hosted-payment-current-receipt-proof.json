@@ -108,5 +108,24 @@
     "baselineCommit": "75cbea7",
     "finding": "Current verify-payment and payments client receipt contract changed since original hosted280, adding registrationConfirmed/refundRequired/financialStatus. Original success is accepted only together with this current actual positive receipt test and current negative-state tests, not by falsely declaring verification code unchanged.",
     "unchanged": "cashfree-webhook source unchanged between baseline and current source."
+  },
+  "current297CategoryRead": {
+    "method": "Read-only Supabase MCP SELECT on event297",
+    "categories": [
+      {
+        "id": 29,
+        "name": "Sandbox Standard",
+        "pricePaisa": 1234,
+        "capacity": 3,
+        "active": true
+      },
+      {
+        "id": 30,
+        "name": "Sandbox Plus",
+        "pricePaisa": 1800,
+        "capacity": 2,
+        "active": true
+      }
+    ]
   }
 }
