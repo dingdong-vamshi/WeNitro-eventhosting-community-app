@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-03T19:56:46.543329+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+  "status": "PASS_ACTUAL_DEPLOYED_DOWNLOAD",
+  "interaction": "Coordinator entered restore_event in deployed Security Logs, observed six matches, clicked Export visible page twice. CUA download event timed out but both actual files completed.",
+  "files": [
+    {
+      "path": "/Users/vamshipendyala/Downloads/wenitro-security-audit.json",
+      "bytes": 1951,
+      "sha256": "a1a64829034cf1f6fd92a21d0d157c27d902efdfa1f16c6a0b17942b79a18509",
+      "modifiedAt": "2026-10-03T19:52:27.233818+00:00",
+      "rowCount": 6,
+      "allRowsMatchSearch": true,
+      "targetIds": [
+        "activity 282",
+        "activity 283"
+      ]
+    },
+    {
+      "path": "/Users/vamshipendyala/Downloads/wenitro-security-audit (1).json",
+      "bytes": 1951,
+      "sha256": "a1a64829034cf1f6fd92a21d0d157c27d902efdfa1f16c6a0b17942b79a18509",
+      "modifiedAt": "2026-10-03T19:53:34.486238+00:00",
+      "rowCount": 6,
+      "allRowsMatchSearch": true,
+      "targetIds": [
+        "activity 282",
+        "activity 283"
+      ]
+    }
+  ],
+  "matchingScope": "Visible-page export of six restore_event records for synthetic QA Activity282/283. JSON includes id,timestamp,action,actionCategory,actor,actorType,targetId,reason. No raw audit actor identities copied into this proof.",
+  "implementationReview": "src/components/admin/security-logs-table.tsx creates application/json Blob from current filtered query.data.rows, names wenitro-security-audit.json, clicks download anchor and revokes object URL. Real completed output establishes execution; no source fix is indicated.",
+  "screenshot": "qa-evidence/chat001/release-admin-security-search.png",
+  "screenshotVisuallyReviewed": true
+}

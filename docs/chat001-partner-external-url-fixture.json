@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-03T19:56:46.550403+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "readOnly": true,
+  "activityId": 234,
+  "ownerId": 71,
+  "title": "Final QA Partner Studio Meetup",
+  "public": true,
+  "cancelled": false,
+  "deleted": false,
+  "storedExternalUrl": "https://example.com/wenitro-final-qa",
+  "appRoute": "https://wenitro-app.vercel.app/#/activity/234",
+  "control": "Partner website / accessibility label Open Partner activity website",
+  "position": "After location/timeline, before Host section in active Activity detail",
+  "status": "EXISTING_PERSISTED_FIXTURE_LOCATED_UI_OPEN_PENDING",
+  "source": "Read-only MCP query on intended Supabase target; active App.tsx line4808 uses Linking.openURL(activity.externalUrl).",
+  "limit": "Existing safe fixture located. No browser open performed by this worker. Example path may return404; exact URL navigation is distinct from external content availability."
+}
