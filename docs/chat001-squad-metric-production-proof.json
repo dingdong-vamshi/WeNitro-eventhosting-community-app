@@ -1,0 +1,80 @@
+{
+  "at": "2026-10-03T19:45:50.607Z",
+  "status": "PASS",
+  "release": {
+    "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+  },
+  "migration": "20261003194203_squad_metric_excludes_self",
+  "source": "Actual deployed authenticated/anonymous RPC; no table/fixture writes",
+  "checks": [
+    {
+      "name": "Bound identity 120",
+      "status": "PASS",
+      "actual": 120
+    },
+    {
+      "name": "Identity 120 count equals its own unique list",
+      "status": "PASS",
+      "actual": 1
+    },
+    {
+      "name": "Identity 120 excludes self",
+      "status": "PASS",
+      "actual": false
+    },
+    {
+      "name": "Reciprocal duplicate and self fixture produces one peer",
+      "status": "PASS",
+      "actual": [
+        70
+      ]
+    },
+    {
+      "name": "Profile count is one",
+      "status": "PASS",
+      "actual": 1
+    },
+    {
+      "name": "Bound identity 71",
+      "status": "PASS",
+      "actual": 71
+    },
+    {
+      "name": "Identity 71 count equals its own unique list",
+      "status": "PASS",
+      "actual": 0
+    },
+    {
+      "name": "Identity 71 excludes self",
+      "status": "PASS",
+      "actual": false
+    },
+    {
+      "name": "Anonymous list_my_squad denied",
+      "status": "PASS",
+      "actual": true
+    },
+    {
+      "name": "Anonymous list_my_squad permission code",
+      "status": "PASS",
+      "actual": "42501"
+    },
+    {
+      "name": "Anonymous my_profile_metrics denied",
+      "status": "PASS",
+      "actual": true
+    },
+    {
+      "name": "Anonymous my_profile_metrics permission code",
+      "status": "PASS",
+      "actual": "42501"
+    }
+  ],
+  "fixtureRowsPreserved": [
+    47,
+    48,
+    49
+  ],
+  "releaseNote": "SQL-only metric fix; App remains08b8bb8. Backend metric now uses the same eligible unique non-self Squad list; Nitro and referral history unchanged."
+}

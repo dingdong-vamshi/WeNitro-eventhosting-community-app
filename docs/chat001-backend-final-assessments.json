@@ -1,0 +1,2150 @@
+{
+  "at": "2026-10-03T19:49:46.234621+00:00",
+  "status": "SCOPED_TECHNICAL_AND_BADGE_ACCEPTANCE_COMPLETE",
+  "scope": "F12 plus22 badges only. Coordinator merges other domains and process gates. All22 exact images personally inspected; this review made no production writes.",
+  "requirements": [
+    {
+      "id": "DOC-DEVELOPER",
+      "before": "Developer and deployment documentation needed reconciliation with the implemented application and provider constraints.",
+      "acceptanceScope": "Coordinator owns updated developer/deployment/provider documentation; this agent documents invitation and provider/fixture distinctions. Documentation review is separate from runtime proof.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Read current README, api/README, database/README and historical E2E notice. Cross-checked target project, release manifest, migration order and recorded local/live proofs. Documentation review, not an app screenshot."
+        }
+      ],
+      "technicalProof": [
+        "README.md",
+        "api/README.md",
+        "database/README.md",
+        "docs/E2E_PRODUCTION.md"
+      ],
+      "status": "PASS",
+      "implemented": "README documents current Expo57/Supabase architecture, integer-keyed migrations, service adapters, secret handling, local gate, DB\u2192Edge\u2192App/Admin release order and evidence rules. Historical API/schema/demo files are explicitly archival.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "README.md",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "api/README.md",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "database/README.md",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/E2E_PRODUCTION.md",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-ANONYMOUS-MEDIA",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "Current deployed feed redacts author and returns opaque marker; authorized Edge image renders without owner/storage path.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:27:20.189Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "outcome": "Current deployed feed redacts author and returns opaque marker; authorized Edge image renders without owner/storage path.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Anonymous Community feed redacts author attribution and owner-identifying media paths; authorized Edge delivery uses opaque references while retaining authorized Admin attribution.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-MEDIA-CAPABILITY",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "Current deployed mint, tampering, HEAD/range, raw/direct Storage denial and soft-delete revocation pass. Original authentic one-hour expiry proof reused because capability implementation unchanged; deleted fixture36 was not reused.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:27:20.189Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "outcome": "Current deployed mint, tampering, HEAD/range, raw/direct Storage denial and soft-delete revocation pass. Original authentic one-hour expiry proof reused because capability implementation unchanged; deleted fixture36 was not reused.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-anonymous-media-expiry-proof.json"
+      ],
+      "status": "PASS",
+      "implemented": "Authorized capability minting checks membership. Signed capabilities enforce integrity/expiry, range/HEAD access and source deletion revocation. Direct private Storage reads remain protected.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-anonymous-media-expiry-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-ANONYMOUS-RATING",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "First31 checks passed before unrelated Realtime timeout: recipient review omits rater/time/event fields, raw identity is hidden; legitimate named review shows intended rater. Duplicate rating yields0 Nitro; self/Host-No-Show/outsider denied.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T18:00:59.706Z",
+          "proof": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "outcome": "First31 checks passed before unrelated Realtime timeout: recipient review omits rater/time/event fields, raw identity is hidden; legitimate named review shows intended rater. Duplicate rating yields0 Nitro; self/Host-No-Show/outsider denied.",
+          "wholeArtifactStatus": "FAIL"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json"
+      ],
+      "status": "PASS",
+      "implemented": "Recipient projection removes rater identity and identifying event/time fields for anonymous reviews. Raw-table access cannot reveal authors; named reviews retain deliberate identity.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "excludedClaims": "musp6fp8 stays overall FAIL due later Realtime timeout. Only named passing rating/report checks count. Separate chat001-realtime-current-retry.json proves fresh Realtime success.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-PROFILE-ACCOUNT-SWITCH",
+      "before": "Asynchronous profile operations required identity binding so an account change could not apply stale results to the new account.",
+      "acceptanceScope": "Local executable identity/race tests plus deployed isolated ownership, revoked/deleted identity, cross-user gallery/interest/payment denials. Browser account-switch race is not claimed as replayed by this API agent. Initiating-identity race is actual executable local client/service evidence; no browser race replay claim.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Local executable identity/race tests plus deployed isolated ownership, revoked/deleted identity, cross-user gallery/interest/payment denials. Browser account-switch race is not claimed as replayed by this API agent.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:27:20.189Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "outcome": "Local executable identity/race tests plus deployed isolated ownership, revoked/deleted identity, cross-user gallery/interest/payment denials. Browser account-switch race is not claimed as replayed by this API agent.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Profile loads, saves, media and interest operations bind their initiating authenticated identity and suppress stale results after account changes. Server ownership/current-account boundaries remain enforced.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-PROFILE-INTEREST-ATOMICITY",
+      "before": "Client-side delete-then-insert could remove saved interests before a newly unavailable category caused the insert to fail.",
+      "acceptanceScope": "Deployed stale new archived assignment fails and preserves old selection; unchanged archived selection retained; other member unaffected.13 real PostgreSQL local assertions.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Deployed stale new archived assignment fails and preserves old selection; unchanged archived selection retained; other member unaffected.13 real PostgreSQL local assertions.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "set_my_interests applies a complete selection atomically. Newly disabled categories reject without deleting old interests; unchanged historical archived categories remain preservable.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-REPORT-SUBMISSION",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "Current deployed own report persists as open despite supplied resolved; reporter impersonation, self/Host/private-outsider reporting and member review denied. Own synthetic report removed in cleanup.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T18:00:59.706Z",
+          "proof": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "outcome": "Current deployed own report persists as open despite supplied resolved; reporter impersonation, self/Host/private-outsider reporting and member review denied. Own synthetic report removed in cleanup.",
+          "wholeArtifactStatus": "FAIL"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json"
+      ],
+      "status": "PASS",
+      "implemented": "Submission derives caller identity, forces open status and validates targets. Members cannot impersonate reporters, submit reviewed outcomes, review reports or report prohibited self/Host/private targets.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "excludedClaims": "musp6fp8 stays overall FAIL due later Realtime timeout. Only named passing rating/report checks count. Separate chat001-realtime-current-retry.json proves fresh Realtime success.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-BADGE-ELIGIBILITY",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "Local22-rule/82-boundary/exclusion checks plus actual deployed22-rule catalog/current states and real referral award. Does not manufacture every earned production threshold.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Local22-rule/82-boundary/exclusion checks plus actual deployed22-rule catalog/current states and real referral award. Does not manufacture every earned production threshold.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Local22-rule/82-boundary/exclusion checks plus actual deployed22-rule catalog/current states and real referral award. Does not manufacture every earned production threshold.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "status": "PASS",
+      "implemented": "Centralized22-rule engine applies valid-Activity, successful-payment, unique-participation, active-account, qualifying-post and valid-referral filters, completed original-Host rules and free-inclusive Popular Partner qualification.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-BADGE-IDEMPOTENCY",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "Current deployed legitimate referral earns First Connector; repeated reconciliation preserves earned timestamp. Referral repeat/cross-inviter grant0. Broader thresholds are local executable cases.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Current deployed legitimate referral earns First Connector; repeated reconciliation preserves earned timestamp. Referral repeat/cross-inviter grant0. Broader thresholds are local executable cases.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current deployed legitimate referral earns First Connector; repeated reconciliation preserves earned timestamp. Referral repeat/cross-inviter grant0. Broader thresholds are local executable cases.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "status": "PASS",
+      "implemented": "Reconciliation preserves earned timestamps/snapshots, prevents duplicate awards and revokes invalid eligibility without deleting audit history. Referral replay/cross-inviter calls grant no repeat reward.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-BADGE-READ-PRIVACY",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "Current owner/public badge progress and Trust privacy validated; anonymous achievement access denied. Owner70 Trust20 matches public viewer71.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Current owner/public badge progress and Trust privacy validated; anonymous achievement access denied. Owner70 Trust20 matches public viewer71.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current owner/public badge progress and Trust privacy validated; anonymous achievement access denied. Owner70 Trust20 matches public viewer71.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "status": "PASS",
+      "implemented": "Owner APIs include progress and verification breakdown; public projections expose intended earned state and total/rating/Activity metrics only. Anonymous access is denied.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-STORAGE-OWNERSHIP",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "Current owner upload/read/delete and cross-user overwrite/delete denial across avatars, communities, vibes and messages. Gallery fourth-slot denial and anonymous direct-path denial tested. Public avatar CDN cache may retain old bytes after object deletion; authoritative remove response/listing checked.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T18:04:21.956Z",
+          "proof": "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+          "outcome": "Current owner upload/read/delete and cross-user overwrite/delete denial across avatars, communities, vibes and messages. Gallery fourth-slot denial and anonymous direct-path denial tested. Public avatar CDN cache may retain old bytes after object deletion; authoritative remove response/listing checked.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:27:20.189Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "outcome": "Current owner upload/read/delete and cross-user overwrite/delete denial across avatars, communities, vibes and messages. Gallery fourth-slot denial and anonymous direct-path denial tested. Public avatar CDN cache may retain old bytes after object deletion; authoritative remove response/listing checked.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:38:11.927Z",
+          "proof": "docs/chat001-isolated-backend-production-mussnxbq-287618.json",
+          "outcome": "Final-release Activity media participant signing returns bytes; outsider signing/read denied; another participant cannot alter author feed choice; former participant loses row access."
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-isolated-backend-production-mussnxbq-287618.json"
+      ],
+      "status": "PASS",
+      "implemented": "Storage policies bind writes/deletes to authorized owners and intended readers. Cross-user overwrite/delete is denied across avatars, Communities, Vibes and messages; linked Activity media requires eligible audience access.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mussnxbq-287618.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "SEC-OBSERVATION-AUTH",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "acceptanceScope": "Admin agent deployed21-check initial segment proves Member/Finance analytics denial and private Activity view/share42501; host observations deduplicate. This agent verifies private raw schema not exposed plus no member SELECT/INSERT grants on observation table.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T18:04:21.956Z",
+          "proof": "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+          "outcome": "Admin agent deployed21-check initial segment proves Member/Finance analytics denial and private Activity view/share42501; host observations deduplicate. This agent verifies private raw schema not exposed plus no member SELECT/INSERT grants on observation table.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T18:05:10.499387+00:00",
+          "proof": "docs/chat001-postdeploy-security-structure.json",
+          "outcome": "Admin agent deployed21-check initial segment proves Member/Finance analytics denial and private Activity view/share42501; host observations deduplicate. This agent verifies private raw schema not exposed plus no member SELECT/INSERT grants on observation table.",
+          "wholeArtifactStatus": "SCOPED_EVIDENCE"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+        "docs/chat001-postdeploy-security-structure.json"
+      ],
+      "status": "PASS",
+      "implemented": "View/share observations derive the member and validate Activity visibility. Deduplication prevents inflated counts; raw private analytics have no ordinary read/write grants and reporting requires an authorized Admin role.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "screenshotProof": [],
+      "screenshotReviewScope": "Not applicable: F row accepts backend/documentation invariant. Related visible requirements are independently assessed by UI owners.",
+      "proofSources": [
+        {
+          "path": "docs/chat001-admin-integrated-production-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-postdeploy-security-structure.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-01",
+      "before": "Source document required join 1 qualifying activity. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Activity Explorer (Explorer), threshold1. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Activity Explorer criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 1 qualifying activity. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Earned02/10/2026.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Activity Explorer: Join 1 qualifying activity. Server threshold=1; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Explorer",
+        "name": "Activity Explorer",
+        "threshold": 1,
+        "criterion": "Join 1 qualifying activity.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-01-activity-explorer.png",
+          "scope": "Personally inspected Activity Explorer detail, criterion, Earned02/10/2026 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "f69a664533d4649e5b97c253553916b1cef00a1049b8b29618e5469fcfaf58b3",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-02",
+      "before": "Source document required join 5 qualifying activities. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Active Explorer (Explorer), threshold5. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Active Explorer criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 5 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;2 of5.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Active Explorer: Join 5 qualifying activities. Server threshold=5; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Explorer",
+        "name": "Active Explorer",
+        "threshold": 5,
+        "criterion": "Join 5 qualifying activities.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-02-active-explorer.png",
+          "scope": "Personally inspected Active Explorer detail, criterion, Locked;2 of5 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "129b19f0ed1300e72da219f8eb7005b56f1b87742a77cf879ef4dec3ac71a595",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-03",
+      "before": "Source document required join 10 qualifying activities. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Adventure Seeker (Explorer), threshold10. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Adventure Seeker criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 10 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;2 of10.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Adventure Seeker: Join 10 qualifying activities. Server threshold=10; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Explorer",
+        "name": "Adventure Seeker",
+        "threshold": 10,
+        "criterion": "Join 10 qualifying activities.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-03-adventure-seeker.png",
+          "scope": "Personally inspected Adventure Seeker detail, criterion, Locked;2 of10 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "f70022b3fbbe8bc2502ae7670ddfe028bb02a2ae8b303db13542268d7baf004e",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-04",
+      "before": "Source document required join 25 qualifying activities. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Activity Pro (Explorer), threshold25. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Activity Pro criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 25 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;2 of25.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Activity Pro: Join 25 qualifying activities. Server threshold=25; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Explorer",
+        "name": "Activity Pro",
+        "threshold": 25,
+        "criterion": "Join 25 qualifying activities.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-04-activity-pro.png",
+          "scope": "Personally inspected Activity Pro detail, criterion, Locked;2 of25 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "012fa486ebaaa5d5254d9ffb3274af2155d9a10316479d13d28d537b3d698c43",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-05",
+      "before": "Source document required complete 1 hosted activity. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "First-Time Host (Host), threshold1. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 First-Time Host criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 1 hosted activity. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Earned02/10/2026.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "First-Time Host: Complete 1 hosted activity. Server threshold=1; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Host",
+        "name": "First-Time Host",
+        "threshold": 1,
+        "criterion": "Complete 1 hosted activity.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions.",
+        "qualification": "Completed original-Host Activities only; creation, future scheduling and Co-host membership do not substitute for completion."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-05-first-time-host.png",
+          "scope": "Personally inspected First-Time Host detail, criterion, Earned02/10/2026 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "a9a107bd1c36f98dcfdee8e9d946da7b4fd5ee1d897a707004c68d086be440c7",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-06",
+      "before": "Source document required complete 5 hosted activities. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Active Host (Host), threshold5. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Active Host criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 5 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;3 of5.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Active Host: Complete 5 hosted activities. Server threshold=5; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Host",
+        "name": "Active Host",
+        "threshold": 5,
+        "criterion": "Complete 5 hosted activities.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions.",
+        "qualification": "Completed original-Host Activities only; creation, future scheduling and Co-host membership do not substitute for completion."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-06-active-host.png",
+          "scope": "Personally inspected Active Host detail, criterion, Locked;3 of5 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "8af85d4d100b40a82a95d35223718f647e324ba037fa017c373db80194f8ccab",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-07",
+      "before": "Source document required complete 10 hosted activities. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Experienced Host (Host), threshold10. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Experienced Host criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 10 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;3 of10.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Experienced Host: Complete 10 hosted activities. Server threshold=10; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Host",
+        "name": "Experienced Host",
+        "threshold": 10,
+        "criterion": "Complete 10 hosted activities.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions.",
+        "qualification": "Completed original-Host Activities only; creation, future scheduling and Co-host membership do not substitute for completion."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-07-experienced-host.png",
+          "scope": "Personally inspected Experienced Host detail, criterion, Locked;3 of10 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "1d2de939999c20ce3c7b0920cd817ab4b14152bbc6a39da09e43ed558a533529",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-08",
+      "before": "Source document required complete 25 hosted activities. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Hosting Veteran (Host), threshold25. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Hosting Veteran criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 25 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;3 of25.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Hosting Veteran: Complete 25 hosted activities. Server threshold=25; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Host",
+        "name": "Hosting Veteran",
+        "threshold": 25,
+        "criterion": "Complete 25 hosted activities.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions.",
+        "qualification": "Completed original-Host Activities only; creation, future scheduling and Co-host membership do not substitute for completion."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-08-hosting-veteran.png",
+          "scope": "Personally inspected Hosting Veteran detail, criterion, Locked;3 of25 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "f6834022d7076a9a001b94729b31fe91d178acebc58ecc15635859e4c021ac39",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-09",
+      "before": "Source document required join 1 community. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Community Starter (Community), threshold1. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Community Starter criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 1 community. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Earned02/10/2026.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Community Starter: Join 1 community. Server threshold=1; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Community",
+        "name": "Community Starter",
+        "threshold": 1,
+        "criterion": "Join 1 community.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-09-community-starter.png",
+          "scope": "Personally inspected Community Starter detail, criterion, Earned02/10/2026 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "a9323938dbaebebcb2cfdcd74dbb2f2448904f9faf57e3152bcfb2045d28dc0e",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-10",
+      "before": "Source document required publish 5 qualifying community posts. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Community Contributor (Community), threshold5. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Community Contributor criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Publish 5 qualifying community posts. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;2 of5.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Community Contributor: Publish 5 qualifying community posts. Server threshold=5; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Community",
+        "name": "Community Contributor",
+        "threshold": 5,
+        "criterion": "Publish 5 qualifying community posts.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-10-community-contributor.png",
+          "scope": "Personally inspected Community Contributor detail, criterion, Locked;2 of5 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "0671a67479c48f9e5f1c00429b891c07ef7d5f20b2336b7560c87e229b1fb5a1",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-11",
+      "before": "Source document required publish 10 qualifying community posts. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Conversation Starter (Community), threshold10. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Conversation Starter criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Publish 10 qualifying community posts. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;2 of10.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Conversation Starter: Publish 10 qualifying community posts. Server threshold=10; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Community",
+        "name": "Conversation Starter",
+        "threshold": 10,
+        "criterion": "Publish 10 qualifying community posts.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-11-conversation-starter.png",
+          "scope": "Personally inspected Conversation Starter detail, criterion, Locked;2 of10 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "fe7688909c7edfb0403c37aa4bc121cc216ed0d6814060d89c0960795b8838fe",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-12",
+      "before": "Source document required join 5 communities. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Community Explorer (Community), threshold5. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Community Explorer criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 5 communities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Earned03/10/2026.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Community Explorer: Join 5 communities. Server threshold=5; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Community",
+        "name": "Community Explorer",
+        "threshold": 5,
+        "criterion": "Join 5 communities.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-12-community-explorer.png",
+          "scope": "Personally inspected Community Explorer detail, criterion, Earned03/10/2026 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "9672d3e46a7b2db76698ee5377889113dfd133cb8879dc2023a5784a514a4a68",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-13",
+      "before": "Source document required invite 1 successfully referred member. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "First Connector (Connector), threshold1. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 First Connector criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Invite 1 successfully referred member. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;0 of1.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "First Connector: Invite 1 successfully referred member. Server threshold=1; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Connector",
+        "name": "First Connector",
+        "threshold": 1,
+        "criterion": "Invite 1 successfully referred member.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-13-first-connector.png",
+          "scope": "Personally inspected First Connector detail, criterion, Locked;0 of1 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "8fc464d19635d501bf6da10c558f3ae6012c912c0c84e14782c5c1504d978320",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-14",
+      "before": "Source document required invite 5 successfully referred members. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Network Builder (Connector), threshold5. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Network Builder criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Invite 5 successfully referred members. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;0 of5.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Network Builder: Invite 5 successfully referred members. Server threshold=5; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Connector",
+        "name": "Network Builder",
+        "threshold": 5,
+        "criterion": "Invite 5 successfully referred members.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-14-network-builder.png",
+          "scope": "Personally inspected Network Builder detail, criterion, Locked;0 of5 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "a40a7d4588889ec02fcbe67eb843ff20eb2f644e87ff75a852c7ed61bc5a9067",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-15",
+      "before": "Source document required invite 10 successfully referred members. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Community Connector (Connector), threshold10. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Community Connector criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Invite 10 successfully referred members. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;0 of10.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Community Connector: Invite 10 successfully referred members. Server threshold=10; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Connector",
+        "name": "Community Connector",
+        "threshold": 10,
+        "criterion": "Invite 10 successfully referred members.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-15-community-connector.png",
+          "scope": "Personally inspected Community Connector detail, criterion, Locked;0 of10 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "8c748d1ed0f3a9ef6a70b16d627474eb57312923fe8b00f72120f996aa71f6c2",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-16",
+      "before": "Source document required complete your first participation. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "First Activity (Milestone), threshold1. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 First Activity criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete your first participation. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;0 of1.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "First Activity: Complete your first participation. Server threshold=1; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Milestone",
+        "name": "First Activity",
+        "threshold": 1,
+        "criterion": "Complete your first participation.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-16-first-activity.png",
+          "scope": "Personally inspected First Activity detail, criterion, Locked;0 of1 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "673139b98ee90ea0f34fbd40b27b89222b04b1de33778efbe668563479e6b3e8",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-17",
+      "before": "Source document required complete 10 participations. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "10 Activities (Milestone), threshold10. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 10 Activities criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 10 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;0 of10.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "10 Activities: Complete 10 participations. Server threshold=10; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Milestone",
+        "name": "10 Activities",
+        "threshold": 10,
+        "criterion": "Complete 10 participations.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-17-10-activities.png",
+          "scope": "Personally inspected 10 Activities detail, criterion, Locked;0 of10 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "d3b042198831f42a642dcd29ebb58e26f613b35f25aee79fce488f21b1f1ea9f",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-18",
+      "before": "Source document required complete 25 participations. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "25 Activities (Milestone), threshold25. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 25 Activities criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 25 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;0 of25.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "25 Activities: Complete 25 participations. Server threshold=25; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Milestone",
+        "name": "25 Activities",
+        "threshold": 25,
+        "criterion": "Complete 25 participations.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-18-25-activities.png",
+          "scope": "Personally inspected 25 Activities detail, criterion, Locked;0 of25 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "1d6cc89adecdd7b5274471d28a74825c1ce83267c593da2e210cce5c8fe89e7d",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-19",
+      "before": "Source document required complete 50 participations. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "50 Activities (Milestone), threshold50. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 50 Activities criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 50 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;0 of50 (account120).",
+          "captureAt": "2026-10-03T18:46:21.916Z",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "50 Activities: Complete 50 participations. Server threshold=50; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Milestone",
+        "name": "50 Activities",
+        "threshold": 50,
+        "criterion": "Complete 50 participations.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/iab-badge19-50activities.png",
+          "scope": "Personally inspected 50 Activities detail, criterion, Locked;0 of50 (account120) and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 120,
+          "sha256": "a69a4686229fe05369689587f583e9fe35a3c1e020fffb51d9e1664d5ce52491",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-20",
+      "before": "Source document required receive admin approval as a partner. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Verified Partner (Partner), threshold1. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Verified Partner criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Receive Admin approval as a Partner. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Earned02/10/2026.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Verified Partner: Receive Admin approval as a Partner. Server threshold=1; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Partner",
+        "name": "Verified Partner",
+        "threshold": 1,
+        "criterion": "Receive Admin approval as a Partner.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-20-verified-partner.png",
+          "scope": "Personally inspected Verified Partner detail, criterion, Earned02/10/2026 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "873901a9160744d0bc86beeddfdfd389c4b54fd6d3362551aa504a7ec99cdee8",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-21",
+      "before": "Source document required complete 5 paid partner activities. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Active Partner (Partner), threshold5. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Active Partner criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 5 paid Partner activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;0 of5.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Active Partner: Complete 5 paid Partner activities. Server threshold=5; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Partner",
+        "name": "Active Partner",
+        "threshold": 5,
+        "criterion": "Complete 5 paid Partner activities.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-21-active-partner.png",
+          "scope": "Personally inspected Active Partner detail, criterion, Locked;0 of5 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "a8b13a5bfa418aad19f4a8fce1c939fd4f37ff33cef8b010cac71fd36e83e1f2",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    },
+    {
+      "id": "BADGE-22",
+      "before": "Source document required welcome 100 qualifying participants across partner activities, including qualifying free-activity participants. Acceptance needed independent rule-boundary, current API and visible detail evidence.",
+      "acceptanceScope": "Popular Partner (Partner), threshold100. Actual SQL engine below/at/above-threshold and exclusion tests run in disposable PostgreSQL. Deployed proof covers actual catalog/current state and inspected detail image, not newly earning every threshold in production.",
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Popular Partner criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Welcome 100 qualifying participants across Partner activities, including qualifying free-activity participants. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T19:49:46.234621+00:00",
+          "outcome": "Saved deployed image personally inspected against source criterion/threshold: Locked;8 of100.",
+          "captureAt": "Original B/C capture metadata retained in docs/chat001-production-bc-qa.json",
+          "reviewOnly": true
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "status": "PASS",
+      "implemented": "Popular Partner: Welcome 100 qualifying participants across Partner activities, including qualifying free-activity participants. Server threshold=100; progress, locked/earned state, earned timestamp and criterion render from the centralized achievement catalog.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json"
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "",
+      "evidenceCompatibility": "Earlier evidence retains original deployment/time. Compared bd6d314\u219208b8bb8 changed paths: badge renderer/profile adapter, badge SQL and anonymous-media/rating contracts unchanged. New Activity media privacy separately tested on final release. No recapture claim.",
+      "technicalAcceptance": "PASS for stated invariant and scope; not a provider-delivery, universal security or all-device certification.",
+      "sourceCriterion": {
+        "source": "WeNitro Badges.docx",
+        "group": "Partner",
+        "name": "Popular Partner",
+        "threshold": 100,
+        "criterion": "Welcome 100 qualifying participants across Partner activities, including qualifying free-activity participants.",
+        "exclusions": "Cancelled registrations; failed payments; duplicate registrations; self-referrals; deleted/spam posts; removed Activities; suspended-account fraudulent activity; duplicate referral identities; repeated nonqualifying actions.",
+        "qualification": "Includes qualifying free Activity participants; only Active Partner explicitly requires completed paid Activities."
+      },
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-22-popular-partner.png",
+          "scope": "Personally inspected Popular Partner detail, criterion, Locked;8 of100 and exclusion hint. State is at capture time.",
+          "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "capturedAccount": 70,
+          "sha256": "a8921b50700d6ad8ada37b6c4dbc73f3ba9a21a12ffdfd7d0822ad15a0a58170",
+          "reuseDecision": "Compatible earlier deployed capture; renderer/service/engine unchanged. Not recaptured."
+        }
+      ],
+      "proofSources": [
+        {
+          "path": "docs/chat001-current-profile70-proof.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        },
+        {
+          "path": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "use": "Named scoped outcomes with original timestamps preserved; source-only tests do not prove deployed behavior."
+        }
+      ]
+    }
+  ],
+  "releaseCompatibility": {
+    "baseAppCommit": "bd6d314",
+    "selectedAppCommit": "08b8bb8",
+    "badgePathsUnchanged": [
+      "src/components/profile-achievements.tsx",
+      "src/components/reconstruction/profile.tsx",
+      "src/services/profile-production.ts",
+      "supabase/migrations/20261002170748_client_badge_engine.sql",
+      "supabase/migrations/20261003052115_popular_partner_qualifying_participants.sql",
+      "src/lib/supabase.ts"
+    ],
+    "laterSqlOnlyChange": "20261003194203_squad_metric_excludes_self changes only Squad metric; no badge rendering/criteria/Trust change.",
+    "rpcAccess": "ProfileAchievements directly calls profile_achievements; no separate achievement-service file."
+  },
+  "remainingGlobalConstraints": [
+    "Auth inbox/SMS/Google completion, licensed Aadhaar, Hubble and live-money provider acceptance are separate canonical/provider rows, not implied by these34 PASS scopes.",
+    "0 advisor ERROR is not absence of vulnerabilities.135 authenticated-definer warnings, leaked-password warning and9 private-table notices remain in docs/chat001-final-security-advisor-review.json.",
+    "Toolchain dependency advisories remain coordinator-recorded."
+  ]
+}
