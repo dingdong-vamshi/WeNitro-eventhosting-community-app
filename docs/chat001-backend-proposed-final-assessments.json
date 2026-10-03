@@ -1,0 +1,1762 @@
+{
+  "at": "2026-10-03T19:14:54.588166+00:00",
+  "sourcePrimaryCommit": "d525bc0",
+  "status": "PROPOSED_NOT_FINAL",
+  "count": 34,
+  "requirements": [
+    {
+      "id": "DOC-DEVELOPER",
+      "requestedChange": "Developer documentation explains the implemented architecture, deployment order, provider dependencies and operational constraints.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "Developer and deployment documentation needed reconciliation with the implemented application and provider constraints.",
+      "implemented": "Developer documentation explains the implemented architecture, deployment order, provider dependencies and operational constraints.",
+      "acceptanceScope": "Coordinator owns updated developer/deployment/provider documentation; this agent documents invitation and provider/fixture distinctions. Documentation review is separate from runtime proof.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [],
+      "technicalProof": [
+        "README.md",
+        "api/README.md",
+        "database/README.md",
+        "docs/E2E_PRODUCTION.md"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "Coordinator must review final operational/deployment documentation; runtime tests do not establish documentation completeness."
+      ]
+    },
+    {
+      "id": "SEC-ANONYMOUS-MEDIA",
+      "requestedChange": "Anonymous Community media delivery does not leak an author-identifying owner/storage path to recipient clients.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Anonymous Community media delivery does not leak an author-identifying owner/storage path to recipient clients.",
+      "acceptanceScope": "Current deployed feed redacts author and returns opaque marker; authorized Edge image renders without owner/storage path.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:27:20.189Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "outcome": "Current deployed feed redacts author and returns opaque marker; authorized Edge image renders without owner/storage path.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ]
+    },
+    {
+      "id": "SEC-MEDIA-CAPABILITY",
+      "requestedChange": "Anonymous-media capabilities require authorized minting, reject tampering, expire naturally and fail after source soft deletion; direct private Storage paths remain protected.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Anonymous-media capabilities require authorized minting, reject tampering, expire naturally and fail after source soft deletion; direct private Storage paths remain protected.",
+      "acceptanceScope": "Current deployed mint, tampering, HEAD/range, raw/direct Storage denial and soft-delete revocation pass. Original authentic one-hour expiry proof reused because capability implementation unchanged; deleted fixture36 was not reused.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:27:20.189Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "outcome": "Current deployed mint, tampering, HEAD/range, raw/direct Storage denial and soft-delete revocation pass. Original authentic one-hour expiry proof reused because capability implementation unchanged; deleted fixture36 was not reused.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+        "docs/chat001-anonymous-media-expiry-proof.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ]
+    },
+    {
+      "id": "SEC-ANONYMOUS-RATING",
+      "requestedChange": "Anonymous participant ratings redact recipient-visible author identity and deny unauthorized raw-table access while preserving legitimate named reviews.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Anonymous participant ratings redact recipient-visible author identity and deny unauthorized raw-table access while preserving legitimate named reviews.",
+      "acceptanceScope": "First31 checks passed before unrelated Realtime timeout: recipient review omits rater/time/event fields, raw identity is hidden; legitimate named review shows intended rater. Duplicate rating yields0 Nitro; self/Host-No-Show/outsider denied.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T18:00:59.706Z",
+          "proof": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "outcome": "First31 checks passed before unrelated Realtime timeout: recipient review omits rater/time/event fields, raw identity is hidden; legitimate named review shows intended rater. Duplicate rating yields0 Nitro; self/Host-No-Show/outsider denied.",
+          "wholeArtifactStatus": "FAIL"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ],
+      "evidenceCaveat": "The musp6fp8 report is overall FAIL because a later Realtime subscription timed out. Only the explicitly passed rating/report checks are cited. Separate fresh Realtime retry passed; do not relabel original report PASS."
+    },
+    {
+      "id": "SEC-PROFILE-ACCOUNT-SWITCH",
+      "requestedChange": "Profile loading/saving/media/interest operations cannot apply a prior account's data to a newly signed-in account; mutations remain bound to their initiating authenticated identity.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "Asynchronous profile operations required identity binding so an account change could not apply stale results to the new account.",
+      "implemented": "Profile loading/saving/media/interest operations cannot apply a prior account's data to a newly signed-in account; mutations remain bound to their initiating authenticated identity.",
+      "acceptanceScope": "Local executable identity/race tests plus deployed isolated ownership, revoked/deleted identity, cross-user gallery/interest/payment denials. Browser account-switch race is not claimed as replayed by this API agent.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Local executable identity/race tests plus deployed isolated ownership, revoked/deleted identity, cross-user gallery/interest/payment denials. Browser account-switch race is not claimed as replayed by this API agent.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:27:20.189Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "outcome": "Local executable identity/race tests plus deployed isolated ownership, revoked/deleted identity, cross-user gallery/interest/payment denials. Browser account-switch race is not claimed as replayed by this API agent.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "Account-switch race is executable local evidence, not a replayed browser race; combine UI owner account-switch proof if required."
+      ]
+    },
+    {
+      "id": "SEC-PROFILE-INTEREST-ATOMICITY",
+      "requestedChange": "Interest updates are atomic: an unavailable new category must roll back without deleting previously saved interests, while unchanged historical IDs remain preservable.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "Client-side delete-then-insert could remove saved interests before a newly unavailable category caused the insert to fail.",
+      "implemented": "Interest updates are atomic: an unavailable new category must roll back without deleting previously saved interests, while unchanged historical IDs remain preservable.",
+      "acceptanceScope": "Deployed stale new archived assignment fails and preserves old selection; unchanged archived selection retained; other member unaffected.13 real PostgreSQL local assertions.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Deployed stale new archived assignment fails and preserves old selection; unchanged archived selection retained; other member unaffected.13 real PostgreSQL local assertions.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ]
+    },
+    {
+      "id": "SEC-REPORT-SUBMISSION",
+      "requestedChange": "Eligible authenticated members can submit their own safety reports, cannot spoof another reporter or reviewed status, and cannot report prohibited self/Host targets.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Eligible authenticated members can submit their own safety reports, cannot spoof another reporter or reviewed status, and cannot report prohibited self/Host targets.",
+      "acceptanceScope": "Current deployed own report persists as open despite supplied resolved; reporter impersonation, self/Host/private-outsider reporting and member review denied. Own synthetic report removed in cleanup.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T18:00:59.706Z",
+          "proof": "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json",
+          "outcome": "Current deployed own report persists as open despite supplied resolved; reporter impersonation, self/Host/private-outsider reporting and member review denied. Own synthetic report removed in cleanup.",
+          "wholeArtifactStatus": "FAIL"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-musp6fp8-9fe1f2.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ],
+      "evidenceCaveat": "The musp6fp8 report is overall FAIL because a later Realtime subscription timed out. Only the explicitly passed rating/report checks are cited. Separate fresh Realtime retry passed; do not relabel original report PASS."
+    },
+    {
+      "id": "SEC-BADGE-ELIGIBILITY",
+      "requestedChange": "Badge progress excludes the documented failed/cancelled/removed/suspended/ineligible activity, membership, post and referral states.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Badge progress excludes the documented failed/cancelled/removed/suspended/ineligible activity, membership, post and referral states.",
+      "acceptanceScope": "Local22-rule/82-boundary/exclusion checks plus actual deployed22-rule catalog/current states and real referral award. Does not manufacture every earned production threshold.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Local22-rule/82-boundary/exclusion checks plus actual deployed22-rule catalog/current states and real referral award. Does not manufacture every earned production threshold.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Local22-rule/82-boundary/exclusion checks plus actual deployed22-rule catalog/current states and real referral award. Does not manufacture every earned production threshold.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ]
+    },
+    {
+      "id": "SEC-BADGE-IDEMPOTENCY",
+      "requestedChange": "Badge evaluation/refresh persists legitimate earned state/timestamps without duplicate awards or reward farming.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Badge evaluation/refresh persists legitimate earned state/timestamps without duplicate awards or reward farming.",
+      "acceptanceScope": "Current deployed legitimate referral earns First Connector; repeated reconciliation preserves earned timestamp. Referral repeat/cross-inviter grant0. Broader thresholds are local executable cases.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Current deployed legitimate referral earns First Connector; repeated reconciliation preserves earned timestamp. Referral repeat/cross-inviter grant0. Broader thresholds are local executable cases.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current deployed legitimate referral earns First Connector; repeated reconciliation preserves earned timestamp. Referral repeat/cross-inviter grant0. Broader thresholds are local executable cases.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ]
+    },
+    {
+      "id": "SEC-BADGE-READ-PRIVACY",
+      "requestedChange": "Badge and Trust APIs disclose only intended self/public metrics and enforce current identity/authorization.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Badge and Trust APIs disclose only intended self/public metrics and enforce current identity/authorization.",
+      "acceptanceScope": "Current owner/public badge progress and Trust privacy validated; anonymous achievement access denied. Owner70 Trust20 matches public viewer71.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Current owner/public badge progress and Trust privacy validated; anonymous achievement access denied. Owner70 Trust20 matches public viewer71.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current owner/public badge progress and Trust privacy validated; anonymous achievement access denied. Owner70 Trust20 matches public viewer71.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+        "docs/chat001-current-profile70-proof.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ]
+    },
+    {
+      "id": "SEC-STORAGE-OWNERSHIP",
+      "requestedChange": "Profile, Community, Vibe and Chat media writes/deletes are limited to authorized owners/managers and intended content access.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Profile, Community, Vibe and Chat media writes/deletes are limited to authorized owners/managers and intended content access.",
+      "acceptanceScope": "Current owner upload/read/delete and cross-user overwrite/delete denial across avatars, communities, vibes and messages. Gallery fourth-slot denial and anonymous direct-path denial tested. Public avatar CDN cache may retain old bytes after object deletion; authoritative remove response/listing checked.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T18:04:21.956Z",
+          "proof": "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+          "outcome": "Current owner upload/read/delete and cross-user overwrite/delete denial across avatars, communities, vibes and messages. Gallery fourth-slot denial and anonymous direct-path denial tested. Public avatar CDN cache may retain old bytes after object deletion; authoritative remove response/listing checked.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:27:20.189Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json",
+          "outcome": "Current owner upload/read/delete and cross-user overwrite/delete denial across avatars, communities, vibes and messages. Gallery fourth-slot denial and anonymous direct-path denial tested. Public avatar CDN cache may retain old bytes after object deletion; authoritative remove response/listing checked.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+        "docs/chat001-isolated-backend-production-mus4oh17-f4d98f.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ]
+    },
+    {
+      "id": "SEC-OBSERVATION-AUTH",
+      "requestedChange": "Usage/view/share observation APIs derive the authenticated member and verify Activity visibility; raw/private analytics are not writable or readable by ordinary clients.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The audit required explicit proof of this boundary; the cited evidence does not establish that every boundary was previously vulnerable.",
+      "implemented": "Usage/view/share observation APIs derive the authenticated member and verify Activity visibility; raw/private analytics are not writable or readable by ordinary clients.",
+      "acceptanceScope": "Admin agent deployed21-check initial segment proves Member/Finance analytics denial and private Activity view/share42501; host observations deduplicate. This agent verifies private raw schema not exposed plus no member SELECT/INSERT grants on observation table.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T18:04:21.956Z",
+          "proof": "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+          "outcome": "Admin agent deployed21-check initial segment proves Member/Finance analytics denial and private Activity view/share42501; host observations deduplicate. This agent verifies private raw schema not exposed plus no member SELECT/INSERT grants on observation table.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T18:05:10.499387+00:00",
+          "proof": "docs/chat001-postdeploy-security-structure.json",
+          "outcome": "Admin agent deployed21-check initial segment proves Member/Finance analytics denial and private Activity view/share42501; host observations deduplicate. This agent verifies private raw schema not exposed plus no member SELECT/INSERT grants on observation table.",
+          "wholeArtifactStatus": "SCOPED_EVIDENCE"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-admin-integrated-production-proof.json",
+        "docs/chat001-isolated-backend-production-muspb1ly-43fb61.json",
+        "docs/chat001-postdeploy-security-structure.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility."
+      ]
+    },
+    {
+      "id": "BADGE-01",
+      "requestedChange": "Join 1 qualifying activity.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Join 1 qualifying activity. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Activity Explorer criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 1 qualifying activity. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-01-activity-explorer.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-02",
+      "requestedChange": "Join 5 qualifying activities.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Join 5 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Active Explorer criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 5 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-02-active-explorer.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-03",
+      "requestedChange": "Join 10 qualifying activities.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Join 10 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Adventure Seeker criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 10 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-03-adventure-seeker.png",
+          "scope": "This badge detail/current state",
+          "review": "RECAPTURE_OPENING_ANIMATION"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        },
+        {
+          "interactionAndOutcome": "Opened badge detail again and recaptured settled modal; saved PNG visually inspected and matches name/category/criteria/state.",
+          "testAccount": 70
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-04",
+      "requestedChange": "Join 25 qualifying activities.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Join 25 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Activity Pro criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 25 qualifying activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-04-activity-pro.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-05",
+      "requestedChange": "Complete 1 hosted activity.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete 1 hosted activity. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 First-Time Host criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 1 hosted activity. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-05-first-time-host.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-06",
+      "requestedChange": "Complete 5 hosted activities.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete 5 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Active Host criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 5 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-06-active-host.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-07",
+      "requestedChange": "Complete 10 hosted activities.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete 10 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Experienced Host criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 10 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-07-experienced-host.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-08",
+      "requestedChange": "Complete 25 hosted activities.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete 25 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Hosting Veteran criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 25 hosted activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-08-hosting-veteran.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-09",
+      "requestedChange": "Join 1 community.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Join 1 community. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Community Starter criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 1 community. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-09-community-starter.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-10",
+      "requestedChange": "Publish 5 qualifying community posts.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Publish 5 qualifying community posts. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Community Contributor criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Publish 5 qualifying community posts. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-10-community-contributor.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-11",
+      "requestedChange": "Publish 10 qualifying community posts.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Publish 10 qualifying community posts. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Conversation Starter criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Publish 10 qualifying community posts. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-11-conversation-starter.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-12",
+      "requestedChange": "Join 5 communities.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Join 5 communities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Community Explorer criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Join 5 communities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-12-community-explorer.png",
+          "scope": "This badge detail/current state",
+          "review": "RECAPTURE_OPENING_ANIMATION"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        },
+        {
+          "interactionAndOutcome": "Opened badge detail again and recaptured settled modal; saved PNG visually inspected and matches name/category/criteria/state.",
+          "testAccount": 70
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-13",
+      "requestedChange": "Invite 1 successfully referred member.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Invite 1 successfully referred member. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 First Connector criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Invite 1 successfully referred member. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-13-first-connector.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-14",
+      "requestedChange": "Invite 5 successfully referred members.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Invite 5 successfully referred members. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Network Builder criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Invite 5 successfully referred members. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-14-network-builder.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-15",
+      "requestedChange": "Invite 10 successfully referred members.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Invite 10 successfully referred members. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Community Connector criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Invite 10 successfully referred members. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-15-community-connector.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-16",
+      "requestedChange": "Complete your first participation.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete your first participation. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 First Activity criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete your first participation. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-16-first-activity.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-17",
+      "requestedChange": "Complete 10 participations.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete 10 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 10 Activities criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 10 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-17-10-activities.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-18",
+      "requestedChange": "Complete 25 participations.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete 25 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 25 Activities criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 25 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-18-25-activities.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-19",
+      "requestedChange": "Complete 50 participations.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete 50 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 50 Activities criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 50 participations. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-19-50-activities.png",
+          "scope": "This badge detail/current state",
+          "review": "RECAPTURE_OPENING_ANIMATION"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "UI_VERIFIED_SCREENSHOT_REVIEW_PENDING"
+    },
+    {
+      "id": "BADGE-20",
+      "requestedChange": "Receive Admin approval as a Partner.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Receive Admin approval as a Partner. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Verified Partner criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Receive Admin approval as a Partner. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-20-verified-partner.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-21",
+      "requestedChange": "Complete 5 paid Partner activities.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Complete 5 paid Partner activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Active Partner criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Complete 5 paid Partner activities. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-21-active-partner.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    },
+    {
+      "id": "BADGE-22",
+      "requestedChange": "Welcome 100 qualifying participants across Partner activities, including qualifying free-activity participants.",
+      "assessmentState": "PROPOSED_PENDING_FINAL_RELEASE_RECONCILIATION",
+      "proposedStatus": "PASS",
+      "before": "The source requires this achievement criterion; no claim is made that every original threshold was absent or broken.",
+      "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
+      "acceptanceScope": "Welcome 100 qualifying participants across Partner activities, including qualifying free-activity participants. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+      "localVerification": [
+        "docs/chat001-integrated-local-verification.json",
+        "docs/chat001-predeployment-local-verification.json"
+      ],
+      "productionVerification": [
+        {
+          "at": "2026-10-03T08:25:08.498Z",
+          "proof": "docs/chat001-current-profile70-proof.json",
+          "outcome": "Current account70 Popular Partner criterion/state read from the deployed API; public progress is redacted.",
+          "wholeArtifactStatus": "PASS"
+        },
+        {
+          "at": "2026-10-03T08:22:50.853Z",
+          "proof": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
+          "outcome": "Welcome 100 qualifying participants across Partner activities, including qualifying free-activity participants. Criteria/boundaries are exercised in a disposable PostgreSQL database; actual deployed UI/API verifies current catalog, progress, earned dates and public redaction. This does not assert all 22 thresholds were earned in production.",
+          "wholeArtifactStatus": "PASS"
+        }
+      ],
+      "technicalProof": [
+        "docs/chat001-current-profile70-proof.json",
+        "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json"
+      ],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001-integrated-bc/badge-22-popular-partner.png",
+          "scope": "This badge detail/current state",
+          "review": "VISUALLY_REVIEWED_DETAIL_VISIBLE"
+        }
+      ],
+      "screenshotsReviewed": false,
+      "releaseReviewed": false,
+      "release": null,
+      "reason": "Final batch release is not yet selected; coordinator must reconcile compatible prior proof and any required deployed visual proof before assigning terminal PASS.",
+      "remaining": [
+        "Reconcile final release IDs and implementation compatibility.",
+        "UI owner/coordinator must review exact badge screenshot, including BADGE-19 replacement, against final release."
+      ],
+      "priorUiVerification": [
+        {
+          "type": "actual_deployed_ui",
+          "account": 70,
+          "interaction": "Expand View all22 badges, select this named badge, inspect criterion/locked-or-earned state/progress or earned date, close detail.",
+          "outcome": "The named criterion and actual current state were present in the deployed DOM. No artificial earned threshold was manufactured.",
+          "url": "https://wenitro-app.vercel.app/#/profile",
+          "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+          "viewport": "390x844"
+        }
+      ],
+      "uiOwnerStatus": "VERIFIED_CURRENT_DETAIL_AND_ENGINE"
+    }
+  ],
+  "securityAssessment": {
+    "scope": "Actual authorization/ownership boundaries plus structural inventory; not a blanket security certification.",
+    "currentPriorProof": [
+      "docs/chat001-postdeploy-security-advisors.json",
+      "docs/chat001-postdeploy-security-structure.json",
+      "docs/chat001-postdeploy-rpc-inventory.json",
+      "docs/chat001-postdeploy-auth-provider-state.json"
+    ],
+    "priorAdvisorResult": "0 ERROR;135 authenticated SECURITY DEFINER warnings; leaked-password protection disabled warning;8 private RLS-no-policy informational findings. No anonymous SECURITY DEFINER execution, no public tables without RLS or callable views without security_invoker in the inspected snapshot.",
+    "remaining": "Refresh structural/advisor inventory after the five pending migrations. The number of warnings is not a proof of absence or presence of an exploitable boundary.",
+    "externalConstraints": [
+      "Leaked-password protection requires actual Supabase Auth configuration/provider availability review; no disabled setting represented as enabled.",
+      "Auth provider settings are not proof of successful inbox/SMS delivery or Google consent completion.",
+      "Known transitive tooling vulnerabilities remain recorded by coordinator; no claim of npm audit clean."
+    ]
+  },
+  "migrationReview": {
+    "blockingFindings": [],
+    "filesByteIdenticalToTestedCommit": "3f7fd39",
+    "orderedMigrations": [
+      "20261003181143_invited_registration_answers",
+      "20261003181703_activity_safety_reminders",
+      "20261003182405_participant_management_boundaries",
+      "20261003183320_active_join_retry_idempotency",
+      "20261003185740_activity_media_feed_choice"
+    ],
+    "deploymentConditions": [
+      "Apply database migrations before new App clients query show_in_vibes or call seven-argument vibe_create.",
+      "Preserve exact existing private.enqueue_notification and payment/join contracts; dynamic migration guards fail loudly on incompatible definitions.",
+      "Observe actual pg_cron timing and idempotence after deployment using isolated fixtures."
+    ],
+    "intentionalBehaviorChanges": [
+      "38 existing event-linked public Vibes become activity visibility according to the original participant-only requirement. Old associated public-share acceptance cannot be reused to claim continued public audience.",
+      "Old six-argument vibe_create delegates to the new seven-argument implementation with show_in_vibes=true. Existing author/Admin RLS exceptions remain.",
+      "New media audience trigger enforces event-linked public\u2192activity even for forged client visibility. Client listReels filters show_in_vibes except Activity-scoped queries."
+    ],
+    "preparedProductionScopes": [
+      "--safety-reminders",
+      "--participant-management",
+      "--activity-media"
+    ]
+  }
+}
