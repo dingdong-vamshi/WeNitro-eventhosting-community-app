@@ -45,6 +45,13 @@ includesAll(app, ['recordShare(vibe.id, "copy_link")', 'recordShare(vibe.id, "ex
 includesAll(edge, ['.eq("visibility", "public")']);
 includesAll(read('supabase/functions/share-vibe/handler.ts'), ['og:title', 'og:description', 'og:image']);
 assert.match(vercel, /share\/vibe\/:id/);
+const publicPreviewHosting = JSON.parse(vercel);
+const previewRewrite = publicPreviewHosting.rewrites.find(rule => rule.source === '/share/vibe/:id');
+assert.equal(previewRewrite?.destination, 'https://cxsznhrkzqndhseodcyy.supabase.co/functions/v1/share-vibe?id=:id');
+const previewHeaders = publicPreviewHosting.headers.filter(rule => rule.source === '/share/vibe/:id').flatMap(rule => rule.headers);
+assert.deepEqual(previewHeaders.filter(header => header.key.toLowerCase() === 'cache-control').map(header => header.value), ['no-store'], 'Canonical hosting must preserve the Edge author/audience no-cache boundary.');
+assert(previewHeaders.some(header => header.key.toLowerCase() === 'x-content-type-options' && header.value === 'nosniff'));
+
 
 includesAll(security, [
   'create_activity_invite', 'redeem_activity_invite', 'ensure_activity_chat',

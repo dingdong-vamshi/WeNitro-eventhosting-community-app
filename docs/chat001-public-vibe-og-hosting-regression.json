@@ -1,0 +1,31 @@
+{
+  "status": "LOCAL_FIXED_AWAITING_VERCEL_REDEPLOY",
+  "finding": "Canonical App Vercel route overrides upstream share-vibe no-store with public 300-second caching. Root verifier failed second assertion after successful public200; no false author denial.",
+  "readOnlyChecks": {
+    "canonicalPrivate135": {
+      "status": 404,
+      "cacheControl": "public, max-age=300, s-maxage=300",
+      "xVercelCache": "MISS",
+      "ogMetadataPresent": false
+    },
+    "directEdgePrivate135": {
+      "status": 404,
+      "cacheControl": "no-store",
+      "ogMetadataPresent": false
+    },
+    "author120": {
+      "activeType": "integer",
+      "active": 1,
+      "deleteType": "integer",
+      "deleted": 0,
+      "notDeactivated": true,
+      "authExists": true,
+      "authNotDeleted": true,
+      "bannedUntilNull": true
+    }
+  },
+  "change": "Only canonical Vercel share route Cache-Control becomes no-store; Edge runtime unchanged. Existing CSP, MIME, nosniff and exact project rewrite preserved.",
+  "focusedVerification": "PASS client-pdf-regression-test.mjs exact rewrite/no-store/single-cache-header/nosniff assertions plus existing full client contracts.",
+  "production": "Root retains two failed verifier runs (136,137), each exact cleanup4PASS and QA120 rewards unchanged. No third fixture or deployment executed by this agent.",
+  "next": "Root full local gate then App Vercel redeploy; rerun synthetic positive/private/reward/cleanup verifier only after READY."
+}
