@@ -3,7 +3,8 @@
   "purpose": "Sixteen auth/provider canonical dispositions reconciled against actual Oct1 evidence and fresh read-only target settings. No browser, new identity, signup consent, outbound message or credential reset.",
   "count": 16,
   "counts": {
-    "PARTIAL_EXTERNAL_DEPENDENCY": 16
+    "PARTIAL_EXTERNAL_DEPENDENCY": 15,
+    "PENDING_SCOPED_ACCEPTANCE": 1
   },
   "requirements": [
     {
@@ -514,14 +515,14 @@
     },
     {
       "id": "AUTH-GOOGLE-PROVIDER",
-      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
       "sourceClauseIds": [
         "A04-03"
       ],
       "requestedChange": "Configured Google sign-in exchanges valid provider credentials and rejects invalid or cancelled attempts.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "Actual valid Google GIS credential exchange into target session passed. Local executable chooser cancellation, retry, duplicate-tap, invalid exchange/error restoration tests pass on unchanged auth code.",
-      "acceptanceScope": "Actual valid Google GIS credential exchange into target session passed. Local executable chooser cancellation, retry, duplicate-tap, invalid exchange/error restoration tests pass on unchanged auth code. Remaining external interaction: Live provider cancellation/invalid-credential UI evidence is not retained; current locked-device/browser authorization prevents that interactive branch. Primary valid exchange is already proven and must not be reported as failed or missing Google credentials.",
+      "acceptanceScope": "Prior valid GIS exchange and local chooser cancellation/error boundaries accepted within recorded scope; live cancellation/error UI still pending.",
       "localVerification": [
         {
           "check": "google-oauth-web-test",
@@ -573,11 +574,11 @@
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Live provider cancellation/invalid-credential UI evidence is not retained; current locked-device/browser authorization prevents that interactive branch. Primary valid exchange is already proven and must not be reported as failed or missing Google credentials.",
+      "reason": "Actual primary GIS valid exchange is proven and local cancellation/invalid exchange tests pass. Live chooser cancellation/error UI remains unexercised in retained evidence. Mac lock is a temporary test-access block, not missing Google configuration or an external implementation dependency.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
-        "Live provider cancellation/invalid-credential UI evidence is not retained; current locked-device/browser authorization prevents that interactive branch. Primary valid exchange is already proven and must not be reported as failed or missing Google credentials."
+        "Actual primary GIS valid exchange is proven and local cancellation/invalid exchange tests pass. Live chooser cancellation/error UI remains unexercised in retained evidence. Mac lock is a temporary test-access block, not missing Google configuration or an external implementation dependency."
       ],
       "implementationStatus": "IMPLEMENTED"
     },
