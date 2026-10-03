@@ -55,9 +55,11 @@ try {
   await check('phone-otp-ui-test', process.execPath, ['scripts/phone-otp-ui-test.mjs'], appRoot, { QA_APP_BASE_URL: `http://127.0.0.1:${server.address().port}` });
 } finally { await new Promise(resolve => server.close(resolve)); }
 if (fs.existsSync(path.join(adminRoot, 'scripts'))) for (const file of fs.readdirSync(path.join(adminRoot, 'scripts')).filter(name => name.endsWith('-test.mjs')).sort()) await check('admin-' + file.replace('.mjs', ''), process.execPath, ['scripts/' + file], adminRoot);
-await check('admin-typecheck', process.execPath, ['node_modules/typescript/bin/tsc', '--noEmit', '--pretty', 'false'], adminRoot);
 await check('admin-lint', 'npm', ['run', 'lint'], adminRoot);
 await check('admin-production-build', 'npm', ['run', 'build'], adminRoot);
+// Next generates route declarations during build. Check those fresh declarations,
+// rather than stale (or cloud-sync duplicated) files from a previous build.
+await check('admin-typecheck', process.execPath, ['node_modules/typescript/bin/tsc', '--noEmit', '--pretty', 'false'], adminRoot);
 report.finishedAt = new Date().toISOString();
 report.passed = report.checks.filter(row => row.status === 'PASS').length;
 report.failed = report.checks.length - report.passed;
