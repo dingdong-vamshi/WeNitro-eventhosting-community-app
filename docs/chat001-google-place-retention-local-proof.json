@@ -5,9 +5,9 @@
   "migration": "supabase/migrations/20261003211325_google_place_coordinate_retention.sql",
   "localVerification": {
     "command": "node scripts/google-place-retention-postgres-test.mjs",
-    "checks": 59,
+    "checks": 63,
     "result": "PASS",
-    "additionalRun": "Same59 real PostgreSQL checks pass using current read-only production create_activity/update_activity definitions as optional fixture. No production mutation.",
+    "additionalRun": "Same63 real PostgreSQL checks pass using current read-only production create_activity/update_activity definitions as optional fixture. Includes executing the complete10-check rollback production verifier locally and proving both synthetic event/cache fixtures are absent afterward. No production mutation.",
     "schedulerLimit": "Local pg_cron extension unavailable; scheduling contract uses stub. Actual purge SQL is executed against real PostgreSQL, including ended Activities and idempotence. Production job inspection remains pending."
   },
   "currentProductionFunctionDefinitions": [

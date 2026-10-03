@@ -43,7 +43,7 @@ begin
  receipt:=public.cache_google_place_coordinates(place,13.4,78.5);
  if not (select latitude=13.4 and longitude=78.5 and location_coordinates_expires_at=(receipt->>'expiresAt')::timestamptz from public.tbl_events where id=eid) then raise exception 'Fresh receipt did not renew reference';end if;
  perform set_config('qa.google_retention_result',(current_setting('qa.google_retention_result')::jsonb||jsonb_build_array(jsonb_build_object('check','New synthetic receipt renews existing reference','passed',true)))::text,true);
- -- Purge contract/body and actual local59-check regression prove clearing; do not run
+ -- Purge contract/body and actual local63-check regression prove clearing; do not run
  -- the global dispatcher here because unrelated production rows must be untouched.
  if position('delete from private.google_place_coordinate_cache' in pg_get_functiondef('private.purge_expired_google_coordinates()'::regprocedure))=0
  or position('update public.tbl_events set latitude=null,longitude=null' in pg_get_functiondef('private.purge_expired_google_coordinates()'::regprocedure))=0 then raise exception 'Purge definition mismatch';end if;

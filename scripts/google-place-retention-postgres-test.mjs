@@ -14,9 +14,9 @@ const cache=(id='ChIJ_Test',lat='12.3',lng='77.4')=>JSON.parse(as(null,`select p
 try{
  run('initdb',['-D',dir+'/db','-A','trust','--no-locale','-E','UTF8']);run('pg_ctl',['-D',dir+'/db','-l',dir+'/log','-o',`-F -h '' -k ${dir} -p 55465`,'-w','start']);started=true;
  sql(`create role anon;create role authenticated;create role service_role;create schema auth;create schema private;create schema cron;
- grant usage on schema auth,private to authenticated;create function auth.uid() returns uuid language sql as $$select nullif(current_setting('qa.uid',true),'')::uuid$$;
+ grant usage on schema auth,private to authenticated;create function auth.uid() returns uuid language sql as $$select coalesce(nullif(current_setting('qa.uid',true),''),nullif(current_setting('request.jwt.claim.sub',true),''))::uuid$$;
  create table auth.users(id uuid primary key,banned_until timestamptz);
- create table public.tbl_users(id int primary key,auth_user_id uuid,is_active int default 1,is_delete int default 0,deactivated_at timestamptz);
+ create table public.tbl_users(id int primary key,auth_user_id uuid,fullname text,is_active int default 1,is_delete int default 0,deactivated_at timestamptz);
  insert into auth.users(id) select ('00000000-0000-0000-0000-'||lpad(n::text,12,'0'))::uuid from generate_series(1,3)n;
  insert into public.tbl_users(id,auth_user_id) select n,('00000000-0000-0000-0000-'||lpad(n::text,12,'0'))::uuid from generate_series(1,3)n;
  create table public.tbl_events(id serial primary key,created_by int,updated_by int,title text,description text,event_start_time timestamptz,event_end_time timestamptz,registration_close_time timestamptz,max_participants int,visibility_type text,join_type text,location text,display_location text,latitude numeric,longitude numeric,verified_only boolean,age_min int,age_max int,gender_preference text,location_instruction text,costs_may_apply boolean,entry_fee_required boolean,is_paid boolean,price numeric,currency text,intent text,status text,media jsonb,is_cancelled boolean default false,is_deleted boolean default false,updated_at timestamptz);
@@ -27,8 +27,8 @@ try{
  create table private.qa_questions(event_id int,questions jsonb);
  create function private.save_activity_registration_questions(integer,jsonb) returns void language sql as $$insert into private.qa_questions values($1,$2)$$;
  -- Local Cron contract stub: actual retention SQL is exercised below; scheduler extension is not simulated.
- create table cron.job(jobname text primary key,schedule text,command text);
- create function cron.schedule(text,text,text) returns bigint language sql as $$insert into cron.job values($1,$2,$3) on conflict(jobname) do update set schedule=excluded.schedule,command=excluded.command returning 1::bigint$$;
+ create table cron.job(jobname text primary key,schedule text,command text,active boolean default true);
+ create function cron.schedule(text,text,text) returns bigint language sql as $$insert into cron.job(jobname,schedule,command) values($1,$2,$3) on conflict(jobname) do update set schedule=excluded.schedule,command=excluded.command returning 1::bigint$$;
  ${fn('20261003075305_account_status_rpc_enforcement.sql','private.account_is_allowed')}
  ${fn('20261003065531_admin_operational_controls.sql','public.current_app_user_id')}
  ${fn('20260908103402_phase4_privacy_enforcement.sql','public.get_current_app_user_id')}
@@ -93,5 +93,10 @@ try{
  eq(sql("select count(*)||'/'||min(schedule) from cron.job where jobname='wenitro-google-coordinate-retention';"),'1/0 * * * *');
  eq(sql("select command from cron.job where jobname='wenitro-google-coordinate-retention';"),'select private.purge_expired_google_coordinates()');
  eq(sql("select count(*) from information_schema.columns where table_schema='private' and table_name='google_place_coordinate_cache' and column_name not in ('place_id','latitude','longitude','expires_at');"),'0');
+ sql("insert into auth.users(id) values('00000000-0000-0000-0000-000000000119');insert into public.tbl_users(id,auth_user_id,fullname) values(119,'00000000-0000-0000-0000-000000000119','[QA] Local rollback host');");
+ const productionVerifier=JSON.parse(sql("select set_config('qa.uid','',false);"+fs.readFileSync('scripts/qa-google-place-retention-rollback.sql','utf8')).split('\n').at(-1));
+ eq(productionVerifier.status,'PASS_ROLLBACK_ONLY');eq(productionVerifier.checks.length,10);
+ eq(sql("select count(*) from public.tbl_events where title='[QA] Google retention rollback only';"),'0');
+ eq(sql("select count(*) from private.google_place_coordinate_cache where place_id like 'wenitro_qa_rollback_%';"),'0');
  console.log(JSON.stringify({status:'PASS',checks,scope:'Real PostgreSQL cache role/RLS boundary, trusted create/update receipt binding, anonymous/cross-user/disabled Auth denials, static labels, legacy/OSM compatibility, expired edit, trusted refresh, ended-event retention purge and idempotence. Cron scheduling contract uses local stub; no Google calls, no production mutation.'}));
 }finally{if(started)run('pg_ctl',['-D',dir+'/db','-m','immediate','-w','stop']);fs.rmSync(dir,{recursive:true,force:true});}
