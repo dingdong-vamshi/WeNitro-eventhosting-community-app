@@ -1,0 +1,124 @@
+{
+  "at": "2026-10-03T22:25:13.632785+00:00",
+  "status": "READ_ONLY_DRAFT_AUDIT_NOT_FINAL_ACCEPTANCE",
+  "auditedDraftGeneratedAt": "2026-10-03T22:12:45.075Z",
+  "auditedDraftSha256": "38e17da3969f919a48465579f7b1b9bb68a61b891444117324b1450989845f0c",
+  "canonicalIntegrity": {
+    "canonicalCount": 308,
+    "canonicalIdsUnique": 308,
+    "sourceClauseCount": 249,
+    "sourceClauseIdsUnique": 249,
+    "sourcePages": {
+      "A": 40,
+      "B": 39
+    },
+    "badgeIds": [
+      "BADGE-01",
+      "BADGE-02",
+      "BADGE-03",
+      "BADGE-04",
+      "BADGE-05",
+      "BADGE-06",
+      "BADGE-07",
+      "BADGE-08",
+      "BADGE-09",
+      "BADGE-10",
+      "BADGE-11",
+      "BADGE-12",
+      "BADGE-13",
+      "BADGE-14",
+      "BADGE-15",
+      "BADGE-16",
+      "BADGE-17",
+      "BADGE-18",
+      "BADGE-19",
+      "BADGE-20",
+      "BADGE-21",
+      "BADGE-22"
+    ],
+    "badgeDispositions": {
+      "BADGE-01": "PASS",
+      "BADGE-02": "PASS",
+      "BADGE-03": "PASS",
+      "BADGE-04": "PASS",
+      "BADGE-05": "PASS",
+      "BADGE-06": "PASS",
+      "BADGE-07": "PASS",
+      "BADGE-08": "PASS",
+      "BADGE-09": "PASS",
+      "BADGE-10": "PASS",
+      "BADGE-11": "PASS",
+      "BADGE-12": "PASS",
+      "BADGE-13": "PASS",
+      "BADGE-14": "PASS",
+      "BADGE-15": "PASS",
+      "BADGE-16": "PASS",
+      "BADGE-17": "PASS",
+      "BADGE-18": "PASS",
+      "BADGE-19": "PASS",
+      "BADGE-20": "PASS",
+      "BADGE-21": "PASS",
+      "BADGE-22": "PASS"
+    }
+  },
+  "summaryCounts": {
+    "totalDistinctRequirements": 308,
+    "acceptedWithinRecordedScope": 226,
+    "normalPendingEvidence": 60,
+    "partialExternalDependency": 21,
+    "notImplementedExternalDependency": 1,
+    "totalExternalDispositions": 22,
+    "acceptedWithReviewedScreenshotEvidence": 210,
+    "allRequirementsWithExplicitlySelectedReviewedScreenshotState": 215,
+    "acceptedWithExistingTechnicalArtifactLinked": 164,
+    "allRequirementsWithExistingTechnicalArtifactLinked": 221,
+    "processGates": {
+      "PASS": 4,
+      "PENDING": 3
+    }
+  },
+  "countSemantics": [
+    "Accepted226 means criterion-scoped acceptance, often compatible earlier production evidence plus current source review; it does not mean226 fresh runs on the newest deployment.",
+    "Screenshot210 counts distinct accepted requirements with selected reviewed captures.215includes partial/pending state-only evidence; these do not prove remaining interactions.",
+    "Technical164/221 counts existing linked artifacts. Some are local tests or document evidence; do not label all164 as fresh production/backend executions. These counts overlap screenshots and cannot be summed.",
+    "All22badge rules appear once and have scopedPASS dispositions; threshold cases and repeatedgridimages do not inflate22.",
+    "No already-correct versus fixed-during-run split is supported by a complete comparable baseline.",
+    "Normalpending60 is separate from22externaldispositions;3processgates remainunresolved."
+  ],
+  "integrityFindings": {
+    "missingReferencedLocalTechnicalOrScreenshotFiles": 0,
+    "excludedInvalidScreenshotsStillCited": 0,
+    "unknownOrDuplicateCanonicalIds": 0,
+    "sourceClausesUnmapped": 0,
+    "olderCaptureDatesPreserved": true,
+    "draftSourceReleaseSnapshotChangedSinceGeneration": true
+  },
+  "presentationFindings": [
+    {
+      "issue": "Reviewed screenshots always labeled requires release review; supplementary metadata could obscure actual reviewed scope.",
+      "fix": "Added REVIEWED_SCOPED_CAPTURE only for explicitly selected capture references with matching per-row release and review flags; preserves original capture dates/deployments. Unselected supplementary captures retain requires-review label."
+    },
+    {
+      "issue": "Historical owner statuses and input scope totals can be mistaken for current acceptance, including older unavailable-only IP classification.",
+      "fix": "Historical input-mapping scope labeled explicitly; current disposition kept separate."
+    },
+    {
+      "issue": "Pending requirements only showed generic nonterminal message, dropping owner action checklist.",
+      "fix": "Pending remainingValidation retains exact coordinator/owner list alongside structural errors. No terminal status orPASSgate loosened."
+    },
+    {
+      "issue": "Flat canonical Markdown omitted user-requested source-document organization.",
+      "fix": "Seven sections: PDF A40pages, PDF B39pages,22badges,Admin,Security/backend/Partner/newer requirements,external holds,finalnumbers. All249sourceclause\u2192requirement links and308detailanchors verified; overlaps cross-reference once."
+    }
+  ],
+  "verification": [
+    "node scripts/chat001-final-report-generator-test.mjs PASS including invalid capture/final refusal/duplicate detection, legacy capture provenance, unreviewed supplementary exclusion, stale-release denial and pending checklist retention.",
+    "Read-only buildReport against ROOT currentinputs and isolated render confirmed7sections,40A+39Bpages,249clauses,22badges,308single detailanchors; outcome counts remain226/60/21/1. Preview only/tmp/chat001-seven-section-preview.md; no root report rewritten."
+  ],
+  "currentWorkLimit": "Coordinator reported Edge public-share author guard regression fix underway. This audit cannot certify that unfinished/new release; refresh relevant backend owner evidence, deploymentmanifest anddraft after the targeted fix/retest.",
+  "filesChanged": [
+    "scripts/chat001-final-report-generator.mjs",
+    "scripts/chat001-final-report-generator-test.mjs"
+  ],
+  "rootFilesModified": false
+}
