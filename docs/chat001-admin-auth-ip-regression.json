@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-03T20:48:11.961440+00:00",
+  "status": "LOCAL_PASS_AWAITING_COORDINATED_DEPLOYMENT",
+  "target": "cxsznhrkzqndhseodcyy",
+  "sourceRequirement": "PDF A36 current Admin dashboard functionality; no extra IP-blocking/anomaly/geolocation feature inferred.",
+  "migration": "20261003203749_admin_auth_ip_observations",
+  "sourceSchemaVerification": {
+    "method": "Read-only Supabase MCP information_schema + aggregate count",
+    "columns": {
+      "instance_id": "uuid nullable",
+      "id": "uuid nonnull",
+      "payload": "json nullable",
+      "created_at": "timestamptz nullable",
+      "ip_address": "varchar nonnull"
+    },
+    "retainedAuthAuditRows": 0,
+    "rowsWithNonemptyIp": 0,
+    "privacy": "No raw existing IP, payload or account identifiers were read by schema check."
+  },
+  "implemented": [
+    "SECURITY DEFINER with empty search_path, fresh Admin/Master and active account guards; no broad Auth schema/table grants.",
+    "Latest500 recorded nonblank IP events, stable timestamp/id ordering, at most100 literal search matches and search length64.",
+    "Projection only recordid/time/IP/validated Auth action/mapped appactorID; no raw payload,email,token or providersecret.",
+    "Current-user/role/search query keys, zero retained cache, consumed abortSignal; superseded and unmounted requests canceled.",
+    "Real empty/no-match/loading/error/Retry/Refresh and mapped-user links; explicit retention/identity limits. No fake country/risk/block actions."
+  ],
+  "localVerification": [
+    {
+      "command": "node scripts/admin-auth-ip-postgres-test.mjs",
+      "status": "PASS",
+      "checks": 32,
+      "scope": "RealPostgres actualfresh role+account helper and new migration. Empty/populated bounded results, rawpayloadredaction, stable sort/literalsearch, Admin/Master allow, Finance/member/anonymous/missingAuth/disabledAdmin/banned/deactivated/deletedApp deny. No broadtablegrant."
+    },
+    {
+      "command": "QA_ADMIN_ROOT=<Admincheckout> node scripts/admin-auth-ip-ui-test.mjs",
+      "status": "PASS",
+      "scope": "Actual adapter and rendered component; Refresh/Retry callbacks; realQueryObserver aborts obsolete/unmounted requests and identity-bound cachekeys."
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "status": "PASS"
+    },
+    {
+      "command": "scoped eslint",
+      "status": "PASS"
+    },
+    {
+      "command": "npx next build --webpack",
+      "status": "PASS",
+      "scope": "Compiled, TypeScript completed, all70routes generated; actual exit0. Isolated dependency symlink requires webpack; root fullgate uses normalprimarybuild."
+    }
+  ],
+  "productionVerification": {
+    "status": "PENDING",
+    "required": [
+      "Apply newmigration beforeAdmin UI deployment.",
+      "Actual currentAdmin/Master receives honest empty recordset; Finance/member unauthorized and cannot invokeRPC.",
+      "Capture deployed empty/results page +Refresh; realcurrenttablehas0retained rows, so do not fabricate IP events or infer no signins."
+    ]
+  }
+}
