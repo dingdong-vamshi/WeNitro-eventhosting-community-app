@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-03T21:01:20.317280+00:00",
+  "at": "2026-10-03T21:25:55.971354+00:00",
   "scope": "A126 plus B/C80 guide-schema subset; excludes22BADGE rows owned by backend. Scoped PASS only; unresolved normal actions are pending, not external holds.",
   "count": 206,
   "counts": {
@@ -13241,8 +13241,8 @@
       ],
       "requestedChange": "Actual Google Maps/Places integration uses the client's authorized configured account.",
       "before": "Host search used Photon/Nominatim/GPS; no Google Places adapter or configured Google account was proven.",
-      "implemented": "Locally implemented disabled-by-default authenticated Google Places Text Search proxy, client response mapping and cancellation, and transient attributed discovery links in the Host location UI. Existing selectable OSM venues remain working. Google results cannot be persisted in Activity drafts.",
-      "acceptanceScope": "Local mocked adapter/UI callback checks only. No Google request, authorized account activation, production adapter deployment or Google-backed saved venue acceptance is claimed.",
+      "implemented": "Locally implemented actual Google venue selection and ID-only drafts; source/placeID persistence; trusted28-day coordinate cache and purge; transient attributed name/address resolution; all Activity mappers/Nearby expiry guards; Google Maps PlaceID navigation/share/SOS. Adapter validates an active non-banned app identity and stays disabled until authorized configuration.",
+      "acceptanceScope": "Local executable mocked provider/UI/domain/service checks and59 real PostgreSQL retention/access checks only. No live Google account, activation, deployed Google screenshots or real provider requests are claimed.",
       "localVerification": [
         {
           "path": "docs/chat001-integrated-local-verification.json",
@@ -13253,6 +13253,12 @@
           "check": "google-places-adapter-test + host-activity-test + App TypeScript + Deno check",
           "observedStatus": "PASS",
           "scope": "Executable mocked provider/client and actual rendered location callbacks; no Google traffic."
+        },
+        {
+          "path": "docs/chat001-google-places-local-proof.json",
+          "check": "google-venue-persistence-test, expanded google-places-adapter-test, focused regressions, App TS/Edge Deno",
+          "observedStatus": "PASS",
+          "scope": "Actual Google source/ID selection and durable contract; expiry/memory cleanup; real rendered callback/effect behavior with mocked provider."
         }
       ],
       "productionVerification": [],
@@ -13260,6 +13266,10 @@
         {
           "path": "docs/chat001-google-places-local-proof.json",
           "scope": "Exact adapter/configuration, no-storage boundary, official policy sources and remaining saved-venue architecture."
+        },
+        {
+          "path": "docs/chat001-google-place-retention-local-proof.json",
+          "scope": "59 real PostgreSQL checks; scheduler stub limitation explicit. SQL commit a8d339e."
         }
       ],
       "screenshotProof": [],
@@ -13269,15 +13279,14 @@
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Client-authorized Google project/API/billing/key and policy setup are not available to activate/test. Google-backed saved Activity venues also remain unimplemented: place-ID/source persistence, ID-only drafts, dynamic permitted resolution and all filter/share/detail readers require an agreed durable data contract. This is explicitly partial, not a credential-only completion.",
+      "reason": "Implementation is locally complete. Client-authorized Google account/API/billing/restricted key and terms/privacy configuration are not activated; production provider end-to-end acceptance and deployment/Cron validation remain pending.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
-        "Client-authorized Google Cloud project, Places API (New) activation/billing, appropriately restricted server API key and quota/budget configuration. A Text Search request can be billable. Do not set flags merely because a key is found.",
-        "Deploy the disabled Edge function with authentication and explicitly configure both flags only after account authorization. Server key must never use EXPO_PUBLIC prefix.",
-        "Confirm application Terms/Privacy incorporate the Google requirements, appropriate Google agreement/billing-region rules and acceptable permitted data uses. Current UI links alone are not a legal review.",
-        "Review actual attributed UI and perform authorized provider end-to-end/error/denial tests with the configured client account.",
-        "A Google place-ID field and source discriminator in Activity persistence; ID-only Google drafts; authenticated on-demand Places resolution for all venue consumers with attribution and permitted caching lifecycle; filtering/sharing behavior and migration of every reader. Existing OSM durable venues must retain their current meaning. This architecture is not included in this bounded adapter change and is not labeled credential-only."
+        "Integrate full App/Admin/Edge local gate and grouped deployment; this is not a full-suite result.",
+        "Production SQL/cache function and hourly Cron job inspection without Google traffic.",
+        "Client-authorized project, billing/API/key/restrictions/quota and applicable Google terms/privacy setup before setting either enable flag.",
+        "Authorized real provider venue selection/publication/edit/expiry-refresh and actual deployed attribution/map/provider-error screenshots. No production Google behavior is presently claimed."
       ]
     },
     {
@@ -17133,7 +17142,7 @@
     {
       "id": "MAPS-GOOGLE",
       "status": "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION",
-      "action": "Google Maps/Places integration code is not implemented; source currently uses Photon/Nominatim/GPS. Client-authorized Maps project/API configuration plus implementation are required. This is not merely a native-device test hold."
+      "action": "Google-backed venue selection, place-ID/source persistence, trusted28-day coordinate expiry, transient name/address resolution, filters and map/share/SOS integration are implemented locally (d51e0bd+a8d339e). Remaining: integrated deployment/SQL Cron validation and client-authorized Google project/API/billing/key/policy activation plus real provider acceptance. Flags remain disabled; no Google calls or spend."
     },
     {
       "id": "ACT-NO-SELF-REPORT",
@@ -17826,7 +17835,7 @@
       "details": [
         {
           "id": "MAPS-GOOGLE",
-          "reason": "Google Maps/Places integration code is not implemented; source currently uses Photon/Nominatim/GPS. Client-authorized Maps project/API configuration plus implementation are required. This is not merely a native-device test hold."
+          "reason": "Google-backed venue selection, place-ID/source persistence, trusted28-day coordinate expiry, transient name/address resolution, filters and map/share/SOS integration are implemented locally (d51e0bd+a8d339e). Remaining: integrated deployment/SQL Cron validation and client-authorized Google project/API/billing/key/policy activation plus real provider acceptance. Flags remain disabled; no Google calls or spend."
         },
         {
           "id": "STORE-REDEMPTION",

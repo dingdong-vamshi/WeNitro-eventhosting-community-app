@@ -1,36 +1,61 @@
 {
-  "at": "2026-10-03T21:01:20.317280+00:00",
-  "scope": "Local Google Places adapter and transient discovery; not Google-backed saved Activity venues.",
+  "at": "2026-10-03T21:25:55.971354+00:00",
+  "scope": "Google-backed Activity venue selection implemented locally behind disabled provider flags. Real Google account activation and production acceptance remain pending.",
   "implementation": [
-    "Server-only Google Places Text Search (New) adapter at fixed Google endpoint; exact narrow response field mask and bounded query/results; validated signed-in non-anonymous caller.",
-    "Explicit GOOGLE_PLACES_ENABLED=true AND nonempty GOOGLE_PLACES_API_KEY are required before provider traffic; the public client additionally requires EXPO_PUBLIC_GOOGLE_PLACES_ENABLED=true. No keys or environment settings were changed.",
-    "Only user-entered search text goes to Google; no automatic GPS bias, account ID, Supabase token or arbitrary request fields forwarded.",
-    "No-store responses, no client result cache, provider errors sanitized, cancellation/timeout handling; account changes discard stale client responses.",
-    "Host search retains its selectable OSM/GPS flow unchanged. Configured Google suggestions render in a distinct transient section with Google Maps and third-party attribution and external View on Google Maps actions. They cannot enter HostDraft or Activity persistence.",
-    "Explicit missing/unavailable Google labels and Google terms/privacy links."
+    "Authenticated active-account Google Text Search and Place Details adapter; explicit client/server enable flags and server-only API key. Caller-supplied GPS/auth/account fields are not forwarded. Place Details fetches coordinates then calls service-role-only trusted cache writer.",
+    "Actual Host search selection stores source=google and Google place ID. HostDraft serialization, restoration and edit hydration retain only those identifiers for Google venues. Labels, addresses, coordinates and attributions cannot enter durable drafts.",
+    "Activity writes refresh Place Details before publishing/updating a selected Google venue. API payloads strip Google labels/coordinates; DB trigger binds the trusted receipt and stores only a static Google Maps venue label plus source/ID.",
+    "Transient names, addresses and required Google Maps/third-party attributions render only inside the disposable GoogleVenue component. Resolution aborts on unmount; account changes discard stale responses. Google content is never placed into canonical Activity.where/locationName/AppData fields.",
+    "All production/workspace/Home Activity mappers retain source/placeID/expiry and mask expired coordinates. Both Home and Activities Nearby paths reject expired coordinates; server Nearby queries include the expiry predicate. A bounded timer clears expired coordinates from memory-only AppData during long-running sessions.",
+    "Google Activity map actions use Google Maps PlaceID links. Internal shares and SOS text use PlaceID links plus user-authored instructions, never resolved provider addresses. Existing non-Google map/link behavior is unchanged.",
+    "Existing OSM/legacy venue selection remains functional without Google configuration. Empty, disabled/unavailable, error, retry and current-location paths preserve truthful provider labels.",
+    "Separate SQL slice: durable source/PlaceID plus private28-day trusted coordinate cache; service-only writer, source-change guards, stale masking and hourly purge. No provider refreshes run from Cron."
   ],
   "localVerification": [
     {
       "command": "node scripts/google-places-adapter-test.mjs",
       "status": "PASS",
-      "kind": "executable mocked HTTP/Edge/client plus actual rendered LocationSearch callbacks",
-      "scope": "Missing flags/key produce zero auth/provider calls; auth/validation/errors/timeouts/cancel; exact field mapping; no secret/GPS forwarding; no cache; account switch; actual Google action opens Maps while only OSM row calls onSelect."
+      "kind": "executable mocked HTTP + actual client/Edge index/UI callbacks",
+      "scope": "Disabled flags/key = zero calls; auth including rejected active-app identity before spend; provider contract, search/Details mapping, receipt, sanitization/timeouts/cancellation/account changes; actual selection emits only source+ID; memory expiry clearing/timer boundaries."
     },
     {
-      "command": "node scripts/host-activity-test.mjs",
+      "command": "node scripts/google-venue-persistence-test.mjs",
       "status": "PASS",
-      "kind": "existing executable host/service regression",
-      "scope": "Existing OSM provider/GPS fallback and host validation remain working without Google configuration."
+      "kind": "executable domain/service/mapper/UI effect",
+      "scope": "ID-only draft save/restore/edit, invalid draft recovery, Google label stripping, fresh/stale coordinate mapping, actual publication payload, actual Nearby server filter, actual SOS PlaceID link/instructions, late component resolution suppressed on dispose."
     },
     {
-      "command": "deno check supabase/functions/google-places/index.ts",
+      "command": "node scripts/google-place-retention-postgres-test.mjs",
       "status": "PASS",
-      "kind": "typecheck"
+      "checks": 59,
+      "proof": "docs/chat001-google-place-retention-local-proof.json",
+      "scope": "Independent Admin agent real PostgreSQL/cache/RLS/write/expiry tests. Actual purge executes; local pg_cron scheduling is stubbed because extension unavailable. Production scheduler job inspection remains required."
+    },
+    {
+      "commands": [
+        "host-activity-test",
+        "activities-filter-test",
+        "activity-safety-actions-test",
+        "workspace-loading-regression-test",
+        "activity-share-observation-test",
+        "activity-payment-modes-test",
+        "feed-loading-state-test",
+        "frontend-safe-overrides-test",
+        "hero-brand-visual-test",
+        "client-home-profile-test"
+      ],
+      "status": "PASS",
+      "scope": "Existing focused suites, preserving their executable versus source-contract limitations."
     },
     {
       "command": "node node_modules/typescript/bin/tsc --noEmit --pretty false",
       "status": "PASS",
       "kind": "App typecheck"
+    },
+    {
+      "command": "deno check supabase/functions/google-places/index.ts",
+      "status": "PASS",
+      "kind": "Edge typecheck"
     }
   ],
   "productionVerification": [],
@@ -44,20 +69,37 @@
     "Confirm application Terms/Privacy incorporate the Google requirements, appropriate Google agreement/billing-region rules and acceptable permitted data uses. Current UI links alone are not a legal review.",
     "Review actual attributed UI and perform authorized provider end-to-end/error/denial tests with the configured client account."
   ],
-  "notImplemented": [
-    {
-      "scope": "Persisting and publishing Google-selected Activity venues",
-      "reason": "Current HostDraft/Activity database/readers durably store venue label and coordinates, use those fields for discovery filters, share/detail and drafts. Google Text Search content cannot simply be put into those fields.",
-      "remainingCode": "A Google place-ID field and source discriminator in Activity persistence; ID-only Google drafts; authenticated on-demand Places resolution for all venue consumers with attribution and permitted caching lifecycle; filtering/sharing behavior and migration of every reader. Existing OSM durable venues must retain their current meaning. This architecture is not included in this bounded adapter change and is not labeled credential-only.",
-      "externalDecision": "Confirm the authorized client agreement and intended Google-backed saved-location behavior before implementing the durable data contract."
-    }
-  ],
+  "notImplemented": [],
   "sources": [
     "https://developers.google.com/maps/documentation/places/web-service/text-search",
     "https://developers.google.com/maps/documentation/places/web-service/policies",
     "https://developers.google.com/maps/api-security-best-practices",
     "https://supabase.com/docs/guides/functions/auth",
     "https://docs.expo.dev/versions/v57.0.0/",
-    "https://docs.expo.dev/versions/v57.0.0/sdk/location/"
-  ]
+    "https://docs.expo.dev/versions/v57.0.0/sdk/location/",
+    "https://cloud.google.com/maps-platform/terms/maps-service-terms#14-places-api"
+  ],
+  "appCommit": "d51e0bd",
+  "sqlCommit": "a8d339e",
+  "sqlIntegratedCommit": "abc21aa",
+  "migration": "supabase/migrations/20261003211325_google_place_coordinate_retention.sql",
+  "implementationCompleteLocally": true,
+  "remainingVerification": [
+    "Integrate full App/Admin/Edge local gate and grouped deployment; this is not a full-suite result.",
+    "Production SQL/cache function and hourly Cron job inspection without Google traffic.",
+    "Client-authorized project, billing/API/key/restrictions/quota and applicable Google terms/privacy setup before setting either enable flag.",
+    "Authorized real provider venue selection/publication/edit/expiry-refresh and actual deployed attribution/map/provider-error screenshots. No production Google behavior is presently claimed."
+  ],
+  "deploymentOrder": [
+    "Apply20261003211325_google_place_coordinate_retention.sql",
+    "Deploy google-places Edge with GOOGLE_PLACES_ENABLED absent/false and no key activation",
+    "Deploy App with EXPO_PUBLIC_GOOGLE_PLACES_ENABLED absent/false",
+    "Verify deployed disabled fallback and SQL/cron checks",
+    "Only upon client-authorized provider configuration activate and perform real Google end-to-end acceptance"
+  ],
+  "persistenceReview": {
+    "scope": "Read all App.tsx/src AsyncStorage/localStorage/setItem/JSON.stringify uses. AppData activities are memory-only; no generic workspace disk persistence exists. Durable app data here are auth session/preferences/intro/splash/referral/invite/HostDraft; the HostDraft path is sanitized. New code does not add a Google result cache.",
+    "database": "Admin agent inspected current event triggers/audit functions; no durable whole-event coordinate-history trigger found. Receipt table has only ID/coordinates/expiry; event labels static.",
+    "retention": "28-day SQL TTL + hourly physical purge (<30days under healthy scheduler); read filters/mappers and memory timer suppress/clear at exact expiry. Verify production cron health before activation."
+  }
 }

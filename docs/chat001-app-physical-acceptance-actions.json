@@ -207,7 +207,7 @@
       "ids": [
         "MAPS-GOOGLE"
       ],
-      "scope": "Disabled local Google Places adapter and transient attributed discovery links now implemented and mock-tested (docs/chat001-google-places-local-proof.json). Client account/API/policy activation and Google-backed saved venue place-ID/source persistence plus permitted dynamic resolution across all readers remain incomplete; existing OSM/GPS venues are separate."
+      "scope": "Google-backed venue selection, place-ID/source persistence, trusted28-day coordinate expiry, transient name/address resolution, filters and map/share/SOS integration are implemented locally (d51e0bd+a8d339e). Remaining: integrated deployment/SQL Cron validation and client-authorized Google project/API/billing/key/policy activation plus real provider acceptance. Flags remain disabled; no Google calls or spend."
     },
     {
       "category": "Aadhaar provider",
