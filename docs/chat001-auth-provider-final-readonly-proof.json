@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-03T20:16:29.954Z",
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "httpStatus": 200,
+  "providers": {
+    "email": true,
+    "phone": true,
+    "google": true,
+    "apple": false
+  },
+  "signupDisabled": false,
+  "emailAutoconfirm": false,
+  "phoneAutoconfirm": false,
+  "scope": "Read-only public Auth settings; no secret values, signup, password reset, messages or provider mutations. Public settings do not expose SMTP credentials, sender/template body, or Google Console authorized redirect list.",
+  "googleIdentityAggregate": {
+    "at": "2026-10-03T20:19:13.367730+00:00",
+    "source": "Read-only Supabase MCP SQL on auth.identities/auth.users/tbl_users; no identity or contact values selected.",
+    "googleIdentities": 8,
+    "googleAuthUsers": 8,
+    "usersWithSignIn": 8,
+    "exactlyOneApplicationProfile": 5,
+    "duplicateApplicationProfiles": 0,
+    "scope": "Historical/current identity existence only. Three identities have no current app profile; no reason inferred and no claim that every Google user completed onboarding. This aggregate does not identify which prior login exercised new/existing branches."
+  },
+  "priorEvidenceReconciled": {
+    "file": "docs/new-credential-onboarding-verification.json",
+    "recordedAt": "2026-10-01",
+    "deployment": "dpl_HKdBqHDGQqr2K48nG5Ams2Ur2HhA",
+    "google": "Actual primary GIS popup ID-token exchange, target session, unique app mapping, Home/Profile and restored session PASS. Separate redirect flow returned redirect_uri_mismatch for target callback.",
+    "sms": "Replacement credential wallet authentication HTTP200 returntrue; signed invalid-payload hook400 (not missing-secret/signature failure); non-delivery request400 mobile required; Veriphone success. No physical OTP sent/delivered. Old credential401 diagnosis superseded.",
+    "email": "Template/configuration inspection and real password login/session restoration pass. Recovery target link generated without sent email; example.com address rejected for outbound delivery. No real-inbox confirmation/reset completed.",
+    "sourceCompatibility": "git diff5709de4..currentHEAD for src/services/google-auth.web.ts, src/services/google-auth.ts and src/services/auth-production.ts is empty. Prior successful GIS path remains unchanged; this does not retest external console settings."
+  },
+  "configurationAccessLimit": "Installed Supabase MCP exposes SQL, project and function tools but no Auth management configuration reader. Public settings cannot establish current SMTP host/custom sender/template contents or authorized Google Console callbacks; no absent/broken SMTP credentials inferred."
+}

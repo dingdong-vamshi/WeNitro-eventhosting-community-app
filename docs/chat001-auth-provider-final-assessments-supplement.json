@@ -1,0 +1,1015 @@
+{
+  "at": "2026-10-03T20:19:13.368472+00:00",
+  "purpose": "Sixteen auth/provider canonical dispositions reconciled against actual Oct1 evidence and fresh read-only target settings. No browser, new identity, signup consent, outbound message or credential reset.",
+  "count": 16,
+  "counts": {
+    "PARTIAL_EXTERNAL_DEPENDENCY": 16
+  },
+  "requirements": [
+    {
+      "id": "AUTH-EMAIL-BRAND",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A03-01",
+        "A03-02"
+      ],
+      "requestedChange": "Verification email uses WeNitro branding and the wording Confirm your Email Address.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "WeNitro confirmation wording/template configuration was inspected previously; active App wording is implemented.",
+      "acceptanceScope": "WeNitro confirmation wording/template configuration was inspected previously; active App wording is implemented. Remaining external interaction: A controlled real inbox message is still required to establish rendered template branding. Prior configuration evidence is accepted; current SMTP/template secrets are not exposed by available read-only tools.",
+      "localVerification": [
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Email branding/template configuration recorded.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/2/requirements/0",
+          "scopeLimit": "Configuration/source only; received verification email not captured.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "WeNitro confirmation wording/template configuration was inspected previously; active App wording is implemented.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Email branding/template configuration recorded."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "A controlled real inbox message is still required to establish rendered template branding. Prior configuration evidence is accepted; current SMTP/template secrets are not exposed by available read-only tools.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "A controlled real inbox message is still required to establish rendered template branding. Prior configuration evidence is accepted; current SMTP/template secrets are not exposed by available read-only tools."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-EMAIL-CONFIRM",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A03-03"
+      ],
+      "requestedChange": "A valid confirmation link completes email verification for the intended target account.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Email verification uses real Supabase Auth confirmation state; email autoconfirm remains false.",
+      "acceptanceScope": "Email verification uses real Supabase Auth confirmation state; email autoconfirm remains false. Remaining external interaction: No valid confirmation link from a controlled real inbox was opened for the intended account in retained evidence. Owner-controlled inbox interaction is needed; no new identity or consent was created for this audit.",
+      "localVerification": [
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Email verification uses real Supabase Auth confirmation state; email autoconfirm remains false.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "No valid confirmation link from a controlled real inbox was opened for the intended account in retained evidence. Owner-controlled inbox interaction is needed; no new identity or consent was created for this audit.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "No valid confirmation link from a controlled real inbox was opened for the intended account in retained evidence. Owner-controlled inbox interaction is needed; no new identity or consent was created for this audit."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-EMAIL-SENDER",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A03-03"
+      ],
+      "requestedChange": "Verification and recovery mail use the configured sender and deliver through the intended email service.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Email provider enabled; prior standard email password login/session restore worked.",
+      "acceptanceScope": "Email provider enabled; prior standard email password login/session restore worked. Remaining external interaction: Rendered sender and intended delivery service need a controlled inbox receipt. Prior docs described optional custom SMTP credentials as not supplied, but present tools do not establish current SMTP configuration. Do not claim broken or missing SMTP from provider flags.",
+      "localVerification": [
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Email provider enabled; prior standard email password login/session restore worked.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Rendered sender and intended delivery service need a controlled inbox receipt. Prior docs described optional custom SMTP credentials as not supplied, but present tools do not establish current SMTP configuration. Do not claim broken or missing SMTP from provider flags.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Rendered sender and intended delivery service need a controlled inbox receipt. Prior docs described optional custom SMTP credentials as not supplied, but present tools do not establish current SMTP configuration. Do not claim broken or missing SMTP from provider flags."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-RECOVERY-REQUEST",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A05-01"
+      ],
+      "requestedChange": "Forgot Password requests a recovery email without disclosing unrelated account data.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Forgot Password UI and target-project recovery request/link are implemented. Prior production request to example.com was rejected for outbound delivery; target recovery URL generation succeeded.",
+      "acceptanceScope": "Forgot Password UI and target-project recovery request/link are implemented. Prior production request to example.com was rejected for outbound delivery; target recovery URL generation succeeded. Remaining external interaction: Actual delivery to an owner-controlled real inbox remains untested; test-address rejection is not evidence of universal mail failure.",
+      "localVerification": [
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Recovery link was generated for target project and production return URL.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/4/requirements/0",
+          "scopeLimit": "Configuration only; example.com outbound delivery rejected. Actual inbox/link/reset/login chain not established.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Forgot Password UI and target-project recovery request/link are implemented. Prior production request to example.com was rejected for outbound delivery; target recovery URL generation succeeded.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Recovery link was generated for target project and production return URL."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Actual delivery to an owner-controlled real inbox remains untested; test-address rejection is not evidence of universal mail failure.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Actual delivery to an owner-controlled real inbox remains untested; test-address rejection is not evidence of universal mail failure."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-RECOVERY-ROUTE",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A05-02"
+      ],
+      "requestedChange": "Opening the recovery link reaches the password reset flow with the intended recovery session.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Generated recovery link was verified to target the correct Supabase project and production App redirect. Reset route regression passed.",
+      "acceptanceScope": "Generated recovery link was verified to target the correct Supabase project and production App redirect. Reset route regression passed. Remaining external interaction: Opening an actual received recovery link with its intended recovery session was not recorded. Link generation is configuration proof, not clicked-link execution.",
+      "localVerification": [
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Recovery link was generated for target project and production return URL.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/4/requirements/0",
+          "scopeLimit": "Configuration only; example.com outbound delivery rejected. Actual inbox/link/reset/login chain not established.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Generated recovery link was verified to target the correct Supabase project and production App redirect. Reset route regression passed.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Recovery link was generated for target project and production return URL."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Opening an actual received recovery link with its intended recovery session was not recorded. Link generation is configuration proof, not clicked-link execution.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Opening an actual received recovery link with its intended recovery session was not recorded. Link generation is configuration proof, not clicked-link execution."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-RECOVERY-RESET",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A05-03"
+      ],
+      "requestedChange": "A valid recovery session can save a new password with visible validation and error handling.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Reset form and authenticated update-password flow have validation/error handling and local coverage.",
+      "acceptanceScope": "Reset form and authenticated update-password flow have validation/error handling and local coverage. Remaining external interaction: No controlled actual recovery session was used to save a new password. This requires owner-controlled mailbox/account interaction; current task explicitly excludes credential reset.",
+      "localVerification": [
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Reset form and authenticated update-password flow have validation/error handling and local coverage.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "No controlled actual recovery session was used to save a new password. This requires owner-controlled mailbox/account interaction; current task explicitly excludes credential reset.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "No controlled actual recovery session was used to save a new password. This requires owner-controlled mailbox/account interaction; current task explicitly excludes credential reset."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-RECOVERY-LOGIN",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A05-04"
+      ],
+      "requestedChange": "The reset account can subsequently sign in using its new password.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Ordinary real email password login/logout/relogin and restored sessions passed previously.",
+      "acceptanceScope": "Ordinary real email password login/logout/relogin and restored sessions passed previously. Remaining external interaction: Login after an actual recovery password change has not been demonstrated. Ordinary existing-password login is not evidence of post-reset login.",
+      "localVerification": [
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Ordinary real email password login/logout/relogin and restored sessions passed previously.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Login after an actual recovery password change has not been demonstrated. Ordinary existing-password login is not evidence of post-reset login.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Login after an actual recovery password change has not been demonstrated. Ordinary existing-password login is not evidence of post-reset login."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-GOOGLE-NEW",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A04-01"
+      ],
+      "requestedChange": "A new Google sign-in creates one target-project identity and reaches the correct setup stage.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Prior actual GIS sign-in created/restored one target Auth identity and one app profile and reached Home/Profile. Current Google provider is enabled.",
+      "acceptanceScope": "Prior actual GIS sign-in created/restored one target Auth identity and one app profile and reached Home/Profile. Current Google provider is enabled. Remaining external interaction: The retained successful observation does not identify an independently fresh Google identity or its setup-stage transition. An owner-controlled Google account/new-user provider interaction is required to distinguish this branch; no provider-secret failure is asserted.",
+      "localVerification": [
+        {
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Actual deployed Google login produced target session and unique application identity; Home/Profile/reload restoration recorded.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/3/requirements/0",
+          "scopeLimit": "Does not distinguish a fresh new-account run from an existing-account run, nor prove cancel/invalid-provider cases. Primary GIS flow only; redirect callback remained mismatched.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Prior actual GIS sign-in created/restored one target Auth identity and one app profile and reached Home/Profile. Current Google provider is enabled.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Actual deployed Google login produced target session and unique application identity; Home/Profile/reload restoration recorded."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "The retained successful observation does not identify an independently fresh Google identity or its setup-stage transition. An owner-controlled Google account/new-user provider interaction is required to distinguish this branch; no provider-secret failure is asserted.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "The retained successful observation does not identify an independently fresh Google identity or its setup-stage transition. An owner-controlled Google account/new-user provider interaction is required to distinguish this branch; no provider-secret failure is asserted."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-GOOGLE-EXISTING",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A04-01"
+      ],
+      "requestedChange": "An existing Google sign-in restores the existing account without duplicate identity creation.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Actual Google target session, unique app profile and reload restoration were recorded; zero duplicate Google app mappings in current aggregate.",
+      "acceptanceScope": "Actual Google target session, unique app profile and reload restoration were recorded; zero duplicate Google app mappings in current aggregate. Remaining external interaction: Prior session restoration does not prove a second independent provider sign-in returned the same existing identity. Controlled Google chooser interaction is needed for that exact branch; source remains unchanged.",
+      "localVerification": [
+        {
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Actual deployed Google login produced target session and unique application identity; Home/Profile/reload restoration recorded.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/3/requirements/0",
+          "scopeLimit": "Does not distinguish a fresh new-account run from an existing-account run, nor prove cancel/invalid-provider cases. Primary GIS flow only; redirect callback remained mismatched.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Actual Google target session, unique app profile and reload restoration were recorded; zero duplicate Google app mappings in current aggregate.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Actual deployed Google login produced target session and unique application identity; Home/Profile/reload restoration recorded."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Prior session restoration does not prove a second independent provider sign-in returned the same existing identity. Controlled Google chooser interaction is needed for that exact branch; source remains unchanged.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Prior session restoration does not prove a second independent provider sign-in returned the same existing identity. Controlled Google chooser interaction is needed for that exact branch; source remains unchanged."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-GOOGLE-PROVIDER",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A04-03"
+      ],
+      "requestedChange": "Configured Google sign-in exchanges valid provider credentials and rejects invalid or cancelled attempts.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Actual valid Google GIS credential exchange into target session passed. Local executable chooser cancellation, retry, duplicate-tap, invalid exchange/error restoration tests pass on unchanged auth code.",
+      "acceptanceScope": "Actual valid Google GIS credential exchange into target session passed. Local executable chooser cancellation, retry, duplicate-tap, invalid exchange/error restoration tests pass on unchanged auth code. Remaining external interaction: Live provider cancellation/invalid-credential UI evidence is not retained; current locked-device/browser authorization prevents that interactive branch. Primary valid exchange is already proven and must not be reported as failed or missing Google credentials.",
+      "localVerification": [
+        {
+          "check": "google-oauth-web-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Actual deployed Google login produced target session and unique application identity; Home/Profile/reload restoration recorded.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/3/requirements/0",
+          "scopeLimit": "Does not distinguish a fresh new-account run from an existing-account run, nor prove cancel/invalid-provider cases. Primary GIS flow only; redirect callback remained mismatched.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Actual valid Google GIS credential exchange into target session passed. Local executable chooser cancellation, retry, duplicate-tap, invalid exchange/error restoration tests pass on unchanged auth code.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Actual deployed Google login produced target session and unique application identity; Home/Profile/reload restoration recorded."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Live provider cancellation/invalid-credential UI evidence is not retained; current locked-device/browser authorization prevents that interactive branch. Primary valid exchange is already proven and must not be reported as failed or missing Google credentials.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Live provider cancellation/invalid-credential UI evidence is not retained; current locked-device/browser authorization prevents that interactive branch. Primary valid exchange is already proven and must not be reported as failed or missing Google credentials."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-GOOGLE-REDIRECT",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A04-03"
+      ],
+      "requestedChange": "The separate redirect-based Google callback is accepted by the client provider configuration and returns to the app.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Primary GIS popup token exchange works without the Supabase redirect callback. Separate redirect-based fallback exists.",
+      "acceptanceScope": "Primary GIS popup token exchange works without the Supabase redirect callback. Separate redirect-based fallback exists. Remaining external interaction: Actual prior redirect probe returned redirect_uri_mismatch for https://cxsznhrkzqndhseodcyy.supabase.co/auth/v1/callback. Owner must authorize that exact URI on the same Google Web OAuth client, preserving existing Firebase handler, then retest. No evidence of later console correction exists; current settings do not expose that allowlist.",
+      "localVerification": [
+        {
+          "check": "google-oauth-web-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "onboarding-google-auth-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Separate redirect probe returned redirect_uri_mismatch.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/3/requirements/0",
+          "scopeLimit": "Historical recorded failure, not a successful callback. Requires current provider configuration and real callback test.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Primary GIS popup token exchange works without the Supabase redirect callback. Separate redirect-based fallback exists.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Separate redirect probe returned redirect_uri_mismatch."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Actual prior redirect probe returned redirect_uri_mismatch for https://cxsznhrkzqndhseodcyy.supabase.co/auth/v1/callback. Owner must authorize that exact URI on the same Google Web OAuth client, preserving existing Firebase handler, then retest. No evidence of later console correction exists; current settings do not expose that allowlist.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Actual prior redirect probe returned redirect_uri_mismatch for https://cxsznhrkzqndhseodcyy.supabase.co/auth/v1/callback. Owner must authorize that exact URI on the same Google Web OAuth client, preserving existing Firebase handler, then retest. No evidence of later console correction exists; current settings do not expose that allowlist."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-PHONE-NEW",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A06-01"
+      ],
+      "requestedChange": "A new phone account can complete signup after legitimate OTP verification.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Phone signup, real Auth OTP verification and app-profile bridge are implemented; provider enabled, phone autoconfirmfalse.",
+      "acceptanceScope": "Phone signup, real Auth OTP verification and app-profile bridge are implemented; provider enabled, phone autoconfirmfalse. Remaining external interaction: New-account completion with genuinely delivered physical OTP remains unproven. Requires owner-controlled physical number/device, not fabricated phone confirmation.",
+      "localVerification": [
+        {
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Phone signup, real Auth OTP verification and app-profile bridge are implemented; provider enabled, phone autoconfirmfalse.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "New-account completion with genuinely delivered physical OTP remains unproven. Requires owner-controlled physical number/device, not fabricated phone confirmation.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "New-account completion with genuinely delivered physical OTP remains unproven. Requires owner-controlled physical number/device, not fabricated phone confirmation."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-PHONE-EXISTING",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A06-01"
+      ],
+      "requestedChange": "An existing phone account signs in to its existing profile instead of creating a duplicate.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Existing-identity reuse and phone login mapping implemented and locally tested.",
+      "acceptanceScope": "Existing-identity reuse and phone login mapping implemented and locally tested. Remaining external interaction: Physical OTP login into a pre-existing controlled phone identity has not been demonstrated; no duplicate-profile conclusion can be drawn from synthetic downstream fixtures.",
+      "localVerification": [
+        {
+          "check": "auth-identity-reuse-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "auth-bootstrap-regression-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "onboarding-profile-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Existing-identity reuse and phone login mapping implemented and locally tested.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Physical OTP login into a pre-existing controlled phone identity has not been demonstrated; no duplicate-profile conclusion can be drawn from synthetic downstream fixtures.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Physical OTP login into a pre-existing controlled phone identity has not been demonstrated; no duplicate-profile conclusion can be drawn from synthetic downstream fixtures."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-OTP-SEND",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A06-02",
+        "A25-03"
+      ],
+      "requestedChange": "OTP sending uses the configured phone verification provider and reaches the controlled physical test number.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Configured send-SMS hook/Fast2SMS transport and Veriphone validation exist. Replacement provider credential authentication passed Oct1; prior401 diagnosis is superseded.",
+      "acceptanceScope": "Configured send-SMS hook/Fast2SMS transport and Veriphone validation exist. Replacement provider credential authentication passed Oct1; prior401 diagnosis is superseded. Remaining external interaction: The prior diagnostics intentionally sent no SMS. Template acceptance, full send path, actual controlled-number delivery and current credit sufficiency remain unproven; only controlled physical-number testing can close them.",
+      "localVerification": [
+        {
+          "check": "sms-provider-diagnostics-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "phone-otp-ui-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-predeployment-local-verification.json"
+        },
+        {
+          "check": "edge-sms-tests",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Provider credential authentication and invalid-payload guards inspected/tested.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/5/requirements/0",
+          "scopeLimit": "No physical OTP delivery or valid delivered-code verification. Does not establish confirmed phone state.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Configured send-SMS hook/Fast2SMS transport and Veriphone validation exist. Replacement provider credential authentication passed Oct1; prior401 diagnosis is superseded.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Provider credential authentication and invalid-payload guards inspected/tested."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "The prior diagnostics intentionally sent no SMS. Template acceptance, full send path, actual controlled-number delivery and current credit sufficiency remain unproven; only controlled physical-number testing can close them.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "The prior diagnostics intentionally sent no SMS. Template acceptance, full send path, actual controlled-number delivery and current credit sufficiency remain unproven; only controlled physical-number testing can close them."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-OTP-VERIFY",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A06-02",
+        "A25-03"
+      ],
+      "requestedChange": "Valid delivered OTP verification succeeds while invalid, expired and replayed codes are rejected.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Real Auth verifyOtp flow and safe error/cancellation handling exist; isolated phone UI and signed hook payload tests pass.",
+      "acceptanceScope": "Real Auth verifyOtp flow and safe error/cancellation handling exist; isolated phone UI and signed hook payload tests pass. Remaining external interaction: Valid delivered OTP and invalid/expired/replayed real-code branches remain unexercised. Requires controlled physical delivery; synthetic confirmed fixtures cannot substitute.",
+      "localVerification": [
+        {
+          "check": "sms-provider-diagnostics-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "phone-otp-ui-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-predeployment-local-verification.json"
+        },
+        {
+          "check": "edge-sms-tests",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Provider credential authentication and invalid-payload guards inspected/tested.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/5/requirements/0",
+          "scopeLimit": "No physical OTP delivery or valid delivered-code verification. Does not establish confirmed phone state.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Real Auth verifyOtp flow and safe error/cancellation handling exist; isolated phone UI and signed hook payload tests pass.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Provider credential authentication and invalid-payload guards inspected/tested."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "Valid delivered OTP and invalid/expired/replayed real-code branches remain unexercised. Requires controlled physical delivery; synthetic confirmed fixtures cannot substitute.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "Valid delivered OTP and invalid/expired/replayed real-code branches remain unexercised. Requires controlled physical delivery; synthetic confirmed fixtures cannot substitute."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    },
+    {
+      "id": "AUTH-PHONE-STATE",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "sourceClauseIds": [
+        "A06-04"
+      ],
+      "requestedChange": "Phone-verified state reflects authenticated provider confirmation rather than a local or synthetic bypass.",
+      "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
+      "implemented": "Downstream phone-state access checks derive Auth provider confirmation; autoconfirmfalse. Synthetic fixtures are explicitly labelled.",
+      "acceptanceScope": "Downstream phone-state access checks derive Auth provider confirmation; autoconfirmfalse. Synthetic fixtures are explicitly labelled. Remaining external interaction: A genuine physical OTP resulting in the intended account's confirmed state remains unverified. No synthetic fixture is claimed as ownership proof.",
+      "localVerification": [
+        {
+          "check": "sms-provider-diagnostics-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "check": "phone-otp-ui-test",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-predeployment-local-verification.json"
+        },
+        {
+          "check": "edge-sms-tests",
+          "observedStatus": "PASS",
+          "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery.",
+          "path": "docs/chat001-integrated-local-verification.json"
+        },
+        {
+          "path": "docs/chat001-integrated-local-verification.json",
+          "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        }
+      ],
+      "productionVerification": [
+        {
+          "outcome": "Provider credential authentication and invalid-payload guards inspected/tested.",
+          "at": "2026-10-01",
+          "source": "docs/client-acceptance-checklist.json/pages/5/requirements/0",
+          "scopeLimit": "No physical OTP delivery or valid delivered-code verification. Does not establish confirmed phone state.",
+          "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-auth-provider-final-readonly-proof.json",
+          "outcome": "Downstream phone-state access checks derive Auth provider confirmation; autoconfirmfalse. Synthetic fixtures are explicitly labelled.",
+          "scopeLimit": "Exact retained prior test and fresh read-only configuration scope; no fresh interactive delivery/Google/OTP/recovery claim."
+        }
+      ],
+      "technicalProof": [
+        {
+          "finding": "2026-10-03T18:04:32Z: email, phone, Google enabled; email/phone autoconfirm false. Provider flags are not delivered email/SMS, consent, callback or ownership proof.",
+          "path": "docs/chat001-postdeploy-auth-provider-state.json"
+        },
+        {
+          "path": "docs/client-acceptance-checklist.json",
+          "scope": "Original recorded production observation: Provider credential authentication and invalid-payload guards inspected/tested."
+        },
+        "docs/chat001-auth-provider-final-readonly-proof.json",
+        "docs/new-credential-onboarding-verification.json"
+      ],
+      "screenshotProof": [],
+      "screenshotsReviewed": false,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "reason": "A genuine physical OTP resulting in the intended account's confirmed state remains unverified. No synthetic fixture is claimed as ownership proof.",
+      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
+      "remainingValidation": [
+        "A genuine physical OTP resulting in the intended account's confirmed state remains unverified. No synthetic fixture is claimed as ownership proof."
+      ],
+      "implementationStatus": "IMPLEMENTED"
+    }
+  ],
+  "scopeClarifications": [
+    "Primary GIS success is established, separate redirect fallback requires exact Google Console owner action.",
+    "Fast2SMS credential authentication is established; physical delivery is not.",
+    "Prior target template/link configuration and ordinary password login are accepted, but no real-inbox sender/confirmation/reset cycle was completed.",
+    "No blanket absent-credentials diagnosis. Native Google SDK device test is not silently added to these web criteria."
+  ]
+}
