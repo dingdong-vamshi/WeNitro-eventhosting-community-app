@@ -1,3 +1,4 @@
+import { AadhaarVerificationCard } from '../aadhaar-verification-card';
 import { LiveSelfieCamera } from './live-selfie-camera';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList, Image, Linking, Platform, Pressable, ScrollView, Text, View } from 'react-native';
@@ -110,7 +111,7 @@ export function ReferenceVerification({ back }: { back: () => void }) {
       {identityPhoto ? <Button label={'Submit Selfie for Review'} busy={busy} onPress={() => void run(async () => { await verificationService.submitLivePhoto(identityPhoto.uri, identityPhoto.mimeType); if (!alive.current) return; setIdentityPhoto(null); await load(); })} /> : null}
       {photoVerified && <Text style={{ color: c.muted, fontSize: 12 }}>Replacing your selfie requires a new review and never awards Nitro Points.</Text>}
     </View>
-    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 8 }}><View style={{ flexDirection: 'row' }}><Text style={{ color: c.text, fontWeight: '700', fontSize: 15, flex: 1 }}>Aadhaar Verification</Text><Text style={{ color: metrics?.aadhaar_verified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+20</Text></View><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18 }}>{metrics?.aadhaar_verified ? 'Aadhaar verified · +20 points.' : 'Aadhaar verification is not available in this build yet. Completing it will add +20 to Trust Score.'}</Text></View>
+    <AadhaarVerificationCard verified={Boolean(metrics?.aadhaar_verified)} onVerified={load} />
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, gap: 8, borderWidth: 1, borderColor: c.border }}><Text style={{ color: c.text, fontWeight: '700', fontSize: 15 }}>Trust Score breakdown</Text>{parts.parts.map(part => <View key={part.key} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Icon name={part.done ? 'checkmark-circle' : 'ellipse-outline'} color={part.done ? '#2D9666' : c.iconMuted} size={16} /><Text style={{ color: c.text, fontSize: 12, flex: 1 }}>{part.label}</Text><Text style={{ color: part.done ? '#2D9666' : c.muted, fontSize: 12 }}>{part.earned}/{part.points}</Text></View>)}<Text style={{ color: c.muted, fontSize: 12, lineHeight: 18 }}>Email (Google or confirmed email) +10, phone OTP +10, selfie +10, Aadhaar +20, 1+ social profile +10, 4+ karma rating +10 (0 if rating drops below 4), 10 activities joined +20, 20+ joined +30.</Text></View>
     <ErrorLine text={error} />
   </ScrollView>}{cameraOpen ? <LiveSelfieCamera onClose={() => setCameraOpen(false)} onCapture={asset => { if (alive.current) { setIdentityPhoto(asset); setCameraOpen(false); } }} /> : null}</Page>;

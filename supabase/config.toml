@@ -22,3 +22,6 @@ verify_jwt = false
 [functions.google-places]
 # Both the gateway and handler require a real signed-in user. Disabled until configured.
 verify_jwt = true
+
+[functions.aadhaar-verification]
+verify_jwt = true

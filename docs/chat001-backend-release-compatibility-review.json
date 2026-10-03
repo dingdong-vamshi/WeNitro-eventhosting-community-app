@@ -1187,5 +1187,13 @@
       "sha256": "247bef838f6849ef5ec04bc2502a685347193f6ad319c26b5ebe918b6473d63a",
       "comparison": "Function byte-identical to deployed App source08b8bb8"
     }
-  ]
+  ],
+  "laterDigiLockerCompatibility": {
+    "at": "2026-10-03T21:13:37.496365+00:00",
+    "scope": "Supersedes any inference that byte-identical older Trust migration means unchanged runtime after the new DigiLocker migration.",
+    "proof": "docs/chat001-digilocker-local-proof.json",
+    "badgeCriteriaAndRendering": "unchanged",
+    "trustChange": "Aadhaar only: production-verified private ledger or existing legacy approved signal; test sessions give +0; other components/Nitro/selfie review unchanged.",
+    "productionAndScreenshotAcceptance": "Not yet deployed; no new capture or actual provider proof claimed."
+  }
 }

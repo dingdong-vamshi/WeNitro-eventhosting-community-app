@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-03T21:13:37.496365+00:00",
+  "status": "LOCAL_PASS_PROVIDER_DISABLED_NOT_DEPLOYED",
+  "sourceBase": "a8e0b77",
+  "migration": "supabase/migrations/20261003205431_sandbox_digilocker_verification.sql",
+  "edge": "aadhaar-verification",
+  "externalProviderRequests": 0,
+  "productionMutations": 0,
+  "identityDataUsed": "none; synthetic local/mock fixtures only",
+  "checks": [
+    {
+      "command": "deno check supabase/functions/aadhaar-verification/index.ts",
+      "status": "PASS"
+    },
+    {
+      "command": "deno test --allow-env supabase/functions/aadhaar-verification/handler_test.ts",
+      "status": "PASS",
+      "tests": 14,
+      "scope": "Actual handler and provider adapter; disabled/incomplete/unapproved configs, authenticated actor, consent, exact protocol headers/body, owned session, UIDAI document metadata, test non-award, pending/failure/expiry, safe URLs, idempotent replay, privacy/error redaction."
+    },
+    {
+      "command": "node scripts/digilocker-verification-postgres-test.mjs",
+      "status": "PASS",
+      "checks": 46,
+      "scope": "Actual isolated PostgreSQL migration; service-only grant/JWT role, private RLS, actor binding, disabled/banned/deleted account denial, throttles, expiry, cross-user/environment/provider-reference denial, production finalization idempotency, exact +20 once, test +0, no Nitro or selfie-state mutation, no sensitive columns, Auth cascade."
+    },
+    {
+      "command": "node scripts/digilocker-verification-ui-test.mjs",
+      "status": "PASS",
+      "checks": 26,
+      "scope": "Actual component/client module harness; disabled state, consent, redirect alone not verified, refresh completion, test non-award, visible error/retry, stale identity/unmounted completion, safe URL and exact action payload."
+    },
+    {
+      "command": "npm run typecheck",
+      "status": "PASS"
+    },
+    {
+      "command": "node scripts/live-selfie-camera-test.mjs",
+      "status": "PASS",
+      "scope": "Adjacent camera UI; local synthetic camera only."
+    },
+    {
+      "command": "node scripts/trust-score-database-test.mjs",
+      "status": "PASS",
+      "checks": 23,
+      "scope": "Existing Trust regression fixture."
+    }
+  ],
+  "notProven": [
+    "Integrated coordinator full suite for final merged commit",
+    "Migration/Edge/frontend deployment",
+    "Provider credentials/entitlement or remote-secret absence",
+    "Actual consenting live DigiLocker hosted flow and document metadata",
+    "Deployed screenshot/real native return behavior"
+  ],
+  "compatibility": "Badge renderer, definitions and thresholds unchanged. New private.has_verified_aadhaar changes the Aadhaar source of Trust/sync only; the prior blanket Trust-runtime-unchanged statement does not apply. An empty disabled ledger preserves current score behavior; old source-file byte identity alone is not proof of this new migration."
+}
