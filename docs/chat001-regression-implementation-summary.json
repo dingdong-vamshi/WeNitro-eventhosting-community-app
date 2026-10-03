@@ -76,6 +76,12 @@
       "implementation": "Durable Place IDs and source, fixed labels, private service-only 28-day coordinate receipts, DB-enforced create/update binding and hourly expired-coordinate purge. Names and addresses stay transient.",
       "commit": "abc21aa",
       "localProof": "docs/chat001-google-place-retention-local-proof.json"
+    },
+    {
+      "change": "Google venue selection and display",
+      "implementation": "Complete local Host selection, Place-ID-only drafts and canonical models, transient attributed provider display, Details resolution before save, expiry-aware Nearby and memory cleanup, correct Google map/share/SOS links. Provider remains disabled pending activation.",
+      "commit": "8690142",
+      "localProof": "docs/chat001-google-places-local-proof.json"
     }
   ],
   "productionVisualAcceptance": "Pending deployment and actual interaction. Locked Mac/native browser confirmation blocks current browser input; no screenshot substituted."
