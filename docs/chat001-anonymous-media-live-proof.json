@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-03T05:11:54.942Z",
+  "target": "cxsznhrkzqndhseodcyy.supabase.co",
+  "post": 36,
+  "room": 244,
+  "checks": {
+    "authorRedacted": true,
+    "pathHidden": true,
+    "rawColumnDenied": true,
+    "directSigningDenied": true,
+    "directDownloadDenied": true,
+    "storageListingHidden": true,
+    "ownerAccess": true,
+    "adminAttribution": true,
+    "memberAuditDenied": true,
+    "opaqueImageRenders": true,
+    "tamperingDenied": true,
+    "expiredTimestampDenied": true,
+    "head": true,
+    "rangePlayback": true,
+    "multipleRangesDenied": true,
+    "unauthenticatedMintDenied": true,
+    "namedPostNotProxied": true
+  },
+  "scope": "Expired timestamp rejected in production; authentic token expiry and deleted-post revocation also tested with controlled clock/fixtures in local handler tests."
+}

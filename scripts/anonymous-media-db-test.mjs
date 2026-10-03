@@ -15,7 +15,7 @@ let started = false;
 try {
   run('initdb', ['-D', database, '-A', 'trust', '--no-locale', '-E', 'UTF8']);
   run('pg_ctl', ['-D', database, '-l', path.join(directory, 'postgres.log'), '-o', `-F -h '' -k ${directory} -p 55442`, '-w', 'start']); started = true;
-  const migration = fs.readFileSync('supabase/migrations/20261002200547_anonymous_community_media_privacy.sql', 'utf8');
+  const migration = fs.readFileSync('supabase/migrations/20261003050836_anonymous_community_media_privacy.sql', 'utf8');
   const output = run('psql', ['-h', directory, '-p', '55442', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-Atq'], `
 create role anon; create role authenticated;
 create schema auth; create schema private; create schema storage;

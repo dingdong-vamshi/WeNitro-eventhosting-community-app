@@ -1,10 +1,20 @@
 {
-  "status": "LOCAL_REPAIR_TESTED_NOT_DEPLOYED",
+  "status": "BACKEND_DEPLOYED_VERIFIED_FRONTEND_DEPLOYMENT_IN_PROGRESS",
   "target": "cxsznhrkzqndhseodcyy",
   "requestedChange": "Anonymous Community authors must not be identifiable by ordinary users through UI or APIs; authorized Admin attribution remains available.",
   "found": {
-    "fixture": { "community": 244, "post": 36, "ownerQaUser": 70, "viewerQaUser": 71 },
-    "sanitizedProductionResult": { "authorFieldsRedacted": true, "mediaPathHidden": false, "rawMediaColumnDenied": false, "directStorageSigningDenied": false },
+    "fixture": {
+      "community": 244,
+      "post": 36,
+      "ownerQaUser": 70,
+      "viewerQaUser": 71
+    },
+    "sanitizedProductionResult": {
+      "authorFieldsRedacted": true,
+      "mediaPathHidden": false,
+      "rawMediaColumnDenied": false,
+      "directStorageSigningDenied": false
+    },
     "impact": "The anonymous media path begins with the uploader Auth UUID, which can correlate with a known public profile-photo URL. Text-only author redaction did not cover this channel."
   },
   "implementedLocally": [
@@ -27,18 +37,24 @@
   },
   "deployment": {
     "completed": false,
-    "reason": "Target Dashboard authenticated; connector OAuth refresh fails and existing CLI identity lacks target project authorization. App frontend intentionally not deployed ahead of required backend.",
+    "reason": "Management access restored in CHAT 001; backend deployed and live privacy checks pass.",
     "requiredOrder": [
       "Deploy community-media to target with verify_jwt=false; handler itself checks POST JWT/membership and GET signatures. Uses existing SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY runtime values; no new client/provider secret.",
-      "Apply tested migration 20261002200547_anonymous_community_media_privacy.sql to target.",
+      "Apply tested migration 20261003050836_anonymous_community_media_privacy.sql to target.",
       "Run qa-anonymous-media-acceptance.mjs using supplied QA credential environment; it logs sanitized booleans only.",
       "Push/deploy dependent app build to existing Vercel project.",
       "Verify post 36 image renders as member 71 with generic Anonymous, no profile navigation, no author path in response/URL, and named post media unchanged.",
       "Recheck authenticated Realtime delivery, Storage rejection, Admin audit and stability; capture deployed screenshots.",
       "Remove only the temporary QA post 36/media fixture after evidence is recorded."
-    ]
+    ],
+    "backend": {
+      "migration": "20261003050836",
+      "edgeFunction": "community-media",
+      "version": 1,
+      "status": "ACTIVE"
+    }
   },
-  "productionVerification": "Current defect confirmed; repaired backend and frontend not yet production verified.",
+  "productionVerification": "Backend live checks pass; dependent frontend deployment and screenshots pending.",
   "screenshotProof": "Pending deployed repair. Technical privacy proof is required; a generic Anonymous screenshot alone cannot prove absence of API leakage.",
   "residualNotes": [
     "Already-issued legacy signed Storage URLs may remain valid until their original expiry. Previously disclosed identifiers cannot be retroactively erased.",
