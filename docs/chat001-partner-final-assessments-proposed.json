@@ -154,11 +154,18 @@
           "at": "2026-10-03T18:21:57.405Z",
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 71
+        },
+        {
+          "file": "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
+          "scope": "Final-release24 authenticated checks: paid approval/self-join retry preserve admitted seat; removal requires financial review; host rejection cancels unpaid reservation; late synthetic success requires refund and never readmits; deployed Edge never confirms rejected paid seat.",
+          "limit": "Synthetic provider references and ON_HOLD cleanup; no hosted-provider success claim."
         }
       ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
-        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+        "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
+        "docs/chat001-final-backend-production-proof.json"
       ],
       "screenshotProof": [
         {
@@ -399,12 +406,20 @@
         "scripts/cashfree-modal-completion-test.mjs",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
+          "scope": "Final-release24 authenticated checks: paid approval/self-join retry preserve admitted seat; removal requires financial review; host rejection cancels unpaid reservation; late synthetic success requires refund and never readmits; deployed Edge never confirms rejected paid seat.",
+          "limit": "Synthetic provider references and ON_HOLD cleanup; no hosted-provider success claim."
+        }
+      ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
         "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
         "scripts/payment-registration-confirmation-test.mjs",
-        "docs/chat001-hosted-checkout-proof.json"
+        "docs/chat001-hosted-checkout-proof.json",
+        "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
+        "docs/chat001-final-backend-production-proof.json"
       ],
       "screenshotProof": [],
       "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
@@ -617,10 +632,18 @@
         "scripts/cashfree-webhook-target-test.mjs",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
+          "scope": "Final-release24 authenticated checks: paid approval/self-join retry preserve admitted seat; removal requires financial review; host rejection cancels unpaid reservation; late synthetic success requires refund and never readmits; deployed Edge never confirms rejected paid seat.",
+          "limit": "Synthetic provider references and ON_HOLD cleanup; no hosted-provider success claim."
+        }
+      ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
-        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json"
+        "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+        "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
+        "docs/chat001-final-backend-production-proof.json"
       ],
       "screenshotProof": [],
       "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
@@ -687,11 +710,19 @@
         "scripts/payment-registration-confirmation-test.mjs",
         "docs/chat001-integrated-local-verification.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "file": "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
+          "scope": "Final-release24 authenticated checks: paid approval/self-join retry preserve admitted seat; removal requires financial review; host rejection cancels unpaid reservation; late synthetic success requires refund and never readmits; deployed Edge never confirms rejected paid seat.",
+          "limit": "Synthetic provider references and ON_HOLD cleanup; no hosted-provider success claim."
+        }
+      ],
       "technicalProof": [
         "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
         "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
-        "scripts/payment-entry-authorization-test.mjs"
+        "scripts/payment-entry-authorization-test.mjs",
+        "docs/chat001-isolated-backend-production-mussn9mz-3e45be.json",
+        "docs/chat001-final-backend-production-proof.json"
       ],
       "screenshotProof": [],
       "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
