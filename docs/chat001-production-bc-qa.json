@@ -1,6 +1,6 @@
 {
   "status": "PARTIAL_PRODUCTION_QA_HANDOFF_TO_WORKING_IAB",
-  "scope": "103 B Communities/Posts/Chat/Vibes and C Profile/Verification/Trust/Badge canonical requirements",
+  "scope": "102 B/C canonical requirements after original B27 direct-popup correction; historical production handoff, superseded by current coordinator proposals.",
   "deployment": {
     "projectId": "cxsznhrkzqndhseodcyy",
     "at": "2026-10-03T08:21:32.253Z",
@@ -1912,7 +1912,7 @@
       "sourceClauseIds": [
         "A38-10"
       ],
-      "requestedChange": "After creating an Activity, its media can optionally be passed to the Vibe composer without automatic publication.",
+      "requestedChange": "While adding photo/video inside an Activity, choose whether to include it in Vibes, preserving participant-only viewing.",
       "implemented": "Vibes uses a shared real media composer, optional Activity association, reel viewing and content actions backed by Vibe services. Upload/playback and navigation acceptance require the listed UI actions.",
       "status": "PENDING_INTEGRATED_PRODUCTION",
       "localVerification": [
@@ -1938,7 +1938,8 @@
       "implementationFiles": [
         "App.tsx",
         "src/services/vibes-production.ts"
-      ]
+      ],
+      "interpretationCorrection": "Original PDF controls interpretation; current local fix/remaining production action in docs/chat001-bc-assessments-proposed.json."
     },
     {
       "canonicalId": "COMM-ANONYMOUS-POST",
@@ -2666,57 +2667,11 @@
       ]
     },
     {
-      "canonicalId": "CHAT-PLUS-DIRECT",
-      "sourceClauseIds": [
-        "B27-01"
-      ],
-      "requestedChange": "Chat plus opens a functional direct-message recipient flow.",
-      "implemented": "Chat uses real direct/group/community/activity conversations, persisted messages/polls, privacy actions and live inbox state; group/story media uses the upload flow. The criterion-specific acceptance is not inferred from source presence.",
-      "status": "PENDING_INTEGRATED_PRODUCTION",
-      "localVerification": [
-        {
-          "suite": "scripts/chat-ui-regression-test.mjs",
-          "type": "actual chat service/deletion/group behavior with mocks plus UI source contracts",
-          "status": "PASS",
-          "proof": "docs/chat001-predeployment-local-verification.json#/checks/26"
-        },
-        {
-          "suite": "scripts/chat-realtime-regression-test.mjs",
-          "type": "actual transpiled realtime hydration/merge handlers with mocks plus source contracts",
-          "status": "PASS",
-          "proof": "docs/chat001-predeployment-local-verification.json#/checks/25"
-        },
-        {
-          "suite": "scripts/chat-inbox-merge-test.mjs",
-          "type": "actual inbox merge function",
-          "status": "PASS",
-          "proof": "docs/chat001-predeployment-local-verification.json#/checks/24"
-        }
-      ],
-      "productionVerification": [],
-      "screenshots": [],
-      "technicalProof": [],
-      "historicalEvidenceReview": [],
-      "remaining": [
-        {
-          "batch": "BC6_CHAT",
-          "gapType": "PENDING_UI_ACTIONS_WITH_CURRENT_API_PROOF_LINKED",
-          "exactActionPlan": "docs/chat001-bc-ui-handoff.json#/batches/5"
-        }
-      ],
-      "before": "Client-requested acceptance gap: Chat plus opens a functional direct-message recipient flow.",
-      "implementationFiles": [
-        "App.tsx",
-        "src/components/reconstruction/messages.tsx",
-        "src/services/realtime-chat.ts"
-      ]
-    },
-    {
       "canonicalId": "CHAT-PLUS-GROUP",
       "sourceClauseIds": [
         "B27-01"
       ],
-      "requestedChange": "Chat plus opens a functional create-group flow and creates the intended authorized group.",
+      "requestedChange": "Chat plus immediately opens the Create Group popup with member profile images and can create the intended authorized group.",
       "implemented": "Chat uses real direct/group/community/activity conversations, persisted messages/polls, privacy actions and live inbox state; group/story media uses the upload flow. The criterion-specific acceptance is not inferred from source presence.",
       "status": "PENDING_INTEGRATED_PRODUCTION",
       "localVerification": [
@@ -2755,7 +2710,8 @@
         "App.tsx",
         "src/components/reconstruction/messages.tsx",
         "src/services/realtime-chat.ts"
-      ]
+      ],
+      "interpretationCorrection": "Original PDF controls interpretation; current local fix/remaining production action in docs/chat001-bc-assessments-proposed.json."
     },
     {
       "canonicalId": "PROFILE-LAYOUT",
@@ -3543,7 +3499,7 @@
       "sourceClauseIds": [
         "B32-01"
       ],
-      "requestedChange": "Vibes newest/all menu changes the intended content ordering/filter.",
+      "requestedChange": "Vibes are ordered latest to oldest and the selected-Vibe three-dot actions work; no newest/all filter is requested.",
       "implemented": "Vibes uses a shared real media composer, optional Activity association, reel viewing and content actions backed by Vibe services. Upload/playback and navigation acceptance require the listed UI actions.",
       "status": "PENDING_INTEGRATED_PRODUCTION",
       "localVerification": [
@@ -3569,7 +3525,8 @@
       "implementationFiles": [
         "App.tsx",
         "src/services/vibes-production.ts"
-      ]
+      ],
+      "interpretationCorrection": "Original PDF controls interpretation; current local fix/remaining production action in docs/chat001-bc-assessments-proposed.json."
     },
     {
       "canonicalId": "VIBE-DIRECT-CREATE",
@@ -4828,7 +4785,7 @@
       ],
       "requestedChange": "Complete 50 participations.",
       "implemented": "Server-owned22-rule achievement catalog with current progress/earned state, detail criteria, private owner progress and idempotent earned timestamps.",
-      "status": "UI_VERIFIED_SCREENSHOT_REVIEW_PENDING",
+      "status": "VERIFIED_CURRENT_DETAIL_AND_ENGINE",
       "localVerification": [
         {
           "suite": "scripts/badge-engine-test.mjs",
@@ -4846,14 +4803,14 @@
           "url": "https://wenitro-app.vercel.app/#/profile",
           "deploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "viewport": "390x844"
+        },
+        {
+          "interactionAndOutcome": "Root opened actual deployed 50Activities badge; image bytes visually reviewed by B/C agent confirm correct criterion, progress0/50 and Locked. No artificial earned completion claimed.",
+          "proof": "qa-evidence/chat001/iab-badge19-50activities.png"
         }
       ],
       "screenshots": [
-        {
-          "path": "qa-evidence/chat001-integrated-bc/badge-19-50-activities.png",
-          "scope": "This badge detail/current state",
-          "review": "RECAPTURE_OPENING_ANIMATION"
-        }
+        "qa-evidence/chat001/iab-badge19-50activities.png"
       ],
       "technicalProof": [
         {
@@ -4878,7 +4835,17 @@
           "exactActionPlan": "docs/chat001-bc-ui-handoff.json#/batches/2"
         }
       ],
-      "before": "Client-requested acceptance gap: Complete 50 participations."
+      "before": "Client-requested acceptance gap: Complete 50 participations.",
+      "supersededScreenshot": {
+        "paths": [
+          {
+            "path": "qa-evidence/chat001-integrated-bc/badge-19-50-activities.png",
+            "scope": "This badge detail/current state",
+            "review": "RECAPTURE_OPENING_ANIMATION"
+          }
+        ],
+        "reason": "Prior animation frame did not prove selected badge; replaced by root IAB image reviewed by B/C agent with complete50 criterion and0/50locked state."
+      }
     },
     {
       "canonicalId": "BADGE-20",
@@ -5259,7 +5226,7 @@
   },
   "statusCounts": {
     "TECHNICAL_EVIDENCE_LINKED_UI_ACCEPTANCE_PENDING": 13,
-    "PENDING_INTEGRATED_PRODUCTION": 42,
+    "PENDING_INTEGRATED_PRODUCTION": 41,
     "VERIFIED_COMPATIBLE_DEPLOYED_UI_WITH_SCOPED_TECHNICAL_PROOF": 8,
     "COMPATIBLE_HISTORICAL_VISUAL_REVIEWED_ACCEPTANCE_PENDING": 4,
     "EXTERNAL_PROVIDER_NOT_IMPLEMENTED": 1,
@@ -5268,8 +5235,15 @@
     "VERIFIED_FRESH_OWNER_AND_COMPATIBLE_PUBLIC_UI_API": 1,
     "VERIFIED_SCORING_ENGINE_AND_CURRENT_OWNER_STATE": 7,
     "SCORING_VERIFIED_PROVIDER_NOT_IMPLEMENTED": 1,
-    "VERIFIED_CURRENT_DETAIL_AND_ENGINE": 21,
-    "UI_VERIFIED_SCREENSHOT_REVIEW_PENDING": 1
+    "VERIFIED_CURRENT_DETAIL_AND_ENGINE": 22
   },
-  "countMeaning": "103 canonical requirements represented once. Status counts are scoped verification states, not a claim all implementation or deployed acceptance is complete. API/engine-only, compatible prior UI, device/provider and missing fresh actions remain distinct."
+  "countMeaning": "103 canonical requirements represented once. Status counts are scoped verification states, not a claim all implementation or deployed acceptance is complete. API/engine-only, compatible prior UI, device/provider and missing fresh actions remain distinct.",
+  "excludedInterpretations": [
+    {
+      "canonicalId": "CHAT-PLUS-DIRECT",
+      "sourceClauseId": "B27-01",
+      "reason": "Original plus directly opens Create Group; no direct-message chooser requested. Merged interpretation into CHAT-PLUS-GROUP; not counted."
+    }
+  ],
+  "latestProposal": "docs/chat001-bc-assessments-proposed.json"
 }
