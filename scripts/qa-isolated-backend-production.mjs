@@ -63,7 +63,7 @@ async function main() {
   };
   const cleanup=async()=>{
     // Validate retained manifest ownership before retrying any interrupted cleanup.
-    for(const u of manifest.users){const d=await ok(service.auth.admin.getUserById(u.id));assert.equal(d.user.email,u.email);assert.equal(d.user.app_metadata.qa_fixture,true);}
+    for(const u of manifest.users){if(u.authDeleted)continue;const d=await ok(service.auth.admin.getUserById(u.id));assert.equal(d.user.email,u.email);assert.equal(d.user.app_metadata.qa_fixture,true);}
     if(manifest.events.length){const owned=await ok(service.from('tbl_events').select('id,title').in('id',manifest.events));assert.equal(owned.length,manifest.events.length);assert(owned.every(e=>e.title.startsWith(`[QA] ${runId} `)));}
     if(manifest.categories.length){const owned=await ok(service.from('tbl_categories').select('id,name').in('id',manifest.categories));assert.equal(owned.length,manifest.categories.length);assert(owned.every(c=>c.name.startsWith(`QA ${runId} `)));}
     const attempt=async(name,p)=>{try{await ok(p);proof.cleanup.push({name,status:'PASS'});}catch(e){proof.cleanup.push({name,status:'FAIL',code:e.code??null});}};
@@ -74,8 +74,8 @@ async function main() {
     }
     if(manifest.categories.length)await attempt('Synthetic categories archived',service.from('tbl_categories').update({is_enabled:false,archived_at:new Date().toISOString()}).in('id',manifest.categories));
     for(const u of manifest.users){
-      await attempt(`Synthetic ${u.label} authority revoked and login banned`,service.auth.admin.updateUserById(u.id,{ban_duration:'876000h',app_metadata:{role:'',admin_status:'inactive',qa_fixture:true}}));
-      await attempt(`Synthetic ${u.label} profile deactivated`,service.from('tbl_users').update({is_active:0}).eq('auth_user_id',u.id));
+      if(!u.authDeleted)await attempt(`Synthetic ${u.label} authority revoked and login banned`,service.auth.admin.updateUserById(u.id,{ban_duration:'876000h',app_metadata:{role:'',admin_status:'inactive',qa_fixture:true}}));
+      await attempt(`Synthetic ${u.label} profile deactivated`,service.from('tbl_users').update({is_active:0}).eq(u.userId?'id':'auth_user_id',u.userId??u.id));
     }
     await Promise.allSettled(clients.map(c=>c.auth.signOut({scope:'local'})));
     manifest.cleanup=proof.cleanup;persist();
@@ -99,6 +99,11 @@ async function main() {
     await deny('Banned identity retains no verification authority',guard.client.rpc('sync_my_verification'),/Account unavailable|deactivated/);
     await ok(service.auth.admin.updateUserById(guard.id,{ban_duration:'none'}));
     pass('Restored identity can resolve own profile',await rpc(guard.client,'get_current_app_user_id'),guard.userId);
+    const deleted=await createUser('deleted-auth');
+    await ok(service.auth.admin.deleteUser(deleted.id));
+    manifest.users.find(u=>u.id===deleted.id).authDeleted=true;persist();
+    await deny('Deleted Auth identity cannot use retained JWT to sync verification',deleted.client.rpc('sync_my_verification'),/Account unavailable|deactivated/);
+    pass('Deleted Auth identity cannot read profile with retained JWT',await ok(deleted.client.from('tbl_users').select('id').eq('id',deleted.userId)),[]);
     const before=await rpc(host.client,'list_my_nitro_history');
     pass('New confirmed referral grants exactly ten Nitro',(await rpc(a.client,'redeem_referral',{p_referrer_id:host.userId})).points,10);
     pass('Same referral replay awards nothing',(await rpc(a.client,'redeem_referral',{p_referrer_id:host.userId})).awarded,false);
