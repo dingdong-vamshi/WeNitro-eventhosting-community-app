@@ -6,8 +6,8 @@ import assert from 'node:assert/strict';
 import {randomBytes,randomUUID} from 'node:crypto';
 import {createClient} from '@supabase/supabase-js';
 
-const mode=process.argv.find(v=>['--execute','--observe-scheduled','--cleanup'].includes(v));
-assert(mode,'Choose --execute, --observe-scheduled, or --cleanup after deployment readiness.');
+const mode=process.argv.find(v=>['--execute','--resume-workspaces','--observe-scheduled','--cleanup'].includes(v));
+assert(mode,'Choose --execute, --resume-workspaces, --observe-scheduled, or --cleanup after deployment readiness.');
 assert.equal(process.env.CHAT001_PRODUCTION_READY,'yes','Coordinator deployment readiness is required.');
 assert(process.env.QA_APP_DEPLOYMENT_ID&&process.env.QA_ADMIN_DEPLOYMENT_ID,'Exact deployed App and Admin IDs are required.');
 const sourceRoot=process.env.QA_SOURCE_ROOT||process.cwd();
@@ -25,7 +25,7 @@ const ok=async request=>{const r=await request;assert.ifError(r.error);return r.
 const rpc=(client,name,args={})=>ok(client.rpc(name,args));
 const checks=[];
 const pass=(name,condition,details)=>{assert(condition,name);checks.push({name,status:'PASS',...(details?{details}:{})});};
-const denied=async(name,request,pattern=/administrator|permission|denied|unavailable|not configured/i)=>{const r=await request;pass(name,!!r.error&&pattern.test(r.error.message),{code:r.error?.code});};
+const denied=async(name,request,pattern=/administrator|permission|denied|unavailable|not configured/i)=>{const r=await request;pass(name,!!r.error&&pattern.test(r.error.message),{code:r.error?.code,httpStatus:r.status});};
 let fixture=fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):null;
 const saveFixture=()=>fs.writeFileSync(file,JSON.stringify(fixture,null,2)+'\n',{mode:0o600});
 const saveProof=(status,error)=>{
@@ -80,6 +80,7 @@ try{
    pass('Post-cron delivery replay does not duplicate the notification',(await notifications(recipient)).filter(n=>n.data?.campaign_id===row.id).length===1);
    saveProof('PASS');console.log(JSON.stringify({status:'PASS',mode,checks:checks.length,scheduledCampaignId:row.id}));
   }else{
+   if(mode==='--execute'){
    const categoryArgs={p_id:null,p_name:'[QA] unauthorized category',p_icon:'',p_description:'',p_order:9999,p_enabled:true,p_archived:false,p_reason:'CHAT001 unauthorized mutation denial'};
    for(const [client,label] of [[host,'Member'],[finance,'Finance']]){
     await denied(`${label} cannot manage categories`,client.rpc('admin_save_category',categoryArgs));
@@ -109,10 +110,12 @@ try{
    pass('Repeated QA Activity views persist once per member and UTC day',metrics.views.filter(v=>v.event_id===fixture.eventId&&v.day===today).reduce((n,v)=>n+Number(v.views),0)===1);
    pass('Repeated Activity shares persist once independently of views',metrics.shares.filter(v=>v.event_id===fixture.eventId&&v.day===today).reduce((n,v)=>n+Number(v.shares),0)===1);
    const gates=await rpc(admin,'admin_feature_gates');pass('All four deployed creation gates are readable without changing global state',gates.length===4&&gates.every(g=>g.enabled===true));
+   }
    for(const kind of ['notification_template','email_template','reward','coupon']){
-    let row=await createDoc(kind,`[QA] CHAT001 ${kind}`,kind==='email_template'?'email':'in_app');
-    pass(`${kind} draft survives a fresh database read`,(await getDoc(kind,row.id))?.version===1);
-    const stale={...row};row=await saveDoc(row,{...row.payload,notes:'Persisted QA edit'});
+    const existing=fixture.documents.find(d=>d.kind===kind);
+    let row=existing?await getDoc(kind,existing.id):await createDoc(kind,`[QA] CHAT001 ${kind}`,kind==='email_template'?'email':'in_app');
+    pass(`${kind} draft survives a fresh database read`,(await getDoc(kind,row.id))?.version>=1);
+    const stale={...row};row=await saveDoc(row,{...row.payload,notes:`Persisted QA edit ${Date.now()}`});
     await denied(`${kind} stale editor cannot overwrite a newer version`,admin.rpc('admin_workspace_save',{p_id:stale.id,p_kind:kind,p_payload:{...stale.payload,notes:'stale'},p_version:stale.version,p_archived:false,p_reason:'CHAT001 stale save denial'}),/changed|reload/i);
     row=await saveDoc(row,row.payload,true);pass(`${kind} archive persists`,(await getDoc(kind,row.id)).archived===true);await saveDoc(row,row.payload,false);
    }
