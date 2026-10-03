@@ -1,9 +1,9 @@
 {
-  "at": "2026-10-03T18:23:05.425Z",
+  "at": "2026-10-03T18:41:37.586Z",
   "target": "cxsznhrkzqndhseodcyy",
   "announcementId": 3,
   "recipient": 120,
-  "phase": "BEFORE_UI_ACK",
+  "phase": "AFTER_UI_ACK_AND_DISABLED",
   "checks": [
     {
       "name": "Deployed Admin UI publication persisted with only dedicated QA120 audience",
@@ -22,7 +22,11 @@
       "status": "PASS"
     },
     {
-      "name": "Intended QA120 recipient can load unacknowledged announcement",
+      "name": "Current App UI acknowledgement persists once and retry preserves original receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "Dedicated test announcement disabled after acceptance",
       "status": "PASS"
     },
     {

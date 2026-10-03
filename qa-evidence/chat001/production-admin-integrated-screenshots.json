@@ -1,0 +1,422 @@
+[
+  {
+    "name": "dashboard",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-dashboard.png",
+    "url": "https://wenitro-admin-roan.vercel.app/dashboard",
+    "at": "2026-10-03T08:26:36.926Z"
+  },
+  {
+    "name": "category-dialog",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-dialog.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/categories",
+    "at": "2026-10-03T18:01:08.910Z"
+  },
+  {
+    "name": "category-reloaded",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-reloaded.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/categories",
+    "at": "2026-10-03T18:01:24.975Z"
+  },
+  {
+    "name": "search-first",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-search-first.png",
+    "url": "https://wenitro-admin-roan.vercel.app/search?q=QA%20Audit",
+    "at": "2026-10-03T18:01:40.084Z"
+  },
+  {
+    "name": "search-second",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-search-second.png",
+    "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+    "at": "2026-10-03T18:01:42.556Z"
+  },
+  {
+    "name": "header-help",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-help.png",
+    "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+    "at": "2026-10-03T18:01:47.862Z"
+  },
+  {
+    "name": "header-profile",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-profile.png",
+    "url": "https://wenitro-admin-roan.vercel.app/search?q=Historical%20category",
+    "at": "2026-10-03T18:01:49.169Z"
+  },
+  {
+    "name": "template-edit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-edit.png",
+    "at": "2026-10-03T18:03:23.235Z",
+    "capture": "Native Chrome deployed Admin"
+  },
+  {
+    "name": "template-reloaded",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-template-reloaded.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:04:08.706Z"
+  },
+  {
+    "name": "campaign-delivered",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-campaign-delivered.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:07:34.224Z"
+  },
+  {
+    "name": "schedule-cancelled",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-schedule-cancelled.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:07:36.940Z"
+  },
+  {
+    "name": "provider-email",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-provider-email.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:07:58.565Z"
+  },
+  {
+    "name": "provider-push",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-provider-push.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:01.499Z"
+  },
+  {
+    "name": "email-templates",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-email-templates.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:03.323Z"
+  },
+  {
+    "name": "feature-controls",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-feature-controls.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:10.231Z"
+  },
+  {
+    "name": "languages",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-languages.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:11.828Z"
+  },
+  {
+    "name": "settings",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-settings.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:14.649Z"
+  },
+  {
+    "name": "reward-catalog",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-reward-catalog.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:17.424Z"
+  },
+  {
+    "name": "coupons",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-coupons.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:19.516Z"
+  },
+  {
+    "name": "analytics-users",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-users.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:27.886Z"
+  },
+  {
+    "name": "analytics-platform",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-platform.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:08:30.501Z"
+  },
+  {
+    "name": "analytics-engagement-before-label-fix",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-engagement-before-label-fix.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:11:53.391Z"
+  },
+  {
+    "name": "analytics-events",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-events.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:05.403Z"
+  },
+  {
+    "name": "analytics-event-views",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-event-views.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:09.351Z"
+  },
+  {
+    "name": "analytics-growth",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-growth.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:17.567Z"
+  },
+  {
+    "name": "analytics-top-events",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-top-events.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:19.924Z"
+  },
+  {
+    "name": "analytics-hosts",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-hosts.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:23.282Z"
+  },
+  {
+    "name": "analytics-geography",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-analytics-geography.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:24.862Z"
+  },
+  {
+    "name": "nitro-rules",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-nitro-rules.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:30.964Z"
+  },
+  {
+    "name": "nitro-leaderboard",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-nitro-leaderboard.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:32.784Z"
+  },
+  {
+    "name": "synthetic-user-profile",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-synthetic-user-profile.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:35.127Z"
+  },
+  {
+    "name": "synthetic-activity",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-synthetic-activity.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:36.760Z"
+  },
+  {
+    "name": "synthetic-participants",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-synthetic-participants.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:42.048Z"
+  },
+  {
+    "name": "synthetic-user-history",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-synthetic-user-history.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:43.735Z"
+  },
+  {
+    "name": "communities",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-communities.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:45.514Z"
+  },
+  {
+    "name": "vibes",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-vibes.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:47.265Z"
+  },
+  {
+    "name": "stories",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-stories.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:49.514Z"
+  },
+  {
+    "name": "verification",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-verification.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:53.203Z"
+  },
+  {
+    "name": "partner-review",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-partner-review.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:54.710Z"
+  },
+  {
+    "name": "partner-activities",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-partner-activities.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:56.779Z"
+  },
+  {
+    "name": "reports",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-reports.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:12:59.878Z"
+  },
+  {
+    "name": "investigation",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-investigation.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:05.654Z"
+  },
+  {
+    "name": "chat-reports",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-chat-reports.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:08.220Z"
+  },
+  {
+    "name": "manual-media",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-manual-media.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:11.421Z"
+  },
+  {
+    "name": "abuse-review",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-abuse-review.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:14.566Z"
+  },
+  {
+    "name": "ip-provider-status",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-ip-provider-status.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:17.129Z"
+  },
+  {
+    "name": "moderation-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-moderation-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:22.774Z"
+  },
+  {
+    "name": "security-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-security-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:24.417Z"
+  },
+  {
+    "name": "admin-role-boundary",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-admin-role-boundary.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:36.928Z"
+  },
+  {
+    "name": "master-role-boundary",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-master-role-boundary.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:38.896Z"
+  },
+  {
+    "name": "access-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-access-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:39.775Z"
+  },
+  {
+    "name": "moderation-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-moderation-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:40.658Z"
+  },
+  {
+    "name": "security-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-security-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:47.136Z"
+  },
+  {
+    "name": "master-role-boundary",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-master-role-boundary.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:13:57.593Z"
+  },
+  {
+    "name": "access-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-access-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:14:00.636Z"
+  },
+  {
+    "name": "moderation-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-moderation-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:14:05.394Z"
+  },
+  {
+    "name": "settings",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-settings.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:14:20.768Z"
+  },
+  {
+    "name": "header-notifications",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-notifications.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:15:12.583Z"
+  },
+  {
+    "name": "header-notifications",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-notifications.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:15:24.991Z"
+  },
+  {
+    "name": "investigation",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-investigation.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:15:30.131Z"
+  },
+  {
+    "name": "investigation-persisted",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-investigation-persisted.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:15:44.559Z"
+  },
+  {
+    "name": "investigation-resolved",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-investigation-resolved.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:15:45.761Z"
+  },
+  {
+    "name": "announcements",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-announcements.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:15:49.826Z"
+  },
+  {
+    "name": "announcement-explicit-audience",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-announcement-explicit-audience.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:16:03.581Z"
+  },
+  {
+    "name": "announcement-published",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-announcement-published.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:16:09.546Z"
+  },
+  {
+    "name": "header-profile-detail",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-header-profile-detail.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:16:43.944Z"
+  },
+  {
+    "name": "finance-transactions",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-finance-transactions.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:17:25.281Z"
+  },
+  {
+    "name": "finance-revenue",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-finance-revenue.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:17:27.589Z"
+  },
+  {
+    "name": "finance-settlements",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-finance-settlements.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:17:30.489Z"
+  },
+  {
+    "name": "finance-moderation-denied",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-finance-moderation-denied.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:17:38.043Z"
+  }
+]

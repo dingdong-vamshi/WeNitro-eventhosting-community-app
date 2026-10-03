@@ -1,0 +1,965 @@
+[
+  {
+    "name": "integrated-home-hero-activities",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-home-hero-activities.png",
+    "url": "https://wenitro-app.vercel.app/",
+    "at": "2026-10-03T08:22:58.293Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HERO-ASSETS"
+    ],
+    "outcome": "Approved Communities hero frame observed; filename is historical and does not identify first slide."
+  },
+  {
+    "name": "integrated-home-hero-slide1",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-home-hero-slide1.png",
+    "url": "https://wenitro-app.vercel.app/",
+    "at": "2026-10-03T08:23:12.093Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HERO-ASSETS"
+    ],
+    "outcome": "Selected first hero; screenshot records the actual rotating carousel frame."
+  },
+  {
+    "name": "integrated-home-hero-friends",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-home-hero-friends.png",
+    "url": "https://wenitro-app.vercel.app/",
+    "at": "2026-10-03T08:23:23.185Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HERO-ASSETS"
+    ],
+    "outcome": "Approved Friends hero selected."
+  },
+  {
+    "name": "integrated-hero-invite-destination",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-hero-invite-destination.png",
+    "url": "https://wenitro-app.vercel.app/#/inviteSquad",
+    "at": "2026-10-03T08:24:02.922Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HERO-CTA-INVITE",
+      "REFERRAL-EXPLANATION"
+    ],
+    "outcome": "Hero Invite Friends opened Invite Squad; visible terms consistently state10 Nitro and account116 referral."
+  },
+  {
+    "name": "integrated-home-hero-store",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-home-hero-store.png",
+    "url": "https://wenitro-app.vercel.app/",
+    "at": "2026-10-03T08:24:24.352Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HERO-ASSETS"
+    ],
+    "outcome": "Approved Store hero selected."
+  },
+  {
+    "name": "integrated-hero-store-destination",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-hero-store-destination.png",
+    "url": "https://wenitro-app.vercel.app/",
+    "at": "2026-10-03T08:24:30.484Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [],
+    "outcome": "Excluded CTA proof: click did not leave Home. Correct store destination recorded separately.",
+    "excluded": true
+  },
+  {
+    "name": "integrated-store-confirmed-destination",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-store-confirmed-destination.png",
+    "url": "https://wenitro-app.vercel.app/#/shop",
+    "at": "2026-10-03T08:24:52.646Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HERO-CTA-STORE",
+      "STORE-NAMING",
+      "STORE-MINIMUM",
+      "STORE-REDEMPTION"
+    ],
+    "outcome": "Hero CTA reached actual Nitro Store, showing200 threshold and provider unavailable; no points spent."
+  },
+  {
+    "name": "integrated-hero-communities-destination",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-hero-communities-destination.png",
+    "url": "https://wenitro-app.vercel.app/#/communities",
+    "at": "2026-10-03T08:26:00.347Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HERO-CTA-COMMUNITIES"
+    ],
+    "outcome": "Communities hero CTA opened production Communities with actual list data."
+  },
+  {
+    "name": "integrated-activities-collapsed",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activities-collapsed.png",
+    "url": "https://wenitro-app.vercel.app/#/activities",
+    "at": "2026-10-03T08:26:58.489Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HERO-CTA-ACTIVITIES",
+      "ACT-LIST-LAYOUT",
+      "ACT-LIST-HEADER",
+      "ACT-SEARCH-TOGGLE",
+      "ACT-COVER",
+      "ACT-STATUS-CHIPS",
+      "PARTNER-LIST-IDENTITY",
+      "AVATAR-FALLBACK",
+      "AVATAR-SHAPE"
+    ],
+    "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities."
+  },
+  {
+    "name": "integrated-activities-search-expanded",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activities-search-expanded.png",
+    "url": "https://wenitro-app.vercel.app/#/activities",
+    "at": "2026-10-03T08:27:08.550Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "ACT-SEARCH-TOGGLE"
+    ],
+    "outcome": "Search icon revealed the editable Activities search input."
+  },
+  {
+    "name": "integrated-activities-date-free-filter",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activities-date-free-filter.png",
+    "url": "https://wenitro-app.vercel.app/#/activities",
+    "at": "2026-10-03T08:27:27.255Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "FILTER-DATE",
+      "FILTER-PRICE",
+      "APP-CATEGORY-CATALOG"
+    ],
+    "outcome": "Selected4Oct\u20134Oct andFree; active server catalog rendered andQA catalog excluded."
+  },
+  {
+    "name": "integrated-activities-date-free-results",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activities-date-free-results.png",
+    "url": "https://wenitro-app.vercel.app/#/activities",
+    "at": "2026-10-03T08:27:33.340Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "FILTER-DATE",
+      "FILTER-PRICE",
+      "FILTER-APPLY"
+    ],
+    "outcome": "After Apply only free4Oct event277 remains, matching selectedlocalday."
+  },
+  {
+    "name": "integrated-filter-reopened",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-filter-reopened.png",
+    "url": "https://wenitro-app.vercel.app/#/activities",
+    "at": "2026-10-03T08:27:42.017Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "FILTER-APPLY"
+    ],
+    "outcome": "ReopenedFiltersretained4Oct\u20134Oct andFree selection."
+  },
+  {
+    "name": "integrated-filter-reset",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-filter-reset.png",
+    "url": "https://wenitro-app.vercel.app/#/activities",
+    "at": "2026-10-03T08:27:59.688Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "FILTER-RESET"
+    ],
+    "outcome": "ResetAll clearedbothdates and restoredprice/genderAll withno categoryorverificationrestriction."
+  },
+  {
+    "name": "integrated-partner-entry-categories",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-entry-categories.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/297",
+    "at": "2026-10-03T18:08:02.698Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "PARTNER-CATEGORY-PRICES",
+      "PARTNER-CATEGORY-SELECTION"
+    ],
+    "outcome": "Private Partner activity presents Standard \u20b912.34 and Plus \u20b918 entry categories before checkout."
+  },
+  {
+    "name": "integrated-invited-payment-form-regression",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-invited-payment-form-regression.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/297",
+    "at": "2026-10-03T18:08:33.055Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "PARTNER-REQUIRED-ANSWERS"
+    ],
+    "outcome": "Invited payment_required participant attempts Pay without required-question form and receives Payment request failed. Regression assigned for fix."
+  },
+  {
+    "name": "integrated-activity-host-profile",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activity-host-profile.png",
+    "url": "https://wenitro-app.vercel.app/#/profile/71",
+    "at": "2026-10-03T18:09:00.574Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "ACT-HOST-PROFILE",
+      "AVATAR-FALLBACK",
+      "AVATAR-SHAPE"
+    ],
+    "outcome": "Activity297 host Priya Nair opens matching public profile with round PN initials and public signals."
+  },
+  {
+    "name": "integrated-host-direct-chat",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-host-direct-chat.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/251",
+    "at": "2026-10-03T18:09:09.896Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "ACT-MESSAGE-HOST"
+    ],
+    "outcome": "Host profile Message opens Priya Nair direct conversation with matching PN avatar."
+  },
+  {
+    "name": "integrated-notifications-loaded",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-notifications-loaded.png",
+    "url": "https://wenitro-app.vercel.app/#/notifications",
+    "at": "2026-10-03T18:09:23.460Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "NOTIFICATIONS-LOAD"
+    ],
+    "outcome": "Four real persisted QA notifications load with unread state and recipient-specific activity links."
+  },
+  {
+    "name": "integrated-host-warning",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-host-warning.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:09:44.715Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HOST-WARNING-CONTENT"
+    ],
+    "outcome": "Host Responsibly explicitly warns prohibited/misleading content, removal and permanent suspension."
+  },
+  {
+    "name": "integrated-host-warning-cancelled",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-host-warning-cancelled.png",
+    "url": "https://wenitro-app.vercel.app/#/host",
+    "at": "2026-10-03T18:09:49.848Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HOST-WARNING-CANCEL"
+    ],
+    "outcome": "Cancel returns to Create & Share without publishing."
+  },
+  {
+    "name": "integrated-normal-host-paid",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-normal-host-paid.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:09:56.290Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HOST-NORMAL-PAID",
+      "HOST-WARNING-CONTINUE"
+    ],
+    "outcome": "Upper Access and Privacy section only; actual PaidON evidence is integrated-normal-host-paid-visible."
+  },
+  {
+    "name": "integrated-host-category-catalog",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-host-category-catalog.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:10:03.911Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "APP-CATEGORY-CATALOG"
+    ],
+    "outcome": "Hosting category selector loads shared active choices and excludes QA-prefixed categories."
+  },
+  {
+    "name": "integrated-location-fallback",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-location-fallback.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:10:16.607Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "MAPS-PROVIDER-CLARITY"
+    ],
+    "outcome": "Actual Bengaluru location search returns attributed OpenStreetMap results; no claim of Google Places."
+  },
+  {
+    "name": "integrated-host-expired-draft-validation",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-host-expired-draft-validation.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:10:22.654Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HOST-SCHEDULE-ERRORS",
+      "HOST-REGISTRATION-BOUNDS"
+    ],
+    "outcome": "Restored expired QA draft retains inputs and shows specific start/deadline errors with Host Now disabled."
+  },
+  {
+    "name": "integrated-host-schedule-errors",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-host-schedule-errors.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:10:26.996Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HOST-END-DEFAULT",
+      "HOST-REGISTRATION-BOUNDS",
+      "HOST-SCHEDULE-ERRORS"
+    ],
+    "outcome": "Invalid one-minute duration and deadline after start produce specific errors and prevent publication."
+  },
+  {
+    "name": "integrated-normal-host-paid-visible",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-normal-host-paid-visible.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:10:33.057Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HOST-NORMAL-PAID"
+    ],
+    "outcome": "Normal host Paid ON has venue-spending classification and explicit no price/Pay Now collection."
+  },
+  {
+    "name": "integrated-activity-upload-warning",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activity-upload-warning.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:10:37.312Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "UPLOAD-WARNING"
+    ],
+    "outcome": "Activity media picker is preceded by explicit Upload Responsibly warning."
+  },
+  {
+    "name": "integrated-upload-cancel-preserves-draft",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-upload-cancel-preserves-draft.png",
+    "url": "https://wenitro-app.vercel.app/#/createActivity",
+    "at": "2026-10-03T18:10:43.065Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "UPLOAD-WARNING-CANCEL"
+    ],
+    "outcome": "Cancel returns to unchanged title and description with no selected media."
+  },
+  {
+    "name": "integrated-nitrobot-faq",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-nitrobot-faq.png",
+    "url": "https://wenitro-app.vercel.app/#/help",
+    "at": "2026-10-03T18:10:56.533Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HELP-NITROBOT"
+    ],
+    "outcome": "Activity FAQ responds with supported guidance and explicit lack of private account access."
+  },
+  {
+    "name": "integrated-support-query-persisted",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-support-query-persisted.png",
+    "url": "https://wenitro-app.vercel.app/#/feedback",
+    "at": "2026-10-03T18:11:27.499Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "HELP-SUPPORT-QUERY"
+    ],
+    "outcome": "Submitted QA query shows success after server persistence; DB feedback9 belongs to user116 and matches exact message."
+  },
+  {
+    "name": "integrated-emergency-contact-empty-validation",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-emergency-contact-empty-validation.png",
+    "url": "https://wenitro-app.vercel.app/#/emergency",
+    "at": "2026-10-03T18:12:13.588Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "SOS-ACTION"
+    ],
+    "outcome": "Web Emergency Contact exposes stored trusted-contact setup and valid Indian-number validation; no background tracking claim."
+  },
+  {
+    "name": "integrated-onboarding-page1",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-onboarding-page1.png",
+    "url": "https://wenitro-app.vercel.app/#/login",
+    "at": "2026-10-03T18:12:52.674Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "ONB-NEXT",
+      "ONB-CONTENT",
+      "ONB-LAYOUT",
+      "ONB-REPLAY"
+    ],
+    "outcome": "Explore WeNitro replays intro at page1 with visible Next and Skip."
+  },
+  {
+    "name": "integrated-onboarding-page2",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-onboarding-page2.png",
+    "url": "https://wenitro-app.vercel.app/#/login",
+    "at": "2026-10-03T18:12:58.828Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "ONB-NEXT",
+      "ONB-CONTENT"
+    ],
+    "outcome": "First Next advances page1 to page2 with readable content."
+  },
+  {
+    "name": "integrated-onboarding-page3",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-onboarding-page3.png",
+    "url": "https://wenitro-app.vercel.app/#/login",
+    "at": "2026-10-03T18:13:05.568Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "ONB-NEXT",
+      "ONB-CONTENT",
+      "ONB-FINISH"
+    ],
+    "outcome": "Second Next advances only to page3, whose completion action is Start Exploring."
+  },
+  {
+    "name": "integrated-onboarding-narrow-page2",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-onboarding-narrow-page2.png",
+    "url": "https://wenitro-app.vercel.app/#/login",
+    "at": "2026-10-03T18:13:37.899Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "ONB-LAYOUT",
+      "ONB-DOTS"
+    ],
+    "outcome": "At320x568, page2 heading and fixed Next remain readable; lower body requires vertical scroll."
+  },
+  {
+    "name": "integrated-onboarding-narrow-page2-scrolled",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-onboarding-narrow-page2-scrolled.png",
+    "url": "https://wenitro-app.vercel.app/#/login",
+    "at": "2026-10-03T18:13:46.259Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "ONB-LAYOUT"
+    ],
+    "outcome": "At320x568 scrolling page2 reveals its complete body copy while Next remains reachable."
+  },
+  {
+    "name": "integrated-auth-artwork",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-auth-artwork.png",
+    "url": "https://wenitro-app.vercel.app/#/authFallback",
+    "at": "2026-10-03T18:15:24.402Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "AUTH-ARTWORK",
+      "ONB-SKIP",
+      "ONB-FINISH"
+    ],
+    "outcome": "Skip/Finish return to Welcome; email destination uses community activities artwork and readable authentication controls."
+  },
+  {
+    "name": "integrated-email-invalid-no-tick",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-email-invalid-no-tick.png",
+    "url": "https://wenitro-app.vercel.app/#/authSignup",
+    "at": "2026-10-03T18:15:33.389Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "AUTH-EMAIL-TICK",
+      "AUTH-NAME-VALIDATION"
+    ],
+    "outcome": "Malformed invalid@ produces error without email tick; legitimate Telugu name receives valid name indicator. No signup submitted."
+  },
+  {
+    "name": "integrated-email-format-valid",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-email-format-valid.png",
+    "url": "https://wenitro-app.vercel.app/#/authSignup",
+    "at": "2026-10-03T18:15:37.039Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "AUTH-EMAIL-TICK",
+      "AUTH-NAME-VALIDATION"
+    ],
+    "outcome": "Syntactically valid example address shows format tick; this is not verified ownership. Telugu name remains accepted."
+  },
+  {
+    "name": "integrated-name-invalid",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-name-invalid.png",
+    "url": "https://wenitro-app.vercel.app/#/authSignup",
+    "at": "2026-10-03T18:15:50.994Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": null,
+    "requirements": [
+      "AUTH-NAME-VALIDATION"
+    ],
+    "outcome": "Numeric-only name produces actionable validation instead of a success tick."
+  },
+  {
+    "name": "integrated-partner-instructions",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-instructions.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerAccount",
+    "at": "2026-10-03T18:16:58.997Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "PARTNER-INSTRUCTIONS"
+    ],
+    "outcome": "Partner application explains reviewed paid-host eligibility and business/activity/location fields."
+  },
+  {
+    "name": "integrated-partner-terms-disabled",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-terms-disabled.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerAccount",
+    "at": "2026-10-03T18:17:05.494Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 116,
+    "requirements": [
+      "PARTNER-TERMS"
+    ],
+    "outcome": "Application exposes Terms link, unchecked required agreement and disabled submission. No legal agreement or application submitted."
+  },
+  {
+    "name": "integrated-partner-dashboard-overview",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-dashboard-overview.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerDashboard",
+    "at": "2026-10-03T18:20:57.155Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 71,
+    "requirements": [
+      "PARTNER-DASHBOARD"
+    ],
+    "outcome": "Approved QA Partner71 sees actual hosted/registration and Sandbox financial metrics; amounts are not real-money settlement."
+  },
+  {
+    "name": "integrated-partner-unpaid-registration",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-unpaid-registration.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerDashboard",
+    "at": "2026-10-03T18:21:57.405Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 71,
+    "requirements": [
+      "PARTNER-PARTICIPANTS",
+      "PARTNER-PAYMENT-DETAILS"
+    ],
+    "outcome": "QA Partner71 sees buyer116 payment required, UNPAID, \u20b90 and no answers before checkout; not falsely approved."
+  },
+  {
+    "name": "integrated-partner-required-question",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-partner-required-question.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerRegistrationForm/297",
+    "at": "2026-10-03T18:22:07.103Z",
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "account": 71,
+    "requirements": [
+      "PARTNER-REQUIRED-ANSWERS"
+    ],
+    "outcome": "Host sees persisted required short-text question; editing locked once registrations exist."
+  },
+  {
+    "name": "iab-recipient120-announcement",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-recipient120-announcement.png",
+    "url": "https://wenitro-app.vercel.app/#/feed",
+    "at": "2026-10-03T18:41:16.786Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "ANNOUNCEMENT-DISPLAY",
+      "ANNOUNCEMENT-AUDIENCE"
+    ],
+    "outcome": "Actual login displays announcement3 restricted to controlled120"
+  },
+  {
+    "name": "iab-recipient120-after-ack",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-recipient120-after-ack.png",
+    "url": "https://wenitro-app.vercel.app/#/feed",
+    "at": "2026-10-03T18:41:28.737Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "ANNOUNCEMENT-RECEIPT"
+    ],
+    "outcome": "Reload after acknowledgement does not repeat announcement"
+  },
+  {
+    "name": "iab-verification120-pending",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-verification120-pending.png",
+    "url": "https://wenitro-app.vercel.app/#/verification",
+    "at": "2026-10-03T18:41:55.439Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "VERIFY-SELFIE-REVIEW",
+      "VERIFY-SELFIE-CAMERA",
+      "VERIFY-STAGED-BADGE"
+    ],
+    "outcome": "Selfie Awaiting Review with camera-only controls and pending0Trust; Aadhaar unavailable explicitly"
+  },
+  {
+    "name": "iab-verification120-rejected",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-verification120-rejected.png",
+    "url": "https://wenitro-app.vercel.app/#/verification",
+    "at": "2026-10-03T18:42:38.190Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "VERIFY-SELFIE-REVIEW",
+      "VERIFY-TRUST-NOT-NITRO"
+    ],
+    "outcome": "After Admin rejection and reload selfie remains unverified and totalTrust10 unchanged"
+  },
+  {
+    "name": "iab-profile120-photo-added",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-photo-added.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T18:44:07.089Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-PHOTO-ADD",
+      "PROFILE-PHOTO-PRIMARY"
+    ],
+    "outcome": "Controlled camera object uploaded through deployed gallery and rendered as primary"
+  },
+  {
+    "name": "iab-profile120-three-photos",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T18:45:02.437Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-PHOTO-ADD"
+    ],
+    "outcome": "Three rendered photo slots, gallery capacity reached and add control removed"
+  },
+  {
+    "name": "iab-profile120-photo-management",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-photo-management.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T18:45:10.589Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-PHOTO-CHANGE",
+      "PROFILE-PHOTO-DELETE",
+      "PROFILE-PHOTO-PRIMARY"
+    ],
+    "outcome": "Photo preview exposes Change, Set as primary and Delete"
+  },
+  {
+    "name": "iab-profile120-primary-reloaded",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-primary-reloaded.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T18:45:34.945Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-PHOTO-PRIMARY"
+    ],
+    "outcome": "Reload retains the changed primary image and three-photo gallery"
+  },
+  {
+    "name": "iab-profile120-extra-replaced",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-extra-replaced.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T18:46:00.945Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-PHOTO-CHANGE"
+    ],
+    "outcome": "Third gallery photo replacement persists after reload and preview shows camera object"
+  },
+  {
+    "name": "iab-profile120-extra-deleted",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-extra-deleted.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T18:46:11.948Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-PHOTO-DELETE"
+    ],
+    "outcome": "Disposable third photo removed; two slots remain and add control returns"
+  },
+  {
+    "name": "iab-badge19-50activities",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-badge19-50activities.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T18:46:21.916Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "BADGE-19"
+    ],
+    "outcome": "50 Activities badge modal shows completed50 criterion, progress0/50 and lockedstate"
+  },
+  {
+    "name": "iab-profile120-social-persisted",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-social-persisted.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T18:47:45.274Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-SOCIAL"
+    ],
+    "outcome": "Social handle persists after reload as normalized HTTPSInstagramlink; Nitro0 and Trust20"
+  },
+  {
+    "name": "iab-community120-created",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community120-created.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/252",
+    "at": "2026-10-03T18:49:34.416Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "COMM-CREATED-STATE"
+    ],
+    "outcome": "Community Created success shows exactmarkedname, firstmember and ViewCommunity action"
+  },
+  {
+    "name": "iab-community252-owner",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-owner.png",
+    "url": "https://wenitro-app.vercel.app/#/community/252",
+    "at": "2026-10-03T18:49:57.806Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "COMM-AVATAR",
+      "COMM-MEMBER-COUNT",
+      "COMM-COVER",
+      "COMM-POSTS-SEPARATE"
+    ],
+    "outcome": "Loaded actual communityavatar,1member,compactcover and separate Posts/Chat actions"
+  },
+  {
+    "name": "iab-community252-video-post",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-video-post.png",
+    "url": "https://wenitro-app.vercel.app/#/community/252",
+    "at": "2026-10-03T18:52:17.901Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "COMM-POST-VIDEO",
+      "COMM-POST-NO-POLL"
+    ],
+    "outcome": "Published generated video appears in community posts; composer exposesPhoto/Video with noPoll"
+  },
+  {
+    "name": "iab-community252-video-played",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-video-played.png",
+    "url": "https://wenitro-app.vercel.app/#/community/252",
+    "at": "2026-10-03T18:52:36.686Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "COMM-POST-VIDEO"
+    ],
+    "outcome": "Native player reached2/2seconds endedtrue without media error after actualPlay click"
+  },
+  {
+    "name": "iab-community252-chat-back",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-chat-back.png",
+    "url": "https://wenitro-app.vercel.app/#/community/252",
+    "at": "2026-10-03T18:53:03.082Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "COMM-CHAT-BACK"
+    ],
+    "outcome": "Opening communitychat thenBack restores samecommunity252detail"
+  },
+  {
+    "name": "iab-communities-before-header-fix",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-communities-before-header-fix.png",
+    "url": "https://wenitro-app.vercel.app/#/communities",
+    "at": "2026-10-03T18:53:10.765Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "COMM-HEADER",
+      "COMM-BACK-LIST"
+    ],
+    "outcome": "BEFORE upcomingcorrection: Backreturnscommunitylist butlegacytextlogo and alwaysvisiblesearch do notmatchPDFheader"
+  },
+  {
+    "name": "iab-public120-gallery-readonly",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-public120-gallery-readonly.png",
+    "url": "https://wenitro-app.vercel.app/#/profile/120",
+    "at": "2026-10-03T18:55:15.972Z",
+    "account": 71,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-PHOTO-PRIMARY",
+      "PROFILE-GALLERY-PUBLIC"
+    ],
+    "outcome": "Otheruser71 can preview loaded primary image, with noChange/Delete/SetPrimary controls"
+  },
+  {
+    "name": "iab-public120-vibes-first",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-public120-vibes-first.png",
+    "url": "https://wenitro-app.vercel.app/#/profile/120",
+    "at": "2026-10-03T18:55:38.195Z",
+    "account": 71,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "PROFILE-PUBLIC-VIBES-FIRST"
+    ],
+    "outcome": "Publicprofile initiallyselectsVibes and renders No vibes posted; noownermanagementcontrols"
+  },
+  {
+    "name": "iab-community252-member-count",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-member-count.png",
+    "url": "https://wenitro-app.vercel.app/#/community/252",
+    "at": "2026-10-03T18:56:23.315Z",
+    "account": 71,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "COMM-MEMBER-COUNT",
+      "COMM-MEMBER-PROFILE"
+    ],
+    "outcome": "Secondcontrolledmemberjoined;2distinctmembersand roles rendered"
+  },
+  {
+    "name": "iab-community252-member-profile",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-member-profile.png",
+    "url": "https://wenitro-app.vercel.app/#/profile/120",
+    "at": "2026-10-03T18:57:30.791Z",
+    "account": 71,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "COMM-MEMBER-PROFILE"
+    ],
+    "outcome": "Clicking communitymember120 opens exactpublicprofile with loadedavatar"
+  },
+  {
+    "name": "iab-direct71-to120-sent",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct71-to120-sent.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T18:58:07.543Z",
+    "account": 71,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "CHAT-NAMES",
+      "CHAT-TIMESTAMPS"
+    ],
+    "outcome": "Actualcontrolledrecipientname and datedownmessage rendered aftersend"
+  },
+  {
+    "name": "iab-direct253-options",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-options.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T18:58:15.953Z",
+    "account": 71,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "CHAT-NO-VIDEO",
+      "CHAT-BLOCK"
+    ],
+    "outcome": "Actualattachmentmenu hasSharePhoto/CreatePoll/Block and noVideo"
+  },
+  {
+    "name": "iab-direct253-poll-created",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-poll-created.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T19:05:24.297Z",
+    "account": 71,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "POLL-CREATE"
+    ],
+    "outcome": "Created two-option poll in direct QA chat; persisted poll has zero votes before recipient voting."
+  },
+  {
+    "name": "iab-direct120-unread",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct120-unread.png",
+    "url": "https://wenitro-app.vercel.app/#/chat",
+    "at": "2026-10-03T19:06:55.429Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "CHAT-UNREAD"
+    ],
+    "outcome": "Recipient inbox shows one conversation containing two unread messages from controlled sender Priya."
+  },
+  {
+    "name": "iab-direct253-poll-voted",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-poll-voted.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T19:08:31.375Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "POLL-VOTE"
+    ],
+    "outcome": "QA recipient120 voted Morning: one vote and100percent, while sender text remains visible without owner-delete controls."
+  },
+  {
+    "name": "iab-direct253-poll-voters",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct253-poll-voters.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T19:09:06.326Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "POLL-VOTER-IDENTITY"
+    ],
+    "outcome": "Visible voter identity QA Audit recipient and chosen Morning option; retrieved from deployed poll voters control."
+  },
+  {
+    "name": "iab-direct120-read-cleared",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-direct120-read-cleared.png",
+    "url": "https://wenitro-app.vercel.app/#/chat",
+    "at": "2026-10-03T19:09:21.724Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "CHAT-UNREAD"
+    ],
+    "outcome": "Opening room253 cleared its two-message unread badge; retained conversation and latest poll preview remain."
+  },
+  {
+    "name": "iab-group120-created",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-group120-created.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/254",
+    "at": "2026-10-03T19:16:00.590Z",
+    "account": 120,
+    "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "requirements": [
+      "CHAT-PLUS-GROUP",
+      "GROUP-AVATAR"
+    ],
+    "outcome": "Created named group254 with actual uploaded photo and three controlled members; group header navigation is a separate pending fix."
+  }
+]

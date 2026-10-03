@@ -1,0 +1,437 @@
+[
+  {
+    "name": "iab-admin-user-analytics",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-user-analytics.png",
+    "url": "https://wenitro-admin-roan.vercel.app/analytics/user-analytics",
+    "at": "2026-10-03T18:24:07.308Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-ANALYTICS-USERS"
+    ],
+    "outcome": "Loaded user analytics distinguish UTC observed activity/retention from registered totals."
+  },
+  {
+    "name": "iab-admin-communities",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-communities.png",
+    "url": "https://wenitro-admin-roan.vercel.app/communities",
+    "at": "2026-10-03T18:32:22.973Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-COMMUNITIES"
+    ],
+    "outcome": "Loaded community membership counts and visibility"
+  },
+  {
+    "name": "iab-admin-vibes",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-vibes.png",
+    "url": "https://wenitro-admin-roan.vercel.app/content/vibes",
+    "at": "2026-10-03T18:33:00.620Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-VIBES"
+    ],
+    "outcome": "Live Vibes list and moderation statuses"
+  },
+  {
+    "name": "iab-admin-stories",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-stories.png",
+    "url": "https://wenitro-admin-roan.vercel.app/content/stories",
+    "at": "2026-10-03T18:33:09.448Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-STORIES"
+    ],
+    "outcome": "Live Stories list with expiry and active state"
+  },
+  {
+    "name": "iab-admin-verification",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-verification.png",
+    "url": "https://wenitro-admin-roan.vercel.app/verification",
+    "at": "2026-10-03T18:33:29.812Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-VERIFICATION"
+    ],
+    "outcome": "Verification queue shows type/status/review actions; no identity approval performed"
+  },
+  {
+    "name": "iab-admin-partner-review",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-partner-review.png",
+    "url": "https://wenitro-admin-roan.vercel.app/business",
+    "at": "2026-10-03T18:34:03.871Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-PARTNER-REVIEW"
+    ],
+    "outcome": "Partner application review list with current approved/pending status"
+  },
+  {
+    "name": "iab-admin-manual-media",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-manual-media.png",
+    "url": "https://wenitro-admin-roan.vercel.app/moderation/image-moderation",
+    "at": "2026-10-03T18:34:43.454Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-MANUAL-MEDIA-REVIEW",
+      "ADMIN-AUTO-MODERATION"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-ip-monitoring",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-ip-monitoring.png",
+    "url": "https://wenitro-admin-roan.vercel.app/security/ip-monitoring",
+    "at": "2026-10-03T18:34:44.260Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-IP-MONITORING"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-moderation-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-moderation-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/moderation/action-logs",
+    "at": "2026-10-03T18:34:54.370Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-USER-RESTRICTIONS",
+      "ADMIN-ACTIVITY-MODERATION",
+      "ADMIN-REPORT-REVIEW"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-feature-controls",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-feature-controls.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/features",
+    "at": "2026-10-03T18:34:55.038Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-FEATURE-SETTINGS"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-languages",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-languages.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/languages",
+    "at": "2026-10-03T18:35:56.864Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-LANGUAGE-SETTINGS"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-reward-rules",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-reward-rules.png",
+    "url": "https://wenitro-admin-roan.vercel.app/rewards/coins",
+    "at": "2026-10-03T18:35:57.640Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-REWARD-RULES"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-security-audit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-security-audit.png",
+    "url": "https://wenitro-admin-roan.vercel.app/security/security-logs",
+    "at": "2026-10-03T18:36:35.098Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-SECURITY-AUDIT"
+    ],
+    "outcome": "Persisted synthetic Activity283 restore action with before/after detail and actor"
+  },
+  {
+    "name": "iab-admin-reward-catalog",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-reward-catalog.png",
+    "url": "https://wenitro-admin-roan.vercel.app/rewards/catalog",
+    "at": "2026-10-03T18:36:35.930Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-REWARD-CATALOG"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-coupons",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-coupons.png",
+    "url": "https://wenitro-admin-roan.vercel.app/rewards/coupons",
+    "at": "2026-10-03T18:36:36.533Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-COUPONS"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-leaderboard",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-leaderboard.png",
+    "url": "https://wenitro-admin-roan.vercel.app/rewards/leaderboard",
+    "at": "2026-10-03T18:36:59.807Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-LEADERBOARD"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-campaign-delivery",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-campaign-delivery.png",
+    "url": "https://wenitro-admin-roan.vercel.app/notifications/system-alerts",
+    "at": "2026-10-03T18:37:00.375Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-CAMPAIGN-DRAFTS",
+      "ADMIN-CAMPAIGN-DELIVERY"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-email-provider",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-email-provider.png",
+    "url": "https://wenitro-admin-roan.vercel.app/notifications/email",
+    "at": "2026-10-03T18:37:00.999Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-CAMPAIGN-DRAFTS",
+      "ADMIN-CAMPAIGN-DELIVERY"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-role-boundary",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-role-boundary.png",
+    "url": "https://wenitro-admin-roan.vercel.app/admins/roles",
+    "at": "2026-10-03T18:37:10.821Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-MASTER-ROLES",
+      "ADMIN-ROLE-ENFORCEMENT",
+      "ADMIN-ACCESS-AUDIT"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-partner-activities",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-partner-activities.png",
+    "url": "https://wenitro-admin-roan.vercel.app/business/sponsored-events",
+    "at": "2026-10-03T18:37:11.519Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-PARTNER-ACTIVITIES"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-templates",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-templates.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:37:11.962Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-TEMPLATES"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-template-reloaded",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-template-reloaded.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings/notification-templates",
+    "at": "2026-10-03T18:37:27.189Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-TEMPLATES"
+    ],
+    "outcome": "Persisted synthetic template reopened with stored message body"
+  },
+  {
+    "name": "iab-admin-synthetic-activity",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-activity.png",
+    "url": "https://wenitro-admin-roan.vercel.app/events/283",
+    "at": "2026-10-03T18:37:56.427Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-PIN",
+      "ADMIN-CATEGORY-CORRECTION",
+      "ADMIN-ACTIVITIES"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-synthetic-user",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-user.png",
+    "url": "https://wenitro-admin-roan.vercel.app/users/119",
+    "at": "2026-10-03T18:37:57.465Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-USERS",
+      "ADMIN-USER-RESTRICTIONS"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-investigation",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-investigation.png",
+    "url": "https://wenitro-admin-roan.vercel.app/moderation/investigation",
+    "at": "2026-10-03T18:38:57.568Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-REPORT-REVIEW",
+      "ADMIN-INVESTIGATION"
+    ],
+    "outcome": "Resolved synthetic report event4 with actual reporter, target, linked Activity and review controls"
+  },
+  {
+    "name": "iab-admin-announcement",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-announcement.png",
+    "url": "https://wenitro-admin-roan.vercel.app/notifications",
+    "at": "2026-10-03T18:38:59.074Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ANNOUNCEMENT-CREATE",
+      "ANNOUNCEMENT-AUDIENCE",
+      "ANNOUNCEMENT-DISPLAY",
+      "ANNOUNCEMENT-RECEIPT"
+    ],
+    "outcome": "Loaded deployed route; screenshot scope is visible data and controls. Behavioral proof is linked separately."
+  },
+  {
+    "name": "iab-admin-announcement-audience",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-announcement-audience.png",
+    "url": "https://wenitro-admin-roan.vercel.app/notifications",
+    "at": "2026-10-03T18:39:07.687Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ANNOUNCEMENT-CREATE",
+      "ANNOUNCEMENT-AUDIENCE"
+    ],
+    "outcome": "Published synthetic announcement restricted to user120; earlier announcements inactive"
+  },
+  {
+    "name": "iab-admin-private-verification-preview",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-private-verification-preview.png",
+    "url": "https://wenitro-admin-roan.vercel.app/verification",
+    "at": "2026-10-03T18:42:17.201Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-VERIFICATION",
+      "VERIFY-SELFIE-REVIEW"
+    ],
+    "outcome": "Authorized private submission31 preview shows controlled camera object; five-minute signed access; not biometric evidence"
+  },
+  {
+    "name": "iab-admin-verification-rejected",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-verification-rejected.png",
+    "url": "https://wenitro-admin-roan.vercel.app/verification",
+    "at": "2026-10-03T18:42:24.829Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-VERIFICATION",
+      "VERIFY-SELFIE-REVIEW"
+    ],
+    "outcome": "Synthetic object-photo31 rejected through deployed Admin; timestamp recorded and review complete"
+  },
+  {
+    "name": "iab-admin-events-list",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-events-list.png",
+    "url": "https://wenitro-admin-roan.vercel.app/events?search=Historical%20category",
+    "at": "2026-10-03T19:12:31.285Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-ACTIVITY-MODERATION"
+    ],
+    "outcome": "Filtered real target DB to synthetic283; retained upcoming/restored state with host/category and Open action. Mutation outcomes have separate audited API proof."
+  },
+  {
+    "name": "iab-admin-chat-reports",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-chat-reports.png",
+    "url": "https://wenitro-admin-roan.vercel.app/moderation/chat-violations",
+    "at": "2026-10-03T19:12:53.267Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-MANUAL-MEDIA-REVIEW"
+    ],
+    "outcome": "Actual chat-related submitted-report queue loads with zero matches and explicit lack of automated classification/private transcripts; no fabricated violation."
+  },
+  {
+    "name": "iab-admin-header-notifications",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-header-notifications.png",
+    "url": "https://wenitro-admin-roan.vercel.app/moderation/pending-reports",
+    "at": "2026-10-03T19:13:32.194Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-HEADER-NOTIFICATIONS"
+    ],
+    "outcome": "Clicked header bell: reached actual pending-report queue; five loaded report rows match headercount five."
+  },
+  {
+    "name": "iab-admin-header-profile",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-header-profile.png",
+    "url": "https://wenitro-admin-roan.vercel.app/moderation/pending-reports",
+    "at": "2026-10-03T19:13:57.457Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-HEADER-HELP-PROFILE"
+    ],
+    "outcome": "Header Admin profile opens actual authenticated QA Admin email, Admin role and last-signin; separate help screenshot preserves working help link."
+  },
+  {
+    "name": "iab-admin-settings-summary",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-settings-summary.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings",
+    "at": "2026-10-03T19:14:28.158Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-FEATURE-SETTINGS"
+    ],
+    "outcome": "Settings loads actual category/template/language counts and fixed deployed INR/local-date/UTC-report contract with working configuration links."
+  },
+  {
+    "name": "iab-finance-settings-denied",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-finance-settings-denied.png",
+    "url": "https://wenitro-admin-roan.vercel.app/settings",
+    "at": "2026-10-03T19:22:18.981Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-ROLE-ENFORCEMENT"
+    ],
+    "outcome": "Dedicated Finance121 correctly denied ordinary platform Settings; only Business navigation and own revenue workspace available."
+  },
+  {
+    "name": "iab-finance-revenue",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-finance-revenue.png",
+    "url": "https://wenitro-admin-roan.vercel.app/business/revenue",
+    "at": "2026-10-03T19:22:47.352Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-REVENUE"
+    ],
+    "outcome": "Finance121 sees persisted gross111.10/platform11.07/net100.03 ledger totals and historical persisted fees; no provider transfer executed."
+  },
+  {
+    "name": "iab-finance-transactions",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-finance-transactions.png",
+    "url": "https://wenitro-admin-roan.vercel.app/business/transactions",
+    "at": "2026-10-03T19:23:24.430Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-TRANSACTIONS"
+    ],
+    "outcome": "Financial ledger filters actual hosted SandboxActivity280:12.34gross1.23fee11.11net, held and no payout reference."
+  },
+  {
+    "name": "iab-finance-settlements",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-finance-settlements.png",
+    "url": "https://wenitro-admin-roan.vercel.app/business/settlements",
+    "at": "2026-10-03T19:30:09.866Z",
+    "deployment": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+    "requirements": [
+      "ADMIN-SETTLEMENTS"
+    ],
+    "outcome": "Loaded dedicated settlements route filters held Sandbox280 with no payout reference; ledger UI verified, no transfer executed."
+  }
+]

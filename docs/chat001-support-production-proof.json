@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "projectId": "cxsznhrkzqndhseodcyy",
+  "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+  "requirement": "HELP-SUPPORT-QUERY",
+  "recordedAt": "2026-10-03T18:11:10Z",
+  "interaction": "Signed-in synthetic buyer116 opened Settings > NitroBot > Send Query. Empty form disabled submit. Entered clearly marked QA message and submitted once. Success appeared only after persisted request.",
+  "databaseReadback": {"id":9,"user_id":116,"type":"other","message":"[QA CHAT001] Integrated acceptance support persistence check. Synthetic user116; no response or action needed.","created_at":"2026-10-03 18:11:03.60593+00"},
+  "screenshot": "qa-evidence/chat001/integrated-support-query-persisted.png"
+}

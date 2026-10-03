@@ -1,7 +1,7 @@
 {
-  "startedAt": "2026-10-03T19:22:10.779Z",
-  "appCommit": "4b93b0fc6e186b6ab840214b9251b59f91fc4993",
-  "adminCommit": "bcdaa9662a73897a0e413f58793b8f45463c906f",
+  "startedAt": "2026-10-03T08:15:58.177Z",
+  "appCommit": "7159d5c276a2bfa2f715f3fe21c30ba264f32e1b",
+  "adminCommit": "b2e74a3554714ae09ab87b11aafe4b1f3d941f9e",
   "status": "PASS",
   "scope": "Executable local PostgreSQL/Edge/client tests, source contracts, typechecks, Expo Doctor, App production export, Admin lint/build. Production API/UI verification is separate.",
   "checks": [
@@ -13,7 +13,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1195,
+      "elapsedMs": 1003,
       "log": "tmp/chat001-integrated-local/acceptance-backend-test.log"
     },
     {
@@ -24,7 +24,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 157,
+      "elapsedMs": 36,
       "log": "tmp/chat001-integrated-local/acceptance-ui-contract-test.log"
     },
     {
@@ -35,19 +35,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 2063,
+      "elapsedMs": 1526,
       "log": "tmp/chat001-integrated-local/account-status-rpc-test.log"
-    },
-    {
-      "name": "active-join-retry-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/active-join-retry-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 1839,
-      "log": "tmp/chat001-integrated-local/active-join-retry-test.log"
     },
     {
       "name": "activities-filter-test",
@@ -57,7 +46,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 287,
+      "elapsedMs": 253,
       "log": "tmp/chat001-integrated-local/activities-filter-test.log"
     },
     {
@@ -68,7 +57,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 992,
+      "elapsedMs": 803,
       "log": "tmp/chat001-integrated-local/activity-checkout-terms-test.log"
     },
     {
@@ -79,7 +68,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 136,
+      "elapsedMs": 27,
       "log": "tmp/chat001-integrated-local/activity-deep-link-regression-test.log"
     },
     {
@@ -90,30 +79,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 437,
+      "elapsedMs": 293,
       "log": "tmp/chat001-integrated-local/activity-history-test.log"
-    },
-    {
-      "name": "activity-invite-lifecycle-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/activity-invite-lifecycle-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 1980,
-      "log": "tmp/chat001-integrated-local/activity-invite-lifecycle-test.log"
-    },
-    {
-      "name": "activity-media-feed-choice-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/activity-media-feed-choice-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 1488,
-      "log": "tmp/chat001-integrated-local/activity-media-feed-choice-test.log"
     },
     {
       "name": "activity-payment-modes-test",
@@ -123,7 +90,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 331,
+      "elapsedMs": 268,
       "log": "tmp/chat001-integrated-local/activity-payment-modes-test.log"
     },
     {
@@ -134,30 +101,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 284,
+      "elapsedMs": 238,
       "log": "tmp/chat001-integrated-local/activity-price-test.log"
-    },
-    {
-      "name": "activity-safety-actions-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/activity-safety-actions-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 276,
-      "log": "tmp/chat001-integrated-local/activity-safety-actions-test.log"
-    },
-    {
-      "name": "activity-safety-reminder-postgres-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/activity-safety-reminder-postgres-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 3832,
-      "log": "tmp/chat001-integrated-local/activity-safety-reminder-postgres-test.log"
     },
     {
       "name": "activity-share-observation-test",
@@ -167,19 +112,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 262,
+      "elapsedMs": 227,
       "log": "tmp/chat001-integrated-local/activity-share-observation-test.log"
-    },
-    {
-      "name": "activity-vibe-visibility-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/activity-vibe-visibility-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 473,
-      "log": "tmp/chat001-integrated-local/activity-vibe-visibility-test.log"
     },
     {
       "name": "admin-account-management-test",
@@ -189,7 +123,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1249,
+      "elapsedMs": 1050,
       "log": "tmp/chat001-integrated-local/admin-account-management-test.log"
     },
     {
@@ -200,7 +134,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1370,
+      "elapsedMs": 1404,
       "log": "tmp/chat001-integrated-local/admin-category-catalog-test.log"
     },
     {
@@ -211,7 +145,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1239,
+      "elapsedMs": 1201,
       "log": "tmp/chat001-integrated-local/admin-observed-usage-test.log"
     },
     {
@@ -222,7 +156,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1296,
+      "elapsedMs": 1242,
       "log": "tmp/chat001-integrated-local/admin-operational-controls-test.log"
     },
     {
@@ -233,7 +167,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 419,
+      "elapsedMs": 383,
       "log": "tmp/chat001-integrated-local/admin-read-models-test.log"
     },
     {
@@ -244,7 +178,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1524,
+      "elapsedMs": 1379,
       "log": "tmp/chat001-integrated-local/admin-workspace-operations-test.log"
     },
     {
@@ -255,7 +189,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 858,
+      "elapsedMs": 841,
       "log": "tmp/chat001-integrated-local/anonymous-media-db-test.log"
     },
     {
@@ -266,7 +200,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 423,
+      "elapsedMs": 390,
       "log": "tmp/chat001-integrated-local/auth-bootstrap-regression-test.log"
     },
     {
@@ -277,7 +211,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 297,
+      "elapsedMs": 300,
       "log": "tmp/chat001-integrated-local/auth-identity-reuse-test.log"
     },
     {
@@ -288,7 +222,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 234,
+      "elapsedMs": 224,
       "log": "tmp/chat001-integrated-local/avatar-fallback-test.log"
     },
     {
@@ -299,7 +233,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 2817,
+      "elapsedMs": 2430,
       "log": "tmp/chat001-integrated-local/badge-engine-test.log"
     },
     {
@@ -310,7 +244,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 246,
+      "elapsedMs": 220,
       "log": "tmp/chat001-integrated-local/cashfree-modal-completion-test.log"
     },
     {
@@ -321,7 +255,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 262,
+      "elapsedMs": 234,
       "log": "tmp/chat001-integrated-local/cashfree-webhook-target-test.log"
     },
     {
@@ -332,19 +266,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 340,
+      "elapsedMs": 228,
       "log": "tmp/chat001-integrated-local/category-catalog-client-test.log"
-    },
-    {
-      "name": "chat-group-info-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/chat-group-info-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 544,
-      "log": "tmp/chat001-integrated-local/chat-group-info-test.log"
     },
     {
       "name": "chat-inbox-merge-test",
@@ -354,7 +277,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 299,
+      "elapsedMs": 301,
       "log": "tmp/chat001-integrated-local/chat-inbox-merge-test.log"
     },
     {
@@ -365,7 +288,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 448,
+      "elapsedMs": 350,
       "log": "tmp/chat001-integrated-local/chat-realtime-regression-test.log"
     },
     {
@@ -376,19 +299,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 280,
+      "elapsedMs": 265,
       "log": "tmp/chat001-integrated-local/chat-ui-regression-test.log"
-    },
-    {
-      "name": "chat001-final-report-generator-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/chat001-final-report-generator-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 41,
-      "log": "tmp/chat001-integrated-local/chat001-final-report-generator-test.log"
     },
     {
       "name": "client-home-profile-test",
@@ -398,7 +310,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 40,
+      "elapsedMs": 26,
       "log": "tmp/chat001-integrated-local/client-home-profile-test.log"
     },
     {
@@ -409,7 +321,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 51,
+      "elapsedMs": 28,
       "log": "tmp/chat001-integrated-local/client-pdf-regression-test.log"
     },
     {
@@ -420,7 +332,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 49,
+      "elapsedMs": 25,
       "log": "tmp/chat001-integrated-local/client-readiness-contract-test.log"
     },
     {
@@ -431,30 +343,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 349,
+      "elapsedMs": 274,
       "log": "tmp/chat001-integrated-local/community-anonymous-media-service-test.log"
-    },
-    {
-      "name": "community-cover-edit-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/community-cover-edit-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 283,
-      "log": "tmp/chat001-integrated-local/community-cover-edit-test.log"
-    },
-    {
-      "name": "community-discovery-ui-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/community-discovery-ui-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 354,
-      "log": "tmp/chat001-integrated-local/community-discovery-ui-test.log"
     },
     {
       "name": "community-permissions-test",
@@ -464,7 +354,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 289,
+      "elapsedMs": 265,
       "log": "tmp/chat001-integrated-local/community-permissions-test.log"
     },
     {
@@ -475,7 +365,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 280,
+      "elapsedMs": 237,
       "log": "tmp/chat001-integrated-local/feed-loading-state-test.log"
     },
     {
@@ -497,7 +387,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 281,
+      "elapsedMs": 249,
       "log": "tmp/chat001-integrated-local/google-oauth-web-test.log"
     },
     {
@@ -508,7 +398,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 39,
+      "elapsedMs": 62,
       "log": "tmp/chat001-integrated-local/hero-brand-visual-test.log"
     },
     {
@@ -519,30 +409,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 494,
+      "elapsedMs": 305,
       "log": "tmp/chat001-integrated-local/host-activity-test.log"
-    },
-    {
-      "name": "invited-registration-answers-postgres-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/invited-registration-answers-postgres-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 1570,
-      "log": "tmp/chat001-integrated-local/invited-registration-answers-postgres-test.log"
-    },
-    {
-      "name": "invited-registration-payment-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/invited-registration-payment-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 346,
-      "log": "tmp/chat001-integrated-local/invited-registration-payment-test.log"
     },
     {
       "name": "messages-search-performance-test",
@@ -552,7 +420,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 341,
+      "elapsedMs": 288,
       "log": "tmp/chat001-integrated-local/messages-search-performance-test.log"
     },
     {
@@ -563,7 +431,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 29,
+      "elapsedMs": 25,
       "log": "tmp/chat001-integrated-local/onboarding-completion-test.log"
     },
     {
@@ -574,7 +442,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 346,
+      "elapsedMs": 239,
       "log": "tmp/chat001-integrated-local/onboarding-google-auth-test.log"
     },
     {
@@ -585,30 +453,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 455,
+      "elapsedMs": 268,
       "log": "tmp/chat001-integrated-local/onboarding-profile-test.log"
-    },
-    {
-      "name": "onboarding-responsibility-taglines-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/onboarding-responsibility-taglines-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 553,
-      "log": "tmp/chat001-integrated-local/onboarding-responsibility-taglines-test.log"
-    },
-    {
-      "name": "participant-management-boundaries-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/participant-management-boundaries-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 2340,
-      "log": "tmp/chat001-integrated-local/participant-management-boundaries-test.log"
     },
     {
       "name": "partner-auth-test",
@@ -618,7 +464,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 268,
+      "elapsedMs": 156,
       "log": "tmp/chat001-integrated-local/partner-auth-test.log"
     },
     {
@@ -629,7 +475,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 341,
+      "elapsedMs": 236,
       "log": "tmp/chat001-integrated-local/partner-dashboard-loading-test.log"
     },
     {
@@ -640,19 +486,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 310,
+      "elapsedMs": 237,
       "log": "tmp/chat001-integrated-local/partner-ecosystem-test.log"
-    },
-    {
-      "name": "partner-preflight-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/partner-preflight-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 586,
-      "log": "tmp/chat001-integrated-local/partner-preflight-test.log"
     },
     {
       "name": "partner-submit-regression-test",
@@ -662,7 +497,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 334,
+      "elapsedMs": 284,
       "log": "tmp/chat001-integrated-local/partner-submit-regression-test.log"
     },
     {
@@ -673,7 +508,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 31,
+      "elapsedMs": 27,
       "log": "tmp/chat001-integrated-local/partner-v1-contract-test.log"
     },
     {
@@ -684,7 +519,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1981,
+      "elapsedMs": 1368,
       "log": "tmp/chat001-integrated-local/payment-entry-authorization-test.log"
     },
     {
@@ -695,7 +530,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 324,
+      "elapsedMs": 289,
       "log": "tmp/chat001-integrated-local/payment-registration-confirmation-test.log"
     },
     {
@@ -706,7 +541,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 240,
+      "elapsedMs": 220,
       "log": "tmp/chat001-integrated-local/phase3-vibe-test.log"
     },
     {
@@ -717,7 +552,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 277,
+      "elapsedMs": 259,
       "log": "tmp/chat001-integrated-local/phase4-privacy-test.log"
     },
     {
@@ -728,7 +563,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 303,
+      "elapsedMs": 298,
       "log": "tmp/chat001-integrated-local/phase5-profile-test.log"
     },
     {
@@ -739,7 +574,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 319,
+      "elapsedMs": 311,
       "log": "tmp/chat001-integrated-local/profile-catalog-recovery-test.log"
     },
     {
@@ -750,7 +585,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 283,
+      "elapsedMs": 271,
       "log": "tmp/chat001-integrated-local/profile-community-avatars-test.log"
     },
     {
@@ -761,7 +596,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1119,
+      "elapsedMs": 870,
       "log": "tmp/chat001-integrated-local/profile-interest-atomic-test.log"
     },
     {
@@ -772,19 +607,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 310,
+      "elapsedMs": 225,
       "log": "tmp/chat001-integrated-local/profile-social-test.log"
-    },
-    {
-      "name": "qa-isolated-backend-safety-test",
-      "command": [
-        "/Users/vamshipendyala/.nvm/versions/node/v22.21.1/bin/node",
-        "scripts/qa-isolated-backend-safety-test.mjs"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 192,
-      "log": "tmp/chat001-integrated-local/qa-isolated-backend-safety-test.log"
     },
     {
       "name": "referral-reward-identity-test",
@@ -794,7 +618,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1366,
+      "elapsedMs": 1010,
       "log": "tmp/chat001-integrated-local/referral-reward-identity-test.log"
     },
     {
@@ -805,7 +629,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 446,
+      "elapsedMs": 228,
       "log": "tmp/chat001-integrated-local/registration-questions-test.log"
     },
     {
@@ -816,7 +640,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 307,
+      "elapsedMs": 245,
       "log": "tmp/chat001-integrated-local/sms-provider-diagnostics-test.log"
     },
     {
@@ -827,7 +651,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 270,
+      "elapsedMs": 231,
       "log": "tmp/chat001-integrated-local/storage-signing-regression-test.log"
     },
     {
@@ -838,7 +662,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 29,
+      "elapsedMs": 25,
       "log": "tmp/chat001-integrated-local/supabase-repair-regression-test.log"
     },
     {
@@ -849,7 +673,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1315,
+      "elapsedMs": 1120,
       "log": "tmp/chat001-integrated-local/trust-score-database-test.log"
     },
     {
@@ -860,7 +684,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 284,
+      "elapsedMs": 241,
       "log": "tmp/chat001-integrated-local/validation-test.log"
     },
     {
@@ -871,7 +695,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1366,
+      "elapsedMs": 1107,
       "log": "tmp/chat001-integrated-local/vibe-share-attribution-test.log"
     },
     {
@@ -882,7 +706,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 365,
+      "elapsedMs": 291,
       "log": "tmp/chat001-integrated-local/workspace-loading-regression-test.log"
     },
     {
@@ -893,7 +717,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 244,
+      "elapsedMs": 225,
       "log": "tmp/chat001-integrated-local/workspace-refresh-test.log"
     },
     {
@@ -908,7 +732,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 718,
+      "elapsedMs": 586,
       "log": "tmp/chat001-integrated-local/edge-core-tests.log"
     },
     {
@@ -923,7 +747,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 54,
+      "elapsedMs": 47,
       "log": "tmp/chat001-integrated-local/edge-sms-tests.log"
     },
     {
@@ -937,7 +761,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 193,
+      "elapsedMs": 174,
       "log": "tmp/chat001-integrated-local/cashfree-edge-typecheck.log"
     },
     {
@@ -949,7 +773,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 125891,
+      "elapsedMs": 54016,
       "log": "tmp/chat001-integrated-local/app-typecheck.log"
     },
     {
@@ -961,7 +785,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 6523,
+      "elapsedMs": 3722,
       "log": "tmp/chat001-integrated-local/expo-doctor.log"
     },
     {
@@ -973,7 +797,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 9098,
+      "elapsedMs": 2055,
       "log": "tmp/chat001-integrated-local/app-production-export.log"
     },
     {
@@ -984,7 +808,7 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 16986,
+      "elapsedMs": 5619,
       "log": "tmp/chat001-integrated-local/phone-otp-ui-test.log"
     },
     {
@@ -995,32 +819,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1074,
+      "elapsedMs": 271,
       "log": "tmp/chat001-integrated-local/admin-admin-review-read-models-test.log"
-    },
-    {
-      "name": "admin-lint",
-      "command": [
-        "npm",
-        "run",
-        "lint"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 12783,
-      "log": "tmp/chat001-integrated-local/admin-lint.log"
-    },
-    {
-      "name": "admin-production-build",
-      "command": [
-        "npm",
-        "run",
-        "build"
-      ],
-      "status": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 7558,
-      "log": "tmp/chat001-integrated-local/admin-production-build.log"
     },
     {
       "name": "admin-typecheck",
@@ -1033,11 +833,35 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1745,
+      "elapsedMs": 4294,
       "log": "tmp/chat001-integrated-local/admin-typecheck.log"
+    },
+    {
+      "name": "admin-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 5518,
+      "log": "tmp/chat001-integrated-local/admin-lint.log"
+    },
+    {
+      "name": "admin-production-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 5678,
+      "log": "tmp/chat001-integrated-local/admin-production-build.log"
     }
   ],
-  "finishedAt": "2026-10-03T19:26:05.500Z",
-  "passed": 92,
+  "finishedAt": "2026-10-03T08:17:49.433Z",
+  "passed": 76,
   "failed": 0
 }

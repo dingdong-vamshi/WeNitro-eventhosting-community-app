@@ -1,0 +1,4579 @@
+{
+  "status": "IN_PROGRESS",
+  "target": "cxsznhrkzqndhseodcyy",
+  "appCommit": "bd6d314",
+  "requirements": [
+    {
+      "id": "ONB-NEXT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A01-01"
+      ],
+      "requestedOutcome": "Next advances exactly one introductory slide and remains reachable.",
+      "acceptanceCriteria": [
+        "Next advances exactly one introductory slide and remains reachable."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Explore WeNitro replays intro at page1 with visible Next and Skip.",
+          "recordedAt": "2026-10-03T18:12:52.674Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "First Next advances page1 to page2 with readable content.",
+          "recordedAt": "2026-10-03T18:12:58.828Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Second Next advances only to page3, whose completion action is Start Exploring.",
+          "recordedAt": "2026-10-03T18:13:05.568Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-onboarding-page1.png",
+        "qa-evidence/chat001/integrated-onboarding-page2.png",
+        "qa-evidence/chat001/integrated-onboarding-page3.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-045",
+        "EV-046",
+        "EV-047"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ONB-LAYOUT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A01-02"
+      ],
+      "requestedOutcome": "Introductory text and controls have appropriate spacing and remain usable on short and narrow screens.",
+      "acceptanceCriteria": [
+        "Introductory text and controls have appropriate spacing and remain usable on short and narrow screens."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Explore WeNitro replays intro at page1 with visible Next and Skip.",
+          "recordedAt": "2026-10-03T18:12:52.674Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "At320x568, page2 heading and fixed Next remain readable; lower body requires vertical scroll.",
+          "recordedAt": "2026-10-03T18:13:37.899Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "At320x568 scrolling page2 reveals its complete body copy while Next remains reachable.",
+          "recordedAt": "2026-10-03T18:13:46.259Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-onboarding-page1.png",
+        "qa-evidence/chat001/integrated-onboarding-narrow-page2.png",
+        "qa-evidence/chat001/integrated-onboarding-narrow-page2-scrolled.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-045",
+        "EV-046",
+        "EV-047"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ONB-CONTENT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A01-03"
+      ],
+      "requestedOutcome": "The three approved old-app introductory screens appear in their intended order.",
+      "acceptanceCriteria": [
+        "The three approved old-app introductory screens appear in their intended order."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Explore WeNitro replays intro at page1 with visible Next and Skip.",
+          "recordedAt": "2026-10-03T18:12:52.674Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "First Next advances page1 to page2 with readable content.",
+          "recordedAt": "2026-10-03T18:12:58.828Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Second Next advances only to page3, whose completion action is Start Exploring.",
+          "recordedAt": "2026-10-03T18:13:05.568Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-onboarding-page1.png",
+        "qa-evidence/chat001/integrated-onboarding-page2.png",
+        "qa-evidence/chat001/integrated-onboarding-page3.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-045",
+        "EV-046",
+        "EV-047"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ONB-SKIP",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "Skip exits the introduction through the intended onboarding transition.",
+      "acceptanceCriteria": [
+        "Skip exits the introduction through the intended onboarding transition."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Skip/Finish return to Welcome; email destination uses community activities artwork and readable authentication controls.",
+          "recordedAt": "2026-10-03T18:15:24.402Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-auth-artwork.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-045",
+        "EV-046",
+        "EV-047"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ONB-SWIPE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "Swiping changes the introductory slide without breaking the selected page.",
+      "acceptanceCriteria": [
+        "Swiping changes the introductory slide without breaking the selected page."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-045",
+        "EV-046",
+        "EV-047"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ONB-DOTS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "The introductory pagination dots show the current slide and permit page selection.",
+      "acceptanceCriteria": [
+        "The introductory pagination dots show the current slide and permit page selection."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "At320x568, page2 heading and fixed Next remain readable; lower body requires vertical scroll.",
+          "recordedAt": "2026-10-03T18:13:37.899Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-onboarding-narrow-page2.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-045",
+        "EV-046",
+        "EV-047"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ONB-FINISH",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "Finish completes the introduction and persists its completed state.",
+      "acceptanceCriteria": [
+        "Finish completes the introduction and persists its completed state."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Second Next advances only to page3, whose completion action is Start Exploring.",
+          "recordedAt": "2026-10-03T18:13:05.568Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Skip/Finish return to Welcome; email destination uses community activities artwork and readable authentication controls.",
+          "recordedAt": "2026-10-03T18:15:24.402Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-onboarding-page3.png",
+        "qa-evidence/chat001/integrated-auth-artwork.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-045",
+        "EV-046",
+        "EV-047"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ONB-REPLAY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A01-04"
+      ],
+      "requestedOutcome": "The introduction can be replayed without corrupting account or completion state.",
+      "acceptanceCriteria": [
+        "The introduction can be replayed without corrupting account or completion state."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Explore WeNitro replays intro at page1 with visible Next and Skip.",
+          "recordedAt": "2026-10-03T18:12:52.674Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-onboarding-page1.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-045",
+        "EV-046",
+        "EV-047"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-TAGLINE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A02-01"
+      ],
+      "requestedOutcome": "Welcome screen loads rotate the requested taglines.",
+      "acceptanceCriteria": [
+        "Welcome screen loads rotate the requested taglines."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-EMAIL-BRAND",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A03-01",
+        "A03-02"
+      ],
+      "requestedOutcome": "Verification email uses WeNitro branding and the wording Confirm your Email Address.",
+      "acceptanceCriteria": [
+        "Verification email uses WeNitro branding and the wording Confirm your Email Address."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-EMAIL-CONFIRM",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A03-03"
+      ],
+      "requestedOutcome": "A valid confirmation link completes email verification for the intended target account.",
+      "acceptanceCriteria": [
+        "A valid confirmation link completes email verification for the intended target account."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-EMAIL-SENDER",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A03-03"
+      ],
+      "requestedOutcome": "Verification and recovery mail use the configured sender and deliver through the intended email service.",
+      "acceptanceCriteria": [
+        "Verification and recovery mail use the configured sender and deliver through the intended email service."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "candidateDependencyIds": [
+        "SMTP_SENDER_AND_MAIL_DELIVERY"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-GOOGLE-NEW",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A04-01"
+      ],
+      "requestedOutcome": "A new Google sign-in creates one target-project identity and reaches the correct setup stage.",
+      "acceptanceCriteria": [
+        "A new Google sign-in creates one target-project identity and reaches the correct setup stage."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-GOOGLE-EXISTING",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A04-01"
+      ],
+      "requestedOutcome": "An existing Google sign-in restores the existing account without duplicate identity creation.",
+      "acceptanceCriteria": [
+        "An existing Google sign-in restores the existing account without duplicate identity creation."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-IDENTITY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A04-02",
+        "A06-03"
+      ],
+      "requestedOutcome": "Authentication resolves to the intended target Supabase session and matching application profile.",
+      "acceptanceCriteria": [
+        "Authentication resolves to the intended target Supabase session and matching application profile."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-GOOGLE-PROVIDER",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A04-03"
+      ],
+      "requestedOutcome": "Configured Google sign-in exchanges valid provider credentials and rejects invalid or cancelled attempts.",
+      "acceptanceCriteria": [
+        "Configured Google sign-in exchanges valid provider credentials and rejects invalid or cancelled attempts."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-GOOGLE-REDIRECT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A04-03"
+      ],
+      "requestedOutcome": "The separate redirect-based Google callback is accepted by the client provider configuration and returns to the app.",
+      "acceptanceCriteria": [
+        "The separate redirect-based Google callback is accepted by the client provider configuration and returns to the app."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "candidateDependencyIds": [
+        "GOOGLE_REDIRECT_CLIENT_CONFIGURATION"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-RECOVERY-REQUEST",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A05-01"
+      ],
+      "requestedOutcome": "Forgot Password requests a recovery email without disclosing unrelated account data.",
+      "acceptanceCriteria": [
+        "Forgot Password requests a recovery email without disclosing unrelated account data."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-RECOVERY-ROUTE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A05-02"
+      ],
+      "requestedOutcome": "Opening the recovery link reaches the password reset flow with the intended recovery session.",
+      "acceptanceCriteria": [
+        "Opening the recovery link reaches the password reset flow with the intended recovery session."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-RECOVERY-RESET",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A05-03"
+      ],
+      "requestedOutcome": "A valid recovery session can save a new password with visible validation and error handling.",
+      "acceptanceCriteria": [
+        "A valid recovery session can save a new password with visible validation and error handling."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-RECOVERY-LOGIN",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A05-04"
+      ],
+      "requestedOutcome": "The reset account can subsequently sign in using its new password.",
+      "acceptanceCriteria": [
+        "The reset account can subsequently sign in using its new password."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-PHONE-NEW",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A06-01"
+      ],
+      "requestedOutcome": "A new phone account can complete signup after legitimate OTP verification.",
+      "acceptanceCriteria": [
+        "A new phone account can complete signup after legitimate OTP verification."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "candidateDependencyIds": [
+        "CONTROLLED_PHYSICAL_PHONE_OTP_RECEIPT"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-PHONE-EXISTING",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A06-01"
+      ],
+      "requestedOutcome": "An existing phone account signs in to its existing profile instead of creating a duplicate.",
+      "acceptanceCriteria": [
+        "An existing phone account signs in to its existing profile instead of creating a duplicate."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "candidateDependencyIds": [
+        "CONTROLLED_PHYSICAL_PHONE_OTP_RECEIPT"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-OTP-SEND",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A06-02",
+        "A25-03"
+      ],
+      "requestedOutcome": "OTP sending uses the configured phone verification provider and reaches the controlled physical test number.",
+      "acceptanceCriteria": [
+        "OTP sending uses the configured phone verification provider and reaches the controlled physical test number."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "candidateDependencyIds": [
+        "CONTROLLED_PHYSICAL_PHONE_OTP_RECEIPT"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-OTP-VERIFY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A06-02",
+        "A25-03"
+      ],
+      "requestedOutcome": "Valid delivered OTP verification succeeds while invalid, expired and replayed codes are rejected.",
+      "acceptanceCriteria": [
+        "Valid delivered OTP verification succeeds while invalid, expired and replayed codes are rejected."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [],
+      "candidateDependencyIds": [
+        "CONTROLLED_PHYSICAL_PHONE_OTP_RECEIPT"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-PHONE-STATE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A06-04"
+      ],
+      "requestedOutcome": "Phone-verified state reflects authenticated provider confirmation rather than a local or synthetic bypass.",
+      "acceptanceCriteria": [
+        "Phone-verified state reflects authenticated provider confirmation rather than a local or synthetic bypass."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HERO-SIZE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A07-01",
+        "A07-03"
+      ],
+      "requestedOutcome": "The Home hero has the requested reduced, responsive height.",
+      "acceptanceCriteria": [
+        "The Home hero has the requested reduced, responsive height."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-048"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HERO-BLUE-SURROUND",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A07-02",
+        "A08-01"
+      ],
+      "requestedOutcome": "The Home hero has the approved lighter treatment without an extra outer blue surround or patch.",
+      "acceptanceCriteria": [
+        "The Home hero has the approved lighter treatment without an extra outer blue surround or patch."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-048"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AVATAR-PHOTOS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A08-02",
+        "A11-01",
+        "A22-01",
+        "B15-01",
+        "B19-03",
+        "B25-04",
+        "B27-02",
+        "B35-01"
+      ],
+      "requestedOutcome": "User photos render for the relevant Home, Activity, member, Vibe, Profile and Chat identities rather than unrelated placeholder images.",
+      "acceptanceCriteria": [
+        "User photos render for the relevant Home, Activity, member, Vibe, Profile and Chat identities rather than unrelated placeholder images."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-054"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AVATAR-FALLBACK",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A08-03",
+        "A11-01",
+        "A22-02",
+        "B25-04",
+        "B27-02",
+        "B35-01"
+      ],
+      "requestedOutcome": "Missing or failed user photos display deterministic varied-color, Unicode-aware initials in the relevant identity surfaces.",
+      "acceptanceCriteria": [
+        "Missing or failed user photos display deterministic varied-color, Unicode-aware initials in the relevant identity surfaces."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Activity297 host Priya Nair opens matching public profile with round PN initials and public signals.",
+          "recordedAt": "2026-10-03T18:09:00.574Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png",
+        "qa-evidence/chat001/integrated-activity-host-profile.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-054"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AVATAR-SHAPE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B14-03"
+      ],
+      "requestedOutcome": "User display pictures use the requested round presentation.",
+      "acceptanceCriteria": [
+        "User display pictures use the requested round presentation."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Activity297 host Priya Nair opens matching public profile with round PN initials and public signals.",
+          "recordedAt": "2026-10-03T18:09:00.574Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png",
+        "qa-evidence/chat001/integrated-activity-host-profile.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-054"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-LIST-LAYOUT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A09-01",
+        "A09-05",
+        "B10-01"
+      ],
+      "requestedOutcome": "All Activities uses the requested readable card layout without the redundant description text.",
+      "acceptanceCriteria": [
+        "All Activities uses the requested readable card layout without the redundant description text."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-LIST-HEADER",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A09-02",
+        "A09-04"
+      ],
+      "requestedOutcome": "Activities search and notification icons are present, with Filter beside Activities for You.",
+      "acceptanceCriteria": [
+        "Activities search and notification icons are present, with Filter beside Activities for You."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-SEARCH-TOGGLE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A09-03"
+      ],
+      "requestedOutcome": "Activity search stays collapsed until requested and opens a usable search input on tap.",
+      "acceptanceCriteria": [
+        "Activity search stays collapsed until requested and opens a usable search input on tap."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Search icon revealed the editable Activities search input.",
+          "recordedAt": "2026-10-03T08:27:08.550Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png",
+        "qa-evidence/chat001/integrated-activities-search-expanded.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-COVER",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A09-06"
+      ],
+      "requestedOutcome": "Activity cards fill their intended cover area and show an intentional fallback when no cover is available.",
+      "acceptanceCriteria": [
+        "Activity cards fill their intended cover area and show an intentional fallback when no cover is available."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-HOST-PROFILE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A09-07"
+      ],
+      "requestedOutcome": "Tapping the Activity host name or photo opens that host's correct profile.",
+      "acceptanceCriteria": [
+        "Tapping the Activity host name or photo opens that host's correct profile."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activity297 host Priya Nair opens matching public profile with round PN initials and public signals.",
+          "recordedAt": "2026-10-03T18:09:00.574Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activity-host-profile.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-TIMELINE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A10-01"
+      ],
+      "requestedOutcome": "Activity timeline content and labels do not overlap.",
+      "acceptanceCriteria": [
+        "Activity timeline content and labels do not overlap."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "UI-TYPE-READABILITY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A10-02",
+        "B09-01"
+      ],
+      "requestedOutcome": "Text remains readable and uncut on smaller supported screens, including Activity details and recommendations.",
+      "acceptanceCriteria": [
+        "Text remains readable and uncut on smaller supported screens, including Activity details and recommendations."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-LIKERS-LIST",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A10-03"
+      ],
+      "requestedOutcome": "Long-pressing an Activity Like action reveals the actual liker identities.",
+      "acceptanceCriteria": [
+        "Long-pressing an Activity Like action reveals the actual liker identities."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-LIKER-PROFILE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A10-03"
+      ],
+      "requestedOutcome": "Selecting a liker opens the corresponding profile.",
+      "acceptanceCriteria": [
+        "Selecting a liker opens the corresponding profile."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-MESSAGE-HOST",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A11-02",
+        "B15-02"
+      ],
+      "requestedOutcome": "The Activity host Message action opens the intended direct conversation.",
+      "acceptanceCriteria": [
+        "The Activity host Message action opens the intended direct conversation."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Host profile Message opens Priya Nair direct conversation with matching PN avatar.",
+          "recordedAt": "2026-10-03T18:09:09.896Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-host-direct-chat.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-ENDED-EDIT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A11-03",
+        "A37-02"
+      ],
+      "requestedOutcome": "Ended Activities cannot be edited through the UI or direct authorized mutation attempts.",
+      "acceptanceCriteria": [
+        "Ended Activities cannot be edited through the UI or direct authorized mutation attempts."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-ENDED-REMOVE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A11-03"
+      ],
+      "requestedOutcome": "Participants cannot be removed from an ended Activity through UI or backend mutation.",
+      "acceptanceCriteria": [
+        "Participants cannot be removed from an ended Activity through UI or backend mutation."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-ENDED-LEAVE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A11-03",
+        "A13-03"
+      ],
+      "requestedOutcome": "An ended Activity cannot be left through UI or backend mutation.",
+      "acceptanceCriteria": [
+        "An ended Activity cannot be left through UI or backend mutation."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-COMMENT-ELIGIBILITY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A12-01",
+        "A12-02"
+      ],
+      "requestedOutcome": "Only the intended eligible host/participants may create Activity comments, with backend enforcement.",
+      "acceptanceCriteria": [
+        "Only the intended eligible host/participants may create Activity comments, with backend enforcement."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-COMMENT-IDENTITY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A12-03"
+      ],
+      "requestedOutcome": "Activity comments display the correct commenter identity and avatar.",
+      "acceptanceCriteria": [
+        "Activity comments display the correct commenter identity and avatar."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-ENDED-PARTICIPANT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A13-01"
+      ],
+      "requestedOutcome": "An eligible ended-Activity participant sees the Rate Participants action.",
+      "acceptanceCriteria": [
+        "An eligible ended-Activity participant sees the Rate Participants action."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-ENDED-NONPARTICIPANT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A13-02"
+      ],
+      "requestedOutcome": "An ended Activity shows Activity Ended to a nonparticipant without a join or leave action.",
+      "acceptanceCriteria": [
+        "An ended Activity shows Activity Ended to a nonparticipant without a join or leave action."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "RATE-NO-SELF",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A15-01"
+      ],
+      "requestedOutcome": "A participant cannot rate themselves through UI or backend.",
+      "acceptanceCriteria": [
+        "A participant cannot rate themselves through UI or backend."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [
+        "EV-009",
+        "EV-012",
+        "EV-013"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "RATE-HOST-LABEL",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A15-02"
+      ],
+      "requestedOutcome": "The rating list clearly identifies the original Host.",
+      "acceptanceCriteria": [
+        "The rating list clearly identifies the original Host."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-009",
+        "EV-012",
+        "EV-013"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "RATE-NO-SHOW",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A15-03"
+      ],
+      "requestedOutcome": "No Show may be selected only for an eligible participant under the intended rating rules.",
+      "acceptanceCriteria": [
+        "No Show may be selected only for an eligible participant under the intended rating rules."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-009",
+        "EV-012",
+        "EV-013"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "RATE-HOST-NO-SHOW",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A15-04"
+      ],
+      "requestedOutcome": "The original Host cannot receive a No Show rating.",
+      "acceptanceCriteria": [
+        "The original Host cannot receive a No Show rating."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [
+        "EV-009",
+        "EV-012",
+        "EV-013"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "RATE-REWARD",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A16-01",
+        "A16-02"
+      ],
+      "requestedOutcome": "Each distinct legitimate participant rating earns exactly two Nitro, including more than one eligible rating.",
+      "acceptanceCriteria": [
+        "Each distinct legitimate participant rating earns exactly two Nitro, including more than one eligible rating."
+      ],
+      "additionalOriginIds": [
+        "N10"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-009",
+        "EV-012",
+        "EV-013"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "RATE-GOLD-RECEIPT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A16-03"
+      ],
+      "requestedOutcome": "A successful rewarding rating displays the dark gold congratulations receipt with the actual awarded amount.",
+      "acceptanceCriteria": [
+        "A successful rewarding rating displays the dark gold congratulations receipt with the actual awarded amount."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-009",
+        "EV-012",
+        "EV-013"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "NITRO-HISTORY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A16-04",
+        "A38-08"
+      ],
+      "requestedOutcome": "Nitro history displays the persisted award/spend ledger with positive rewards and negative spending signs.",
+      "acceptanceCriteria": [
+        "Nitro history displays the persisted award/spend ledger with positive rewards and negative spending signs."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-009"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "RATE-IDEMPOTENCY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A16-05"
+      ],
+      "requestedOutcome": "Retrying an existing rating does not duplicate either the rating or its Nitro award.",
+      "acceptanceCriteria": [
+        "Retrying an existing rating does not duplicate either the rating or its Nitro award."
+      ],
+      "additionalOriginIds": [
+        "N10"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [
+        "EV-009",
+        "EV-012",
+        "EV-013"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "TRIBE-PRESENTATION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A17-01",
+        "A17-02"
+      ],
+      "requestedOutcome": "Tribe/category cards use the requested imagery and wording without the unwanted Find label.",
+      "acceptanceCriteria": [
+        "Tribe/category cards use the requested imagery and wording without the unwanted Find label."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "TRIBE-NAVIGATION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A17-03"
+      ],
+      "requestedOutcome": "Selecting a Tribe opens Activities filtered to that category.",
+      "acceptanceCriteria": [
+        "Selecting a Tribe opens Activities filtered to that category."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-WARNING-CONTENT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A18-01",
+        "A18-02",
+        "A18-03"
+      ],
+      "requestedOutcome": "Host Responsibly includes the prohibited-content warning and prominently states permanent account suspension consequences.",
+      "acceptanceCriteria": [
+        "Host Responsibly includes the prohibited-content warning and prominently states permanent account suspension consequences."
+      ],
+      "additionalOriginIds": [
+        "N09"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Host Responsibly explicitly warns prohibited/misleading content, removal and permanent suspension.",
+          "recordedAt": "2026-10-03T18:09:44.715Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-host-warning.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-WARNING-CANCEL",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A18-04"
+      ],
+      "requestedOutcome": "Cancelling Host Responsibly returns safely without proceeding to create the Activity.",
+      "acceptanceCriteria": [
+        "Cancelling Host Responsibly returns safely without proceeding to create the Activity."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Cancel returns to Create & Share without publishing.",
+          "recordedAt": "2026-10-03T18:09:49.848Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-host-warning-cancelled.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-WARNING-CONTINUE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A18-04"
+      ],
+      "requestedOutcome": "Continuing Host Responsibly enters the hosting flow.",
+      "acceptanceCriteria": [
+        "Continuing Host Responsibly enters the hosting flow."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Hosting continuation shows Access & Privacy; Paid control is below the captured viewport. Use integrated-normal-host-paid-visible for pricing proof.",
+          "recordedAt": "2026-10-03T18:09:56.290Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-normal-host-paid.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "CONTENT-BACKEND-CHECKS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A18-05",
+        "A38-12"
+      ],
+      "requestedOutcome": "Applicable backend content and authorization checks enforce the documented policy beyond a client-only warning.",
+      "acceptanceCriteria": [
+        "Applicable backend content and authorization checks enforce the documented policy beyond a client-only warning."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "UPLOAD-WARNING",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A19-01"
+      ],
+      "requestedOutcome": "Applicable Activity, Vibe, Community and other requested media pickers are preceded by Upload Responsibly.",
+      "acceptanceCriteria": [
+        "Applicable Activity, Vibe, Community and other requested media pickers are preceded by Upload Responsibly."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activity media picker is preceded by explicit Upload Responsibly warning.",
+          "recordedAt": "2026-10-03T18:10:37.312Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activity-upload-warning.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "UPLOAD-WARNING-CANCEL",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A19-02"
+      ],
+      "requestedOutcome": "Cancelling Upload Responsibly preserves the draft and does not open the picker.",
+      "acceptanceCriteria": [
+        "Cancelling Upload Responsibly preserves the draft and does not open the picker."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Cancel returns to unchanged title and description with no selected media.",
+          "recordedAt": "2026-10-03T18:10:43.065Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-upload-cancel-preserves-draft.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "UPLOAD-WARNING-CONTINUE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A19-03"
+      ],
+      "requestedOutcome": "Continuing Upload Responsibly opens the intended picker and preserves selected media workflow.",
+      "acceptanceCriteria": [
+        "Continuing Upload Responsibly opens the intended picker and preserves selected media workflow."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "NOTIFICATIONS-LOAD",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A27-01",
+        "A27-02"
+      ],
+      "requestedOutcome": "Notifications load, reload and reopen without recurring errors, distinguishing empty, multiple-item, loading and error states.",
+      "acceptanceCriteria": [
+        "Notifications load, reload and reopen without recurring errors, distinguishing empty, multiple-item, loading and error states."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Four real persisted QA notifications load with unread state and recipient-specific activity links.",
+          "recordedAt": "2026-10-03T18:09:23.460Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-notifications-loaded.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-INSTRUCTIONS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A32-01"
+      ],
+      "requestedOutcome": "Show readable bullet-point Partner instructions before the application fields, explaining required details, payout destination and approval.",
+      "acceptanceCriteria": [
+        "Show readable bullet-point Partner instructions before the application fields, explaining required details, payout destination and approval."
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": [],
+      "sourceCorrection": "2026-10-03 original PDFs re-read: exact A37 safety reminder and A32 before-entry Terms replace earlier broadened/softened interpretations."
+    },
+    {
+      "id": "PARTNER-TERMS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A32-02",
+        "A32-03"
+      ],
+      "requestedOutcome": "Present the Partner Terms agreement popup before filling the application. Gate fields until agreement, preserve a current own prior receipt, and persist accepted policy version atomically on submission.",
+      "acceptanceCriteria": [
+        "Present the Partner Terms agreement popup before filling the application. Gate fields until agreement, preserve a current own prior receipt, and persist accepted policy version atomically on submission."
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": [],
+      "sourceCorrection": "2026-10-03 original PDFs re-read: exact A37 safety reminder and A32 before-entry Terms replace earlier broadened/softened interpretations."
+    },
+    {
+      "id": "PARTNER-DASHBOARD",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A33-01"
+      ],
+      "requestedOutcome": "An approved Partner can open their actual dashboard and manage only their authorized activities.",
+      "acceptanceCriteria": [
+        "An approved Partner can open their actual dashboard and manage only their authorized activities."
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-PARTICIPANTS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A33-02"
+      ],
+      "requestedOutcome": "Partner dashboard participant details reflect real registrations and payment/join states.",
+      "acceptanceCriteria": [
+        "Partner dashboard participant details reflect real registrations and payment/join states."
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-PAYMENT-DETAILS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A33-03"
+      ],
+      "requestedOutcome": "The chosen registration's payable amount, selected category and required details are correctly displayed.",
+      "acceptanceCriteria": [
+        "The chosen registration's payable amount, selected category and required details are correctly displayed."
+      ],
+      "additionalOriginIds": [
+        "N03"
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-024"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-CATEGORY-PRICES",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A33-04"
+      ],
+      "requestedOutcome": "A Partner can configure multiple distinct entry categories with server-stored prices and applicable capacities.",
+      "acceptanceCriteria": [
+        "A Partner can configure multiple distinct entry categories with server-stored prices and applicable capacities."
+      ],
+      "additionalOriginIds": [
+        "N03"
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008",
+        "EV-024"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-CATEGORY-SELECTION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A33-05"
+      ],
+      "requestedOutcome": "A participant selects an eligible entry category and checkout uses its current server price.",
+      "acceptanceCriteria": [
+        "A participant selects an eligible entry category and checkout uses its current server price."
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008",
+        "EV-024"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-REQUIRED-ANSWERS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A33-06"
+      ],
+      "requestedOutcome": "Required registration answers must be valid and persisted before paid registration can secure participation.",
+      "acceptanceCriteria": [
+        "Required registration answers must be valid and persisted before paid registration can secure participation."
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-PAID-JOIN",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A33-06"
+      ],
+      "requestedOutcome": "Joined/seat-secured confirmation requires both legitimate successful payment and approved qualifying participation; refund-required reconciliation must not claim a secured seat.",
+      "acceptanceCriteria": [
+        "Joined/seat-secured confirmation requires both legitimate successful payment and approved qualifying participation; refund-required reconciliation must not claim a secured seat.",
+        "PAID with REFUND_REQUIRED or unapproved participation displays reconciliation/support information, not Joined or Your place is secured."
+      ],
+      "additionalOriginIds": [
+        "N03"
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-024"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-LIST-IDENTITY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A34-01"
+      ],
+      "requestedOutcome": "Partner activities are visually differentiated with the requested Partner identity across discovery, Home, Profile and recommendation lists.",
+      "acceptanceCriteria": [
+        "Partner activities are visually differentiated with the requested Partner identity across discovery, Home, Profile and recommendation lists."
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-CREATE-DESTINATION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-01"
+      ],
+      "requestedOutcome": "Publishing an Activity opens the created Activity's detail screen.",
+      "acceptanceCriteria": [
+        "Publishing an Activity opens the created Activity's detail screen."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-START-DEFAULT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-06",
+        "B13-01"
+      ],
+      "requestedOutcome": "A new Activity starts with a default time ten minutes from the current time.",
+      "acceptanceCriteria": [
+        "A new Activity starts with a default time ten minutes from the current time."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-END-DEFAULT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-06",
+        "B13-02"
+      ],
+      "requestedOutcome": "Default Activity end is one hour after start, and schedules reject end times less than the required duration.",
+      "acceptanceCriteria": [
+        "Default Activity end is one hour after start, and schedules reject end times less than the required duration."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Invalid one-minute duration and deadline after start produce specific errors and prevent publication.",
+          "recordedAt": "2026-10-03T18:10:26.996Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-host-schedule-errors.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-REGISTRATION-DEFAULT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-06"
+      ],
+      "requestedOutcome": "Default registration closes at the Activity start.",
+      "acceptanceCriteria": [
+        "Default registration closes at the Activity start."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "SOS-ACTION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-07"
+      ],
+      "requestedOutcome": "The Activity SOS action opens functional safety guidance, activity sharing and access to the saved emergency contact without claiming automatic live tracking.",
+      "acceptanceCriteria": [
+        "The Activity SOS action opens functional safety guidance, activity sharing and access to the saved emergency contact without claiming automatic live tracking."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": [],
+      "sourceCorrection": "2026-10-03 original PDFs re-read: exact A37 safety reminder and A32 before-entry Terms replace earlier broadened/softened interpretations."
+    },
+    {
+      "id": "SOS-SAFETY-REMINDER",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-07"
+      ],
+      "requestedOutcome": "Send confirmed eligible Activity members a safety notification ten minutes before start with the exact requested message: Make sure to share your activity details and live location with someone you trust.",
+      "acceptanceCriteria": [
+        "Send confirmed eligible Activity members a safety notification ten minutes before start with the exact requested message: Make sure to share your activity details and live location with someone you trust."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "LOCAL_FIX_AWAITING_DEPLOYED_RETEST",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": [],
+      "sourceCorrection": "2026-10-03 original PDFs re-read: exact A37 safety reminder and A32 before-entry Terms replace earlier broadened/softened interpretations."
+    },
+    {
+      "id": "HELP-NITROBOT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-08"
+      ],
+      "requestedOutcome": "NitroBot answers the supported FAQ without pretending to access private account data or unsupported services.",
+      "acceptanceCriteria": [
+        "NitroBot answers the supported FAQ without pretending to access private account data or unsupported services."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activity FAQ responds with supported guidance and explicit lack of private account access.",
+          "recordedAt": "2026-10-03T18:10:56.533Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-nitrobot-faq.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HELP-SUPPORT-QUERY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-09"
+      ],
+      "requestedOutcome": "A member can submit a support/feedback query and receive confirmation only after persistence succeeds.",
+      "acceptanceCriteria": [
+        "A member can submit a support/feedback query and receive confirmation only after persistence succeeds."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Submitted QA query shows success after server persistence; DB feedback9 belongs to user116 and matches exact message.",
+          "recordedAt": "2026-10-03T18:11:27.499Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-support-query-persisted.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PLAY-STORE-REWARD",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-10"
+      ],
+      "requestedOutcome": "The supported Play Store action awards its intended reward once without falsely claiming proof of a submitted review.",
+      "acceptanceCriteria": [
+        "The supported Play Store action awards its intended reward once without falsely claiming proof of a submitted review."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "STORE-MINIMUM",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-11"
+      ],
+      "requestedOutcome": "Hubble redemption eligibility requires at least 200 Nitro Points, using the current authoritative threshold.",
+      "acceptanceCriteria": [
+        "Hubble redemption eligibility requires at least 200 Nitro Points, using the current authoritative threshold."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Hero CTA reached actual Nitro Store, showing200 threshold and provider unavailable; no points spent.",
+          "recordedAt": "2026-10-03T08:24:52.646Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-store-confirmed-destination.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "STORE-REDEMPTION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A37-11"
+      ],
+      "requestedOutcome": "Actual Hubble redemption is available only with a working configured provider and a successful authorized redemption; an unavailable provider must not deduct points or report a redemption success.",
+      "acceptanceCriteria": [
+        "Actual Hubble redemption is available only with a working configured provider and a successful authorized redemption; an unavailable provider must not deduct points or report a redemption success."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Hero CTA reached actual Nitro Store, showing200 threshold and provider unavailable; no points spent.",
+          "recordedAt": "2026-10-03T08:24:52.646Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-store-confirmed-destination.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "candidateDependencyIds": [
+        "HUBBLE_REDEMPTION_PROVIDER"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "COHOST-PROMOTE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-01",
+        "B15-03"
+      ],
+      "requestedOutcome": "The authorized original Host can promote an eligible participant to Co-host.",
+      "acceptanceCriteria": [
+        "The authorized original Host can promote an eligible participant to Co-host."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-010",
+        "EV-011"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "COHOST-APPROVE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-01"
+      ],
+      "requestedOutcome": "A Co-host can approve eligible registration requests within the allowed Activity state.",
+      "acceptanceCriteria": [
+        "A Co-host can approve eligible registration requests within the allowed Activity state."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-010",
+        "EV-011"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "COHOST-REJECT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-01"
+      ],
+      "requestedOutcome": "A Co-host can reject eligible registration requests within the allowed Activity state.",
+      "acceptanceCriteria": [
+        "A Co-host can reject eligible registration requests within the allowed Activity state."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-010",
+        "EV-011"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "COHOST-REMOVE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-01"
+      ],
+      "requestedOutcome": "A Co-host can remove eligible participants before the Activity ends, respecting protected Host/role boundaries.",
+      "acceptanceCriteria": [
+        "A Co-host can remove eligible participants before the Activity ends, respecting protected Host/role boundaries."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-010",
+        "EV-011"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "COHOST-EDIT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-01"
+      ],
+      "requestedOutcome": "A Co-host can edit the permitted Activity fields before the Activity ends.",
+      "acceptanceCriteria": [
+        "A Co-host can edit the permitted Activity fields before the Activity ends."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-010",
+        "EV-011"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "COHOST-ORIGINAL-HOST",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-02",
+        "B15-01"
+      ],
+      "requestedOutcome": "The original creator remains clearly identified as HOST / ORIGINAL CREATOR after Co-host changes.",
+      "acceptanceCriteria": [
+        "The original creator remains clearly identified as HOST / ORIGINAL CREATOR after Co-host changes."
+      ],
+      "additionalOriginIds": [
+        "N06"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-010",
+        "EV-011"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "COHOST-DEMOTE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-03"
+      ],
+      "requestedOutcome": "Demoting/removing a Co-host persists and immediately removes their backend management permissions.",
+      "acceptanceCriteria": [
+        "Demoting/removing a Co-host persists and immediately removes their backend management permissions."
+      ],
+      "additionalOriginIds": [
+        "N07"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-010",
+        "EV-011"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "POLICY-FIRST-SIGNUP",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-06"
+      ],
+      "requestedOutcome": "First signup presents and records the required policy acceptance without reapplying it incorrectly to existing sessions.",
+      "acceptanceCriteria": [
+        "First signup presents and records the required policy acceptance without reapplying it incorrectly to existing sessions."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "PARTNER-EXTERNAL-URL",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-09"
+      ],
+      "requestedOutcome": "Partner activities can persist and open a safe external website URL.",
+      "acceptanceCriteria": [
+        "Partner activities can persist and open a safe external website URL."
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "LEGAL-EXTERNAL",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B01-01"
+      ],
+      "requestedOutcome": "Terms and privacy links open their actual approved external policy destinations.",
+      "acceptanceCriteria": [
+        "Terms and privacy links open their actual approved external policy destinations."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-026",
+        "EV-027",
+        "EV-028",
+        "EV-029"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-EMAIL-TICK",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B02-01"
+      ],
+      "requestedOutcome": "The email field tick appears only when the entered address passes email-format validation; malformed email must not display the success tick. This indicator is not proof of confirmed email ownership.",
+      "acceptanceCriteria": [
+        "The email field tick appears only when the entered address passes email-format validation; malformed email must not display the success tick. This indicator is not proof of confirmed email ownership."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Malformed invalid@ produces error without email tick; legitimate Telugu name receives valid name indicator. No signup submitted.",
+          "recordedAt": "2026-10-03T18:15:33.389Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Syntactically valid example address shows format tick; this is not verified ownership. Telugu name remains accepted.",
+          "recordedAt": "2026-10-03T18:15:37.039Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-email-invalid-no-tick.png",
+        "qa-evidence/chat001/integrated-email-format-valid.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-NAME-VALIDATION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B02-02",
+        "B02-03"
+      ],
+      "requestedOutcome": "Name validation supports legitimate Unicode names and rejects invalid/prohibited names on both client and backend paths.",
+      "acceptanceCriteria": [
+        "Name validation supports legitimate Unicode names and rejects invalid/prohibited names on both client and backend paths.",
+        "Reject the source examples of invalid/prohibited display names: an email address, Playboy, Sex Addict and Gamer; preserve legitimate names."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Malformed invalid@ produces error without email tick; legitimate Telugu name receives valid name indicator. No signup submitted.",
+          "recordedAt": "2026-10-03T18:15:33.389Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Syntactically valid example address shows format tick; this is not verified ownership. Telugu name remains accepted.",
+          "recordedAt": "2026-10-03T18:15:37.039Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Numeric-only name produces actionable validation instead of a success tick.",
+          "recordedAt": "2026-10-03T18:15:50.994Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-email-invalid-no-tick.png",
+        "qa-evidence/chat001/integrated-email-format-valid.png",
+        "qa-evidence/chat001/integrated-name-invalid.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "AUTH-ARTWORK",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B03-01",
+        "B03-02"
+      ],
+      "requestedOutcome": "Social sign-in uses the approved non-dating artwork with readable contrast.",
+      "acceptanceCriteria": [
+        "Social sign-in uses the approved non-dating artwork with readable contrast."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Skip/Finish return to Welcome; email destination uses community activities artwork and readable authentication controls.",
+          "recordedAt": "2026-10-03T18:15:24.402Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-auth-artwork.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "STORE-NAMING",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B04-01"
+      ],
+      "requestedOutcome": "Store navigation and current UI use the authoritative Nitro Store naming.",
+      "acceptanceCriteria": [
+        "Store navigation and current UI use the authoritative Nitro Store naming."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Hero CTA reached actual Nitro Store, showing200 threshold and provider unavailable; no points spent.",
+          "recordedAt": "2026-10-03T08:24:52.646Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-store-confirmed-destination.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOME-HEADER",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B04-02"
+      ],
+      "requestedOutcome": "Home uses the latest requested header without the removed avatar or an empty redundant section.",
+      "acceptanceCriteria": [
+        "Home uses the latest requested header without the removed avatar or an empty redundant section."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HERO-ASSETS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B05-01",
+        "B05-03"
+      ],
+      "requestedOutcome": "The hero uses the four exact approved assets without duplicate masking/text overlays.",
+      "acceptanceCriteria": [
+        "The hero uses the four exact approved assets without duplicate masking/text overlays."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Captured Communities hero after carousel auto-advance; not proof of Activities slide.",
+          "recordedAt": "2026-10-03T08:22:58.293Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Selected first hero; screenshot records the actual rotating carousel frame.",
+          "recordedAt": "2026-10-03T08:23:12.093Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Approved Friends hero selected.",
+          "recordedAt": "2026-10-03T08:23:23.185Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Approved Store hero selected.",
+          "recordedAt": "2026-10-03T08:24:24.352Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-home-hero-activities.png",
+        "qa-evidence/chat001/integrated-home-hero-slide1.png",
+        "qa-evidence/chat001/integrated-home-hero-friends.png",
+        "qa-evidence/chat001/integrated-home-hero-store.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HERO-CTA-ACTIVITIES",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B05-02"
+      ],
+      "requestedOutcome": "The Activities hero CTA opens Activities.",
+      "acceptanceCriteria": [
+        "The Activities hero CTA opens Activities."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HERO-CTA-COMMUNITIES",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B05-02"
+      ],
+      "requestedOutcome": "The Communities hero CTA opens Communities.",
+      "acceptanceCriteria": [
+        "The Communities hero CTA opens Communities."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Communities hero CTA opened production Communities with actual list data.",
+          "recordedAt": "2026-10-03T08:26:00.347Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-hero-communities-destination.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HERO-CTA-INVITE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B05-02"
+      ],
+      "requestedOutcome": "The Friends hero CTA opens Invite Squad.",
+      "acceptanceCriteria": [
+        "The Friends hero CTA opens Invite Squad."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Hero Invite Friends opened Invite Squad; visible terms consistently state10 Nitro and account116 referral.",
+          "recordedAt": "2026-10-03T08:24:02.922Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-hero-invite-destination.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HERO-CTA-STORE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B05-02"
+      ],
+      "requestedOutcome": "The Store hero CTA opens Nitro Store.",
+      "acceptanceCriteria": [
+        "The Store hero CTA opens Nitro Store."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Hero CTA reached actual Nitro Store, showing200 threshold and provider unavailable; no points spent.",
+          "recordedAt": "2026-10-03T08:24:52.646Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-store-confirmed-destination.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "REFERRAL-REWARD",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B06-01"
+      ],
+      "requestedOutcome": "A legitimate successful referral earns the authoritative ten Nitro reward.",
+      "acceptanceCriteria": [
+        "A legitimate successful referral earns the authoritative ten Nitro reward."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "REFERRAL-EXPLANATION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B06-02",
+        "B06-03"
+      ],
+      "requestedOutcome": "Invite How it works and referral terms are readable and describe the actual qualifying reward behavior.",
+      "acceptanceCriteria": [
+        "Invite How it works and referral terms are readable and describe the actual qualifying reward behavior."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Hero Invite Friends opened Invite Squad; visible terms consistently state10 Nitro and account116 referral.",
+          "recordedAt": "2026-10-03T08:24:02.922Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-hero-invite-destination.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "REFERRAL-ANTI-ABUSE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-12",
+        "B06-04"
+      ],
+      "requestedOutcome": "Self-referrals, duplicate redemption and referral farming do not award illegitimate Nitro or qualifying badge progress.",
+      "acceptanceCriteria": [
+        "Self-referrals, duplicate redemption and referral farming do not award illegitimate Nitro or qualifying badge progress.",
+        "Referral reward qualification excludes suspended, self, deleted or duplicate identities and uses completed legitimate referral state."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "LEGAL-VIEW-MORE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B07-01"
+      ],
+      "requestedOutcome": "The policy screen replaces Contact Support with a working View More link to the corresponding policy site.",
+      "acceptanceCriteria": [
+        "The policy screen replaces Contact Support with a working View More link to the corresponding policy site."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-026",
+        "EV-027",
+        "EV-028",
+        "EV-029"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOME-NITRO-CARD",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B08-01",
+        "B08-02"
+      ],
+      "requestedOutcome": "Nitro Points and Invite cards use the requested matching blue/purple visual styling.",
+      "acceptanceCriteria": [
+        "Nitro Points and Invite cards use the requested matching blue/purple visual styling."
+      ],
+      "additionalOriginIds": [
+        "N01"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-BACK-HOME",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B10-03"
+      ],
+      "requestedOutcome": "Back from the Activities screen returns Home.",
+      "acceptanceCriteria": [
+        "Back from the Activities screen returns Home."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "FILTER-DATE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B10-02",
+        "B11-01"
+      ],
+      "requestedOutcome": "Activity date-range filtering applies valid local-day bounds and returns matching actual results.",
+      "acceptanceCriteria": [
+        "Activity date-range filtering applies valid local-day bounds and returns matching actual results."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Selected4Oct\u20134Oct andFree; active server catalog rendered andQA catalog excluded.",
+          "recordedAt": "2026-10-03T08:27:27.255Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "After Apply only free4Oct event277 remains, matching selectedlocalday.",
+          "recordedAt": "2026-10-03T08:27:33.340Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-date-free-filter.png",
+        "qa-evidence/chat001/integrated-activities-date-free-results.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023",
+        "EV-041",
+        "EV-042",
+        "EV-043"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "FILTER-PRICE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B10-02",
+        "B11-01"
+      ],
+      "requestedOutcome": "All/Free/Paid filtering returns the appropriate free, onsite-cost and Partner-paid Activities.",
+      "acceptanceCriteria": [
+        "All/Free/Paid filtering returns the appropriate free, onsite-cost and Partner-paid Activities."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Selected4Oct\u20134Oct andFree; active server catalog rendered andQA catalog excluded.",
+          "recordedAt": "2026-10-03T08:27:27.255Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "After Apply only free4Oct event277 remains, matching selectedlocalday.",
+          "recordedAt": "2026-10-03T08:27:33.340Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-date-free-filter.png",
+        "qa-evidence/chat001/integrated-activities-date-free-results.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023",
+        "EV-041",
+        "EV-042",
+        "EV-043"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "FILTER-GENDER",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B10-02",
+        "B11-01"
+      ],
+      "requestedOutcome": "Gender preference filters change the returned Activity matches correctly.",
+      "acceptanceCriteria": [
+        "Gender preference filters change the returned Activity matches correctly."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023",
+        "EV-041",
+        "EV-042",
+        "EV-043"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "FILTER-APPLY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B11-02"
+      ],
+      "requestedOutcome": "Apply commits the selected filters and reopening the filter sheet retains the applied values.",
+      "acceptanceCriteria": [
+        "Apply commits the selected filters and reopening the filter sheet retains the applied values."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "After Apply only free4Oct event277 remains, matching selectedlocalday.",
+          "recordedAt": "2026-10-03T08:27:33.340Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "ReopenedFiltersretained4Oct\u20134Oct andFree selection.",
+          "recordedAt": "2026-10-03T08:27:42.017Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-date-free-results.png",
+        "qa-evidence/chat001/integrated-filter-reopened.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023",
+        "EV-041",
+        "EV-042",
+        "EV-043"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "FILTER-RESET",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B11-02"
+      ],
+      "requestedOutcome": "Reset All clears the requested date, price, gender, category and verification filters and subsequent results reflect the reset.",
+      "acceptanceCriteria": [
+        "Reset All clears the requested date, price, gender, category and verification filters and subsequent results reflect the reset."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "ResetAll clearedbothdates and restoredprice/genderAll withno categoryorverificationrestriction.",
+          "recordedAt": "2026-10-03T08:27:59.688Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-filter-reset.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023",
+        "EV-041",
+        "EV-042",
+        "EV-043"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-HOST-EDIT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B12-01",
+        "B22-02"
+      ],
+      "requestedOutcome": "Only an eligible Host/Co-host sees and can use the Activity edit control within the permitted state.",
+      "acceptanceCriteria": [
+        "Only an eligible Host/Co-host sees and can use the Activity edit control within the permitted state."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-HOST-DELETE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B12-01",
+        "B22-02"
+      ],
+      "requestedOutcome": "Only an eligible Host/authorized manager can cancel/delete an Activity, respecting payment and state restrictions.",
+      "acceptanceCriteria": [
+        "Only an eligible Host/authorized manager can cancel/delete an Activity, respecting payment and state restrictions."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-CHAT-OPEN",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B12-02"
+      ],
+      "requestedOutcome": "Activity Chat opens the correct authorized Activity conversation.",
+      "acceptanceCriteria": [
+        "Activity Chat opens the correct authorized Activity conversation."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-STATUS-CHIPS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B12-03"
+      ],
+      "requestedOutcome": "Activity cards/detail use the requested compact FREE/PAID/JOINED status presentation.",
+      "acceptanceCriteria": [
+        "Activity cards/detail use the requested compact FREE/PAID/JOINED status presentation."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Activities hero opened full list; search collapsed, full cover/fallback cards, Partner/paid/joined states and host identities.",
+          "recordedAt": "2026-10-03T08:26:58.489Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-collapsed.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-REGISTRATION-BOUNDS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B13-03"
+      ],
+      "requestedOutcome": "Registration deadlines cannot precede now or exceed Activity start, with backend validation.",
+      "acceptanceCriteria": [
+        "Registration deadlines cannot precede now or exceed Activity start, with backend validation."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Restored expired QA draft retains inputs and shows specific start/deadline errors with Host Now disabled.",
+          "recordedAt": "2026-10-03T18:10:22.654Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Invalid one-minute duration and deadline after start produce specific errors and prevent publication.",
+          "recordedAt": "2026-10-03T18:10:26.996Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-host-expired-draft-validation.png",
+        "qa-evidence/chat001/integrated-host-schedule-errors.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-SCHEDULE-ERRORS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B13-04"
+      ],
+      "requestedOutcome": "Invalid Activity schedules show visible actionable validation and preserve the editable draft.",
+      "acceptanceCriteria": [
+        "Invalid Activity schedules show visible actionable validation and preserve the editable draft."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Restored expired QA draft retains inputs and shows specific start/deadline errors with Host Now disabled.",
+          "recordedAt": "2026-10-03T18:10:22.654Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Invalid one-minute duration and deadline after start produce specific errors and prevent publication.",
+          "recordedAt": "2026-10-03T18:10:26.996Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-host-expired-draft-validation.png",
+        "qa-evidence/chat001/integrated-host-schedule-errors.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-TIMEZONE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B13-05"
+      ],
+      "requestedOutcome": "Displayed and submitted Activity schedules preserve the intended local timezone and stored instant.",
+      "acceptanceCriteria": [
+        "Displayed and submitted Activity schedules preserve the intended local timezone and stored instant."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-VISIBILITY-LABEL",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B14-01"
+      ],
+      "requestedOutcome": "Public/private visibility is displayed beside the Activity title.",
+      "acceptanceCriteria": [
+        "Public/private visibility is displayed beside the Activity title."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-TAGS-POSITION",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B14-02"
+      ],
+      "requestedOutcome": "Activity tags are displayed beneath About as requested.",
+      "acceptanceCriteria": [
+        "Activity tags are displayed beneath About as requested."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_render_or_behavior_check",
+        "actual_deployed_screenshot_at_required_viewports"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-PRIVATE-RLS",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-12",
+        "B14-04"
+      ],
+      "requestedOutcome": "Private Activities and protected details are visible only to authorized hosts, participants or valid invite recipients under backend policies.",
+      "acceptanceCriteria": [
+        "Private Activities and protected details are visible only to authorized hosts, participants or valid invite recipients under backend policies."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-HOST-IDENTITY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B15-01"
+      ],
+      "requestedOutcome": "Activity detail clearly shows the host's full identity and emphasized host styling.",
+      "acceptanceCriteria": [
+        "Activity detail clearly shows the host's full identity and emphasized host styling."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-SEE-ALL",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B17-01"
+      ],
+      "requestedOutcome": "See All Activities opens the Activities listing.",
+      "acceptanceCriteria": [
+        "See All Activities opens the Activities listing."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-CHAT-BACK",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B18-01"
+      ],
+      "requestedOutcome": "Back from Activity Chat returns to the originating Activity context.",
+      "acceptanceCriteria": [
+        "Back from Activity Chat returns to the originating Activity context."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "HOST-NORMAL-PAID",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B20-01",
+        "B20-02"
+      ],
+      "requestedOutcome": "A normal non-Partner host gets only the Paid ON/OFF cost classification, with no amount field, Cashfree checkout or platform collection.",
+      "acceptanceCriteria": [
+        "A normal non-Partner host gets only the Paid ON/OFF cost classification, with no amount field, Cashfree checkout or platform collection."
+      ],
+      "additionalOriginIds": [
+        "N02",
+        "N03"
+      ],
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Normal host Paid ON has venue-spending classification and explicit no price/Pay Now collection.",
+          "recordedAt": "2026-10-03T18:10:33.057Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-normal-host-paid-visible.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [
+        "EV-015",
+        "EV-016"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "MAPS-GOOGLE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B21-01"
+      ],
+      "requestedOutcome": "Actual Google Maps/Places integration uses the client's authorized configured account.",
+      "acceptanceCriteria": [
+        "Actual Google Maps/Places integration uses the client's authorized configured account."
+      ],
+      "additionalOriginIds": [
+        "N04"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "candidateDependencyIds": [
+        "CLIENT_GOOGLE_MAPS_PLACES_CREDENTIALS"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "MAPS-PROVIDER-CLARITY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B21-02"
+      ],
+      "requestedOutcome": "The location UI accurately distinguishes missing Google configuration from the available Photon/GPS fallback.",
+      "acceptanceCriteria": [
+        "The location UI accurately distinguishes missing Google configuration from the available Photon/GPS fallback."
+      ],
+      "additionalOriginIds": [
+        "N04"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Actual Bengaluru location search returns attributed OpenStreetMap results; no claim of Google Places.",
+          "recordedAt": "2026-10-03T18:10:16.607Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-location-fallback.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-NO-SELF-REPORT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B22-01"
+      ],
+      "requestedOutcome": "A Host cannot report their own Activity through UI or backend.",
+      "acceptanceCriteria": [
+        "A Host cannot report their own Activity through UI or backend."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-DETAIL-BACK",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "B22-03"
+      ],
+      "requestedOutcome": "Back from an Activity detail returns to its intended Activities context.",
+      "acceptanceCriteria": [
+        "Back from an Activity detail returns to its intended Activities context."
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "APP-CATEGORY-CATALOG",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A36-03"
+      ],
+      "requestedOutcome": "App category selectors consume the shared active catalog, distinguish loading/error/empty states, support retry and retain unchanged historical selections safely.",
+      "acceptanceCriteria": [
+        "App category selectors consume the shared active catalog, distinguish loading/error/empty states, support retry and retain unchanged historical selections safely.",
+        "Disabled/archived choices are not offered for new assignments; a retained historical selection remains identifiable and can be preserved."
+      ],
+      "derivation": "Decomposition of all current Dashboard controls; unsupported capabilities remain pending, never automatically accepted merely by hiding a button.",
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "DEPLOYED_UI_OBSERVED_RECONCILIATION_PENDING",
+      "localVerification": [],
+      "productionVerification": [
+        {
+          "outcome": "Selected4Oct\u20134Oct andFree; active server catalog rendered andQA catalog excluded.",
+          "recordedAt": "2026-10-03T08:27:27.255Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        },
+        {
+          "outcome": "Hosting category selector loads shared active choices and excludes QA-prefixed categories.",
+          "recordedAt": "2026-10-03T18:10:03.911Z",
+          "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf"
+        }
+      ],
+      "acceptedScreenshotProof": [
+        "qa-evidence/chat001/integrated-activities-date-free-filter.png",
+        "qa-evidence/chat001/integrated-host-category-catalog.png"
+      ],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "SEC-PAYMENT-PRIVACY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-12"
+      ],
+      "requestedOutcome": "Payment orders, personal registration details and provider secrets remain restricted to authorized participants, hosts and permitted finance/Admin access.",
+      "acceptanceCriteria": [
+        "Payment orders, personal registration details and provider secrets remain restricted to authorized participants, hosts and permitted finance/Admin access."
+      ],
+      "derivation": "Concrete invariant within the explicit security/privacy audit scope, refined from observed implementation risks.",
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [
+        "EV-024"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "SEC-PAYMENT-IDEMPOTENCY",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-12"
+      ],
+      "requestedOutcome": "Duplicate payment callbacks/reconciliation cannot duplicate paid registration, ledger records or a seat.",
+      "acceptanceCriteria": [
+        "Duplicate payment callbacks/reconciliation cannot duplicate paid registration, ledger records or a seat."
+      ],
+      "derivation": "Concrete invariant within the explicit security/privacy audit scope, refined from observed implementation risks.",
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [
+        "EV-024"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "SEC-PAYMENT-AMOUNT",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-12"
+      ],
+      "requestedOutcome": "Checkout uses trusted current server amount/category/capacity and rejects forged, missing, stale or unauthorized order inputs.",
+      "acceptanceCriteria": [
+        "Checkout uses trusted current server amount/category/capacity and rejects forged, missing, stale or unauthorized order inputs."
+      ],
+      "derivation": "Concrete invariant within the explicit security/privacy audit scope, refined from observed implementation risks.",
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [
+        "EV-024"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "SEC-PAYMENT-STATE",
+      "kind": "implementation",
+      "sourceClauseIds": [
+        "A38-12"
+      ],
+      "requestedOutcome": "Ended/cancelled/removed/suspended or otherwise ineligible registration cannot newly secure a paid seat; real paid-but-ineligible states require explicit reconciliation instead of false success.",
+      "acceptanceCriteria": [
+        "Ended/cancelled/removed/suspended or otherwise ineligible registration cannot newly secure a paid seat; real paid-but-ineligible states require explicit reconciliation instead of false success."
+      ],
+      "derivation": "Concrete invariant within the explicit security/privacy audit scope, refined from observed implementation risks.",
+      "qaOwner": "E_PARTNER_CASHFREE",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_boundary_or_authorization_test",
+        "current_target_authenticated_api_db_proof",
+        "deployed_ui_proof_if_user_visible"
+      ],
+      "candidateEvidenceIds": [
+        "EV-024"
+      ],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    },
+    {
+      "id": "ACT-LEAVE-REJOIN",
+      "kind": "implementation",
+      "sourceClauseIds": [],
+      "requestedOutcome": "Leaving and rejoining an approval-based Activity re-enters the intended approval workflow without duplicate participation or bypassing approval.",
+      "acceptanceCriteria": [
+        "A legitimate pre-end leave persists; rejoin creates/reuses the correct pending request and Host/Co-host approval is required again."
+      ],
+      "additionalOriginIds": [
+        "N05"
+      ],
+      "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
+      "status": "PENDING_INTEGRATED_PRODUCTION",
+      "localVerification": [],
+      "productionVerification": [],
+      "acceptedScreenshotProof": [],
+      "acceptedTechnicalProof": [],
+      "requiredEvidence": [
+        "local_executable_or_visual_check",
+        "deployed_interaction_and_screenshot",
+        "authenticated_backend_proof_when_applicable"
+      ],
+      "candidateEvidenceIds": [],
+      "before": "TO_RECONCILE",
+      "implemented": "TO_RECONCILE",
+      "evidenceNotes": []
+    }
+  ],
+  "sessions": [],
+  "lastReconciledAt": "2026-10-03T18:18:00Z",
+  "evidenceRule": "Screenshots confirm only their visible state and paired observed interaction. UI observation alone does not close required backend, provider or boundary checks."
+}
