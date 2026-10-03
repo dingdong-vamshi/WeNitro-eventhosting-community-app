@@ -1,0 +1,112 @@
+{
+  "at": "2026-10-03T20:23:32.311Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Current deployed verification accepts existing real-provider-paid order280 with confirmed seat and no refund-required false positive",
+      "status": "PASS",
+      "details": {
+        "receipts": [
+          {
+            "orderId": "wn_280_116_5f4a3b86f8fc49dfa9e9",
+            "status": "paid",
+            "paid": true,
+            "financialStatus": "ON_HOLD",
+            "registrationConfirmed": true,
+            "refundRequired": false
+          },
+          {
+            "orderId": "wn_280_116_5f4a3b86f8fc49dfa9e9",
+            "status": "paid",
+            "paid": true,
+            "financialStatus": "ON_HOLD",
+            "registrationConfirmed": true,
+            "refundRequired": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "Two current receipt replays preserve existing paid order and approved seat exactly",
+      "status": "PASS"
+    },
+    {
+      "name": "Buyer116 sees actual saved required answer for current297",
+      "status": "PASS",
+      "details": {
+        "questionId": 134,
+        "value": "Sandbox Acceptance"
+      }
+    },
+    {
+      "name": "Owner71 current dashboard RPC shows real-paid280 approved and1234paisa held from payout",
+      "status": "PASS",
+      "details": {
+        "paymentStatus": "ON_HOLD"
+      }
+    },
+    {
+      "name": "Owner71 current dashboard RPC shows unpaid297 with required answer, no false paid seat",
+      "status": "PASS",
+      "details": {
+        "amountPaidPaisa": 0,
+        "status": "payment_required",
+        "paymentStatus": "PENDING",
+        "answers": [
+          {
+            "label": "Entry name for this Sandbox test",
+            "value": "Sandbox Acceptance",
+            "question_id": 134
+          }
+        ]
+      }
+    },
+    {
+      "name": "Unrelated member70 cannot read buyer116 required answers or297 payment48",
+      "status": "PASS"
+    }
+  ],
+  "priorActualHostedSuccess": "docs/chat001-hosted-checkout-proof.json",
+  "current297ProviderOrder": {
+    "at": "2026-10-03T20:02:53.483Z",
+    "orderId": "wn_297_116_07ff0548003d4e09822f",
+    "amount": 12.34,
+    "currency": "INR",
+    "status": "ACTIVE",
+    "entryCategoryId": 29,
+    "paymentId": 48,
+    "providerPaymentStatuses": [
+      "PENDING"
+    ]
+  },
+  "scope": "Existing280 real Sandbox provider success rechecked against current receipt schema; no new payment. Current297 only reached hosted checkout and remains pending in recordedproviderreadback; no297 success or bank authorization claimed. No live money, refunds or payouts. Separate coordinator MCP before/after ledger checks verify one financial PAYMENT row.",
+  "ledgerInvariance": {
+    "method": "Supabase MCP SELECT before current verification replay and after replay",
+    "payment41": {
+      "eventId": 280,
+      "userId": 116,
+      "status": "paid",
+      "financialStatus": "ON_HOLD",
+      "participantStatus": "approved",
+      "amountPaisa": 1234,
+      "paymentLedgerCountBefore": 1,
+      "paymentLedgerCountAfter": 1
+    },
+    "payment48": {
+      "eventId": 297,
+      "userId": 116,
+      "status": "pending",
+      "financialStatus": "OPEN",
+      "participantStatus": "payment_required",
+      "amountPaisa": 1234,
+      "paymentLedgerCountBefore": 0,
+      "paymentLedgerCountAfter": 0
+    }
+  },
+  "sourceCompatibility": {
+    "baselineCommit": "75cbea7",
+    "finding": "Current verify-payment and payments client receipt contract changed since original hosted280, adding registrationConfirmed/refundRequired/financialStatus. Original success is accepted only together with this current actual positive receipt test and current negative-state tests, not by falsely declaring verification code unchanged.",
+    "unchanged": "cashfree-webhook source unchanged between baseline and current source."
+  }
+}
