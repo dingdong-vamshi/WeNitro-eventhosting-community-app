@@ -1,0 +1,13 @@
+{
+  "sourceRequirement": "PDF page32: Show some bullet point instructions and a pop-up of terms and conditions to be agreed to become a partner before filling up this page.",
+  "canonicalCorrections": [
+    {"id":"PARTNER-INSTRUCTIONS","acceptanceCriteria":["Display accurate bullet point instructions for eligibility, application details, payout destination and Admin review before the application fields."]},
+    {"id":"PARTNER-TERMS","acceptanceCriteria":["Show a Terms & Conditions popup with explicit unchecked agreement before any new application fields can be filled.","Cancel/dismiss must leave application fields inaccessible.","A stored own receipt for the current policy version avoids forcing an existing applicant to agree again.","Submission still requires the accepted terms flag and persists the existing server-side receipt atomically with the application."]}
+  ],
+  "before":"Only a paragraph and bottom-of-form checkbox existed; fields could be filled before agreement. Existing saved acceptance was not loaded.",
+  "implemented":"Bullet instructions and a blocking Terms popup; fields are not rendered until explicit agreement or a current-version own receipt. Not now/dismiss cannot bypass. Current-version receipt is read under existing own-user RLS. No backend policy or payout behavior changed.",
+  "localVerification":["partner-preflight-test.mjs: executable actual component covers gate, unchecked disabled CTA, dismiss, explicit consent, saved acceptance, fail-closed retry and suspended accounts; actual Supabase SDK covers current/old/missing/unrecorded receipt and read error.","partner-submit-regression-test.mjs: real SDK payload validation, receiver, server error/retry and realtime lifecycle PASS.","npm run typecheck PASS."],
+  "productionVerification":"Pending coordinated deployment and screenshot of the unaccepted popup. No legal agreement was accepted through browser automation.",
+  "screenshotProof":[],
+  "status":"IMPLEMENTED_LOCAL_VERIFIED"
+}

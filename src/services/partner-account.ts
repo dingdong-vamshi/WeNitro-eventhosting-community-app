@@ -95,6 +95,11 @@ function accountResult(value: unknown): PartnerAccountResult {
 }
 
 export const partnerAccountService = {
+  async termsAccepted(): Promise<boolean> {
+    const { data, error } = await supabase.from("tbl_partner_terms_acceptances").select("policy_version,accepted_at").limit(1).maybeSingle();
+    if (error) throw error;
+    return data?.policy_version === "2026-10-01" && Boolean(data.accepted_at);
+  },
   async get(): Promise<PartnerAccountResult> {
     const { data, error } = await supabase.rpc("get_my_partner_profile");
     if (error) throw error;

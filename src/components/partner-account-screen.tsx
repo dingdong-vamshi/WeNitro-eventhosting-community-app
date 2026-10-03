@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Linking, Modal, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { WENITRO_LEGAL_URLS } from "./onboarding/reference-screens";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { partnerAccountService, validatePartnerAccount, type PartnerAccountInput, type PartnerAccountResult } from "../services/partner-account";
@@ -32,17 +32,22 @@ export function PartnerAccountScreen({ dark = false, onBack, onSaved }: {
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
   const [retry, setRetry] = useState(0);
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(false);
 
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
   useEffect(() => {
     let active = true;
     setLoading(true); setError(""); setResult(null);
-    void partnerAccountService.get().then(value => {
+    void Promise.all([partnerAccountService.get(), partnerAccountService.termsAccepted()]).then(([value, accepted]) => {
       if (!active) return;
       setResult(value);
+      setTermsOpen(value.eligible && value.profile?.status !== "SUSPENDED" && !accepted);
+      setTermsChecked(false);
       setPayoutMethod(value.payout_account?.upi_id_masked ? "upi" : "bank");
       setInput(current => ({
         ...current,
+        terms_accepted: accepted,
         business_name: value.profile?.business_name ?? "",
         description: value.profile?.description ?? "",
         city: value.profile?.city ?? "",
@@ -59,7 +64,8 @@ export function PartnerAccountScreen({ dark = false, onBack, onSaved }: {
 
   const status = result?.profile?.status;
   const restricted = status === "SUSPENDED";
-  const canEdit = Boolean(result?.eligible) && !restricted;
+  const canApply = Boolean(result?.eligible) && !restricted;
+  const canEdit = canApply && input.terms_accepted === true;
   const update = <K extends keyof PartnerAccountInput>(key: K, value: PartnerAccountInput[K]) => {
     setInput(current => ({ ...current, [key]: value })); setSaved(false); setError("");
   };
@@ -85,7 +91,7 @@ export function PartnerAccountScreen({ dark = false, onBack, onSaved }: {
     <Text style={[theme.typography.label, { color: c.textPrimary }]}>{label}</Text>
     <TextInput accessibilityLabel={label} value={String(input[key])} onChangeText={text => update(key, text)} editable={canEdit && !saving} maxLength={maxLength} multiline={multiline} autoCapitalize={options?.autoCapitalize} style={{ minHeight: multiline ? 110 : 48, padding: 12, borderWidth: 1, borderColor: c.border, borderRadius: 8, textAlignVertical: "top", color: c.textPrimary, backgroundColor: c.surface }} />
   </View>;
-  return <ScrollView contentInsetAdjustmentBehavior="automatic" keyboardShouldPersistTaps="handled" style={{ flex: 1, backgroundColor: c.background }} contentContainerStyle={{ width: "100%", maxWidth: 760, alignSelf: "center", padding: 16, paddingTop: Math.max(insets.top, 16), paddingBottom: Math.max(insets.bottom, 16) + 80, gap: 16 }}>
+  return <><ScrollView contentInsetAdjustmentBehavior="automatic" keyboardShouldPersistTaps="handled" style={{ flex: 1, backgroundColor: c.background }} contentContainerStyle={{ width: "100%", maxWidth: 760, alignSelf: "center", padding: 16, paddingTop: Math.max(insets.top, 16), paddingBottom: Math.max(insets.bottom, 16) + 80, gap: 16 }}>
     <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>{action("Back", onBack, saving)}<Text accessibilityRole="header" style={[theme.typography.heading3, { color: c.textPrimary, flex: 1 }]}>Partner Application</Text></View>
     {loading ? <ActivityIndicator accessibilityLabel="Loading partner account" color={c.primary} /> : null}
     {error ? <Text selectable accessibilityRole="alert" style={[theme.typography.body, { color: c.danger }]}>{error}</Text> : null}
@@ -99,6 +105,12 @@ export function PartnerAccountScreen({ dark = false, onBack, onSaved }: {
       </View> : null}
       {!result.eligible ? <Text style={[theme.typography.body, { color: c.textSecondary }]}>Verify your email or phone before submitting a Partner application.</Text> : null}
       {restricted ? <Text style={[theme.typography.body, { color: c.textSecondary }]}>This Partner account is suspended. Contact WeNitro support for review.</Text> : null}
+      <View style={{ gap: 8 }}>
+        <Text accessibilityRole="header" style={[theme.typography.title, { color: c.textPrimary }]}>Before you apply</Text>
+        {["Verify your email or phone to become eligible.", "Provide your business name, city, usual Activity location, Activity types and age category.", "Choose one settlement destination: a bank account or UPI ID. Your saved details are masked.", "Read and agree to the Terms & Conditions before filling the application.", "WeNitro reviews your application and payout destination before enabling paid Activities."].map(instruction => <Text key={instruction} style={[theme.typography.body, { color: c.textSecondary }]}>• {instruction}</Text>)}
+      </View>
+      {canApply && !input.terms_accepted ? action("Review Terms & Conditions", () => { setTermsChecked(false); setTermsOpen(true); }, false, true) : null}
+      {input.terms_accepted ? <>
       {field("Business name *", "business_name", 120)}
       {field("Business description (optional)", "description", 1000, true)}
       {field("City *", "city", 120, false, { autoCapitalize: "words" })}
@@ -115,12 +127,28 @@ export function PartnerAccountScreen({ dark = false, onBack, onSaved }: {
         <View style={{ flexDirection: "row", gap: 8 }}>{(["bank", "upi"] as const).map(method => <Pressable key={method} accessibilityRole="radio" accessibilityState={{ checked: payoutMethod === method }} disabled={!canEdit || saving} onPress={() => setPayoutMethod(method)} style={{ flex: 1, minHeight: 44, alignItems: "center", justifyContent: "center", borderRadius: 8, backgroundColor: payoutMethod === method ? c.primary : c.surfaceSubtle }}><Text style={[theme.typography.label, { color: payoutMethod === method ? "#FFFFFF" : c.textPrimary }]}>{method === "bank" ? "Bank account" : "UPI"}</Text></Pressable>)}</View>
         {payoutMethod === "bank" ? <>{field("Bank name *", "bank_name", 120)}{field("Account holder name *", "account_holder_name", 160)}{field("Account number *", "account_number", 34, false, { autoCapitalize: "none" })}{field("IFSC code *", "ifsc", 11, false, { autoCapitalize: "characters" })}</> : field("UPI ID *", "upi_id", 160, false, { autoCapitalize: "none" })}
       </View>
-      <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.terms)}><Text style={{ color: c.primary }}>Read Terms &amp; Conditions</Text></Pressable>
-      <Pressable accessibilityRole="checkbox" accessibilityLabel="I agree to the Partner Terms and Conditions" accessibilityState={{ checked: input.terms_accepted === true, disabled: !canEdit || saving }} disabled={!canEdit || saving} onPress={() => update("terms_accepted", !input.terms_accepted)} style={{ minHeight: 48, padding: 12, borderWidth: 1, borderColor: input.terms_accepted ? c.primary : c.border, borderRadius: 8 }}><Text style={{ color: c.textPrimary }}>{input.terms_accepted ? "☑" : "☐"} I agree to the Terms &amp; Conditions for my Partner application.</Text></Pressable>
+      <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.terms).catch(() => setError("Terms could not open. Please try again."))}><Text style={{ color: c.primary }}>Read Terms &amp; Conditions</Text></Pressable>
+      <Text style={[theme.typography.caption, { color: c.textSecondary }]}>Terms &amp; Conditions accepted for this application.</Text>
       {saved ? <Text accessibilityRole="alert" style={[theme.typography.body, { color: c.success }]}>Application submitted for review.</Text> : null}
       {canEdit ? action(saving ? "Submitting…" : status === "APPROVED" ? "Submit updated details" : status === "REJECTED" ? "Resubmit application" : "Submit application", () => void submit(), saving || !input.terms_accepted, true) : null}
+      </> : null}
     </> : null}
-  </ScrollView>;
+  </ScrollView>
+  <Modal visible={termsOpen && !loading && Boolean(result)} transparent animationType="fade" onRequestClose={() => setTermsOpen(false)}>
+    <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", padding: 20, paddingTop: Math.max(insets.top, 20), paddingBottom: Math.max(insets.bottom, 20) }}>
+      <View accessibilityViewIsModal style={{ width: "100%", maxWidth: 520, maxHeight: "90%", alignSelf: "center", backgroundColor: c.surface, borderRadius: 16, padding: 20, gap: 16 }}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: 16 }}>
+          <Text accessibilityRole="header" style={[theme.typography.heading3, { color: c.textPrimary }]}>Partner Terms &amp; Conditions</Text>
+          <Text style={[theme.typography.body, { color: c.textSecondary }]}>Review the Terms &amp; Conditions before filling your Partner application. Continuing does not submit an application or enable paid hosting.</Text>
+          <Pressable accessibilityRole="link" accessibilityLabel="Read Partner Terms and Conditions" onPress={() => void Linking.openURL(WENITRO_LEGAL_URLS.terms).catch(() => setError("Terms could not open. Please try again."))} style={{ minHeight: 44, justifyContent: "center" }}><Text style={{ color: c.primary }}>Read Terms &amp; Conditions</Text></Pressable>
+          {error ? <Text selectable accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text> : null}
+          <Pressable accessibilityRole="checkbox" accessibilityLabel="I agree to the Partner Terms and Conditions" accessibilityState={{ checked: termsChecked }} onPress={() => setTermsChecked(value => !value)} style={{ minHeight: 48, padding: 12, borderWidth: 1, borderColor: termsChecked ? c.primary : c.border, borderRadius: 8 }}><Text style={{ color: c.textPrimary }}>{termsChecked ? "☑" : "☐"} I agree to the Terms &amp; Conditions for my Partner application.</Text></Pressable>
+          {action("Agree and continue to application", () => { if (!termsChecked) return; update("terms_accepted", true); setTermsOpen(false); }, !termsChecked, true)}
+          {action("Not now", () => setTermsOpen(false))}
+        </ScrollView>
+      </View>
+    </View>
+  </Modal></>;
 }
 
 function message(error: unknown): string {
