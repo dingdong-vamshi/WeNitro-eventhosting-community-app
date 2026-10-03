@@ -10,6 +10,14 @@ do $$ declare definition text; signature text; begin
   definition:=replace(definition,E'begin\n',E'begin\n  perform private.assert_activity_mutable(p_event_id);\n');
   if signature='public.prepare_activity_payment(integer,bigint)' then
    definition:=replace(definition,E'begin\n',E'begin\n  if not exists(select 1 from auth.users where id=auth.uid() and phone_confirmed_at is not null and nullif(btrim(phone),'''') is not null) then raise exception ''A verified phone number is required for Cashfree checkout.'' using errcode=''42501'';end if;\n');
+   definition:=replace(definition,'perform private.assert_activity_mutable(p_event_id);',$guard$
+    perform private.assert_activity_mutable(p_event_id);
+    if exists(select 1 from public.tbl_activity_payments previous where previous.event_id=p_event_id and previous.user_id=me and previous.status='paid' and previous.financial_status in ('REFUND_REQUIRED','DISPUTED')) then
+      raise exception 'Your previous payment needs review. Contact support before paying again.' using errcode='42501';
+    end if;$guard$);
+   if position('p.status=''paid'' or (p.status in' in definition)=0 then raise exception 'Unexpected category capacity contract';end if;
+   definition:=replace(definition,'p.status=''paid'' or (p.status in',
+    '(p.status=''paid'' and coalesce(p.financial_status,''OPEN'') not in (''REFUND_REQUIRED'',''REFUNDED'',''REVERSED'',''DISPUTED'')) or (p.status in');
   end if;
   execute definition;
  end loop;
@@ -53,9 +61,13 @@ do $$ declare definition text; begin
   if exception_reason is null and payment.entry_category_id is not null and exists(
     select 1 from public.tbl_activity_entry_categories c where c.id=payment.entry_category_id and c.capacity is not null and c.capacity<=(
       select count(*) from public.tbl_activity_payments other where other.entry_category_id=c.id and other.id<>payment.id
-       and (other.status='paid' or (other.status in ('created','pending') and other.checkout_expires_at>now()))
+       and ((other.status='paid' and coalesce(other.financial_status,'OPEN') not in ('REFUND_REQUIRED','REFUNDED','REVERSED','DISPUTED')) or (other.status in ('created','pending') and other.checkout_expires_at>now()))
     )
   ) then exception_reason:='CATEGORY_CAPACITY_UNAVAILABLE_AFTER_PAYMENT';end if;
   update public.tbl_activity_payments set$guard$);
+ -- Accounting triggers and the refund queue may update financial_status after
+ -- UPDATE ... RETURNING filled the local variable. Return the final ledger row.
+ if position(E'  return payment;\nend' in definition)=0 then raise exception 'Unexpected payment finalizer return contract';end if;
+ definition:=replace(definition,E'  return payment;\nend',E'  select p.* into payment from public.tbl_activity_payments p where p.id=payment.id;\n  return payment;\nend');
  execute definition;
 end $$;

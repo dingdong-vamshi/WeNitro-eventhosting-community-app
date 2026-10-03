@@ -9,6 +9,8 @@ const run=(cmd,args,input)=>{const r=spawnSync(cmd,args,{input,encoding:'utf8',m
 const sql=q=>run('psql',['-h',dir,'-p','55446','-d','postgres','-v','ON_ERROR_STOP=1','-Atq'],q).trim();
 const source=fs.readFileSync('supabase/migrations/20260929095859_partner_entry_categories.sql','utf8');
 const functionSql=name=>{const start=source.indexOf('create or replace function public.'+name+'(');assert(start>=0);const end=source.indexOf('\n$$;',start);assert(end>start);return source.slice(start,end+4);};
+const financialSource=fs.readFileSync('supabase/migrations/20260922192250_partner_ecosystem_v1.sql','utf8');
+const financialFunction=name=>{const start=financialSource.indexOf('create or replace function private.'+name+'(');assert(start>=0);return financialSource.slice(start,financialSource.indexOf('end $$;',start)+7);};
 const ended=fs.readFileSync('supabase/migrations/20260930192948_enforce_ended_activity_mutation_guards.sql','utf8').split('CREATE OR REPLACE FUNCTION public.request_join_activity')[0];
 try{
  run('initdb',['-D',path.join(dir,'db'),'-A','trust','--no-locale','-E','UTF8']);
@@ -30,9 +32,12 @@ try{
  create function private.assert_registration_complete(int,int) returns void language plpgsql as $$begin if not private.registration_event_visible($1) then raise exception 'Activity access required' using errcode='42501';end if;end$$;
  create function private.activity_occupied_count(int,int) returns int language sql as $$select count(*)::int from public.tbl_event_participants where event_id=$1 and user_id<>$2 and status='approved'$$;
  alter table public.tbl_activity_payments add column provider_payment_id text,add column provider_metadata jsonb,add column paid_at timestamptz,add column last_verified_at timestamptz,add column financial_status text;
- create table public.tbl_partner_financial_events(payment_id bigint,event_id int,partner_user_id int,participant_user_id int,kind text,status text,amount_paisa bigint,idempotency_key text unique,provider_reference text);
- create table private.qa_refunds(payment_id bigint,reason text);
- create function private.queue_required_refund(public.tbl_activity_payments,text) returns void language sql as $$insert into private.qa_refunds values(($1).id,$2)$$;
+ create table public.tbl_partner_financial_events(payment_id bigint,event_id int,partner_user_id int,participant_user_id int,kind text,status text,amount_paisa bigint,idempotency_key text unique,provider_reference text,reason text);
+ create table public.tbl_partner_finance_config(singleton bool,platform_fee_bps int,gst_enabled bool,gst_bps int,gst_basis text);insert into public.tbl_partner_finance_config values(true,1000,false,0,'disabled');
+ alter table public.tbl_activity_payments add column platform_fee_bps int,add column platform_fee_paisa bigint,add column gst_bps int,add column gst_paisa bigint,add column gst_basis text,add column partner_net_paisa bigint;
+ ${financialFunction('snapshot_activity_payment_fee')}
+ create trigger snapshot_activity_payment_fee before insert or update on public.tbl_activity_payments for each row execute function private.snapshot_activity_payment_fee();
+ ${financialFunction('queue_required_refund')}
  create function private.enqueue_notification(int,text,text,text,text,int,jsonb) returns void language sql as $$select$$;
  create function private.refresh_partner_settlement(int) returns void language sql as $$select$$;
  ${fs.readFileSync('scripts/fixtures/payment-finalizer.sql','utf8')}
@@ -83,12 +88,25 @@ try{
  (23,2,1,'valid-payment',1000,'INR','pending',now()+interval '10 minutes',null);`);
  for(const order of ['late-ended','late-category','banned-buyer']){assert.equal(sql(finalize(order,order+'-provider')),'REFUND_REQUIRED');checks++;}
  assert.equal(sql('select count(*) from public.tbl_event_participants where event_id in(20,21,22);'),'0');checks++;
- assert.equal(sql('select count(*) from private.qa_refunds;'),'3');checks++;
+ assert.equal(sql("select count(*) from public.tbl_partner_financial_events where kind='REFUND';"),'3');checks++;
  assert.equal(sql(finalize('valid-payment','valid-provider')),'PAYABLE');checks++;
  assert.equal(sql(finalize('valid-payment','valid-provider')),'PAYABLE');checks++;
  assert.equal(sql("select count(*) from public.tbl_event_participants where event_id=23 and status='approved';"),'1');checks++;
- assert.equal(sql('select count(*) from public.tbl_partner_financial_events;'),'1');checks++;
+ assert.equal(sql("select count(*) from public.tbl_partner_financial_events where kind='PAYMENT';"),'1');checks++;
  assert.throws(()=>sql(finalize('valid-payment','conflicting-provider')),/Conflicting paid-payment replay/);checks++;
  denies(2,finalize('valid-payment','valid-provider'),/permission denied/);
+ // Rejected/refunded paid attempts never consume a category seat; paid
+ // attempts needing review cannot be retried by the same buyer.
+ for(const financialState of ['REFUND_REQUIRED','REFUNDED','REVERSED','DISPUTED']){
+  sql(`insert into public.tbl_events(id,created_by) values(30,1);insert into public.tbl_activity_entry_categories(id,event_id,name,price_paisa,capacity,position) values(30,30,'One seat',1000,1,0);
+   insert into public.tbl_activity_payments(event_id,user_id,partner_user_id,provider_order_id,amount_paisa,currency,status,financial_status,entry_category_id) values(30,2,1,'old-unfulfilled',1000,'INR','paid','${financialState}',30);
+   insert into public.tbl_event_participants(event_id,user_id,status) values(30,2,'left');update public.tbl_activity_payments set financial_status='${financialState}' where provider_order_id='old-unfulfilled';`);
+  if(['REFUND_REQUIRED','DISPUTED'].includes(financialState)) denies(2,'select public.prepare_activity_payment(30,30);',/previous payment needs review/);
+  equal(3,'select (public.prepare_activity_payment(30,30)).amount_paisa;','1000');
+  const newOrder=sql("select provider_order_id from public.tbl_activity_payments where event_id=30 and user_id=3;");
+  assert.equal(sql(finalize(newOrder,'new-valid-'+financialState)),'PAYABLE');checks++;
+  assert.equal(sql("select count(*) from public.tbl_event_participants where event_id=30 and status='approved';"),'1');checks++;
+  sql('delete from public.tbl_partner_financial_events where event_id=30;delete from public.tbl_event_participants where event_id=30;delete from public.tbl_activity_payments where event_id=30;delete from public.tbl_activity_entry_categories where id=30;delete from public.tbl_events where id=30;');
+ }
  console.log(JSON.stringify({status:'PASS',checks,scope:'Actual PostgreSQL checkout SQL: canonical legacy overload, category amount/capacity, private access, invited access, ended/cancelled checkout and category edits, late finalization refund-required, category overbooking, banned buyer, service-only finalizer and replay idempotency; no provider calls'}));
 }finally{if(started)run('pg_ctl',['-D',path.join(dir,'db'),'-m','immediate','-w','stop']);fs.rmSync(dir,{recursive:true,force:true});}

@@ -26,6 +26,9 @@ export type ActivityPaymentVerification = {
   orderId: string;
   status: ActivityPaymentStatus;
   paid: boolean;
+  registrationConfirmed: boolean;
+  refundRequired: boolean;
+  financialStatus: string | null;
 };
 
 export type CashfreeCheckoutResult = {
@@ -167,7 +170,10 @@ export const verifyActivityPayment = (
   return invoke<ActivityPaymentVerification>("cashfree-verify-payment", {
     orderId: normalized,
   }).then(result => {
-    if (result.orderId !== normalized || typeof result.paid !== "boolean" || !["created", "pending", "paid", "failed", "cancelled", "expired"].includes(result.status)) {
+    if (result.orderId !== normalized || typeof result.paid !== "boolean" || typeof result.registrationConfirmed !== "boolean" || typeof result.refundRequired !== "boolean" || !(result.financialStatus === null || typeof result.financialStatus === "string") || !["created", "pending", "paid", "failed", "cancelled", "expired"].includes(result.status)
+      || result.paid !== (result.status === "paid")
+      || (result.registrationConfirmed && (!result.paid || !["PAYABLE", "SETTLED", "ON_HOLD"].includes(result.financialStatus ?? "")))
+      || result.refundRequired !== (result.paid && result.financialStatus === "REFUND_REQUIRED")) {
       throw new Error("Payment verification returned an invalid response.");
     }
     return result;

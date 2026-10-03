@@ -4125,6 +4125,9 @@ export function ActivityDetailScreen({
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const [paymentBusy, setPaymentBusy] = useState(false);
   const [paymentMessage, setPaymentMessage] = useState("");
+  const [paymentOrderId, setPaymentOrderId] = useState<string | null>(null);
+  const [paymentNeedsReview, setPaymentNeedsReview] = useState(false);
+  const paymentRegistrationRef = useRef<boolean | null>(null);
   const [entryCategories, setEntryCategories] = useState<ActivityEntryCategory[]>([]);
   const [selectedEntryCategoryId, setSelectedEntryCategoryId] = useState<string | null>(null);
   const returnVerificationRef = useRef<string | null>(null);
@@ -4187,8 +4190,11 @@ export function ActivityDetailScreen({
       setIsHost(details.isHost);
       setIsCohost(Boolean(details.isCohost));
       setJoinType(details.joinType === "approval" ? "approval" : "direct");
-      setViewerStatus(details.viewerStatus);
-      setJoined(["going", "approved", "paid"].includes(String(details.viewerStatus)));
+      const refreshedJoined = ["going", "approved", "paid"].includes(String(details.viewerStatus));
+      const confirmedJoined = refreshedJoined && paymentRegistrationRef.current !== false;
+      const confirmedViewerStatus = refreshedJoined && !confirmedJoined ? null : details.viewerStatus;
+      setViewerStatus(confirmedViewerStatus);
+      setJoined(confirmedJoined);
       setFeedback(details.feedback ?? []);
       setActivityVibes(details.activityVibes ?? []);
       setFeedbackSubmitted(Boolean(details.feedbackSubmittedByViewer));
@@ -4201,24 +4207,34 @@ export function ActivityDetailScreen({
           ? [...new Set([...current.savedIds, reactionId])]
           : current.savedIds.filter((id) => id !== reactionId),
         activities: current.activities.map((item) =>
-          item.id === activity.id ? { ...refreshed, likeCount: details.likeCount ?? item.likeCount ?? 0 } : item,
+          item.id === activity.id ? { ...refreshed, viewerStatus: confirmedViewerStatus, likeCount: details.likeCount ?? item.likeCount ?? 0 } : item,
         ),
       }));
   };
   const verifyPayment = async (orderId: string) => {
+    setPaymentOrderId(orderId);
     setPaymentBusy(true); setJoinError(""); setPaymentMessage("Checking payment with Cashfree…");
     try {
       const verification = await verifyActivityPayment(orderId);
       if (verification.paid) {
-        setViewerStatus("paid"); setJoined(true);
-        setPaymentMessage("Payment confirmed. Your place is secured.");
+        const confirmed = verification.registrationConfirmed;
+        paymentRegistrationRef.current = confirmed;
+        setViewerStatus(confirmed ? "approved" : null); setJoined(confirmed);
+        setData(current => ({ ...current, activities: current.activities.map(item => item.id === activity.id ? { ...item, viewerStatus: confirmed ? "approved" : null } : item) }));
+        setPaymentNeedsReview(!confirmed && !["REFUNDED", "REVERSED"].includes(verification.financialStatus ?? ""));
+        setPaymentMessage(confirmed ? "Payment confirmed. Your place is secured."
+          : verification.refundRequired ? "Payment received, but your place was not confirmed. A refund review is required. Contact support before paying again."
+          : verification.financialStatus === "REFUNDED" ? "This payment was refunded. No place is confirmed."
+          : verification.financialStatus === "REVERSED" ? "This payment was reversed. No place is confirmed."
+          : "Payment received. Your registration is not confirmed. Contact support before paying again.");
         clearCashfreeReturnOrderId();
-        await refreshDetails();
+        // A details outage cannot replace the authoritative payment/seat result.
+        await refreshDetails().catch(() => undefined);
         return;
       }
       setPaymentMessage(verification.status === "pending" ? "Cashfree has not confirmed payment yet. You can check again from this activity." : `Payment status: ${verification.status.replace(/_/g, " ")}.`);
-      clearCashfreeReturnOrderId();
-      await refreshDetails();
+      if (!["created", "pending"].includes(verification.status)) clearCashfreeReturnOrderId();
+      await refreshDetails().catch(() => undefined);
     } catch (caught) {
       const text = caught instanceof Error ? caught.message : "Payment could not be verified.";
       setJoinError(text); setPaymentMessage("");
@@ -4226,6 +4242,7 @@ export function ActivityDetailScreen({
   };
   const startPayment = async () => {
     if (paymentBusy) return;
+    if (paymentNeedsReview) { setJoinError("Your previous payment needs review. Check its status or contact support before paying again."); return; }
     const availability = cashfreeCheckoutAvailability();
     if (!availability.available) {
       const text = availability.message ?? "Secure checkout is unavailable on this build.";
@@ -4234,6 +4251,7 @@ export function ActivityDetailScreen({
     setPaymentBusy(true); setJoinError(""); setPaymentMessage("Preparing secure checkout…");
     try {
       const order = await createActivityPayment(activity.id, selectedEntryCategoryId);
+      setPaymentOrderId(order.orderId);
       setViewerStatus("payment_pending");
       const returnUrl = typeof window === "undefined" ? "" : `${window.location.origin}${window.location.pathname}${window.location.search}#/activity/${encodeURIComponent(activity.id)}?cashfree_order_id=${encodeURIComponent(order.orderId)}`;
       const checkout = await launchCashfreeCheckout(order.paymentSessionId, returnUrl);
@@ -4248,6 +4266,8 @@ export function ActivityDetailScreen({
     } finally { setPaymentBusy(false); }
   };
   useEffect(() => {
+    paymentRegistrationRef.current = null;
+    setPaymentOrderId(null); setPaymentNeedsReview(false); setPaymentMessage("");
     setHeroLoadFailed(false);
     if (initialDetails) {
       applyDetails(initialDetails);
@@ -4691,6 +4711,7 @@ export function ActivityDetailScreen({
         <View style={styles.detailContent}>
           {joinError ? <Text style={styles.error}>{joinError}</Text> : null}
           {paymentMessage ? <Text accessibilityRole="alert" style={{ color: palette.accent, fontSize: 13, fontWeight: "700" }}>{paymentMessage}</Text> : null}
+          {paymentOrderId && !joined ? <Pressable accessibilityRole="button" disabled={paymentBusy} onPress={() => void verifyPayment(paymentOrderId)}><Text style={{ color: palette.accent, fontSize: 13, fontWeight: "700" }}>{paymentBusy ? "Checking payment…" : "Check payment status"}</Text></Pressable> : null}
           {isPaidActivity ? <View style={{ padding: 14, gap: 6, borderRadius: 12, backgroundColor: palette.card, borderWidth: 1, borderColor: palette.border }}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Icon name="cash-outline" color="#6D5CE8" /><Text style={{ color: palette.text, fontWeight: "800", fontSize: 16 }}>{requiresPlatformPayment ? `Activity Price ${activity.price}` : `Paid activity · ${activity.price}`}</Text></View>
             <Text style={{ color: palette.muted, fontSize: 12 }}>{requiresPlatformPayment ? 'Secure online payment is required to confirm your place. Required registration questions and host approval, when applicable, come before checkout.' : 'Payment handled directly with the host at the venue. Join normally; no payment is collected by WeNitro.'}</Text>
@@ -4979,10 +5000,10 @@ export function ActivityDetailScreen({
                 <Pressable
                   style={styles.joinButtonLarge}
                   onPress={() => void join()}
-                  disabled={joining || paymentBusy || registrationClosed || Boolean(registrationForm)}
+                  disabled={joining || paymentBusy || paymentNeedsReview || registrationClosed || Boolean(registrationForm)}
                 >
                 <Text style={styles.joinButtonText}>
-                  {registrationClosed
+                  {paymentNeedsReview ? "Payment under review" : registrationClosed
                     ? activityEnded ? "Activity Ended" : "Registration Closed"
                     : joining || paymentBusy
                     ? paymentBusy ? "Opening payment…" : "Saving..."

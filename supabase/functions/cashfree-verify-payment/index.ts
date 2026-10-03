@@ -6,6 +6,8 @@ import {
   corsHeaders,
   errorResponse,
   jsonResponse,
+  firstRecord,
+  paymentVerificationReceipt,
   safeProviderMetadata,
 } from "../_shared/cashfree.ts";
 
@@ -15,6 +17,9 @@ type PaymentRow = {
   amount_paisa: number;
   currency: string;
   status: string;
+  event_id: number;
+  user_id: number;
+  financial_status: string | null;
 };
 
 const localStatus = (providerStatus: string) => {
@@ -42,13 +47,24 @@ Deno.serve(async (request) => {
 
     const owned = await client
       .from("tbl_activity_payments")
-      .select("id,provider_order_id,amount_paisa,currency,status")
+      .select("id,event_id,user_id,provider_order_id,amount_paisa,currency,status,financial_status")
       .eq("provider_order_id", orderId)
       .single();
     if (owned.error || !owned.data) {
       throw new Error("Payment order not found.");
     }
     const payment = owned.data as PaymentRow;
+
+    const receipt = async (recorded: PaymentRow) => {
+      const participation = await client.from("tbl_event_participants")
+        .select("status").eq("event_id", recorded.event_id)
+        .eq("user_id", recorded.user_id).maybeSingle();
+      if (participation.error) throw participation.error;
+      return jsonResponse(paymentVerificationReceipt(recorded, participation.data?.status ?? null));
+    };
+    // Rechecking a terminal paid order must use its current financial and seat
+    // state, including refund cases, without treating provider PAID as admission.
+    if (payment.status === "paid") return await receipt(payment);
 
     const providerOrder = await cashfreeRequest(
       "/pg/orders/" + encodeURIComponent(orderId),
@@ -65,6 +81,7 @@ Deno.serve(async (request) => {
     }
 
     const admin = adminClient();
+    let recordedPayment: PaymentRow | null = null;
     if (providerStatus === "PAID") {
       const payments = await cashfreeRequest(
         "/pg/orders/" + encodeURIComponent(orderId) + "/payments",
@@ -100,6 +117,7 @@ Deno.serve(async (request) => {
         }),
       });
       if (finalized.error) throw finalized.error;
+      recordedPayment = firstRecord(finalized.data as PaymentRow | PaymentRow[]);
     } else {
       const recorded = await admin.rpc(
         "record_activity_payment_provider_state",
@@ -112,13 +130,11 @@ Deno.serve(async (request) => {
         },
       );
       if (recorded.error) throw recorded.error;
+      recordedPayment = firstRecord(recorded.data as PaymentRow | PaymentRow[]);
     }
 
-    return jsonResponse({
-      orderId,
-      status: localStatus(providerStatus),
-      paid: providerStatus === "PAID",
-    });
+    if (!recordedPayment) throw new Error("Payment verification did not return a ledger record.");
+    return await receipt(recordedPayment);
   } catch (error) {
     return errorResponse(error);
   }

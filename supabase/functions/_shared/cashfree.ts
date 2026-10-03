@@ -109,6 +109,25 @@ export const verifiedCheckoutPhone = (
   return phone;
 };
 
+export const paymentVerificationReceipt = (
+  payment: { provider_order_id: string; status: string; financial_status?: string | null },
+  participationStatus: string | null,
+) => {
+  const financialStatus = payment.financial_status ?? null;
+  const paid = payment.status === "paid";
+  const registrationConfirmed = paid &&
+    ["PAYABLE", "SETTLED", "ON_HOLD"].includes(financialStatus ?? "") &&
+    ["approved", "going", "paid"].includes(participationStatus ?? "");
+  return {
+    orderId: payment.provider_order_id,
+    status: payment.status,
+    paid,
+    financialStatus,
+    registrationConfirmed,
+    refundRequired: paid && financialStatus === "REFUND_REQUIRED",
+  };
+};
+
 const cashfreeCredentials = () => {
   const environment = requiredEnv("CASHFREE_ENV").toLowerCase();
   const sandbox = environment === "test" || environment === "sandbox";
