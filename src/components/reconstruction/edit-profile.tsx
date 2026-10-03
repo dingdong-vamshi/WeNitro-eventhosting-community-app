@@ -119,7 +119,7 @@ export function ReferenceEditProfile({ data, setData, back, onSaved, onSocialPro
    if (changes.username && !(await profileOnboardingService.checkUsername(changes.username)).available) throw new Error('That username is already taken. Choose another.');
    await sameIdentity(saveAuthId);
    if (Object.keys(changes).length) await profiles.editProfile(changes);
-   if ([...interests].sort().join(',') !== [...originalInterests.current].sort().join(',')) { await sameIdentity(saveAuthId); await profiles.setInterests(interests); }
+   if ([...interests].sort().join(',') !== [...originalInterests.current].sort().join(',')) { await sameIdentity(saveAuthId); await profiles.setInterests(interests, saveAuthId); }
    if (pendingAvatar) { await sameIdentity(saveAuthId); await profiles.uploadAvatar(pendingAvatar, saveAuthId); }
    await sameIdentity(saveAuthId);
    const details = await profiles.loadProfile(); await sameIdentity(saveAuthId);

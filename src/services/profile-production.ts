@@ -737,14 +737,20 @@ export const profileProductionService = {
     return (await listActiveCategories()).map(mapInterest);
   },
 
-  async setInterests(interestIds: Array<number | string>): Promise<Interest[]> {
-    await currentUser();
+  async setInterests(interestIds: Array<number | string>, expectedAuthUserId?: string): Promise<Interest[]> {
+    const authUser = await currentUser();
+    if (expectedAuthUserId && authUser.id !== expectedAuthUserId) throw new Error("Your signed-in account changed. Reopen Edit Profile before saving.");
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (!sessionData.session || sessionData.session.user.id !== authUser.id) throw new Error("Your signed-in account changed. Reopen Edit Profile before saving.");
+    const authorization = `Bearer ${sessionData.session.access_token}`;
     const selected = [...new Set(interestIds.map(id => positiveInteger(id, "interest id")))];
     if (selected.length > 50) throw new Error("Select no more than 50 interests.");
     // One transaction keeps existing interests intact if a newly selected category
     // was disabled after the form loaded. The RPC preserves unchanged old IDs.
-    const { data, error } = await supabase.rpc("set_my_interests", { p_category_ids: selected });
+    const { data, error } = await supabase.rpc("set_my_interests", { p_category_ids: selected }).setHeader("Authorization", authorization);
     if (error) throw error;
+    if ((await currentUser()).id !== authUser.id) throw new Error("Your signed-in account changed. Reopen Edit Profile before saving.");
     if (!Array.isArray(data)) throw new Error("Interests could not be confirmed. Please reload your profile.");
     return data.map(mapInterest).sort((a, b) => a.name.localeCompare(b.name));
   },
