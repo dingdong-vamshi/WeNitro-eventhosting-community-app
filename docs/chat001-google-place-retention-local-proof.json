@@ -1,0 +1,49 @@
+{
+  "status": "LOCAL_PASS_PRODUCTION_PENDING",
+  "recordedAt": "2026-10-03T21:22:08.446777+00:00",
+  "target": "cxsznhrkzqndhseodcyy",
+  "migration": "supabase/migrations/20261003211325_google_place_coordinate_retention.sql",
+  "localVerification": {
+    "command": "node scripts/google-place-retention-postgres-test.mjs",
+    "checks": 59,
+    "result": "PASS",
+    "additionalRun": "Same59 real PostgreSQL checks pass using current read-only production create_activity/update_activity definitions as optional fixture. No production mutation.",
+    "schedulerLimit": "Local pg_cron extension unavailable; scheduling contract uses stub. Actual purge SQL is executed against real PostgreSQL, including ended Activities and idempotence. Production job inspection remains pending."
+  },
+  "currentProductionFunctionDefinitions": [
+    {
+      "name": "create_activity",
+      "sha256": "0204e2b3f35f9f9f3959f251ac4c7308c26e54930a5b5cdfa15c4240563e8c9f"
+    },
+    {
+      "name": "update_activity",
+      "sha256": "e3d71961562e9be781f85e11ee16afa3ec1ac7bfd85b45bd7830f2bdc6e921e1"
+    }
+  ],
+  "implementation": [
+    "Durable PlaceID; 28-day private coordinate cache, service-role-only receipt writer with no broad table grants and RLS enabled.",
+    "Google event coordinates and expiry come only from trusted fresh cache. Static Google Maps venue label replaces request names/address.",
+    "Existing same-place unrelated edits survive expiry with coordinates null; new or different stale selections rejected.",
+    "Actual fresh Details receipts renew existing event references, without provider calls in Cron.",
+    "Hourly SQL cleanup deletes expired cache rows and clears expired event coordinates, including ended Activities. Nearby/client mapping separately suppress coordinates immediately at expiry.",
+    "Legacy and OSM writes remain compatible. Source-only changes away from Google clear inherited provider coordinate values. Narrow RPC patches preserve current authorization, category history, participant validation and registration question logic."
+  ],
+  "auditReview": {
+    "method": "Read-only pg_trigger and pg_get_functiondef on current tbl_events, plus migration source review.",
+    "triggerNames": [
+      "enforce_partner_paid_hosting",
+      "freeze_activity_checkout_terms",
+      "guard_admin_activity_pin",
+      "guard_ugc_text",
+      "notify_partner_activity_completed",
+      "platform_activity_gate",
+      "validate_host_activity_fields"
+    ],
+    "result": "No durable whole-event/coordinate history trigger found. Admin moderation audit stores deleted/cancelled/status and notification count, not coordinates. New cache schema contains only PlaceID, coordinates and expiry."
+  },
+  "productionVerification": "Pending coordinated deployment. Provider flags remain disabled; no provider traffic or spend authorized/performed. No Google data or fake production coordinates were seeded.",
+  "termsReferences": [
+    "https://cloud.google.com/maps-platform/terms/maps-service-terms#14-places-api"
+  ],
+  "retentionBoundary": "28-day TTL plus hourly cleanup stays below30 days under normal scheduler operation; client expiry guards suppress stale coordinates immediately. Production cron health must be verified when enabled."
+}
