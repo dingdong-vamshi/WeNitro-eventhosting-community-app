@@ -1,16 +1,16 @@
 {
   "projectId": "cxsznhrkzqndhseodcyy",
   "readyForProductionQA": true,
-  "at": "2026-10-03T08:21:32.253Z",
-  "appCommit": "bd6d314872e1227246ef8b1bdfd566ceff32842b",
-  "adminCommit": "b2e74a3554714ae09ab87b11aafe4b1f3d941f9e",
-  "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
-  "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y",
+  "at": "2026-10-03T19:33:48.201879+00:00",
+  "appCommit": "08b8bb8abee17f33f412cb449b9edce2749db0b4",
+  "adminCommit": "bcdaa9662a73897a0e413f58793b8f45463c906f",
+  "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+  "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
   "appUrl": "https://wenitro-app.vercel.app",
-  "appImmutableUrl": "https://wenitro-fjsmkg874-vamshi-krishna-pendyalas-projects.vercel.app",
+  "appImmutableUrl": "https://wenitro-f9vc49af2-vamshi-krishna-pendyalas-projects.vercel.app",
   "adminUrl": "https://wenitro-admin-roan.vercel.app",
   "cashfreeVerifyVersion": 4,
-  "cashfreeCreateVersion": 5,
+  "cashfreeCreateVersion": 6,
   "cashfreeWebhookVersion": 4,
   "appliedMigrations": [
     "20261003074100",
@@ -22,7 +22,12 @@
     "20261003075804",
     "20261003080410",
     "20261003082759",
-    "20261003082845"
+    "20261003082845",
+    "20261003181143",
+    "20261003181703",
+    "20261003182405",
+    "20261003183320",
+    "20261003185740"
   ],
   "rollout": [
     {
@@ -175,13 +180,100 @@
         ],
         "isError": false
       }
+    },
+    {
+      "name": "invited_registration_answers",
+      "file": "supabase/migrations/20261003181143_invited_registration_answers.sql",
+      "version": "20261003181143",
+      "at": "2026-10-03T19:30:28.619Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "activity_safety_reminders",
+      "file": "supabase/migrations/20261003181703_activity_safety_reminders.sql",
+      "version": "20261003181703",
+      "at": "2026-10-03T19:30:30.471Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "participant_management_boundaries",
+      "file": "supabase/migrations/20261003182405_participant_management_boundaries.sql",
+      "version": "20261003182405",
+      "at": "2026-10-03T19:30:33.469Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "active_join_retry_idempotency",
+      "file": "supabase/migrations/20261003183320_active_join_retry_idempotency.sql",
+      "version": "20261003183320",
+      "at": "2026-10-03T19:30:35.330Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "activity_media_feed_choice",
+      "file": "supabase/migrations/20261003185740_activity_media_feed_choice.sql",
+      "version": "20261003185740",
+      "at": "2026-10-03T19:30:37.354Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "cashfree-create-order",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"id\":\"d2a93ad1-e6fb-4df0-9a29-980fed08441e\",\"slug\":\"cashfree-create-order\",\"name\":\"cashfree-create-order\",\"status\":\"ACTIVE\",\"version\":6,\"created_at\":1790774490535,\"updated_at\":1791055848034,\"verify_jwt\":true,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_d2a93ad1-e6fb-4df0-9a29-980fed08441e_6/source/supabase/functions/cashfree-create-order/index.ts\",\"ezbr_sha256\":\"f410fa094738d6a010606244fb74f021bb9180342b99db86f8ca7c7737c72a55\"}"
+          }
+        ],
+        "isError": false
+      }
     }
   ],
-  "releaseNotes": "Git-linked production deployments were triggered by the authorized pushes. Database migrations and Edge Functions completed before App became READY; Admin became READY after App. A redundant manual queued App deployment dpl_57dXGWTGqWTbgGkBeeXDRKTgRUgc was canceled without becoming live. No manual Admin duplicate was created.",
+  "releaseNotes": "Final coordinated local batch: all92 local checks passed, five database migrations and Cashfree create-orderv6 applied before Git-linked App08b8bb8 and Adminbcdaa96 became READY. Stable production aliases verified. No manual duplicate deployments.",
   "localGate": {
-    "checks": 76,
+    "checks": 92,
     "failed": 0,
-    "report": "docs/chat001-predeployment-local-verification.json"
+    "report": "docs/chat001-integrated-local-verification.json"
   },
   "productionRegressions": [
     {
@@ -207,5 +299,13 @@
       "productionRetest": "PENDING"
     }
   ],
-  "postRegressionLocalGate": "docs/chat001-integrated-local-verification.json"
+  "postRegressionLocalGate": "docs/chat001-integrated-local-verification.json",
+  "previousRelease": {
+    "at": "2026-10-03T08:21:32.253Z",
+    "appCommit": "bd6d314872e1227246ef8b1bdfd566ceff32842b",
+    "adminCommit": "b2e74a3554714ae09ab87b11aafe4b1f3d941f9e",
+    "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+    "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
+  },
+  "adminImmutableUrl": "https://wenitro-admin-j256pnnu7-vamshi-krishna-pendyalas-projects.vercel.app"
 }

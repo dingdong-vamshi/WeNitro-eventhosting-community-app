@@ -961,5 +961,451 @@
       "GROUP-AVATAR"
     ],
     "outcome": "Created named group254 with actual uploaded photo and three controlled members; group header navigation is a separate pending fix."
+  },
+  {
+    "name": "release-chats-all",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-all.png",
+    "url": "https://wenitro-app.vercel.app/#/chat",
+    "at": "2026-10-03T19:35:01.879Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "CHAT-ALL-TYPES",
+      "CHAT-QUIET-INDICATOR",
+      "CHAT-NAMES",
+      "GROUP-AVATAR"
+    ],
+    "outcome": "Released All tab lists one direct and one group, counts2=1+1; uploadedgroupavatar and names visible; no inactive quiet badge."
+  },
+  {
+    "name": "release-chats-people",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-people.png",
+    "url": "https://wenitro-app.vercel.app/#/chat",
+    "at": "2026-10-03T19:35:15.235Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "CHAT-ALL-TYPES"
+    ],
+    "outcome": "People filter displays only direct conversation and retains exact category counts."
+  },
+  {
+    "name": "release-chats-groups-search",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chats-groups-search.png",
+    "url": "https://wenitro-app.vercel.app/#/chat",
+    "at": "2026-10-03T19:35:30.328Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "CHAT-ALL-TYPES",
+      "CHAT-LIVE-SEARCH"
+    ],
+    "outcome": "Groups filter and mixed-case cHaT001 query show only matching group, update counts1/0/1."
+  },
+  {
+    "name": "release-group254-info",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-group254-info.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/254",
+    "at": "2026-10-03T19:36:08.694Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "CHAT-INFO-NAVIGATION",
+      "GROUP-AVATAR"
+    ],
+    "outcome": "Released group Info opens real three-member list with correct roles, UserAvatar initials/photo and no fake Date/Location card."
+  },
+  {
+    "name": "release-group-member-profile",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-group-member-profile.png",
+    "url": "https://wenitro-app.vercel.app/#/profile/71",
+    "at": "2026-10-03T19:36:41.836Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "CHAT-INFO-NAVIGATION"
+    ],
+    "outcome": "Group254 member Priya button opens correct public profile71 with name/handle; default Vibes tab retained."
+  },
+  {
+    "name": "release-profile71-reviews",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-profile71-reviews.png",
+    "url": "https://wenitro-app.vercel.app/#/profile/71",
+    "at": "2026-10-03T19:37:05.824Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PROFILE-REVIEWS"
+    ],
+    "outcome": "Public71 Reviews shows two anonymous4.0ratings with identityhidden plus namedArjun4.0rating and Activitycontext."
+  },
+  {
+    "name": "release-profile71-activity-history",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-profile71-activity-history.png",
+    "url": "https://wenitro-app.vercel.app/#/profile/71",
+    "at": "2026-10-03T19:37:30.819Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PROFILE-UPCOMING",
+      "PROFILE-COMPLETED"
+    ],
+    "outcome": "Public profile71 Activities renders populated Upcoming list and older Completed Sept29 activities with actual titles/date/location."
+  },
+  {
+    "name": "release-community-header",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-header.png",
+    "url": "https://wenitro-app.vercel.app/#/communities",
+    "at": "2026-10-03T19:37:59.588Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "COMM-HEADER",
+      "COMM-SEARCH-TOGGLE",
+      "COMM-AVATAR"
+    ],
+    "outcome": "Released Communities header uses WeNitro logo and adjacent search/notification controls with searchcollapsed; image and initials fallbacks visible in horizontal communities."
+  },
+  {
+    "name": "release-community-search-category",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-search-category.png",
+    "url": "https://wenitro-app.vercel.app/#/communities",
+    "at": "2026-10-03T19:38:29.723Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "COMM-SEARCH-TOGGLE",
+      "COMM-SEARCH-FILTER"
+    ],
+    "outcome": "Expanded search with mixed-case cHaT001 and Creative category filters list to QA252; functional category controls visible."
+  },
+  {
+    "name": "release-community252-cover-reloaded",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community252-cover-reloaded.png",
+    "url": "https://wenitro-app.vercel.app/#/community/252",
+    "at": "2026-10-03T19:41:19.200Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "COMM-COVER-EDIT",
+      "COMM-COVER"
+    ],
+    "outcome": "Owner edited cover through picker/crop/save; reload retains food cover above camera avatar in compactCommunityheader."
+  },
+  {
+    "name": "release-community252-moderator",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community252-moderator.png",
+    "url": "https://wenitro-app.vercel.app/#/community/252",
+    "at": "2026-10-03T19:42:43.451Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "COMM-MODERATOR-ROLE"
+    ],
+    "outcome": "After save and reload Priya remains Moderator with approve/post/edit permissions enabled and role-changing permissiondisabled."
+  },
+  {
+    "name": "release-activity300-detail",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/300",
+    "at": "2026-10-03T19:43:04.176Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "ACT-VISIBILITY-LABEL",
+      "ACT-TIMELINE",
+      "UI-TYPE-READABILITY"
+    ],
+    "outcome": "Controlled Activity300 shows Private/Upcoming, distinct START END REG.BY local-time timeline and readable title."
+  },
+  {
+    "name": "release-activity300-host-participants",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-host-participants.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/300",
+    "at": "2026-10-03T19:43:04.357Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "ACT-HOST-IDENTITY",
+      "ACT-TAGS-POSITION",
+      "AVATAR-FALLBACK",
+      "AVATAR-SHAPE"
+    ],
+    "outcome": "Actual originalHost120, tags belowAbout and two approved members70/71 with roundinitials; ownerphoto also shown besidecommentfield."
+  },
+  {
+    "name": "release-activity300-comment",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-comment.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/300",
+    "at": "2026-10-03T19:43:39.703Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "ACT-COMMENT-IDENTITY"
+    ],
+    "outcome": "Actual submitted Activity comment renders author QA Audit recipient and exact controlled text."
+  },
+  {
+    "name": "release-activity-media-off",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-off.png",
+    "url": "https://wenitro-app.vercel.app/#/postVibe",
+    "at": "2026-10-03T19:43:52.818Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "VIBE-FROM-ACTIVITY-MEDIA",
+      "VIBE-COMPOSER"
+    ],
+    "outcome": "Activity300 composer defaults ShowinVibesOFF with participants-onlycopy and AddtoActivityaction."
+  },
+  {
+    "name": "release-activity-media-off-controls",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-off-controls.png",
+    "url": "https://wenitro-app.vercel.app/#/postVibe",
+    "at": "2026-10-03T19:44:45.344Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "VIBE-FROM-ACTIVITY-MEDIA",
+      "VIBE-COMPOSER"
+    ],
+    "outcome": "Selected camera photo and caption with ShowinVibesOFF; participants-onlycopy and AddtoActivitybutton visible."
+  },
+  {
+    "name": "release-activity300-media-inside",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-media-inside.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/300",
+    "at": "2026-10-03T19:45:10.090Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "VIBE-FROM-ACTIVITY-MEDIA"
+    ],
+    "outcome": "Activity-only post returned to Activity300 and appears under ActivityVibes1Upload with chosen camera photo."
+  },
+  {
+    "name": "release-activity-media-on-controls",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity-media-on-controls.png",
+    "url": "https://wenitro-app.vercel.app/#/postVibe",
+    "at": "2026-10-03T19:45:35.781Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "VIBE-FROM-ACTIVITY-MEDIA",
+      "VIBE-COMPOSER"
+    ],
+    "outcome": "Selected synthetic2secondvideo, ShowinVibesON, participants-onlyaudience remains, PostVibeaction visible."
+  },
+  {
+    "name": "release-vibe-video-playing",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-video-playing.png",
+    "url": "https://wenitro-app.vercel.app/#/vibe/135",
+    "at": "2026-10-03T19:46:07.852Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "VIBE-VIDEO",
+      "VIBE-REELS",
+      "VIBE-FROM-ACTIVITY-MEDIA"
+    ],
+    "outcome": "Published Activity300 syntheticvideo opens full-heightreel with actualcreator/caption/context and no old arrows/header; DOM playback advancing error-free."
+  },
+  {
+    "name": "release-vibe-activity-link",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-activity-link.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/300",
+    "at": "2026-10-03T19:54:40.445Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "VIBE-ACTIVITY-LINK"
+    ],
+    "outcome": "Video135 View activity opens original private Activity300 with both media items."
+  },
+  {
+    "name": "release-activity300-sos",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-sos.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/300",
+    "at": "2026-10-03T19:55:00.381Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "SOS-ACTION"
+    ],
+    "outcome": "Safety sheet offers share/copy/contact and truthful reminder guidance. Copy was attempted, but clipboard read was empty; not successful-copy proof. Clipboard handling is covered by subsequent regression fix."
+  },
+  {
+    "name": "release-squad120-deduplicated",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-squad120-deduplicated.png",
+    "url": "https://wenitro-app.vercel.app/#/squad/120",
+    "at": "2026-10-03T19:56:03.002Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "SQUAD-DEDUP"
+    ],
+    "outcome": "Controlled reciprocal and self fixture resolves once to Arjun70, self omitted."
+  },
+  {
+    "name": "release-squad120-counter",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-squad120-counter.png",
+    "url": "https://wenitro-app.vercel.app/#/profile",
+    "at": "2026-10-03T19:56:42.147Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "SQUAD-DEDUP"
+    ],
+    "outcome": "Owner profile Squad1 matches unique Arjun70 list; Nitro remains0."
+  },
+  {
+    "name": "release-partner-preflight-terms",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-partner-preflight-terms.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerAccount",
+    "at": "2026-10-03T19:56:52.450Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PARTNER-INSTRUCTIONS",
+      "PARTNER-TERMS"
+    ],
+    "outcome": "QA120 unaccepted application opens Terms before any fields; unchecked consent disables continuation. No new agreement accepted."
+  },
+  {
+    "name": "release-partner-preflight-instructions",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-partner-preflight-instructions.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerAccount",
+    "at": "2026-10-03T19:57:11.464Z",
+    "account": 120,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PARTNER-INSTRUCTIONS",
+      "PARTNER-TERMS"
+    ],
+    "outcome": "Not now closes consent; instructions remain and application fields stay inaccessible until consent."
+  },
+  {
+    "name": "release-checkout297-required-answer",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-checkout297-required-answer.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/297",
+    "at": "2026-10-03T19:58:44.847Z",
+    "account": 116,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PARTNER-REQUIRED-ANSWERS",
+      "PARTNER-CATEGORY-SELECTION"
+    ],
+    "outcome": "Sandbox buyer116 invited unpaid reservation cannot continue without requiredanswer; Standard12.34 and Plus18 displayed."
+  },
+  {
+    "name": "release-checkout297-provider",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-checkout297-provider.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/297",
+    "at": "2026-10-03T19:59:18.168Z",
+    "account": 116,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PARTNER-PAID-JOIN",
+      "PARTNER-CATEGORY-SELECTION"
+    ],
+    "outcome": "Actual Cashfree Sandbox hosted checkout opens at\u20b912.34 after saved requiredanswer; synthetic buyer116."
+  },
+  {
+    "name": "release-checkout297-simulator-window-pending",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-checkout297-simulator-window-pending.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/297",
+    "at": "2026-10-03T20:02:32.767Z",
+    "account": 116,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PARTNER-PAID-JOIN"
+    ],
+    "outcome": "Hosted Sandbox SBI attempt initiated; provider waits for separate bank simulator window. IAB controls do not expose window while Mac locked. Payment is pending, not success proof."
+  },
+  {
+    "name": "release-partner234-external-url",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-partner234-external-url.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/234",
+    "at": "2026-10-03T20:03:34.040Z",
+    "account": 116,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PARTNER-EXTERNAL-URL"
+    ],
+    "outcome": "Stored safe Partner website visible and clicked; IAB does not expose opened external window while Mac locked. Arrival not proven."
+  },
+  {
+    "name": "release-chat253-vibe-shared",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chat253-vibe-shared.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T20:04:37.956Z",
+    "account": 71,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "SHARE-VIBE"
+    ],
+    "outcome": "Recipient71 receives actualVibe135 meaningful caption and creatorQA Auditrecipient; card opensauthorizedVibe."
+  },
+  {
+    "name": "release-vibe135-recipient",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe135-recipient.png",
+    "url": "https://wenitro-app.vercel.app/#/vibe/135",
+    "at": "2026-10-03T20:04:50.763Z",
+    "account": 71,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "SHARE-VIBE",
+      "VIBE-REELS"
+    ],
+    "outcome": "Recipient71 opens sharedVibe135 and authorizedvideo. Newestcontrolledvideo appears before olderQAactivityVibes."
+  },
+  {
+    "name": "release-vibe-vertical-next",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-vertical-next.png",
+    "url": "https://wenitro-app.vercel.app/#/vibe/135",
+    "at": "2026-10-03T20:05:00.919Z",
+    "account": 71,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "VIBE-REELS",
+      "VIBE-NEWEST"
+    ],
+    "outcome": "One vertical scroll advances from newest135 to olderQA BadmintonVibe; no arrow controls. Authorlabel regression separatelytracked."
+  },
+  {
+    "name": "release-community252-moderator-edit",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community252-moderator-edit.png",
+    "url": "https://wenitro-app.vercel.app/#/community/252",
+    "at": "2026-10-03T20:05:58.078Z",
+    "account": 71,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "COMM-MODERATOR-ROLE"
+    ],
+    "outcome": "Moderator71 saved description addition; production reload retains it while originalcreator120 remainsowner."
+  },
+  {
+    "name": "release-chat253-community-shared",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-chat253-community-shared.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T20:06:47.509Z",
+    "account": 71,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "SHARE-COMMUNITY"
+    ],
+    "outcome": "Moderator71 sharedCommunity252 toowner120; meaningfultitle/description and ViewinWeNitrocard present."
+  },
+  {
+    "name": "release-partner234-external-arrival",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-partner234-external-arrival.png",
+    "url": "https://example.com/wenitro-final-qa",
+    "at": "2026-10-03T20:09:19.973Z",
+    "account": 116,
+    "deployment": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "requirements": [
+      "PARTNER-EXTERNAL-URL"
+    ],
+    "outcome": "Click fromproductionActivity234 openedexactstoredhttps://example.com/wenitro-final-qa; destinationExampleDomainactualloaded."
   }
 ]

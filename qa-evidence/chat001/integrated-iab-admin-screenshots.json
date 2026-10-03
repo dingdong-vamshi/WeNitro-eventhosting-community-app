@@ -433,5 +433,139 @@
       "ADMIN-SETTLEMENTS"
     ],
     "outcome": "Loaded dedicated settlements route filters held Sandbox280 with no payout reference; ledger UI verified, no transfer executed."
+  },
+  {
+    "name": "release-admin-22-badges",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-22-badges.png",
+    "url": "https://wenitro-admin-roan.vercel.app/rewards/badges",
+    "at": "2026-10-03T19:34:30.566Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-BADGE-CATALOG"
+    ],
+    "outcome": "New released Admin catalog loads exactly22 authoritative metric badges; legacy verification badges excluded. All22 table rows verified in DOM."
+  },
+  {
+    "name": "release-admin-vibe-shares",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-vibe-shares.png",
+    "url": "https://wenitro-admin-roan.vercel.app/analytics/engagement",
+    "at": "2026-10-03T19:35:54.443Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-ANALYTICS-ENGAGEMENT"
+    ],
+    "outcome": "Released engagement cards and chart explicitly label Vibe Shares7, distinguish Activity shares, and show unavailable conversion/rating honestly."
+  },
+  {
+    "name": "release-admin-history119",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-history119.png",
+    "url": "https://wenitro-admin-roan.vercel.app/users/119/activity",
+    "at": "2026-10-03T19:36:29.859Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-USERS"
+    ],
+    "outcome": "Released synthetic user history shows actual created Activity and Logins Not tracked; no fabricated login count."
+  },
+  {
+    "name": "release-admin-rating-history71",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-rating-history71.png",
+    "url": "https://wenitro-admin-roan.vercel.app/users/71/activity",
+    "at": "2026-10-03T19:39:05.132Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-USERS"
+    ],
+    "outcome": "Released Admin history includes three received-rating entries with persisted timestamps, instead of silently omitting ratings."
+  },
+  {
+    "name": "release-admin-platform-utc",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-platform-utc.png",
+    "url": "https://wenitro-admin-roan.vercel.app/analytics/platform-activity",
+    "at": "2026-10-03T19:40:08.539Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-ANALYTICS-PLATFORM"
+    ],
+    "outcome": "Released platform analytics names UTCtoday, observedSince2026-10-03, timeline range and all-time totals; no fabricated peak telemetry."
+  },
+  {
+    "name": "release-admin-host-formula",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-host-formula.png",
+    "url": "https://wenitro-admin-roan.vercel.app/analytics/host-performance",
+    "at": "2026-10-03T19:41:19.301Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-ANALYTICS-HOSTS"
+    ],
+    "outcome": "Host analytics explicitly defines storedmemberrating\u00d720 and completed/hosted denominator; actual rankedrows and non-Activity-rating scope shown."
+  },
+  {
+    "name": "release-admin-activity-engagement",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-activity-engagement.png",
+    "url": "https://wenitro-admin-roan.vercel.app/analytics/event-engagement",
+    "at": "2026-10-03T19:42:28.361Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-ANALYTICS-EVENT-VIEWS"
+    ],
+    "outcome": "Actual Activity views/shares are distinct member/Activity/UTCday observations with VibeSharesexcluded; loadedcounts2views1share and approvedjoins."
+  },
+  {
+    "name": "release-admin-event-analytics",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-event-analytics.png",
+    "url": "https://wenitro-admin-roan.vercel.app/analytics/event-analytics",
+    "at": "2026-10-03T19:43:04.460Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-ANALYTICS-EVENTS"
+    ],
+    "outcome": "Released event analytics loads91total13active53completed25cancelled and actualcategory/city charts."
+  },
+  {
+    "name": "release-admin-geography",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-geography.png",
+    "url": "https://wenitro-admin-roan.vercel.app/analytics/geographic-insights",
+    "at": "2026-10-03T19:43:39.802Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-ANALYTICS-GEOGRAPHY"
+    ],
+    "outcome": "Geography shows declarednationality and savedActivitydisplaylocations, explicitly no inferred city/region from phone/address."
+  },
+  {
+    "name": "release-admin-retention-window",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-retention-window.png",
+    "url": "https://wenitro-admin-roan.vercel.app/analytics/user-growth",
+    "at": "2026-10-03T19:45:35.687Z",
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-ANALYTICS-USERS"
+    ],
+    "outcome": "Retention cards explicitly Awaitingcohort and previous/currentUTCperiod definition."
+  },
+  {
+    "name": "release-admin-security-search",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-security-search.png",
+    "url": "https://wenitro-admin-roan.vercel.app/security/security-logs",
+    "at": "2026-10-03T19:53:25.983Z",
+    "account": 120,
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-SECURITY-AUDIT"
+    ],
+    "outcome": "restore_event search returns six actual matching audit records."
+  },
+  {
+    "name": "release-admin-partner108-history",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-admin-partner108-history.png",
+    "url": "https://wenitro-admin-roan.vercel.app/business/108",
+    "at": "2026-10-03T19:56:10.072Z",
+    "account": 120,
+    "deployment": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "requirements": [
+      "ADMIN-PARTNER-REVIEW"
+    ],
+    "outcome": "Actual QA108 application shows masked UPI and persisted New to Under review history, original timestamp."
   }
 ]

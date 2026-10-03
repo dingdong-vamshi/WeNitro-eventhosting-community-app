@@ -1,0 +1,97 @@
+{
+  "projectId": "cxsznhrkzqndhseodcyy",
+  "at": "2026-10-03T19:31:11.642Z",
+  "migrations": [
+    {
+      "name": "invited_registration_answers",
+      "file": "supabase/migrations/20261003181143_invited_registration_answers.sql",
+      "version": "20261003181143",
+      "at": "2026-10-03T19:30:28.619Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "activity_safety_reminders",
+      "file": "supabase/migrations/20261003181703_activity_safety_reminders.sql",
+      "version": "20261003181703",
+      "at": "2026-10-03T19:30:30.471Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "participant_management_boundaries",
+      "file": "supabase/migrations/20261003182405_participant_management_boundaries.sql",
+      "version": "20261003182405",
+      "at": "2026-10-03T19:30:33.469Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "active_join_retry_idempotency",
+      "file": "supabase/migrations/20261003183320_active_join_retry_idempotency.sql",
+      "version": "20261003183320",
+      "at": "2026-10-03T19:30:35.330Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "name": "activity_media_feed_choice",
+      "file": "supabase/migrations/20261003185740_activity_media_feed_choice.sql",
+      "version": "20261003185740",
+      "at": "2026-10-03T19:30:37.354Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"success\":true}"
+          }
+        ],
+        "isError": false
+      }
+    }
+  ],
+  "edge": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"id\":\"d2a93ad1-e6fb-4df0-9a29-980fed08441e\",\"slug\":\"cashfree-create-order\",\"name\":\"cashfree-create-order\",\"status\":\"ACTIVE\",\"version\":6,\"created_at\":1790774490535,\"updated_at\":1791055848034,\"verify_jwt\":true,\"import_map\":false,\"entrypoint_path\":\"file:///tmp/user_fn_cxsznhrkzqndhseodcyy_d2a93ad1-e6fb-4df0-9a29-980fed08441e_6/source/supabase/functions/cashfree-create-order/index.ts\",\"ezbr_sha256\":\"f410fa094738d6a010606244fb74f021bb9180342b99db86f8ca7c7737c72a55\"}"
+      }
+    ],
+    "isError": false
+  },
+  "localGate": {
+    "report": "docs/chat001-integrated-local-verification.json",
+    "passed": 92,
+    "failed": 0
+  },
+  "appCommit": "08b8bb8",
+  "adminCommit": "bcdaa9662a73897a0e413f58793b8f45463c906f"
+}
