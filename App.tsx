@@ -1,3 +1,5 @@
+import { GoogleVenue } from './src/components/google-venue';
+import { googlePlaceIdUrl, clearExpiredGoogleCoordinates, googleCoordinateExpiryDelay } from './src/services/google-places';
 import { ActionConfirmationProvider, useActionConfirmation } from './src/components/reconstruction/action-confirmation';
 import { ActivityLikersSheet } from './src/components/activity-likers-sheet';
 import { recordActivityShare } from './src/services/activity-usage';
@@ -242,6 +244,7 @@ export type Activity = {
   category: string;
   when: string;
   where: string;
+  locationSource?: "legacy" | "openstreetmap" | "google"; googlePlaceId?: string | null; locationCoordinatesExpiresAt?: string | null;
   price: string;
   costsMayApply?: boolean;
   entryFeeRequired?: boolean;
@@ -615,7 +618,8 @@ const activityFromRemote = (item: any): Activity => ({
   ageMax: item.age_max == null ? null : Number(item.age_max),
   genderPreference: item.gender_preference ?? null,
   likeCount: Number(item.like_count ?? 0),
-  where: item.location_name,
+  where: item.location_source === "google" ? "Google Maps venue" : item.location_name,
+  locationSource: item.location_source || "legacy", googlePlaceId: item.google_place_id || null, locationCoordinatesExpiresAt: item.location_coordinates_expires_at || null,
   price: activityDisplayPrice({ priceInr: Number(item.price_inr) || 0, isPaid: item.is_paid === true, paymentCollectionMode: item.payment_collection_mode === "onsite" ? "onsite" : "cashfree", costsMayApply: item.costs_may_apply === true, entryFeeRequired: item.entry_fee_required === true }),
   isPaid: item.is_paid === true,
   paymentCollectionMode: item.payment_collection_mode === "onsite" ? "onsite" : "cashfree",
@@ -631,7 +635,8 @@ const activityFromRemote = (item: any): Activity => ({
   image:
     item.cover_url || activityFallbackCover(item.category, item.activity_type),
   viewerStatus: item.viewer_status ?? null,
-  latitude: item.latitude ?? null, longitude: item.longitude ?? null,
+  latitude: item.location_source === "google" && !(Date.parse(item.location_coordinates_expires_at || "") > Date.now()) ? null : item.latitude ?? null,
+  longitude: item.location_source === "google" && !(Date.parse(item.location_coordinates_expires_at || "") > Date.now()) ? null : item.longitude ?? null,
   visibility: item.visibility ?? "public",
   status: item.status ?? "published",
   activityType: item.activity_type ?? "meetup",
@@ -2048,7 +2053,7 @@ function ActivityCard({
         <View style={styles.rowBetween}>
           <View style={styles.inlineAction}>
             <Icon name="location-outline" size={17} color={colors.muted} />
-            <Text style={styles.meta}>{item.where}</Text>
+            {item.locationSource === "google" && item.googlePlaceId ? <GoogleVenue compact placeId={item.googlePlaceId} /> : <Text style={styles.meta}>{item.where}</Text>}
           </View>
           <Text style={styles.price}>{item.price}</Text>
         </View>
@@ -4532,6 +4537,7 @@ export function ActivityDetailScreen({
   };
 
   const openMap = async () => {
+    if (activity.locationSource === "google" && activity.googlePlaceId) { await Linking.openURL(googlePlaceIdUrl(activity.googlePlaceId)); return; }
     const query = activity.latitude != null && activity.longitude != null
       ? `${activity.latitude},${activity.longitude}`
       : activity.where;
@@ -4612,9 +4618,9 @@ export function ActivityDetailScreen({
       }
       return;
     }
-    requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.where}` });
+    requestInternalShare({ kind: "activity", id: activity.id, title: activity.title, preview: `${activity.when} · ${activity.locationSource === "google" && activity.googlePlaceId ? googlePlaceIdUrl(activity.googlePlaceId) : activity.where}` });
   };
-  const safetyDetails = `My WeNitro Activity: ${activity.title}\n${activity.when}\n${activity.where}\n\nPlease keep these details. I will share my live location separately in my messaging app.`;
+  const safetyDetails = `My WeNitro Activity: ${activity.title}\n${activity.when}\n${activity.locationSource === "google" && activity.googlePlaceId ? googlePlaceIdUrl(activity.googlePlaceId) : activity.where}\n${activity.locationInstruction || ""}\n\nPlease keep these details. I will share my live location separately in my messaging app.`;
   const runSafetyAction = async (action: "share" | "copy" | "call") => {
     if (safetyBusy) return;
     setSafetyBusy(true); setSafetyMessage("");
@@ -4764,7 +4770,7 @@ export function ActivityDetailScreen({
             ))}
           </View>
           <Pressable accessibilityRole="link" onPress={() => void openMap()} style={[styles.locationBar, { backgroundColor: palette.card }]}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flex: 1 }}><Icon name="location-outline" color="#A899FF" /><View style={{ flex: 1, gap: 3 }}><Text style={[styles.detailCardTitle, { color: palette.text }]}>{activity.where || "Location to be decided"}</Text>{activity.locationInstruction ? <Text style={[styles.detailCardMuted, { color: palette.muted }]}>{activity.locationInstruction}</Text> : null}<Text style={{ color: "#8F82F4", fontSize: 12 }}>Tap to open in Maps</Text></View></View><Icon name="chevron-forward" color="#8A94A3" size={18} />
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flex: 1 }}><Icon name="location-outline" color="#A899FF" /><View style={{ flex: 1, gap: 3 }}>{activity.locationSource === "google" && activity.googlePlaceId ? <GoogleVenue key={`${data.userId}:${activity.googlePlaceId}`} placeId={activity.googlePlaceId} /> : <Text style={[styles.detailCardTitle, { color: palette.text }]}>{activity.where || "Location to be decided"}</Text>}{activity.locationInstruction ? <Text style={[styles.detailCardMuted, { color: palette.muted }]}>{activity.locationInstruction}</Text> : null}<Text style={{ color: "#8F82F4", fontSize: 12 }}>Tap to open in Maps</Text></View></View><Icon name="chevron-forward" color="#8A94A3" size={18} />
           </Pressable>
           <View style={[styles.detailSection, { backgroundColor: palette.card, borderColor: palette.border }]}>
             <Text style={[styles.detailSectionTitle, { color: palette.text }]}>About this activity</Text>
@@ -9117,6 +9123,12 @@ export default function App() {
     Manrope_800ExtraBold,
   });
   const [data, setData] = useState<AppData>(initialData);
+  useEffect(() => {
+    const delay = googleCoordinateExpiryDelay(data.activities);
+    if (delay === undefined) return;
+    const timer = setTimeout(() => setData(current => ({ ...current, activities: clearExpiredGoogleCoordinates(current.activities) })), delay);
+    return () => clearTimeout(timer);
+  }, [data.activities]);
   const systemTheme = useColorScheme();
   const [appearanceLoaded, setAppearanceLoaded] = useState(false);
   const [messagesTab, setMessagesTab] = useState('Chats');

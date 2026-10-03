@@ -7,7 +7,16 @@ export const GENDER_OPTIONS = [
   { label: 'Open to All', value: '' }, { label: 'Male Only', value: 'male' },
   { label: 'Female Only', value: 'female' }, { label: 'Non-binary Only', value: 'non_binary' },
 ] as const;
-export type HostLocation = { label: string; latitude: number; longitude: number };
+export type CoordinateLocation = { source?: 'legacy' | 'openstreetmap'; label: string; latitude: number; longitude: number };
+export type HostLocation = CoordinateLocation | { source: 'google'; googlePlaceId: string; label?: never; latitude?: never; longitude?: never };
+export const GOOGLE_VENUE_LABEL = 'Google Maps venue';
+export function persistedHostDraft(draft: HostDraft): HostDraft {
+  // A draft survives indefinitely: Google content (including coordinates) never does.
+  if (draft.location?.source !== 'google') return draft;
+  const id = draft.location.googlePlaceId;
+  return { ...draft, location: typeof id === 'string' && id.trim() && id.length <= 300 && !/[\x00-\x1f\x7f]/.test(id)
+    ? { source: 'google', googlePlaceId: id.trim() } : null };
+}
 export type HostEntryCategory = { name: string; price: string; capacity: string };
 export type HostDraft = {
   title: string; description: string; coverUri: string; coverContentType: string;
@@ -47,6 +56,7 @@ export type HostActivitySource = {
   genderPreference?: string | null; costsMayApply?: boolean; entryFeeRequired?: boolean;
   price?: string | null;
   category?: string; where?: string; latitude?: number | null; longitude?: number | null;
+  locationSource?: 'legacy' | 'openstreetmap' | 'google'; googlePlaceId?: string | null;
   locationInstruction?: string; externalUrl?: string | null; startsAt?: string; endsAt?: string; registrationClosesAt?: string;
 };
 export function draftFromActivity(activity: HostActivitySource, now = new Date()): HostDraft {
@@ -76,8 +86,10 @@ export function draftFromActivity(activity: HostActivitySource, now = new Date()
     price: isPaid && price > 0 ? String(price) : '',
     entryCategories: [{ name: 'General Admission', price: isPaid && price > 0 ? String(price) : '', capacity: '' }],
     category: activity.category || '',
-    location: activity.where && activity.latitude != null && activity.longitude != null
-      ? { label: activity.where, latitude: activity.latitude, longitude: activity.longitude } : null,
+    location: activity.locationSource === 'google' && activity.googlePlaceId
+      ? { source: 'google', googlePlaceId: activity.googlePlaceId }
+      : activity.where && activity.latitude != null && activity.longitude != null
+      ? { source: activity.locationSource === 'openstreetmap' ? 'openstreetmap' : 'legacy', label: activity.where, latitude: activity.latitude, longitude: activity.longitude } : null,
     locationInstruction: activity.locationInstruction || '',
     externalUrl: activity.externalUrl || '',
     dateLater: !activity.startsAt,
@@ -117,7 +129,7 @@ export function hostStepError(d: HostDraft, step: number, requiresPrice: boolean
   }
   if (step === 2) {
     if (!d.category) return 'Select a category.';
-    if (!d.location || !Number.isFinite(d.location.latitude) || !Number.isFinite(d.location.longitude)) return 'Select an actual location.';
+    if (!d.location || (d.location.source === 'google' ? typeof d.location.googlePlaceId !== 'string' || !d.location.googlePlaceId.trim() || d.location.googlePlaceId.length > 300 || /[\x00-\x1f\x7f]/.test(d.location.googlePlaceId) : !Number.isFinite(d.location.latitude) || !Number.isFinite(d.location.longitude))) return 'Select an actual location.';
     if (d.externalUrl && !/^https:\/\/[^\s]+$/i.test(d.externalUrl.trim())) return 'Partner external URL must be a valid HTTPS link.';
     if (!d.dateLater) {
       const fields = scheduleFieldErrors(d, now);

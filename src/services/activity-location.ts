@@ -1,5 +1,5 @@
 import * as Location from 'expo-location';
-import type { HostLocation } from '../domain/host-activity';
+import type { CoordinateLocation as HostLocation } from '../domain/host-activity';
 
 const photon = process.env.EXPO_PUBLIC_PHOTON_URL?.trim() || 'https://photon.komoot.io';
 const nominatim = process.env.EXPO_PUBLIC_NOMINATIM_URL?.trim() || 'https://nominatim.openstreetmap.org';

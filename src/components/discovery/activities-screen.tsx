@@ -1,3 +1,4 @@
+import { GoogleVenue } from '../google-venue';
 import { CategoryCatalogStatus } from '../category-catalog-status';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Image, Platform, Pressable, ScrollView, Switch, Text, View } from 'react-native';
@@ -108,7 +109,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity, openPr
     if (gender !== 'All') { const wanted = gender === 'Non-binary' ? 'non_binary' : gender.toLowerCase(); result = result.filter(item => String(item.genderPreference || '').toLowerCase() === wanted); }
     if (verifiedOnly) result = result.filter(item => item.verifiedOnly);
     if (filter === 'Popular') result = [...result].sort((a, b) => (b.likeCount || 0) + b.joined - ((a.likeCount || 0) + a.joined));
-    if (filter === 'Nearby') result = position ? result.filter(item => item.latitude != null && item.longitude != null && distanceKm(position.latitude, position.longitude, item.latitude, item.longitude) <= 25) : [];
+    if (filter === 'Nearby') result = position ? result.filter(item => (item.locationSource !== "google" || Date.parse(item.locationCoordinatesExpiresAt || "") > Date.now()) && item.latitude != null && item.longitude != null && distanceKm(position.latitude, position.longitude, item.latitude, item.longitude) <= 25) : [];
     if (filter === 'Today' || filter === 'Tomorrow') { const target = new Date(); if (filter === 'Tomorrow') target.setDate(target.getDate() + 1); result = result.filter(item => item.startsAt && new Date(item.startsAt).toDateString() === target.toDateString()); }
     return result;
   }, [data.activities, query, categories, dateFrom, dateTo, price, gender, verifiedOnly, filter, position]);
@@ -162,7 +163,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity, openPr
           <View style={{ paddingHorizontal: 12, paddingVertical: 12, gap: 7 }}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Open activity ${item.title} details`} onPress={() => openActivity(item.id)}><Text numberOfLines={2} style={{ color: c.text, fontSize: 16, lineHeight: 21, fontWeight: '800' }}>{item.title}</Text></Pressable>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><Icon name="calendar-outline" color={c.accent} size={15} /><Text numberOfLines={1} style={{ color: c.accent, fontSize: 13, fontWeight: '800', flex: 1 }}>{time(item.startsAt)}</Text></View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><Icon name="location-outline" color={c.muted} size={15} /><Text numberOfLines={1} style={{ color: c.muted, fontSize: 13, fontWeight: '600', flex: 1 }}>{item.where || 'Location to be decided'}</Text></View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}><Icon name="location-outline" color={c.muted} size={15} />{item.locationSource === 'google' && item.googlePlaceId ? <GoogleVenue key={`${data.userId}:${item.googlePlaceId}`} compact placeId={item.googlePlaceId} /> : <Text numberOfLines={1} style={{ color: c.muted, fontSize: 13, fontWeight: '600', flex: 1 }}>{item.where || 'Location to be decided'}</Text>}</View>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 1, gap: 7 }}>
               <Pressable accessibilityRole="button" accessibilityLabel={`Open ${item.host}'s profile`} disabled={!item.ownerId || !openProfile} onPress={() => item.ownerId && openProfile?.(item.ownerId)} style={{ flexDirection: 'row', alignItems: 'center', gap: 7, flexShrink: 1 }}><UserAvatar uri={item.hostAvatar} name={item.host} size={26} /><Text numberOfLines={1} style={{ color: c.text, fontSize: 13, fontWeight: '800', flexShrink: 1 }}>{item.host}</Text><VerifiedBadge userId={item.ownerId} size={14} /></Pressable>
               <View style={{ flex: 1 }} />

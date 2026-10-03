@@ -556,7 +556,8 @@ async function readRemoteWorkspace(session: Session, existingProfile?: Workspace
       description: item.description,
       category: item.category,
       cover_url: item.coverUrl ? activityCovers.get(item.coverUrl) ?? null : null,
-      location_name: item.locationName,
+      location_name: item.locationSource === "google" ? "Google Maps venue" : item.locationName,
+      location_source: item.locationSource, google_place_id: item.googlePlaceId, location_coordinates_expires_at: item.locationCoordinatesExpiresAt,
       latitude: item.latitude, longitude: item.longitude,
       price_inr: item.priceInr,
       is_paid: item.isPaid,
@@ -933,6 +934,7 @@ export type ActivityWriteInput = {
   endsAt?: string | null;
   registrationClosesAt?: string | null;
   location: string;
+  locationSource?: "legacy" | "openstreetmap" | "google"; googlePlaceId?: string | null;
   description: string;
   priceInr: number;
   costsMayApply?: boolean;
@@ -1007,7 +1009,8 @@ const activityForWorkspace = async (
   description: activity.description,
   category: activity.category,
   cover_url: await signedActivityCoverUrl(activity.coverUrl),
-  location_name: activity.locationName,
+  location_name: activity.locationSource === "google" ? "Google Maps venue" : activity.locationName,
+  location_source: activity.locationSource, google_place_id: activity.googlePlaceId, location_coordinates_expires_at: activity.locationCoordinatesExpiresAt,
   latitude: activity.latitude, longitude: activity.longitude,
   price_inr: activity.priceInr,
   is_paid: activity.isPaid,
@@ -1090,6 +1093,7 @@ const writeActivityFromUi = async (
       );
       uploadedCoverPath = uploaded.path;
     }
+    if (input.locationSource === "google") await (await import("./google-places")).resolveGooglePlace(input.googlePlaceId || "");
     const { data, error } = await supabase.rpc("create_activity", {
       p_payload: {
         title: input.title.trim(),
@@ -1098,9 +1102,10 @@ const writeActivityFromUi = async (
         event_start_time: input.startsAt,
         event_end_time: input.endsAt ?? null,
         registration_close_time: input.registrationClosesAt ?? null,
-        location: input.location.trim(),
-        display_location: input.location.trim(),
-        latitude: input.latitude, longitude: input.longitude, location_instruction: input.locationInstruction,
+        location_source: input.locationSource || "legacy", google_place_id: input.locationSource === "google" ? input.googlePlaceId : null,
+        location: input.locationSource === "google" ? "Google Maps venue" : input.location.trim(),
+        display_location: input.locationSource === "google" ? "Google Maps venue" : input.location.trim(),
+        latitude: input.locationSource === "google" ? undefined : input.latitude, longitude: input.locationSource === "google" ? undefined : input.longitude, location_instruction: input.locationInstruction,
         verified_only: input.verifiedOnly, age_min: input.ageMin, age_max: input.ageMax, gender_preference: input.genderPreference,
         price_inr: input.priceInr,
         costs_may_apply: input.costsMayApply ?? false,
@@ -1205,6 +1210,7 @@ export const activityService = {
         endsAt: input.endsAt ?? null,
         registrationClosesAt: input.registrationClosesAt ?? null,
         locationName: input.location,
+        locationSource: input.locationSource, googlePlaceId: input.googlePlaceId,
         latitude: input.latitude, longitude: input.longitude, locationInstruction: input.locationInstruction,
         verifiedOnly: input.verifiedOnly, ageMin: input.ageMin, ageMax: input.ageMax, genderPreference: input.genderPreference,
         priceInr: input.priceInr,

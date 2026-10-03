@@ -49,6 +49,9 @@ export type Activity = {
   category: string;
   coverUrl: string | null;
   locationName: string;
+  locationSource?: "legacy" | "openstreetmap" | "google";
+  googlePlaceId?: string | null;
+  locationCoordinatesExpiresAt?: string | null;
   latitude: number | null;
   longitude: number | null;
   priceInr: number;
@@ -158,6 +161,9 @@ export type CreateActivityInput = {
   category: string;
   startsAt: string | null;
   locationName: string;
+  locationSource?: "legacy" | "openstreetmap" | "google";
+  googlePlaceId?: string | null;
+  locationCoordinatesExpiresAt?: string | null;
   description?: string | null;
   communityId?: string | null;
   coverUrl?: string | null;
@@ -207,7 +213,7 @@ export type ActivityRealtimeHandlers = {
 type DbRecord = Record<string, unknown>;
 
 const EVENT_SELECT =
-  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,payment_collection_mode,costs_may_apply,entry_fee_required,currency,intent,status,latitude,longitude,display_location,location_instruction,external_url,verified_only,age_min,age_max,gender_preference";
+  "id,created_by,updated_by,title,description,event_start_time,event_end_time,registration_close_time,max_participants,visibility_type,join_type,location,is_cancelled,is_deleted,created_at,updated_at,media,is_paid,price,payment_collection_mode,costs_may_apply,entry_fee_required,currency,intent,status,latitude,longitude,location_source,google_place_id,location_coordinates_expires_at,display_location,location_instruction,external_url,verified_only,age_min,age_max,gender_preference";
 const FEEDBACK_SELECT = "id,event_id,created_by,reaction,comment,created_at";
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
@@ -402,6 +408,8 @@ const activityFromDb = (
   const metadata = mediaMetadata(row.media);
   const price = Number(row.price ?? metadata.price_inr ?? 0);
   const capacity = Number(row.max_participants ?? 0);
+  const googleVenue = row.location_source === "google";
+  const coordinatesFresh = !googleVenue || Date.parse(String(row.location_coordinates_expires_at || "")) > Date.now();
   const matchScore =
     metadata.match_score == null ? null : Number(metadata.match_score);
   return {
@@ -414,9 +422,12 @@ const activityFromDb = (
     coverUrl: nullableString(
       metadata.cover_url ?? metadata.url ?? metadata.path ?? metadata.media_url,
     ),
-    locationName: String(row.display_location ?? row.location ?? ""),
-    latitude: row.latitude == null ? null : Number(row.latitude),
-    longitude: row.longitude == null ? null : Number(row.longitude),
+    locationName: googleVenue ? "Google Maps venue" : String(row.display_location ?? row.location ?? ""),
+    locationSource: googleVenue ? "google" : row.location_source === "openstreetmap" ? "openstreetmap" : "legacy",
+    googlePlaceId: googleVenue ? nullableString(row.google_place_id) : null,
+    locationCoordinatesExpiresAt: googleVenue ? nullableString(row.location_coordinates_expires_at) : null,
+    latitude: !coordinatesFresh || row.latitude == null ? null : Number(row.latitude),
+    longitude: !coordinatesFresh || row.longitude == null ? null : Number(row.longitude),
     priceInr: Number.isFinite(price) ? price : 0,
     isPaid: row.is_paid === true,
     paymentCollectionMode: row.payment_collection_mode === "onsite" ? "onsite" : "cashfree",
@@ -508,8 +519,12 @@ const buildPayload = (
   if (input.category !== undefined) {
     payload.category = requiredText(input.category, "Category");
   }
+  if (input.locationSource !== undefined) {
+    payload.location_source = input.locationSource;
+    payload.google_place_id = input.locationSource === "google" ? requiredText(input.googlePlaceId || "", "Google place ID") : null;
+  }
   if (input.locationName !== undefined) {
-    const location = requiredText(input.locationName, "Location");
+    const location = input.locationSource === "google" ? "Google Maps venue" : requiredText(input.locationName, "Location");
     payload.location = location;
     payload.display_location = location;
   }
@@ -538,11 +553,11 @@ const buildPayload = (
         ? null
         : asIso(input.registrationClosesAt, "Registration close time");
   }
-  if (input.latitude !== undefined) {
+  if (input.latitude !== undefined && input.locationSource !== "google") {
     payload.latitude =
       input.latitude === null ? null : finite(input.latitude, "Latitude");
   }
-  if (input.longitude !== undefined) {
+  if (input.longitude !== undefined && input.locationSource !== "google") {
     payload.longitude =
       input.longitude === null ? null : finite(input.longitude, "Longitude");
   }
@@ -813,6 +828,7 @@ async function writeActivity(
   status: "draft" | "published",
 ) {
   await currentUserId();
+  if (input.locationSource === "google") await (await import("./google-places")).resolveGooglePlace(input.googlePlaceId || "");
   const payload = buildPayload(input);
   const data = await callRpc<unknown>("create_activity", {
     p_payload: payload,
@@ -940,6 +956,7 @@ export const activitiesProductionService = {
       const latitudeDelta = radiusKm / 110.574;
       const longitudeDelta = radiusKm / (111.32 * Math.max(0.01, Math.abs(Math.cos(latitude * Math.PI / 180))));
       query = query
+        .or(`location_source.neq.google,location_coordinates_expires_at.gt.${new Date().toISOString()}`)
         .gte("latitude", Math.max(-90, latitude - latitudeDelta))
         .lte("latitude", Math.min(90, latitude + latitudeDelta))
         .gte("longitude", Math.max(-180, longitude - longitudeDelta))
@@ -1157,6 +1174,7 @@ export const activitiesProductionService = {
       await callRpc<unknown>("cancel_activity", { p_event_id: eventId });
       return getActivity(eventId);
     }
+    if (input.locationSource === "google") await (await import("./google-places")).resolveGooglePlace(input.googlePlaceId || "");
     const patch = buildPayload(input);
     if (!Object.keys(patch).length) {
       throw new Error("No activity changes supplied.");

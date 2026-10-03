@@ -75,8 +75,8 @@ await assert.rejects(realClient.searchGooglePlaces('venue', cancelled.signal), /
 session = null; assert.equal((await realClient.searchGooglePlaces('venue', signal)).status, 'unavailable');
 console.log('PASS: Google Places mocked provider/client execution, disabled/no-key no requests, auth, validation, exact mapping/field mask, no GPS/token forwarding, no-store, timeout/error sanitization, cancellation, no client cache, account-switch response rejection. No Google request, provider spend or production mutation.');
 
-// Execute the real location component's rendered callbacks: Google content opens Maps;
-// only the existing OSM row can enter the durable Activity draft.
+// Execute the real location component's rendered callbacks: Google selection returns only provider+placeID;
+// no provider content enters the durable Activity draft.
 const uiSource = fs.readFileSync('src/components/hosting/host-activity-screen.tsx', 'utf8');
 const ast = ts.createSourceFile('host.tsx', uiSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 const node = ast.statements.find(node => ts.isFunctionDeclaration(node) && node.name?.text === 'LocationSearch');
@@ -91,11 +91,56 @@ const render = new Function(...names, `${component}; return LocationSearch;`)(Re
 const tree = render({ onSelect: value => selected.push(value), onClose: () => {} });
 function flatten(node) { return node && typeof node === 'object' ? [node, ...(node.children ?? []).flatMap(flatten)] : []; }
 const nodes = flatten(tree);
-const googleAction = nodes.find(node => node.props.accessibilityLabel === 'View Test Venue on Google Maps');
+const googleAction = nodes.find(node => node.props.accessibilityLabel === 'Select Test Venue');
 assert.ok(googleAction); googleAction.props.onPress(); await Promise.resolve();
-assert.equal(opened.length, 1); assert.deepEqual(selected, []);
+assert.equal(opened.length, 0); assert.deepEqual(selected, [{ source: 'google', googlePlaceId: 'test-place' }]);
 const osmAction = nodes.find(node => String(node.props.key ?? '').startsWith('OSM venue:'));
-assert.ok(osmAction); osmAction.props.onPress(); assert.deepEqual(selected, [osm]);
+assert.ok(osmAction); osmAction.props.onPress(); assert.deepEqual(selected, [{ source: 'google', googlePlaceId: 'test-place' }, { ...osm, source: 'openstreetmap' }]);
 assert.ok(nodes.some(node => node.children.includes('Google Maps')));
 assert.ok(nodes.some(node => node.children.includes('Example data')));
-console.log('PASS: actual LocationSearch render/callback isolation and provider attribution; Google suggestions cannot be selected into persisted HostDraft.');
+console.log('PASS: actual LocationSearch render/callback isolation and provider attribution; Google selection stores only placeID/source and OSM selection remains unchanged.');
+
+// Place Details performs no search POST, and only server-fetched coordinates can reach the cache.
+let cached = [], detailRequests = [];
+const detailHandler = edge.createGooglePlacesHandler({ env: key => env[key], authenticate: async () => {},
+ fetch: async (url, options) => { detailRequests.push({ url, options }); return Response.json(place); },
+ cacheCoordinates: async (...args) => { cached.push(args); return { expiresAt: new Date(Date.now() + 28 * 86400000).toISOString() }; } });
+const detailResponse = await detailHandler(request({ placeId: 'test-place', latitude: -88, longitude: 0 }));
+assert.equal(detailResponse.status, 200); assert.equal(detailRequests[0].url, 'https://places.googleapis.com/v1/places/test-place');
+assert.equal(detailRequests[0].options.method, 'GET'); assert.equal(detailRequests[0].options.body, undefined);
+assert.equal(detailRequests[0].options.headers['X-Goog-FieldMask'], 'id,displayName,formattedAddress,location,attributions');
+assert.deepEqual(cached, [['test-place', 18.52, 73.85]]);
+assert.ok(Date.parse((await detailResponse.json()).coordinateReceipt.expiresAt) > Date.now());
+assert.equal((await detailHandler(request({ placeId: 'bad\u0000id' }))).status, 400);
+session = { access_token: 'session-A', user: { id: 'account-A' } };
+fetchClient = async (_url, options) => { assert.deepEqual(JSON.parse(options.body), { placeId: 'test-place' }); return Response.json({ places: mapped, coordinateReceipt: { expiresAt: new Date(Date.now() + 10000).toISOString() } }); };
+assert.deepEqual(await realClient.resolveGooglePlace('test-place', signal), mapped[0]);
+fetchClient = async () => Response.json({ places: mapped, coordinateReceipt: { expiresAt: new Date(Date.now() - 1).toISOString() } });
+await assert.rejects(realClient.resolveGooglePlace('test-place', signal), /refresh/);
+console.log('PASS: Details field mask, trusted coordinate callback/receipt, place-ID validation and stale receipt rejection.');
+
+const now = Date.now();
+const coordinateRecords = [
+ { locationSource: 'google', googlePlaceId: 'old', latitude: 14, longitude: 75, locationCoordinatesExpiresAt: new Date(now - 1).toISOString() },
+ { locationSource: 'google', googlePlaceId: 'fresh', latitude: 15, longitude: 76, locationCoordinatesExpiresAt: new Date(now + 1000).toISOString() },
+ { locationSource: 'legacy', latitude: 16, longitude: 77 },
+];
+const purged = realClient.clearExpiredGoogleCoordinates(coordinateRecords, now);
+assert.equal(purged[0].latitude, null); assert.equal(purged[0].longitude, null); assert.equal(purged[0].googlePlaceId, 'old');
+assert.equal(purged[1].latitude, 15); assert.equal(purged[2].latitude, 16);
+assert.equal(realClient.googleCoordinateExpiryDelay(coordinateRecords, now), 0);
+assert.equal(realClient.googleCoordinateExpiryDelay(purged, now), 1000);
+assert.equal(realClient.googleCoordinateExpiryDelay([{ ...coordinateRecords[1], locationCoordinatesExpiresAt: new Date(now + 28 * 86400000).toISOString() }], now), 86400000);
+assert.equal(realClient.googleCoordinateExpiryDelay([coordinateRecords[2]], now), undefined);
+console.log('PASS: in-memory Google coordinates purge at expiry; trusted placeID survives, fresh/legacy values remain, timers bounded and disabled for non-Google rows.');
+
+// Execute the deployed index's actual authentication wiring, not only an injected rejection.
+let served, googleFetches = 0, appIdentityError = new Error('Account unavailable');
+new Function('exports', 'require', 'Deno', 'fetch', compile('supabase/functions/google-places/index.ts'))({}, name => {
+ if (name === 'npm:@supabase/supabase-js@2.112.4') return { createClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: 'auth-user', is_anonymous: false } }, error: null }) }, rpc: async name => { assert.equal(name, 'get_current_app_user_id'); return { data: appIdentityError ? null : 10, error: appIdentityError }; } }) };
+ if (name === './handler.ts') return edge;
+ throw Error(name);
+}, { env: { get: key => ({ ...env, SUPABASE_URL: 'https://project.test', SUPABASE_ANON_KEY: 'test-public' })[key] }, serve: callback => { served = callback; } }, async () => { googleFetches++; return Response.json({ places: [] }); });
+assert.equal((await served(request())).status, 401); assert.equal(googleFetches, 0);
+appIdentityError = null; assert.equal((await served(request())).status, 200); assert.equal(googleFetches, 1);
+console.log('PASS: actual Edge index requires active app identity before provider traffic; denied app identity makes zero Google calls.');
