@@ -1,6 +1,6 @@
 {
-  "startedAt": "2026-10-03T21:53:55.927271+00:00",
-  "appCommit": "e8727e09b1aef67988b00c58e31350e6b9c9063f",
+  "startedAt": "2026-10-03T22:34:59.841800+00:00",
+  "appCommit": "abe5827407ab8de63f7aa81abdfed03df2ccdad2",
   "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
   "status": "PASS",
   "scope": "Complete local regression gate after production-discovered fixes; original92 checks plus new executable regression tests. UI production proof remains separate.",
@@ -13,8 +13,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 553,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/action-confirmation-regression-test.log"
+      "elapsedMs": 770,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/action-confirmation-regression-test.log"
     },
     {
       "name": "activity-likers-sheet-test",
@@ -24,8 +24,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 308,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-likers-sheet-test.log"
+      "elapsedMs": 363,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-likers-sheet-test.log"
     },
     {
       "name": "admin-auth-ip-postgres-test",
@@ -35,8 +35,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1448,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-auth-ip-postgres-test.log"
+      "elapsedMs": 1355,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-auth-ip-postgres-test.log"
     },
     {
       "name": "admin-auth-ip-ui-test",
@@ -46,8 +46,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 352,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-auth-ip-ui-test.log"
+      "elapsedMs": 368,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-auth-ip-ui-test.log"
     },
     {
       "name": "admin-partner-terms-postgres-test",
@@ -57,8 +57,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1074,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-partner-terms-postgres-test.log"
+      "elapsedMs": 1100,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-partner-terms-postgres-test.log"
     },
     {
       "name": "admin-partner-terms-ui-test",
@@ -68,8 +68,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 323,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-partner-terms-ui-test.log"
+      "elapsedMs": 318,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-partner-terms-ui-test.log"
     },
     {
       "name": "digilocker-production-verifier-test",
@@ -79,8 +79,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 88,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/digilocker-production-verifier-test.log"
+      "elapsedMs": 86,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/digilocker-production-verifier-test.log"
     },
     {
       "name": "digilocker-verification-postgres-test",
@@ -90,8 +90,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1984,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/digilocker-verification-postgres-test.log"
+      "elapsedMs": 1419,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/digilocker-verification-postgres-test.log"
     },
     {
       "name": "digilocker-verification-ui-test",
@@ -101,8 +101,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 293,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/digilocker-verification-ui-test.log"
+      "elapsedMs": 291,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/digilocker-verification-ui-test.log"
     },
     {
       "name": "google-place-retention-postgres-test",
@@ -112,8 +112,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1601,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/google-place-retention-postgres-test.log"
+      "elapsedMs": 1604,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/google-place-retention-postgres-test.log"
     },
     {
       "name": "google-places-adapter-test",
@@ -123,8 +123,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 342,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/google-places-adapter-test.log"
+      "elapsedMs": 332,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/google-places-adapter-test.log"
     },
     {
       "name": "google-venue-persistence-test",
@@ -134,8 +134,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 331,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/google-venue-persistence-test.log"
+      "elapsedMs": 320,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/google-venue-persistence-test.log"
     },
     {
       "name": "live-selfie-camera-test",
@@ -145,8 +145,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 2753,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/live-selfie-camera-test.log"
+      "elapsedMs": 2869,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/live-selfie-camera-test.log"
     },
     {
       "name": "partner-route-regression-test",
@@ -156,8 +156,19 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 398,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/partner-route-regression-test.log"
+      "elapsedMs": 370,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/partner-route-regression-test.log"
+    },
+    {
+      "name": "public-vibe-og-production-safety-test",
+      "command": [
+        "node",
+        "scripts/public-vibe-og-production-safety-test.mjs"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 65,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/public-vibe-og-production-safety-test.log"
     },
     {
       "name": "registration-text-guards-postgres-test",
@@ -167,8 +178,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1581,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/registration-text-guards-postgres-test.log"
+      "elapsedMs": 1397,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/registration-text-guards-postgres-test.log"
     },
     {
       "name": "share-identity-regression-test",
@@ -178,8 +189,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 542,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/share-identity-regression-test.log"
+      "elapsedMs": 528,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/share-identity-regression-test.log"
     },
     {
       "name": "shared-media-preview-test",
@@ -189,8 +200,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 359,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/shared-media-preview-test.log"
+      "elapsedMs": 356,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/shared-media-preview-test.log"
     },
     {
       "name": "squad-profile-metric-test",
@@ -200,8 +211,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1114,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/squad-profile-metric-test.log"
+      "elapsedMs": 1023,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/squad-profile-metric-test.log"
     },
     {
       "name": "vibe-metadata-share-regression-test",
@@ -211,8 +222,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 662,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/vibe-metadata-share-regression-test.log"
+      "elapsedMs": 659,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/vibe-metadata-share-regression-test.log"
     },
     {
       "name": "acceptance-backend-test",
@@ -222,8 +233,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 844,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/acceptance-backend-test.log"
+      "elapsedMs": 825,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/acceptance-backend-test.log"
     },
     {
       "name": "acceptance-ui-contract-test",
@@ -233,8 +244,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 33,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/acceptance-ui-contract-test.log"
+      "elapsedMs": 31,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/acceptance-ui-contract-test.log"
     },
     {
       "name": "account-status-rpc-test",
@@ -244,8 +255,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1522,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/account-status-rpc-test.log"
+      "elapsedMs": 1498,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/account-status-rpc-test.log"
     },
     {
       "name": "active-join-retry-test",
@@ -255,8 +266,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1420,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/active-join-retry-test.log"
+      "elapsedMs": 1449,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/active-join-retry-test.log"
     },
     {
       "name": "activities-filter-test",
@@ -266,8 +277,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 238,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activities-filter-test.log"
+      "elapsedMs": 235,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activities-filter-test.log"
     },
     {
       "name": "activity-checkout-terms-test",
@@ -277,8 +288,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 806,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-checkout-terms-test.log"
+      "elapsedMs": 866,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-checkout-terms-test.log"
     },
     {
       "name": "activity-deep-link-regression-test",
@@ -289,7 +300,7 @@
       "status": "PASS",
       "exitCode": 0,
       "elapsedMs": 28,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-deep-link-regression-test.log"
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-deep-link-regression-test.log"
     },
     {
       "name": "activity-history-test",
@@ -299,8 +310,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 304,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-history-test.log"
+      "elapsedMs": 302,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-history-test.log"
     },
     {
       "name": "activity-invite-lifecycle-test",
@@ -310,8 +321,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1553,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-invite-lifecycle-test.log"
+      "elapsedMs": 1447,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-invite-lifecycle-test.log"
     },
     {
       "name": "activity-media-feed-choice-test",
@@ -321,8 +332,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1169,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-media-feed-choice-test.log"
+      "elapsedMs": 1156,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-media-feed-choice-test.log"
     },
     {
       "name": "activity-payment-modes-test",
@@ -332,8 +343,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 286,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-payment-modes-test.log"
+      "elapsedMs": 277,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-payment-modes-test.log"
     },
     {
       "name": "activity-price-test",
@@ -343,8 +354,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 247,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-price-test.log"
+      "elapsedMs": 243,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-price-test.log"
     },
     {
       "name": "activity-safety-actions-test",
@@ -354,8 +365,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 250,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-safety-actions-test.log"
+      "elapsedMs": 245,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-safety-actions-test.log"
     },
     {
       "name": "activity-safety-reminder-postgres-test",
@@ -365,8 +376,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 3694,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-safety-reminder-postgres-test.log"
+      "elapsedMs": 3672,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-safety-reminder-postgres-test.log"
     },
     {
       "name": "activity-share-observation-test",
@@ -376,8 +387,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 264,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-share-observation-test.log"
+      "elapsedMs": 243,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-share-observation-test.log"
     },
     {
       "name": "activity-vibe-visibility-test",
@@ -387,8 +398,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 398,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/activity-vibe-visibility-test.log"
+      "elapsedMs": 388,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/activity-vibe-visibility-test.log"
     },
     {
       "name": "admin-account-management-test",
@@ -398,8 +409,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1077,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-account-management-test.log"
+      "elapsedMs": 1030,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-account-management-test.log"
     },
     {
       "name": "admin-category-catalog-test",
@@ -409,8 +420,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1155,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-category-catalog-test.log"
+      "elapsedMs": 1091,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-category-catalog-test.log"
     },
     {
       "name": "admin-observed-usage-test",
@@ -420,8 +431,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1118,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-observed-usage-test.log"
+      "elapsedMs": 1095,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-observed-usage-test.log"
     },
     {
       "name": "admin-operational-controls-test",
@@ -431,8 +442,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1427,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-operational-controls-test.log"
+      "elapsedMs": 1214,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-operational-controls-test.log"
     },
     {
       "name": "admin-read-models-test",
@@ -442,8 +453,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 356,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-read-models-test.log"
+      "elapsedMs": 351,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-read-models-test.log"
     },
     {
       "name": "admin-workspace-operations-test",
@@ -453,8 +464,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1471,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-workspace-operations-test.log"
+      "elapsedMs": 1482,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-workspace-operations-test.log"
     },
     {
       "name": "anonymous-media-db-test",
@@ -464,8 +475,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 939,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/anonymous-media-db-test.log"
+      "elapsedMs": 1012,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/anonymous-media-db-test.log"
     },
     {
       "name": "auth-bootstrap-regression-test",
@@ -475,8 +486,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 401,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/auth-bootstrap-regression-test.log"
+      "elapsedMs": 394,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/auth-bootstrap-regression-test.log"
     },
     {
       "name": "auth-identity-reuse-test",
@@ -486,8 +497,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 298,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/auth-identity-reuse-test.log"
+      "elapsedMs": 299,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/auth-identity-reuse-test.log"
     },
     {
       "name": "avatar-fallback-test",
@@ -497,8 +508,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 227,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/avatar-fallback-test.log"
+      "elapsedMs": 221,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/avatar-fallback-test.log"
     },
     {
       "name": "badge-engine-test",
@@ -508,8 +519,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 2563,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/badge-engine-test.log"
+      "elapsedMs": 2455,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/badge-engine-test.log"
     },
     {
       "name": "cashfree-modal-completion-test",
@@ -519,8 +530,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 240,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/cashfree-modal-completion-test.log"
+      "elapsedMs": 231,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/cashfree-modal-completion-test.log"
     },
     {
       "name": "cashfree-webhook-target-test",
@@ -530,8 +541,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 247,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/cashfree-webhook-target-test.log"
+      "elapsedMs": 242,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/cashfree-webhook-target-test.log"
     },
     {
       "name": "category-catalog-client-test",
@@ -541,8 +552,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 234,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/category-catalog-client-test.log"
+      "elapsedMs": 230,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/category-catalog-client-test.log"
     },
     {
       "name": "chat-group-info-test",
@@ -552,8 +563,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 364,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/chat-group-info-test.log"
+      "elapsedMs": 351,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/chat-group-info-test.log"
     },
     {
       "name": "chat-inbox-merge-test",
@@ -563,8 +574,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 237,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/chat-inbox-merge-test.log"
+      "elapsedMs": 227,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/chat-inbox-merge-test.log"
     },
     {
       "name": "chat-realtime-regression-test",
@@ -574,8 +585,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 369,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/chat-realtime-regression-test.log"
+      "elapsedMs": 354,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/chat-realtime-regression-test.log"
     },
     {
       "name": "chat-ui-regression-test",
@@ -585,8 +596,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 280,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/chat-ui-regression-test.log"
+      "elapsedMs": 281,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/chat-ui-regression-test.log"
     },
     {
       "name": "chat001-final-report-generator-test",
@@ -596,8 +607,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 40,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/chat001-final-report-generator-test.log"
+      "elapsedMs": 43,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/chat001-final-report-generator-test.log"
     },
     {
       "name": "client-home-profile-test",
@@ -607,8 +618,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 28,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/client-home-profile-test.log"
+      "elapsedMs": 39,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/client-home-profile-test.log"
     },
     {
       "name": "client-pdf-regression-test",
@@ -618,8 +629,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 33,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/client-pdf-regression-test.log"
+      "elapsedMs": 44,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/client-pdf-regression-test.log"
     },
     {
       "name": "client-readiness-contract-test",
@@ -629,8 +640,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 27,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/client-readiness-contract-test.log"
+      "elapsedMs": 32,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/client-readiness-contract-test.log"
     },
     {
       "name": "community-anonymous-media-service-test",
@@ -640,8 +651,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 323,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/community-anonymous-media-service-test.log"
+      "elapsedMs": 286,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/community-anonymous-media-service-test.log"
     },
     {
       "name": "community-cover-edit-test",
@@ -651,8 +662,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 274,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/community-cover-edit-test.log"
+      "elapsedMs": 321,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/community-cover-edit-test.log"
     },
     {
       "name": "community-discovery-ui-test",
@@ -662,8 +673,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 351,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/community-discovery-ui-test.log"
+      "elapsedMs": 360,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/community-discovery-ui-test.log"
     },
     {
       "name": "community-permissions-test",
@@ -673,8 +684,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 279,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/community-permissions-test.log"
+      "elapsedMs": 275,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/community-permissions-test.log"
     },
     {
       "name": "feed-loading-state-test",
@@ -684,8 +695,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 249,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/feed-loading-state-test.log"
+      "elapsedMs": 245,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/feed-loading-state-test.log"
     },
     {
       "name": "frontend-safe-overrides-test",
@@ -696,7 +707,7 @@
       "status": "PASS",
       "exitCode": 0,
       "elapsedMs": 27,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/frontend-safe-overrides-test.log"
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/frontend-safe-overrides-test.log"
     },
     {
       "name": "google-oauth-web-test",
@@ -706,8 +717,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 249,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/google-oauth-web-test.log"
+      "elapsedMs": 245,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/google-oauth-web-test.log"
     },
     {
       "name": "hero-brand-visual-test",
@@ -717,8 +728,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 37,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/hero-brand-visual-test.log"
+      "elapsedMs": 36,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/hero-brand-visual-test.log"
     },
     {
       "name": "host-activity-test",
@@ -728,8 +739,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 293,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/host-activity-test.log"
+      "elapsedMs": 281,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/host-activity-test.log"
     },
     {
       "name": "invited-registration-answers-postgres-test",
@@ -739,8 +750,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1418,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/invited-registration-answers-postgres-test.log"
+      "elapsedMs": 1173,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/invited-registration-answers-postgres-test.log"
     },
     {
       "name": "invited-registration-payment-test",
@@ -750,8 +761,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 289,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/invited-registration-payment-test.log"
+      "elapsedMs": 280,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/invited-registration-payment-test.log"
     },
     {
       "name": "messages-search-performance-test",
@@ -761,8 +772,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 304,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/messages-search-performance-test.log"
+      "elapsedMs": 289,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/messages-search-performance-test.log"
     },
     {
       "name": "onboarding-completion-test",
@@ -772,8 +783,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 26,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/onboarding-completion-test.log"
+      "elapsedMs": 25,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/onboarding-completion-test.log"
     },
     {
       "name": "onboarding-google-auth-test",
@@ -783,8 +794,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 248,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/onboarding-google-auth-test.log"
+      "elapsedMs": 247,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/onboarding-google-auth-test.log"
     },
     {
       "name": "onboarding-profile-test",
@@ -794,8 +805,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 287,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/onboarding-profile-test.log"
+      "elapsedMs": 285,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/onboarding-profile-test.log"
     },
     {
       "name": "onboarding-responsibility-taglines-test",
@@ -805,8 +816,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 324,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/onboarding-responsibility-taglines-test.log"
+      "elapsedMs": 322,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/onboarding-responsibility-taglines-test.log"
     },
     {
       "name": "participant-management-boundaries-test",
@@ -816,8 +827,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1387,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/participant-management-boundaries-test.log"
+      "elapsedMs": 1315,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/participant-management-boundaries-test.log"
     },
     {
       "name": "partner-auth-test",
@@ -827,8 +838,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 176,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/partner-auth-test.log"
+      "elapsedMs": 164,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/partner-auth-test.log"
     },
     {
       "name": "partner-dashboard-loading-test",
@@ -838,8 +849,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 250,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/partner-dashboard-loading-test.log"
+      "elapsedMs": 246,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/partner-dashboard-loading-test.log"
     },
     {
       "name": "partner-ecosystem-test",
@@ -849,8 +860,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 262,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/partner-ecosystem-test.log"
+      "elapsedMs": 248,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/partner-ecosystem-test.log"
     },
     {
       "name": "partner-preflight-test",
@@ -860,8 +871,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 392,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/partner-preflight-test.log"
+      "elapsedMs": 366,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/partner-preflight-test.log"
     },
     {
       "name": "partner-submit-regression-test",
@@ -871,8 +882,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 281,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/partner-submit-regression-test.log"
+      "elapsedMs": 279,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/partner-submit-regression-test.log"
     },
     {
       "name": "partner-v1-contract-test",
@@ -882,8 +893,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 27,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/partner-v1-contract-test.log"
+      "elapsedMs": 29,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/partner-v1-contract-test.log"
     },
     {
       "name": "payment-entry-authorization-test",
@@ -893,8 +904,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1571,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/payment-entry-authorization-test.log"
+      "elapsedMs": 1522,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/payment-entry-authorization-test.log"
     },
     {
       "name": "payment-registration-confirmation-test",
@@ -904,8 +915,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 286,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/payment-registration-confirmation-test.log"
+      "elapsedMs": 285,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/payment-registration-confirmation-test.log"
     },
     {
       "name": "phase3-vibe-test",
@@ -915,8 +926,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 226,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/phase3-vibe-test.log"
+      "elapsedMs": 224,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/phase3-vibe-test.log"
     },
     {
       "name": "phase4-privacy-test",
@@ -926,8 +937,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 268,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/phase4-privacy-test.log"
+      "elapsedMs": 263,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/phase4-privacy-test.log"
     },
     {
       "name": "phase5-profile-test",
@@ -937,8 +948,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 312,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/phase5-profile-test.log"
+      "elapsedMs": 283,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/phase5-profile-test.log"
     },
     {
       "name": "profile-catalog-recovery-test",
@@ -948,8 +959,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 336,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/profile-catalog-recovery-test.log"
+      "elapsedMs": 309,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/profile-catalog-recovery-test.log"
     },
     {
       "name": "profile-community-avatars-test",
@@ -959,8 +970,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 299,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/profile-community-avatars-test.log"
+      "elapsedMs": 281,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/profile-community-avatars-test.log"
     },
     {
       "name": "profile-interest-atomic-test",
@@ -970,8 +981,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 939,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/profile-interest-atomic-test.log"
+      "elapsedMs": 884,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/profile-interest-atomic-test.log"
     },
     {
       "name": "profile-social-test",
@@ -981,8 +992,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 309,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/profile-social-test.log"
+      "elapsedMs": 230,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/profile-social-test.log"
     },
     {
       "name": "qa-isolated-backend-safety-test",
@@ -992,8 +1003,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 142,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/qa-isolated-backend-safety-test.log"
+      "elapsedMs": 138,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/qa-isolated-backend-safety-test.log"
     },
     {
       "name": "referral-reward-identity-test",
@@ -1003,8 +1014,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1076,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/referral-reward-identity-test.log"
+      "elapsedMs": 1068,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/referral-reward-identity-test.log"
     },
     {
       "name": "registration-questions-test",
@@ -1014,8 +1025,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 234,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/registration-questions-test.log"
+      "elapsedMs": 245,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/registration-questions-test.log"
     },
     {
       "name": "sms-provider-diagnostics-test",
@@ -1025,8 +1036,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 248,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/sms-provider-diagnostics-test.log"
+      "elapsedMs": 261,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/sms-provider-diagnostics-test.log"
     },
     {
       "name": "storage-signing-regression-test",
@@ -1037,7 +1048,7 @@
       "status": "PASS",
       "exitCode": 0,
       "elapsedMs": 234,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/storage-signing-regression-test.log"
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/storage-signing-regression-test.log"
     },
     {
       "name": "supabase-repair-regression-test",
@@ -1047,8 +1058,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 25,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/supabase-repair-regression-test.log"
+      "elapsedMs": 27,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/supabase-repair-regression-test.log"
     },
     {
       "name": "trust-score-database-test",
@@ -1058,8 +1069,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1180,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/trust-score-database-test.log"
+      "elapsedMs": 1153,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/trust-score-database-test.log"
     },
     {
       "name": "validation-test",
@@ -1069,8 +1080,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 234,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/validation-test.log"
+      "elapsedMs": 244,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/validation-test.log"
     },
     {
       "name": "vibe-share-attribution-test",
@@ -1080,8 +1091,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1110,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/vibe-share-attribution-test.log"
+      "elapsedMs": 1033,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/vibe-share-attribution-test.log"
     },
     {
       "name": "workspace-loading-regression-test",
@@ -1091,8 +1102,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 549,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/workspace-loading-regression-test.log"
+      "elapsedMs": 305,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/workspace-loading-regression-test.log"
     },
     {
       "name": "workspace-refresh-test",
@@ -1102,8 +1113,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 384,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/workspace-refresh-test.log"
+      "elapsedMs": 225,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/workspace-refresh-test.log"
     },
     {
       "name": "edge-core-tests",
@@ -1117,8 +1128,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 702,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/edge-core-tests.log"
+      "elapsedMs": 596,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-core-tests.log"
     },
     {
       "name": "edge-sms-tests",
@@ -1132,8 +1143,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 50,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/edge-sms-tests.log"
+      "elapsedMs": 49,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-sms-tests.log"
     },
     {
       "name": "cashfree-edge-typecheck",
@@ -1146,8 +1157,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 170,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/cashfree-edge-typecheck.log"
+      "elapsedMs": 173,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/cashfree-edge-typecheck.log"
     },
     {
       "name": "app-typecheck",
@@ -1158,8 +1169,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 43378,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/app-typecheck.log"
+      "elapsedMs": 37315,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/app-typecheck.log"
     },
     {
       "name": "expo-doctor",
@@ -1170,8 +1181,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 4336,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/expo-doctor.log"
+      "elapsedMs": 3926,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/expo-doctor.log"
     },
     {
       "name": "app-production-export",
@@ -1182,8 +1193,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 4366,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/app-production-export.log"
+      "elapsedMs": 2657,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/app-production-export.log"
     },
     {
       "name": "phone-otp-ui-test",
@@ -1193,8 +1204,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 4912,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/phone-otp-ui-test.log"
+      "elapsedMs": 5522,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/phone-otp-ui-test.log"
     },
     {
       "name": "admin-admin-review-read-models-test",
@@ -1204,8 +1215,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 280,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-admin-review-read-models-test.log"
+      "elapsedMs": 378,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-admin-review-read-models-test.log"
     },
     {
       "name": "admin-lint",
@@ -1216,8 +1227,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 5472,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-lint.log"
+      "elapsedMs": 5444,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-lint.log"
     },
     {
       "name": "admin-production-build",
@@ -1228,8 +1239,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 20699,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-production-build.log"
+      "elapsedMs": 4901,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-production-build.log"
     },
     {
       "name": "admin-typecheck",
@@ -1242,8 +1253,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 1461,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/admin-typecheck.log"
+      "elapsedMs": 1191,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/admin-typecheck.log"
     },
     {
       "name": "edge-aadhaar-verification-handler_test-ts",
@@ -1256,8 +1267,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 551,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/edge-aadhaar-verification-handler_test-ts.log"
+      "elapsedMs": 242,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-aadhaar-verification-handler_test-ts.log"
     },
     {
       "name": "edge-aadhaar-verification-index-ts",
@@ -1269,8 +1280,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 227,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/edge-aadhaar-verification-index-ts.log"
+      "elapsedMs": 42,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-aadhaar-verification-index-ts.log"
     },
     {
       "name": "edge-community-media-index-ts",
@@ -1282,8 +1293,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 50,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/edge-community-media-index-ts.log"
+      "elapsedMs": 70,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-community-media-index-ts.log"
     },
     {
       "name": "edge-google-places-index-ts",
@@ -1295,8 +1306,8 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 38,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/edge-google-places-index-ts.log"
+      "elapsedMs": 53,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-google-places-index-ts.log"
     },
     {
       "name": "edge-send-sms-index-ts",
@@ -1310,8 +1321,22 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 14,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/edge-send-sms-index-ts.log"
+      "elapsedMs": 52,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-send-sms-index-ts.log"
+    },
+    {
+      "name": "edge-share-vibe-handler_test-ts",
+      "command": [
+        "deno",
+        "test",
+        "--allow-env",
+        "--node-modules-dir=none",
+        "supabase/functions/share-vibe/handler_test.ts"
+      ],
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 92,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-share-vibe-handler_test-ts.log"
     },
     {
       "name": "edge-share-vibe-index-ts",
@@ -1323,13 +1348,13 @@
       ],
       "status": "PASS",
       "exitCode": 0,
-      "elapsedMs": 13,
-      "log": "tmp/chat001-production-regression-local-20261003T215355Z/edge-share-vibe-index-ts.log"
+      "elapsedMs": 26,
+      "log": "tmp/chat001-production-regression-local-20261003T223459Z/edge-share-vibe-index-ts.log"
     }
   ],
-  "finishedAt": "2026-10-03T21:56:22.787050+00:00",
+  "finishedAt": "2026-10-03T22:37:00.439229+00:00",
   "counts": {
-    "total": 117,
-    "passed": 117
+    "total": 119,
+    "passed": 119
   }
 }

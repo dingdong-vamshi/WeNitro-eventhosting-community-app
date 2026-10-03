@@ -1,0 +1,136 @@
+{
+  "at": "2026-10-03T22:06:59.195427+00:00",
+  "status": "PROPOSED_FOR_COORDINATOR_INTEGRATION_NOT_NEW_PRODUCTION_ACCEPTANCE",
+  "targetRelease": {
+    "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+  },
+  "targetCommits": {
+    "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+    "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+  },
+  "deploymentEvidenceBoundary": "New App deployment identity is supplied by coordinator task instruction. Root integrated-release.json still contains96f1ecf/dpl_3upivwr3iVp43DohkVi53DznEPi3 at read time; coordinator must reconcile the release manifest before final generation. Admin deployment is unchanged and already verified.",
+  "sourceProof": {
+    "admin": {
+      "beforeCommit": "bcdaa966",
+      "afterCommit": "03d20e5",
+      "changedPaths": [
+        "README.md",
+        "src/app/(admin)/security/ip-monitoring/page.tsx",
+        "src/app/(admin)/security/page.tsx",
+        "src/components/admin/ip-monitoring-table.tsx",
+        "src/components/admin/partner-application-detail-screen.tsx",
+        "src/lib/admin-auth-observations.ts",
+        "src/lib/partner-admin.ts"
+      ],
+      "commits": [
+        "03d20e5 Read retained Auth IP observations with bounded current Admin access",
+        "e4a6625 Show recorded Partner Terms receipt in Admin review"
+      ]
+    },
+    "auth": {
+      "beforeCommit": "08b8bb8",
+      "afterCommit": "fc0257f",
+      "unchangedFiles": [
+        {
+          "path": "src/services/auth-production.ts",
+          "gitBlobBefore": "8f50e664c97cfcccae3bded2b6ced1694fcd59aa",
+          "gitBlobAfter": "8f50e664c97cfcccae3bded2b6ced1694fcd59aa"
+        },
+        {
+          "path": "src/services/google-auth.shared.ts",
+          "gitBlobBefore": "ac059e0cd4fbfa8f06b430a05bf0ded6b0b1ca32",
+          "gitBlobAfter": "ac059e0cd4fbfa8f06b430a05bf0ded6b0b1ca32"
+        },
+        {
+          "path": "src/services/google-auth.web.ts",
+          "gitBlobBefore": "57dcc150dbff6b4be4f92fd2e9117547c25f38c1",
+          "gitBlobAfter": "57dcc150dbff6b4be4f92fd2e9117547c25f38c1"
+        },
+        {
+          "path": "src/services/google-auth.ts",
+          "gitBlobBefore": "d7fb31fad9568a9dce1dc61204d47d16e09734de",
+          "gitBlobAfter": "d7fb31fad9568a9dce1dc61204d47d16e09734de"
+        },
+        {
+          "path": "src/components/onboarding/reference-screens.tsx",
+          "gitBlobBefore": "3587bd71cdd89e4bd026a7678c9ff7b1728906a3",
+          "gitBlobAfter": "3587bd71cdd89e4bd026a7678c9ff7b1728906a3"
+        }
+      ]
+    },
+    "announcements": {
+      "path": "src/components/login-announcements.tsx",
+      "gitBlobBefore": "bf0c4a41dcf53ee92731aef03c937631e0f60a41",
+      "gitBlobAfter": "bf0c4a41dcf53ee92731aef03c937631e0f60a41",
+      "rootAppReview": "LoginAnnouncements mount condition and props unchanged; ActionConfirmationProvider wraps children but does not alter announcement fetch/acknowledgement semantics."
+    },
+    "localGate": {
+      "startedAt": "2026-10-03T21:53:55.927271+00:00",
+      "appCommit": "e8727e09b1aef67988b00c58e31350e6b9c9063f",
+      "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
+      "status": "PASS",
+      "finishedAt": "2026-10-03T21:56:22.787050+00:00",
+      "counts": {
+        "total": 117,
+        "passed": 117
+      }
+    },
+    "testedToReleaseChangedPaths": [
+      "docs/chat001-admin-auth-ip-production-proof.json",
+      "docs/chat001-admin-final-assessments.json",
+      "docs/chat001-admin-partner-terms-production-proof.json",
+      "docs/chat001-ae-technical-supplement.json",
+      "docs/chat001-app-final-assessments.json",
+      "docs/chat001-backend-release-compatibility-review.json",
+      "docs/chat001-digilocker-assessments-supplement.json",
+      "docs/chat001-digilocker-disabled-production-proof.json",
+      "docs/chat001-feedback-text-guard-production-proof.json",
+      "docs/chat001-google-places-disabled-production-proof.json",
+      "docs/chat001-integrated-release.json",
+      "docs/chat001-pre-partner-preview-local-verification.json",
+      "docs/chat001-production-regression-local-verification.json",
+      "docs/chat001-regression-implementation-summary.json",
+      "docs/chat001-regression-production-rollout.json",
+      "docs/chat001-regression-security-advisor-review.json",
+      "qa-evidence/chat001/integrated-ae-screenshots.json",
+      "qa-evidence/chat001/integrated-iab-admin-screenshots.json",
+      "qa-evidence/chat001/regression-production/admin-ip-observations-empty.png",
+      "qa-evidence/chat001/regression-production/admin-partner-terms-missing71.png",
+      "qa-evidence/chat001/regression-production/admin-partner-terms-receipt108.png",
+      "qa-evidence/chat001/regression-production/chat-vibe-creator.png",
+      "qa-evidence/chat001/regression-production/ended-participant233-actions.png",
+      "qa-evidence/chat001/regression-production/home-nitro-card.png",
+      "qa-evidence/chat001/regression-production/home-tribe-presentation.png",
+      "qa-evidence/chat001/regression-production/partner-paid280-on-hold.png",
+      "qa-evidence/chat001/regression-production/partner-unpaid297-answer.png",
+      "qa-evidence/chat001/regression-production/referral-qualification-copy.png",
+      "qa-evidence/chat001/regression-production/verification-disabled-digilocker.png",
+      "qa-evidence/chat001/regression-production/vibe135-creator-activity.png",
+      "scripts/chat001-coordinator-working-assessments.mjs"
+    ]
+  },
+  "adminCountsUnchanged": {
+    "PASS": 49,
+    "PARTIAL_EXTERNAL_DEPENDENCY": 1,
+    "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
+    "PENDING_SCOPED_ACCEPTANCE": 1
+  },
+  "authCountsUnchanged": {
+    "PARTIAL_EXTERNAL_DEPENDENCY": 15,
+    "PENDING_SCOPED_ACCEPTANCE": 1
+  },
+  "preservedEvidence": "All screenshot paths/hash/dates/deployment IDs and production records copied unchanged. Only assessed-release metadata and compatibility justification added.",
+  "coordinatorGateReview": {
+    "script": "scripts/chat001-coordinator-working-assessments.mjs",
+    "observed": "Latest full117/117 e8727e0 gate is read dynamically. fc0257f differs only in docs/evidence/coordinator report script, not runtime source. Existing selected-release manifest still points to96f1ecf, so current source-parity string correctly requires reconciliation until manifest updated.",
+    "recommendedDisposition": "Preserve4PASS/3PENDING process gates; no final evidence or responsive gate promotion. IP click remains pending. Security136definerWARN+1passwordWARN=137WARN total,11INFO,0ERROR.",
+    "runtimeCompatibility": "e8727e0 tested runtime equalsfc0257f deployed runtime by changed-path review; different commit hashes alone must not imply untested product changes."
+  },
+  "filesForIntegration": [
+    "docs/chat001-admin-final-assessments-release-proposed.json",
+    "docs/chat001-auth-provider-final-assessments-release-proposed.json"
+  ],
+  "rootFilesModified": false,
+  "commitsCreated": false
+}

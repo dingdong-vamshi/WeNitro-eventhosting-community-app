@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-03T21:48:18.811251+00:00",
-  "scope": "Two coordinator merge-by-ID updates for deployed disabled DigiLocker; real provider activation remains external.",
+  "at": "2026-10-03T22:10:25.241717+00:00",
+  "scope": "Two deployed-disabled external-dependency rows reconciled to Appfc0257f by exact96f1ecf\u2192fc0257f source identity; existing capture and API proof dates retained.",
   "requirements": [
     {
       "id": "VERIFY-AADHAAR",
@@ -10,7 +10,13 @@
       "implemented": "Supported Sandbox DigiLocker consent/initiate/status/issued-Aadhaar metadata adapter with authenticated account-bound private ledger, disabled default and test non-award; Verification consent/hosted link/status UI; production verified outcome adds existing Aadhaar +20 and preserves selfie/Nitro/other Trust rules.",
       "acceptanceScope": "Deployed disabled Verification card and Aadhaar0/20 inspected on account71;9 actual final-release API checks passed, including anonymous401, authenticated unavailable/verifiedfalse, denied owner/forged-owner ledger reads and unchanged owner Trust10 on account120. Read-only deployed SQL confirms private RLS/service ACL, zero sessions/verified/test-verified rows, no sensitive identity columns and actual Trust/sync helper wiring. Local synthetic production proof verifies exactly +20 once and test+0; no live provider flow is accepted.",
       "localVerification": [
-        "docs/chat001-digilocker-local-proof.json"
+        "docs/chat001-digilocker-local-proof.json",
+        {
+          "path": "docs/chat001-production-regression-local-verification.json",
+          "status": "PASS",
+          "checks": 117,
+          "scope": "Current gate includes DigiLocker14Edge/58PG/26UI and15verifier boundaries; not live provider identity evidence."
+        }
       ],
       "productionVerification": [
         {
@@ -39,7 +45,8 @@
         "docs/chat001-digilocker-integration.md",
         "docs/chat001-digilocker-integrated-security-review.json",
         "docs/chat001-digilocker-disabled-production-proof.json",
-        "docs/chat001-regression-production-rollout.json"
+        "docs/chat001-regression-production-rollout.json",
+        "docs/chat001-backend-hotfix-compatibility-proposed.json"
       ],
       "screenshotProof": [
         {
@@ -55,7 +62,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Supported Sandbox DigiLocker integration is deployed and deliberately disabled. Authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials and registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance remain external prerequisites. Remote credential absence was not established. No real Aadhaar verification or resulting live +20 award is claimed.",
@@ -64,14 +71,23 @@
         "Explicit production activation and consenting real-person hosted-flow acceptance",
         "Real verified outcome/Trust+20 and supported device-return acceptance after authorized activation"
       ],
-      "evidenceCompatibility": "Evidence is from deployed App96f1ecf / dpl_3upivwr3iVp43DohkVi53DznEPi3 and deployed Aadhaar Edgev1 / database migration actual20261003213131 (source20261003205431). The screenshot is the newly captured disabled card, not a reused preintegration screenshot. The next planned App-only Partner gate regression is outside this evidence scope; preserve capture IDs and confirm the actual diff before accepting reuse for that future release.",
+      "evidenceCompatibility": "App96f1ecf\u2192fc0257f changes only Partner route/access gate and shared-preview renderer in product code; all7 Aadhaar Edge/migration/service/card/Verification files compared byte-identical. Database/Edgev1/Admin03d20e5 unchanged during App-only hotfix. Therefore actual disabled9API/readonlySQL and account71 disabled-card/Aadhaar0/20 screenshot remain compatible. Screenshot/API capturedDeploymentId and timestamps remain their original96f1ecf evidence; no recapture or live provider activation claim. docs/chat001-backend-hotfix-compatibility-proposed.json",
       "sourceClauseIds": [
         "A26-01",
         "A26-02",
         "A26-03"
       ],
       "requestedChange": "Aadhaar verification uses an approved licensed provider and exposes only legitimate verification outcomes.",
-      "screenshotReviewProvenance": "Coordinator captured and inspected deployed full card; backend agent independently opened the actual PNG bytes and confirmed disabled message and Aadhaar0/20."
+      "screenshotReviewProvenance": "Coordinator captured and inspected deployed full card; backend agent independently opened the actual PNG bytes and confirmed disabled message and Aadhaar0/20.",
+      "previousAssessmentRelease": {
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseCompatibilityReview": {
+        "path": "docs/chat001-backend-hotfix-compatibility-proposed.json",
+        "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+        "scope": "Disabled UI and backend/Trust source identical to accepted96f1ecf state; real provider flow still excluded."
+      }
     },
     {
       "id": "TRUST-AADHAAR",
@@ -81,7 +97,13 @@
       "implemented": "Supported Sandbox DigiLocker consent/initiate/status/issued-Aadhaar metadata adapter with authenticated account-bound private ledger, disabled default and test non-award; Verification consent/hosted link/status UI; production verified outcome adds existing Aadhaar +20 and preserves selfie/Nitro/other Trust rules.",
       "acceptanceScope": "Deployed disabled Verification card and Aadhaar0/20 inspected on account71;9 actual final-release API checks passed, including anonymous401, authenticated unavailable/verifiedfalse, denied owner/forged-owner ledger reads and unchanged owner Trust10 on account120. Read-only deployed SQL confirms private RLS/service ACL, zero sessions/verified/test-verified rows, no sensitive identity columns and actual Trust/sync helper wiring. Local synthetic production proof verifies exactly +20 once and test+0; no live provider flow is accepted.",
       "localVerification": [
-        "docs/chat001-digilocker-local-proof.json"
+        "docs/chat001-digilocker-local-proof.json",
+        {
+          "path": "docs/chat001-production-regression-local-verification.json",
+          "status": "PASS",
+          "checks": 117,
+          "scope": "Current gate includes DigiLocker14Edge/58PG/26UI and15verifier boundaries; not live provider identity evidence."
+        }
       ],
       "productionVerification": [
         {
@@ -110,7 +132,8 @@
         "docs/chat001-digilocker-integration.md",
         "docs/chat001-digilocker-integrated-security-review.json",
         "docs/chat001-digilocker-disabled-production-proof.json",
-        "docs/chat001-regression-production-rollout.json"
+        "docs/chat001-regression-production-rollout.json",
+        "docs/chat001-backend-hotfix-compatibility-proposed.json"
       ],
       "screenshotProof": [
         {
@@ -126,7 +149,7 @@
       "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "reason": "Supported Sandbox DigiLocker integration is deployed and deliberately disabled. Authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials and registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance remain external prerequisites. Remote credential absence was not established. No real Aadhaar verification or resulting live +20 award is claimed.",
@@ -135,12 +158,21 @@
         "Explicit production activation and consenting real-person hosted-flow acceptance",
         "Real verified outcome/Trust+20 and supported device-return acceptance after authorized activation"
       ],
-      "evidenceCompatibility": "Evidence is from deployed App96f1ecf / dpl_3upivwr3iVp43DohkVi53DznEPi3 and deployed Aadhaar Edgev1 / database migration actual20261003213131 (source20261003205431). The screenshot is the newly captured disabled card, not a reused preintegration screenshot. The next planned App-only Partner gate regression is outside this evidence scope; preserve capture IDs and confirm the actual diff before accepting reuse for that future release.",
+      "evidenceCompatibility": "App96f1ecf\u2192fc0257f changes only Partner route/access gate and shared-preview renderer in product code; all7 Aadhaar Edge/migration/service/card/Verification files compared byte-identical. Database/Edgev1/Admin03d20e5 unchanged during App-only hotfix. Therefore actual disabled9API/readonlySQL and account71 disabled-card/Aadhaar0/20 screenshot remain compatible. Screenshot/API capturedDeploymentId and timestamps remain their original96f1ecf evidence; no recapture or live provider activation claim. docs/chat001-backend-hotfix-compatibility-proposed.json",
       "sourceClauseIds": [
         "B30-02"
       ],
       "requestedChange": "Legitimate Aadhaar verification contributes twenty Trust points.",
-      "screenshotReviewProvenance": "Coordinator captured and inspected deployed full card; backend agent independently opened the actual PNG bytes and confirmed disabled message and Aadhaar0/20."
+      "screenshotReviewProvenance": "Coordinator captured and inspected deployed full card; backend agent independently opened the actual PNG bytes and confirmed disabled message and Aadhaar0/20.",
+      "previousAssessmentRelease": {
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseCompatibilityReview": {
+        "path": "docs/chat001-backend-hotfix-compatibility-proposed.json",
+        "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+        "scope": "Disabled UI and backend/Trust source identical to accepted96f1ecf state; real provider flow still excluded."
+      }
     }
   ]
 }

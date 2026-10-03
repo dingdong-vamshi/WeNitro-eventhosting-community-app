@@ -1,15 +1,14 @@
 {
-  "at": "2026-10-03T20:25:40.260041+00:00",
+  "at": "2026-10-03T22:10:03.469050+00:00",
   "purpose": "Final-release E16 contribution awaiting root hosted297 and new preflight/external-link visual proof. Preserves exact prior compatible nonpayment scopes; no fabricated success.",
   "target": "cxsznhrkzqndhseodcyy",
   "count": 16,
   "release": {
-    "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-    "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+    "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
   },
   "counts": {
-    "PASS": 14,
-    "PENDING_SCOPED_ACCEPTANCE": 2
+    "PASS": 16
   },
   "requirements": [
     {
@@ -41,11 +40,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "excludedPriorEvidence": "Old instructions/bottom-checkbox screenshots predate corrected pre-entry gate and cannot satisfy original PDF32."
+      "excludedPriorEvidence": "Old instructions/bottom-checkbox screenshots predate corrected pre-entry gate and cannot satisfy original PDF32.",
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-TERMS",
@@ -81,11 +81,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "excludedPriorEvidence": "Old instructions/bottom-checkbox screenshots predate corrected pre-entry gate and cannot satisfy original PDF32."
+      "excludedPriorEvidence": "Old instructions/bottom-checkbox screenshots predate corrected pre-entry gate and cannot satisfy original PDF32.",
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-DASHBOARD",
@@ -130,15 +131,16 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately."
+      "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately.",
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-PARTICIPANTS",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "Partner dashboard participant details reflect real registrations and payment/join states.",
       "before": "Existing participant reporting required checks against actual unpaid/approved/paid states.",
@@ -167,6 +169,11 @@
         {
           "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
           "outcome": "Owner71 actual dashboard RPC currently shows280 approved,1234paisa,ON_HOLD and297 payment_required,0paid plus persisted requiredanswer134 Sandbox Acceptance."
+        },
+        {
+          "path": "docs/chat001-partner-preview-production-retest.json",
+          "outcome": "Current deployed owner71 shows buyer116 on280 approved/paid12.34/ONHOLD and297 paymentrequired/CANCELLED/paid0 with savedrequiredanswer. No new hosted success or payout inferred.",
+          "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE"
         }
       ],
       "technicalProof": [
@@ -184,23 +191,24 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "visuallyReviewed": true,
           "sha256": "17d0f18cfbf809b8d5a7a0fe4d3f5ae4a9b42a6da0b48054988959d273f839f4"
-        }
+        },
+        "qa-evidence/chat001/regression-production/partner-cold297-final.png",
+        "qa-evidence/chat001/regression-production/partner-paid280-final.png"
       ],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid\u20b912.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "acceptanceScope": "Correct owner participant/payment ledger and registration answer display, including cold-route access and changing activities.",
+      "reason": "Current deployed owner71 shows buyer116 on280 approved/paid12.34/ONHOLD and297 paymentrequired/CANCELLED/paid0 with savedrequiredanswer. No new hosted success or payout inferred.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": [
-        "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid\u20b912.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states."
-      ]
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-PAYMENT-DETAILS",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": true,
       "requestedChange": "The chosen registration's payable amount, selected category and required details are correctly displayed.",
       "before": "Existing payment-detail view required validation of selected category, amount and answers.",
@@ -224,6 +232,11 @@
         {
           "path": "docs/chat001-existing-hosted-payment-current-receipt-proof.json",
           "outcome": "Owner71 actual dashboard RPC currently shows280 approved,1234paisa,ON_HOLD and297 payment_required,0paid plus persisted requiredanswer134 Sandbox Acceptance."
+        },
+        {
+          "path": "docs/chat001-partner-preview-production-retest.json",
+          "outcome": "Current deployed owner71 shows buyer116 on280 approved/paid12.34/ONHOLD and297 paymentrequired/CANCELLED/paid0 with savedrequiredanswer. No new hosted success or payout inferred.",
+          "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE"
         }
       ],
       "technicalProof": [
@@ -238,19 +251,20 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "visuallyReviewed": true,
           "sha256": "17d0f18cfbf809b8d5a7a0fe4d3f5ae4a9b42a6da0b48054988959d273f839f4"
-        }
+        },
+        "qa-evidence/chat001/regression-production/partner-cold297-final.png",
+        "qa-evidence/chat001/regression-production/partner-paid280-final.png"
       ],
-      "acceptanceScope": "Only the exact stated local, production API and visible UI scopes; Sandbox tests are not real-money collection, provider configuration, approval or settlement.",
-      "reason": "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid\u20b912.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states.",
-      "releaseReviewed": false,
-      "screenshotsReviewed": false,
+      "acceptanceScope": "Correct owner participant/payment ledger and registration answer display, including cold-route access and changing activities.",
+      "reason": "Current deployed owner71 shows buyer116 on280 approved/paid12.34/ONHOLD and297 paymentrequired/CANCELLED/paid0 with savedrequiredanswer. No new hosted success or payout inferred.",
+      "releaseReviewed": true,
+      "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": [
-        "Current actual Partner RPC and prior dashboard rendering are proven. Remaining visual-only state: owner71 open280 participant116 showing paid\u20b912.34/approved/ON_HOLD, and297 participant116 showing required answer Sandbox Acceptance with zero paid/payment required. No normal implementation defect found; no need complete297bank payment to show these truthful states."
-      ]
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-CATEGORY-PRICES",
@@ -303,10 +317,11 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": []
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-CATEGORY-SELECTION",
@@ -358,10 +373,11 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": []
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-REQUIRED-ANSWERS",
@@ -415,11 +431,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "excludedPriorEvidence": "integrated-invited-payment-form-regression.png records an actual failure later repaired; never positive acceptance proof."
+      "excludedPriorEvidence": "integrated-invited-payment-form-regression.png records an actual failure later repaired; never positive acceptance proof.",
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-PAID-JOIN",
@@ -475,10 +492,11 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": []
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-LIST-IDENTITY",
@@ -540,11 +558,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately."
+      "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately.",
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "PARTNER-EXTERNAL-URL",
@@ -579,10 +598,11 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": []
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "HOST-NORMAL-PAID",
@@ -627,11 +647,12 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "remainingValidation": [],
-      "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately."
+      "releaseReviewBasis": "Reviewed release identity and changed-path scope; these specific ordinary-host/dashboard/Partner-card behaviors are unchanged. Prior image scope/date preserved. New checkout/payment success and preflight are assessed separately.",
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "SEC-PAYMENT-PRIVACY",
@@ -670,10 +691,11 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": []
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "SEC-PAYMENT-IDEMPOTENCY",
@@ -727,10 +749,11 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": []
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "SEC-PAYMENT-AMOUNT",
@@ -769,10 +792,11 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": []
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     },
     {
       "id": "SEC-PAYMENT-STATE",
@@ -828,45 +852,14 @@
       "releaseReviewed": true,
       "screenshotsReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "remainingValidation": []
+      "remainingValidation": [],
+      "evidenceCompatibility": "Reviewed08b8bb8\u2192fc0257f: Partner components/services and Cashfree create/verify/webhook entrypoints unchanged. App route access/memo/key corrections specifically retested on current production cold297/form and280\u2194297/back/forward. Original provider/UI proof dates remain unchanged. New registration guards covered117local+12deployedtextfields."
     }
   ],
   "priorMetadataCorrections": "Owner dashboard/unpaid/required-question identity now correctly71; canonical category IDs corrected in current root metadata.",
-  "rootActionGroups": [
-    {
-      "group": "Unaccepted Partner preflight",
-      "ids": [
-        "PARTNER-INSTRUCTIONS",
-        "PARTNER-TERMS"
-      ],
-      "action": "Capture bullets and Terms modal with fields blocked; no real applicant agreement required."
-    },
-    {
-      "group": "Hosted Sandbox297",
-      "ids": [
-        "PARTNER-PARTICIPANTS",
-        "PARTNER-PAYMENT-DETAILS",
-        "PARTNER-CATEGORY-PRICES",
-        "PARTNER-CATEGORY-SELECTION",
-        "PARTNER-REQUIRED-ANSWERS",
-        "PARTNER-PAID-JOIN",
-        "SEC-PAYMENT-PRIVACY",
-        "SEC-PAYMENT-IDEMPOTENCY",
-        "SEC-PAYMENT-AMOUNT",
-        "SEC-PAYMENT-STATE"
-      ],
-      "action": "Complete legitimate provider Sandbox payment with required answers; inspect same-screen confirmation, authoritative amount, one persisted registration/payment, owner detail and cross-user privacy. Preserve held/no-payout state."
-    },
-    {
-      "group": "Partner external link",
-      "ids": [
-        "PARTNER-EXTERNAL-URL"
-      ],
-      "action": "Use already stored harmless HTTPS URL or dedicated fixture and capture actual open destination."
-    }
-  ],
-  "currentPaymentEvidenceLimit": "Activity297 order48 remains pending; retained280 provider-success + current280 receipt replay + current297 order-entry are deliberately distinct scopes. Actual new bank simulator is waiting on native browser access; no live money operation."
+  "rootActionGroups": [],
+  "currentPaymentEvidenceLimit": "Activity280 earliergenuinehostedSandboxsuccess/ONHOLD remainsvalid;297 latestUIcancelled/paymentrequired/zero paid, no newerprovider-success claim."
 }

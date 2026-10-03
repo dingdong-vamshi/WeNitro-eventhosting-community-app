@@ -1524,5 +1524,111 @@
     ],
     "outcome": "Actual deployed Activity233 visibly JOINED and COMPLETED; footer shows Like and Rate Participants, with no Leave Activity action. Image bytes personally reviewed. No rating, leave or overflow-menu click claimed.",
     "screenshotsReviewed": true
+  },
+  {
+    "name": "partner-cold297-final",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/partner-cold297-final.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerDashboard/297",
+    "at": "2026-10-03T22:07:45.284656+00:00",
+    "account": 71,
+    "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "requirements": [
+      "PARTNER-PARTICIPANTS",
+      "PARTNER-PAYMENT-DETAILS"
+    ],
+    "outcome": "Cold owner71 routeauthorized; requiredanswerSandboxAcceptance; CANCELLED paymentrequired,zero paid",
+    "reviewed": true
+  },
+  {
+    "name": "partner-paid280-final",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/partner-paid280-final.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerDashboard/280",
+    "at": "2026-10-03T22:07:45.284656+00:00",
+    "account": 71,
+    "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "requirements": [
+      "PARTNER-PARTICIPANTS",
+      "PARTNER-PAYMENT-DETAILS"
+    ],
+    "outcome": "ActualpriorSandboxpaidseatapproved,12.34paid,ONHOLD",
+    "reviewed": true
+  },
+  {
+    "name": "partner-cold-registration297-final",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/partner-cold-registration297-final.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerRegistrationForm/297",
+    "at": "2026-10-03T22:07:45.284656+00:00",
+    "account": 71,
+    "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "requirements": [
+      "PARTNER-REQUIRED-ANSWERS"
+    ],
+    "outcome": "Coldformauthorized,existingrequiredquestionlocked",
+    "reviewed": true
+  },
+  {
+    "name": "chat-video-preview-final",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/chat-video-preview-final.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T22:07:45.284656+00:00",
+    "account": 71,
+    "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "requirements": [
+      "SHARE-VIBE"
+    ],
+    "outcome": "Explicit video previewplaceholder+correctcreatorQA Auditrecipient andVibe135caption; noextractedframeclaim",
+    "reviewed": true
+  },
+  {
+    "name": "splash-rotation-first",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/splash-rotation-first.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T22:10:03.469050+00:00",
+    "account": 71,
+    "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "requirements": [
+      "AUTH-TAGLINE"
+    ],
+    "outcome": "Actualconsecutivefullreload splash duringfadeanimation: Adventures are better together",
+    "reviewed": true
+  },
+  {
+    "name": "splash-rotation-second",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/splash-rotation-second.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T22:10:03.469050+00:00",
+    "account": 71,
+    "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "requirements": [
+      "AUTH-TAGLINE"
+    ],
+    "outcome": "Actualconsecutivefullreload splash duringfadeanimation: From5AMruns tolate-nightstudy sessions",
+    "reviewed": true
+  },
+  {
+    "name": "activity-chat255-header",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/activity-chat255-header.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/255",
+    "at": "2026-10-03T22:11:12.286407+00:00",
+    "account": 71,
+    "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "requirements": [
+      "CHAT-NAMES"
+    ],
+    "outcome": "Correct Activity300 title and3members, no chatmessages",
+    "reviewed": true
+  },
+  {
+    "name": "chat-inbox-activity-name",
+    "path": "/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/chat-inbox-activity-name.png",
+    "url": "https://wenitro-app.vercel.app/#/chat",
+    "at": "2026-10-03T22:11:12.286407+00:00",
+    "account": 71,
+    "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "requirements": [
+      "CHAT-NAMES"
+    ],
+    "outcome": "Activity300correctname visibleinrealinbox, directnamesalso visible",
+    "reviewed": true
   }
 ]

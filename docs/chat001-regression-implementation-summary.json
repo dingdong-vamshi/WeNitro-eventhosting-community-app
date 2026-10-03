@@ -53,15 +53,16 @@
     {
       "change": "Admin authentication IP records",
       "implementation": "Bounded Admin/Master-only retained authentication IP read viewer, actor-scoped cancelable query, honest loading/error/empty states; no geography, risk scoring or fabricated data.",
-      "status": "IMPLEMENTED_LOCAL",
+      "status": "DEPLOYED_API_VERIFIED_UI_REFRESH_PENDING",
       "appCommit": "d2b7951",
       "adminCommit": "03d20e5",
-      "localProof": "docs/chat001-admin-auth-ip-regression.json"
+      "localProof": "docs/chat001-admin-auth-ip-regression.json",
+      "productionProof": "docs/chat001-admin-auth-ip-production-proof.json"
     },
     {
       "change": "Web camera-only selfie capture",
       "implementation": "HTTPS getUserMedia capture to JPEG with explicit preview/retake/cancel and track/lifecycle cleanup, preserving native camera behavior. No web gallery fallback.",
-      "status": "IMPLEMENTED_LOCAL",
+      "status": "DEPLOYED_GENUINE_CAMERA_ACCEPTANCE_PENDING",
       "commit": "a8e0b77",
       "localProof": "docs/chat001-live-selfie-camera-local-proof.json"
     },
@@ -90,7 +91,8 @@
       "sourceCommit": "413ce69",
       "localProof": "docs/chat001-partner-route-local-proof.json",
       "integratedGateCheck": "partner-route-regression-test",
-      "productionStatus": "App hotfix deployment and actual cold/reload280\u2192297/back-forward/registration-form retests pending; no new paid transaction needed."
+      "productionStatus": "DEPLOYED_PRODUCTION_RETEST_PASS",
+      "productionProof": "docs/chat001-partner-preview-production-retest.json"
     },
     {
       "change": "Video-safe internal share previews",
@@ -99,22 +101,30 @@
       "sourceCommit": "3c89d42",
       "localProof": "docs/chat001-share-media-preview-regression.json",
       "integratedGateCheck": "shared-media-preview-test",
-      "productionStatus": "App hotfix deployment and actual DM253/Vibe135 share-card screenshot retest pending. Placeholder is not a generated video thumbnail.",
-      "backendChange": "None; no signing/public-URL rewrite/RPC/schema/Edge change. Public share-vibe OG already uses branded fallback for video without poster."
+      "productionStatus": "DEPLOYED_PRODUCTION_RETEST_PASS",
+      "backendChange": "None; no signing/public-URL rewrite/RPC/schema/Edge change. Public share-vibe OG already uses branded fallback for video without poster.",
+      "productionProof": "docs/chat001-partner-preview-production-retest.json"
+    },
+    {
+      "change": "Public Vibe preview author authorization and cache policy",
+      "implementation": "Only active standalone public Vibes can publish preview metadata. Author account and Auth access are checked before signing; Activity media stays private. HTML is no-store through both Edge and Vercel; signed image access lasts five minutes.",
+      "commits": [
+        "5adc146",
+        "abe5827"
+      ],
+      "localProof": "docs/chat001-public-vibe-og-hardening.json",
+      "completeLocalGate": "docs/chat001-production-regression-local-verification.json",
+      "productionStatus": "Edge v4 active; Vercel no-store correction awaiting this push and production retest.",
+      "knownProductionFailure": "docs/chat001-public-vibe-og-cache-header-failure.json"
     }
   ],
-  "productionVisualAcceptance": "The coordinated96f1ecf release is deployed and actual API/SQL/UI evidence exists in the named artifacts. The later App-only Partner route and share-preview regressions passed the complete117-check gate and still require their new deployment plus targeted production interactions/captures. The prior locked-browser blocker is no longer the current acceptance state; do not substitute old screenshots for changed behavior.",
+  "productionVisualAcceptance": "Latest Appfc0257f andAdmin03d20e5 production evidence retained. Partner cold routes/activityswitch/back-forward/registrationform and sharedvideopreview actual screenshots pass. Remaining userinteractions and provider/deviceconditions remain explicit in308report; no blanket finalacceptance.",
   "localVerification": {
     "status": "PASS",
-    "checks": 117,
-    "passed": 117,
-    "failed": 0,
-    "report": "docs/chat001-production-regression-local-verification.json",
-    "testedAppCommit": "e8727e09b1aef67988b00c58e31350e6b9c9063f",
-    "testedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
-    "startedAt": "2026-10-03T21:53:55.927271+00:00",
-    "finishedAt": "2026-10-03T21:56:22.787050+00:00",
-    "scope": "Complete actual runner record: App/Admin typecheck and production builds, backend/Edge/RLS/security/payment/badge and UI regression checks, including Partner route and shared-media preview. Individual test boundaries remain in the report; not production UI acceptance."
+    "checks": 119,
+    "passed": 119,
+    "testedCommit": "abe5827407ab8de63f7aa81abdfed03df2ccdad2",
+    "report": "docs/chat001-production-regression-local-verification.json"
   },
   "at": "2026-10-03T22:01:58.195139+00:00",
   "productionEvidenceBeforeHotfix": {
@@ -185,5 +195,10 @@
       "Refresh reporting-only advisor reference to docs/chat001-regression-security-advisor-review.json:0ERROR,136authenticated-definerWARN,1leaked-passwordWARN,11private-RLSINFO; do not call all vulnerabilities resolved."
     ],
     "notNeeded": "No repeat synthetic badge awards, hosted payment, identity/session creation, provider activation or additional production mutation is required to close this backend review."
+  },
+  "finalCorrectionRelease": {
+    "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+    "deploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "proof": "docs/chat001-partner-preview-production-retest.json"
   }
 }

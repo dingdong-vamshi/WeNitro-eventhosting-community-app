@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-03T22:32:24.898Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "release": {
+    "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "shareVibeVersion": 4
+  },
+  "status": "FAIL",
+  "checks": [],
+  "cleanup": [
+    {
+      "name": "Exact synthetic Vibe deleted and anonymous preview now 404",
+      "status": "PASS",
+      "vibeId": 136
+    },
+    {
+      "name": "Exact synthetic media removed",
+      "status": "PASS"
+    },
+    {
+      "name": "Synthetic Storage object absence verified",
+      "status": "PASS"
+    },
+    {
+      "name": "QA120 badges, Nitro ledger and Trust unchanged",
+      "status": "PASS"
+    }
+  ],
+  "fixture": {
+    "ownerId": 120,
+    "runId": "1d9e546e-64ee-4409-85bd-2437c499cbd4",
+    "mediaKind": "synthetic one-pixel PNG",
+    "vibeId": 136
+  },
+  "scope": "Synthetic public fixture only; no actual private media or real identity/provider data.",
+  "reason": "A scoped public-preview assertion failed; no raw response bodies or capabilities recorded.",
+  "finishedAt": "2026-10-03T22:32:35.912Z"
+}

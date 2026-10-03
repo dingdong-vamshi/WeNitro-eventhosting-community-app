@@ -1,13 +1,13 @@
 {
   "projectId": "cxsznhrkzqndhseodcyy",
   "readyForProductionQA": true,
-  "at": "2026-10-03T21:35:59.397725+00:00",
-  "appCommit": "96f1ecfd5bd78f2688e386677407a0eb35dfd21e",
+  "at": "2026-10-03T22:05:31.608975+00:00",
+  "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
   "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
-  "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+  "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
   "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
   "appUrl": "https://wenitro-app.vercel.app",
-  "appImmutableUrl": "https://wenitro-fp37eu1kc-vamshi-krishna-pendyalas-projects.vercel.app",
+  "appImmutableUrl": "https://wenitro-aovleh5yx-vamshi-krishna-pendyalas-projects.vercel.app",
   "adminUrl": "https://wenitro-admin-roan.vercel.app",
   "cashfreeVerifyVersion": 4,
   "cashfreeCreateVersion": 6,
@@ -277,11 +277,45 @@
   ],
   "releaseNotes": "Coordinated regression release after complete115/115local gate. Four SQL migrations and two JWT-protected disabled-provider Edge functions preceded one Git-linked deployment per App/Admin. Both exact SHAs and production aliases READY. Provider activation was not changed. Deployed acceptance in progress, not final client acceptance.",
   "localGate": {
-    "checks": 115,
+    "checks": 117,
     "failed": 0,
-    "report": "docs/chat001-pre-partner-preview-local-verification.json",
-    "testedCommit": "53cb3d4",
-    "releaseDifference": "Evidence/report-only commit96f1ecf after the tested source; runtime implementation unchanged."
+    "report": "docs/chat001-production-regression-local-verification.json",
+    "testedCommit": "e8727e09b1aef67988b00c58e31350e6b9c9063f",
+    "releaseDifference": "Evidence/report-only fc0257f commit after tested runtime; no subsequent runtime change.",
+    "runtimeEquivalentToTestedSource": true,
+    "evidenceOnlyDifferencePaths": [
+      "docs/chat001-admin-auth-ip-production-proof.json",
+      "docs/chat001-admin-final-assessments.json",
+      "docs/chat001-admin-partner-terms-production-proof.json",
+      "docs/chat001-ae-technical-supplement.json",
+      "docs/chat001-app-final-assessments.json",
+      "docs/chat001-backend-release-compatibility-review.json",
+      "docs/chat001-digilocker-assessments-supplement.json",
+      "docs/chat001-digilocker-disabled-production-proof.json",
+      "docs/chat001-feedback-text-guard-production-proof.json",
+      "docs/chat001-google-places-disabled-production-proof.json",
+      "docs/chat001-integrated-release.json",
+      "docs/chat001-pre-partner-preview-local-verification.json",
+      "docs/chat001-production-regression-local-verification.json",
+      "docs/chat001-regression-implementation-summary.json",
+      "docs/chat001-regression-production-rollout.json",
+      "docs/chat001-regression-security-advisor-review.json",
+      "qa-evidence/chat001/integrated-ae-screenshots.json",
+      "qa-evidence/chat001/integrated-iab-admin-screenshots.json",
+      "qa-evidence/chat001/regression-production/admin-ip-observations-empty.png",
+      "qa-evidence/chat001/regression-production/admin-partner-terms-missing71.png",
+      "qa-evidence/chat001/regression-production/admin-partner-terms-receipt108.png",
+      "qa-evidence/chat001/regression-production/chat-vibe-creator.png",
+      "qa-evidence/chat001/regression-production/ended-participant233-actions.png",
+      "qa-evidence/chat001/regression-production/home-nitro-card.png",
+      "qa-evidence/chat001/regression-production/home-tribe-presentation.png",
+      "qa-evidence/chat001/regression-production/partner-paid280-on-hold.png",
+      "qa-evidence/chat001/regression-production/partner-unpaid297-answer.png",
+      "qa-evidence/chat001/regression-production/referral-qualification-copy.png",
+      "qa-evidence/chat001/regression-production/verification-disabled-digilocker.png",
+      "qa-evidence/chat001/regression-production/vibe135-creator-activity.png",
+      "scripts/chat001-coordinator-working-assessments.mjs"
+    ]
   },
   "productionRegressions": [
     {
@@ -322,17 +356,15 @@
   },
   "adminImmutableUrl": "https://wenitro-admin-14yjxqxik-vamshi-krishna-pendyalas-projects.vercel.app",
   "previousRegressionRelease": {
-    "at": "2026-10-03T19:33:48.201879+00:00",
-    "appCommit": "08b8bb8abee17f33f412cb449b9edce2749db0b4",
-    "adminCommit": "bcdaa9662a73897a0e413f58793b8f45463c906f",
-    "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-    "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
-    "appImmutableUrl": "https://wenitro-f9vc49af2-vamshi-krishna-pendyalas-projects.vercel.app",
-    "adminImmutableUrl": "https://wenitro-admin-j256pnnu7-vamshi-krishna-pendyalas-projects.vercel.app",
+    "appCommit": "96f1ecfd5bd78f2688e386677407a0eb35dfd21e",
+    "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "appImmutableUrl": "https://wenitro-fp37eu1kc-vamshi-krishna-pendyalas-projects.vercel.app",
     "localGate": {
-      "checks": 92,
+      "checks": 115,
       "failed": 0,
-      "report": "docs/chat001-integrated-local-verification.json"
+      "report": "docs/chat001-pre-partner-preview-local-verification.json",
+      "testedCommit": "53cb3d4",
+      "releaseDifference": "Evidence/report-only commit96f1ecf after the tested source; runtime implementation unchanged."
     }
   },
   "googlePlacesVersion": 1,
@@ -375,6 +407,27 @@
       "Reset Partner activity selection on changed URL",
       "Explicit safe video preview in shared cards"
     ],
-    "status": "LOCAL_VERIFIED_AWAITING_DEPLOYMENT"
+    "status": "DEPLOYED_PRODUCTION_RETEST_PASS",
+    "productionProof": "docs/chat001-partner-preview-production-retest.json"
+  },
+  "shareVibeVersion": 4,
+  "shareVibeRelease": {
+    "version": 4,
+    "status": "ACTIVE",
+    "verify_jwt": false,
+    "hash": "253791f3ed7b795be9a0d1d50c2a13892bfb5289edeb54de80f28c20d39f6ee3",
+    "deployedAt": "2026-10-03T22:32:24.620342+00:00",
+    "localGate": {
+      "checks": 119,
+      "passed": 119,
+      "testedCommit": "5adc146",
+      "report": "docs/chat001-production-regression-local-verification.json"
+    },
+    "fixtureOnlyFollowup": {
+      "commit": "ff53e16",
+      "safetyAssertions": 15,
+      "PNG": "69bytes,3CRCchecksPASS",
+      "runtimeUnchanged": true
+    }
   }
 }

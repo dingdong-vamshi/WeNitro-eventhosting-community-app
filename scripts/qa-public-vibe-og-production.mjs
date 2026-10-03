@@ -50,7 +50,7 @@ async function main(){
   assert.equal(created.data.user_id,120);assert.equal(created.data.event_id,null);assert.equal(created.data.visibility,'public');
   const verified=await verifyPublicPreview(request,id,fixture.caption);proof.checks.push(...verified.checks);proof.htmlSha256=verified.htmlSha256;
   const image=await fetch(verified.imageUrl,{signal:AbortSignal.timeout(20_000)});assert.equal(image.status,200);assert.match(image.headers.get('content-type')||'',/^image\/png/);const bytes=Buffer.from(await image.arrayBuffer());assert.deepEqual(bytes,png);proof.checks.push({name:'Public OG image capability returns exactly the synthetic owned PNG',status:'PASS',sha256:createHash('sha256').update(bytes).digest('hex')});proof.status='PASS';
- }catch{proof.status='FAIL';proof.reason='A scoped public-preview assertion failed; no raw response bodies or capabilities recorded.';process.exitCode=1;}
+ }catch(error){proof.status='FAIL';proof.reason='Scoped assertion: '+(error instanceof Error?error.message.split('\n')[0].slice(0,180):'Unknown failure');process.exitCode=1;}
  finally{
   if(authenticated)try{
    validateFixture(fixture,recipient.authId);

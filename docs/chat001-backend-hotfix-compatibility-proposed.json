@@ -1,0 +1,641 @@
+{
+  "at": "2026-10-03T22:08:07.183Z",
+  "status": "PROPOSED_SCOPED_COMPATIBILITY_REVIEW",
+  "reviewedAppCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+  "reviewedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
+  "selectedRelease": {
+    "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+  },
+  "unchangedFiles": [
+    {
+      "path": "src/components/profile-achievements.tsx",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "bafd85a25e1cc3ca9c8ef14c084c28a520bbe80fa8a615a8075b548d36981208"
+    },
+    {
+      "path": "src/components/verified-badge.tsx",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "7836dd80f47927fb2af264ced4f4f8a20265eb0039d2daca0fb37bd10b5c2d20"
+    },
+    {
+      "path": "src/services/reference-delta.ts",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "f3cee67c1b72db713f2c98acded3bd3f08797cc4def9220d2ae72b7aed252eee"
+    },
+    {
+      "path": "src/services/profile-production.ts",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "c609d673039799d397f3c104d0e66c7a01f7dfc3c64405245c148f4647f5c32f"
+    },
+    {
+      "path": "src/services/communities-production.ts",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "7de2e54d894e4a7e8d5809b1c3007f8de0a89b9d75d35f4f34e9bafc490b3b8d"
+    },
+    {
+      "path": "src/services/storage-signed-urls.ts",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "d3e1289f52aa22454f29b5ecb945342bfc46ce362ed759a2667309d242ccd05a"
+    },
+    {
+      "path": "supabase/functions/community-media/index.ts",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "4156b24a3bc108e587a6800155df904846d1ceea4c7f06a87ca117f2181301a7"
+    },
+    {
+      "path": "supabase/functions/community-media/handler.ts",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "b5ead9f0b5b963e1c581842d8d643c112377c81f9eba14c868a1c5e3912d0cbd"
+    },
+    {
+      "path": "supabase/migrations/20261002170748_client_badge_engine.sql",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "aa783222a8ad2999ff6eaab0badaa2e0e5dc7e026fd751fdf819f90c7ce5b22a"
+    },
+    {
+      "path": "supabase/migrations/20261003050836_anonymous_community_media_privacy.sql",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "4c1975b424258d314d4f0bfc15d5342fa4d6d13484606505044533d21bda4ea7"
+    },
+    {
+      "path": "supabase/migrations/20261001102925_anonymous_participant_ratings.sql",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "cb21d2299b6d8b8194ce97e3a39b31c143e8b577cf99d10fbe7fc2e13774bf83"
+    },
+    {
+      "path": "supabase/migrations/20261001103542_anonymous_rating_legacy_compatibility.sql",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "facc792d6feafecedd562e79cfb72d0b9a70d6a7e2ac8cf3f4e2809bacf39ef8"
+    },
+    {
+      "path": "supabase/migrations/20261003070837_authenticated_safety_reports.sql",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "634e401f519a9699909e85dd565fb60dbae1efa188a9d8abb376407fa0636b07"
+    },
+    {
+      "path": "supabase/migrations/20261003075804_atomic_profile_interests.sql",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "4666f5216d3f0b1c1fa61b7ce7454b5e56b9908a2a195ef3c64f73dd3d87b301"
+    },
+    {
+      "path": "supabase/migrations/20261003074522_observed_usage_analytics.sql",
+      "oldCommit": "08b8bb8",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "b4e3620f3dedbdc698567af908cea6b9691b945a9aa7e42bdd2ccfc22b37d327"
+    }
+  ],
+  "profilePortions": [
+    {
+      "path": "src/components/reconstruction/profile.tsx",
+      "symbol": "ProfileLayout",
+      "byteIdentical": true,
+      "sha256": "7bfd278b8d3d53e2cd58ca17f30dc438adac6d379d08861f8ef63bffee7b2c11",
+      "scopeLimit": "Whole profile file changed for owner-only Squad metric; this records only the named unchanged portion."
+    },
+    {
+      "path": "src/components/reconstruction/profile.tsx",
+      "symbol": "TrustCard",
+      "byteIdentical": true,
+      "sha256": "67ef641042650e9b6294ce264810f7954d1fea8b209388ee0c3f8cc51092dab5",
+      "scopeLimit": "Whole profile file changed for owner-only Squad metric; this records only the named unchanged portion."
+    },
+    {
+      "path": "src/components/reconstruction/profile.tsx",
+      "symbol": "trustFrom",
+      "byteIdentical": true,
+      "sha256": "5ce6176ca6edecc3e4b78ff21f9d8831fabacf588e2fb0cab2f1d08c7bc9ce10",
+      "scopeLimit": "Whole profile file changed for owner-only Squad metric; this records only the named unchanged portion."
+    },
+    {
+      "path": "src/components/reconstruction/profile.tsx",
+      "symbol": "trustMetrics",
+      "byteIdentical": true,
+      "sha256": "247bef838f6849ef5ec04bc2502a685347193f6ad319c26b5ebe918b6473d63a",
+      "scopeLimit": "Whole profile file changed for owner-only Squad metric; this records only the named unchanged portion."
+    }
+  ],
+  "imageChecks": [
+    {
+      "id": "BADGE-01",
+      "path": "qa-evidence/chat001-integrated-bc/badge-01-activity-explorer.png",
+      "sha256": "f69a664533d4649e5b97c253553916b1cef00a1049b8b29618e5469fcfaf58b3",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-02",
+      "path": "qa-evidence/chat001-integrated-bc/badge-02-active-explorer.png",
+      "sha256": "129b19f0ed1300e72da219f8eb7005b56f1b87742a77cf879ef4dec3ac71a595",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-03",
+      "path": "qa-evidence/chat001-integrated-bc/badge-03-adventure-seeker.png",
+      "sha256": "f70022b3fbbe8bc2502ae7670ddfe028bb02a2ae8b303db13542268d7baf004e",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-04",
+      "path": "qa-evidence/chat001-integrated-bc/badge-04-activity-pro.png",
+      "sha256": "012fa486ebaaa5d5254d9ffb3274af2155d9a10316479d13d28d537b3d698c43",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-05",
+      "path": "qa-evidence/chat001-integrated-bc/badge-05-first-time-host.png",
+      "sha256": "a9a107bd1c36f98dcfdee8e9d946da7b4fd5ee1d897a707004c68d086be440c7",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-06",
+      "path": "qa-evidence/chat001-integrated-bc/badge-06-active-host.png",
+      "sha256": "8af85d4d100b40a82a95d35223718f647e324ba037fa017c373db80194f8ccab",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-07",
+      "path": "qa-evidence/chat001-integrated-bc/badge-07-experienced-host.png",
+      "sha256": "1d2de939999c20ce3c7b0920cd817ab4b14152bbc6a39da09e43ed558a533529",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-08",
+      "path": "qa-evidence/chat001-integrated-bc/badge-08-hosting-veteran.png",
+      "sha256": "f6834022d7076a9a001b94729b31fe91d178acebc58ecc15635859e4c021ac39",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-09",
+      "path": "qa-evidence/chat001-integrated-bc/badge-09-community-starter.png",
+      "sha256": "a9323938dbaebebcb2cfdcd74dbb2f2448904f9faf57e3152bcfb2045d28dc0e",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-10",
+      "path": "qa-evidence/chat001-integrated-bc/badge-10-community-contributor.png",
+      "sha256": "0671a67479c48f9e5f1c00429b891c07ef7d5f20b2336b7560c87e229b1fb5a1",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-11",
+      "path": "qa-evidence/chat001-integrated-bc/badge-11-conversation-starter.png",
+      "sha256": "fe7688909c7edfb0403c37aa4bc121cc216ed0d6814060d89c0960795b8838fe",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-12",
+      "path": "qa-evidence/chat001-integrated-bc/badge-12-community-explorer.png",
+      "sha256": "9672d3e46a7b2db76698ee5377889113dfd133cb8879dc2023a5784a514a4a68",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-13",
+      "path": "qa-evidence/chat001-integrated-bc/badge-13-first-connector.png",
+      "sha256": "8fc464d19635d501bf6da10c558f3ae6012c912c0c84e14782c5c1504d978320",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-14",
+      "path": "qa-evidence/chat001-integrated-bc/badge-14-network-builder.png",
+      "sha256": "a40a7d4588889ec02fcbe67eb843ff20eb2f644e87ff75a852c7ed61bc5a9067",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-15",
+      "path": "qa-evidence/chat001-integrated-bc/badge-15-community-connector.png",
+      "sha256": "8c748d1ed0f3a9ef6a70b16d627474eb57312923fe8b00f72120f996aa71f6c2",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-16",
+      "path": "qa-evidence/chat001-integrated-bc/badge-16-first-activity.png",
+      "sha256": "673139b98ee90ea0f34fbd40b27b89222b04b1de33778efbe668563479e6b3e8",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-17",
+      "path": "qa-evidence/chat001-integrated-bc/badge-17-10-activities.png",
+      "sha256": "d3b042198831f42a642dcd29ebb58e26f613b35f25aee79fce488f21b1f1ea9f",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-18",
+      "path": "qa-evidence/chat001-integrated-bc/badge-18-25-activities.png",
+      "sha256": "1d6cc89adecdd7b5274471d28a74825c1ce83267c593da2e210cce5c8fe89e7d",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-19",
+      "path": "qa-evidence/chat001/iab-badge19-50activities.png",
+      "sha256": "a69a4686229fe05369689587f583e9fe35a3c1e020fffb51d9e1664d5ce52491",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-20",
+      "path": "qa-evidence/chat001-integrated-bc/badge-20-verified-partner.png",
+      "sha256": "873901a9160744d0bc86beeddfdfd389c4b54fd6d3362551aa504a7ec99cdee8",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-21",
+      "path": "qa-evidence/chat001-integrated-bc/badge-21-active-partner.png",
+      "sha256": "a8b13a5bfa418aad19f4a8fce1c939fd4f37ff33cef8b010cac71fd36e83e1f2",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    },
+    {
+      "id": "BADGE-22",
+      "path": "qa-evidence/chat001-integrated-bc/badge-22-popular-partner.png",
+      "sha256": "a8921b50700d6ad8ada37b6c4dbc73f3ba9a21a12ffdfd7d0822ad15a0a58170",
+      "capturedDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
+      "unchangedSincePriorPersonalReview": true
+    }
+  ],
+  "digilockerFiles": [
+    {
+      "path": "supabase/functions/_shared/digilocker.ts",
+      "oldCommit": "96f1ecf",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "021f624f98b4b290c845e651b68b3287b3c4fd43d756216bb2404f206ca937b3"
+    },
+    {
+      "path": "supabase/functions/aadhaar-verification/index.ts",
+      "oldCommit": "96f1ecf",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "107de2b8756547ee619fe6f324c69863a66d5734e7a72281bb2e149340199c7e"
+    },
+    {
+      "path": "supabase/functions/aadhaar-verification/handler.ts",
+      "oldCommit": "96f1ecf",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "bf3daa41d596d0c0a661bd47905befeac1205a2b357d5bb28fff945c2133ad62"
+    },
+    {
+      "path": "supabase/migrations/20261003205431_sandbox_digilocker_verification.sql",
+      "oldCommit": "96f1ecf",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "4da237b6c23ebee91db56eeb0debd4c4397c5857432feac68576c3f558134e07"
+    },
+    {
+      "path": "src/services/aadhaar-verification.ts",
+      "oldCommit": "96f1ecf",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "83515e494577210833d25b68db04b6a2d1b6294190a21f79121d67f7153ed891"
+    },
+    {
+      "path": "src/components/aadhaar-verification-card.tsx",
+      "oldCommit": "96f1ecf",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "87d267a12522f2ce7605f51193f31432ee2d8360ab1afcb36facb7220bb8e244"
+    },
+    {
+      "path": "src/components/reconstruction/profile-utilities.tsx",
+      "oldCommit": "96f1ecf",
+      "currentCommit": "fc0257f",
+      "byteIdentical": true,
+      "sha256": "6b553bf0705059a9ace4a3e8b2d4e047e740448471b667d24e239442da1df935"
+    }
+  ],
+  "appOnlyHotfixSourceDiff": [
+    "App.tsx",
+    "src/components/ShareToChatModal.tsx",
+    "src/components/community/reference-community.tsx",
+    "src/components/partner-access-gate.tsx",
+    "src/components/shared-media-preview.tsx"
+  ],
+  "limit": "Existing proof/capture timestamps and source release IDs remain unchanged. Updated assessment release identifies reviewed compatibility, not a recapture, new provider flow or newly awarded badge.",
+  "latestMigrationReview": [
+    {
+      "path": "supabase/migrations/20261003194203_squad_metric_excludes_self.sql",
+      "sha256": "7715d55c207a33d45baf8e3170696736a5b02d261943b0c889bae896d80e0cb2",
+      "review": "Replaces only private.my_profile_metrics Squad count with list_my_squad length. Auth and non-Squad metrics retained; no achievement rule or award changes."
+    },
+    {
+      "path": "supabase/migrations/20261003195913_admin_partner_terms_receipt.sql",
+      "sha256": "98e440fae3c010fe33f90f6144bf846194511b833a74596cd5c53c67ab50f581",
+      "review": "Adds authorized Admin read policy to Partner terms receipt table only; unrelated member/media/ratings/analytics permissions unchanged."
+    },
+    {
+      "path": "supabase/migrations/20261003203126_registration_question_category_text_guards.sql",
+      "sha256": "1a79d2db617e41ab95369150c5b102ee06957bef406556473a0630a2f05fe40f",
+      "review": "Extends deterministic guard triggers for registration/feedback/Partner/Community text. No changes to report ownership, anonymous projections, badge eligibility or Storage rules. Current50local/12deployed field evidence retained separately."
+    },
+    {
+      "path": "supabase/migrations/20261003203749_admin_auth_ip_observations.sql",
+      "sha256": "babb947a84e625370ee2e51d3e6166e631aa8f906f18d6ec3aebc880494d3a09",
+      "review": "New active Admin-only bounded reader of retained Auth IP observations. Does not expose raw Auth payloads or alter existing ordinary profile/analytics permissions."
+    },
+    {
+      "path": "supabase/migrations/20261003205431_sandbox_digilocker_verification.sql",
+      "sha256": "4da237b6c23ebee91db56eeb0debd4c4397c5857432feac68576c3f558134e07",
+      "review": "New private consent/session ledger and service-only RPC; actual Trust/sync Aadhaar source is changed, not assumed identical. Existing public Trust projection and remaining formula preserved; actual disabled9/API and read-only RLS/zero-ledger/wiring proof +58localPG cover this new source. Real provider remains disabled/external."
+    },
+    {
+      "path": "supabase/migrations/20261003211325_google_place_coordinate_retention.sql",
+      "sha256": "45d16156d92b11f24cbf92a1272730e50d84a9b0b5923e03258a6ac167fe81a4",
+      "review": "Adds private service-only coordinate receipts, expiry trigger and SQL-only purge; narrow create/update Activity location patches. Does not change eligibility/status/payment filters, anonymous rating/media projections, badge rules, Storage ownership or observation authorization."
+    }
+  ],
+  "localGate": {
+    "path": "docs/chat001-production-regression-local-verification.json",
+    "appCommit": "e8727e09b1aef67988b00c58e31350e6b9c9063f",
+    "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
+    "checks": 117,
+    "status": "PASS",
+    "finishedAt": "2026-10-03T21:56:22.787050+00:00",
+    "limit": "Local checks remain local evidence; deployed source/evidence reuse is explicitly scoped."
+  },
+  "unchangedAdminContext": "Selected Admin03d20e5 is the same deployed Admin as DigiLocker/current regression proof. Its IP-observation/receipt UI changes do not modify App F12/22 contracts; no new Admin screenshot acceptance is inferred.",
+  "requirementReviews": [
+    {
+      "id": "DOC-DEVELOPER",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Read current README, API/database historical notices, E2E notice and new provider runbooks. Existing architecture/release guidance remains compatible; current provider activation/disabled evidence is added through named runbooks, not inferred from historical docs."
+    },
+    {
+      "id": "SEC-ANONYMOUS-MEDIA",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Opaque media Edge handler and Community service/anonymous-media migration byte-identical. New Community share-preview component renders already-authorized URLs and does not replace anonymous-post capabilities or expose paths."
+    },
+    {
+      "id": "SEC-MEDIA-CAPABILITY",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Capability handler/migration and signed-URL service byte-identical. Old real expiry/tamper/HEAD/range/deletion proof remains valid for unchanged contract; fixture36 is not reused and no new expiry wait claimed."
+    },
+    {
+      "id": "SEC-ANONYMOUS-RATING",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Anonymous rating/legacy projection migrations unchanged; latest six migrations do not alter recipient/raw-table access. Keep only named passed checks from musp6fp8, which remains overall FAIL due separate Realtime timeout."
+    },
+    {
+      "id": "SEC-PROFILE-ACCOUNT-SWITCH",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Profile service unchanged. Profile file changed only own-Squad metric branch with identity recheck; unrelated sharing adds stronger actor invalidation. Current117 gate includes actual identity/phase5/profile/service races. No fresh browser race claimed."
+    },
+    {
+      "id": "SEC-PROFILE-INTEREST-ATOMICITY",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Atomic interests SQL and Profile service unchanged; new migrations do not replace set_my_interests or category guards. Existing deployed rollback/preservation/cross-user proof plus current profile-interest test remain scoped."
+    },
+    {
+      "id": "SEC-REPORT-SUBMISSION",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Authenticated report contract unchanged and new text guard intentionally does not filter private report evidence. Preserve named successful report checks and overall failed-run limitation."
+    },
+    {
+      "id": "SEC-BADGE-ELIGIBILITY",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "22-rule engine and reference adapter unchanged; new migrations leave qualifying status/payment/Host/ban/post/referral filters intact. Current117 reruns actual badge-engine boundaries. No claim all thresholds newly earned."
+    },
+    {
+      "id": "SEC-BADGE-IDEMPOTENCY",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "22-rule engine unchanged; no new Nitro/achievement ledger grant path in six newer migrations. DigiLocker changes only trusted verification signal, not Nitro or achievement rules. Existing actual referral/reconciliation and current local test retain scope."
+    },
+    {
+      "id": "SEC-BADGE-READ-PRIVACY",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement/public projections unchanged. Aadhaar source now private ledger helper; actual deployed ordinary-ledger denial/zero rows/unchanged score and local58 demonstrate boundary, while public Trust still returns only intended aggregate fields. Do not claim whole Trust runtime unchanged."
+    },
+    {
+      "id": "SEC-STORAGE-OWNERSHIP",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "New migrations do not alter Storage policies; signed-URL service unchanged. Latest share-preview renderer uses supplied signed URI unchanged and avoids fetching video as image; no public URL conversion. Existing actual cross-user Storage and linked Activity privacy proof retained."
+    },
+    {
+      "id": "SEC-OBSERVATION-AUTH",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Observed usage migration unchanged; new Admin IP read is separate and Admin-only. Existing current-member/view/share visibility and private analytics grant/role evidence retains scope."
+    },
+    {
+      "id": "BADGE-01",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-02",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-03",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-04",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-05",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-06",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-07",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-08",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-09",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-10",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-11",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-12",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-13",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-14",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-15",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-16",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-17",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-18",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-19",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-20",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-21",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "BADGE-22",
+      "statusPreserved": "PASS",
+      "releaseUpdateJustified": true,
+      "scope": "Achievement renderer, verified-badge display, reference adapter and22-rule SQL byte-identical from08b8bb8 tofc0257f; named ProfileLayout/TrustCard/trustFrom/trustMetrics portions unchanged. Original PNG hash matches prior personal review. Criterion/threshold/current-state-at-capture remains valid for unchanged UI; whole profile file is not unchanged (Squad fix). No screenshot recapture or all22 newly earned claim."
+    },
+    {
+      "id": "VERIFY-AADHAAR",
+      "statusPreserved": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "releaseUpdateJustified": true,
+      "scope": "Disabled UI and backend/Trust source identical to accepted96f1ecf state; real provider flow still excluded."
+    },
+    {
+      "id": "TRUST-AADHAAR",
+      "statusPreserved": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "releaseUpdateJustified": true,
+      "scope": "Disabled UI and backend/Trust source identical to accepted96f1ecf state; real provider flow still excluded."
+    }
+  ],
+  "inputs": [
+    {
+      "path": "docs/chat001-backend-final-assessments.json",
+      "sha256": "64c73888e28c0e3db8821d4ae4924a7001434149420d48324558c43f234ff2ec"
+    },
+    {
+      "path": "docs/chat001-digilocker-assessments-supplement.json",
+      "sha256": "38d6c5dcb45e55bc6b6f34cc54a6b4a10f29e8561dbde30a241806a66f07a35a"
+    },
+    {
+      "path": "docs/chat001-integrated-release.json",
+      "sha256": "087840b689f810af614b966c93fb8a84fbc4438429116a377bd3122ce2c6c4e9"
+    },
+    {
+      "path": "docs/chat001-production-regression-local-verification.json",
+      "sha256": "ee9f919b1f8119901dc6d598bc05248a83cf610fa9fad27b8d8ef988f90552cd"
+    }
+  ],
+  "untouchedEvidence": "All original productionVerification/screenshotProof dates, source deployment IDs, criterion thresholds and statuses copied unchanged. Added compatibility fields/technical references only; no root edits and no commits."
+}

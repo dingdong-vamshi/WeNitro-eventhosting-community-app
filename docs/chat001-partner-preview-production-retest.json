@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-03T22:07:04.418543+00:00",
+  "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+  "deployment": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+  "url": "https://wenitro-app.vercel.app",
+  "account": 71,
+  "checks": [
+    {
+      "name": "cold-partner297",
+      "status": "PASS",
+      "observed": "Approved71 cold-loads297 without visiting Profile; answer visible; paymentrequired/CANCELLED/zero paid."
+    },
+    {
+      "name": "partner297-to280",
+      "status": "PASS",
+      "observed": "Hashnavigation selects280 approved12.34ONHOLD"
+    },
+    {
+      "name": "partner280-to297",
+      "status": "PASS",
+      "observed": "Hashnavigation selects297 own title, answer, zero paid"
+    },
+    {
+      "name": "browser-back",
+      "status": "PASS",
+      "observed": "Restores280 correctledger"
+    },
+    {
+      "name": "browser-forward",
+      "status": "PASS",
+      "observed": "Restores297 correctledger"
+    },
+    {
+      "name": "cold-registration-form297",
+      "status": "PASS",
+      "observed": "Coldreload ownerformauthorized, existing requiredquestionlocked"
+    },
+    {
+      "name": "shared-video-preview",
+      "status": "PASS",
+      "observed": "Actual DM253 Vibe135 displays Video preview icon/label and creator QA Auditrecipient, no broken image."
+    },
+    {
+      "name": "new-hosted-payment297",
+      "status": "NOT_SUCCESSFUL",
+      "observed": "UI nowCANCELLED; no paidseat,no fundsclaim."
+    }
+  ],
+  "limits": [
+    "Browserbutton clicks remainblocked bylockedMac/nativeconfirmation. Navigation uses supportedgoto/reload/back/forward.",
+    "Video preview is an explicit placeholder, not an extracted frame.",
+    "Payment280 is earlier genuine Sandboxsuccess, no new payment inthispass."
+  ]
+}

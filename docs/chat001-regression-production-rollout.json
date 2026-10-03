@@ -167,21 +167,30 @@
   "newProductionRegressions": [
     {
       "issue": "Cold direct PartnerDashboard/Registration route does not load authoritative role",
-      "status": "LOCAL_VERIFIED_117_OF_117_AWAITING_DEPLOYMENT",
+      "status": "DEPLOYED_PRODUCTION_RETEST_PASS",
       "source": "Actual deployed reload297returnedPartneraccountrequired forauthenticatedapproved71; ProfilehydrationthenenabledDashboard.",
-      "localProof": "docs/chat001-partner-route-local-proof.json"
+      "localProof": "docs/chat001-partner-route-local-proof.json",
+      "productionProof": "docs/chat001-partner-preview-production-retest.json"
     },
     {
       "issue": "Changing Partner activity deep link retains previous selectedActivity",
-      "status": "LOCAL_VERIFIED_117_OF_117_AWAITING_DEPLOYMENT",
+      "status": "DEPLOYED_PRODUCTION_RETEST_PASS",
       "source": "Actual deployed hash280to297kept280; route dependency/stateinitialization sourceconfirmed.",
-      "localProof": "docs/chat001-partner-route-local-proof.json"
+      "localProof": "docs/chat001-partner-route-local-proof.json",
+      "productionProof": "docs/chat001-partner-preview-production-retest.json"
     },
     {
       "issue": "Shared video card uses video URL as image and renders blank",
-      "status": "LOCAL_VERIFIED_117_OF_117_AWAITING_DEPLOYMENT",
+      "status": "DEPLOYED_PRODUCTION_RETEST_PASS",
       "localProof": "docs/chat001-share-media-preview-regression.json",
-      "scope": "Explicit video preview placeholder; no synthesized video frame claim."
+      "scope": "Explicit video preview placeholder; no synthesized video frame claim.",
+      "productionProof": "docs/chat001-partner-preview-production-retest.json"
     }
-  ]
+  ],
+  "correctionRelease": {
+    "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+    "deploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+    "localGate": "docs/chat001-production-regression-local-verification.json",
+    "productionProof": "docs/chat001-partner-preview-production-retest.json"
+  }
 }

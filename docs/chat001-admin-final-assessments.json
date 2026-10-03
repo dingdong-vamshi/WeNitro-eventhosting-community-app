@@ -1,13 +1,13 @@
 {
-  "at": "2026-10-03T21:44:41.368979+00:00",
+  "at": "2026-10-03T22:06:59.195427+00:00",
   "purpose": "Coordinator-compatible D52 final-release contribution: scoped acceptance, exact external validation/provider dispositions, and any remaining nonterminal evidence gaps.",
   "target": "cxsznhrkzqndhseodcyy",
   "count": 52,
   "release": {
-    "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
     "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
   },
-  "releaseCompatibilityReview": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions. Follow-up current release App96f1ecf/Admin03d20e5: Terms/IP changes have matching local tests,14fresh role/API checks and three independently reviewed deployed screenshots; IP button interaction remains explicitly pending. No other row is promoted by this follow-up.",
+  "releaseCompatibilityReview": "Bounded compatibility review against Admin03d20e5 and coordinator-supplied Appfc0257f deployment. All52 original statuses preserved. New Terms/IP paths have current deployed evidence; other unchanged Admin paths retain their dated earlier observations. No blanket new production run or status promotion.",
   "counts": {
     "PASS": 49,
     "PARTIAL_EXTERNAL_DEPENDENCY": 1,
@@ -57,10 +57,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-MASTER-ROLES",
@@ -119,10 +134,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ROLE-ENFORCEMENT",
@@ -182,10 +212,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-PIN",
@@ -229,10 +274,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-CATEGORY-CORRECTION",
@@ -277,10 +337,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ANNOUNCEMENT-CREATE",
@@ -340,10 +415,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build. App LoginAnnouncements file has identical Git blob at08b8bb8/fc0257f; its App mount condition/props remain unchanged. Existing displayed/acknowledged/reload-absent proof remains bounded prior evidence.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ANNOUNCEMENT-AUDIENCE",
@@ -419,10 +509,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build. App LoginAnnouncements file has identical Git blob at08b8bb8/fc0257f; its App mount condition/props remain unchanged. Existing displayed/acknowledged/reload-absent proof remains bounded prior evidence.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ANNOUNCEMENT-DISPLAY",
@@ -468,10 +573,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build. App LoginAnnouncements file has identical Git blob at08b8bb8/fc0257f; its App mount condition/props remain unchanged. Existing displayed/acknowledged/reload-absent proof remains bounded prior evidence.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ANNOUNCEMENT-RECEIPT",
@@ -517,10 +637,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build. App LoginAnnouncements file has identical Git blob at08b8bb8/fc0257f; its App mount condition/props remain unchanged. Existing displayed/acknowledged/reload-absent proof remains bounded prior evidence.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ANONYMOUS-AUDIT",
@@ -562,10 +697,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-DASHBOARD",
@@ -609,10 +759,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-USERS",
@@ -689,10 +854,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ACTIVITIES",
@@ -750,10 +930,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-COMMUNITIES",
@@ -797,10 +992,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-VIBES",
@@ -844,10 +1054,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-STORIES",
@@ -891,10 +1116,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-VERIFICATION",
@@ -969,8 +1209,8 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
       "supplementaryEvidenceAwaitingIntegration": {
         "path": "/Users/vamshipendyala/.codex/worktrees/chat001-app-audit/wenitro-phone-app-/docs/chat001-verification120-fixture-proof.json",
@@ -978,7 +1218,7 @@
         "status": "PASS_REJECTED_AND_PRIVATE_OBJECT_CLEANED",
         "owner": "app_pdf_regression"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions.",
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
       "implementationStatus": "IMPLEMENTED",
       "externalValidationRequired": "Consenting test person provides an actual supported camera/selfie capture; authorized reviewer inspects and approves that genuine submission, then verifies approved state and applicable Trust effects with no Nitro award.",
       "acceptedSubscopes": [
@@ -992,7 +1232,22 @@
         "genuine identity approval",
         "native camera/device permission execution",
         "biometric liveness or government KYC"
-      ]
+      ],
+      "previousAssessmentRelease": {
+        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+      },
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-PARTNER-REVIEW",
@@ -1084,10 +1339,25 @@
       "screenshotReviewProvenance": "Coordinator captured actual deployed IAB pages; Admin acceptance owner independently inspected all three new image files using view_image. API assertions run after deployment against matching current Admin adapter.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Changed Terms receipt detail/getter is covered by six current actual-role API checks and independently reviewed deployed108receipt/71missing screenshots on the identical Admin03d20e5 deployment. Prior decision/history/masked payout scopes preserved; no new approval or consent claimed.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "releaseReviewBasis": "Coordinator confirmed current App96f1ecf/Admin03d20e5 exact deployment SHAs and stable aliases. New Terms and IP visual states reviewed on this release; earlier unaffected review/history scopes remain explicitly prior observations."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ACCESS-AUDIT",
@@ -1146,10 +1416,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-USER-RESTRICTIONS",
@@ -1209,10 +1494,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ACTIVITY-MODERATION",
@@ -1271,10 +1571,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-REPORT-REVIEW",
@@ -1335,10 +1650,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-INVESTIGATION",
@@ -1383,10 +1713,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-MANUAL-MEDIA-REVIEW",
@@ -1445,10 +1790,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-AUTO-MODERATION",
@@ -1493,10 +1853,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-IP-MONITORING",
@@ -1543,11 +1918,26 @@
       "screenshotReviewProvenance": "Coordinator captured actual deployed IAB pages; Admin acceptance owner independently inspected all three new image files using view_image. API assertions run after deployment against matching current Admin adapter.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "New Auth IP reader has eight current actual-role API checks plus independently reviewed0of0empty screenshot on identical Admin03d20e5 deployment. Actual Refresh-button click remains pending; release metadata correction does not promote status or invent nonempty records.",
+      "implementationStatus": "IMPLEMENTED",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
         "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "releaseReviewBasis": "Coordinator confirmed current App96f1ecf/Admin03d20e5 exact deployment SHAs and stable aliases. New Terms and IP visual states reviewed on this release; earlier unaffected review/history scopes remain explicitly prior observations.",
-      "implementationStatus": "IMPLEMENTED"
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-SECURITY-AUDIT",
@@ -1604,10 +1994,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-PARTNER-ACTIVITIES",
@@ -1651,10 +2056,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-TRANSACTIONS",
@@ -1697,10 +2117,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-REVENUE",
@@ -1743,10 +2178,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-SETTLEMENTS",
@@ -1788,10 +2238,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ANALYTICS-USERS",
@@ -1853,10 +2318,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ANALYTICS-PLATFORM",
@@ -1903,10 +2383,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ANALYTICS-ENGAGEMENT",
@@ -1953,10 +2448,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ANALYTICS-EVENTS",
@@ -2001,10 +2511,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ANALYTICS-EVENT-VIEWS",
@@ -2051,10 +2576,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ANALYTICS-HOSTS",
@@ -2100,10 +2640,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-ANALYTICS-GEOGRAPHY",
@@ -2148,10 +2703,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-CATEGORY-CATALOG",
@@ -2209,10 +2779,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build. New registration/category text validation adds bounded invalid-input rejection; prior valid catalog CRUD behavior remains compatible, backed by the complete local suite. No new production CRUD is claimed.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-CAMPAIGN-DRAFTS",
@@ -2273,10 +2858,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-CAMPAIGN-DELIVERY",
@@ -2337,10 +2937,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-TEMPLATES",
@@ -2386,10 +3001,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-REWARD-RULES",
@@ -2433,10 +3063,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-REWARD-CATALOG",
@@ -2480,10 +3125,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-COUPONS",
@@ -2527,10 +3187,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-BADGE-CATALOG",
@@ -2576,10 +3251,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-LEADERBOARD",
@@ -2623,10 +3313,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-FEATURE-SETTINGS",
@@ -2686,10 +3391,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-LANGUAGE-SETTINGS",
@@ -2733,10 +3453,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-HEADER-SEARCH",
@@ -2794,10 +3529,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-HEADER-NOTIFICATIONS",
@@ -2840,10 +3590,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     },
     {
       "id": "ADMIN-HEADER-HELP-PROFILE",
@@ -2916,10 +3681,25 @@
       "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
       "releaseReviewed": true,
       "release": {
+        "appDeploymentId": "dpl_Ffk3wN3Zgywb3uCkmmNcjq2Qt7SE",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "releaseReviewBasis": "Admin source bcdaa966\u219203d20e5 changes only Partner Terms receipt and Auth IP reader, its security landing description, and README. This requirement's existing Admin UI/API implementations are unchanged; earlier observed scopes retain their original dates and screenshot deployment IDs. Added App migrations do not replace this Admin API contract. Current full117/117 local suite includes Admin TypeScript/lint/build.",
+      "previousAssessmentRelease": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseCompatibilityReview": {
+        "reviewedAt": "2026-10-03T22:06:59.195427+00:00",
+        "type": "SOURCE_AND_EXISTING_EVIDENCE_COMPATIBILITY_ONLY",
+        "targetCommits": {
+          "appCommit": "fc0257f053214cd60a0f8474203cd98dd8b5e3fd",
+          "adminCommit": "03d20e5a51edada5f515673715250b332198193f"
+        },
+        "evidence": "docs/chat001-admin-auth-release-compatibility-proposed.json",
+        "statusPreserved": true,
+        "freshProductionRunClaimed": false
+      }
     }
   ],
   "visualReview": [
