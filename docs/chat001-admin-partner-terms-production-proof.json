@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-03T20:12:29.179Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "status": "PASS",
+  "scope": "Live deployed SQL + actual Admin adapter, existing read-only receipts. No consent, role, approval, payout or award mutation. Admin visual receipt awaits UI deployment.",
+  "checks": [
+    {
+      "name": "Actual current ordinary Admin session",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual Admin adapter reads existing applicant108 receipt version and acceptance time",
+      "status": "PASS",
+      "details": {
+        "policyVersion": "2026-10-01",
+        "acceptedAt": "2026-10-01T12:11:34.054077+00:00"
+      }
+    },
+    {
+      "name": "Actual Admin adapter correctly returns no receipt for legacy applicant71",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual current Finance session",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance session cannot read another applicant108 receipt: RLS returns no rows",
+      "status": "PASS"
+    },
+    {
+      "name": "Unrelated ordinary member120 cannot read applicant108 receipt: RLS returns no rows",
+      "status": "PASS"
+    }
+  ]
+}
