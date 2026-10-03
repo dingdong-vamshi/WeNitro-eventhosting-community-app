@@ -150,7 +150,8 @@ export const launchCashfreeCheckout = async (
     };
   }
   if (result?.paymentDetails) {
-    if (typeof window !== "undefined") window.location.assign(returnUrl);
+    // The modal returns to the already-mounted Activity. Its caller must verify
+    // the order with our backend; changing only the hash does not remount it.
     return { redirected: false, completed: true };
   }
   return { redirected: false, completed: false };

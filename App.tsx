@@ -4236,7 +4236,8 @@ export function ActivityDetailScreen({
       const returnUrl = typeof window === "undefined" ? "" : `${window.location.origin}${window.location.pathname}${window.location.search}#/activity/${encodeURIComponent(activity.id)}?cashfree_order_id=${encodeURIComponent(order.orderId)}`;
       const checkout = await launchCashfreeCheckout(order.paymentSessionId, returnUrl);
       if (checkout.errorMessage) throw new Error(checkout.errorMessage);
-      if (checkout.redirected) setPaymentMessage("Cashfree checkout opened. Return here after completing payment.");
+      if (checkout.completed) await verifyPayment(order.orderId);
+      else if (checkout.redirected) setPaymentMessage("Cashfree checkout opened. Return here after completing payment.");
       else if (!checkout.completed) setPaymentMessage("Checkout was closed before Cashfree confirmed payment. Tap Pay to try again.");
     } catch (caught) {
       const text = caught instanceof Error ? caught.message : "Secure checkout could not start.";

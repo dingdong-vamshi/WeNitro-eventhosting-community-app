@@ -1,0 +1,48 @@
+{
+  "recordedAt": "2026-10-03T05:57:55.775Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "app": "https://wenitro-app.vercel.app",
+  "environment": "sandbox",
+  "eventId": 279,
+  "userId": 116,
+  "paymentId": 40,
+  "checks": [
+    {
+      "name": "Cashfree Sandbox provider order is PAID",
+      "status": "PASS",
+      "data": {
+        "orderId": "wn_279_116_1993850545754448b674",
+        "amount": 12.34,
+        "currency": "INR"
+      }
+    },
+    {
+      "name": "Hosted bank simulator generated actual provider SUCCESS",
+      "status": "PASS",
+      "data": {
+        "paymentId": "1459788009087684608",
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "name": "Deployed verification returns paid and safely repeats",
+      "status": "PASS"
+    },
+    {
+      "name": "One approved registration persisted after verified payment",
+      "status": "PASS"
+    },
+    {
+      "name": "One financial PAYMENT event after repeated verification",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "qa-evidence/chat001/production-cashfree-hosted-checkout.png",
+    "qa-evidence/chat001/production-cashfree-sandbox-simulator.png",
+    "qa-evidence/chat001/before-cashfree-stale-progress.png"
+  ],
+  "scope": "Hosted interactive Sandbox; no real money. Synthetic phone is not evidence of OTP delivery.",
+  "uiDefect": "JOINED but Preparing secure checkout remained: modal completion did not trigger backend verification in the mounted Activity. Fix pending deployment/retest.",
+  "quarantine": "Payment and settlement ON_HOLD; no payout authorized."
+}
