@@ -558,5 +558,27 @@
       ],
       "limitation": "No populated Squad proof is claimed. Read-only discovery did not create friendships."
     }
-  ]
+  ],
+  "squadSetupInspection": {
+    "checkedAt": "2026-10-03T19:39:35.497230+00:00",
+    "method": "Read-only production pg_proc + pg_policies + count of tbl_friends rows involving controlled70/71/120, and source search",
+    "functions": [
+      "public.list_my_squad()",
+      "public.remove_my_squad_member(p_member_id integer)",
+      "private.activity_squad_visible(p_event_id integer)",
+      "private.in_squad(target integer)"
+    ],
+    "functionsInsertingFriendship": [],
+    "controlledRelationships": 0,
+    "tablePolicies": [
+      "wenitro_admin_all: authenticated, is_wenitro_admin() USING/WITH CHECK",
+      "admin_suspension_guard: authenticated account_is_allowed() restrictive guard"
+    ],
+    "normalAppControls": [
+      "Own Squad list",
+      "Remove existing member",
+      "Invite Squad referral sharing (does not insert friendship)"
+    ],
+    "conclusion": "No normal authenticated member add/request/accept friendship operation exists in current schema or App source. No friendship was invented for populated visual proof. Existing local PostgreSQL dedup/self-exclusion tests remain technical proof only. Parent notified."
+  }
 }
