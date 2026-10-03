@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {spawnSync} from 'node:child_process';
+const dir=fs.mkdtempSync(path.join(os.tmpdir(),'wenitro-trust-score-'));let started=false;
+const run=(cmd,args,input)=>{const r=spawnSync(cmd,args,{input,encoding:'utf8',maxBuffer:4e6});if(r.error||r.status)throw Error(r.error?.message||r.stderr||r.stdout);return r.stdout;};
+const sql=q=>run('psql',['-h',dir,'-p','55450','-d','postgres','-v','ON_ERROR_STOP=1','-Atq'],q).trim();
+try{
+ run('initdb',['-D',dir+'/db','-A','trust','--no-locale','-E','UTF8']);run('pg_ctl',['-D',dir+'/db','-l',dir+'/log','-o',`-F -h '' -k ${dir} -p 55450`,'-w','start']);started=true;
+ sql(`create schema private;create schema auth;
+ create table auth.users(id uuid primary key,email_confirmed_at timestamptz,phone_confirmed_at timestamptz);
+ create table public.tbl_users(id int primary key,auth_user_id uuid,is_active int default 1,is_delete int default 0,rating numeric default 0,points int default 12,isverified int default 0);
+ create table public.tbl_user_verification(user_id int,live_photo_verified bool default false,aadhaar_verified bool default false,phone_verified bool default false,status text,live_photo_path text);
+ create table public.tbl_user_social_links(user_id int,instagram text,facebook text,twitter text,linkedin text,youtube text);
+ create table public.tbl_event_participants(event_id int,user_id int,status text);
+ create table public.tbl_events(id int primary key,is_deleted bool default false,is_cancelled bool default false);
+ create function public.get_current_app_user_id() returns int language sql as $$select 1$$;
+ create function private.can_read_profile(int) returns bool language sql as $$select $1=1$$;
+ insert into public.tbl_users(id,auth_user_id) values(1,'00000000-0000-0000-0000-000000000001');insert into auth.users(id) select auth_user_id from public.tbl_users;
+ ${fs.readFileSync('scripts/fixtures/trust-score-functions.sql','utf8')}`);
+ let checks=0;const equal=(q,w)=>{assert.equal(sql(q).split('\n').at(-1),w);checks++;};const score=n=>equal("select public.my_trust_score()->>'total';",String(n));
+ score(0);sql('update auth.users set email_confirmed_at=now();');score(10);
+ sql("insert into public.tbl_user_verification(user_id,phone_verified,live_photo_verified,aadhaar_verified,status) values(1,true,true,true,'submitted');");score(10);
+ sql('update auth.users set phone_confirmed_at=now();');score(20);
+ sql("update public.tbl_user_verification set status='approved',aadhaar_verified=false;");score(30);
+ sql('update public.tbl_user_verification set aadhaar_verified=true;');score(50);
+ sql("insert into public.tbl_user_social_links(user_id,instagram) values(1,'https://instagram.com/example');");score(60);
+ sql('update public.tbl_users set rating=4;');score(70);sql('update public.tbl_users set rating=3.99;');score(60);sql('update public.tbl_users set rating=5;');
+ sql("insert into public.tbl_events(id) select n from generate_series(1,25)n;insert into public.tbl_event_participants select n,1,'approved' from generate_series(1,9)n;");score(70);
+ sql("insert into public.tbl_event_participants values(10,1,'approved');");score(90);
+ sql("insert into public.tbl_event_participants select n,1,'approved' from generate_series(11,20)n;");score(100);
+ sql('insert into public.tbl_event_participants select * from public.tbl_event_participants;');score(100);equal("select public.my_trust_score()->>'activities_joined';",'20');
+ sql('update public.tbl_events set is_cancelled=true where id=20;');score(90);
+ sql('update public.tbl_events set is_deleted=true where id between 1 and 10;');score(70);
+ equal("select private.sync_verification_rewards('00000000-0000-0000-0000-000000000001')->>'points_awarded';",'0');equal('select points from public.tbl_users where id=1;','12');equal('select isverified from public.tbl_users where id=1;','1');
+ sql("update public.tbl_user_verification set status='submitted';");equal("select private.sync_verification_rewards('00000000-0000-0000-0000-000000000001')->>'is_verified';",'false');
+ equal("select public.profile_trust_score(1)?'email_verified';",'f');equal("select public.profile_trust_score(1)?'aadhaar_verified';",'f');assert.throws(()=>sql('select public.profile_trust_score(2);'),/Squad only/);checks++;
+ console.log(JSON.stringify({status:'PASS',checks,scope:'Actual derived Trust SQL: independent verification sources/approved selfie/Aadhaar, max100, 10/20 nonstacking activity tiers, duplicate/cancel/delete exclusions, rating drop removes boost, zero verification Nitro, public private-signal redaction'}));
+}finally{if(started)run('pg_ctl',['-D',dir+'/db','-m','immediate','-w','stop']);fs.rmSync(dir,{recursive:true,force:true});}

@@ -90,10 +90,23 @@ export const amountToPaisa = (value: unknown) => {
     throw new Error("Provider returned an invalid payment amount.");
   }
   const paisa = Math.round(amount * 100);
+  if (!Number.isSafeInteger(paisa)) {
+    throw new Error("Provider returned an invalid payment amount.");
+  }
   if (Math.abs(amount * 100 - paisa) > 0.000001) {
     throw new Error("Provider amount has more than two decimal places.");
   }
   return paisa;
+};
+
+export const verifiedCheckoutPhone = (
+  user: Pick<User, "phone" | "phone_confirmed_at">,
+): string => {
+  const phone = user.phone?.trim();
+  if (!phone || !user.phone_confirmed_at) {
+    throw new Error("A verified phone number is required for Cashfree checkout.");
+  }
+  return phone;
 };
 
 const cashfreeCredentials = () => {

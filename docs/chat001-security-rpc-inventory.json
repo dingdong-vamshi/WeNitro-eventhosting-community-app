@@ -1,0 +1,1268 @@
+{
+  "scope": "Read-only target predeployment snapshot; signature/call inventory is not proof that every branch authorizes correctly. New local tests address actual gaps found.",
+  "project": "cxsznhrkzqndhseodcyy",
+  "observedAt": "2026-10-03T07:56:22Z",
+  "counts": {
+    "securityDefinerFunctions": 243,
+    "publicAuthenticatedDefiners": 137,
+    "anonCallableDefiners": 0,
+    "publicTablesWithoutRLS": 0,
+    "publicViewsWithoutSecurityInvoker": 0
+  },
+  "advisors": [
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "count": 3,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+    },
+    {
+      "name": "authenticated_security_definer_function_executable",
+      "level": "WARN",
+      "count": 137,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable"
+    },
+    {
+      "name": "auth_leaked_password_protection",
+      "level": "WARN",
+      "count": 1,
+      "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+    }
+  ],
+  "localRepairs": [
+    "payment_entry_authorization: private pricing, category legacy overload, ended checkout/edit",
+    "account_status_rpc_enforcement: deleted Auth/disabled profiles plus Auth-only RPC and story feed",
+    "referral_identity_reward_guard: alias/phone/self-referral rewards and authoritative referral history",
+    "atomic_profile_interests: one atomic complete-set replacement with per-profile lock"
+  ],
+  "functions": [
+    {
+      "name": "accept_signup_policies",
+      "arguments": "p_policy_version text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_signup_policy_acceptances"
+      ]
+    },
+    {
+      "name": "acknowledge_login_announcement",
+      "arguments": "p_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_login_announcement_receipts"
+      ]
+    },
+    {
+      "name": "admin_access_logs",
+      "arguments": "",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.current_admin_role"
+      ]
+    },
+    {
+      "name": "admin_accounts",
+      "arguments": "",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.current_admin_role"
+      ]
+    },
+    {
+      "name": "admin_correct_activity_category",
+      "arguments": "p_event_id integer, p_category_id integer",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin",
+        "public.get_current_app_user_id",
+        "public.tbl_event_categories"
+      ]
+    },
+    {
+      "name": "admin_create_login_announcement",
+      "arguments": "p_title text, p_body text, p_starts_at timestamp with time zone, p_expires_at timestamp with time zone, p_target_user_ids integer[]",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin",
+        "public.tbl_login_announcements",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "admin_disable_login_announcement",
+      "arguments": "p_id bigint",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "admin_get_partner_finance_config",
+      "arguments": "",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.admin_get_partner_finance_config"
+      ]
+    },
+    {
+      "name": "admin_list_anonymous_community_posts",
+      "arguments": "p_limit integer, p_before_id bigint",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "admin_list_partner_application_history",
+      "arguments": "p_user_id integer",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "admin_list_partner_applications",
+      "arguments": "p_status text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.admin_list_partner_applications"
+      ]
+    },
+    {
+      "name": "admin_list_partner_finance",
+      "arguments": "p_status text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.admin_list_partner_finance"
+      ]
+    },
+    {
+      "name": "admin_list_users",
+      "arguments": "",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "admin_list_verifications",
+      "arguments": "p_status text, p_limit integer, p_before_id integer",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "admin_list_vibe_reports",
+      "arguments": "",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "admin_moderate_activity",
+      "arguments": "p_event_id integer, p_action text, p_reason text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin",
+        "public.admin_moderate_user",
+        "public.tbl_notifications",
+        "public.current_app_user_id",
+        "public.tbl_notifications",
+        "public.current_app_user_id",
+        "private.admin_operation_audit"
+      ]
+    },
+    {
+      "name": "admin_moderate_user",
+      "arguments": "p_user_id integer, p_duration text, p_reason text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin",
+        "private.admin_operation_audit"
+      ]
+    },
+    {
+      "name": "admin_operation_logs",
+      "arguments": "",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "admin_record_partner_financial_event",
+      "arguments": "p_payment_id bigint, p_kind text, p_status text, p_amount_paisa bigint, p_provider_reference text, p_idempotency_key text, p_reason text, p_metadata jsonb",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.admin_record_partner_financial_event"
+      ]
+    },
+    {
+      "name": "admin_review_partner_application",
+      "arguments": "p_user_id integer, p_status text, p_reason text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.admin_review_partner_application"
+      ]
+    },
+    {
+      "name": "admin_review_report",
+      "arguments": "p_type text, p_id integer, p_status text, p_reason text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin",
+        "private.admin_operation_audit"
+      ]
+    },
+    {
+      "name": "admin_review_verification",
+      "arguments": "p_verification_id integer, p_status text, p_review_notes text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin",
+        "private.sync_verification_rewards"
+      ]
+    },
+    {
+      "name": "admin_review_vibe_report",
+      "arguments": "p_report_id bigint, p_status text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "admin_search_partner_applications",
+      "arguments": "p_status text, p_city text, p_category text, p_submitted_from timestamp with time zone, p_submitted_to timestamp with time zone",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.admin_search_partner_applications"
+      ]
+    },
+    {
+      "name": "admin_set_account_access",
+      "arguments": "p_email text, p_role text, p_status text, p_reason text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.current_admin_role",
+        "private.admin_access_audit"
+      ]
+    },
+    {
+      "name": "admin_set_activity_pinned",
+      "arguments": "p_event_id integer, p_pinned boolean",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "admin_update_partner_finance_config",
+      "arguments": "p_platform_fee_bps integer, p_gst_enabled boolean, p_gst_bps integer, p_gst_basis text, p_settlement_days integer, p_reason text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.admin_update_partner_finance_config"
+      ]
+    },
+    {
+      "name": "admin_update_partner_settlement",
+      "arguments": "p_settlement_id bigint, p_status text, p_payout_reference text, p_note text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.admin_update_partner_settlement"
+      ]
+    },
+    {
+      "name": "assert_chat_membership",
+      "arguments": "p_room_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "block_chat_user",
+      "arguments": "p_user_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_user_blocks"
+      ]
+    },
+    {
+      "name": "can_read_event",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.activity_squad_visible",
+        "public.current_app_user_id",
+        "public.current_app_user_id"
+      ]
+    },
+    {
+      "name": "cancel_activity",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.can_manage_activity",
+        "private.enqueue_notification",
+        "private.queue_required_refund",
+        "public.tbl_partner_finance_audit",
+        "private.enqueue_notification"
+      ]
+    },
+    {
+      "name": "claim_play_store_rating_reward",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_user_points_history"
+      ]
+    },
+    {
+      "name": "community_create",
+      "arguments": "p_name text, p_tagline text, p_description text, p_category text, p_tags text[], p_rules text[], p_image_path text, p_cover_path text, p_visibility text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_categories",
+        "public.tbl_chat_rooms",
+        "public.tbl_chat_participants"
+      ]
+    },
+    {
+      "name": "community_create_post",
+      "arguments": "p_room_id integer, p_title text, p_body text, p_category text, p_media_path text, p_media_type text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.community_create_post"
+      ]
+    },
+    {
+      "name": "community_create_post_comment",
+      "arguments": "p_post_id bigint, p_body text, p_parent_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.is_chat_member",
+        "public.tbl_community_post_comments"
+      ]
+    },
+    {
+      "name": "community_create_post_v2",
+      "arguments": "p_room_id integer, p_title text, p_body text, p_category text, p_media_path text, p_media_type text, p_anonymous boolean",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.community_create_post_v2"
+      ]
+    },
+    {
+      "name": "community_join",
+      "arguments": "p_room_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_chat_participants",
+        "public.tbl_community_join_requests"
+      ]
+    },
+    {
+      "name": "community_leave",
+      "arguments": "p_room_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "community_list_post_comments",
+      "arguments": "p_post_id bigint, p_page integer, p_page_size integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.is_chat_member"
+      ]
+    },
+    {
+      "name": "community_list_posts",
+      "arguments": "p_room_id integer, p_page integer, p_page_size integer",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.is_wenitro_admin",
+        "public.assert_chat_membership"
+      ]
+    },
+    {
+      "name": "community_manage",
+      "arguments": "p_room_id integer, p_action text, p_patch jsonb",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.community_manage"
+      ]
+    },
+    {
+      "name": "community_poll",
+      "arguments": "p_action text, p_room_id integer, p_payload jsonb",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.community_poll"
+      ]
+    },
+    {
+      "name": "community_poll_voters",
+      "arguments": "p_room_id integer, p_poll_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.assert_chat_membership"
+      ]
+    },
+    {
+      "name": "community_remove_member",
+      "arguments": "p_room_id integer, p_user_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.community_manager",
+        "private.enqueue_notification"
+      ]
+    },
+    {
+      "name": "community_set_post_reaction",
+      "arguments": "p_post_id bigint, p_reaction text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.is_chat_member",
+        "public.tbl_community_post_reactions"
+      ]
+    },
+    {
+      "name": "create_activity",
+      "arguments": "p_payload jsonb, p_status text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_events",
+        "public.tbl_categories",
+        "public.tbl_event_categories",
+        "private.save_activity_registration_questions"
+      ]
+    },
+    {
+      "name": "create_activity_comment",
+      "arguments": "p_event_id integer, p_body text, p_parent_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.can_read_event",
+        "public.tbl_event_comments"
+      ]
+    },
+    {
+      "name": "create_activity_invite",
+      "arguments": "p_event_id integer, p_expires_at timestamp with time zone, p_max_uses integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.can_manage_activity",
+        "public.tbl_activity_invites"
+      ]
+    },
+    {
+      "name": "create_direct_chat_room",
+      "arguments": "p_other_user_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.users_blocked",
+        "private.may_message",
+        "public.tbl_chat_rooms",
+        "public.tbl_chat_participants"
+      ]
+    },
+    {
+      "name": "create_group_chat_room",
+      "arguments": "p_title text, p_member_ids integer[]",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.create_group_chat_room_secure"
+      ]
+    },
+    {
+      "name": "create_group_chat_room",
+      "arguments": "p_title text, p_member_ids integer[], p_image_path text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.create_group_chat_room_secure"
+      ]
+    },
+    {
+      "name": "create_story",
+      "arguments": "p_media_url text, p_media_type text, p_caption text, p_expires_at timestamp with time zone",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_stories"
+      ]
+    },
+    {
+      "name": "create_verification_draft",
+      "arguments": "p_verification_type text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.tbl_user_verification",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "current_app_user_id",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.account_is_allowed"
+      ]
+    },
+    {
+      "name": "delete_activity_comment",
+      "arguments": "p_comment_id bigint",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "delete_my_primary_profile_photo",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "delete_my_profile_photo",
+      "arguments": "p_photo_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "delete_own_chat_message",
+      "arguments": "p_message_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.assert_chat_membership"
+      ]
+    },
+    {
+      "name": "delete_story",
+      "arguments": "p_story_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "discard_verification_draft",
+      "arguments": "p_verification_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "ensure_activity_chat",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.can_manage_activity",
+        "public.is_event_participant",
+        "public.tbl_chat_rooms",
+        "public.tbl_chat_participants",
+        "public.tbl_chat_participants",
+        "public.is_chat_member"
+      ]
+    },
+    {
+      "name": "finalize_verification",
+      "arguments": "p_verification_id integer, p_document_path text, p_document_mime text, p_document_size integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "get_current_app_user_id",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.current_app_user_id"
+      ]
+    },
+    {
+      "name": "get_current_legacy_user_id",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "get_my_emergency_contact",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "get_my_partner_profile",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.get_my_partner_profile"
+      ]
+    },
+    {
+      "name": "get_my_profile",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "get_partner_dashboard",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.get_partner_dashboard"
+      ]
+    },
+    {
+      "name": "get_partner_registrations",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.get_partner_registrations"
+      ]
+    },
+    {
+      "name": "get_partner_transactions",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.get_partner_transactions"
+      ]
+    },
+    {
+      "name": "get_user_privacy_settings",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_user_privacy_settings"
+      ]
+    },
+    {
+      "name": "is_chat_member",
+      "arguments": "p_room_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.current_app_user_id"
+      ]
+    },
+    {
+      "name": "is_event_participant",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.current_app_user_id"
+      ]
+    },
+    {
+      "name": "is_wenitro_admin",
+      "arguments": "",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.current_admin_role"
+      ]
+    },
+    {
+      "name": "list_active_stories",
+      "arguments": "p_limit integer, p_before_created_at timestamp with time zone, p_before_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_activity_comments",
+      "arguments": "p_event_id integer, p_page integer, p_page_size integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.can_read_event"
+      ]
+    },
+    {
+      "name": "list_activity_entry_categories",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.can_manage_activity",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_activity_participant_ratings",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_badge_catalog",
+      "arguments": "",
+      "classification": "Explicit Auth or static catalog; individual review required",
+      "calls": []
+    },
+    {
+      "name": "list_chat_inbox",
+      "arguments": "p_message_limit integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.users_blocked"
+      ]
+    },
+    {
+      "name": "list_chat_messages",
+      "arguments": "p_room_id integer, p_before_created_at timestamp with time zone, p_before_id bigint, p_limit integer, p_include_deleted boolean",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.assert_chat_membership"
+      ]
+    },
+    {
+      "name": "list_chat_participants",
+      "arguments": "p_room_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.assert_chat_membership"
+      ]
+    },
+    {
+      "name": "list_discoverable_people",
+      "arguments": "p_limit integer",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.can_read_profile"
+      ]
+    },
+    {
+      "name": "list_interest_catalog",
+      "arguments": "",
+      "classification": "Explicit Auth or static catalog; individual review required",
+      "calls": []
+    },
+    {
+      "name": "list_my_badges",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_my_blocked_users",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_my_interests",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_my_nitro_history",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_my_squad",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_my_stories",
+      "arguments": "p_include_expired boolean",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_user_notifications",
+      "arguments": "p_limit integer, p_before_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "list_user_verifications",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "mark_activity_participant_no_show",
+      "arguments": "p_event_id integer, p_user_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.save_participant_rating"
+      ]
+    },
+    {
+      "name": "mark_all_notifications_read",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "mark_chat_read",
+      "arguments": "p_room_id integer, p_read_at timestamp with time zone",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.assert_chat_membership"
+      ]
+    },
+    {
+      "name": "mark_notification_read",
+      "arguments": "p_notification_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "mark_story_viewed",
+      "arguments": "p_story_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_story_views"
+      ]
+    },
+    {
+      "name": "my_login_announcements",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "my_trust_score",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.trust_score_for",
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "prepare_activity_payment",
+      "arguments": "p_event_id integer, p_entry_category_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.has_active_partner",
+        "private.assert_registration_complete",
+        "private.activity_occupied_count",
+        "public.tbl_event_participants",
+        "public.tbl_activity_payments"
+      ]
+    },
+    {
+      "name": "prepare_activity_payment",
+      "arguments": "p_event_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.has_active_partner",
+        "private.assert_registration_complete",
+        "private.activity_occupied_count",
+        "public.tbl_event_participants",
+        "public.tbl_activity_payments"
+      ]
+    },
+    {
+      "name": "profile_reviews",
+      "arguments": "p_user_id integer",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.can_read_profile"
+      ]
+    },
+    {
+      "name": "profile_trust_score",
+      "arguments": "p_user_id integer",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "private.can_read_profile",
+        "private.trust_score_for"
+      ]
+    },
+    {
+      "name": "promote_my_profile_photo",
+      "arguments": "p_position integer, p_previous_path text, p_previous_url text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_user_profile_photos"
+      ]
+    },
+    {
+      "name": "rate_activity_participant",
+      "arguments": "p_event_id integer, p_user_id integer, p_behaviour integer, p_friendly integer, p_communication integer, p_comment text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.save_participant_rating"
+      ]
+    },
+    {
+      "name": "rate_activity_participant",
+      "arguments": "p_event_id integer, p_user_id integer, p_behaviour integer, p_friendly integer, p_communication integer, p_comment text, p_is_anonymous boolean",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "private.save_participant_rating"
+      ]
+    },
+    {
+      "name": "redeem_activity_invite",
+      "arguments": "p_token text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.activity_occupied_count",
+        "public.tbl_event_participants"
+      ]
+    },
+    {
+      "name": "redeem_referral",
+      "arguments": "p_referrer_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_referral_history"
+      ]
+    },
+    {
+      "name": "remove_my_squad_member",
+      "arguments": "p_member_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "report_vibe",
+      "arguments": "p_vibe_id bigint, p_reason text, p_details text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.is_event_participant",
+        "public.tbl_vibe_reports"
+      ]
+    },
+    {
+      "name": "request_join_activity",
+      "arguments": "p_event_id integer, p_status text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.assert_activity_mutable",
+        "private.assert_registration_complete",
+        "private.activity_occupied_count",
+        "public.tbl_event_participants"
+      ]
+    },
+    {
+      "name": "respond_activity_join",
+      "arguments": "p_event_id integer, p_user_id integer, p_status text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.assert_activity_mutable",
+        "private.can_manage_activity",
+        "private.activity_occupied_count",
+        "private.enqueue_notification"
+      ]
+    },
+    {
+      "name": "save_activity_entry_categories",
+      "arguments": "p_event_id integer, p_categories jsonb",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.can_manage_activity",
+        "private.has_active_partner",
+        "public.tbl_activity_entry_categories",
+        "public.list_activity_entry_categories"
+      ]
+    },
+    {
+      "name": "save_my_emergency_contact",
+      "arguments": "p_contact_name text, p_relation text, p_phone_number text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_emergency_contacts"
+      ]
+    },
+    {
+      "name": "save_my_partner_profile",
+      "arguments": "p_business_name text, p_description text, p_city text",
+      "classification": "Explicit Auth or static catalog; individual review required",
+      "calls": [
+        "private.save_my_partner_profile"
+      ]
+    },
+    {
+      "name": "save_my_profile_photo",
+      "arguments": "p_position integer, p_storage_path text, p_public_url text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_user_profile_photos"
+      ]
+    },
+    {
+      "name": "send_chat_message",
+      "arguments": "p_room_id integer, p_client_id uuid, p_content text, p_message_type text, p_media_url text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.assert_chat_membership",
+        "private.users_blocked",
+        "public.tbl_messages"
+      ]
+    },
+    {
+      "name": "send_chat_share",
+      "arguments": "p_room_ids integer[], p_client_ids uuid[], p_share_kind text, p_entity_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.is_event_participant",
+        "public.is_chat_member",
+        "public.is_chat_member",
+        "public.is_event_participant",
+        "public.assert_chat_membership",
+        "public.tbl_messages"
+      ]
+    },
+    {
+      "name": "set_activity_cohost",
+      "arguments": "p_event_id integer, p_user_id integer, p_cohost boolean",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.assert_activity_mutable"
+      ]
+    },
+    {
+      "name": "set_my_interests",
+      "arguments": "p_category_ids integer[]",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_user_interests"
+      ]
+    },
+    {
+      "name": "set_partner_activity_external_url",
+      "arguments": "p_event_id integer, p_external_url text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.can_manage_activity",
+        "private.has_active_partner"
+      ]
+    },
+    {
+      "name": "submit_my_live_photo",
+      "arguments": "p_path text",
+      "classification": "Explicit Auth or static catalog; individual review required",
+      "calls": [
+        "public.tbl_user_verification",
+        "private.sync_verification_rewards"
+      ]
+    },
+    {
+      "name": "submit_partner_application",
+      "arguments": "p_application jsonb",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.submit_partner_application",
+        "public.tbl_partner_terms_acceptances"
+      ]
+    },
+    {
+      "name": "sync_my_phone_verification",
+      "arguments": "",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_user_verification"
+      ]
+    },
+    {
+      "name": "sync_my_verification",
+      "arguments": "",
+      "classification": "Explicit Auth or static catalog; individual review required",
+      "calls": [
+        "private.sync_verification_rewards"
+      ]
+    },
+    {
+      "name": "unblock_chat_user",
+      "arguments": "p_user_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "update_activity",
+      "arguments": "p_event_id integer, p_patch jsonb",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "private.assert_activity_mutable",
+        "private.can_manage_activity",
+        "public.tbl_categories",
+        "public.tbl_event_categories",
+        "private.save_activity_registration_questions"
+      ]
+    },
+    {
+      "name": "update_activity_comment",
+      "arguments": "p_comment_id bigint, p_body text",
+      "classification": "Calls Admin role boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.is_wenitro_admin"
+      ]
+    },
+    {
+      "name": "update_my_profile",
+      "arguments": "p_patch jsonb",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.get_my_profile"
+      ]
+    },
+    {
+      "name": "update_user_privacy_settings",
+      "arguments": "p_profile_visibility text, p_email_visibility text, p_phone_visibility text, p_message_visibility text, p_show_online_status boolean",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_user_privacy_settings"
+      ]
+    },
+    {
+      "name": "vibe_create",
+      "arguments": "p_event_id bigint, p_media_path text, p_media_type text, p_caption text, p_hashtags text[], p_visibility text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_activity_vibes"
+      ]
+    },
+    {
+      "name": "vibe_create_comment",
+      "arguments": "p_vibe_id bigint, p_body text, p_parent_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_vibe_comments"
+      ]
+    },
+    {
+      "name": "vibe_delete",
+      "arguments": "p_vibe_id bigint",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "vibe_delete_comment",
+      "arguments": "p_comment_id integer",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id"
+      ]
+    },
+    {
+      "name": "vibe_set_liked",
+      "arguments": "p_vibe_id bigint, p_liked boolean",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.get_current_app_user_id",
+        "public.tbl_vibe_likes"
+      ]
+    },
+    {
+      "name": "vibe_track_share",
+      "arguments": "p_vibe_id bigint, p_channel text",
+      "classification": "Calls current account boundary",
+      "calls": [
+        "public.tbl_vibe_shares",
+        "public.get_current_app_user_id"
+      ]
+    }
+  ],
+  "reviewNotes": [
+    "SECURITY DEFINER call-graph labels are navigation aids, not branch-level authorization proofs. Actual review found and fixed account-status and private-price gaps listed here.",
+    "list_badge_catalog exposes only the public badge catalog; list_interest_catalog exposes static categories and is replaced with a filtered invoker in Admin catalog migration.",
+    "save_my_partner_profile delegates to an always-raising obsolete-application endpoint and cannot save payout or Partner data.",
+    "submit_my_live_photo and sync_my_verification gain live account guards in75305. list_active_stories previously used current user only for viewed decoration, and gains a WHERE authorization predicate.",
+    "Admin and Finance RPCs use fresh auth.users app_metadata via current_admin_role, not user_metadata or stale JWT role claims.",
+    "Do not report security advisories clean: 137 predeployment authenticated definer WARNs and leaked password protection WARN remain in snapshot. Rerun after integration/deployment."
+  ]
+}

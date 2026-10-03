@@ -11,6 +11,7 @@ import {
   jsonResponse,
   positiveInteger,
   safeProviderMetadata,
+  verifiedCheckoutPhone,
 } from "../_shared/cashfree.ts";
 
 type PaymentRow = {
@@ -42,6 +43,9 @@ Deno.serve(async (request) => {
     const activityId = positiveInteger(body.activityId, "Activity ID");
     const entryCategoryId = body.entryCategoryId == null ? null : positiveInteger(body.entryCategoryId, "Entry category ID");
 
+    // Validate provider eligibility before reserving a seat in the database.
+    const customerPhone = verifiedCheckoutPhone(user);
+
     const prepared = await client.rpc("prepare_activity_payment", {
       p_event_id: activityId,
       p_entry_category_id: entryCategoryId,
@@ -61,13 +65,6 @@ Deno.serve(async (request) => {
         entryCategoryId: payment.entry_category_id == null ? null : String(payment.entry_category_id),
         entryCategoryName: payment.entry_category_name,
       });
-    }
-
-    const customerPhone = user.phone?.trim();
-    if (!customerPhone) {
-      throw new Error(
-        "A verified phone number is required for Cashfree checkout.",
-      );
     }
 
     const returnUrl = checkoutReturnUrl(
