@@ -1,0 +1,332 @@
+{
+  "target": "https://wenitro-admin-roan.vercel.app",
+  "fixtureManifest": "tmp/chat001-admin-integrated-fixtures.json",
+  "captureRule": "Use isolated IAB. Verify each screenshot visually matches DOM/URL; Chrome background screenshot returned stalepixels. After capture store path+URL+timestamp+currentdeployment. No nativeChrome calls.",
+  "routes": [
+    {
+      "route": "/dashboard",
+      "canonicalIds": [
+        "ADMIN-LOGIN-DATA",
+        "ADMIN-DASHBOARD"
+      ],
+      "check": "Ordinary Admin; prior valid current-release dashboard image exists."
+    },
+    {
+      "route": "/settings/categories",
+      "canonicalIds": [
+        "ADMIN-CATEGORY-CATALOG"
+      ],
+      "check": "Search CHAT001; prior category-dialog/reloaded images valid. Synthetic category27 description persisted."
+    },
+    {
+      "route": "/search?q=Historical%20category",
+      "canonicalIds": [
+        "ADMIN-HEADER-SEARCH"
+      ],
+      "check": "Prior search-first/search-second images valid; two changed same-route queries verified."
+    },
+    {
+      "route": "/admins/roles",
+      "canonicalIds": [
+        "ADMIN-MASTER-ROLES",
+        "ADMIN-ROLE-ENFORCEMENT",
+        "ADMIN-ACCESS-AUDIT"
+      ],
+      "check": "Ordinary Admin correctly Access restricted. Master CRUD/audit baseline16PASS retained; permanentMasteridentity undecided; do not grant fresh authority solely for image."
+    },
+    {
+      "route": "/events/283",
+      "canonicalIds": [
+        "ADMIN-PIN",
+        "ADMIN-CATEGORY-CORRECTION",
+        "ADMIN-ACTIVITIES"
+      ],
+      "check": "Synthetic private Activity283; correct No participant limit/No limit/Not capped labels. API20PASS pinned/unpinned/category persisted to host session then restored. Current category intentionally corrected in controls test."
+    },
+    {
+      "route": "/users/119",
+      "canonicalIds": [
+        "ADMIN-USERS",
+        "ADMIN-USER-RESTRICTIONS"
+      ],
+      "check": "Synthetichost; account Active/restored. Followers Not tracked, real recentActivity. Buttonsrestriction can be inspected without mutating."
+    },
+    {
+      "route": "/users/119/activity",
+      "canonicalIds": [
+        "ADMIN-USERS"
+      ],
+      "check": "After newdeploy shows received ratingtimeline and Logins Not tracked, no fakezero. API ratings metadata authorizedAdmin only proven."
+    },
+    {
+      "route": "/events?search=Historical%20category",
+      "canonicalIds": [
+        "ADMIN-ACTIVITY-MODERATION"
+      ],
+      "check": "If URLsearchunsupported use visible searchinput; choose synthetic283. API cancel/delete/restore audited/retry idempotency verified. Do not mutate any other event."
+    },
+    {
+      "route": "/communities",
+      "canonicalIds": [
+        "ADMIN-COMMUNITIES",
+        "ADMIN-ANONYMOUS-AUDIT"
+      ],
+      "check": "ActualCommunityrecords. Anonymousauthor attribution proof is backend technical-only; do not expect authoridentityinpublicUI."
+    },
+    {
+      "route": "/content/vibes",
+      "canonicalIds": [
+        "ADMIN-VIBES"
+      ],
+      "check": "Actualrecordstable."
+    },
+    {
+      "route": "/content/stories",
+      "canonicalIds": [
+        "ADMIN-STORIES"
+      ],
+      "check": "Actualstoredexpiration/deletionstatus."
+    },
+    {
+      "route": "/verification",
+      "canonicalIds": [
+        "ADMIN-VERIFICATION"
+      ],
+      "check": "Private evidence metadata/reviewtable; no unrelated document opened or new approval necessary. Baselineprivateupload/reviewproof plusbackendcurrentauthorization."
+    },
+    {
+      "route": "/business",
+      "canonicalIds": [
+        "ADMIN-PARTNER-REVIEW"
+      ],
+      "check": "Actual applications/masked review. Use existing synthetic QAapplication for details only; no unrelated decision."
+    },
+    {
+      "route": "/moderation/investigation",
+      "canonicalIds": [
+        "ADMIN-REPORT-REVIEW",
+        "ADMIN-INVESTIGATION"
+      ],
+      "check": "Uncheck Open reports only; reportevent-4 synthetic resolved. CurrentUI successfully investigated then restoredresolved; notes CHAT001 deployed investigation QA complete. Profile/history/Activitylinks actual."
+    },
+    {
+      "route": "/moderation/chat-violations",
+      "canonicalIds": [
+        "ADMIN-MANUAL-MEDIA-REVIEW"
+      ],
+      "check": "Actualsubmittedtopic queue; no fakeclassifier/transcript."
+    },
+    {
+      "route": "/moderation/image-moderation",
+      "canonicalIds": [
+        "ADMIN-MANUAL-MEDIA-REVIEW",
+        "ADMIN-AUTO-MODERATION"
+      ],
+      "check": "Actualreportedmedia/manualworkflow; explicitclassifier unavailable."
+    },
+    {
+      "route": "/security/ip-monitoring",
+      "canonicalIds": [
+        "ADMIN-IP-MONITORING"
+      ],
+      "check": "ExplicitnoIPfeed/blockenforcement; workingsecurityaudit/account links. TargetAuthaudit0rows verifiedtechnical."
+    },
+    {
+      "route": "/security/security-logs",
+      "canonicalIds": [
+        "ADMIN-SECURITY-AUDIT"
+      ],
+      "check": "Wait actual table loaded; current283operation/restriction reasons and actor visible. Open one synthetic283 detail ifdesired."
+    },
+    {
+      "route": "/moderation/action-logs",
+      "canonicalIds": [
+        "ADMIN-USER-RESTRICTIONS",
+        "ADMIN-ACTIVITY-MODERATION",
+        "ADMIN-REPORT-REVIEW"
+      ],
+      "check": "Wait Loading audit gone; actualfixture119/283 and report4 auditoperations."
+    },
+    {
+      "route": "/business/sponsored-events",
+      "canonicalIds": [
+        "ADMIN-PARTNER-ACTIVITIES"
+      ],
+      "check": "Actual Partner-hostedActivities; ad-budget/impressions notconfigured truthful. Controlslink actual."
+    },
+    {
+      "route": "/business/transactions",
+      "canonicalIds": [
+        "ADMIN-TRANSACTIONS"
+      ],
+      "check": "Requires dedicated Finance121 login from fixturemanifest. Do not record financial event orconfigurepolicy."
+    },
+    {
+      "route": "/business/revenue",
+      "canonicalIds": [
+        "ADMIN-REVENUE"
+      ],
+      "check": "Finance121; actualledger summary."
+    },
+    {
+      "route": "/business/settlements",
+      "canonicalIds": [
+        "ADMIN-SETTLEMENTS"
+      ],
+      "check": "Finance121; actualpending/hold ledger; no payout/refund execution."
+    },
+    {
+      "route": "/analytics/user-analytics",
+      "canonicalIds": [
+        "ADMIN-ANALYTICS-USERS"
+      ],
+      "check": "Prior DOM UserAnalytics DAU/MAU/observationstart2026-10-03; retention Awaitingcohort. Growthroute /analytics/user-growth addsnullablecohort windowdefinition."
+    },
+    {
+      "route": "/analytics/platform-activity",
+      "canonicalIds": [
+        "ADMIN-ANALYTICS-PLATFORM"
+      ],
+      "check": "Newdeploy observedSinceUTCcopy; DAUactual; alltimecounterlabels."
+    },
+    {
+      "route": "/analytics/engagement",
+      "canonicalIds": [
+        "ADMIN-ANALYTICS-ENGAGEMENT"
+      ],
+      "check": "Newdeploy Vibe Shares label/card/chartCSV. Unavailableconversion/ratingexplicit."
+    },
+    {
+      "route": "/analytics/event-analytics",
+      "canonicalIds": [
+        "ADMIN-ANALYTICS-EVENTS"
+      ],
+      "check": "ActualActivitycounts/categories/cities; top-eventsroute shows Activityratings Not collected."
+    },
+    {
+      "route": "/analytics/event-engagement",
+      "canonicalIds": [
+        "ADMIN-ANALYTICS-EVENT-VIEWS"
+      ],
+      "check": "Actualauthorizeddailyviews/shares/UTC explanation, Vibesexcluded."
+    },
+    {
+      "route": "/analytics/host-performance",
+      "canonicalIds": [
+        "ADMIN-ANALYTICS-HOSTS"
+      ],
+      "check": "Newdeploy explainsrating\u00d720/completed\u00f7hosted; actualranking."
+    },
+    {
+      "route": "/analytics/geographic-insights",
+      "canonicalIds": [
+        "ADMIN-ANALYTICS-GEOGRAPHY"
+      ],
+      "check": "Actualdeclarednationality/saveddisplaylocation; noIPgeography."
+    },
+    {
+      "route": "/notifications/system-alerts",
+      "canonicalIds": [
+        "ADMIN-CAMPAIGN-DRAFTS",
+        "ADMIN-CAMPAIGN-DELIVERY"
+      ],
+      "check": "ExistingQAinappimmediate1delivered1read; scheduled1delivered0read actualcron08:32. Cancelledscheduledraft. Needsfresh screenshot; no send required."
+    },
+    {
+      "route": "/notifications/email",
+      "canonicalIds": [
+        "ADMIN-CAMPAIGN-DRAFTS",
+        "ADMIN-CAMPAIGN-DELIVERY"
+      ],
+      "check": "SavedQAdraft and emailprovider unavailable; nofake send. Push equivalent /notifications/push-campaigns."
+    },
+    {
+      "route": "/settings/notification-templates",
+      "canonicalIds": [
+        "ADMIN-TEMPLATES"
+      ],
+      "check": "Open [QA]CHAT001template edit; body Synthetic QA message saved and reloaded through deployed Admin. prior native template-edit imagevalid but reloaded screenshotstale."
+    },
+    {
+      "route": "/rewards/coins",
+      "canonicalIds": [
+        "ADMIN-REWARD-RULES"
+      ],
+      "check": "Actualauthoritative2/10/10/verification0; fixedreviewedcontract."
+    },
+    {
+      "route": "/rewards/catalog",
+      "canonicalIds": [
+        "ADMIN-REWARD-CATALOG"
+      ],
+      "check": "persistedQAproposal only, actualfulfillmentnotconfigured."
+    },
+    {
+      "route": "/rewards/coupons",
+      "canonicalIds": [
+        "ADMIN-COUPONS"
+      ],
+      "check": "PersistedQAproposal only, redemptionnotconfigured."
+    },
+    {
+      "route": "/rewards/badges",
+      "canonicalIds": [
+        "ADMIN-BADGE-CATALOG"
+      ],
+      "check": "Newdeploymentmustshow22canonicalmetricbadges, not25includinglegacyverification."
+    },
+    {
+      "route": "/rewards/leaderboard",
+      "canonicalIds": [
+        "ADMIN-LEADERBOARD"
+      ],
+      "check": "Actualrolling7/30day/alltimerewardledger; noreset."
+    },
+    {
+      "route": "/settings/features",
+      "canonicalIds": [
+        "ADMIN-FEATURE-SETTINGS"
+      ],
+      "check": "All4globalgatesON. Neverdisableglobally. RollbackSQLtestalreadyprovenactualcreate_activitydenyandrestoredtrue."
+    },
+    {
+      "route": "/settings/languages",
+      "canonicalIds": [
+        "ADMIN-LANGUAGE-SETTINGS"
+      ],
+      "check": "Englishonly, truthfuladditionaltranslationdependency."
+    },
+    {
+      "route": "/settings",
+      "canonicalIds": [
+        "ADMIN-FEATURE-SETTINGS"
+      ],
+      "check": "Wait countsloaded; realdeployedreleaseconfig and links."
+    },
+    {
+      "route": "/notifications",
+      "canonicalIds": [
+        "ANNOUNCEMENT-CREATE",
+        "ANNOUNCEMENT-AUDIENCE",
+        "ANNOUNCEMENT-DISPLAY",
+        "ANNOUNCEMENT-RECEIPT"
+      ],
+      "check": "Announcement3 [QA]CHAT001integratedAdminUIacceptance recipient120only active. RootAppIABrecipient120popup/ackpending; runner--after-ui-ack verifiesreceiptanddisables. Noalluserpublication."
+    },
+    {
+      "route": "/moderation/pending-reports",
+      "canonicalIds": [
+        "ADMIN-HEADER-NOTIFICATIONS"
+      ],
+      "check": "Click bannerNotifications then wait reporttable; headerpendingcount5matches actualqueue. No needreview unrelatedreport."
+    },
+    {
+      "route": "/dashboard",
+      "canonicalIds": [
+        "ADMIN-HEADER-HELP-PROFILE"
+      ],
+      "check": "Priorhelpimagevalid; actualprofiledialogshowscurrentAdminemail/role/lastsignin viaheader menu Admin profile. Needprofiledialog screenshotrecapture."
+    }
+  ],
+  "canonicalIdsCovered": 52
+}
