@@ -1,13 +1,13 @@
 {
   "projectId": "cxsznhrkzqndhseodcyy",
   "readyForProductionQA": true,
-  "at": "2026-10-03T19:33:48.201879+00:00",
-  "appCommit": "08b8bb8abee17f33f412cb449b9edce2749db0b4",
-  "adminCommit": "bcdaa9662a73897a0e413f58793b8f45463c906f",
-  "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-  "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+  "at": "2026-10-03T21:35:59.397725+00:00",
+  "appCommit": "96f1ecfd5bd78f2688e386677407a0eb35dfd21e",
+  "adminCommit": "03d20e5a51edada5f515673715250b332198193f",
+  "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+  "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
   "appUrl": "https://wenitro-app.vercel.app",
-  "appImmutableUrl": "https://wenitro-f9vc49af2-vamshi-krishna-pendyalas-projects.vercel.app",
+  "appImmutableUrl": "https://wenitro-fp37eu1kc-vamshi-krishna-pendyalas-projects.vercel.app",
   "adminUrl": "https://wenitro-admin-roan.vercel.app",
   "cashfreeVerifyVersion": 4,
   "cashfreeCreateVersion": 6,
@@ -27,7 +27,13 @@
     "20261003181703",
     "20261003182405",
     "20261003183320",
-    "20261003185740"
+    "20261003185740",
+    "20261003194203",
+    "20261003195913",
+    "20261003203126",
+    "20261003203749",
+    "20261003205431",
+    "20261003211325"
   ],
   "rollout": [
     {
@@ -269,11 +275,13 @@
       }
     }
   ],
-  "releaseNotes": "Final coordinated local batch: all92 local checks passed, five database migrations and Cashfree create-orderv6 applied before Git-linked App08b8bb8 and Adminbcdaa96 became READY. Stable production aliases verified. No manual duplicate deployments.",
+  "releaseNotes": "Coordinated regression release after complete115/115local gate. Four SQL migrations and two JWT-protected disabled-provider Edge functions preceded one Git-linked deployment per App/Admin. Both exact SHAs and production aliases READY. Provider activation was not changed. Deployed acceptance in progress, not final client acceptance.",
   "localGate": {
-    "checks": 92,
+    "checks": 115,
     "failed": 0,
-    "report": "docs/chat001-integrated-local-verification.json"
+    "report": "docs/chat001-pre-partner-preview-local-verification.json",
+    "testedCommit": "53cb3d4",
+    "releaseDifference": "Evidence/report-only commit96f1ecf after the tested source; runtime implementation unchanged."
   },
   "productionRegressions": [
     {
@@ -282,7 +290,9 @@
       "migration": "20261003082759_admin_workspace_conflict_http_status",
       "localChecks": 51,
       "deployed": true,
-      "productionRetest": "PENDING"
+      "productionRetest": "PASS",
+      "productionProof": "docs/chat001-admin-conflict-production-proof.json",
+      "observed": "Three live stale-version operations returned409/PT409; rows unchanged."
     },
     {
       "name": "Expired Activity invitation and verified-paid invite replay",
@@ -296,10 +306,13 @@
         "paymentLifecycle": 47
       },
       "deployed": true,
-      "productionRetest": "PENDING"
+      "productionRetest": "PASS_SCOPED_BACKEND",
+      "productionProof": "docs/chat001-isolated-backend-production-musp8cua-ff1af1.json",
+      "observed": "18 deployed checks and11cleanup: actual registration expiry denial without consuming token; completed/cancelled denial; approved paid replay idempotence and cross-buyer denial.",
+      "limitation": "Paid replay fixture uses explicit synthetic service finalizer; not provider payment proof. Past end-clock timestamp boundary tested locally."
     }
   ],
-  "postRegressionLocalGate": "docs/chat001-integrated-local-verification.json",
+  "postRegressionLocalGate": "docs/chat001-production-regression-local-verification.json",
   "previousRelease": {
     "at": "2026-10-03T08:21:32.253Z",
     "appCommit": "bd6d314872e1227246ef8b1bdfd566ceff32842b",
@@ -307,5 +320,61 @@
     "appDeploymentId": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
     "adminDeploymentId": "dpl_GF1iqxEpBkfjM4P8FZfLn6L8E12Y"
   },
-  "adminImmutableUrl": "https://wenitro-admin-j256pnnu7-vamshi-krishna-pendyalas-projects.vercel.app"
+  "adminImmutableUrl": "https://wenitro-admin-14yjxqxik-vamshi-krishna-pendyalas-projects.vercel.app",
+  "previousRegressionRelease": {
+    "at": "2026-10-03T19:33:48.201879+00:00",
+    "appCommit": "08b8bb8abee17f33f412cb449b9edce2749db0b4",
+    "adminCommit": "bcdaa9662a73897a0e413f58793b8f45463c906f",
+    "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
+    "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw",
+    "appImmutableUrl": "https://wenitro-f9vc49af2-vamshi-krishna-pendyalas-projects.vercel.app",
+    "adminImmutableUrl": "https://wenitro-admin-j256pnnu7-vamshi-krishna-pendyalas-projects.vercel.app",
+    "localGate": {
+      "checks": 92,
+      "failed": 0,
+      "report": "docs/chat001-integrated-local-verification.json"
+    }
+  },
+  "googlePlacesVersion": 1,
+  "aadhaarVerificationVersion": 1,
+  "regressionMigrationMapping": [
+    {
+      "localFile": "supabase/migrations/20261003203126_registration_question_category_text_guards.sql",
+      "localVersion": "20261003203126",
+      "version": "20261003213127",
+      "name": "registration_question_category_text_guards"
+    },
+    {
+      "localFile": "supabase/migrations/20261003203749_admin_auth_ip_observations.sql",
+      "localVersion": "20261003203749",
+      "version": "20261003213129",
+      "name": "admin_auth_ip_observations"
+    },
+    {
+      "localFile": "supabase/migrations/20261003205431_sandbox_digilocker_verification.sql",
+      "localVersion": "20261003205431",
+      "version": "20261003213131",
+      "name": "sandbox_digilocker_verification"
+    },
+    {
+      "localFile": "supabase/migrations/20261003211325_google_place_coordinate_retention.sql",
+      "localVersion": "20261003211325",
+      "version": "20261003213132",
+      "name": "google_place_coordinate_retention"
+    }
+  ],
+  "pendingRegressionRelease": {
+    "testedCommit": "e8727e09b1aef67988b00c58e31350e6b9c9063f",
+    "localGate": {
+      "total": 117,
+      "passed": 117,
+      "failed": 0
+    },
+    "changes": [
+      "Authoritative Partner access on cold routes",
+      "Reset Partner activity selection on changed URL",
+      "Explicit safe video preview in shared cards"
+    ],
+    "status": "LOCAL_VERIFIED_AWAITING_DEPLOYMENT"
+  }
 }

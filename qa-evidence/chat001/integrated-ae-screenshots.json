@@ -1407,5 +1407,122 @@
       "PARTNER-EXTERNAL-URL"
     ],
     "outcome": "Click fromproductionActivity234 openedexactstoredhttps://example.com/wenitro-final-qa; destinationExampleDomainactualloaded."
+  },
+  {
+    "name": "regression-verification-disabled-digilocker",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/verification-disabled-digilocker.png",
+    "url": "https://wenitro-app.vercel.app/#/verification",
+    "at": "2026-10-03T21:38:32.729633+00:00",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "account": 71,
+    "requirements": [
+      "VERIFY-AADHAAR",
+      "TRUST-AADHAAR"
+    ],
+    "outcome": "Actual deployed card states unavailable/configuration required, Aadhaar0/20; camera-only privacycopy and OpenCamera visible. Genuine capture/provider verification not performed. Scrolled through supported accessibility scroll; fullPage capture separately rejected due known tool framing issue."
+  },
+  {
+    "name": "regression-partner-paid280-on-hold",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/partner-paid280-on-hold.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerDashboard/280",
+    "at": "2026-10-03T21:44:36.930778+00:00",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "account": 71,
+    "requirements": [
+      "PARTNER-PARTICIPANTS",
+      "PARTNER-PAYMENT-DETAILS"
+    ],
+    "outcome": "Existing real hosted Sandbox success: approved, ON HOLD, paid12.34; no duplicatecharge/ledger or payout performed. Correct current render captured afterProfilehydration; coldroute/staleactivityselectionregressions found separately and assigned."
+  },
+  {
+    "name": "regression-partner-unpaid297-answer",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/partner-unpaid297-answer.png",
+    "url": "https://wenitro-app.vercel.app/#/partnerDashboard/297",
+    "at": "2026-10-03T21:44:36.931235+00:00",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "account": 71,
+    "requirements": [
+      "PARTNER-PARTICIPANTS",
+      "PARTNER-PAYMENT-DETAILS"
+    ],
+    "outcome": "Current buyer116 payment required/PENDING, paid0, saved requiredanswerSandboxAcceptance. Not a completedpayment. Correct current render captured afterProfilehydration; coldroute/staleactivityselectionregressions found separately and assigned."
+  },
+  {
+    "name": "regression-referral-qualification-copy",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/referral-qualification-copy.png",
+    "url": "https://wenitro-app.vercel.app/#/inviteSquad",
+    "at": "2026-10-03T21:50:17.054443+00:00",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "account": 71,
+    "requirements": [
+      "REFERRAL-EXPLANATION"
+    ],
+    "outcome": "Actual current deployedHowitworks:10Nitroonlyverifieduniqueaccount; once/person,self/alias/unavailableexcluded; read clearly at1280x720. Copy/send not exercised."
+  },
+  {
+    "name": "regression-home-nitro-card",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/home-nitro-card.png",
+    "url": "https://wenitro-app.vercel.app/#/feed",
+    "at": "2026-10-03T21:50:17.054443+00:00",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "account": 71,
+    "requirements": [
+      "HOME-NITRO-CARD"
+    ],
+    "outcome": "Actual Home blue/purpleNitrocard currentbalance10. Wide screenshot; newmobileviewport override didnotapply (actual1280x720), no falsemobileclaim."
+  },
+  {
+    "name": "regression-home-tribe-presentation",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/home-tribe-presentation.png",
+    "url": "https://wenitro-app.vercel.app/#/feed",
+    "at": "2026-10-03T21:50:17.054443+00:00",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "account": 71,
+    "requirements": [
+      "TRIBE-PRESENTATION",
+      "HOME-NITRO-CARD"
+    ],
+    "outcome": "Actual Tribeimagecards andnameswithoutFind, matchingpurpleInvitecard; actual1280x720. Categorynavigationnotexercised."
+  },
+  {
+    "name": "regression-chat-vibe-creator",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/chat-vibe-creator.png",
+    "url": "https://wenitro-app.vercel.app/#/chat/253",
+    "at": "2026-10-03T21:50:17.054443+00:00",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "account": 71,
+    "requirements": [
+      "SHARE-VIBE"
+    ],
+    "outcome": "Actual prior-deliveredVibe135cardcreatorcorrected. Video preview stillblankfromMP4Imagebug; assignednewproductionregression, notacceptedcomplete."
+  },
+  {
+    "name": "regression-vibe135-creator-activity",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/vibe135-creator-activity.png",
+    "url": "https://wenitro-app.vercel.app/#/vibe/135",
+    "at": "2026-10-03T21:50:17.054443+00:00",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "account": 71,
+    "requirements": [
+      "SHARE-VIBE"
+    ],
+    "outcome": "Actual intendedVibe135directroute creatorQA Auditrecipient and linkedActivity300titlecorrected. No freshshare-cardclick orplaybackclaimed."
+  },
+  {
+    "name": "regression-ended-participant233-actions",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/ended-participant233-actions.png",
+    "url": "https://wenitro-app.vercel.app/#/activity/233",
+    "at": "2026-10-03T21:55:11.309632+00:00",
+    "timestampProvenance": "Screenshot file modification time; exact browser capture timestamp was not separately supplied.",
+    "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "appCommit": "96f1ecf",
+    "account": 71,
+    "actorProvenance": "Coordinator reported current authenticated Priya71 production session.",
+    "requirements": [
+      "ACT-ENDED-PARTICIPANT",
+      "ACT-ENDED-LEAVE"
+    ],
+    "outcome": "Actual deployed Activity233 visibly JOINED and COMPLETED; footer shows Like and Rate Participants, with no Leave Activity action. Image bytes personally reviewed. No rating, leave or overflow-menu click claimed.",
+    "screenshotsReviewed": true
   }
 ]

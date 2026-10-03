@@ -567,5 +567,41 @@
       "ADMIN-PARTNER-REVIEW"
     ],
     "outcome": "Actual QA108 application shows masked UPI and persisted New to Under review history, original timestamp."
+  },
+  {
+    "name": "regression-admin-ip-observations-empty",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/admin-ip-observations-empty.png",
+    "url": "https://wenitro-admin-roan.vercel.app/security/ip-monitoring",
+    "at": "2026-10-03T21:38:32.727900+00:00",
+    "deployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "account": "qa.admin.20260902@example.com",
+    "requirements": [
+      "ADMIN-IP-MONITORING"
+    ],
+    "outcome": "Actual deployed Admin page: bounded0of0retained records; honest empty state and Refresh/search controls. Direct read load proven; click-based Refresh remains unverified while native dialog blocks clicks."
+  },
+  {
+    "name": "regression-admin-partner-terms-receipt108",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/admin-partner-terms-receipt108.png",
+    "url": "https://wenitro-admin-roan.vercel.app/business/108",
+    "at": "2026-10-03T21:42:22.684225+00:00",
+    "deployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "account": "qa.admin.20260902@example.com",
+    "requirements": [
+      "ADMIN-PARTNER-REVIEW"
+    ],
+    "outcome": "Actual deployed Terms version2026-10-01 and accepted1Oct2026 5:41pm; maskedpayout separate; receipt not identity proof."
+  },
+  {
+    "name": "regression-admin-partner-terms-missing71",
+    "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/admin-partner-terms-missing71.png",
+    "url": "https://wenitro-admin-roan.vercel.app/business/71",
+    "at": "2026-10-03T21:42:22.684580+00:00",
+    "deployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "account": "qa.admin.20260902@example.com",
+    "requirements": [
+      "ADMIN-PARTNER-REVIEW"
+    ],
+    "outcome": "Actual deployed legacy applicant has no Terms receipt; approved status not equated to consent."
   }
 ]

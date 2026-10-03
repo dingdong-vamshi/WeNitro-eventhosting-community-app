@@ -1189,11 +1189,39 @@
     }
   ],
   "laterDigiLockerCompatibility": {
-    "at": "2026-10-03T21:13:37.496365+00:00",
-    "scope": "Supersedes any inference that byte-identical older Trust migration means unchanged runtime after the new DigiLocker migration.",
-    "proof": "docs/chat001-digilocker-local-proof.json",
-    "badgeCriteriaAndRendering": "unchanged",
-    "trustChange": "Aadhaar only: production-verified private ledger or existing legacy approved signal; test sessions give +0; other components/Nitro/selfie review unchanged.",
-    "productionAndScreenshotAcceptance": "Not yet deployed; no new capture or actual provider proof claimed."
+    "at": "2026-10-03T21:48:18.811251+00:00",
+    "status": "DEPLOYED_DISABLED_SCOPED_ACCEPTANCE",
+    "release": {
+      "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+      "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+    },
+    "appCommit": "96f1ecfd5bd78f2688e386677407a0eb35dfd21e",
+    "scope": "Supersedes the old prospective/deployment-pending Aadhaar note and any inference that unchanged older Trust migration files mean unchanged runtime. The historical34-item review and original screenshot IDs stay preserved.",
+    "proof": [
+      "docs/chat001-digilocker-local-proof.json",
+      "docs/chat001-digilocker-disabled-production-proof.json",
+      "docs/chat001-regression-production-rollout.json"
+    ],
+    "badgeCriteriaAndRendering": "Unchanged by DigiLocker integration; no newly earned22-badge claim.",
+    "trustChange": "Deployed private.has_verified_aadhaar supplies Aadhaar only from a legitimate production-verified private ledger or existing approved legacy signal. Test+0; other components/Nitro/selfie review unchanged. Actual ledger empty, ordinary access denied, actual Trust/sync wiring confirmed, tested owner Trust unchanged.",
+    "productionAndScreenshotAcceptance": {
+      "path": "qa-evidence/chat001/regression-production/verification-disabled-digilocker.png",
+      "scope": "Account71 actual deployed Aadhaar card: not enabled/provider onboarding and configuration required; Trust breakdown Aadhaar0/20. No consent/hosted provider completion or native capture acceptance.",
+      "capturedAt": "2026-10-03T21:38:32.729633+00:00",
+      "deploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+      "account": 71,
+      "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json",
+      "sha256": "8d06dc524c5d0f67098e0726eb043965b9385790243ab681c0f7d7639e055967"
+    },
+    "actualProviderAcceptance": "Not performed; disabled. Supported Sandbox DigiLocker integration is deployed and deliberately disabled. Authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials and registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance remain external prerequisites. Remote credential absence was not established. No real Aadhaar verification or resulting live +20 award is claimed.",
+    "nextReleaseCompatibility": "Evidence is from deployed App96f1ecf / dpl_3upivwr3iVp43DohkVi53DznEPi3 and deployed Aadhaar Edgev1 / database migration actual20261003213131 (source20261003205431). The screenshot is the newly captured disabled card, not a reused preintegration screenshot. The next planned App-only Partner gate regression is outside this evidence scope; preserve capture IDs and confirm the actual diff before accepting reuse for that future release.",
+    "currentSecurityAdvisorScope": {
+      "path": "docs/chat001-regression-security-advisor-review.json",
+      "errors": 0,
+      "authenticatedDefinerWarnings": 136,
+      "leakedPasswordWarning": 1,
+      "privateRlsInfo": 11,
+      "limit": "Recorded exposure review, not zero vulnerabilities or automatic security certification."
+    }
   }
 }

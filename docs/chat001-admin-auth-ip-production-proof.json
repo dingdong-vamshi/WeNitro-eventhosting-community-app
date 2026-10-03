@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-03T21:36:41.852Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Actual current ordinary Admin session; no temporary Master grant",
+      "status": "PASS"
+    },
+    {
+      "name": "Current Admin adapter reads only bounded minimal Auth observation projection",
+      "status": "PASS",
+      "details": {
+        "returned": 0,
+        "candidates": 0,
+        "matches": 0,
+        "empty": true
+      }
+    },
+    {
+      "name": "Read-only refresh succeeds with real retained-data count",
+      "status": "PASS",
+      "details": {
+        "returned": 0,
+        "candidates": 0
+      }
+    },
+    {
+      "name": "Literal bounded search has honest no-match result",
+      "status": "PASS"
+    },
+    {
+      "name": "Server rejects overlong search",
+      "status": "PASS"
+    },
+    {
+      "name": "Finance121 cannot read Auth IP observations",
+      "status": "PASS"
+    },
+    {
+      "name": "Member120 cannot read Auth IP observations",
+      "status": "PASS"
+    },
+    {
+      "name": "Anonymous cannot execute Auth IP reader",
+      "status": "PASS"
+    }
+  ],
+  "scope": "Actual existing ordinary Admin/Finance/member and anonymous production sessions; read-only minimal observations and authorization. No fabricated Auth audit rows, role changes or raw IP/payload values recorded.",
+  "masterBoundary": "Master allow and revoked/banned/disabled account denial verified by32realPostgres local checks; no live Master identity is impersonated or granted here.",
+  "visualProof": "Pending coordinator deployed page Refresh/empty-state screenshot.",
+  "deployment": {
+    "adminCommit": "03d20e5",
+    "adminDeployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "appCommit": "96f1ecf",
+    "appDeployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "readiness": "Coordinator confirmed exact SHA and stable aliases before verifier execution"
+  }
+}

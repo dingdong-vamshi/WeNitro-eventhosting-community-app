@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-03T21:36:35.279Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "release": {
+    "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "aadhaarVerificationVersion": 1
+  },
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Anonymous availability denied",
+      "status": "PASS",
+      "actual": 401
+    },
+    {
+      "name": "Authenticated availability response",
+      "status": "PASS",
+      "actual": 200
+    },
+    {
+      "name": "Provider disabled",
+      "status": "PASS",
+      "actual": false
+    },
+    {
+      "name": "Disabled endpoint grants no verification",
+      "status": "PASS",
+      "actual": false
+    },
+    {
+      "name": "Disabled state explicit",
+      "status": "PASS",
+      "actual": "unavailable"
+    },
+    {
+      "name": "No provider references, authorization links or identity payload returned",
+      "status": "PASS",
+      "actual": [
+        "available",
+        "message",
+        "status",
+        "verified"
+      ]
+    },
+    {
+      "name": "Ordinary owner cannot directly read service ledger",
+      "status": "PASS",
+      "actual": "42501"
+    },
+    {
+      "name": "Ordinary user cannot choose another ledger owner",
+      "status": "PASS",
+      "actual": "42501"
+    },
+    {
+      "name": "Availability check leaves owner Trust unchanged",
+      "status": "PASS",
+      "actual": {
+        "total": 10,
+        "rating": 0,
+        "social_linked": false,
+        "email_verified": true,
+        "phone_verified": false,
+        "selfie_verified": false,
+        "aadhaar_verified": false,
+        "activities_joined": 0
+      }
+    }
+  ],
+  "scope": "Deployed disabled-path API only. No provider or real identity acceptance. Existing QA account is not edited.",
+  "providerActionsInvoked": [],
+  "fixtureWrites": 0,
+  "finishedAt": "2026-10-03T21:36:38.284Z"
+}

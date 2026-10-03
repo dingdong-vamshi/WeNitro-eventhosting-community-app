@@ -1,5 +1,5 @@
 {
-  "status": "LOCAL_IMPLEMENTATION_AND_COMPLETE_GATE_PASS_PRODUCTION_PENDING",
+  "status": "COMPLETE_LOCAL_GATE_117_PASS_APP_HOTFIX_DEPLOYMENT_AND_TARGETED_RETEST_PENDING",
   "items": [
     {
       "change": "Vibe identity and Activity metadata",
@@ -82,15 +82,108 @@
       "implementation": "Complete local Host selection, Place-ID-only drafts and canonical models, transient attributed provider display, Details resolution before save, expiry-aware Nearby and memory cleanup, correct Google map/share/SOS links. Provider remains disabled pending activation.",
       "commit": "8690142",
       "localProof": "docs/chat001-google-places-local-proof.json"
+    },
+    {
+      "change": "Partner direct-route authorization and Activity switching",
+      "implementation": "PartnerAccessGate resolves authoritative Partner approval on cold direct routes without relying on previously loaded Profile state, with bounded loading/error/retry/denied states and actor-scoped completion. Partner route key and memo include screen/ActivityID, disposing old ledger state when280changes to297.",
+      "commit": "0ca1724",
+      "sourceCommit": "413ce69",
+      "localProof": "docs/chat001-partner-route-local-proof.json",
+      "integratedGateCheck": "partner-route-regression-test",
+      "productionStatus": "App hotfix deployment and actual cold/reload280\u2192297/back-forward/registration-form retests pending; no new paid transaction needed."
+    },
+    {
+      "change": "Video-safe internal share previews",
+      "implementation": "One SharedMediaPreview renderer serves DM, Community share card and share-modal preview. Signed/encoded video URLs render a labeled Video preview placeholder; real image posters retain the exact authorized URL, with a visible failed-image fallback. Delayed old-image errors do not hide refreshed URLs. Creator/context/navigation unchanged.",
+      "commit": "e8727e0",
+      "sourceCommit": "3c89d42",
+      "localProof": "docs/chat001-share-media-preview-regression.json",
+      "integratedGateCheck": "shared-media-preview-test",
+      "productionStatus": "App hotfix deployment and actual DM253/Vibe135 share-card screenshot retest pending. Placeholder is not a generated video thumbnail.",
+      "backendChange": "None; no signing/public-URL rewrite/RPC/schema/Edge change. Public share-vibe OG already uses branded fallback for video without poster."
     }
   ],
-  "productionVisualAcceptance": "Pending deployment and actual interaction. Locked Mac/native browser confirmation blocks current browser input; no screenshot substituted.",
+  "productionVisualAcceptance": "The coordinated96f1ecf release is deployed and actual API/SQL/UI evidence exists in the named artifacts. The later App-only Partner route and share-preview regressions passed the complete117-check gate and still require their new deployment plus targeted production interactions/captures. The prior locked-browser blocker is no longer the current acceptance state; do not substitute old screenshots for changed behavior.",
   "localVerification": {
     "status": "PASS",
-    "checks": 115,
+    "checks": 117,
+    "passed": 117,
     "failed": 0,
     "report": "docs/chat001-production-regression-local-verification.json",
-    "testedAppCommit": "53cb3d4",
-    "testedAdminCommit": "03d20e5"
+    "testedAppCommit": "e8727e09b1aef67988b00c58e31350e6b9c9063f",
+    "testedAdminCommit": "03d20e5a51edada5f515673715250b332198193f",
+    "startedAt": "2026-10-03T21:53:55.927271+00:00",
+    "finishedAt": "2026-10-03T21:56:22.787050+00:00",
+    "scope": "Complete actual runner record: App/Admin typecheck and production builds, backend/Edge/RLS/security/payment/badge and UI regression checks, including Partner route and shared-media preview. Individual test boundaries remain in the report; not production UI acceptance."
+  },
+  "at": "2026-10-03T22:01:58.195139+00:00",
+  "productionEvidenceBeforeHotfix": {
+    "appCommit": "96f1ecf",
+    "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+    "rollout": "docs/chat001-regression-production-rollout.json",
+    "DigiLocker": "docs/chat001-digilocker-disabled-production-proof.json",
+    "GooglePlaces": "docs/chat001-google-places-disabled-production-proof.json",
+    "feedbackTextGuard": "docs/chat001-feedback-text-guard-production-proof.json",
+    "screenshots": "qa-evidence/chat001/integrated-ae-screenshots.json",
+    "limit": "Exact captured releases retained; the forthcoming frontend-only hotfix needs explicit compatibility reconciliation, not relabeled capture timestamps."
+  },
+  "backendExternalReview": {
+    "scope": "Read-only assessment review; no provider, payment, account or fixture mutation. F12/22 backend assessment rows have scopedPASS; no additional ordinary backend implementation defect found in this review.",
+    "holds": [
+      {
+        "ids": [
+          "VERIFY-AADHAAR",
+          "TRUST-AADHAAR"
+        ],
+        "reason": "Supported DigiLocker code is deployed disabled and live disabled/auth/private-ledger/Trust checks pass. Authorized Requestor onboarding/entitlement, environment setup/registered redirect, production approval and consenting real-person hosted acceptance remain. Remote credential absence is not established.",
+        "proof": "docs/chat001-digilocker-assessments-supplement.json"
+      },
+      {
+        "ids": [
+          "MAPS-GOOGLE"
+        ],
+        "reason": "Google Places selection/coordinate retention code deployed, SQL retention checks and actual disabled endpoints verified. Client-authorized account/API/billing/restricted key/terms configuration and actual provider activation/acceptance remain; no Google calls or spend.",
+        "proof": [
+          "docs/chat001-regression-production-rollout.json",
+          "docs/chat001-google-places-disabled-production-proof.json"
+        ]
+      },
+      {
+        "ids": [
+          "CONTENT-BACKEND-CHECKS",
+          "ADMIN-AUTO-MODERATION"
+        ],
+        "reason": "Deterministic text50local/12deployedfields and manual-report controls are proven. Semantic image/video moderation still needs a selected authorized provider/policy and integration; word guards do not implement it.",
+        "proof": "docs/chat001-feedback-text-guard-production-proof.json"
+      },
+      {
+        "ids": [
+          "STORE-REDEMPTION"
+        ],
+        "reason": "Minimum200/non-deducting unavailable behavior exists. The client Hubble production setup/link and authorized provider account/API contract and integration remain missing; no redemption completed.",
+        "proof": "docs/chat001-app-final-assessments.json"
+      },
+      {
+        "ids": [
+          "ADMIN-VERIFICATION",
+          "AUTH-PHONE-STATE",
+          "AUTH-EMAIL-CONFIRM",
+          "AUTH-GOOGLE-REDIRECT"
+        ],
+        "reason": "Real camera/selfie approval, physical delivered OTP/inbox/recovery flows require controlled consenting inputs. Separate Google redirect has retained redirect_uri_mismatch and needs exact OAuth callback authorization. Prior GIS/auth-provider success must not be generalized to these branches.",
+        "proof": [
+          "docs/chat001-admin-final-assessments.json",
+          "docs/chat001-auth-provider-final-assessments-supplement.json"
+        ]
+      }
+    ],
+    "safeRemainingActions": [
+      "After App hotfix deploy, approved71 cold/reload Partner297, route280\u2192297/back-forward, correct answer/ledger states, registration form and ordinary-nonPartner denial; read-only UI, no new payment.",
+      "After App hotfix deploy, inspect DM253/Vibe135 visible video placeholder and unchanged creator/context/navigation; inspect image-poster share to guard against collateral regression.",
+      "Reconcile report precedence and release compatibility: two DigiLocker overrides supersede stale App-owner missing-implementation text; Google Maps rows must reflect already-completed deployment/SQL retention/disabled endpoint evidence.",
+      "Refresh reporting-only advisor reference to docs/chat001-regression-security-advisor-review.json:0ERROR,136authenticated-definerWARN,1leaked-passwordWARN,11private-RLSINFO; do not call all vulnerabilities resolved."
+    ],
+    "notNeeded": "No repeat synthetic badge awards, hosted payment, identity/session creation, provider activation or additional production mutation is required to close this backend review."
   }
 }

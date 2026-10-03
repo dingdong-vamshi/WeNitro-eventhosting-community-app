@@ -1,62 +1,146 @@
 {
-  "at": "2026-10-03T21:13:37.496365+00:00",
-  "scope": "Two proposed updates for coordinator merge by ID; no modification of App-owner assessments.",
+  "at": "2026-10-03T21:48:18.811251+00:00",
+  "scope": "Two coordinator merge-by-ID updates for deployed disabled DigiLocker; real provider activation remains external.",
   "requirements": [
     {
       "id": "VERIFY-AADHAAR",
       "status": "PARTIAL_EXTERNAL_DEPENDENCY",
-      "implementationStatus": "IMPLEMENTED_DISABLED_PENDING_COORDINATED_RELEASE",
+      "implementationStatus": "DEPLOYED_DISABLED",
       "before": "Verification UI had no supported Aadhaar provider integration; the original page 26 explicitly suggested Sandbox. Existing Trust accepted the legacy approved Aadhaar source only.",
       "implemented": "Supported Sandbox DigiLocker consent/initiate/status/issued-Aadhaar metadata adapter with authenticated account-bound private ledger, disabled default and test non-award; Verification consent/hosted link/status UI; production verified outcome adds existing Aadhaar +20 and preserves selfie/Nitro/other Trust rules.",
-      "acceptanceScope": "Local protocol/security/DB/UI verification only. No claim of live identity verification, deployed screenshot, provider activation, or ownership demonstration from a synthetic test.",
+      "acceptanceScope": "Deployed disabled Verification card and Aadhaar0/20 inspected on account71;9 actual final-release API checks passed, including anonymous401, authenticated unavailable/verifiedfalse, denied owner/forged-owner ledger reads and unchanged owner Trust10 on account120. Read-only deployed SQL confirms private RLS/service ACL, zero sessions/verified/test-verified rows, no sensitive identity columns and actual Trust/sync helper wiring. Local synthetic production proof verifies exactly +20 once and test+0; no live provider flow is accepted.",
       "localVerification": [
         "docs/chat001-digilocker-local-proof.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-digilocker-disabled-production-proof.json",
+          "outcome": "9 PASS: actual authenticated/anonymous disabled-path and ledger authorization checks; no provider actions/fixture writes; account120 Trust remains10.",
+          "at": "2026-10-03T21:36:38.284Z",
+          "release": {
+            "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+            "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+          }
+        },
+        {
+          "path": "docs/chat001-regression-production-rollout.json",
+          "check": "sqlChecks: scripts/sql/qa-digilocker-disabled-readonly.sql",
+          "at": "2026-10-03T21:32:10.375Z",
+          "outcome": "Private RLS true, ordinary table/service access false, service execute true, sessions/verified/testverified/sensitivecolumns0; Trust/sync use private Aadhaar signal."
+        },
+        {
+          "path": "qa-evidence/chat001/regression-production/verification-disabled-digilocker.png",
+          "at": "2026-10-03T21:38:32.729633+00:00",
+          "outcome": "Actual deployed unavailable card and Aadhaar0/20 visually inspected; account71."
+        }
+      ],
       "technicalProof": [
         "docs/chat001-digilocker-local-proof.json",
-        "docs/chat001-digilocker-integration.md"
+        "docs/chat001-digilocker-integration.md",
+        "docs/chat001-digilocker-integrated-security-review.json",
+        "docs/chat001-digilocker-disabled-production-proof.json",
+        "docs/chat001-regression-production-rollout.json"
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Provider flow remains disabled pending authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials, registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance. Remote credentials absence was not established. Coordinated deployment and visual acceptance also remain pending.",
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/regression-production/verification-disabled-digilocker.png",
+          "scope": "Account71 actual deployed Aadhaar card: not enabled/provider onboarding and configuration required; Trust breakdown Aadhaar0/20. No consent/hosted provider completion or native capture acceptance.",
+          "capturedAt": "2026-10-03T21:38:32.729633+00:00",
+          "deploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "account": 71,
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json",
+          "sha256": "8d06dc524c5d0f67098e0726eb043965b9385790243ab681c0f7d7639e055967"
+        }
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "reason": "Supported Sandbox DigiLocker integration is deployed and deliberately disabled. Authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials and registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance remain external prerequisites. Remote credential absence was not established. No real Aadhaar verification or resulting live +20 award is claimed.",
       "remainingValidation": [
-        "Coordinator integrated gate and migration/Edge/frontend deployment",
-        "Authorized provider setup and test environment protocol acceptance",
-        "Explicit production activation and real consenting hosted-flow verification",
-        "Fresh deployed Verification UI and unchanged other Trust behavior"
+        "Authorized Sandbox Requestor onboarding/entitlement and environment setup",
+        "Explicit production activation and consenting real-person hosted-flow acceptance",
+        "Real verified outcome/Trust+20 and supported device-return acceptance after authorized activation"
       ],
-      "evidenceCompatibility": "Earlier verification screenshots do not prove the new DigiLocker card. Existing badge criterion screenshots remain scoped to unchanged badge UI/criteria; Aadhaar Trust source now has a new migration and its local proof must accompany any release compatibility assessment."
+      "evidenceCompatibility": "Evidence is from deployed App96f1ecf / dpl_3upivwr3iVp43DohkVi53DznEPi3 and deployed Aadhaar Edgev1 / database migration actual20261003213131 (source20261003205431). The screenshot is the newly captured disabled card, not a reused preintegration screenshot. The next planned App-only Partner gate regression is outside this evidence scope; preserve capture IDs and confirm the actual diff before accepting reuse for that future release.",
+      "sourceClauseIds": [
+        "A26-01",
+        "A26-02",
+        "A26-03"
+      ],
+      "requestedChange": "Aadhaar verification uses an approved licensed provider and exposes only legitimate verification outcomes.",
+      "screenshotReviewProvenance": "Coordinator captured and inspected deployed full card; backend agent independently opened the actual PNG bytes and confirmed disabled message and Aadhaar0/20."
     },
     {
       "id": "TRUST-AADHAAR",
       "status": "PARTIAL_EXTERNAL_DEPENDENCY",
-      "implementationStatus": "IMPLEMENTED_DISABLED_PENDING_COORDINATED_RELEASE",
+      "implementationStatus": "DEPLOYED_DISABLED",
       "before": "Verification UI had no supported Aadhaar provider integration; the original page 26 explicitly suggested Sandbox. Existing Trust accepted the legacy approved Aadhaar source only.",
       "implemented": "Supported Sandbox DigiLocker consent/initiate/status/issued-Aadhaar metadata adapter with authenticated account-bound private ledger, disabled default and test non-award; Verification consent/hosted link/status UI; production verified outcome adds existing Aadhaar +20 and preserves selfie/Nitro/other Trust rules.",
-      "acceptanceScope": "Local protocol/security/DB/UI verification only. No claim of live identity verification, deployed screenshot, provider activation, or ownership demonstration from a synthetic test.",
+      "acceptanceScope": "Deployed disabled Verification card and Aadhaar0/20 inspected on account71;9 actual final-release API checks passed, including anonymous401, authenticated unavailable/verifiedfalse, denied owner/forged-owner ledger reads and unchanged owner Trust10 on account120. Read-only deployed SQL confirms private RLS/service ACL, zero sessions/verified/test-verified rows, no sensitive identity columns and actual Trust/sync helper wiring. Local synthetic production proof verifies exactly +20 once and test+0; no live provider flow is accepted.",
       "localVerification": [
         "docs/chat001-digilocker-local-proof.json"
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-digilocker-disabled-production-proof.json",
+          "outcome": "9 PASS: actual authenticated/anonymous disabled-path and ledger authorization checks; no provider actions/fixture writes; account120 Trust remains10.",
+          "at": "2026-10-03T21:36:38.284Z",
+          "release": {
+            "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+            "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+          }
+        },
+        {
+          "path": "docs/chat001-regression-production-rollout.json",
+          "check": "sqlChecks: scripts/sql/qa-digilocker-disabled-readonly.sql",
+          "at": "2026-10-03T21:32:10.375Z",
+          "outcome": "Private RLS true, ordinary table/service access false, service execute true, sessions/verified/testverified/sensitivecolumns0; Trust/sync use private Aadhaar signal."
+        },
+        {
+          "path": "qa-evidence/chat001/regression-production/verification-disabled-digilocker.png",
+          "at": "2026-10-03T21:38:32.729633+00:00",
+          "outcome": "Actual deployed unavailable card and Aadhaar0/20 visually inspected; account71."
+        }
+      ],
       "technicalProof": [
         "docs/chat001-digilocker-local-proof.json",
-        "docs/chat001-digilocker-integration.md"
+        "docs/chat001-digilocker-integration.md",
+        "docs/chat001-digilocker-integrated-security-review.json",
+        "docs/chat001-digilocker-disabled-production-proof.json",
+        "docs/chat001-regression-production-rollout.json"
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
-      "releaseReviewed": false,
-      "release": null,
-      "reason": "Provider flow remains disabled pending authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials, registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance. Remote credentials absence was not established. Coordinated deployment and visual acceptance also remain pending.",
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/regression-production/verification-disabled-digilocker.png",
+          "scope": "Account71 actual deployed Aadhaar card: not enabled/provider onboarding and configuration required; Trust breakdown Aadhaar0/20. No consent/hosted provider completion or native capture acceptance.",
+          "capturedAt": "2026-10-03T21:38:32.729633+00:00",
+          "deploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "account": 71,
+          "metadataFile": "qa-evidence/chat001/integrated-ae-screenshots.json",
+          "sha256": "8d06dc524c5d0f67098e0726eb043965b9385790243ab681c0f7d7639e055967"
+        }
+      ],
+      "screenshotsReviewed": true,
+      "releaseReviewed": true,
+      "release": {
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      },
+      "reason": "Supported Sandbox DigiLocker integration is deployed and deliberately disabled. Authorized Sandbox/DigiLocker entitlement and Requestor onboarding, environment credentials and registered HTTPS redirect, production activation approval and a consenting real-person hosted-flow acceptance remain external prerequisites. Remote credential absence was not established. No real Aadhaar verification or resulting live +20 award is claimed.",
       "remainingValidation": [
-        "Coordinator integrated gate and migration/Edge/frontend deployment",
-        "Authorized provider setup and test environment protocol acceptance",
-        "Explicit production activation and real consenting hosted-flow verification",
-        "Fresh deployed Verification UI and unchanged other Trust behavior"
+        "Authorized Sandbox Requestor onboarding/entitlement and environment setup",
+        "Explicit production activation and consenting real-person hosted-flow acceptance",
+        "Real verified outcome/Trust+20 and supported device-return acceptance after authorized activation"
       ],
-      "evidenceCompatibility": "Earlier verification screenshots do not prove the new DigiLocker card. Existing badge criterion screenshots remain scoped to unchanged badge UI/criteria; Aadhaar Trust source now has a new migration and its local proof must accompany any release compatibility assessment."
+      "evidenceCompatibility": "Evidence is from deployed App96f1ecf / dpl_3upivwr3iVp43DohkVi53DznEPi3 and deployed Aadhaar Edgev1 / database migration actual20261003213131 (source20261003205431). The screenshot is the newly captured disabled card, not a reused preintegration screenshot. The next planned App-only Partner gate regression is outside this evidence scope; preserve capture IDs and confirm the actual diff before accepting reuse for that future release.",
+      "sourceClauseIds": [
+        "B30-02"
+      ],
+      "requestedChange": "Legitimate Aadhaar verification contributes twenty Trust points.",
+      "screenshotReviewProvenance": "Coordinator captured and inspected deployed full card; backend agent independently opened the actual PNG bytes and confirmed disabled message and Aadhaar0/20."
     }
   ]
 }

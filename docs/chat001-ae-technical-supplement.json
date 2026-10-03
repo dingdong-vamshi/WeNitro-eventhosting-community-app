@@ -1778,7 +1778,7 @@
         "A38-12"
       ],
       "requestedOutcome": "Applicable backend content and authorization checks enforce the documented policy beyond a client-only warning.",
-      "technicalStatus": "CURRENT_DEPLOYED_TECHNICAL_COVERAGE",
+      "technicalStatus": "CURRENT_DEPLOYED_DETERMINISTIC_TEXT_COVERAGE",
       "technicalProof": [
         {
           "file": "docs/chat001-isolated-backend-production-mus4isau-9ef89f.json",
@@ -1798,6 +1798,20 @@
           ],
           "runStatus": "FAIL",
           "limit": "This overall run is FAIL due to a later Realtime timeout. These exact checks passed before the timeout; do not turn the overall failed run into PASS. Fresh Realtime retry is separately recorded in docs/chat001-realtime-current-retry.json."
+        },
+        {
+          "path": "docs/chat001-regression-production-rollout.json",
+          "at": "2026-10-03T21:32:07.819Z",
+          "outcome": "11 added/extended field checks PASS with generic22023 and rollback: registration label/options, entry category name, answer value, Partner business_name/description, Community title/description/tagline/tags/rules. Feedback initially UNAVAILABLE and completed separately below.",
+          "scopeLimit": "Deterministic text checks only; no image classifier.",
+          "file": "docs/chat001-regression-production-rollout.json"
+        },
+        {
+          "path": "docs/chat001-feedback-text-guard-production-proof.json",
+          "at": "2026-10-03T21:38:32.605Z",
+          "outcome": "12th field completed: clean temporary feedback insert accepted, forbidden comment update generic22023, unchanged clean row after rejection, inserted fixture absent after subtransaction rollback; no sequence/rating/reward effects.",
+          "scopeLimit": "Controlled ended Activity233/approved participant71; no permanent feedback mutation.",
+          "file": "docs/chat001-feedback-text-guard-production-proof.json"
         }
       ],
       "localProof": [
@@ -1818,14 +1832,31 @@
           "check": "acceptance-backend-test",
           "observedStatus": "PASS",
           "limit": "Local executable/source-contract coverage; not proof of deployed UI or external delivery."
+        },
+        {
+          "path": "docs/chat001-feedback-text-guard-production-proof.json",
+          "command": "node scripts/registration-text-guards-postgres-test.mjs",
+          "status": "PASS",
+          "checks": 50,
+          "scope": "Actual PostgreSQL50 including exact rollback-only production verifier; deterministic normalized text, JSON options, legacy unchanged fields, clean saves, generic errors and atomic rollback.",
+          "file": "docs/chat001-feedback-text-guard-production-proof.json"
         }
       ],
-      "sourceInspection": [],
-      "missingEvidence": [
-        "Actual deployed UI interaction and screenshot remain owned by root; this supplement cannot accept visual behavior.",
-        "Text/authorization guards and moderation reports are implemented. Semantic interpretation of every misleading/hateful image/video is not established; no licensed moderation provider or blanket automatic content safety is claimed."
+      "sourceInspection": [
+        {
+          "scope": "Existing deterministic NFKC whole-word profanity guard now covers registration-question labels and every JSON option, entry-category names, registration-answer values, feedback comments, Partner public business name/description and Community title/description/tagline/tags/rules alongside prior UGC guards. Generic errors avoid echoing submitted text; unchanged legacy values are preserved on unrelated edits. Existing auth/RLS/report boundaries remain scoped to their named proofs.",
+          "migration": "supabase/migrations/20261003203126_registration_question_category_text_guards.sql",
+          "actualVersion": "20261003213127"
+        }
       ],
-      "acceptedScreenshots": []
+      "missingEvidence": [
+        "Deterministic server-side text coverage is deployed and verified for the documented public/UGC fields, including the formerly missing registration label/options/category fields and12 added/extended field cases. Semantic picture/video interpretation has no selected authorized provider/policy integration or actual provider acceptance; it is not implemented by the word guard. Private abuse/support evidence and legal/financial identity/URLs are intentionally outside this deterministic filter, so universal every-textbox or image safety is not claimed."
+      ],
+      "acceptedScreenshots": [],
+      "release": {
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+      }
     },
     {
       "id": "UPLOAD-WARNING",
@@ -3624,7 +3655,8 @@
   "statusCounts": {
     "LOCAL_COVERAGE_ONLY": 80,
     "EXTERNAL_DELIVERY_OR_INTERACTION_UNVERIFIED": 16,
-    "CURRENT_DEPLOYED_TECHNICAL_COVERAGE": 25,
+    "CURRENT_DEPLOYED_TECHNICAL_COVERAGE": 24,
+    "CURRENT_DEPLOYED_DETERMINISTIC_TEXT_COVERAGE": 1,
     "LOCAL_FIX_PENDING_DEPLOYMENT": 2,
     "PROVIDER_INTEGRATION_NOT_IMPLEMENTED": 2,
     "NO_BACKEND_ACCEPTANCE_CLAIM": 1

@@ -1,19 +1,18 @@
 {
-  "at": "2026-10-03T20:51:06.378515+00:00",
+  "at": "2026-10-03T21:44:41.368979+00:00",
   "purpose": "Coordinator-compatible D52 final-release contribution: scoped acceptance, exact external validation/provider dispositions, and any remaining nonterminal evidence gaps.",
   "target": "cxsznhrkzqndhseodcyy",
   "count": 52,
   "release": {
-    "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-    "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+    "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
   },
-  "releaseCompatibilityReview": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions.",
+  "releaseCompatibilityReview": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions. Follow-up current release App96f1ecf/Admin03d20e5: Terms/IP changes have matching local tests,14fresh role/API checks and three independently reviewed deployed screenshots; IP button interaction remains explicitly pending. No other row is promoted by this follow-up.",
   "counts": {
-    "PASS": 48,
+    "PASS": 49,
     "PARTIAL_EXTERNAL_DEPENDENCY": 1,
-    "PENDING_SCOPED_ACCEPTANCE": 1,
     "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
-    "PENDING_DEPLOYED_RETEST": 1
+    "PENDING_SCOPED_ACCEPTANCE": 1
   },
   "requirements": [
     {
@@ -997,7 +996,7 @@
     },
     {
       "id": "ADMIN-PARTNER-REVIEW",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "proposalOnly": false,
       "requestedChange": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets.",
       "before": "Actual applicant108 detail showed business fields, masked UPI and review history but omitted an existing Terms receipt.",
@@ -1025,6 +1024,11 @@
         {
           "path": "docs/chat001-admin-partner-terms-production-proof.json",
           "outcome": "Actual Admin reads108 receipt, legacy71 null; Finance121/member120 denied; no new consent or role change."
+        },
+        {
+          "path": "docs/chat001-admin-partner-terms-production-proof.json",
+          "outcome": "Fresh current-release6/6 actual Admin/Finance/member read-only checks pass. Deployed receipt108 and legacy71 missing-receipt screens independently reviewed.",
+          "deployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
         }
       ],
       "technicalProof": [
@@ -1053,21 +1057,37 @@
           "path": "qa-evidence/chat001/release-admin-partner108-history.png",
           "scope": "Actual masked UPI and persisted New\u2192Under review row; no receipt UI shown yet.",
           "visuallyReviewed": true
+        },
+        {
+          "path": "qa-evidence/chat001/regression-production/admin-partner-terms-receipt108.png",
+          "scope": "Actual deployed Terms version2026-10-01 and accepted1Oct2026 5:41pm; maskedpayout separate; receipt not identity proof.",
+          "url": "https://wenitro-admin-roan.vercel.app/business/108",
+          "at": "2026-10-03T21:42:22.684225+00:00",
+          "deployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+          "visuallyReviewed": true,
+          "sha256": "576725cafd22118198de1952ac176f4d5578204d34db1c42ebfe7ea1264725ac"
+        },
+        {
+          "path": "qa-evidence/chat001/regression-production/admin-partner-terms-missing71.png",
+          "scope": "Actual deployed legacy applicant has no Terms receipt; approved status not equated to consent.",
+          "url": "https://wenitro-admin-roan.vercel.app/business/71",
+          "at": "2026-10-03T21:42:22.684580+00:00",
+          "deployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+          "visuallyReviewed": true,
+          "sha256": "e6db45c433734051d07b32b7c4ebd25320cf593bab2f49ad92769e0c6a55d335"
         }
       ],
       "acceptanceScope": "Authorized Admin can review Partner applications, required agreement/details, approval/rejection and history without exposing unneeded payout secrets.",
-      "reason": "Existing list/details/masked payout/history and live receipt API authorization proven. New deployed receipt108/version-time and legacy71 no-record UI states remain pending after coordinated Admin deployment.",
-      "remainingValidation": [
-        "Existing list/details/masked payout/history and live receipt API authorization proven. New deployed receipt108/version-time and legacy71 no-record UI states remain pending after coordinated Admin deployment."
-      ],
+      "reason": "Existing application list/detail/decision/history scopes retained. Fresh deployed applicant108 Terms version/time and masked payout are visible; legacy71 displays an explicit missing receipt. Current actual Admin API6checks pass, including Finance/member denial; no consent or decision was created for this verification.",
+      "remainingValidation": [],
       "screenshotsReviewed": true,
-      "screenshotReviewProvenance": "Admin acceptance owner inspected the cited image pixels using view_image during final release reconciliation; action claims additionally require linked production records.",
-      "releaseReviewed": false,
+      "screenshotReviewProvenance": "Coordinator captured actual deployed IAB pages; Admin acceptance owner independently inspected all three new image files using view_image. API assertions run after deployment against matching current Admin adapter.",
+      "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "releaseReviewBasis": "Reviewed selected release App08b8bb8/Adminbcdaa966 and applied-migration record. Admin b2e74a3\u2192bcdaa966 changes only engagement/platform/host/history UI, their types/charts, and shared API history/UTC/badge readers; changed paths have replacement-release visual proof and full local regression. Other cited production observations remain explicitly prior compatible scopes, not new executions."
+      "releaseReviewBasis": "Coordinator confirmed current App96f1ecf/Admin03d20e5 exact deployment SHAs and stable aliases. New Terms and IP visual states reviewed on this release; earlier unaffected review/history scopes remain explicitly prior observations."
     },
     {
       "id": "ADMIN-ACCESS-AUDIT",
@@ -1480,7 +1500,7 @@
     },
     {
       "id": "ADMIN-IP-MONITORING",
-      "status": "PENDING_DEPLOYED_RETEST",
+      "status": "PENDING_SCOPED_ACCEPTANCE",
       "proposalOnly": false,
       "requestedChange": "IP login monitoring and blocking are represented as working only with a connected telemetry source and enforcement service; unavailable states link actual security controls.",
       "before": "Page showed only an unavailable notice even though the existing Auth audit table could support a real bounded reader.",
@@ -1490,27 +1510,43 @@
       ],
       "productionVerification": [
         {
-          "path": "docs/chat001-admin-auth-ip-regression.json",
-          "scope": "Read-only live schema/zero retained rows inspection only; newRPC not yet deployed."
+          "path": "docs/chat001-admin-auth-ip-production-proof.json",
+          "outcome": "Fresh current-release8/8: actual ordinary Admin minimal reader, repeated request, literal search and bounds; Finance121/member120/anonymous denied; retainedCandidates0.",
+          "deployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+        },
+        {
+          "scope": "Actual deployed page load displays0of0records and honest empty message. Refresh button visible but not clicked.",
+          "evidenceType": "VISUAL_STATE_ONLY"
         }
       ],
       "technicalProof": [
-        "docs/chat001-admin-auth-ip-regression.json"
+        "docs/chat001-admin-auth-ip-regression.json",
+        "docs/chat001-admin-auth-ip-production-proof.json"
       ],
-      "screenshotProof": [],
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/regression-production/admin-ip-observations-empty.png",
+          "scope": "Actual deployed Admin page: bounded0of0retained records; honest empty state and Refresh/search controls. Direct read load proven; click-based Refresh remains unverified while native dialog blocks clicks.",
+          "url": "https://wenitro-admin-roan.vercel.app/security/ip-monitoring",
+          "at": "2026-10-03T21:38:32.727900+00:00",
+          "deployment": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+          "visuallyReviewed": true,
+          "sha256": "1bde1db52515b48536847d7ef6f5b11956a3b0b3d8223bd0a2b168c67bbafbb1"
+        }
+      ],
       "acceptanceScope": "Read existing retained Auth IP events under current Admin/Master authorization, with bounded search, refresh and truthful empty/error states. No inferred location, anomalies, account linkage beyond recorded actor, or IP blocking enforcement.",
-      "reason": "Local implementation and32realPostgres boundary checks, adapter/UI/cancellation tests, typecheck/lint/build passed. Migration/Admin deployment and read-only actual role/UI verification remain pending. Current source table has zero retained IP records; empty data is a scope limitation, not an external implementation dependency.",
+      "reason": "Current deployed Admin reader shows actual0of0retained records with honest empty state and bounded search/Refresh controls. Fresh actual-role API8/8 checks prove read, repeated refresh request, literal search and Finance/member/anonymous denials. Deployed Refresh button click remains untested because a blocking native dialog prevents pointer interactions. This is pending interaction evidence, not an external implementation hold; no click or nonempty production result is claimed.",
       "remainingValidation": [
-        "After coordinated deployment, run read-only actual Admin/Finance/member/anonymous tests; capture real empty page and Refresh. No fabricated audit rows or temporary live Master grant."
+        "On deployed /security/ip-monitoring click Refresh observations and verify request completion/empty-or-real-result state; capture interaction proof. Current API repeated-read and local UI callback tests already pass."
       ],
-      "screenshotsReviewed": false,
-      "screenshotReviewProvenance": "Prior unavailable-only capture is not acceptance of the new reader. New deployed empty/results capture is pending.",
-      "releaseReviewed": false,
+      "screenshotsReviewed": true,
+      "screenshotReviewProvenance": "Coordinator captured actual deployed IAB pages; Admin acceptance owner independently inspected all three new image files using view_image. API assertions run after deployment against matching current Admin adapter.",
+      "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "releaseReviewBasis": "Implementation committed and locally verified; coordinator deployment and production read-only/UI verification pending.",
+      "releaseReviewBasis": "Coordinator confirmed current App96f1ecf/Admin03d20e5 exact deployment SHAs and stable aliases. New Terms and IP visual states reviewed on this release; earlier unaffected review/history scopes remain explicitly prior observations.",
       "implementationStatus": "IMPLEMENTED"
     },
     {
@@ -3342,16 +3378,30 @@
       "sha256": "826bf0d81ab3ad9e4dad29df9f46e0aec4cb50778db49dfd516904786fb6ebe4",
       "requirement": "ADMIN-HEADER-HELP-PROFILE",
       "scope": "Header Admin profile opens actual authenticated QA Admin email, Admin role and last-signin; separate help screenshot preserves working help link."
+    },
+    {
+      "path": "qa-evidence/chat001/regression-production/admin-partner-terms-receipt108.png",
+      "sha256": "576725cafd22118198de1952ac176f4d5578204d34db1c42ebfe7ea1264725ac",
+      "requirement": "ADMIN-PARTNER-REVIEW",
+      "scope": "Actual deployed Terms version2026-10-01 and accepted1Oct2026 5:41pm; maskedpayout separate; receipt not identity proof."
+    },
+    {
+      "path": "qa-evidence/chat001/regression-production/admin-partner-terms-missing71.png",
+      "sha256": "e6db45c433734051d07b32b7c4ebd25320cf593bab2f49ad92769e0c6a55d335",
+      "requirement": "ADMIN-PARTNER-REVIEW",
+      "scope": "Actual deployed legacy applicant has no Terms receipt; approved status not equated to consent."
+    },
+    {
+      "path": "qa-evidence/chat001/regression-production/admin-ip-observations-empty.png",
+      "sha256": "1bde1db52515b48536847d7ef6f5b11956a3b0b3d8223bd0a2b168c67bbafbb1",
+      "requirement": "ADMIN-IP-MONITORING",
+      "scope": "Actual deployed Admin page: bounded0of0retained records; honest empty state and Refresh/search controls. Direct read load proven; click-based Refresh remains unverified while native dialog blocks clicks."
     }
   ],
   "incomplete": [
     {
-      "id": "ADMIN-PARTNER-REVIEW",
-      "reason": "Existing list/details/masked payout/history and live receipt API authorization proven. New deployed receipt108/version-time and legacy71 no-record UI states remain pending after coordinated Admin deployment."
-    },
-    {
       "id": "ADMIN-IP-MONITORING",
-      "reason": "Local implementation and32realPostgres boundary checks, adapter/UI/cancellation tests, typecheck/lint/build passed. Migration/Admin deployment and read-only actual role/UI verification remain pending. Current source table has zero retained IP records; empty data is a scope limitation, not an external implementation dependency."
+      "reason": "Current deployed Admin reader shows actual0of0retained records with honest empty state and bounded search/Refresh controls. Fresh actual-role API8/8 checks prove read, repeated refresh request, literal search and Finance/member/anonymous denials. Deployed Refresh button click remains untested because a blocking native dialog prevents pointer interactions. This is pending interaction evidence, not an external implementation hold; no click or nonempty production result is claimed."
     }
   ]
 }

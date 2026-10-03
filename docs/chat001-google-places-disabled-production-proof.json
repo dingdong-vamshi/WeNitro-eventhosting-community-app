@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-03T21:38:30.506Z",
+  "status": "PASS",
+  "release": {
+    "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+    "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+  },
+  "checks": [
+    {
+      "name": "Anonymous Google Places disabled response",
+      "status": "PASS",
+      "httpStatus": 503,
+      "code": "PROVIDER_NOT_CONFIGURED"
+    },
+    {
+      "name": "Anonymous receives no provider data or coordinates",
+      "status": "PASS",
+      "responseKeys": [
+        "code",
+        "error"
+      ]
+    },
+    {
+      "name": "Authenticated Google Places disabled response",
+      "status": "PASS",
+      "httpStatus": 503,
+      "code": "PROVIDER_NOT_CONFIGURED"
+    },
+    {
+      "name": "Authenticated receives no provider data or coordinates",
+      "status": "PASS",
+      "responseKeys": [
+        "code",
+        "error"
+      ]
+    }
+  ],
+  "providerRequestSafety": "Only query of201characters; deployed handler rejects before fetch if unexpectedly enabled. No valid place ID or query sent.",
+  "fixtureWrites": 0,
+  "priorAttempt": {
+    "at": "2026-10-03T21:37:12.205Z",
+    "status": "FAIL",
+    "release": {
+      "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+      "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+    },
+    "checks": [],
+    "providerRequestSafety": "Only query of201characters; deployed handler rejects before fetch if unexpectedly enabled. No valid place ID or query sent.",
+    "fixtureWrites": 0,
+    "reason": "Safe disabled/gateway assertion failed; inspect without disclosing raw response or credentials.",
+    "finishedAt": "2026-10-03T21:37:14.610Z",
+    "classification": "Verifier expectation incorrect: disabled handler returns503 before authentication; no enabled auth bypass demonstrated."
+  },
+  "scope": "Disabled public/authenticated availability only. Actual enabled provider/authentication behavior remains local-test scope; no live Google query, coordinates or billing.",
+  "finishedAt": "2026-10-03T21:38:31.480Z"
+}

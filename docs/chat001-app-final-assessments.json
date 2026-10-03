@@ -3,9 +3,9 @@
   "scope": "A126 plus B/C80 guide-schema subset; excludes22BADGE rows owned by backend. Scoped PASS only; unresolved normal actions are pending, not external holds.",
   "count": 206,
   "counts": {
-    "PASS": 123,
-    "PENDING_SCOPED_ACCEPTANCE": 76,
-    "PARTIAL_EXTERNAL_DEPENDENCY": 4,
+    "PASS": 126,
+    "PENDING_SCOPED_ACCEPTANCE": 72,
+    "PARTIAL_EXTERNAL_DEPENDENCY": 5,
     "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
     "PENDING_REGRESSION_RETEST": 2
   },
@@ -3221,7 +3221,7 @@
     },
     {
       "id": "ACT-ENDED-LEAVE",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A11-03",
         "A13-03"
@@ -3229,7 +3229,7 @@
       "requestedChange": "An ended Activity cannot be left through UI or backend mutation.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "acceptanceScope": "Completed, joined Activity233 visibly replaces the Leave footer action with Rate Participants. Named authenticated production check Completed activity blocks leaving independently returned42501. No new leave attempt or click is claimed.",
       "localVerification": [
         {
           "check": "acceptance-backend-test",
@@ -3256,6 +3256,23 @@
           "source": "docs/client-acceptance-evidence.json/liveAssertions/22",
           "scopeLimit": "Exact historical authenticated check only. Earlier failed attempts remain in original ledger; this explicitly named retest is later. UI proof is not inferred from an API result.",
           "priorRelease": true
+        },
+        {
+          "name": "regression-ended-participant233-actions",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/ended-participant233-actions.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/233",
+          "at": "2026-10-03T21:55:11.309632+00:00",
+          "timestampProvenance": "Screenshot file modification time; exact browser capture timestamp was not separately supplied.",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "appCommit": "96f1ecf",
+          "account": 71,
+          "actorProvenance": "Coordinator reported current authenticated Priya71 production session.",
+          "requirements": [
+            "ACT-ENDED-PARTICIPANT",
+            "ACT-ENDED-LEAVE"
+          ],
+          "outcome": "Actual deployed Activity233 visibly JOINED and COMPLETED; footer shows Like and Rate Participants, with no Leave Activity action. Image bytes personally reviewed. No rating, leave or overflow-menu click claimed.",
+          "screenshotsReviewed": true
         }
       ],
       "technicalProof": [
@@ -3276,19 +3293,26 @@
           "scope": "Original recorded production observation: Ended Activity server rejects edit, removal and leaving"
         }
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/regression-production/ended-participant233-actions.png",
+          "scope": "Actual deployed Activity233 visibly JOINED and COMPLETED; footer shows Like and Rate Participants, with no Leave Activity action. Image bytes personally reviewed. No rating, leave or overflow-menu click claimed.",
+          "at": "2026-10-03T21:55:11.309632+00:00",
+          "timestampProvenance": "Screenshot file modification time; exact browser capture timestamp was not separately supplied.",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "url": "https://wenitro-app.vercel.app/#/activity/233"
+        }
+      ],
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Current96f1ecf screenshot proves the displayed ended-participant action. Earlier named authenticated server denial remains scoped to ended-leave authorization; subsequent Google venue retention and disabled provider changes do not alter that leave policy. Partner access and shared-media hotfixes do not alter these ended actions.",
+      "screenshotReviewProvenance": "App audit agent opened the actual ended-participant233-actions.png bytes and confirmed JOINED, COMPLETED and Rate Participants; other UI states are not inferred.",
+      "remainingValidation": []
     },
     {
       "id": "ACT-COMMENT-ELIGIBILITY",
@@ -3469,14 +3493,14 @@
     },
     {
       "id": "ACT-ENDED-PARTICIPANT",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "A13-01"
       ],
       "requestedChange": "An eligible ended-Activity participant sees the Rate Participants action.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
+      "acceptanceScope": "Eligible participant71 sees Rate Participants on completed, joined Activity233. This is the exact action-visibility criterion; opening the rating form and submitting a rating are not claimed.",
       "localVerification": [
         {
           "check": "client-pdf-regression-test",
@@ -3496,6 +3520,23 @@
           "source": "docs/client-acceptance-checklist.json/pages/12/requirements/0",
           "scopeLimit": "Historical UI record lacks linked screenshot here; fresh ended-detail pair supplies visual proof.",
           "priorRelease": true
+        },
+        {
+          "name": "regression-ended-participant233-actions",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/ended-participant233-actions.png",
+          "url": "https://wenitro-app.vercel.app/#/activity/233",
+          "at": "2026-10-03T21:55:11.309632+00:00",
+          "timestampProvenance": "Screenshot file modification time; exact browser capture timestamp was not separately supplied.",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "appCommit": "96f1ecf",
+          "account": 71,
+          "actorProvenance": "Coordinator reported current authenticated Priya71 production session.",
+          "requirements": [
+            "ACT-ENDED-PARTICIPANT",
+            "ACT-ENDED-LEAVE"
+          ],
+          "outcome": "Actual deployed Activity233 visibly JOINED and COMPLETED; footer shows Like and Rate Participants, with no Leave Activity action. Image bytes personally reviewed. No rating, leave or overflow-menu click claimed.",
+          "screenshotsReviewed": true
         }
       ],
       "technicalProof": [
@@ -3504,19 +3545,26 @@
           "scope": "Original recorded production observation: Completed Activity272 rating CTA and participant/nonparticipant ended states recorded."
         }
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        {
+          "path": "qa-evidence/chat001/regression-production/ended-participant233-actions.png",
+          "scope": "Actual deployed Activity233 visibly JOINED and COMPLETED; footer shows Like and Rate Participants, with no Leave Activity action. Image bytes personally reviewed. No rating, leave or overflow-menu click claimed.",
+          "at": "2026-10-03T21:55:11.309632+00:00",
+          "timestampProvenance": "Screenshot file modification time; exact browser capture timestamp was not separately supplied.",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "url": "https://wenitro-app.vercel.app/#/activity/233"
+        }
+      ],
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
-      "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
-      ]
+      "reason": "",
+      "evidenceCompatibility": "Current96f1ecf screenshot proves the displayed ended-participant action. Earlier named authenticated server denial remains scoped to ended-leave authorization; subsequent Google venue retention and disabled provider changes do not alter that leave policy. Partner access and shared-media hotfixes do not alter these ended actions.",
+      "screenshotReviewProvenance": "App audit agent opened the actual ended-participant233-actions.png bytes and confirmed JOINED, COMPLETED and Rate Participants; other UI states are not inferred.",
+      "remainingValidation": []
     },
     {
       "id": "ACT-ENDED-NONPARTICIPANT",
@@ -4365,6 +4413,19 @@
           "source": "docs/client-acceptance-checklist.json/pages/16/requirements/0",
           "scopeLimit": "No exact screenshot linked in this record; current Home/Tribe screenshot/action needed for final proof.",
           "priorRelease": true
+        },
+        {
+          "name": "regression-home-tribe-presentation",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/home-tribe-presentation.png",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T21:50:17.054443+00:00",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "account": 71,
+          "requirements": [
+            "TRIBE-PRESENTATION",
+            "HOME-NITRO-CARD"
+          ],
+          "outcome": "Actual Tribeimagecards andnameswithoutFind, matchingpurpleInvitecard; actual1280x720. Categorynavigationnotexercised."
         }
       ],
       "technicalProof": [
@@ -4373,18 +4434,26 @@
           "scope": "Original recorded production observation: Actual Fitness Tribe opened category-filtered All Activities."
         }
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/home-tribe-presentation.png",
+          "scope": "Actual Tribeimagecards andnameswithoutFind, matchingpurpleInvitecard; actual1280x720. Categorynavigationnotexercised.",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T21:50:17.054443+00:00"
+        }
+      ],
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "reason": "Current deployed1280x720 imagery/copy personally inspected and captured. Required narrow viewport still not verified: browser override requested390x844 but actualDOMremained1280x720; no falsemobileclaim.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
-        "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
+        "Actual required narrow viewport rendering and screenshot."
       ]
     },
     {
@@ -4666,15 +4735,15 @@
     },
     {
       "id": "CONTENT-BACKEND-CHECKS",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
       "sourceClauseIds": [
         "A18-05",
         "A38-12"
       ],
       "requestedChange": "Applicable backend content and authorization checks enforce the documented policy beyond a client-only warning.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
-      "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion.",
+      "implemented": "Existing deterministic NFKC whole-word profanity guard now covers registration-question labels and every JSON option, entry-category names, registration-answer values, feedback comments, Partner public business name/description and Community title/description/tagline/tags/rules alongside prior UGC guards. Generic errors avoid echoing submitted text; unchanged legacy values are preserved on unrelated edits. Existing auth/RLS/report boundaries remain scoped to their named proofs.",
+      "acceptanceScope": "50 actual local PostgreSQL checks and12 deployed added/extended text-field cases passed. All deployed attempts were rolled back and feedback cleanup proved. Existing named authorization/report evidence stays scoped. Semantic image/video classification is excluded.",
       "localVerification": [
         {
           "check": "validation-test",
@@ -4691,6 +4760,13 @@
         {
           "path": "docs/chat001-integrated-local-verification.json",
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        },
+        {
+          "path": "docs/chat001-feedback-text-guard-production-proof.json",
+          "command": "node scripts/registration-text-guards-postgres-test.mjs",
+          "status": "PASS",
+          "checks": 50,
+          "scope": "Actual PostgreSQL50 including exact rollback-only production verifier; deterministic normalized text, JSON options, legacy unchanged fields, clean saves, generic errors and atomic rollback."
         }
       ],
       "productionVerification": [
@@ -4700,6 +4776,18 @@
           "source": "docs/client-acceptance-checklist.json/pages/17/requirements/2",
           "scopeLimit": "Does not claim automated image/hate/misleading semantic classifier; unavailable provider remains separate.",
           "priorRelease": true
+        },
+        {
+          "path": "docs/chat001-regression-production-rollout.json",
+          "at": "2026-10-03T21:32:07.819Z",
+          "outcome": "11 added/extended field checks PASS with generic22023 and rollback: registration label/options, entry category name, answer value, Partner business_name/description, Community title/description/tagline/tags/rules. Feedback initially UNAVAILABLE and completed separately below.",
+          "scopeLimit": "Deterministic text checks only; no image classifier."
+        },
+        {
+          "path": "docs/chat001-feedback-text-guard-production-proof.json",
+          "at": "2026-10-03T21:38:32.605Z",
+          "outcome": "12th field completed: clean temporary feedback insert accepted, forbidden comment update generic22023, unchanged clean row after rejection, inserted fixture absent after subtransaction rollback; no sequence/rating/reward effects.",
+          "scopeLimit": "Controlled ended Activity233/approved participant71; no permanent feedback mutation."
         }
       ],
       "technicalProof": [
@@ -4725,22 +4813,35 @@
         {
           "path": "docs/client-acceptance-checklist.json",
           "scope": "Original recorded production observation: Text word guard deployed and production warning observed; local normalization tests."
+        },
+        {
+          "path": "docs/chat001-regression-production-rollout.json",
+          "at": "2026-10-03T21:32:07.819Z",
+          "outcome": "11 added/extended field checks PASS with generic22023 and rollback: registration label/options, entry category name, answer value, Partner business_name/description, Community title/description/tagline/tags/rules. Feedback initially UNAVAILABLE and completed separately below.",
+          "scopeLimit": "Deterministic text checks only; no image classifier."
+        },
+        {
+          "path": "docs/chat001-feedback-text-guard-production-proof.json",
+          "at": "2026-10-03T21:38:32.605Z",
+          "outcome": "12th field completed: clean temporary feedback insert accepted, forbidden comment update generic22023, unchanged clean row after rejection, inserted fixture absent after subtransaction rollback; no sequence/rating/reward effects.",
+          "scopeLimit": "Controlled ended Activity233/approved participant71; no permanent feedback mutation."
         }
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "reason": "Original A18 requires profanity checks in every text box and pictures. Main UGC deterministic text/RLS guards are implemented, but Host custom registration label/options and entry-category name lack the same guard; reported to backend owner for ordinary fix. Actual semantic picture classification has no configured provider/integration and must remain a precise partial external dependency after text coverage is fixed.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "reason": "Deterministic server-side text coverage is deployed and verified for the documented public/UGC fields, including the formerly missing registration label/options/category fields and12 added/extended field cases. Semantic picture/video interpretation has no selected authorized provider/policy integration or actual provider acceptance; it is not implemented by the word guard. Private abuse/support evidence and legal/financial identity/URLs are intentionally outside this deterministic filter, so universal every-textbox or image safety is not claimed.",
+      "evidenceCompatibility": "Text guard migration actual20261003213127/source20261003203126 deployed before App96f1ecf.11 initial added/extended fields plus separate actual feedback12th field passed. This is backend technical evidence; no new UI warning screenshot or image classifier is inferred. A future Partner-only App change must preserve these proof/capture release IDs.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
-        "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
+        "Client/provider policy and authorized semantic image/video moderation integration and real provider acceptance remain external."
       ],
-      "sourceReview": "Actual original tmp/pdfs/must/page-18.jpg reopened: \"Profanity check should be also there in every text box\" and \"Same for pictures as well.\""
+      "sourceReview": "Actual original tmp/pdfs/must/page-18.jpg reopened: \"Profanity check should be also there in every text box\" and \"Same for pictures as well.\"",
+      "implementationStatus": "DEPLOYED_DETERMINISTIC_TEXT_GUARDS_IMAGE_PROVIDER_UNIMPLEMENTED"
     },
     {
       "id": "UPLOAD-WARNING",
@@ -11053,7 +11154,7 @@
     },
     {
       "id": "REFERRAL-EXPLANATION",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
+      "status": "PASS",
       "sourceClauseIds": [
         "B06-02",
         "B06-03"
@@ -11061,7 +11162,7 @@
       "requestedChange": "Invite How it works and referral terms are readable and describe the actual qualifying reward behavior.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Home/settings/navigation surfaces and service paths implement the requested behavior within the supported provider scope; linked tests and visible observations remain criterion-specific.",
-      "acceptanceScope": "Verified only the explicitly listed existing outcomes; remaining required operation: Old screenshot predates verified-unique-account qualification text fix. Capture current Invite Squad How it works and terms.",
+      "acceptanceScope": "Current deployed InviteSquad Howitworks and qualificationterms personallyreadandcaptured; matches local and backenduniqueverifiedaccountrewardcontract. No new reward or share submission claimed.",
       "localVerification": [
         {
           "check": "referral-reward-identity-test",
@@ -11078,6 +11179,11 @@
         {
           "path": "docs/chat001-integrated-local-verification.json",
           "scope": "Coordinator recorded full integrated local suite; individual source-contract and executable scope retained in entries above."
+        },
+        {
+          "path": "docs/chat001-production-regression-local-verification.json",
+          "check": "referral-reward-identity-test",
+          "observedStatus": "PASS"
         }
       ],
       "productionVerification": [
@@ -11103,9 +11209,26 @@
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "account": 116,
           "source": "qa-evidence/chat001/integrated-ae-screenshots.json"
+        },
+        {
+          "name": "regression-referral-qualification-copy",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/referral-qualification-copy.png",
+          "url": "https://wenitro-app.vercel.app/#/inviteSquad",
+          "at": "2026-10-03T21:50:17.054443+00:00",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "account": 71,
+          "requirements": [
+            "REFERRAL-EXPLANATION"
+          ],
+          "outcome": "Actual current deployedHowitworks:10Nitroonlyverifieduniqueaccount; once/person,self/alias/unavailableexcluded; read clearly at1280x720. Copy/send not exercised."
         }
       ],
-      "technicalProof": [],
+      "technicalProof": [
+        {
+          "path": "docs/chat001-ae-technical-supplement.json",
+          "scope": "Recorded unique verified account rewardcontract; no new rewardminting in this visual pass."
+        }
+      ],
       "screenshotProof": [
         {
           "path": "qa-evidence/chat001/integrated-hero-invite-destination.png",
@@ -11113,20 +11236,25 @@
           "at": "2026-10-03T08:24:02.922Z",
           "deployment": "dpl_GffTBaDNysK48twuJGnd5jMdTJcf",
           "url": "https://wenitro-app.vercel.app/#/inviteSquad"
+        },
+        {
+          "path": "qa-evidence/chat001/regression-production/referral-qualification-copy.png",
+          "scope": "Actual current deployedHowitworks:10Nitroonlyverifieduniqueaccount; once/person,self/alias/unavailableexcluded; read clearly at1280x720. Copy/send not exercised.",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "url": "https://wenitro-app.vercel.app/#/inviteSquad",
+          "at": "2026-10-03T21:50:17.054443+00:00"
         }
       ],
-      "screenshotsReviewed": false,
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "reason": "Old screenshot predates verified-unique-account qualification text fix. Capture current Invite Squad How it works and terms.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "reason": "",
+      "evidenceCompatibility": "New96f1ecf screenshot supersedes older terms-text image; prioractualhero navigation retains its ownrelease/date. SubsequentPartnerroute/sharethumbnailfix scope doesnotchange referralwords orrewardcontract.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
-      "remainingValidation": [
-        "Old screenshot predates verified-unique-account qualification text fix. Capture current Invite Squad How it works and terms."
-      ]
+      "remainingValidation": []
     },
     {
       "id": "REFERRAL-ANTI-ABUSE",
@@ -11281,6 +11409,31 @@
           "source": "docs/client-acceptance-checklist.json/emailQa/2",
           "scopeLimit": "Grouped historical Home check, not final-release visual review.",
           "priorRelease": true
+        },
+        {
+          "name": "regression-home-nitro-card",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/home-nitro-card.png",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T21:50:17.054443+00:00",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "account": 71,
+          "requirements": [
+            "HOME-NITRO-CARD"
+          ],
+          "outcome": "Actual Home blue/purpleNitrocard currentbalance10. Wide screenshot; newmobileviewport override didnotapply (actual1280x720), no falsemobileclaim."
+        },
+        {
+          "name": "regression-home-tribe-presentation",
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/home-tribe-presentation.png",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T21:50:17.054443+00:00",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "account": 71,
+          "requirements": [
+            "TRIBE-PRESENTATION",
+            "HOME-NITRO-CARD"
+          ],
+          "outcome": "Actual Tribeimagecards andnameswithoutFind, matchingpurpleInvitecard; actual1280x720. Categorynavigationnotexercised."
         }
       ],
       "technicalProof": [
@@ -11289,18 +11442,33 @@
           "scope": "Original recorded production observation: Prior production Home carousel/navigation/Tribe and computed blue-purple gradients recorded."
         }
       ],
-      "screenshotProof": [],
-      "screenshotsReviewed": false,
+      "screenshotProof": [
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/home-nitro-card.png",
+          "scope": "Actual Home blue/purpleNitrocard currentbalance10. Wide screenshot; newmobileviewport override didnotapply (actual1280x720), no falsemobileclaim.",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T21:50:17.054443+00:00"
+        },
+        {
+          "path": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/regression-production/home-tribe-presentation.png",
+          "scope": "Actual Tribeimagecards andnameswithoutFind, matchingpurpleInvitecard; actual1280x720. Categorynavigationnotexercised.",
+          "deployment": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+          "url": "https://wenitro-app.vercel.app/#/feed",
+          "at": "2026-10-03T21:50:17.054443+00:00"
+        }
+      ],
+      "screenshotsReviewed": true,
       "releaseReviewed": true,
       "release": {
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction.",
+      "reason": "Current deployed1280x720 imagery/copy personally inspected and captured. Required narrow viewport still not verified: browser override requested390x844 but actualDOMremained1280x720; no falsemobileclaim.",
       "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
-        "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
+        "Actual required narrow viewport rendering and screenshot."
       ]
     },
     {
@@ -13241,8 +13409,8 @@
       ],
       "requestedChange": "Actual Google Maps/Places integration uses the client's authorized configured account.",
       "before": "Host search used Photon/Nominatim/GPS; no Google Places adapter or configured Google account was proven.",
-      "implemented": "Locally implemented actual Google venue selection and ID-only drafts; source/placeID persistence; trusted28-day coordinate cache and purge; transient attributed name/address resolution; all Activity mappers/Nearby expiry guards; Google Maps PlaceID navigation/share/SOS. Adapter validates an active non-banned app identity and stays disabled until authorized configuration.",
-      "acceptanceScope": "Local executable mocked provider/UI/domain/service checks and59 real PostgreSQL retention/access checks only. No live Google account, activation, deployed Google screenshots or real provider requests are claimed.",
+      "implemented": "Implemented and deployed actual Google venue selection and ID-only drafts; source/placeID persistence; trusted28-day coordinate cache and purge; transient attributed name/address resolution; all Activity mappers/Nearby expiry guards; Google Maps PlaceID navigation/share/SOS. Adapter validates an active non-banned app identity and stays disabled until authorized configuration.",
+      "acceptanceScope": "Local mocked provider/UI/domain/service checks and59 real PostgreSQL retention/access checks; deployed disabled Edge4PASS plus transactional deployed SQL/ACL/retention10PASS, including exactly one active hourly SQL-only job. No live Google account activation, real provider request, Google-powered venue screenshot or billing is claimed.",
       "localVerification": [
         {
           "path": "docs/chat001-integrated-local-verification.json",
@@ -13261,32 +13429,56 @@
           "scope": "Actual Google source/ID selection and durable contract; expiry/memory cleanup; real rendered callback/effect behavior with mocked provider."
         }
       ],
-      "productionVerification": [],
+      "productionVerification": [
+        {
+          "path": "docs/chat001-google-places-disabled-production-proof.json",
+          "at": "2026-10-03T21:38:30.506Z",
+          "status": "PASS",
+          "checks": 4,
+          "scope": "Disabled public/authenticated availability only. Actual enabled provider/authentication behavior remains local-test scope; no live Google query, coordinates or billing.",
+          "release": {
+            "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+            "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+          }
+        },
+        {
+          "path": "docs/chat001-regression-production-rollout.json",
+          "status": "PASS_ROLLBACK_ONLY",
+          "checks": 10,
+          "scope": "Google retention SQL checks: service-only ACL, private cache access, purge access, exactly one active hourly SQL-only job, bounded TTL, trusted create binding, tamper limits, expired-edit cleanup, reference renewal, and purge definition. Synthetic transaction rolled back; global purge execution excluded.",
+          "release": {
+            "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+            "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
+          }
+        }
+      ],
       "technicalProof": [
         {
           "path": "docs/chat001-google-places-local-proof.json",
-          "scope": "Exact adapter/configuration, no-storage boundary, official policy sources and remaining saved-venue architecture."
+          "scope": "Implemented adapter, ID-only storage boundary, expiring coordinates, transient resolution, official policy sources and exact authorized configuration requirements."
         },
         {
           "path": "docs/chat001-google-place-retention-local-proof.json",
           "scope": "59 real PostgreSQL checks; scheduler stub limitation explicit. SQL commit a8d339e."
+        },
+        {
+          "path": "docs/chat001-regression-production-rollout.json",
+          "scope": "Deployed migration/Edge receipt and10 transactional Google retention/ACL/Cron checks; no provider traffic."
         }
       ],
       "screenshotProof": [],
       "screenshotsReviewed": false,
-      "releaseReviewed": false,
+      "releaseReviewed": true,
       "release": {
-        "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
-        "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
+        "appDeploymentId": "dpl_3upivwr3iVp43DohkVi53DznEPi3",
+        "adminDeploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L"
       },
-      "reason": "Implementation is locally complete. Client-authorized Google account/API/billing/restricted key and terms/privacy configuration are not activated; production provider end-to-end acceptance and deployment/Cron validation remain pending.",
-      "evidenceCompatibility": "Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
+      "reason": "Implementation and disabled deployment are complete. Client-authorized Google project/API/billing/restricted key and terms/privacy configuration remain unactivated; actual provider venue selection and visual end-to-end acceptance remain pending.",
+      "evidenceCompatibility": "96f1ecf deployed disabled provider and retention contract are directly recorded. Local mocks establish enabled control flow only; disabled503 responses do not prove enabled provider authentication, search quality or rendering.",
       "screenshotReviewProvenance": "Prior B/C evidence was personally inspected earlier; final-release19images reviewed from actual bytes this turn. Other A images retain coordinator capture metadata and require coordinator image approval if screenshotsReviewed false.",
       "remainingValidation": [
-        "Integrate full App/Admin/Edge local gate and grouped deployment; this is not a full-suite result.",
-        "Production SQL/cache function and hourly Cron job inspection without Google traffic.",
         "Client-authorized project, billing/API/key/restrictions/quota and applicable Google terms/privacy setup before setting either enable flag.",
-        "Authorized real provider venue selection/publication/edit/expiry-refresh and actual deployed attribution/map/provider-error screenshots. No production Google behavior is presently claimed."
+        "Authorized real provider venue selection/publication/edit/expiry-refresh and actual deployed attribution/map/provider-error screenshots. No enabled production Google behavior is claimed."
       ]
     },
     {
@@ -16860,16 +17052,6 @@
       "action": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
     },
     {
-      "id": "ACT-ENDED-LEAVE",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
-    },
-    {
-      "id": "ACT-ENDED-PARTICIPANT",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
-    },
-    {
       "id": "ACT-ENDED-NONPARTICIPANT",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
@@ -16878,11 +17060,6 @@
       "id": "CHAT-CANCELLED-HIDDEN",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "After root finishes Activity300, cancel it and capture removed active inbox entry. Backend cancellation/write denials already proven."
-    },
-    {
-      "id": "CHAT-CANCELLED-WRITES",
-      "status": "PENDING_VISUAL_PROOF",
-      "action": "Proposed pass only for stated criterion and evidence scope. Final selected-release and image review flags remain unset."
     },
     {
       "id": "CHAT-RETAINED-HISTORY",
@@ -16900,11 +17077,6 @@
       "action": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
     },
     {
-      "id": "NITRO-HISTORY",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Positive+2 entries proven; requirement also includes negative spend sign. Inspect a legitimate persisted negative entry if available; do not fabricate a spend."
-    },
-    {
       "id": "TRIBE-PRESENTATION",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
@@ -16916,8 +17088,8 @@
     },
     {
       "id": "CONTENT-BACKEND-CHECKS",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "action": "Deterministic server-side text coverage is deployed and verified for the documented public/UGC fields, including the formerly missing registration label/options/category fields and12 added/extended field cases. Semantic picture/video interpretation has no selected authorized provider/policy integration or actual provider acceptance; it is not implemented by the word guard. Private abuse/support evidence and legal/financial identity/URLs are intentionally outside this deterministic filter, so universal every-textbox or image safety is not claimed."
     },
     {
       "id": "UPLOAD-WARNING",
@@ -16950,11 +17122,6 @@
       "action": "On a camera-capable authorized test device capture a genuine selfie, inspect preview before submit/cancel. Current120 object was uploaded through API and is not capture-preview evidence."
     },
     {
-      "id": "VERIFY-SELFIE-REVIEW",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Pending\u2192private Admin preview\u2192Reject\u2192owner unverified/noaward is proven. Legitimate approval of real camera evidence remains separate; do not approve synthetic object31."
-    },
-    {
       "id": "VERIFY-STAGED-BADGE",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Local trusted-stage gating and current pending/rejected no-badge are proven. Legitimate successful completion and profile badge transition require genuine verification stages; no fake approval."
@@ -16963,11 +17130,6 @@
       "id": "VERIFY-AADHAAR",
       "status": "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY",
       "action": "Licensed Aadhaar verification provider/credentials are not configured. Scoring formula and unavailable UI are implemented, but no actual Aadhaar verification may be claimed."
-    },
-    {
-      "id": "NOTIFICATIONS-LOAD",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Use existing actual notifications; reopen/reload list and record stable visible state. Backend/previous list/read observation exists."
     },
     {
       "id": "SQUAD-DEDUP",
@@ -17030,21 +17192,6 @@
       "action": "Backend scheduled reminder proof must be linked to actual eligible recipient notification and precise10minute copy; no native push claim."
     },
     {
-      "id": "HELP-NITROBOT",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-    },
-    {
-      "id": "HELP-SUPPORT-QUERY",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-    },
-    {
-      "id": "PLAY-STORE-REWARD",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-    },
-    {
       "id": "STORE-REDEMPTION",
       "status": "PARTIAL_EXTERNAL_DEPENDENCY",
       "action": "Authoritative200minimum and non-deducting unavailable UI exist. Original PDF explicitly requires client Hubble production link/setup; authorized provider account/API contract and integration remain missing. No redemption success claimed."
@@ -17085,16 +17232,6 @@
       "action": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
     },
     {
-      "id": "REFERRAL-REWARD",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-    },
-    {
-      "id": "REFERRAL-EXPLANATION",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Old screenshot predates verified-unique-account qualification text fix. Capture current Invite Squad How it works and terms."
-    },
-    {
       "id": "HOME-NITRO-CARD",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
@@ -17103,11 +17240,6 @@
       "id": "ACT-BACK-HOME",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Actual All Activities Back\u2192Home screenshot/action needed."
-    },
-    {
-      "id": "FILTER-GENDER",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
     },
     {
       "id": "ACT-HOST-EDIT",
@@ -17141,8 +17273,8 @@
     },
     {
       "id": "MAPS-GOOGLE",
-      "status": "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION",
-      "action": "Google-backed venue selection, place-ID/source persistence, trusted28-day coordinate expiry, transient name/address resolution, filters and map/share/SOS integration are implemented locally (d51e0bd+a8d339e). Remaining: integrated deployment/SQL Cron validation and client-authorized Google project/API/billing/key/policy activation plus real provider acceptance. Flags remain disabled; no Google calls or spend."
+      "status": "PARTIAL_EXTERNAL_DEPENDENCY",
+      "action": "Implementation and disabled deployment are complete. Client-authorized Google project/API/billing/restricted key and terms/privacy configuration remain unactivated; actual provider venue selection and visual end-to-end acceptance remain pending."
     },
     {
       "id": "ACT-NO-SELF-REPORT",
@@ -17153,11 +17285,6 @@
       "id": "ACT-DETAIL-BACK",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Actual Activity300 Back\u2192intended originating listing action needed."
-    },
-    {
-      "id": "COMM-MODERATOR-ROLE",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Owner promotion/permission choices and reload are captured. Peer71 actual allowed/denied moderator action still needs proof or exact backend capability mapping."
     },
     {
       "id": "CHAT-NAMES",
@@ -17200,11 +17327,6 @@
       "action": "Create one controlled story if none; view or Mark all seen, reload, verify persisted ring state. Failed/new incoming IDs are covered by actual local race test; do not infer from screenshot."
     },
     {
-      "id": "APP-CATEGORY-CATALOG",
-      "status": "PENDING_SCOPED_ACCEPTANCE",
-      "action": "Active category UI and atomic archived-interest API checks are proven. Changed catalog retry/empty/historical preservation UI remains local fault/race-tested, not a live injected failure screenshot."
-    },
-    {
       "id": "ACT-LEAVE-REJOIN",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Existing actual authenticated production mutation/reload results are retained. Missing exact visual action/result attribution must be linked or captured; do not replay already passed destructive management merely to inflate tests."
@@ -17227,7 +17349,6 @@
         "CHAT-TIMESTAMPS",
         "CHAT-UNREAD",
         "CHAT-CANCELLED-HIDDEN",
-        "CHAT-CANCELLED-WRITES",
         "ACT-HOST-DELETE",
         "SHARE-ACTIVITY"
       ],
@@ -17271,10 +17392,6 @@
         {
           "id": "CHAT-CANCELLED-HIDDEN",
           "reason": "After root finishes Activity300, cancel it and capture removed active inbox entry. Backend cancellation/write denials already proven."
-        },
-        {
-          "id": "CHAT-CANCELLED-WRITES",
-          "reason": "Proposed pass only for stated criterion and evidence scope. Final selected-release and image review flags remain unset."
         },
         {
           "id": "ACT-HOST-DELETE",
@@ -17328,17 +17445,12 @@
       "actions": "Share actual URL; moderator71 allowed/denied action; owner remove71 AFTER tests and verify count/capability revocation.",
       "requirements": [
         "SHARE-COMMUNITY",
-        "COMM-MODERATOR-ROLE",
         "COMM-REMOVE-MEMBER"
       ],
       "details": [
         {
           "id": "SHARE-COMMUNITY",
           "reason": "Community252 Share -> controlled chat253; open correct Community with meaningful title/context."
-        },
-        {
-          "id": "COMM-MODERATOR-ROLE",
-          "reason": "Owner promotion/permission choices and reload are captured. Peer71 actual allowed/denied moderator action still needs proof or exact backend capability mapping."
         },
         {
           "id": "COMM-REMOVE-MEMBER",
@@ -17410,12 +17522,10 @@
       "title": "Old completed/rating UI linkage",
       "actor": "70/71",
       "route": "231/233/272",
-      "actions": "Recover existing proof or open ended fixture once: participantRateCTA, outsiderEnded, Hostlabel/noHostNoShow and disablededit/remove/leave. No repeatNitroaward.",
+      "actions": "Remaining ended states: outsider Activity Ended, host disabled edit/remove, rating Host label/no Host NoShow. Participant Rate CTA and no Leave action now captured; no repeat Nitro award.",
       "requirements": [
         "ACT-ENDED-EDIT",
         "ACT-ENDED-REMOVE",
-        "ACT-ENDED-LEAVE",
-        "ACT-ENDED-PARTICIPANT",
         "ACT-ENDED-NONPARTICIPANT",
         "RATE-HOST-LABEL",
         "RATE-HOST-NO-SHOW"
@@ -17427,14 +17537,6 @@
         },
         {
           "id": "ACT-ENDED-REMOVE",
-          "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
-        },
-        {
-          "id": "ACT-ENDED-LEAVE",
-          "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
-        },
-        {
-          "id": "ACT-ENDED-PARTICIPANT",
           "reason": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
         },
         {
@@ -17540,9 +17642,8 @@
       "title": "Home/hosting/navigation finish",
       "actor": "120",
       "route": "Home/Host draft/Activities",
-      "actions": "CurrentInvitequalificationcopy; actual numericnewdraft+10min/+1h/deadline; SeeAll,Back; Tribe; do notpublish unnecessaryduplicate if oldcreationproof recoverable.",
+      "actions": "Actual numeric new-draft start+10min/end+1h/deadline; See All and Back; Tribe and required Home presentation. Current Invite qualification copy is already accepted.",
       "requirements": [
-        "REFERRAL-EXPLANATION",
         "HOST-START-DEFAULT",
         "HOST-END-DEFAULT",
         "HOST-REGISTRATION-DEFAULT",
@@ -17555,10 +17656,6 @@
         "HOME-NITRO-CARD"
       ],
       "details": [
-        {
-          "id": "REFERRAL-EXPLANATION",
-          "reason": "Old screenshot predates verified-unique-account qualification text fix. Capture current Invite Squad How it works and terms."
-        },
         {
           "id": "HOST-START-DEFAULT",
           "reason": "Capture newly opened Host form actual start approximately current+10min; previous crop did not show numeric fields."
@@ -17602,41 +17699,6 @@
       ]
     },
     {
-      "title": "Settings/notifications ledger linkage",
-      "actor": "Controlled owner",
-      "route": "Settings/Notifications/Nitro",
-      "actions": "Reuse oldFAQ/query/reward observations; currentnotificationreload; locatelegitimatenegativespend ratherthanmanufacture.",
-      "requirements": [
-        "NOTIFICATIONS-LOAD",
-        "HELP-NITROBOT",
-        "HELP-SUPPORT-QUERY",
-        "PLAY-STORE-REWARD",
-        "NITRO-HISTORY"
-      ],
-      "details": [
-        {
-          "id": "NOTIFICATIONS-LOAD",
-          "reason": "Use existing actual notifications; reopen/reload list and record stable visible state. Backend/previous list/read observation exists."
-        },
-        {
-          "id": "HELP-NITROBOT",
-          "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-        },
-        {
-          "id": "HELP-SUPPORT-QUERY",
-          "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-        },
-        {
-          "id": "PLAY-STORE-REWARD",
-          "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
-        },
-        {
-          "id": "NITRO-HISTORY",
-          "reason": "Positive+2 entries proven; requirement also includes negative spend sign. Inspect a legitimate persisted negative entry if available; do not fabricate a spend."
-        }
-      ]
-    },
-    {
       "title": "API-proven visual boundary linkage",
       "actor": "Controlled appropriateuser",
       "route": "Activity/Profile/filter/catalog",
@@ -17644,10 +17706,7 @@
       "requirements": [
         "AVATAR-PHOTOS",
         "CONTENT-BACKEND-CHECKS",
-        "REFERRAL-REWARD",
-        "FILTER-GENDER",
         "ACT-NO-SELF-REPORT",
-        "APP-CATEGORY-CATALOG",
         "SOS-SAFETY-REMINDER"
       ],
       "details": [
@@ -17657,23 +17716,11 @@
         },
         {
           "id": "CONTENT-BACKEND-CHECKS",
-          "reason": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-        },
-        {
-          "id": "REFERRAL-REWARD",
-          "reason": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-        },
-        {
-          "id": "FILTER-GENDER",
-          "reason": "Exact earlier production observation is retained below; locate/review its deployed screenshot or capture the specific current state once. Local/source-only tests are not a production interaction."
+          "reason": "Deterministic server-side text coverage is deployed and verified for the documented public/UGC fields, including the formerly missing registration label/options/category fields and12 added/extended field cases. Semantic picture/video interpretation has no selected authorized provider/policy integration or actual provider acceptance; it is not implemented by the word guard. Private abuse/support evidence and legal/financial identity/URLs are intentionally outside this deterministic filter, so universal every-textbox or image safety is not claimed."
         },
         {
           "id": "ACT-NO-SELF-REPORT",
           "reason": "Named deployed backend checks establish the recorded boundary; screenshot/state evidence must be linked for user-visible portion. No broad UI success is inferred from an API assertion."
-        },
-        {
-          "id": "APP-CATEGORY-CATALOG",
-          "reason": "Active category UI and atomic archived-interest API checks are proven. Changed catalog retry/empty/historical preservation UI remains local fault/race-tested, not a live injected failure screenshot."
         },
         {
           "id": "SOS-SAFETY-REMINDER",
@@ -17799,7 +17846,6 @@
       "requirements": [
         "VERIFY-SELFIE-CAMERA",
         "VERIFY-SELFIE-PREVIEW",
-        "VERIFY-SELFIE-REVIEW",
         "VERIFY-STAGED-BADGE"
       ],
       "details": [
@@ -17812,10 +17858,6 @@
           "reason": "On a camera-capable authorized test device capture a genuine selfie, inspect preview before submit/cancel. Current120 object was uploaded through API and is not capture-preview evidence."
         },
         {
-          "id": "VERIFY-SELFIE-REVIEW",
-          "reason": "Pending\u2192private Admin preview\u2192Reject\u2192owner unverified/noaward is proven. Legitimate approval of real camera evidence remains separate; do not approve synthetic object31."
-        },
-        {
           "id": "VERIFY-STAGED-BADGE",
           "reason": "Local trusted-stage gating and current pending/rejected no-badge are proven. Legitimate successful completion and profile badge transition require genuine verification stages; no fake approval."
         }
@@ -17825,7 +17867,7 @@
       "title": "Explicit provider implementation dependencies",
       "actor": "Client authorizedprovider",
       "route": "Maps/Hubble/Aadhaar",
-      "actions": "Exactmissingimplementation/clientsetup retained separately; no broadproviderunavailabilityclaim.",
+      "actions": "Google venue code and disabled deployment/retention checks complete; authorized provider activation and actual end-to-end acceptance remain. Other provider criteria retain their separate exact prerequisites.",
       "requirements": [
         "MAPS-GOOGLE",
         "STORE-REDEMPTION",
@@ -17835,7 +17877,7 @@
       "details": [
         {
           "id": "MAPS-GOOGLE",
-          "reason": "Google-backed venue selection, place-ID/source persistence, trusted28-day coordinate expiry, transient name/address resolution, filters and map/share/SOS integration are implemented locally (d51e0bd+a8d339e). Remaining: integrated deployment/SQL Cron validation and client-authorized Google project/API/billing/key/policy activation plus real provider acceptance. Flags remain disabled; no Google calls or spend."
+          "reason": "Implementation and disabled deployment are complete. Client-authorized Google project/API/billing/restricted key and terms/privacy configuration remain unactivated; actual provider venue selection and visual end-to-end acceptance remain pending."
         },
         {
           "id": "STORE-REDEMPTION",
