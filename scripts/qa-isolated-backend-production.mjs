@@ -31,6 +31,7 @@ async function main() {
   validateRelease(release,url);
   if(process.argv.includes('--invitations'))assert(release.appliedMigrations.includes('20261003082845'),'Invitation migration readiness required');
   if(process.argv.includes('--safety-reminders'))assert(release.appliedMigrations.includes('20261003181703'),'Safety reminder migration readiness required');
+  if(process.argv.includes('--activity-media'))assert(release.appliedMigrations.includes('20261003185740'),'Activity media migration readiness required');
   if(process.argv.includes('--participant-management'))assert(release.appliedMigrations.includes('20261003182405'),'Participant management migration readiness required');
   if(process.argv.includes('--participant-management'))assert(release.appliedMigrations.includes('20261003183320'),'Active join retry migration readiness required');
   const secretsRoot=path.resolve(arg('--secrets-root'));
@@ -71,8 +72,10 @@ async function main() {
     for(const u of manifest.users){if(u.authDeleted)continue;const d=await ok(service.auth.admin.getUserById(u.id));assert.equal(d.user.email,u.email);assert.equal(d.user.app_metadata.qa_fixture,true);}
     if(manifest.events.length){const owned=await ok(service.from('tbl_events').select('id,title').in('id',manifest.events));assert.equal(owned.length,manifest.events.length);assert(owned.every(e=>e.title.startsWith(`[QA] ${runId} `)));}
     if(manifest.categories.length){const owned=await ok(service.from('tbl_categories').select('id,name').in('id',manifest.categories));assert.equal(owned.length,manifest.categories.length);assert(owned.every(c=>c.name.startsWith(`QA ${runId} `)));}
+    if(manifest.vibes?.length){const owned=await ok(service.from('tbl_activity_vibes').select('id,user_id,event_id').in('id',manifest.vibes.map(v=>v.id)));assert(owned.every(v=>manifest.vibes.some(x=>x.id===v.id&&x.userId===v.user_id&&x.eventId===v.event_id)&&manifest.users.some(u=>u.userId===v.user_id)&&manifest.events.includes(Number(v.event_id))));}
     const attempt=async(name,p)=>{try{await ok(p);proof.cleanup.push({name,status:'PASS'});}catch(e){proof.cleanup.push({name,status:'FAIL',code:e.code??null});}};
     for(const obj of manifest.objects??[]){assert(manifest.users.some(u=>obj.path.startsWith(u.id+'/')));await attempt('Synthetic storage object removed',service.storage.from(obj.bucket).remove([obj.path]));}
+    if(manifest.vibes?.length)await attempt('Synthetic Activity media rows removed',service.from('tbl_activity_vibes').delete().in('id',manifest.vibes.map(v=>v.id)));
     if(manifest.reports?.length)await attempt('Synthetic safety reports removed',service.from('tbl_event_reports').delete().in('id',manifest.reports));
     if(manifest.posts?.length)await attempt('Synthetic community posts hidden',service.from('tbl_community_posts').update({deleted_at:new Date().toISOString()}).in('id',manifest.posts));
     if(manifest.rooms?.length)await attempt('Synthetic rooms remain private',service.from('tbl_chat_rooms').update({visibility:'private'}).in('id',manifest.rooms));
@@ -97,6 +100,10 @@ async function main() {
     const phones=Array.from({length:100},(_,i)=>`120255501${String(i).padStart(2,'0')}`).filter(x=>!used.has(x)&&!used.has(x.slice(1)));assert(phones.length>=3);
     const host=await createUser('host',phones[0]),a=await createUser('buyer',phones[1]),b=await createUser('other',phones[2]),guard=await createUser('guard');
     const anon=make(); clients.push(anon);
+    if(process.argv.includes('--activity-media')){
+      const {runActivityMediaChecks}=await import('./qa-isolated-activity-media-production.mjs');
+      await runActivityMediaChecks({host,a,b,guard,anon,service,ok,rpc,pass,deny,row,manifest,persist,proof,runId});proof.status='PASS';return;
+    }
     if(process.argv.includes('--participant-management')){
       const {runParticipantManagementChecks}=await import('./qa-isolated-participant-management-production.mjs');
       await runParticipantManagementChecks({host,a,b,guard,anon,service,ok,rpc,pass,deny,row,manifest,persist,proof,runId});proof.status='PASS';return;
