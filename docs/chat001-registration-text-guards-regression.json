@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-03T20:36:47.579636+00:00",
+  "status": "LOCAL_VERIFIED_NOT_DEPLOYED",
+  "requirement": "A18 explicit-word text moderation",
+  "migration": "supabase/migrations/20261003203126_registration_question_category_text_guards.sql",
+  "implemented": {
+    "newGuards": {
+      "tbl_activity_registration_questions": [
+        "label",
+        "options (every JSON array option)"
+      ],
+      "tbl_activity_entry_categories": [
+        "name"
+      ],
+      "tbl_activity_registration_answers": [
+        "value (text/choice JSON)"
+      ],
+      "tbl_event_feedback": [
+        "comment"
+      ],
+      "tbl_partner_profiles": [
+        "business_name",
+        "description"
+      ]
+    },
+    "extendedGuard": {
+      "tbl_chat_rooms": [
+        "title",
+        "description",
+        "tagline",
+        "tags",
+        "rules"
+      ]
+    },
+    "behavior": "Uses unchanged private.guard_ugc_text whole-word NFKC-normalized policy and generic 22023 error. Unchanged legacy text is skipped on UPDATE; unrelated edits and clean replacements remain possible. No backfill, grants or RLS changes."
+  },
+  "localVerification": {
+    "command": "node scripts/registration-text-guards-postgres-test.mjs",
+    "status": "PASS",
+    "checks": 44,
+    "scope": "Actual PostgreSQL migration and original guard; previous omitted-fields acceptance reproduced, insert/update denied, every option/array, NFKC/innocent substrings, valid input, legacy no-op, atomic statement rollback and no submitted text in error. Prepared rollback-only live verifier itself executed successfully against local deployed bindings."
+  },
+  "reviewedInputs": [
+    "src/components/registration-questions.tsx (host label/options and attendee short/long answers)",
+    "src/components/partner-account-screen.tsx (business name/description)",
+    "src/components/community/reference-community.tsx (editable rules)",
+    "src/services/communities-production.ts (persisted rules/tags)",
+    "src/services/wenitro.ts submitFeedback (Activity review comment)",
+    "supabase/migrations/20260929095859_partner_entry_categories.sql (name only; no description column)"
+  ],
+  "scopeExclusions": [
+    "Private abuse reports/support evidence may legitimately quote objectionable text and are not filtered.",
+    "Payment/bank/legal identity fields, URLs, contact identifiers and non-persisted searches are not added to this UGC policy.",
+    "Explicit-word matching is not semantic/image/video moderation and does not establish universal all-language moderation."
+  ],
+  "preparedProductionVerifier": "scripts/sql/qa-registration-text-guards-rollback.sql",
+  "productionVerification": [],
+  "remaining": "Coordinator must integrate and pass full local gate before deployment. Rollback-only production verifier checks exact deployed bindings and guard semantics on temporary rows; hosted UI acceptance remains independent."
+}
