@@ -1,0 +1,62 @@
+{
+  "recordedAt": "2026-10-03T19:40:57.122Z",
+  "projectId": "cxsznhrkzqndhseodcyy",
+  "scope": "Explicitly authorized synthetic Admin QA rows only; not real friendship/referral achievement",
+  "actorId": 120,
+  "fixtureRows": [
+    {
+      "id": 47,
+      "user_id": 120,
+      "friend_id": 70,
+      "created_at": "2026-10-03T19:40:56.569914+00:00"
+    },
+    {
+      "id": 48,
+      "user_id": 70,
+      "friend_id": 120,
+      "created_at": "2026-10-03T19:40:56.569914+00:00"
+    },
+    {
+      "id": 49,
+      "user_id": 120,
+      "friend_id": 120,
+      "created_at": "2026-10-03T19:40:56.569914+00:00"
+    }
+  ],
+  "baselineRows": [],
+  "triggerInspection": "2026-10-03 live pg_trigger: no noninternal triggers; UNIQUE(user_id,friend_id), no no-self constraint",
+  "actualOwnerApiSquad": [
+    {
+      "id": 70,
+      "fullname": "Arjun Sharma",
+      "username": "release3eaa15aa2a",
+      "isverified": 0,
+      "connected_at": "2026-10-03T19:40:56.569914+00:00",
+      "profile_image": null
+    }
+  ],
+  "checks": [
+    {
+      "name": "Three fixture rows collapse to one distinct peer70",
+      "status": "PASS"
+    },
+    {
+      "name": "Self120 is excluded from list_my_squad",
+      "status": "PASS"
+    },
+    {
+      "name": "Nitro balance and complete ledger unchanged",
+      "status": "PASS"
+    }
+  ],
+  "baselineNitro": 0,
+  "afterNitro": 0,
+  "profileMetricSquad": 2,
+  "route": "https://wenitro-app.vercel.app/#/squad/120",
+  "uiActions": [
+    "Log in120 and open Your Squad; expect exactly Arjun Sharma70 once, no120 self card.",
+    "Open70 profile from row, Back.",
+    "Capture Remove confirmation and Cancel; preserve row until all proof complete."
+  ],
+  "cleanup": "Delete only recorded fixtureRows IDs after parent signals. No raw referral/verification/badge rows were written."
+}
