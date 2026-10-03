@@ -1,0 +1,187 @@
+{
+  "scope": "Prioritized minimal B/C completion plan for root working IAB",
+  "canonicalEvidence": "docs/chat001-production-bc-qa.json",
+  "releaseCompatibility": "Existing screenshots are actual deployed bd6d314. Root final regression release must assess changed surfaces and recapture relevant ones; do not relabel these as final-release screenshots.",
+  "browser": "Root IAB App4/Admin5 known working. Do not repeat failed Chrome recovery or alter extension permissions.",
+  "credentials": "Use existing synthetic QA sessions; never copy passwords into evidence. Main ignored tmp/chat001-qa.json has QA_EMAIL_1/QA_PASSWORD_1 (70) and QA_EMAIL_2/QA_PASSWORD_2 (71).",
+  "completeAlready": [
+    "22 badge modal interactions and21 matching settled screenshots; only19 retake.",
+    "Owner Profile/Trust20 and unchanged public Trust privacy visual plus current API.",
+    "Current Edit Profile invalid-save, bio/Creative-save, reload persistence, original-value restoration.",
+    "Current Profile\u2192Nitro Store destination.",
+    "Compatible historical smaller cover/separate posts/no Poll/anonymous author/poll voter/public gallery read-only images linked with scope.",
+    "Current backend49 social/gallery/privacy tests and28 Storage ownership checks linked; no repeat live mutation suite needed."
+  ],
+  "batches": [
+    {
+      "id": "BC1_PROFILE_NAVIGATION",
+      "canonicalIds": [
+        "PROFILE-LAYOUT",
+        "PROFILE-PUBLIC-VIBES-FIRST",
+        "PROFILE-SOCIAL",
+        "PROFILE-REVIEWS",
+        "PROFILE-UPCOMING",
+        "PROFILE-COMPLETED",
+        "SQUAD-DEDUP",
+        "COMM-AVATAR"
+      ],
+      "route": "#/profile (owner); use a QA member name to open public Profile",
+      "actions": [
+        "On owner Profile, scroll Activities to Upcoming and Completed; open Activities history and record actual rows. Capture owner layout once loaded.",
+        "Open Add social profile, record original links, save one reversible valid https://example.com link on a supported social field, reload to verify, then restore originals; inspect existing public link href for safe https destination.",
+        "Open QA71 public Profile from a name or Chat member entry; confirm Vibes selected initially, visible identity/loaded avatar, Reviews and Communities. Capture review privacy state if populated; local/current API already proves named/anonymous privacy.",
+        "Open Squad: verify current fixture empty state or populated distinct members excluding owner; source/query and local test evidence complements empty fixture, but do not claim populated UI from an empty list."
+      ],
+      "fixtures": "QA70 owner, QA71 public member. Root currently owns QA71 session; use public view without changing71 data. Original70 bio/interests are restored; Instagram original https://www.instagram.com/.",
+      "gapType": "PENDING_UI_ACTIONS"
+    },
+    {
+      "id": "BC2_GALLERY",
+      "canonicalIds": [
+        "PROFILE-PHOTO-ADD",
+        "PROFILE-PHOTO-CHANGE",
+        "PROFILE-PHOTO-DELETE",
+        "PROFILE-PHOTO-PRIMARY"
+      ],
+      "route": "#/profile \u2192 Add profile photo / photo preview",
+      "actions": [
+        "Using IAB supported chooser, upload three controlled repository object photos (camera.jpg, mic.jpg, food.jpg); warnings must be acknowledged only as non-binding media notice. Capture slots with real loaded primary avatar and preview.",
+        "Replace an extra photo; reload. Set another extra as primary, verify actual swap and no fourth slot; delete test extra photos and restore original primary/gallery.",
+        "Use QA71 public view to show loaded primary renderer if available. Existing unchanged public read-only preview and current API mutation/limit checks are already linked."
+      ],
+      "fixtures": "/Users/vamshipendyala/Desktop/wenitro-phone-app-/assets/photos/{camera,mic,food}.jpg. QA70 originally primary null/gallery empty. No file was uploaded in Chrome.",
+      "gapType": "PENDING_IAB_RECOVERY_UPLOADS",
+      "toolingNote": "Chrome setFiles rejected extension file-URL access, native fallback reported locked Mac. No permission changed. Root IAB may complete; do not classify this recoverable tooling gap as missing implementation."
+    },
+    {
+      "id": "BC3_BADGE_AND_VERIFICATION",
+      "canonicalIds": [
+        "BADGE-19",
+        "VERIFY-TRUST-NOT-NITRO",
+        "VERIFY-SELFIE-CAMERA",
+        "VERIFY-SELFIE-PREVIEW",
+        "VERIFY-SELFIE-REVIEW",
+        "VERIFY-STAGED-BADGE",
+        "VERIFY-AADHAAR"
+      ],
+      "route": "#/profile \u2192 View all22 badges \u2192 50 Activities; Profile \u2192 Verification",
+      "actions": [
+        "Only badge19 50 Activities needs settled screenshot replacement. All22 actual modal interactions completed; other21 PNGs visually verified,03/12 retaken successfully.",
+        "Open Verification and capture current email/phone/selfie/Aadhaar states and Trust/no Nitro wording. Camera-only entry is already shown in compatible deployed proof; actual native camera capture/preview and phone OTP delivery require the device/provider workflow and must never be faked.",
+        "Coordinate Admin review evidence for submitted/approved/rejected selfie and staged badge rules with backend actual PostgreSQL tests. Approved Aadhaar provider is not integrated: explicitly retain this external provider implementation gap."
+      ],
+      "fixtures": "Any existing synthetic QA owner; no real biometrics, OTP or Aadhaar transaction has occurred in our B/C pass.",
+      "gapType": "PENDING_UI_CAPTURE_PLUS_DEVICE_PROVIDER_ACCEPTANCE"
+    },
+    {
+      "id": "BC4_COMMUNITY_CREATE_SEARCH",
+      "canonicalIds": [
+        "COMM-HEADER",
+        "COMM-SEARCH-TOGGLE",
+        "COMM-SEARCH-FILTER",
+        "COMM-CREATED-STATE",
+        "COMM-BACK-LIST",
+        "COMM-MEMBER-COUNT"
+      ],
+      "route": "Chat \u2192 Communities / Home \u2192 Explore Communities \u2192 All Communities",
+      "actions": [
+        "Capture normal header, reveal Search and enter a unique substring; verify visible matches/filter then close Search returns header.",
+        "Create one explicitly named [QA] Chat001 UI acceptance community with active category, no file needed; capture Community Created success and navigate View Community.",
+        "Capture smaller cover/fallback, actual member count and Back to All Communities. Record ID for later cleanup; do not create multiple throwaway communities on retry."
+      ],
+      "fixtures": "New marked community owned by QA70 or root synthetic account; no changes to existing shared community244.",
+      "gapType": "PENDING_UI_ACTIONS"
+    },
+    {
+      "id": "BC5_COMMUNITY_MANAGEMENT_POSTS",
+      "canonicalIds": [
+        "COMM-COVER-EDIT",
+        "COMM-REMOVE-MEMBER",
+        "COMM-MEMBER-PROFILE",
+        "COMM-MODERATOR-ROLE",
+        "COMM-CHAT-BACK",
+        "COMM-POST-VIDEO",
+        "SHARE-COMMUNITY"
+      ],
+      "route": "New QA community \u2192 Info / Members / Edit / Posts / Open Chat / Share",
+      "actions": [
+        "Join only a second synthetic QA account; open member Profile, return; grant/revoke ordinary community moderator role within disposable fixture and verify persisted role, then remove eligible member. Backend permission tests already cover unauthorized cases.",
+        "Change cover using repository object photo and reload; this also proves uploaded community identity renderer if avatar set. Restore/delete fixture media at cleanup.",
+        "Open Posts: no Poll, video option. Publish short controlled test video and verify playback; open Chat and Back returns same community.",
+        "Share this community to a synthetic QA recipient only; verify received card title/context opens the correct community."
+      ],
+      "fixtures": "New community from BC4; /Users/vamshipendyala/.codex/worktrees/chat001-app-audit/wenitro-phone-app-/tmp/chat001-media-fixtures/synthetic-motion.mp4 (2-second generated square animation). QA70/71 or root isolated synthetic recipients only.",
+      "gapType": "PENDING_UI_ACTIONS_AND_UPLOADS"
+    },
+    {
+      "id": "BC6_CHAT",
+      "canonicalIds": [
+        "CHAT-CANCELLED-HIDDEN",
+        "CHAT-CANCELLED-WRITES",
+        "CHAT-RETAINED-HISTORY",
+        "CHAT-DELETE-MESSAGE",
+        "CHAT-DELETE-MEDIA",
+        "CHAT-BLOCK",
+        "CHAT-UNBLOCK",
+        "CHAT-NO-VIDEO",
+        "CHAT-NAMES",
+        "CHAT-UNREAD",
+        "CHAT-TIMESTAMPS",
+        "CHAT-INFO-NAVIGATION",
+        "POLL-CREATE",
+        "POLL-VOTE",
+        "CHAT-PLUS-DIRECT",
+        "CHAT-PLUS-GROUP",
+        "CHAT-QUIET-INDICATOR",
+        "CHAT-LIVE-SEARCH",
+        "CHAT-ALL-TYPES",
+        "GROUP-AVATAR",
+        "STORY-SEEN"
+      ],
+      "route": "Chat \u2192 plus / direct recipient / group; Chats, People and Groups filters",
+      "actions": [
+        "Plus\u2192direct recipient and plus\u2192create marked QA group, using only controlled accounts. Group name/avatar upload, fallback and persisted reopening.",
+        "Send one marked test message between QA accounts; capture name/date/time, unread increment then read decrement; live mixed-case search matching sender/group/message and clearing; All includes People and Groups, quiet indicator absent when inactive.",
+        "Attachment sheet must show Photo/Poll and no Video; create one poll, vote, capture intended voter identity and persist after reopening. Current backend already rejects Video writes.",
+        "Delete own test text and test media, reopen to verify removal; cross-user denial is current API proven. Block/unblock the synthetic pair only and restore unblocked state; retained-history/new-write rules are current API proven.",
+        "Open Activity chat Info\u2192correct Activity, and group Info\u2192group data. Cancelled/deleted Activity chat hidden/writes denied has current backend49 proof; UI entry-list check can use existing deleted synthetic fixture if root has one, otherwise avoid reviving real deleted content.",
+        "Open an existing synthetic Story, close and reopen Chat to verify seen indicator. If no controlled Story, create one controlled object-image Story via IAB uploader."
+      ],
+      "fixtures": "Avoid real users/messages. Root integrated-host-direct-chat.png already proves direct Priya Nair header only, not timestamps. Marked group and messages are disposable test workflow.",
+      "gapType": "PENDING_UI_ACTIONS_WITH_CURRENT_API_PROOF_LINKED"
+    },
+    {
+      "id": "BC7_VIBES",
+      "canonicalIds": [
+        "VIBE-FROM-ACTIVITY-MEDIA",
+        "VIBE-COMPOSER",
+        "VIBE-REELS",
+        "VIBE-ACTIVITY-LINK",
+        "VIBE-NEWEST",
+        "VIBE-DIRECT-CREATE",
+        "VIBE-VIDEO",
+        "SHARE-VIBE"
+      ],
+      "route": "Vibes tab; direct create; Activity\u2192Add Vibes; optional post-creation media action",
+      "actions": [
+        "Capture vertical reel layout and newest/all menu; change option and verify ordering/filter or documented empty state. Open linked Activity from a known linked Vibe and confirm correct detail.",
+        "Open direct composer, cancel; open Activity-linked composer and verify same fields plus correct association. Optional post-Activity media pass-through must open draft without publishing; root Activity create workflow can cover this overlap.",
+        "Publish one marked controlled short video Vibe and verify playback; share to synthetic QA recipient and verify received title/creator/thumbnail and destination. Cleanup synthetic Vibe only."
+      ],
+      "fixtures": "Same controlled synthetic-motion.mp4, no personal media. Existing QA linked Activity or root fresh disposable Activity.",
+      "gapType": "PENDING_UI_ACTIONS_AND_UPLOADS"
+    },
+    {
+      "id": "BC8_ROOT_SHARE_ACTIVITY",
+      "canonicalIds": [
+        "SHARE-ACTIVITY"
+      ],
+      "route": "Activity detail \u2192 Share",
+      "actions": [
+        "Root owns actual public/private Activity share/invite regression and received/opened destination proof. Link its exact evidence and outcomes when delivered."
+      ],
+      "fixtures": "Root controlled Activity/invite fixtures; do not repeat paid/refund live tests.",
+      "gapType": "COORDINATOR_OWNED_PENDING_PROOF"
+    }
+  ]
+}

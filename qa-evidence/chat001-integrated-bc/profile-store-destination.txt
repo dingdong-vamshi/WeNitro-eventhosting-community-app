@@ -1,0 +1,8 @@
+- button "Back":
+  - generic: 
+- generic: Nitro Store
+- generic: 
+- generic: FEATURE UNLOCKS SOON
+- generic: Your current balance is 16 Nitro Points. Redemption requires at least 200 Nitro Points. Earn 184 more points to meet the minimum. Hubble redemption is not enabled yet; no points will be deducted.
+- button "Retry":
+  - generic: Retry

@@ -1,0 +1,103 @@
+- button "Back":
+  - generic: 
+- generic: Edit Profile
+- generic: 
+- button "Edit Photo":
+  - generic: Edit Photo
+- generic: Manage up to 3 profile photos. Set one as primary.
+- button " Social Profiles ":
+  - generic: 
+  - generic: Social Profiles
+  - generic: 
+- generic: Full Name
+- textbox "Full Name": Arjun Sharma
+- generic: Username
+- textbox "Username": <redacted>
+- generic: Email
+- textbox "Email":
+  - /placeholder: No email added
+  - text: <redacted>
+- generic: Email is managed securely through your sign-in account.
+- generic: Bio (24/40)
+- textbox "Bio":
+  - /placeholder: Enter a short bio headline...
+  - text: Chat001 acceptance check
+- generic: Occupation (0/100)
+- textbox "Occupation":
+  - /placeholder: Enter your occupation...
+- generic: About You (0/500)
+- textbox "About You":
+  - /placeholder: Write a longer description about your lifestyle...
+- generic: Date of Birth
+- button "Date of Birth":
+  - generic: 1995-01-15
+  - generic: 
+- generic: Gender
+- button "Gender":
+  - generic: Prefer not to say
+  - generic: 
+- generic: Nationality
+- button "Nationality":
+  - generic: Select nationality
+  - generic: 
+- generic: Interests
+- generic: Choose categories that interest you to personalize your profile
+- checkbox "Business":
+  - generic: Business
+- checkbox "Career":
+  - generic: Career
+- checkbox "Creative":
+  - generic: Creative
+- checkbox "Education":
+  - generic: Education
+- checkbox "Entertainment":
+  - generic: Entertainment
+- checkbox "Fitness":
+  - generic: Fitness
+- checkbox "Food":
+  - generic: Food
+- checkbox "Jobs":
+  - generic: Jobs
+- checkbox "Music":
+  - generic: Music
+- checkbox "Networking":
+  - generic: Networking
+- checkbox "Outdoors":
+  - generic: Outdoors
+- checkbox "Party":
+  - generic: Party
+- checkbox "Politics":
+  - generic: Politics
+- checkbox "Professional":
+  - generic: Professional
+- checkbox "Social":
+  - generic: Social
+- checkbox "Social Work":
+  - generic: Social Work
+- checkbox "Socialize":
+  - generic: Socialize
+- checkbox "Sports":
+  - generic: Sports
+- checkbox "Study":
+  - generic: Study
+- checkbox "Technology":
+  - generic: Technology
+- checkbox "Travel":
+  - generic: Travel
+- button "Save Changes":
+  - generic: Save Changes
+- button "Open Home":
+  - generic: 
+  - generic: Home
+- button "Open Vibes":
+  - generic: 
+  - generic: Vibes
+- button "Open Host":
+  - generic: 
+  - generic: Host
+- button "Open Chat":
+  - generic: 
+  - generic: Chat
+- button "Open Profile":
+  - generic: 
+  - generic: Profile

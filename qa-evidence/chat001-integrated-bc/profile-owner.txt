@@ -1,0 +1,173 @@
+- generic: My profile
+- button "Nitro Store":
+  - generic: 
+- button "Profile settings":
+  - generic: 
+- generic "Arjun Sharma's initials":
+  - generic: AS
+- generic "Your current signed-in profile"
+- generic: Arjun Sharma
+- generic: "@release3eaa15aa2a"
+- button "Trust Score 20 out of 100. View breakdown":
+  - generic: Trust Score
+  - generic: 20/100
+  - generic: 
+  - generic: View score
+- button "Add profile photo":
+  - generic: 
+  - generic: 0/3
+  - generic: 
+- link "Instagram":
+  - /url: https://www.instagram.com/
+  - generic: 
+- button "Add social profile":
+  - generic: 
+- button "Get verified":
+  - generic: 
+  - generic: Get Badge of Trust
+  - generic: Get Verified
+  - generic: 
+- button " Edit profile":
+  - generic: 
+  - generic: Edit profile
+- button " Verification":
+  - generic: 
+  - generic: Verification
+- 'button "Activities: 10"':
+  - generic: 
+  - generic: "10"
+  - generic: Activities
+- 'button "Squad: 0"':
+  - generic: 
+  - generic: "0"
+  - generic: Squad
+- 'button "Karma: 0.0"':
+  - generic: 
+  - generic: "0.0"
+  - generic: Karma
+- 'button "Nitro Points: 16"':
+  - generic: 
+  - generic: "16"
+  - generic: Nitro Points
+- generic: About me
+- generic: Tell people a little about yourself and the experiences you enjoy.
+- button "Add bio":
+  - generic: Add bio
+- generic: Interests
+- button "Manage interests":
+  - generic: Manage
+- generic: Add interests to find your people.
+- generic: 
+- generic: Achievements
+- generic "5 of 22 badges earned": 5/22 earned
+- button "Activity Explorer, earned. View criteria":
+  - generic: 🧭
+  - generic: Activity Explorer
+  - generic: Earned
+- button "First-Time Host, earned. View criteria":
+  - generic: 🎤
+  - generic: First-Time Host
+  - generic: Earned
+- button "Community Starter, earned. View criteria":
+  - generic: 💬
+  - generic: Community Starter
+  - generic: Earned
+- button "Community Explorer, earned. View criteria":
+  - generic: 🌐
+  - generic: Community Explorer
+  - generic: Earned
+- button "View all 22 badges":
+  - generic: View all 22 badges
+- button "Partner Dashboard":
+  - generic: Partner Dashboard
+- button " Partner Account · View Details ":
+  - generic: 
+  - generic: Partner Account · View Details
+  - generic: 
+- tab "Activities":
+  - generic: Activities
+- tab "Vibes":
+  - generic: Vibes
+- tab "Reviews":
+  - generic: Reviews
+- tab "Communities":
+  - generic: Communities
+- tab "Drafts":
+  - generic: Drafts
+- generic: Upcoming
+- button "Open activity [QA] CHAT001 Admin moderation acceptance":
+  - generic: 
+  - generic: "[QA] CHAT001 Admin moderation acceptance"
+  - generic: Partner activity
+  - generic: 6 Oct, 12:33 · QA moderation venue
+  - generic: 
+- button "Open activity [QA] WeNitro Badminton Activity 20261002183628":
+  - generic: 
+  - generic: "[QA] WeNitro Badminton Activity 20261002183628"
+  - generic: Partner activity
+  - generic: 5 Oct, 0:06 · QA Test Location
+  - generic: 
+- button "Open activity [QA] Acceptance email lifecycle 2026-10-02T18:25:36.406Z":
+  - generic: 
+  - generic: "[QA] Acceptance email lifecycle 2026-10-02T18:25:36.406Z"
+  - generic: Partner activity
+  - generic: 4 Oct, 23:55 · QA test venue
+  - generic: 
+- button "Open activity QA Sep24 partner free":
+  - generic: 
+  - generic: QA Sep24 partner free
+  - generic: Partner activity
+  - generic: To Be Decided · Hyderabad, Bahadurpura mandal, Telangana, India · city
+  - generic: 
+- button "Open activity QA Sep24 normal free":
+  - generic: 
+  - generic: QA Sep24 normal free
+  - generic: Partner activity
+  - generic: To Be Decided · Hyderabad, Bahadurpura mandal, Telangana, India · city
+  - generic: 
+- button "Open activity QA Sep24 normal onsite":
+  - generic: 
+  - generic: QA Sep24 normal onsite
+  - generic: Partner activity
+  - generic: To Be Decided · Hyderabad, Bahadurpura mandal, Telangana, India · city
+  - generic: 
+- button "Open activity Golden Hour Photography Walk":
+  - generic: 
+  - generic: Golden Hour Photography Walk
+  - generic: Partner activity
+  - generic: 3 Oct, 17:00 · Bhubaneswar, Odisha
+  - generic: 
+- generic: Completed
+- button "Open activity [QA] WeNitro Badminton Activity 20260929113018":
+  - generic: 
+  - generic: "[QA] WeNitro Badminton Activity 20260929113018"
+  - generic: Partner activity
+  - generic: 1 Oct, 17:00 · QA Test Location
+  - generic: 
+- button "Open activity [QA] WeNitro Badminton Activity 20260929112908":
+  - generic: 
+  - generic: "[QA] WeNitro Badminton Activity 20260929112908"
+  - generic: Partner activity
+  - generic: 1 Oct, 16:59 · QA Test Location
+  - generic: 
+- button "Open activity [QA] WeNitro Badminton Activity 20260929112648":
+  - generic: 
+  - generic: "[QA] WeNitro Badminton Activity 20260929112648"
+  - generic: Partner activity
+  - generic: 1 Oct, 16:56 · QA Test Location
+  - generic: 
+- tab "Home":
+  - generic: 
+  - generic: Home
+- tab "Vibes":
+  - generic: 
+  - generic: Vibes
+- tab "Host":
+  - generic: 
+  - generic: Host
+- tab "Chat":
+  - generic: 
+  - generic: Chat
+- tab "Profile" [active]:
+  - generic: 
+  - generic: Profile
