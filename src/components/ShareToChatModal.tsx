@@ -1,10 +1,10 @@
+import { SharedMediaPreview } from './shared-media-preview';
 import * as Clipboard from "expo-clipboard";
 import { recordActivityShare } from '../services/activity-usage';
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -232,7 +232,7 @@ export function ShareToChatModal({
             </Pressable>
           </View>
           <View style={styles.preview}>
-            {entity?.thumbnailUrl ? <Image source={{ uri: entity.thumbnailUrl }} style={styles.previewImage} /> : <View style={styles.previewFallback}><Text style={styles.logoMark}>W</Text></View>}
+            <SharedMediaPreview uri={entity?.thumbnailUrl} kind={entity?.kind} />
             <View style={styles.previewCopy}>
               <Text style={styles.previewKind}>{entity?.kind.replaceAll("_", " ")}</Text>
               <Text numberOfLines={1} style={styles.previewTitle}>{entity?.title}</Text>
@@ -295,8 +295,6 @@ const styles = StyleSheet.create({
   title: { fontFamily: "Manrope_800ExtraBold", fontSize: 25, color: "#111827" },
   close: { width: 42, height: 42, borderRadius: 21, alignItems: "center", justifyContent: "center", backgroundColor: "#E9EAF4" },
   preview: { borderRadius: 18, overflow: "hidden", backgroundColor: "#101D31" },
-  previewImage: { width: "100%", height: 148, backgroundColor: "#1B2434" },
-  previewFallback: { width: "100%", height: 88, alignItems: "center", justifyContent: "center", backgroundColor: "#1B2434" },
   previewCopy: { padding: 14 },
   previewKind: { fontFamily: "Manrope_800ExtraBold", fontSize: 11, textTransform: "uppercase", color: "#8FB7FF" },
   previewTitle: { marginTop: 4, fontFamily: "Manrope_700Bold", fontSize: 17, color: "#fff" },

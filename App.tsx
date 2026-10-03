@@ -1,4 +1,5 @@
 import { PartnerAccessGate } from './src/components/partner-access-gate';
+import { SharedMediaPreview } from './src/components/shared-media-preview';
 import { GoogleVenue } from './src/components/google-venue';
 import { googlePlaceIdUrl, clearExpiredGoogleCoordinates, googleCoordinateExpiryDelay } from './src/services/google-places';
 import { ActionConfirmationProvider, useActionConfirmation } from './src/components/reconstruction/action-confirmation';
@@ -5821,7 +5822,7 @@ export function ChatScreen({
               {message.pollId ? polls[message.pollId] ? <PollCard poll={polls[message.pollId]} roomId={selected.id} onUpdated={poll => setPolls(current => ({ ...current, [poll.id]: poll }))} /> : <Text style={[styles.dynamicMessageText, { color: palette.muted }]}>Poll</Text> : null}
               {message.share ? (
                 <Pressable onPress={() => openSharedContent(message.share!)} style={{ width: 250, overflow: "hidden", borderRadius: 16, backgroundColor: message.mine ? "rgba(255,255,255,.14)" : palette.inset }}>
-              {message.share.thumbnailUrl || (message.share.kind === "vibe" ? data.vibes.find(item => item.id === message.share?.entityId)?.mediaUrl : undefined) ? <Image source={{ uri: message.share.thumbnailUrl || data.vibes.find(item => item.id === message.share?.entityId)?.mediaUrl }} style={{ width: "100%", height: 148, backgroundColor: "#1B2434" }} /> : <View style={{ width: "100%", height: 84, backgroundColor: "#1B2434", alignItems: "center", justifyContent: "center" }}><Text style={{ color: "#8FB7FF", fontFamily: "Manrope_800ExtraBold" }}>W</Text></View>}
+              <SharedMediaPreview uri={message.share.thumbnailUrl || (message.share.kind === "vibe" ? data.vibes.find(item => item.id === message.share?.entityId)?.mediaUrl : undefined)} kind={message.share.kind} />
                   <View style={{ padding: 13, gap: 4 }}>
                     <Text style={{ fontFamily: "Manrope_800ExtraBold", fontSize: 11, textTransform: "uppercase", color: "#8FB7FF" }}>{message.share.kind.replaceAll("_", " ")}</Text>
                     <Text style={{ fontFamily: "Manrope_700Bold", fontSize: 16, color: message.mine ? "#fff" : palette.text }}>{message.share.title}</Text>

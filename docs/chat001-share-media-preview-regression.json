@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-03T21:52:56.542913+00:00",
+  "status": "LOCAL_PASS_AWAITING_COORDINATED_APP_REGRESSION_DEPLOYMENT",
+  "before": "Deployed DM253 Vibe135 had a signedMP4 in thumbnailUrl; Image rendered a blank148px region. Root captured qa-evidence/chat001/regression-production/chat-vibe-creator.png. The same image-only assumption existed in Community share cards and the share modal.",
+  "implemented": "SharedMediaPreview at all3 mounts detects video extensions/encodedpaths/content-type hints without network lookup. Videos without image posters show a truthful Video preview placeholder. Image URLs remain byte-for-byte unchanged and loading failure displays Preview unavailable. Updated URL is not suppressed by a delayed error from the old URL. Creator/title/context and existing parent navigation are preserved.",
+  "privacy": "No signing/public URL rewrite, media download, thumbnail service, autoplay, schema/RPC/RLS or provider change. Existing authorized URL remains the only image source; video placeholder makes no media request.",
+  "publicOgReview": "Existing supabase/functions/share-vibe/index.ts already selects onlypublic rows and uses wenitro-share.png for video without thumbnail_url. No Edge change needed.",
+  "localVerification": [
+    {
+      "command": "node scripts/shared-media-preview-test.mjs",
+      "checks": 52,
+      "status": "PASS",
+      "scope": "Actual renderer plus actual JSX mounts in DM, Community and share modal; signed/encoded/streamvideo classification, correct image URL preservation, errors/refreshedURL."
+    },
+    {
+      "command": "npm run typecheck",
+      "status": "PASS"
+    },
+    {
+      "command": "node scripts/share-identity-regression-test.mjs",
+      "checks": 41,
+      "status": "PASS"
+    },
+    {
+      "command": "node scripts/vibe-metadata-share-regression-test.mjs",
+      "checks": 36,
+      "status": "PASS"
+    },
+    {
+      "command": "node scripts/vibe-share-attribution-test.mjs",
+      "status": "PASS",
+      "scope": "Actual isolated PostgreSQL shareRPC creator persistence, membership/privatevisibility checks, mapping and bothchatattribution."
+    }
+  ],
+  "productionVerification": [],
+  "remaining": "Coordinator integrated gate, App regression deployment and actual DM253 video share-card recapture. Placeholder is not a generated video thumbnail."
+}
