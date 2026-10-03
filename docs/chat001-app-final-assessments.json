@@ -3,10 +3,9 @@
   "scope": "A126 plus B/C80 guide-schema subset; excludes22BADGE rows owned by backend. Scoped PASS only; unresolved normal actions are pending, not external holds.",
   "count": 206,
   "counts": {
-    "PASS": 108,
+    "PASS": 109,
     "PENDING_SCOPED_ACCEPTANCE": 91,
     "PARTIAL_EXTERNAL_DEPENDENCY": 3,
-    "PENDING_ORIGINAL_SCOPE_OR_AVATAR_PROOF": 1,
     "PENDING_VISUAL_PROOF": 1,
     "NOT_IMPLEMENTED_EXTERNAL_DEPENDENCY": 1,
     "PENDING_CLIENT_PROVIDER_SETUP_AND_IMPLEMENTATION": 1
@@ -3294,14 +3293,14 @@
     },
     {
       "id": "ACT-COMMENT-IDENTITY",
-      "status": "PENDING_ORIGINAL_SCOPE_OR_AVATAR_PROOF",
+      "status": "PASS",
       "sourceClauseIds": [
         "A12-03"
       ],
-      "requestedChange": "Activity comments display the correct commenter identity and avatar.",
+      "requestedChange": "Activity comments display the correct commenter identity.",
       "before": "The requested outcome required acceptance against the original client clause; no additional historical implementation defect is asserted without evidence.",
       "implemented": "The active Activity discovery/detail/hosting/rating and service paths contain the requested behavior; linked executable and deployed evidence establish only their recorded scope.",
-      "acceptanceScope": "Activity comments display the correct commenter identity and avatar.",
+      "acceptanceScope": "Actual Activity300 submitted comment displays the correct QA Audit recipient name. Original A12 asks who commented and its screenshot contains no avatar; canonical inferred-avatar wording is corrected, without new productscope.",
       "localVerification": [
         {
           "check": "client-pdf-regression-test",
@@ -3371,12 +3370,15 @@
         "appDeploymentId": "dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR",
         "adminDeploymentId": "dpl_CuCrqECdJKrffxR8RPhXNZYNskfw"
       },
-      "reason": "Actual persisted comment screenshot proves correct author name but no avatar is visible in saved row; composer avatar is separate. Parent checking whether avatar was explicit originalA12 requirement or inferred in canonical wording.",
+      "reason": "",
       "evidenceCompatibility": "Fresh changed-surface screenshots explicitly identify dpl_suTWH1RiFRZKfwK4JpyweS7HPpuR. Earlier screenshot timestamps/deployments remain unchanged. bd6d314\u219208b8bb8 diff reviewed: Profile/gallery/reviews/Trust and badge files unchanged; changed community cover/catalog/header, chat filters/group info, Activity media and inline avatars use new-release evidence where accepted. Referral/splash/first-signup picker and unexercised actions are not accepted from old images.",
       "screenshotReviewProvenance": "Primary supporting screenshot bytes reviewed by assigned App agent, with original interaction/capture metadata retained. Earlier B/C screenshots reviewed in prior audit;19 final-release changed-surface images and34 earlier A images re-inspected2026-10-03. Supplementary older metadata is not a claim of fresh capture.",
-      "remainingValidation": [
-        "Actual persisted comment screenshot proves correct author name but no avatar is visible in saved row; composer avatar is separate. Parent checking whether avatar was explicit originalA12 requirement or inferred in canonical wording."
-      ]
+      "remainingValidation": [],
+      "originalSourceReview": {
+        "path": "/Users/vamshipendyala/Downloads/Must changesimplementations.pdf",
+        "page": 12,
+        "review": "Personally inspected rendered original: commenter name/verificationicon/body, no avatar."
+      }
     },
     {
       "id": "ACT-ENDED-PARTICIPANT",
@@ -15266,11 +15268,6 @@
       "action": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
     },
     {
-      "id": "ACT-COMMENT-IDENTITY",
-      "status": "PENDING_ORIGINAL_SCOPE_OR_AVATAR_PROOF",
-      "action": "Actual persisted comment screenshot proves correct author name but no avatar is visible in saved row; composer avatar is separate. Parent checking whether avatar was explicit originalA12 requirement or inferred in canonical wording."
-    },
-    {
       "id": "ACT-ENDED-PARTICIPANT",
       "status": "PENDING_SCOPED_ACCEPTANCE",
       "action": "Reuse existing ended QA Activity231/233 (members70/71) or272. Backend/historical rating and denied mutation checks already pass; link/capture exact disabled/Rate Participants/Activity Ended/rater Host state requested without another Nitro award."
@@ -15645,8 +15642,7 @@
         "CHAT-CANCELLED-HIDDEN",
         "CHAT-CANCELLED-WRITES",
         "ACT-HOST-DELETE",
-        "SHARE-ACTIVITY",
-        "ACT-COMMENT-IDENTITY"
+        "SHARE-ACTIVITY"
       ],
       "details": [
         {
@@ -15700,10 +15696,6 @@
         {
           "id": "SHARE-ACTIVITY",
           "reason": "Use controlled Activity share -> synthetic chat; open rendered title/context/link and correct Activity destination; external share preview metadata scope separate."
-        },
-        {
-          "id": "ACT-COMMENT-IDENTITY",
-          "reason": "Actual persisted comment screenshot proves correct author name but no avatar is visible in saved row; composer avatar is separate. Parent checking whether avatar was explicit originalA12 requirement or inferred in canonical wording."
         }
       ]
     },

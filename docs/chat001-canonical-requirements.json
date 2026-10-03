@@ -1249,9 +1249,9 @@
       "sourceClauseIds": [
         "A12-03"
       ],
-      "requestedOutcome": "Activity comments display the correct commenter identity and avatar.",
+      "requestedOutcome": "Activity comments display the correct commenter identity.",
       "acceptanceCriteria": [
-        "Activity comments display the correct commenter identity and avatar."
+        "Activity comments display the correct commenter identity."
       ],
       "qaOwner": "A_ONBOARDING_HOME_ACTIVITIES",
       "status": "PENDING_INTEGRATED_PRODUCTION",
