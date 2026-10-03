@@ -1,3 +1,4 @@
+import { recordActivityShare } from '../services/activity-usage';
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useMemo, useState } from "react";
 import {
@@ -163,7 +164,8 @@ export function ShareToChatModal({
   const shareExternally = async () => {
     if (!entity) return;
     try {
-      await shareEntityExternally(entity);
+      const shared = await shareEntityExternally(entity);
+      if (shared && entity.kind === 'activity') void recordActivityShare(entity.id);
     } catch (error) {
       Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.");
     }

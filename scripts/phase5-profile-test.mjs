@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import ts from 'typescript';
 const load = (file, dependencies = {}) => { const exports = {}; new Function('exports','require',ts.transpile(fs.readFileSync(file,'utf8'),{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}))(exports,name => { assert.ok(name in dependencies, `Unexpected dependency ${name}`); return dependencies[name]; }); return exports; };
 const signals = load('src/domain/profile-signals.ts');
-for (const [balance, expected] of [[0,false],[499,false],[500,true],[501,true],[NaN,false],[Infinity,false]]) assert.equal(signals.storeEligible(balance), expected);
+for (const [balance, expected] of [[0,false],[199,false],[200,true],[201,true],[NaN,false],[Infinity,false]]) assert.equal(signals.storeEligible(balance), expected);
 assert.equal(signals.derivedTrustScore({phone_verified:false,aadhaar_verified:false,social_linked:false,rating:0}),0);
 assert.equal(signals.derivedTrustScore({phone_verified:true,aadhaar_verified:false,social_linked:false,rating:3.9}),10);
 assert.equal(signals.derivedTrustScore({email_verified:true,phone_verified:true,selfie_verified:true,aadhaar_verified:true,social_linked:true,rating:4,activities_joined:20}),100);
@@ -18,7 +18,7 @@ let row={id:44,username:'test_user',bio:'headline',about:'longer description',po
 const backend={auth:{getSession:async()=>({data:{session:{user:{id:'test-identity'}}}})},rpc:async name=>({data:name==='get_current_legacy_user_id'?44:{user_id:44,profile_visibility:'public',email_visibility:'friends',phone_visibility:'friends',message_visibility:'everyone',show_online_status:true}}),from:table=>{
  const q={update:patch=>{updates.push(patch);row={...row,...patch};return q;},select:columns=>{reads.push({table,columns});return q;},eq:()=>q,single:async()=>({data:row}),order:async()=>({data:[{id:1,name:'Career '},{id:2,name:'[QA] Automation'},{id:3,name:'Creative'}]}),then:resolve=>Promise.resolve({error:null}).then(resolve)};return q;
 }};
-const service=load('src/services/profile-production.ts',{'../lib/supabase':{isSupabaseConfigured:true,supabase:backend},'../domain/interest-categories':taxonomy}).profileProductionService;
+const service=load('src/services/profile-production.ts',{'../lib/supabase':{isSupabaseConfigured:true,supabase:backend},'../domain/interest-categories':taxonomy,'./category-catalog':{listActiveCategories:async()=>[{id:1,name:'Career'},{id:3,name:'Creative'}]}}).profileProductionService;
 await service.editProfile({bio:'x'.repeat(40),about:'y'.repeat(500),occupation:'z'.repeat(100),nationality:null});
 assert.equal(updates.at(-1).nationality,null); assert.equal(updates.at(-1).about.length,500); assert.ok(!('email' in updates.at(-1))); assert.ok(!('dob' in updates.at(-1)));
 for (const [field,len] of [['bio',41],['about',501],['occupation',101]]) await assert.rejects(()=>service.editProfile({[field]:'x'.repeat(len)}),/characters or fewer/);

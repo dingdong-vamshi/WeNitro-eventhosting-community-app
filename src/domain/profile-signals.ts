@@ -1,4 +1,4 @@
-export const NITRO_STORE_MINIMUM = 500;
+export const NITRO_STORE_MINIMUM = 200;
 export function storeEligible(balance: number) { return Number.isFinite(balance) && balance >= NITRO_STORE_MINIMUM; }
 
 export type TrustSignals = {

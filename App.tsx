@@ -1,3 +1,4 @@
+import { recordActivityShare } from './src/services/activity-usage';
 import { useUsageObservation } from './src/hooks/use-usage-observation';
 import { activityDisplayPrice } from "./src/domain/activity-pricing";
 import { VerifiedBadge } from './src/components/verified-badge';
@@ -3265,7 +3266,7 @@ function VibesScreen({
         {menuOpen ? (
           <ReferenceSheet title="Vibe options" close={() => setMenuOpen(false)}>
             <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); shareVibe(); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="chatbubble-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Share to Chat</Text></Pressable>
-            <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void shareEntityExternally({ kind: "vibe", id: vibe.id, title: vibe.event || "WeNitro Vibe", preview: vibe.text || "Shared a WeNitro Vibe", thumbnailUrl: vibe.mediaUrl }).then(() => isBackendId(vibe.id) ? vibeService.recordShare(vibe.id, "external") : undefined).catch((error) => Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.")); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="share-social-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Share externally</Text></Pressable>
+            <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void shareEntityExternally({ kind: "vibe", id: vibe.id, title: vibe.event || "WeNitro Vibe", preview: vibe.text || "Shared a WeNitro Vibe", thumbnailUrl: vibe.mediaUrl }).then(shared => shared && isBackendId(vibe.id) ? vibeService.recordShare(vibe.id, "external") : undefined).catch((error) => Alert.alert("Could not share", error instanceof Error ? error.message : "Please try again.")); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="share-social-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Share externally</Text></Pressable>
             <Pressable accessibilityRole="button" onPress={() => void copyVibeLink()} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="link-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Copy link</Text></Pressable>
             {vibe.activityId || vibe.event ? <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); const activityId = vibe.activityId || data.activities.find(item => item.title === vibe.event)?.id; if (activityId) openActivity(activityId); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="calendar-outline" /><Text style={[styles.optionText, { color: palette.text }]}>View activity</Text></Pressable> : null}
             {vibe.mine ? <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); void deleteVibe(); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="trash-outline" color="#F47786" /><Text style={[styles.optionText, { color: "#F47786" }]}>Delete vibe</Text></Pressable> : <Pressable accessibilityRole="button" onPress={() => { setMenuOpen(false); setReportOpen(true); }} style={[styles.optionRow, { backgroundColor: palette.card }]}><Icon name="flag-outline" /><Text style={[styles.optionText, { color: palette.text }]}>Report vibe</Text></Pressable>}
@@ -4592,9 +4593,11 @@ export function ActivityDetailScreen({
     if (activity.visibility === "private") {
       try {
         const link = await createActivityInvite(activity.id);
-        await Share.share({ title: activity.title, message: `Join my private WeNitro Activity: ${activity.title}\n\n${link}`, url: link });
+        const result = await Share.share({ title: activity.title, message: `Join my private WeNitro Activity: ${activity.title}\n\n${link}`, url: link });
+        if (result.action === Share.sharedAction) void recordActivityShare(activity.id);
       } catch (caught) {
-        Alert.alert("Invite could not be created", caught instanceof Error ? caught.message : "Please try again.");
+        if (caught && typeof caught === "object" && "name" in caught && caught.name === "AbortError") return;
+        Alert.alert("Invite could not be shared", caught instanceof Error ? caught.message : "Please try again.");
       }
       return;
     }
@@ -9972,6 +9975,7 @@ export default function App() {
               });
               return { ...current, conversations: [...created, ...updated] };
             });
+            if (shareEntity?.kind === "activity" && messages.length) void recordActivityShare(shareEntity.id);
             if (shareEntity?.kind === "vibe" && isBackendId(shareEntity.id)) vibeService.recordShare(shareEntity.id, "direct").catch(() => undefined);
           }}
         />

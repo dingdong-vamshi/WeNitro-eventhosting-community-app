@@ -44,9 +44,15 @@ export async function shareEntityExternally(entity: InternalShareEntity) {
     ? `${base}/share/vibe/${encodeURIComponent(entity.id)}`
     : `${base}/#/${entity.kind.replace("_", "-")}/${encodeURIComponent(entity.id)}`;
   const caption = `${entity.title}\n\n${entity.preview}\n\n${canonicalUrl}\n\nShared from WeNitro`;
-  await Share.share({
-    title: entity.title,
-    url: canonicalUrl,
-    message: Platform.OS === "ios" ? `${entity.title}\n\n${entity.preview}\n\nShared from WeNitro` : caption,
-  });
+  try {
+    const result = await Share.share({
+      title: entity.title,
+      url: canonicalUrl,
+      message: Platform.OS === "ios" ? `${entity.title}\n\n${entity.preview}\n\nShared from WeNitro` : caption,
+    });
+    return result.action === Share.sharedAction;
+  } catch (error) {
+    if (error && typeof error === 'object' && 'name' in error && error.name === 'AbortError') return false;
+    throw error;
+  }
 }

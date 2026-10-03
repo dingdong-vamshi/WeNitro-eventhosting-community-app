@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import ts from 'typescript';
+const load = (path, dependencies) => {
+  const exports = {};
+  new Function('exports', 'require', ts.transpile(fs.readFileSync(path,'utf8'),{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}))(exports,name=>{assert.ok(name in dependencies, `Unexpected dependency ${name}`);return dependencies[name];});
+  return exports;
+};
+let outcome={action:'sharedAction'}, payload;
+const share = load('src/services/internal-share.ts', {'react-native':{Platform:{OS:'web'},Share:{sharedAction:'sharedAction',share:async value=>{payload=value;if(outcome instanceof Error) throw outcome;return outcome;}}}});
+const activity={kind:'activity',id:'123',title:'Test activity',preview:'Tomorrow'};
+assert.equal(await share.shareEntityExternally(activity),true);
+assert.equal(payload.url,'https://wenitro-app.vercel.app/#/activity/123');
+assert.match(payload.message,/Shared from WeNitro/);
+outcome={action:'dismissedAction'};assert.equal(await share.shareEntityExternally(activity),false);
+outcome=Object.assign(new Error('Cancelled'),{name:'AbortError'});assert.equal(await share.shareEntityExternally(activity),false);
+outcome=new Error('Device share failure');await assert.rejects(share.shareEntityExternally(activity),/Device share failure/);
+const observations=[];
+const usage=load('src/services/activity-usage.ts',{'../lib/supabase':{supabase:{rpc:async(name,args)=>{observations.push({name,args});throw new Error('Offline');}}}});
+for(const id of ['bad','0','-1','1.5','9007199254740992']) await usage.recordActivityShare(id);
+assert.equal(observations.length,0);
+await usage.recordActivityShare('123');assert.deepEqual(observations,[{name:'record_activity_share',args:{p_event_id:123}}]);
+const app=fs.readFileSync('App.tsx','utf8'),modal=fs.readFileSync('src/components/ShareToChatModal.tsx','utf8');
+assert.match(app,/result.action === Share.sharedAction\) void recordActivityShare\(activity.id\)/);
+assert.match(app,/shareEntity\?\.kind === "activity" && messages.length\) void recordActivityShare/);
+assert.match(modal,/shared && entity.kind === 'activity'\) void recordActivityShare/);
+console.log('PASS behavioral: successful share, dismissal, Web AbortError, real error propagation, canonical payload; invalid IDs ignored and observation failure nonblocking. Three source guards additionally locate post-success observation calls. No remote writes.');

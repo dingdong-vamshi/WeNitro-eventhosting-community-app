@@ -88,7 +88,6 @@ function ProfileLayout({ identity, summary, metrics, links, gallery, linksAvaila
  const socials = configured;
  const scroll = useRef<ScrollView>(null), contentTop = useRef(0);
  const showTab = (next: Tab) => { setTab(next); requestAnimationFrame(() => scroll.current?.scrollTo({ y: contentTop.current, animated: true })); };
- const initials = (identity.name || identity.username || 'WeNitro member').split(' ').map(part => part[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'WN';
  const rating = metrics?.rating ?? metrics?.karma;
  const score = owner ? metrics ? trustFrom(metrics, linksAvailable ? configured.length > 0 : undefined) : null : metrics?.trust_score ?? null;
  const photos = gallery.length ? gallery.slice(0, 3) : identity.avatar ? [{ uri: identity.avatar, position: 1 }] : [];
@@ -114,7 +113,7 @@ function ProfileLayout({ identity, summary, metrics, links, gallery, linksAvaila
     </View>
     <View style={s.heroTop}>
      <View style={s.photoRow}>
-      {photos.length ? <Pressable accessibilityRole="button" accessibilityLabel={owner ? 'Manage photo 1' : 'View photo 1'} onPress={() => onPhoto?.(photos[0])} style={[s.heroPhotoWrap, s.heroPhotoPrimary]}><Image source={{ uri: photos[0].uri }} style={s.heroPhoto} resizeMode="cover" /></Pressable> : <View style={[s.heroPhotoWrap, s.heroPhotoPrimary]}><LinearGradient colors={['#B798FF', '#6A4DC3']} style={[s.heroPhoto, s.center]}><Text style={s.initials}>{initials}</Text></LinearGradient></View>}
+      {photos.length ? <Pressable accessibilityRole="button" accessibilityLabel={owner ? 'Manage photo 1' : 'View photo 1'} onPress={() => onPhoto?.(photos[0])} style={[s.heroPhotoWrap, s.heroPhotoPrimary]}><UserAvatar uri={photos[0].uri} name={identity.name || identity.username} identity={identity.id} size={67} /></Pressable> : <View style={[s.heroPhotoWrap, s.heroPhotoPrimary]}><UserAvatar name={identity.name || identity.username} identity={identity.id} size={67} /></View>}
       {owner ? <View accessibilityLabel="Your current signed-in profile" style={s.onlineDot} /> : null}
      </View>
      <View style={s.heroIdentity}>

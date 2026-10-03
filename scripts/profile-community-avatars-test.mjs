@@ -51,7 +51,7 @@ assert.doesNotMatch(detail, /wenitro:\/\/community/);
 const shareApi = {}, shares = [];
 new Function('exports', 'require', ts.transpile(fs.readFileSync('src/services/internal-share.ts', 'utf8'), { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }))(shareApi, name => {
   assert.equal(name, 'react-native');
-  return { Platform: { OS: 'web' }, Share: { share: async payload => shares.push(payload) } };
+  return { Platform: { OS: 'web' }, Share: { sharedAction: 'sharedAction', share: async payload => { shares.push(payload); return { action: 'sharedAction' }; } } };
 });
 await shareApi.shareEntityExternally({ kind: 'community', id: '123', title: 'QA Community', preview: 'QA preview' });
 assert.equal(shares[0].url, 'https://wenitro-app.vercel.app/#/community/123');

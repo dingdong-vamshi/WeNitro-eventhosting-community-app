@@ -1,3 +1,4 @@
+import { CategoryCatalogStatus } from '../category-catalog-status';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Image, Platform, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -218,6 +219,7 @@ export function ClientActivitiesScreen({ data, setData, go, openActivity, openPr
         <Switch accessibilityLabel="Exclusive for Verified Users" value={draft.verifiedOnly} onValueChange={value => setDraft(v => ({ ...v, verifiedOnly: value }))} trackColor={{ true: purple, false: c.border }} />
       </View>
       <Text style={{ color: c.text, fontWeight: '800', fontSize: 15 }}>Categories</Text>
+      <CategoryCatalogStatus catalog={catalog} />
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 9 }}>
         {catalog.names.map(value => {
           const selected = draftCategories.includes(value);
