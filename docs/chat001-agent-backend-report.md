@@ -76,3 +76,25 @@ Root review identified that the verification Edge and App still treated any prov
 Preparation and finalization now both exclude REFUND_REQUIRED/REFUNDED/REVERSED/DISPUTED payments from category capacity. A buyer with an unresolved refund/dispute cannot create another checkout. The finalizer rereads its returned payment after the real fee trigger and refund queue have run: the fee trigger initially sets PAYABLE, while the refund queue then changes the authoritative ledger to REFUND_REQUIRED.
 
 The PostgreSQL suite now executes that real fee trigger and refund queue and passes 47 checks. `payment-registration-confirmation-test.mjs` executes the actual verification Edge handler, client decoder and App handlers across nine receipt/retry states, failed refreshes and a stale approved-details response: 90 assertions pass. The modal suite additionally checks that payment-review state blocks checkout. App TypeScript and Cashfree Edge typechecks pass. Deployment and actual production screenshot/API evidence remain pending.
+
+## Isolated deployed API preparation (production execution pending)
+
+Added `scripts/qa-isolated-backend-production.mjs` and its 12-check execution-gate test. Default invocation only prints the plan and requires no credentials/network. Live writes require `--execute`, an explicit coordinator release manifest, exact target, App/Admin deployment identifiers, Cashfree verification function version, and all five affected migration versions. No production writes were performed during preparation.
+
+The runner creates uniquely named synthetic accounts, private activities and synthetic catalog rows; it never suspends or edits shared QA users 70/71/116. Credentials go only into a unique mode-0600 ignored `tmp` manifest immediately after each identity is created. A `finally` cleanup hides the private activities, holds the synthetic financial/settlement rows, archives fixture categories and bans/deactivates fixture accounts. `--cleanup-manifest FILE` retries interrupted cleanup, first validating manifest ownership against actual Auth and fixture titles. Financial history remains retained and labelled synthetic, and no provider refund, payout, bank or SMS operation is executed.
+
+Coverage planned through deployed REST/RPC/Edge APIs: stale-session account guards, ten-Nitro referral once/replay/cross-inviter/self denial, atomic interest rollback with new archived assignments and retained archived choices, all22 unique achievement catalog/earned timestamp/privacy, owner/public Trust privacy and Nitro independence, private tier access, unverified phone and legacy overload denial, live reservation capacity, completed-activity late finalization, category overbooking/refund-required finalization, same-order Edge receipts and service-only finalizer authorization. These are preparation contracts, **not production PASS claims**. Clock-based expiry is covered in actual local PostgreSQL tests; the deployed synthetic case uses `completed` because the real schedule trigger correctly disallows backdating.
+
+Synthetic service-finalizer fixtures test deployed backend and Edge semantics; they do not prove an actual Cashfree payment. The hosted interactive Sandbox repeat remains required separately. Temporary synthetic catalog rows are visible while enabled for the interest test, then archived; no existing category is changed.
+
+Invocation after coordinator signal:
+
+```sh
+node --env-file=/ABSOLUTE/PRIMARY/.env.local scripts/qa-isolated-backend-production.mjs --execute --release /ABSOLUTE/RELEASE.json --secrets-root /ABSOLUTE/PRIMARY
+```
+
+Release JSON fields: `projectId: "cxsznhrkzqndhseodcyy"`, `readyForProductionQA: true`, `appDeploymentId`, `adminDeploymentId`, `cashfreeVerifyVersion`, and `appliedMigrations` containing `20261003074100`, `20261003075132`, `20261003075305`, `20261003075444`, `20261003075804`. Populate only with actual deployed evidence. Output proof is `docs/chat001-isolated-backend-production-<run>.json` and includes release IDs, semantic check values, fixture IDs and cleanup results without credentials.
+
+Existing-script hazards identified: `qa-admin-read-models.mjs` restricts shared70 and restores it unconditionally; avoid parallel rerun until isolated. `qa-checkout-setup.mjs` overwrites the shared checkout manifest and creates a public activity under71; do not blindly rerun. `qa-admin-access-acceptance.mjs --setup` has a fixed manifest name and previous revoked fixtures; use isolated new setup rather than overwriting. Anonymous post36 is deleted and must not be reused.
+
+Preparation validation: `node --check scripts/qa-isolated-backend-production.mjs`, credential-free default plan, and `node scripts/qa-isolated-backend-safety-test.mjs` (**12 assertions PASS**, execution gating only). Deployed execution and current-target security advisor rerun remain pending coordinator readiness.
