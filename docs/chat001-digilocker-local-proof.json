@@ -21,8 +21,8 @@
     {
       "command": "node scripts/digilocker-verification-postgres-test.mjs",
       "status": "PASS",
-      "checks": 46,
-      "scope": "Actual isolated PostgreSQL migration; service-only grant/JWT role, private RLS, actor binding, disabled/banned/deleted account denial, throttles, expiry, cross-user/environment/provider-reference denial, production finalization idempotency, exact +20 once, test +0, no Nitro or selfie-state mutation, no sensitive columns, Auth cascade."
+      "checks": 58,
+      "scope": "Actual isolated PostgreSQL migration; service-only grant/JWT role, private RLS, actor binding, disabled/banned/deleted account denial, throttles, expiry, cross-user/environment/provider-reference denial, production finalization idempotency, exact +20 once, test +0, no Nitro or selfie-state mutation, no sensitive columns, Auth cascade. Includes12 actual read-only production-verifier SQL assertions."
     },
     {
       "command": "node scripts/digilocker-verification-ui-test.mjs",
@@ -44,6 +44,12 @@
       "status": "PASS",
       "checks": 23,
       "scope": "Existing Trust regression fixture."
+    },
+    {
+      "command": "node scripts/digilocker-production-verifier-test.mjs",
+      "status": "PASS",
+      "checks": 15,
+      "scope": "Offline release gating, no-provider availability-only action restriction, correct permission-denial classification and credential-free dry run."
     }
   ],
   "notProven": [

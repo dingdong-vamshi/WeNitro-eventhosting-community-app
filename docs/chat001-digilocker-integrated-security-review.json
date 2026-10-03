@@ -1,0 +1,100 @@
+{
+  "at": "2026-10-03T21:25:52.508415+00:00",
+  "reviewedIntegratedCommit": "81414bc",
+  "status": "NO_BLOCKING_FINDING_PRODUCTION_VERIFICATION_AWAITS_DEPLOYMENT",
+  "sourceSnapshot": [
+    {
+      "path": "supabase/functions/_shared/digilocker.ts",
+      "sha256": "021f624f98b4b290c845e651b68b3287b3c4fd43d756216bb2404f206ca937b3",
+      "matchesTestedWorktree": true
+    },
+    {
+      "path": "supabase/functions/aadhaar-verification/index.ts",
+      "sha256": "107de2b8756547ee619fe6f324c69863a66d5734e7a72281bb2e149340199c7e",
+      "matchesTestedWorktree": true
+    },
+    {
+      "path": "supabase/functions/aadhaar-verification/handler.ts",
+      "sha256": "bf3daa41d596d0c0a661bd47905befeac1205a2b357d5bb28fff945c2133ad62",
+      "matchesTestedWorktree": true
+    },
+    {
+      "path": "supabase/migrations/20261003205431_sandbox_digilocker_verification.sql",
+      "sha256": "4da237b6c23ebee91db56eeb0debd4c4397c5857432feac68576c3f558134e07",
+      "matchesTestedWorktree": true
+    },
+    {
+      "path": "src/components/aadhaar-verification-card.tsx",
+      "sha256": "87d267a12522f2ce7605f51193f31432ee2d8360ab1afcb36facb7220bb8e244",
+      "matchesTestedWorktree": true
+    },
+    {
+      "path": "src/services/aadhaar-verification.ts",
+      "sha256": "83515e494577210833d25b68db04b6a2d1b6294190a21f79121d67f7153ed891",
+      "matchesTestedWorktree": true
+    }
+  ],
+  "reviewedBoundaries": [
+    "JWT getUser and active-account RPC precede handler; service ledger independently denies inactive/deleted/deactivated/banned accounts.",
+    "Only service role can invoke ledger RPC; private table grants deny anonymous/authenticated. Auth ID comes from validated JWT; client provider/account IDs ignored.",
+    "Owned session, consented Aadhaar type, succeeded provider status and UIDAI XML metadata required; fixed official API origins and allowlisted government hosted URL.",
+    "No identity number/document/image/OTP storage, document download, provider-body logging or client response; only safe outcome/reference retained.",
+    "Test environment never sets verified_at or grants Trust. Production additionally requires explicit enablement and approval flags.",
+    "Existing verified replay is idempotent; beginning and refresh throttled; finalization expiry and account state rechecked.",
+    "Trust changes only Aadhaar component and preserves existing approved legacy signal; other verification signals, badge criteria, Nitro and selfie review unchanged.",
+    "Unconfigured provider remains disabled; no config or credentials changed. Gateway and in-handler authentication retained.",
+    "Frontend stale-account/unmount completion ignored; returned hosted link never marks verified; status must be read from server."
+  ],
+  "localChecks": [
+    {
+      "command": "node scripts/digilocker-production-verifier-test.mjs",
+      "status": "PASS",
+      "checks": 15
+    },
+    {
+      "command": "node scripts/digilocker-verification-postgres-test.mjs",
+      "status": "PASS",
+      "checks": 58,
+      "scope": "Original46 plus12 real PostgreSQL assertions for exact prepared read-only production SQL."
+    }
+  ],
+  "productionPlan": {
+    "signalRequired": true,
+    "script": "scripts/qa-digilocker-disabled-production.mjs",
+    "readOnlySql": "scripts/sql/qa-digilocker-disabled-readonly.sql",
+    "manifestRequired": [
+      "exact final App deployment ID",
+      "appliedMigrations includes20261003205431",
+      "aadhaarVerificationVersion positive integer",
+      "readyForProductionQA true"
+    ],
+    "actions": [
+      "anonymous availability",
+      "authenticated availability",
+      "owner/forged-owner service read denied",
+      "owner Trust before/after unchanged",
+      "read-only private schema/grants/aggregate and actual function-wiring SQL"
+    ],
+    "forbiddenActions": [
+      "begin",
+      "refresh",
+      "provider HTTP request",
+      "identity data submission",
+      "fixture mutation",
+      "DDL"
+    ],
+    "cleanup": "No created fixture. Sign out only the verifier local Auth session, preserving other QA UI sessions."
+  },
+  "mergerRecommendation": {
+    "file": "scripts/chat001-coordinator-working-assessments.mjs",
+    "location": "After existing16 auth/provider override loop",
+    "source": "docs/chat001-digilocker-assessments-supplement.json",
+    "allowedIds": [
+      "VERIFY-AADHAAR",
+      "TRUST-AADHAAR"
+    ],
+    "validate": "Reject unknown/unexpected ID; preserve owner canonical IDs and retain both pending review flags.",
+    "disposition": "PARTIAL_EXTERNAL_DEPENDENCY with supported integration code present but disabled; provider onboarding/config/actual consenting flow remain unverified. New deployment and screenshot must be added before release review is true.",
+    "reason": "Existing16 auth supplement does not contain either Aadhaar ID; old App-owner unavailable/NOT_IMPLEMENTED text otherwise survives."
+  }
+}

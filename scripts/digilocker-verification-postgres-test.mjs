@@ -24,6 +24,8 @@ try{
  insert into public.tbl_users(id,auth_user_id) values(1,'${actor1}'),(2,'${actor2}');insert into auth.users(id) select auth_user_id from public.tbl_users;
  ${fs.readFileSync('scripts/fixtures/trust-score-functions.sql','utf8')}
  ${fs.readFileSync('supabase/migrations/20261003205431_sandbox_digilocker_verification.sql','utf8')}`);
+ const boundary=JSON.parse(sql(fs.readFileSync('scripts/sql/qa-digilocker-disabled-readonly.sql','utf8')));
+ for(const [field,value] of Object.entries({private_rls:true,anon_table_select:false,authenticated_table_select:false,anon_service_execute:false,authenticated_service_execute:false,service_execute:true,session_rows:0,verified_rows:0,test_verified_rows:0,trust_uses_private_signal:true,sync_uses_private_signal:true,sensitive_columns:0}))eq(boundary[field],value);
  eq(sql("select relrowsecurity from pg_class where oid='private.aadhaar_verification_sessions'::regclass"),'t');
  for(const role of ['anon','authenticated']){
   eq(sql(`select has_table_privilege('${role}','private.aadhaar_verification_sessions','SELECT')`),'f');
