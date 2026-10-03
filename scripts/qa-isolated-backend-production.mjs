@@ -32,6 +32,7 @@ async function main() {
   if(process.argv.includes('--invitations'))assert(release.appliedMigrations.includes('20261003082845'),'Invitation migration readiness required');
   if(process.argv.includes('--safety-reminders'))assert(release.appliedMigrations.includes('20261003181703'),'Safety reminder migration readiness required');
   if(process.argv.includes('--participant-management'))assert(release.appliedMigrations.includes('20261003182405'),'Participant management migration readiness required');
+  if(process.argv.includes('--participant-management'))assert(release.appliedMigrations.includes('20261003183320'),'Active join retry migration readiness required');
   const secretsRoot=path.resolve(arg('--secrets-root'));
   const {createClient}=await import('@supabase/supabase-js');
   const options={auth:{persistSession:false,autoRefreshToken:false}};

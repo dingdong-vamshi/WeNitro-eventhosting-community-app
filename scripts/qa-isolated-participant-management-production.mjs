@@ -10,6 +10,7 @@ export async function runParticipantManagementChecks({host,a,b,guard,service,ok,
  for(const who of [a,b,guard])await join(who);
  await respond(host,a,'approved');await respond(host,b,'approved');
  pass('Original Host promotes eligible Co-host',row(await role(a,true)).role,'cohost');await role(b,true);
+ pass('Active Co-host self-join retry preserves approved status',row(await join(a)).status,'approved');
  await forbidden('Co-host cannot remove another Co-host',a,b,'rejected',/Co-host role/);
  await forbidden('Host must demote Co-host before removal',host,b,'rejected',/Co-host role/);
  await forbidden('Co-host cannot manage own participation',a,a,'rejected',/own participation/);
@@ -18,6 +19,7 @@ export async function runParticipantManagementChecks({host,a,b,guard,service,ok,
  pass('Co-host removes eligible ordinary participant',row(await respond(a,b,'rejected')).status,'rejected');
  pass('Removed participant rejoin requires approval',row(await join(b)).status,'pending');
  pass('Co-host approves pending participant',row(await respond(a,b,'approved')).status,'approved');
+ pass('Approved ordinary participant self-join retry stays approved',row(await join(b)).status,'approved');
  pass('Co-host rejects pending request',row(await respond(a,guard,'rejected')).status,'rejected');
  await join(guard);
  await rpc(a.client,'update_activity',{p_event_id:event.id,p_patch:{description:'QA Co-host permitted edit'}});
@@ -34,6 +36,7 @@ export async function runParticipantManagementChecks({host,a,b,guard,service,ok,
  const finalize=p=>rpc(service,'finalize_activity_payment',{p_order_id:p.provider_order_id,p_provider_payment_id:`SYNTHETIC_MANAGEMENT_${runId}_${p.id}`,p_amount_paisa:1,p_currency:'INR',p_provider_status:'SUCCESS',p_provider_metadata:{qa_fixture:true,qa_run:runId,provider_transaction_exists:false}}).then(row);
  const payment=await prepare(paid);await finalize(payment);
  pass('Paid approval retry preserves admitted participant',row(await respond(host,b,'approved',paid)).status,'approved');
+ pass('Paid attendee self-join retry preserves confirmed seat',row(await join(b,paid)).status,'approved');
  await forbidden('Paid removal requires financial review',host,b,'rejected',/payment review/,paid);
  const declined=await create('late-host-rejection',true);await join(b,declined);await respond(host,b,'approved',declined);const pending=await prepare(declined);
  await respond(host,b,'rejected',declined);
