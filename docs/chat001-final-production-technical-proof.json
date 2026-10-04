@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-04T06:10:17.484Z",
+  "supabase": {
+    "projectId": "cxsznhrkzqndhseodcyy",
+    "projectName": "WeNitro",
+    "region": "ap-northeast-1",
+    "status": "ACTIVE_HEALTHY",
+    "postgresVersion": "17.6.1.171"
+  },
+  "deployments": {
+    "app": {
+      "alias": "https://wenitro-app.vercel.app/",
+      "immutableUrl": "https://wenitro-172zs4f1o-vamshi-krishna-pendyalas-projects.vercel.app/",
+      "deploymentId": "dpl_AiVsN9P4d6aHB27KkWA7xEXAANQG",
+      "target": "production",
+      "state": "READY",
+      "gitCommit": "58514c7e4d87e7cf4a51d3f1ef562fcb6934fee1"
+    },
+    "admin": {
+      "alias": "https://wenitro-admin-roan.vercel.app/",
+      "immutableUrl": "https://wenitro-admin-14yjxqxik-vamshi-krishna-pendyalas-projects.vercel.app/",
+      "deploymentId": "dpl_CXzfuBLjYGLhQ85naSDREF1YkK8L",
+      "target": "production",
+      "state": "READY",
+      "gitCommit": "03d20e5a51edada5f515673715250b332198193f"
+    }
+  },
+  "finalQaFixtureState": {
+    "activity306": {
+      "status": "cancelled",
+      "isCancelled": true,
+      "isDeleted": false,
+      "activityChat256Exists": true,
+      "retainedMessageCount": 2,
+      "retainedMessageTypes": {
+        "text": 1,
+        "activity_share": 1
+      }
+    },
+    "community258": {
+      "visibility": "private",
+      "joinType": "approval",
+      "memberCount": 1,
+      "removedControlledMemberAbsent": true
+    },
+    "directChat257": {
+      "participantCount": 2,
+      "messageCount": 3,
+      "nonDeletedCountBeforeDeleteAcceptance": 3,
+      "mediaCountBeforeDeleteAcceptance": 1,
+      "nonDeletedCountAfterDeleteAcceptance": 1,
+      "softDeletedCountAfterDeleteAcceptance": 2,
+      "visibleMediaCountAfterDeleteAcceptance": 0,
+      "sharedCardCount": 1,
+      "remainingVisibleMessageTypes": {
+        "community_share": 1
+      },
+      "controlledUsersUnblocked": true
+    },
+    "vibe139": {
+      "activityId": 306,
+      "mediaType": "photo",
+      "visibility": "activity",
+      "showInVibes": true
+    },
+    "latestStoryForControlledOwner": {
+      "storyId": 29,
+      "notDeleted": true,
+      "selfViewRecorded": true,
+      "expiresAt": "2026-10-05T06:00:01.607464+00:00"
+    },
+    "rowLevelSecurity": {
+      "inspectedTables": 9,
+      "rlsEnabled": 9,
+      "tables": [
+        "tbl_events",
+        "tbl_event_participants",
+        "tbl_chat_rooms",
+        "tbl_chat_participants",
+        "tbl_messages",
+        "tbl_user_blocks",
+        "tbl_stories",
+        "tbl_story_views",
+        "tbl_activity_vibes"
+      ]
+    }
+  },
+  "supabaseAdvisors": {
+    "security": [
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "count": 11,
+        "scope": "Private-schema internal tables intentionally have no client policies.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "count": 136,
+        "scope": "RPCs are callable by authenticated users and enforce actor/role checks inside the function; targeted cross-user tests provide the acceptance proof.",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable"
+      },
+      {
+        "name": "auth_leaked_password_protection",
+        "level": "WARN",
+        "count": 1,
+        "scope": "Supabase Auth leaked-password protection remains a project-owner configuration item.",
+        "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+      }
+    ],
+    "performance": [
+      {
+        "name": "unindexed_foreign_keys",
+        "level": "INFO",
+        "count": 42
+      },
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "count": 42
+      },
+      {
+        "name": "multiple_permissive_policies",
+        "level": "WARN",
+        "count": 73,
+        "scope": "Performance advisory; policy behavior is covered by the authenticated RLS and cross-user test artifacts."
+      }
+    ]
+  },
+  "evidenceNotes": [
+    "No personal email address, phone number, OAuth client secret, OTP or biometric evidence is included in this artifact.",
+    "The current production state was queried through the connected Supabase project after the final browser interactions, including the confirmed text and image deletion checks.",
+    "Activity cancellation is a recoverable soft cancellation; retained chat rows demonstrate history preservation without exposing message content."
+  ]
+}
