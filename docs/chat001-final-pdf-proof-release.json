@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-10-04T00:00:00+05:30",
+  "branch": "codex/chat001-acceptance-evidence-20261004",
+  "commit": "29bffb516ec30b7b9ff7c528fd2b48f37ab78b84",
+  "production": {
+    "alias": "https://wenitro-app.vercel.app/",
+    "deploymentId": "dpl_73NnNgbb6pcvEHpXJysjJXFaThMp",
+    "immutableUrl": "https://wenitro-7wuhfkpmf-vamshi-krishna-pendyalas-projects.vercel.app",
+    "state": "READY"
+  },
+  "deltaFromAcceptedEvidenceCommit": {
+    "baseCommit": "677f6cc",
+    "changedFiles": [
+      "App.tsx",
+      "docs/chat001-production-regression-local-verification.json",
+      "scripts/client-pdf-regression-test.mjs"
+    ],
+    "functionalScope": "Individual Activity responsive timeline only"
+  },
+  "localVerification": {
+    "fullGate": "PASS",
+    "assertions": "119/119",
+    "typecheck": "PASS",
+    "expoWebExport": "PASS",
+    "adminLintBuildTypecheck": "PASS",
+    "backendRlsSecurity": "PASS",
+    "badges": "PASS",
+    "cashfreePaymentIntegrity": "PASS"
+  },
+  "productionTimelineVerification": [
+    {
+      "viewport": "360x900",
+      "result": "PASS",
+      "observed": "START, END and REGISTRATION BY render as three separate full-width rows with date, year and time visible and no collision"
+    },
+    {
+      "viewport": "390x900",
+      "result": "PASS",
+      "observed": "START, END and REGISTRATION BY render as three separate full-width rows with date, year and time visible and no collision"
+    },
+    {
+      "viewport": "430x900",
+      "result": "PASS",
+      "observed": "START, END and REGISTRATION BY render as three separate full-width rows with date, year and time visible and no collision"
+    }
+  ],
+  "acceptance": {
+    "canonicalRequirements": 308,
+    "productionPass": 282,
+    "externalOwnerDependent": 26,
+    "remainingNormalFixableFailures": 0,
+    "acceptedRequirementsWithReviewedScreenshot": 266,
+    "requirementsWithReviewedScreenshotState": 274,
+    "acceptedRequirementsWithExistingTechnicalArtifact": 221,
+    "requirementsWithExistingTechnicalArtifact": 245
+  }
+}
