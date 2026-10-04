@@ -12410,8 +12410,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scheduleItemVertical: {
-    flex: 0,
+    flexGrow: 0,
+    flexShrink: 0,
+    flexBasis: "auto",
     width: "100%",
+    minHeight: 92,
     paddingHorizontal: 4,
     paddingVertical: 13,
     alignItems: "flex-start",

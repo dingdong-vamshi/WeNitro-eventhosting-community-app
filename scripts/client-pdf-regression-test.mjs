@@ -36,6 +36,8 @@ includesAll(app, [
   'year: "numeric"',
   'scheduleCardVertical',
   'scheduleItemVertical',
+  'flexBasis: "auto"',
+  'minHeight: 92',
 ]);
 for (const mobileWidth of [360, 390, 430]) {
   assert.equal(mobileWidth < 600, true, `Activity timeline must use its vertical layout at ${mobileWidth}px`);
