@@ -70,6 +70,7 @@ import {
   FlatList,
   Linking,
   useColorScheme,
+  useWindowDimensions,
   ActivityIndicator,
   Animated,
   Image,
@@ -4122,6 +4123,7 @@ export function ActivityDetailScreen({
   onEdit: () => void;
 }) {
   const palette = usePalette();
+  const { width: viewportWidth } = useWindowDimensions();
   const confirmAction = useActionConfirmation();
   const detailScrollRef = useRef<ScrollView>(null);
   const isPaidActivity = Boolean(activity.isPaid || activity.costsMayApply || activity.entryFeeRequired || (activity.price !== "Free" && Number(activity.price.replace(/[^0-9.]/g, "")) > 0));
@@ -4565,14 +4567,32 @@ export function ActivityDetailScreen({
     } finally { setReporting(false); }
   };
   const joinedParticipants = participants.filter(participant => ["approved", "going", "paid"].includes(participant.status));
-  const compactDate = (value?: string) => value
-    ? new Date(value).toLocaleString([], {
+  const timelineDate = (value?: string) => {
+    if (!value) return { date: "To be decided", time: "" };
+    const parsed = new Date(value);
+    return {
+      date: parsed.toLocaleDateString([], {
         day: "numeric",
         month: "short",
+        year: "numeric",
+      }),
+      time: parsed.toLocaleTimeString([], {
         hour: "numeric",
         minute: "2-digit",
-      })
-    : "To be decided";
+      }),
+    };
+  };
+  const usesVerticalTimeline = viewportWidth < 600;
+  const timelineItems: Array<{
+    icon: IconName;
+    label: string;
+    value: { date: string; time: string };
+    color: string;
+  }> = [
+    { icon: "calendar-outline", label: "START", value: timelineDate(activity.startsAt), color: "#35BD8A" },
+    { icon: "calendar-outline", label: "END", value: timelineDate(activity.endsAt), color: "#9A8AFF" },
+    { icon: "calendar-outline", label: "REGISTRATION BY", value: timelineDate(activity.registrationClosesAt), color: "#F04463" },
+  ];
   const categoryIcon: IconName = /sport|fitness|badminton|tennis/i.test(activity.category)
     ? "fitness-outline"
     : /study|learn|book/i.test(activity.category)
@@ -4746,27 +4766,14 @@ export function ActivityDetailScreen({
             <View style={{ alignItems: "flex-end", gap: 5 }}><Text style={{ color: activityEnded || joined ? "#6DD4A0" : "#E7B85C", fontSize: 12, fontFamily: "Manrope_700Bold", textTransform: "uppercase" }}>{activityEnded ? "Completed" : joined ? "Joined" : requestPending ? "Pending" : registrationClosed ? "Registration Closed" : "Upcoming"}</Text>{activity.verifiedOnly ? <Icon name="shield-checkmark-outline" size={16} color="#9A8AFF" /> : null}</View>
           </View>
           <Text style={[styles.timelineHeading, { color: palette.muted }]}>ACTIVITY TIMELINE</Text>
-          <View style={[styles.scheduleCard, { backgroundColor: palette.card, borderColor: palette.border }]}>
-            {[
-              ["calendar-outline", "START", compactDate(activity.startsAt), "#35BD8A"],
-              [
-                "calendar-outline",
-                "END",
-                compactDate(activity.endsAt),
-                "#9A8AFF",
-              ],
-              [
-                "calendar-outline",
-                "REG. BY",
-                compactDate(activity.registrationClosesAt),
-                "#F04463",
-              ],
-            ].map(([icon, label, value, color]) => (
-              <View key={label} style={styles.scheduleItem}>
-                <Icon name={icon as IconName} color={color} />
-                <View>
+          <View style={[styles.scheduleCard, usesVerticalTimeline && styles.scheduleCardVertical, { backgroundColor: palette.card, borderColor: palette.border }]}>
+            {timelineItems.map(({ icon, label, value, color }, index) => (
+              <View key={label} style={[styles.scheduleItem, usesVerticalTimeline && styles.scheduleItemVertical, usesVerticalTimeline && index < 2 && { borderBottomWidth: 1, borderBottomColor: palette.border }]}>
+                <Icon name={icon} color={color} />
+                <View style={{ flex: 1, minWidth: 0 }}>
                   <Text style={styles.scheduleLabel}>{label}</Text>
-                  <Text style={[styles.scheduleValue, { color }]}>{value}</Text>
+                  <Text style={[styles.scheduleValue, { color }]}>{value.date}</Text>
+                  {value.time ? <Text style={[styles.scheduleTime, { color }]}>{value.time}</Text> : null}
                 </View>
               </View>
             ))}
@@ -12390,12 +12397,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#344150",
   },
+  scheduleCardVertical: {
+    flexDirection: "column",
+    gap: 0,
+    paddingVertical: 3,
+  },
   scheduleItem: {
     flex: 1,
     minWidth: 0,
     flexDirection: "row",
     gap: 6,
     alignItems: "center",
+  },
+  scheduleItemVertical: {
+    flex: 0,
+    width: "100%",
+    paddingHorizontal: 4,
+    paddingVertical: 13,
+    alignItems: "flex-start",
+    gap: 10,
   },
   scheduleLabel: {
     fontFamily: "Manrope_500Medium",
@@ -12408,6 +12428,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     marginTop: 2,
+  },
+  scheduleTime: {
+    fontFamily: "Manrope_600SemiBold",
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 1,
   },
   locationBar: {
     backgroundColor: "#202C38",

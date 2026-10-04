@@ -29,6 +29,17 @@ includesAll(app, ['redeemPendingReferral', 'redeemPendingActivityInvite', 'creat
 includesAll(app, ['activityService.getDetails(id, data.userId)', 'navigateToActivity(activity.id)', '"Activity unavailable"']);
 includesAll(app, ['setReportOpen(true)', 'vibesProductionService.report', 'onEndReached', 'ListFooterComponent']);
 includesAll(app, ['setLeaveConfirmOpen(true)', 'You can rejoin later while registration remains open.', 'Keep my place']);
+includesAll(app, [
+  'const { width: viewportWidth } = useWindowDimensions();',
+  'const usesVerticalTimeline = viewportWidth < 600;',
+  'label: "REGISTRATION BY"',
+  'year: "numeric"',
+  'scheduleCardVertical',
+  'scheduleItemVertical',
+]);
+for (const mobileWidth of [360, 390, 430]) {
+  assert.equal(mobileWidth < 600, true, `Activity timeline must use its vertical layout at ${mobileWidth}px`);
+}
 assert.ok(!app.includes('window.confirm(requestPending ? "Withdraw your registration request?" : "Leave this Activity?")'), 'Activity leave confirmation must use the in-app sheet on web.');
 assert.ok(!app.includes('Free activity - Free to join'));
 assert.ok(!app.includes('V-Nitro Store'));
