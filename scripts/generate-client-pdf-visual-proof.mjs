@@ -19,6 +19,16 @@ const uniq = values => [...new Set(values.filter(Boolean))];
 const supplementalProofs = {
   'A:3': ['qa-evidence/chat001/iab-admin-email-provider.png'],
   'A:5': ['qa-evidence/chat001/integrated-auth-artwork.png'],
+  'A:8': ['qa-evidence/chat001/integrated-home-hero-slide1.png'],
+  'A:10': ['qa-evidence/chat001/release-activity300-detail.png'],
+  'A:11': ['qa-evidence/chat001/release-activity300-detail.png'],
+  'A:20': ['qa-evidence/chat001/release-community-header.png'],
+  'A:22': ['qa-evidence/chat001/final-production/community-member-management.png'],
+  'A:29': ['qa-evidence/chat001/iab-badge19-50activities.png'],
+  'A:36': ['qa-evidence/chat001/production-admin-integrated-category-reloaded.png'],
+  'B:19': ['qa-evidence/chat001/final-production/vibe-newest-after-direct-create.png'],
+  'B:27': ['qa-evidence/chat001/iab-group120-created.png'],
+  'B:35': ['qa-evidence/chat001/iab-community252-chat-back.png'],
 };
 const title = (key, page) => ({
   A: [
@@ -61,15 +71,15 @@ for (const document of report.sourceDocumentCoverage) {
     const pageRows = ids.map(id => rows.get(id)).filter(Boolean);
     const statuses = uniq(pageRows.map(row => row.finalAcceptanceStatus));
     const external = pageRows.filter(row => row.finalAcceptanceStatus !== 'PASS');
-    const proofs = uniq([
-      ...pageRows.flatMap(row => row.screenshotProof || []).map(proofPath),
-      ...(supplementalProofs[`${document.key}:${page.page}`] || []),
-    ]
+    const preferredProofs = uniq((supplementalProofs[`${document.key}:${page.page}`] || [])
+      .map(value => absolute(value)))
+      .filter(value => fs.existsSync(value));
+    const acceptedProofs = uniq(pageRows.flatMap(row => row.screenshotProof || []).map(proofPath)
       .filter(Boolean)
       .map(value => absolute(value)))
-      .filter(value => fs.existsSync(value))
-      .sort((a, b) => Number(b.includes('/final-production/')) - Number(a.includes('/final-production/')))
-      .slice(0, 3);
+      .filter(value => fs.existsSync(value) && !preferredProofs.includes(value))
+      .sort((a, b) => Number(b.includes('/final-production/')) - Number(a.includes('/final-production/')));
+    const proofs = [...preferredProofs, ...acceptedProofs].slice(0, 3);
     const checks = uniq(pageRows.flatMap(row => (row.localVerification || []).map(item => item?.detail?.check || item?.reference))).slice(0, 4);
     const production = uniq(pageRows.flatMap(row => (row.productionVerification || []).map(item => item?.outcome))).slice(-3);
 

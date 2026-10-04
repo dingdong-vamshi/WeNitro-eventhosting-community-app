@@ -328,17 +328,17 @@ Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/De
 
 ### Deployed proof
 
-![A page 8 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
+![A page 8 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-home-hero-slide1.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-home-hero-slide1.png`
+
+![A page 8 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png`
 
-![A page 8 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p07-blue-surround-removed.png>)
+![A page 8 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p07-blue-surround-removed.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p07-blue-surround-removed.png`
-
-![A page 8 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png`
 
 
 ### Verification
@@ -426,17 +426,17 @@ Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/De
 
 - Fresh current-deployment visual checks: 360×900, 390×900 and 430×900. Each showed separate START, END and REGISTRATION BY rows with date, year and time; no collision or clipping.
 
-![A page 10 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-likers-list.png>)
+![A page 10 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png`
+
+![A page 10 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-likers-list.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-likers-list.png`
 
-![A page 10 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
+![A page 10 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png`
-
-![A page 10 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png`
 
 
 ### Verification
@@ -474,17 +474,17 @@ Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/De
 
 ### Deployed proof
 
-![A page 11 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
+![A page 11 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-activity300-detail.png`
+
+![A page 11 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png`
 
-![A page 11 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/ended-activity-nonparticipant-disabled.png>)
+![A page 11 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/ended-activity-nonparticipant-disabled.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/ended-activity-nonparticipant-disabled.png`
-
-![A page 11 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png`
 
 
 ### Verification
@@ -873,13 +873,13 @@ Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/De
 
 ### Deployed proof
 
-![A page 20 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-communities-before-header-fix.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-communities-before-header-fix.png`
-
-![A page 20 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-header.png>)
+![A page 20 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-header.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-community-header.png`
+
+![A page 20 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-communities-before-header-fix.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-communities-before-header-fix.png`
 
 ![A page 20 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-communities-before-header-fix.png>)
 
@@ -966,17 +966,17 @@ Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/De
 
 ### Deployed proof
 
-![A page 22 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
+![A page 22 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/community-member-management.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/community-member-management.png`
+
+![A page 22 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png`
 
-![A page 22 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png>)
+![A page 22 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png`
-
-![A page 22 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activities-collapsed.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/integrated-activities-collapsed.png`
 
 
 ### Verification
@@ -1291,17 +1291,17 @@ Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/De
 
 ### Deployed proof
 
-![A page 29 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/production-community-deep-link-no-discovery-warning.png>)
+![A page 29 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-badge19-50activities.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-badge19-50activities.png`
+
+![A page 29 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/production-community-deep-link-no-discovery-warning.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/production-community-deep-link-no-discovery-warning.png`
 
-![A page 29 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p29-community-fallbacks.png>)
+![A page 29 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p29-community-fallbacks.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p29-community-fallbacks.png`
-
-![A page 29 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p29-public-community-picture.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/source-a-40-page/production-p29-public-community-picture.png`
 
 
 ### Verification
@@ -1634,17 +1634,17 @@ Evidence: `/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/
 
 ### Deployed proof
 
-![A page 36 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/admin-ip-monitoring-refreshed.png>)
+![A page 36 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-reloaded.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-category-reloaded.png`
+
+![A page 36 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/admin-ip-monitoring-refreshed.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/admin-ip-monitoring-refreshed.png`
 
-![A page 36 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-activity.png>)
+![A page 36 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-activity.png>)
 
 Evidence: `/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-admin-synthetic-activity.png`
-
-![A page 36 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-dashboard.png>)
-
-Evidence: `/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/production-admin-integrated-dashboard.png`
 
 
 ### Verification
@@ -2658,17 +2658,17 @@ Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/De
 
 ### Deployed proof
 
-![B page 19 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
+![B page 19 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/vibe-newest-after-direct-create.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/vibe-newest-after-direct-create.png`
+
+![B page 19 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png`
 
-![B page 19 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-video-playing.png>)
+![B page 19 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-video-playing.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe-video-playing.png`
-
-![B page 19 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe135-recipient.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/release-vibe135-recipient.png`
 
 
 ### Verification
@@ -3010,13 +3010,13 @@ Evidence: `/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/
 
 ### Deployed proof
 
-![B page 27 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png`
-
-![B page 27 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-group120-created.png>)
+![B page 27 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-group120-created.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-group120-created.png`
+
+![B page 27 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png`
 
 ![B page 27 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-group120-created.png>)
 
@@ -3359,17 +3359,17 @@ Evidence: `/Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/
 
 ### Deployed proof
 
-![B page 35 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
+![B page 35 deployed proof 1](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-chat-back.png>)
+
+Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-community252-chat-back.png`
+
+![B page 35 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity-liker-profile.png`
 
-![B page 35 deployed proof 2](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity306-chat-timestamp.png>)
+![B page 35 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity306-chat-timestamp.png>)
 
 Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/final-production/activity306-chat-timestamp.png`
-
-![B page 35 deployed proof 3](</Users/vamshipendyala/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png>)
-
-Evidence: `/Users/vamshipendyala/Library/Mobile Documents/com~apple~CloudDocs/Desktop/wenitro-phone-app-/qa-evidence/chat001/iab-profile120-three-photos.png`
 
 
 ### Verification
