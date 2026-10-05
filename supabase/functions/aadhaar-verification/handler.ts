@@ -1,23 +1,25 @@
 import {
-  AADHAAR_CONSENT_VERSION,
-  AADHAAR_REASON,
-  AadhaarProviderError,
-  aadhaarOkycConfiguration,
-  createAadhaarOkycProvider,
-} from "../_shared/aadhaar-okyc.ts";
+  CONSENT_VERSION,
+  createDigiLockerProvider,
+  DigiLockerProviderError,
+  digilockerConfiguration,
+} from "../_shared/digilocker.ts";
 
 type Session = {
   id: string;
   environment: "test" | "production";
-  provider_reference_id: string | null;
+  provider_session_id: string | null;
   status: string;
   expires_at: string;
   verified_at: string | null;
-  aadhaar_last4: string | null;
 };
 
 type Dependencies = {
-  authenticate: (request: Request) => Promise<{ authId: string; allowed: boolean }>;
+  authenticate: (request: Request) => Promise<{
+    authId: string;
+    allowed: boolean;
+    syncVerified: () => Promise<unknown>;
+  }>;
   ledger: (
     authId: string,
     args: Record<string, unknown>,
@@ -29,22 +31,14 @@ type Dependencies = {
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "application/json",
-      "Cache-Control": "no-store",
-    },
+    headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
-
-const maskedAadhaar = (last4: string | null | undefined) =>
-  last4 && /^\d{4}$/.test(last4) ? `•••• •••• ${last4}` : undefined;
 
 export function createAadhaarHandler(deps: Dependencies) {
   return async function handleAadhaarVerification(request: Request) {
@@ -60,20 +54,19 @@ export function createAadhaarHandler(deps: Dependencies) {
         return jsonResponse({ error: "Invalid verification request." }, 400);
       }
       const action = body.action;
-      if (!["availability", "sendOtp", "verifyOtp"].includes(String(action))) {
+      if (!["availability", "begin", "refresh"].includes(String(action))) {
         return jsonResponse({ error: "Invalid verification action." }, 400);
       }
-      const runtimeSecrets: Record<string, string> = deps.secrets
+      const runtimeSecrets = deps.secrets
         ? await deps.secrets().catch(() => ({} as Record<string, string>))
         : {};
-      const config = aadhaarOkycConfiguration((name) => deps.env(name) ?? runtimeSecrets[name]);
+      const config = digilockerConfiguration((name) => deps.env(name) ?? runtimeSecrets[name]);
       if (!config) {
         return jsonResponse({
           available: false,
           verified: false,
           status: "unavailable",
-          reason: AADHAAR_REASON,
-          message: "Aadhaar verification is not enabled yet.",
+          message: "DigiLocker verification is not enabled or its Sandbox credentials do not match the configured environment.",
         });
       }
       const ledger = async (args: Record<string, unknown>): Promise<Session | null> => {
@@ -81,130 +74,100 @@ export function createAadhaarHandler(deps: Dependencies) {
         if (error) {
           throw new Error(
             /Please wait/.test(error.message)
-              ? "Please wait before requesting another Aadhaar OTP."
-              : /attempts/i.test(error.message)
-                ? "Too many OTP attempts. Request a new OTP."
-                : "Verification session is unavailable. Please start again.",
+              ? "Please wait before starting or checking another DigiLocker verification."
+              : "Verification session is unavailable. Please start again.",
           );
         }
         return data as Session | null;
       };
       const existing = await ledger({ p_action: "read" });
-      const publicState = (session: Session | null) => ({
+      const publicStatus = (session: Session | null) => ({
         available: true,
         testMode: config.environment === "test",
         verified: Boolean(session?.verified_at),
         status: session?.verified_at ? "verified" : session?.status ?? "not_started",
-        reason: AADHAAR_REASON,
-        maskedAadhaar: maskedAadhaar(session?.aadhaar_last4),
       });
       if (action === "availability" || existing?.verified_at) {
-        return jsonResponse(publicState(existing));
+        return jsonResponse(publicStatus(existing));
       }
-      const provider = createAadhaarOkycProvider(config, deps.fetcher);
+      const provider = createDigiLockerProvider(config, deps.fetcher);
 
-      if (action === "sendOtp") {
-        const aadhaarNumber = typeof body.aadhaarNumber === "string" ? body.aadhaarNumber : "";
-        if (!/^\d{12}$/.test(aadhaarNumber)) {
-          return jsonResponse({ error: "Enter a valid 12-digit Aadhaar number." }, 400);
-        }
-        if (
-          body.consent !== true ||
-          body.consentVersion !== AADHAAR_CONSENT_VERSION
-        ) {
+      if (action === "begin") {
+        if (body.consent !== true || body.consentVersion !== CONSENT_VERSION) {
           return jsonResponse({ error: "Your explicit consent is required to continue." }, 400);
         }
-        const session = await ledger({
-          p_action: "begin",
-          p_environment: config.environment,
-          p_aadhaar_last4: aadhaarNumber.slice(-4),
-        });
+        const session = await ledger({ p_action: "begin", p_environment: config.environment });
         if (!session) throw new Error("Verification session could not start.");
         try {
-          const result = await provider.generateOtp(aadhaarNumber);
+          const result = await provider.createSession();
           const recorded = await ledger({
             p_action: "update",
             p_environment: config.environment,
             p_session_id: session.id,
-            p_provider_reference_id: result.referenceId,
-            p_status: "otp_sent",
+            p_provider_session_id: result.providerId,
+            p_status: "created",
             p_transaction_id: result.transactionId,
           });
           return jsonResponse({
-            ...publicState(recorded),
-            message: "OTP sent to the mobile number registered with this Aadhaar.",
+            ...publicStatus(recorded),
+            status: "created",
+            sessionId: result.providerId,
+            publicApiKey: config.key,
           });
         } catch (error) {
-          const code = error instanceof AadhaarProviderError ? error.code : "provider_unavailable";
           await ledger({
-            p_action: "error",
+            p_action: "update",
+            p_environment: config.environment,
             p_session_id: session.id,
-            p_error_code: code,
+            p_status: "failed",
           }).catch(() => null);
           throw error;
         }
       }
 
-      const otp = typeof body.otp === "string" ? body.otp : "";
-      if (!/^\d{6}$/.test(otp)) {
-        return jsonResponse({ error: "Enter the 6-digit OTP sent by Sandbox." }, 400);
-      }
-      if (
-        !existing?.provider_reference_id ||
-        existing.environment !== config.environment
-      ) {
-        return jsonResponse({ error: "Request a new Aadhaar OTP first." }, 400);
+      if (!existing?.provider_session_id || existing.environment !== config.environment) {
+        return jsonResponse({ error: "Start a new DigiLocker verification session." }, 400);
       }
       if (
         new Date(existing.expires_at).getTime() <= Date.now() ||
         ["failed", "expired"].includes(existing.status)
       ) {
-        return jsonResponse({
-          ...publicState(existing),
-          verified: false,
-          status: "expired",
-          message: "This OTP session expired. Request a new OTP.",
-        });
+        return jsonResponse({ ...publicStatus(existing), status: "expired", verified: false });
       }
-      await ledger({ p_action: "claim_verify", p_session_id: existing.id });
-      try {
-        const result = await provider.verifyOtp(existing.provider_reference_id, otp);
-        const verified = config.environment === "production" && result.verified;
-        const recorded = await ledger({
-          p_action: "update",
-          p_environment: config.environment,
-          p_session_id: existing.id,
-          p_provider_reference_id: existing.provider_reference_id,
-          p_status: result.verified ? "succeeded" : "failed",
-          p_verified: verified,
-          p_transaction_id: result.transactionId,
-        });
-        return jsonResponse({
-          ...publicState(recorded),
-          message: verified
-            ? "Aadhaar verified. Your Trust Score now includes +20."
-            : config.environment === "test"
-              ? "Sandbox test verification completed. Test results do not award Trust Score."
-              : "Sandbox did not verify this Aadhaar OTP.",
-        });
-      } catch (error) {
-        const code = error instanceof AadhaarProviderError ? error.code : "provider_unavailable";
-        await ledger({
-          p_action: "error",
-          p_session_id: existing.id,
-          p_error_code: code,
-        }).catch(() => null);
-        throw error;
-      }
+      await ledger({ p_action: "claim_refresh", p_session_id: existing.id });
+      const result = await provider.refresh(existing.provider_session_id);
+      const verified = config.environment === "production" &&
+        result.status === "succeeded" && result.consented && result.issuedAadhaar;
+      const recorded = await ledger({
+        p_action: "update",
+        p_environment: config.environment,
+        p_session_id: existing.id,
+        p_provider_session_id: existing.provider_session_id,
+        p_status: result.status,
+        p_verified: verified,
+        p_transaction_id: result.transactionId,
+      });
+      if (verified) await actor.syncVerified();
+      const message = verified
+        ? "Aadhaar verified. Your Trust Score now includes +20."
+        : result.status === "succeeded"
+          ? config.environment === "test"
+            ? "Sandbox test verification completed. Test sessions do not add Trust Score."
+            : "DigiLocker completed, but a consented UIDAI-issued Aadhaar document was not confirmed."
+          : result.status === "failed" || result.status === "expired"
+            ? "This DigiLocker session ended without verification. Start a new session."
+            : "DigiLocker verification is still in progress.";
+      return jsonResponse({ ...publicStatus(recorded), status: result.status, message });
     } catch (error) {
-      if (error instanceof AadhaarProviderError) {
-        return jsonResponse(
-          { error: error.message, code: error.code, retryable: error.retryable },
-          error.httpStatus,
-        );
+      if (error instanceof DigiLockerProviderError) {
+        return jsonResponse({
+          error: error.message,
+          code: error.code,
+          retryable: error.retryable,
+        }, error.httpStatus);
       }
       const candidate = error instanceof Error ? error.message : "";
-      const message = /^(Verification |Please wait |Too many |Account unavailable|Authentication required|Missing bearer token)/.test(candidate)
+      const message = /^(Verification |Please wait |Account unavailable|Authentication required|Missing bearer token)/.test(candidate)
         ? candidate
         : "Verification could not continue.";
       const status = /Authentication required|Missing bearer token/.test(message) ? 401 : 400;
