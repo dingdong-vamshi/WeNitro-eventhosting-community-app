@@ -20,6 +20,13 @@ export class ContentModerationError extends Error {
   }
 }
 
+const qaOutcomeFromFields = (fields: ModerationText[]): "blocked" | "review" | undefined => {
+  const combined = fields.map((item) => item.value ?? "").join("\n");
+  if (combined.includes("[QA MODERATION FIXTURE][BLOCKED]")) return "blocked";
+  if (combined.includes("[QA MODERATION FIXTURE][REVIEW]")) return "review";
+  return undefined;
+};
+
 const responseBody = async (error: unknown): Promise<Record<string, unknown> | null> => {
   const context = error && typeof error === "object" && "context" in error ? (error as { context?: unknown }).context : null;
   if (!(context instanceof Response)) return null;
@@ -39,8 +46,9 @@ export async function moderatePublicContent(input: {
     .map((item) => ({ field: item.field, value: item.value as string }));
   const images = input.images ?? [];
   if (!fields.length && !images.length) return { status: "safe" };
+  const qaOutcome = input.qaOutcome ?? qaOutcomeFromFields(fields);
   const { data, error } = await supabase.functions.invoke("content-moderation", {
-    body: { scope: input.scope, fields, images, ...(input.qaOutcome ? { qaOutcome: input.qaOutcome } : {}) },
+    body: { scope: input.scope, fields, images, ...(qaOutcome ? { qaOutcome } : {}) },
   });
   const payload = (data && typeof data === "object" ? data : await responseBody(error)) as Record<string, unknown> | null;
   const status = payload?.status;
