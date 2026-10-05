@@ -220,6 +220,7 @@ for (const status of ["created", "initialized", "authorized", "failed", "expired
     assert.equal(result.body.verified, false);
     assert.equal(f.sync.length, 0);
     assert.equal(f.calls.length, 2);
+    assert.equal(Boolean(result.body.sessionId), !["failed", "expired"].includes(status));
   });
 }
 

@@ -32,7 +32,11 @@ export function AadhaarVerificationCard({
   const refresh = async () => {
     const next = await aadhaarVerificationService.refresh();
     if (!alive.current) return;
-    setState(next);
+    setState(current => ({
+      ...next,
+      sessionId: next.sessionId ?? current?.sessionId,
+      publicApiKey: next.publicApiKey ?? current?.publicApiKey,
+    }));
     setNotice(next.message ?? 'DigiLocker verification status checked.');
     if (next.verified) await onVerified();
   };

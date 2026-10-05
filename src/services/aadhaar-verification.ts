@@ -47,7 +47,7 @@ async function invoke(
   ) {
     throw new Error('Aadhaar verification returned an invalid result.');
   }
-  if (action === 'begin') {
+  if (action === 'begin' || data.sessionId !== undefined || data.publicApiKey !== undefined) {
     if (
       typeof data.sessionId !== 'string' ||
       !sessionPattern.test(data.sessionId) ||

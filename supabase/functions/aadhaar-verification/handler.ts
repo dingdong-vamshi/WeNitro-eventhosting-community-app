@@ -86,6 +86,12 @@ export function createAadhaarHandler(deps: Dependencies) {
         testMode: config.environment === "test",
         verified: Boolean(session?.verified_at),
         status: session?.verified_at ? "verified" : session?.status ?? "not_started",
+        ...(session?.provider_session_id &&
+            !session.verified_at &&
+            !["failed", "expired"].includes(session.status) &&
+            new Date(session.expires_at).getTime() > Date.now()
+          ? { sessionId: session.provider_session_id, publicApiKey: config.key }
+          : {}),
       });
       if (action === "availability" || existing?.verified_at) {
         return jsonResponse(publicStatus(existing));
