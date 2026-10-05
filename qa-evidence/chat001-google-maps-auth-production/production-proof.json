@@ -1,0 +1,73 @@
+{
+  "productionApp": "https://wenitro-app.vercel.app",
+  "vercelDeploymentId": "dpl_5RrgvJSFpxM8Jdsihh5UaTHiJifR",
+  "commit": "f944656",
+  "googleMaps": {
+    "serverSideKeyConfigured": true,
+    "clientSourceContainsKey": false,
+    "googlePlacesEdgeFunction": {
+      "status": "ACTIVE",
+      "version": 3,
+      "verifyJwt": true
+    },
+    "reverseGeocoding": {
+      "httpStatus": 200,
+      "locality": "Hashmath Gunj",
+      "status": "PASS"
+    },
+    "placesAutocomplete": {
+      "httpStatus": 502,
+      "googleError": "API_KEY_SERVICE_BLOCKED",
+      "service": "places.googleapis.com",
+      "status": "GOOGLE_CLOUD_CONFIGURATION_BLOCKER"
+    },
+    "homeBrowserProof": {
+      "locationAvailableToAutomationBrowser": false,
+      "renderedFallback": "Nearby"
+    },
+    "hostLocationFallback": {
+      "query": "Banjara Hills Hyderabad",
+      "selected": "Banjara Hills, Hyderabad, Telangana, 500034, India · suburb",
+      "status": "PASS"
+    }
+  },
+  "authentication": {
+    "passwordRecoveryEdgeFunction": {
+      "status": "ACTIVE",
+      "version": 2,
+      "verifyJwt": false,
+      "corsPreflightStatus": 204,
+      "publicGenericResponseStatus": 202
+    },
+    "productionProviderMatrix": {
+      "emailPasswordOnly": {
+        "count": 87,
+        "passwordRecoveryAllowed": true
+      },
+      "googleOnly": {
+        "count": 7,
+        "passwordRecoveryAllowed": false
+      },
+      "linked": {
+        "count": 1,
+        "passwordRecoveryAllowed": true
+      }
+    },
+    "identityClassifierRpc": {
+      "anonCanExecute": false,
+      "authenticatedCanExecute": false,
+      "serviceRoleCanExecute": true
+    },
+    "googleLoginProduction": "PASS",
+    "emailPasswordRecoveryProduction": "PASS",
+    "customSuccessfulLoginEmail": "NOT_IMPLEMENTED_BY_DESIGN"
+  },
+  "localVerification": {
+    "fullRegressionChecks": 116,
+    "fullRegressionFailures": 0,
+    "typecheck": "PASS",
+    "productionWebBuild": "PASS",
+    "focusedGooglePlacesAdapter": "PASS",
+    "focusedProviderAwareRecovery": "PASS"
+  }
+}
