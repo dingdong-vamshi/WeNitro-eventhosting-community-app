@@ -236,9 +236,10 @@ export function createContentModerationHandler(deps: Dependencies) {
         }).catch(() => ({ data: null, error: { message: "unavailable" } }));
       }
       const candidate = error instanceof Error ? error.message : "";
-      const publicMessage = /^(Invalid moderation|Image ownership|Only JPEG|Account unavailable|Moderation session)/.test(candidate)
+      const publicMessage = /^(Invalid moderation|Image ownership|Only JPEG|Account unavailable|Authentication required|Missing bearer token|Moderation session)/.test(candidate)
         ? candidate : "Safety checks could not complete. The content was not published.";
-      return jsonResponse({ requestId: requestId || undefined, status: requestId ? "review" : "error", error: publicMessage }, requestId ? 202 : 400);
+      const status = /^(Authentication required|Missing bearer token)/.test(publicMessage) ? 401 : requestId ? 202 : 400;
+      return jsonResponse({ requestId: requestId || undefined, status: requestId ? "review" : "error", error: publicMessage }, status);
     }
   };
 }

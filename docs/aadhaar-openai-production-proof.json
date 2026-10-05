@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-10-05T12:29:07.610Z",
+  "target": "https://cxsznhrkzqndhseodcyy.supabase.co",
+  "aadhaar": {
+    "edgeFunctionAuthenticated": true,
+    "providerAvailable": true,
+    "productionMode": true,
+    "verifiedStateReturnedWithoutSensitiveData": true,
+    "legacySensitiveFieldsRemaining": 0,
+    "sensitiveStoragePreventionTriggerEnabled": true,
+    "trustScoreIncrement": 20,
+    "aadhaarNitroLedgerEntries": 0,
+    "realOtpStep": "requires_user_consent_and_private_otp"
+  },
+  "moderation": {
+    "providerModel": "omni-moderation-latest",
+    "actualOpenAiSafeDecision": true,
+    "exactSafeValuePublished": true,
+    "directDatabaseBypassRejected": true,
+    "controlledUnsafeDecisionBlocked": true,
+    "unsafeDatabasePublishRejected": true,
+    "controlledProviderReviewKeptPrivate": true,
+    "reviewDatabasePublishRejected": true,
+    "adminQueueContainsReview": true,
+    "fixtureModeDisabledAfterAcceptance": true,
+    "openQaReviewItemsAfterCleanup": 0,
+    "adminModerationAuditEntries": 7
+  },
+  "authorization": {
+    "unauthenticatedEdgeFunctionsRejected": true,
+    "normalUserAdminQueueRejected": true,
+    "adminQueueAllowed": true
+  }
+}

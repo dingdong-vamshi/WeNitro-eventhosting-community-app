@@ -79,7 +79,7 @@ revoke all on function private.moderation_allowed_field(text,text,text) from pub
 
 create or replace function public.content_moderation_begin(p_auth_id uuid,p_scope text,p_items jsonb)
 returns jsonb language plpgsql security definer set search_path='' as $$
-declare me integer; request_id uuid; item jsonb; value text; kind text; field_name text;
+declare me integer; request_id uuid; item jsonb; raw_value text; kind text; field_name text;
   content_hash text; bucket text; object_path text; cached_status text; cached_categories jsonb;
   total integer; uncached integer:=0; cached_images jsonb:='[]'::jsonb;
 begin
@@ -102,12 +102,12 @@ begin
    raise exception 'Please wait before submitting more content' using errcode='P0001';
  end if;
  insert into private.content_moderation_requests(user_id,auth_id,scope) values(me,p_auth_id,p_scope) returning id into request_id;
- for item in select value from jsonb_array_elements(p_items) loop
-   field_name:=item->>'field';kind:=item->>'kind';value:=coalesce(item->>'value','');
+ for item in select element from jsonb_array_elements(p_items) as items(element) loop
+   field_name:=item->>'field';kind:=item->>'kind';raw_value:=coalesce(item->>'value','');
    content_hash:=nullif(lower(coalesce(item->>'contentHash','')),'');
    bucket:=nullif(item->>'storageBucket','');object_path:=nullif(item->>'storagePath','');
    if not private.moderation_allowed_field(p_scope,field_name,kind) then raise exception 'Invalid moderation field' using errcode='22023';end if;
-   if length(value)>40000 then raise exception 'Moderation field is too long' using errcode='22023';end if;
+   if length(raw_value)>40000 then raise exception 'Moderation field is too long' using errcode='22023';end if;
    if kind='image' and (content_hash is null or content_hash!~'^[0-9a-f]{64}$' or bucket is null or object_path is null or length(object_path)>500) then
      raise exception 'Invalid image moderation item' using errcode='22023';
    end if;
@@ -117,8 +117,8 @@ begin
      where c.kind='image' and c.content_hash=content_hash and c.expires_at>now();
    end if;
    insert into private.content_moderation_items(request_id,field_name,kind,value_hash,content_hash,preview,storage_bucket,storage_path,status,categories)
-   values(request_id,field_name,kind,encode(extensions.digest(normalize(value,NFKC),'sha256'),'hex'),content_hash,
-     case when kind='text' then left(value,500) else '' end,bucket,object_path,coalesce(cached_status,'pending'),coalesce(cached_categories,'{}'::jsonb));
+   values(request_id,field_name,kind,encode(extensions.digest(normalize(raw_value,NFKC),'sha256'),'hex'),content_hash,
+     case when kind='text' then left(raw_value,500) else '' end,bucket,object_path,coalesce(cached_status,'pending'),coalesce(cached_categories,'{}'::jsonb));
    if cached_status is null then uncached:=uncached+1;
    elsif kind='image' then cached_images:=cached_images||jsonb_build_array(jsonb_build_object('contentHash',content_hash,'status',cached_status,'categories',cached_categories));end if;
  end loop;

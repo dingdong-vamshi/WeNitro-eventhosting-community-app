@@ -90,3 +90,18 @@ Deno.test("empty fields avoid provider calls and unsafe methods are rejected", a
   assert(empty.status === 200 && (await json(empty)).status === "safe" && calls.fetch === 0);
   assert(get.status === 405);
 });
+
+Deno.test("missing bearer token is returned as an authentication failure", async () => {
+  const { handler } = fixture();
+  const unauthenticated = createContentModerationHandler({
+    authenticate: async () => { throw new Error("Missing bearer token."); },
+    loadImage: async () => ({ bytes: new Uint8Array(), contentType: "image/png" }),
+    begin: async () => ({ data: null, error: null }),
+    resolve: async () => ({ data: null, error: null }),
+    env: () => undefined,
+  });
+  const response = await unauthenticated(request({ scope: "profile", fields: [{ field: "bio", value: "test" }] }));
+  const body = await json(response);
+  assert(response.status === 401 && body.error === "Missing bearer token.");
+  assert(handler instanceof Function);
+});
