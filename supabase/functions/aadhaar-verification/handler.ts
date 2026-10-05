@@ -23,6 +23,7 @@ type Dependencies = {
     args: Record<string, unknown>,
   ) => Promise<{ data: unknown; error: { message: string } | null }>;
   env: (name: string) => string | undefined;
+  secrets?: () => Promise<Record<string, string>>;
   fetcher?: typeof fetch;
 };
 
@@ -62,7 +63,10 @@ export function createAadhaarHandler(deps: Dependencies) {
       if (!["availability", "sendOtp", "verifyOtp"].includes(String(action))) {
         return jsonResponse({ error: "Invalid verification action." }, 400);
       }
-      const config = aadhaarOkycConfiguration(deps.env);
+      const runtimeSecrets: Record<string, string> = deps.secrets
+        ? await deps.secrets().catch(() => ({} as Record<string, string>))
+        : {};
+      const config = aadhaarOkycConfiguration((name) => deps.env(name) ?? runtimeSecrets[name]);
       if (!config) {
         return jsonResponse({
           available: false,

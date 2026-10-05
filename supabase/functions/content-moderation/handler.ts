@@ -12,6 +12,7 @@ type Dependencies = {
   begin: (authId: string, scope: ModerationScope, items: Record<string, unknown>[]) => Promise<{ data: unknown; error: { message: string } | null }>;
   resolve: (authId: string, requestId: string, result: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>;
   env: (name: string) => string | undefined;
+  secrets?: () => Promise<Record<string, string>>;
   fetcher?: typeof fetch;
   sleep?: (milliseconds: number) => Promise<void>;
 };
@@ -136,6 +137,10 @@ export function createContentModerationHandler(deps: Dependencies) {
       const actor = await deps.authenticate(request);
       authId = actor.authId;
       if (!actor.allowed) return jsonResponse({ error: "Account unavailable." }, 403);
+      const runtimeSecrets: Record<string, string> = deps.secrets
+        ? await deps.secrets().catch(() => ({} as Record<string, string>))
+        : {};
+      const runtimeValue = (name: string) => deps.env(name) ?? runtimeSecrets[name];
       const body = object(await request.json().catch(() => null));
       const scope = body?.scope;
       if (typeof scope !== "string" || !scopes.has(scope as ModerationScope)) return jsonResponse({ error: "Invalid moderation scope." }, 400);
@@ -167,7 +172,7 @@ export function createContentModerationHandler(deps: Dependencies) {
       const uncachedImages = imagesWithHash.filter((image) => !cachedByHash.has(image.contentHash));
       const cachedUnsafe = cachedImages.some((item) => item.status === "unsafe");
 
-      const fixture = deps.env("MODERATION_QA_FIXTURES_ENABLED") === "true" &&
+      const fixture = runtimeValue("MODERATION_QA_FIXTURES_ENABLED") === "true" &&
         textInputs.some((item) => item.value.includes("[QA MODERATION FIXTURE]"))
         ? body?.qaOutcome : null;
       if (fixture === "blocked" || fixture === "review") {
@@ -180,7 +185,7 @@ export function createContentModerationHandler(deps: Dependencies) {
         return jsonResponse({ requestId, status, message: status === "unsafe" ? "This content cannot be published because it did not pass safety checks." : "This content is not public and has been sent to Admin Review." }, status === "unsafe" ? 422 : 202);
       }
 
-      const apiKey = deps.env("OPENAI_API_KEY")?.trim();
+      const apiKey = runtimeValue("OPENAI_API_KEY")?.trim();
       if (!apiKey) throw new Error("provider_not_configured");
       let attempts = 0;
       let decision: ProviderDecision | null = null;

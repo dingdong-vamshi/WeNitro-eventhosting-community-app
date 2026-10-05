@@ -19,4 +19,9 @@ Deno.serve(createContentModerationHandler({
   resolve: async (authId, requestId, result) => await adminClient().rpc("content_moderation_resolve", {
     p_auth_id: authId, p_request_id: requestId, ...result,
   }),
+  secrets: async () => {
+    const { data, error } = await adminClient().rpc("provider_runtime_secrets");
+    if (error || !data || typeof data !== "object") return {};
+    return data as Record<string, string>;
+  },
 }));
