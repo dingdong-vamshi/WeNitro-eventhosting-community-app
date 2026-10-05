@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "verifiedAt": "2026-10-05T09:28:30Z",
+  "deployment": {
+    "id": "dpl_8ZwXraruHw6Z97wc3dcbrBm8i5eK",
+    "status": "Ready",
+    "productionAlias": "https://wenitro-app.vercel.app",
+    "immutableUrl": "https://wenitro-k1bfalxcm-vamshi-krishna-pendyalas-projects.vercel.app",
+    "commit": "c47572bfc059e75e236e2357f0c48d01dbaae30b"
+  },
+  "profilePhotoControl": {
+    "status": "PASS",
+    "avatarControl": "Manage profile photos",
+    "managerOpened": true,
+    "standaloneUploaderRemoved": true,
+    "screenshot": "profile-avatar-plus-production.jpg"
+  },
+  "activityTimeline": {
+    "status": "PASS",
+    "widths": [360, 375, 390, 393, 414, 430],
+    "rowHeightPx": 92,
+    "verticalOrder": ["START", "END", "REGISTRATION BY"],
+    "overlap": false,
+    "horizontalOverflow": false,
+    "screenshot": "activity-timeline-mobile-production.jpg"
+  },
+  "pollVotersByOption": {
+    "status": "PASS",
+    "pollId": 39,
+    "roomId": 252,
+    "options": [
+      {"name": "SATURDAY", "votes": 2, "voters": ["Atharv Ronghe", "QA Audit recipient"]},
+      {"name": "SUNDAY", "votes": 1, "voters": ["Priya Nair"]}
+    ],
+    "avatarAndInitialFallbacksVerified": true,
+    "screenshot": "poll-voters-by-option-production.jpg"
+  }
+}
