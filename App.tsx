@@ -4582,7 +4582,7 @@ export function ActivityDetailScreen({
       }),
     };
   };
-  const usesVerticalTimeline = viewportWidth < 600;
+  const usesVerticalTimeline = viewportWidth <= 768;
   const timelineItems: Array<{
     icon: IconName;
     label: string;

@@ -113,8 +113,17 @@ function ProfileLayout({ identity, summary, metrics, links, gallery, linksAvaila
     </View>
     <View style={s.heroTop}>
      <View style={s.photoRow}>
-      {photos.length ? <Pressable accessibilityRole="button" accessibilityLabel={owner ? 'Manage photo 1' : 'View photo 1'} onPress={() => onPhoto?.(photos[0])} style={[s.heroPhotoWrap, s.heroPhotoPrimary]}><UserAvatar uri={photos[0].uri} name={identity.name || identity.username} identity={identity.id} size={67} /></Pressable> : <View style={[s.heroPhotoWrap, s.heroPhotoPrimary]}><UserAvatar name={identity.name || identity.username} identity={identity.id} size={67} /></View>}
+      <Pressable
+       accessibilityRole="button"
+       accessibilityLabel={owner ? 'Manage profile photos' : 'View profile photo'}
+       disabled={!onPhoto}
+       onPress={() => onPhoto?.(photos[0] || { uri: '', position: 1 })}
+       style={[s.heroPhotoWrap, s.heroPhotoPrimary]}
+      >
+       <UserAvatar uri={photos[0]?.uri} name={identity.name || identity.username} identity={identity.id} size={67} />
+      </Pressable>
       {owner ? <View accessibilityLabel="Your current signed-in profile" style={s.onlineDot} /> : null}
+      {owner ? <Pressable accessibilityRole="button" accessibilityLabel="Manage profile photos" onPress={() => onPhoto?.(photos[0] || { uri: '', position: 1 })} style={s.avatarPhotoAdd}><Icon name="add" color="#FFF" size={17} /></Pressable> : null}
      </View>
      <View style={s.heroIdentity}>
       <View style={s.nameRow}><Text numberOfLines={1} style={s.heroName}>{identity.name || identity.username}</Text><VerifiedBadge userId={identity.id} size={15} /></View>
@@ -127,7 +136,7 @@ function ProfileLayout({ identity, summary, metrics, links, gallery, linksAvaila
       <View style={s.heroTrustState}><Icon name={metrics?.verified ? 'shield-checkmark' : 'shield-outline'} size={13} color={metrics?.verified ? '#39E7A0' : '#DBD6FF'} /><Text style={{ fontSize: 10, fontWeight: '700', color: metrics?.verified ? '#39E7A0' : '#DBD6FF' }}>{metrics?.verified ? 'Verified' : 'View score'}</Text></View>
      </Pressable>
     </View>
-    {photos.length > 1 || owner ? <View style={s.photoGallery}>{photos.slice(1).map((photo, index) => <Pressable key={photo.position} accessibilityRole="button" accessibilityLabel={owner ? `Manage photo ${index + 2}` : `View photo ${index + 2}`} onPress={() => onPhoto?.(photo)} style={s.extraPhoto}><Image source={{ uri: photo.uri }} style={s.heroPhoto} /></Pressable>)}{owner && photos.length < 3 ? <Pressable accessibilityRole="button" accessibilityLabel="Add profile photo" onPress={() => onPhoto?.({ uri: '', position: [1, 2, 3].find(position => !photos.some(photo => photo.position === position)) ?? 3 })} style={s.addPhoto}><Icon name="camera-outline" color="#FFF" size={15} /><Text style={s.photoCount}>{photos.length}/3</Text><Icon name="add" color="#FFF" size={13} /></Pressable> : null}</View> : null}
+    {photos.length > 1 ? <View style={s.photoGallery}>{photos.slice(1).map((photo, index) => <Pressable key={photo.position} accessibilityRole="button" accessibilityLabel={owner ? `Manage photo ${index + 2}` : `View photo ${index + 2}`} onPress={() => onPhoto?.(photo)} style={s.extraPhoto}><Image source={{ uri: photo.uri }} style={s.heroPhoto} /></Pressable>)}</View> : null}
    <View style={s.socials}>{socials.map(item => {
     const url = safeSocialUrl(item.key, links[item.key]);
     return <Pressable key={item.key} accessibilityRole={url ? 'link' : 'button'} accessibilityLabel={`${item.label}${url ? '' : ', not configured'}`} {...(Platform.OS === 'web' && url ? { href: url, hrefAttrs: { target: '_self', rel: 'noopener noreferrer' } } as any : {})} onPress={() => {
@@ -375,15 +384,14 @@ const s = StyleSheet.create({
  heroOrbLarge: { width: 260, height: 260, left: -95, bottom: -185 },
  heroOrbSmall: { width: 150, height: 150, right: -40, top: -80 },
  heroTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
- photoRow: { flexDirection: 'row', alignItems: 'center' },
+ photoRow: { flexDirection: 'row', alignItems: 'center', position: 'relative' },
  heroPhotoWrap: { width: 48, height: 48, borderRadius: 24, borderWidth: 2, borderColor: '#FFF', overflow: 'hidden' },
  heroPhotoPrimary: { width: 72, height: 72, borderRadius: 36, borderWidth: 2.5 },
  heroPhoto: { width: '100%', height: '100%' },
- addPhoto: { height: 28, borderRadius: 14, borderWidth: 1, borderColor: '#FFFFFF77', backgroundColor: '#FFFFFF12', borderStyle: 'dashed', flexDirection: 'row', gap: 5, paddingHorizontal: 8, alignItems: 'center', justifyContent: 'center' },
- onlineDot: { position: 'absolute', right: 2, bottom: 1, width: 14, height: 14, borderRadius: 7, borderWidth: 2, borderColor: '#FFF', backgroundColor: '#2DCC88' },
+ onlineDot: { position: 'absolute', right: 2, top: 1, width: 14, height: 14, borderRadius: 7, borderWidth: 2, borderColor: '#FFF', backgroundColor: '#2DCC88', zIndex: 2 },
+ avatarPhotoAdd: { position: 'absolute', right: -3, bottom: -3, width: 25, height: 25, borderRadius: 13, borderWidth: 2, borderColor: '#FFF', backgroundColor: '#5B43E7', alignItems: 'center', justifyContent: 'center', zIndex: 3 },
  photoGallery: { flexDirection: 'row', alignItems: 'center', gap: 6 },
  extraPhoto: { width: 28, height: 28, borderRadius: 14, borderWidth: 1.5, borderColor: '#FFFFFFBB', overflow: 'hidden' },
- photoCount: { color: '#EFEAFF', fontSize: 10, fontWeight: '600' },
  primaryDot: { position: 'absolute', right: 0, bottom: 0, width: 16, height: 16, borderRadius: 8, backgroundColor: '#FFE28A', alignItems: 'center', justifyContent: 'center' },
  primaryDotText: { fontSize: 11, fontWeight: '800', color: '#4F3BEE' },
  heroIdentity: { flex: 1, minWidth: 0, gap: 2 },

@@ -2,6 +2,7 @@ import { SharedMediaPreview } from '../shared-media-preview';
 import { useActionConfirmation } from '../reconstruction/action-confirmation';
 import { CategoryCatalogStatus } from '../category-catalog-status';
 import { VerifiedBadge } from '../verified-badge';
+import { UserAvatar } from '../user-avatar';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Image, Keyboard, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -331,7 +332,22 @@ export function PollCard({ poll, roomId, onUpdated }: { poll: CommunityPoll; roo
    setVotersLoading(true); setError('');
    void communityPollVoters(roomId, poll.id).then(setVoters).catch(e => setError(errorText(e))).finally(() => setVotersLoading(false));
  };
- return <View style={{ gap: 10, maxWidth: 260 }}><Text style={{ color: c.text, fontSize: 14, fontWeight: '600', marginBottom: 5 }}>{poll.question}</Text>{poll.options.map(o => <Pressable key={o.id} accessibilityRole="radio" accessibilityState={{ checked: poll.my_option_id === o.id, disabled: busy }} disabled={busy} onPress={() => { setBusy(true); setError(''); void communityPoll('vote', roomId, { poll_id: poll.id, option_id: o.id }).then(items => { if (items[0]) onUpdated(items[0]); setVoters(null); }).catch(e => setError(errorText(e))).finally(() => setBusy(false)); }} style={{ borderWidth: 1, borderColor: poll.my_option_id === o.id ? c.accent : c.border, borderRadius: 9, padding: 10, overflow: 'hidden' }}><View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${o.percentage}%`, backgroundColor: '#7060EF45' }} /><View style={{ flexDirection: 'row', gap: 10 }}><Text style={{ color: c.text, flex: 1, fontSize: 12 }}>{o.text}</Text><Text style={{ color: c.muted, fontSize: 11 }}>{o.percentage}%</Text></View></Pressable>)}<Pressable accessibilityRole="button" accessibilityLabel="View poll voters" disabled={!poll.total_votes || votersLoading} onPress={toggleVoters}><Text style={{ color: poll.total_votes ? c.accent : c.muted, fontSize: 10, fontWeight: '700' }}>{votersLoading ? 'Loading voters…' : `${poll.total_votes} votes${poll.total_votes ? voters ? ' · Hide voters' : ' · View voters' : ''}`}</Text></Pressable>{voters ? <View style={{ gap: 7, borderTopWidth: 1, borderTopColor: c.border, paddingTop: 8 }}>{voters.map(voter => <View key={voter.user_id} style={{ flexDirection: 'row', alignItems: 'center', gap: 7 }}><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 11, fontWeight: '700' }}>{voter.full_name || voter.username}</Text><Text style={{ color: c.muted, fontSize: 9 }}>voted for {voter.option_text}</Text></View></View>)}</View> : null}<ErrorLine text={error} /></View>;
+ const votersByOption = poll.options.map(option => ({
+   option,
+   voters: (voters || []).filter(voter => voter.option_id === option.id),
+ }));
+ return <View style={{ gap: 10, maxWidth: 280 }}>
+  <Text style={{ color: c.text, fontSize: 14, fontWeight: '600', marginBottom: 5 }}>{poll.question}</Text>
+  {poll.options.map(o => <Pressable key={o.id} accessibilityRole="radio" accessibilityState={{ checked: poll.my_option_id === o.id, disabled: busy }} disabled={busy} onPress={() => { setBusy(true); setError(''); void communityPoll('vote', roomId, { poll_id: poll.id, option_id: o.id }).then(items => { if (items[0]) onUpdated(items[0]); setVoters(null); }).catch(e => setError(errorText(e))).finally(() => setBusy(false)); }} style={{ borderWidth: 1, borderColor: poll.my_option_id === o.id ? c.accent : c.border, borderRadius: 9, padding: 10, overflow: 'hidden' }}><View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${o.percentage}%`, backgroundColor: '#7060EF45' }} /><View style={{ flexDirection: 'row', gap: 10 }}><Text style={{ color: c.text, flex: 1, fontSize: 12 }}>{o.text}</Text><Text style={{ color: c.muted, fontSize: 11 }}>{o.votes} · {o.percentage}%</Text></View></Pressable>)}
+  <Pressable accessibilityRole="button" accessibilityLabel="View poll voters by option" disabled={!poll.total_votes || votersLoading} onPress={toggleVoters}><Text style={{ color: poll.total_votes ? c.accent : c.muted, fontSize: 10, fontWeight: '700' }}>{votersLoading ? 'Loading voters…' : `${poll.total_votes} votes${poll.total_votes ? voters ? ' · Hide voters' : ' · View voters by option' : ''}`}</Text></Pressable>
+  {voters ? <View accessibilityLabel="Poll voters grouped by option" style={{ gap: 11, borderTopWidth: 1, borderTopColor: c.border, paddingTop: 9 }}>
+   {votersByOption.map(({ option, voters: optionVoters }) => <View key={option.id} accessibilityLabel={`${option.text}, ${option.votes} ${option.votes === 1 ? 'vote' : 'votes'}`} style={{ gap: 7 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Text style={{ color: c.text, flex: 1, fontSize: 11, fontWeight: '800', textTransform: 'uppercase' }}>{option.text}</Text><Text style={{ color: c.muted, fontSize: 9, fontWeight: '700' }}>{option.votes} {option.votes === 1 ? 'vote' : 'votes'}</Text></View>
+    {optionVoters.length ? optionVoters.map(voter => { const voterName = voter.full_name || voter.username || 'Member'; return <View key={`${option.id}-${voter.user_id}`} accessibilityLabel={`${voterName} voted for ${option.text}`} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><UserAvatar uri={voter.avatar_url} name={voterName} identity={String(voter.user_id)} size={27} /><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 11, fontWeight: '700' }}>{voterName}</Text><Text style={{ color: c.muted, fontSize: 9 }}>@{voter.username.replace(/^@/, '')}</Text></View></View>; }) : <Text style={{ color: c.muted, fontSize: 9 }}>No votes yet</Text>}
+   </View>)}
+  </View> : null}
+  <ErrorLine text={error} />
+ </View>;
 }
 
 function CommunityVideo({ uri, close }: { uri: string; close: () => void }) {

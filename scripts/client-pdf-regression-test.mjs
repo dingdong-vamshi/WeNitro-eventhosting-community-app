@@ -31,7 +31,7 @@ includesAll(app, ['setReportOpen(true)', 'vibesProductionService.report', 'onEnd
 includesAll(app, ['setLeaveConfirmOpen(true)', 'You can rejoin later while registration remains open.', 'Keep my place']);
 includesAll(app, [
   'const { width: viewportWidth } = useWindowDimensions();',
-  'const usesVerticalTimeline = viewportWidth < 600;',
+  'const usesVerticalTimeline = viewportWidth <= 768;',
   'label: "REGISTRATION BY"',
   'year: "numeric"',
   'scheduleCardVertical',
@@ -39,8 +39,8 @@ includesAll(app, [
   'flexBasis: "auto"',
   'minHeight: 92',
 ]);
-for (const mobileWidth of [360, 390, 430]) {
-  assert.equal(mobileWidth < 600, true, `Activity timeline must use its vertical layout at ${mobileWidth}px`);
+for (const mobileWidth of [360, 375, 390, 393, 414, 430]) {
+  assert.equal(mobileWidth <= 768, true, `Activity timeline must use its vertical layout at ${mobileWidth}px`);
 }
 assert.ok(!app.includes('window.confirm(requestPending ? "Withdraw your registration request?" : "Leave this Activity?")'), 'Activity leave confirmation must use the in-app sheet on web.');
 assert.ok(!app.includes('Free activity - Free to join'));
