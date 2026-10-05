@@ -11,7 +11,9 @@ const handler = edge.createPasswordRecoveryHandler({
 });
 const request = email => new Request('https://project.test/password-recovery', { method: 'POST', body: JSON.stringify({ email }) });
 
-assert.equal((await handler(new Request('https://project.test', { method: 'OPTIONS' }))).status, 204);
+const preflight = await handler(new Request('https://project.test', { method: 'OPTIONS' }));
+assert.equal(preflight.status, 204);
+assert.match(preflight.headers.get('access-control-allow-headers') || '', /authorization/);
 assert.equal((await handler(request('bad-email'))).status, 400);
 let response = await handler(request('GoogleOnly@Example.test'));
 assert.equal(response.status, 202); assert.equal(response.headers.get('cache-control'), 'no-store');
