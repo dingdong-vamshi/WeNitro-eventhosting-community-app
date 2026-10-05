@@ -10,7 +10,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { activityService } from '../../services/wenitro';
 import { activityLocationService } from '../../services/activity-location';
 import { GoogleVenue } from '../google-venue';
-import { googlePlacesEnabled, searchGooglePlaces, type GooglePlacesResult } from '../../services/google-places';
+import { createGooglePlacesSessionToken, googlePlacesEnabled, resolveGooglePlace, searchGooglePlaces, type GoogleLocationBias, type GooglePlacesResult } from '../../services/google-places';
+import { getCachedHomeLocationBias } from '../../services/home-location';
 import { listActivityEntryCategories } from '../../services/payments';
 import { AGE_PRESETS, GENDER_OPTIONS, ageError, draftFromActivity, hasMeaningfulHostDraft, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, withFreshHostSchedule, type HostActivitySource, persistedHostDraft, GOOGLE_VENUE_LABEL, type CoordinateLocation, type HostDraft, type HostLocation } from '../../domain/host-activity';
 import CoverEditor from './cover-editor';
@@ -78,13 +79,16 @@ function ScheduleField({ label, value, onChange, error }: { label: string; value
     {mode && Platform.OS !== 'web' ? <DateTimePicker value={current} mode={mode} onChange={(event, next) => { if (event.type !== 'set' || !next) { setMode(null); return; } onChange(localDateTime(next)); setMode(mode === 'date' ? 'time' : null); }} /> : null}
   </View>;
 }
-function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => void; onClose: () => void }) {
+function LocationSearch({ userId, onSelect, onClose }: { userId: string; onSelect: (l: HostLocation) => void; onClose: () => void }) {
   const { c, s } = useHostTheme();
   const [search, setSearch] = useState(''), [results, setResults] = useState<CoordinateLocation[]>([]), [error, setError] = useState(''), [busy, setBusy] = useState(false);
   const [googleResults, setGoogleResults] = useState<GooglePlacesResult>({ places: [], status: googlePlacesEnabled ? 'ready' : 'disabled' });
   const [googleBusy, setGoogleBusy] = useState(false);
   const currentRequest = useRef<AbortController | null>(null);
   const generation = useRef(0);
+  const sessionToken = useRef(createGooglePlacesSessionToken());
+  const [bias, setBias] = useState<GoogleLocationBias | undefined>();
+  useEffect(() => { let active = true; void getCachedHomeLocationBias(userId).then(value => { if (active) setBias(value); }); return () => { active = false; }; }, [userId]);
   useEffect(() => {
     const id = ++generation.current; const controller = new AbortController(); currentRequest.current?.abort(); currentRequest.current = controller;
     setResults([]); setError(''); setBusy(false); setGoogleBusy(false);
@@ -93,7 +97,7 @@ function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => 
       if (search.trim().length < 2 || id !== generation.current) return; setBusy(true);
       if (googlePlacesEnabled) {
         setGoogleBusy(true);
-        void searchGooglePlaces(search, controller.signal).then(value => {
+        void searchGooglePlaces(search, controller.signal, { sessionToken: sessionToken.current, bias }).then(value => {
           if (id === generation.current) setGoogleResults(value);
         }).catch(() => {
           if (!controller.signal.aborted && id === generation.current) setGoogleResults({ places: [], status: 'unavailable' });
@@ -104,7 +108,7 @@ function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => 
       finally { if (id === generation.current) setBusy(false); }
     }, 280);
     return () => { clearTimeout(timer); controller.abort(); generation.current++; };
-  }, [search]);
+  }, [search, bias]);
   useEffect(() => () => currentRequest.current?.abort(), []);
   const current = async () => {
     const id = ++generation.current; currentRequest.current?.abort(); const controller = new AbortController(); currentRequest.current = controller; setBusy(true); setError(''); setGoogleBusy(false); setGoogleResults({ places: [], status: googlePlacesEnabled ? 'ready' : 'disabled' });
@@ -121,10 +125,18 @@ function LocationSearch({ onSelect, onClose }: { onSelect: (l: HostLocation) => 
         <Text style={{ fontSize: 14, fontWeight: '400', color: c.isDark ? '#FFFFFF' : '#1F1F1F' }} {...(Platform.OS === 'web' ? { translate: 'no' } : {})}>Google Maps</Text>
         <Text style={s.small}>Select a venue for your Activity.</Text>
         {googleResults.places.map(place => <View key={place.id} style={{ gap: 4, paddingVertical: 8 }}>
-          <Pressable accessibilityRole="button" accessibilityLabel={`Select ${place.title}`} onPress={() => onSelect({ source: 'google', googlePlaceId: place.id })}>
+          <Pressable accessibilityRole="button" accessibilityLabel={`Select ${place.title}`} disabled={googleBusy} onPress={() => {
+            const id = ++generation.current; currentRequest.current?.abort(); const controller = new AbortController(); currentRequest.current = controller;
+            setGoogleBusy(true); setError('');
+            void resolveGooglePlace(place.id, controller.signal, sessionToken.current).then(details => {
+              if (id !== generation.current) return;
+              sessionToken.current = createGooglePlacesSessionToken();
+              onSelect({ source: 'google', googlePlaceId: details.id, displayLabel: details.title, displayAddress: details.address });
+            }).catch(caught => { if (!controller.signal.aborted && id === generation.current) setError(caught instanceof Error ? caught.message : 'Could not select this Google Maps venue.'); })
+              .finally(() => { if (id === generation.current) setGoogleBusy(false); });
+          }}>
             <Text style={s.settingTitle}>{place.title}</Text><Text style={s.small}>{place.address}</Text><Text style={[s.small, { color: c.purple }]}>Select this venue</Text>
           </Pressable>
-          {place.attributions.map((attribution, i) => <Text key={i} style={s.small} onPress={attribution.uri ? () => { void Linking.openURL(attribution.uri!).catch(() => setError('Could not open the attribution link.')); } : undefined}>{attribution.provider}</Text>)}
         </View>)}
       </View> : null}
       <Text style={[s.small, { marginBottom: 12 }]}>{googleResults.status === 'disabled' ? 'Venue selection uses OpenStreetMap. Google Maps search is not enabled.' : googleResults.status === 'unavailable' ? 'Google Maps search is unavailable. You can still select an OpenStreetMap venue.' : 'OpenStreetMap venues'}</Text>
@@ -328,7 +340,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
         <Pressable accessibilityRole="button" accessibilityLabel="Choose category" onPress={() => setCategoryOpen(v => !v)} style={[s.inputShell, categoryOpen && { borderColor: c.purple }]}><Text style={[s.body, { flex: 1 }, !draft.category && { color: c.muted }]}>{draft.category || 'Search and select categories...'}</Text><Glyph name="chevron-down" size={16} color={c.muted} /></Pressable>
         {existing && draft.category === existing.category && !catalog.loading && !catalog.error && !catalog.names.includes(draft.category) ? <Text style={s.small}>This category is no longer available for new activities. Your existing selection will be preserved.</Text> : null}
         {categoryOpen && <View style={s.categories}><CategoryCatalogStatus catalog={catalog} /><Control label="Search categories" icon="search-outline" value={categorySearch} onChangeText={setCategorySearch} placeholder="Search..." /><ScrollView nestedScrollEnabled style={{ maxHeight: 320 }} keyboardShouldPersistTaps="handled">{catalog.names.filter(v => v.toLowerCase().includes(categorySearch.toLowerCase())).map(cat => <Option key={cat} label={cat} selected={draft.category === cat} onPress={() => { patch({ category: cat }); setCategoryOpen(false); }} />)}{!catalog.loading && !catalog.error && catalog.names.length > 0 && !catalog.names.some(v => v.toLowerCase().includes(categorySearch.toLowerCase())) && <Text style={[s.small, { padding: 18 }]}>No categories found</Text>}</ScrollView></View>}
-        <Pressable accessibilityRole="button" accessibilityLabel={draft.location ? 'Change location' : 'Add Location'} onPress={() => setLocationOpen(true)} style={s.location}><View style={s.locationIcon}><Glyph name="location-outline" size={24} /></View><View style={{ flex: 1, gap: 4 }}>{draft.location?.source === 'google' ? <GoogleVenue key={`${userId}:${draft.location.googlePlaceId}`} placeId={draft.location.googlePlaceId} /> : <Text style={s.settingTitle}>{draft.location?.label || 'Add Location'}</Text>}<Text style={s.small}>{draft.location ? 'Tap to change location' : 'Where is this meetup happening?'}</Text></View><Glyph name="chevron-forward" size={17} color={c.muted} /></Pressable>
+        <Pressable accessibilityRole="button" accessibilityLabel={draft.location ? 'Change location' : 'Add Location'} onPress={() => setLocationOpen(true)} style={s.location}><View style={s.locationIcon}><Glyph name="location-outline" size={24} /></View><View style={{ flex: 1, gap: 4 }}>{draft.location?.source === 'google' ? draft.location.displayLabel ? <><Text style={s.settingTitle}>{draft.location.displayLabel}</Text>{draft.location.displayAddress ? <Text numberOfLines={2} style={s.small}>{draft.location.displayAddress}</Text> : null}</> : <GoogleVenue key={`${userId}:${draft.location.googlePlaceId}`} placeId={draft.location.googlePlaceId} /> : <Text style={s.settingTitle}>{draft.location?.label || 'Add Location'}</Text>}<Text style={s.small}>{draft.location ? 'Tap to change location' : 'Where is this meetup happening?'}</Text></View><Glyph name="chevron-forward" size={17} color={c.muted} /></Pressable>
         <View style={{ gap: 12 }}><Text style={[s.body, { fontSize: 12 }]}>Location Instructions</Text><TextInput accessibilityLabel="Location Instructions" value={draft.locationInstruction} onChangeText={locationInstruction => patch({ locationInstruction })} multiline maxLength={1000} placeholder="e.g., Meet near the red bench, Room 404..." placeholderTextColor={c.muted} style={s.instructions} /></View>
         {platformPayment ? <View style={{ gap: 12 }}><Text style={[s.body, { fontSize: 12 }]}>Partner External URL (optional)</Text><Control label="Partner External URL" icon="link-outline" autoCapitalize="none" keyboardType="url" value={draft.externalUrl} onChangeText={externalUrl => patch({ externalUrl })} maxLength={2048} placeholder="https://your-business.example/activity" /><Text style={s.small}>Only HTTPS links are accepted. WeNitro payment amounts still come from the server.</Text></View> : null}
         <Pressable accessibilityRole="checkbox" accessibilityLabel="Decide Date Later" accessibilityState={{ checked: draft.dateLater }} aria-checked={draft.dateLater} onPress={() => { scheduleInitialized.current = true; patch({ dateLater: !draft.dateLater }); }} style={s.later}><Text style={s.value}>📅 {draft.dateLater ? 'Add Date Now' : 'Decide Date Later'}</Text></Pressable>
@@ -357,7 +369,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
       {dialog === 'gender' && GENDER_OPTIONS.map(o => <Option key={o.value} label={o.label} selected={draft.gender === o.value} onPress={() => { patch({ gender: o.value }); setDialog(null); }} />)}
       {dialog === 'exit' && <View style={{ padding: 18, gap: 14 }}><Text style={s.subtitle}>Your activity is not published. Keep your draft on this device and return later.</Text><Pressable accessibilityRole="button" style={s.cta} onPress={() => { void store().then(onBack).catch(() => setError('Could not save your draft.')); }}><Text style={s.ctaText}>Save & Exit</Text></Pressable></View>}
     </Dialog>}
-    {locationOpen && <LocationSearch onClose={() => setLocationOpen(false)} onSelect={location => { patch({ location }); setLocationOpen(false); }} />}
+    {locationOpen && <LocationSearch userId={userId} onClose={() => setLocationOpen(false)} onSelect={location => { patch({ location }); setLocationOpen(false); }} />}
     {!!cropUri && <CoverEditor uri={cropUri} onCancel={() => setCropUri('')} onSave={coverUri => { patch({ coverUri, coverContentType: 'image/jpeg' }); setCropUri(''); }} />}
   </SafeAreaView>;
 }

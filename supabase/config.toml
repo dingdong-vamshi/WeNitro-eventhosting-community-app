@@ -23,5 +23,10 @@ verify_jwt = false
 # Both the gateway and handler require a real signed-in user. Disabled until configured.
 verify_jwt = true
 
+[functions.password-recovery]
+# Password recovery must be reachable before sign-in. Its handler returns the
+# same response for unknown, Google-only, and email/password accounts.
+verify_jwt = false
+
 [functions.aadhaar-verification]
 verify_jwt = true

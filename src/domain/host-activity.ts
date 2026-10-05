@@ -8,7 +8,7 @@ export const GENDER_OPTIONS = [
   { label: 'Female Only', value: 'female' }, { label: 'Non-binary Only', value: 'non_binary' },
 ] as const;
 export type CoordinateLocation = { source?: 'legacy' | 'openstreetmap'; label: string; latitude: number; longitude: number };
-export type HostLocation = CoordinateLocation | { source: 'google'; googlePlaceId: string; label?: never; latitude?: never; longitude?: never };
+export type HostLocation = CoordinateLocation | { source: 'google'; googlePlaceId: string; displayLabel?: string; displayAddress?: string; label?: never; latitude?: never; longitude?: never };
 export const GOOGLE_VENUE_LABEL = 'Google Maps venue';
 export function persistedHostDraft(draft: HostDraft): HostDraft {
   // A draft survives indefinitely: Google content (including coordinates) never does.

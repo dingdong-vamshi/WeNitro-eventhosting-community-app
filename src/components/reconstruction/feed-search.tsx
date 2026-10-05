@@ -15,6 +15,7 @@ import { communitiesProductionService, type CommunitySummary } from '../../servi
 import { activityService, loadActivityParticipantCounts } from '../../services/wenitro';
 import { supabase } from '../../lib/supabase';
 import { activityLocationService } from '../../services/activity-location';
+import { resolveHomeLocality } from '../../services/home-location';
 import { useActivityCategories } from '../../hooks/use-activity-categories';
 import { viewerCanListActivity } from '../../domain/activity-visibility';
 import { MOBILE_APP_MAX_WIDTH } from '../mobile-app-shell';
@@ -143,6 +144,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const activityLoadState = feedActivityLoadState(loading || workspaceLoading, data.activities.length, error || workspaceError);
   const [nearby, setNearby] = useState<{ latitude: number; longitude: number } | null>(null);
   const [locating, setLocating] = useState(false);
+  const [homeLocality, setHomeLocality] = useState('Nearby');
   const pageWidth = Math.min(width, MOBILE_APP_MAX_WIDTH);
   const carouselCardWidth = Math.max(pageWidth - 34, 1);
   const carouselCardHeight = carouselCardWidth / HERO_ASPECT_RATIO;
@@ -159,6 +161,16 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
       appStateSubscription.remove();
     };
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+    if (!data.userId) return () => { active = false; controller.abort(); };
+    void resolveHomeLocality(data.userId, controller.signal).then(result => {
+      if (active && result?.locality) setHomeLocality(result.locality);
+    });
+    return () => { active = false; controller.abort(); };
+  }, [data.userId]);
 
   const carouselPaused = carouselDragging || carouselPressed || !appActive || reduceMotion;
   useEffect(() => {
@@ -186,7 +198,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
   const communityCards = data.communities.filter(room => room.membership !== 'created').slice(0, 8);
   return <Page>
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 28 }}>
-      <BrandBar go={go} location={data.location || 'Nearby'} avatarUrl={data.avatarUri} notificationCount={notificationCount}>
+      <BrandBar go={go} location={homeLocality} avatarUrl={data.avatarUri} notificationCount={notificationCount}>
         <View style={{ marginTop: 14, width: carouselCardWidth, alignSelf: 'center' }}>
           <ScrollView
             ref={homeCarousel}

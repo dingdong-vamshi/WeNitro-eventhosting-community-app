@@ -1622,8 +1622,9 @@ function LoginScreen({ go, setData, onPhoneSignup }: {
           <Field label="Email" value={email} onChangeText={setEmail} placeholder="you@example.com" isValid={validateEmail(email).valid} />
           <Field label="Password" value={password} onChangeText={setPassword} placeholder="Your password" secureTextEntry />
           <Pressable accessibilityRole="button" accessibilityLabel="Forgot password" disabled={submitting} onPress={() => void forgotPassword()} style={{ alignSelf: "flex-end", minHeight: 38, justifyContent: "center" }}>
-            <Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600, fontSize: 13 }]}>Forgot Password?</Text>
+            <Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600, fontSize: 13 }]}>Reset email/password</Text>
           </Pressable>
+          <Text style={[styles.meta, { color: palette.muted, textAlign: 'center' }]}>Google Sign-In accounts manage their Google password with Google.</Text>
           <Button label={submitting ? "Signing in..." : "Sign in"} icon="arrow-forward" onPress={passwordLogin} />
           {verificationPending ? <Pressable onPress={() => void resend()}><Text style={[styles.centerLink, { color: palette.isDark ? "#A5B4FC" : colors.purple600 }]}>Resend verification email</Text></Pressable> : null}
           {resendStatus ? <Text style={[styles.meta, { color: palette.muted }]}>{resendStatus}</Text> : null}

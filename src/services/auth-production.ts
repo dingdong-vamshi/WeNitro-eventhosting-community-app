@@ -338,11 +338,48 @@ export async function loginWithPassword(input: PasswordLoginInput) {
 
 export async function requestPasswordReset(email: string) {
   requireBackend();
-  const { error } = await supabase.auth.resetPasswordForEmail(
-    validEmailOrThrow(email),
-    { redirectTo: getAuthRedirectUrl() },
-  );
+  const { error } = await supabase.functions.invoke('password-recovery', {
+    body: { email: validEmailOrThrow(email) },
+  });
   if (error) throw error;
+}
+
+export type SignInMethodSummary = {
+  kind: 'google-only' | 'password-only' | 'linked' | 'phone-only' | 'other';
+  hasGoogle: boolean;
+  hasPassword: boolean;
+  hasPhone: boolean;
+  email: string | null;
+  providers: string[];
+};
+
+export function classifySignInMethods(identities: Array<{ provider?: string | null }>, email: string | null = null): SignInMethodSummary {
+  const providers = [...new Set(identities.map(identity => String(identity.provider || '').trim().toLowerCase()).filter(Boolean))];
+  const hasGoogle = providers.includes('google');
+  const hasPassword = providers.includes('email');
+  const hasPhone = providers.includes('phone');
+  const kind = hasGoogle && hasPassword ? 'linked' : hasGoogle ? 'google-only' : hasPassword ? 'password-only' : hasPhone ? 'phone-only' : 'other';
+  return { kind, hasGoogle, hasPassword, hasPhone, email, providers };
+}
+
+export async function getCurrentSignInMethods(): Promise<SignInMethodSummary> {
+  requireBackend();
+  // getUser validates the current JWT with Auth and returns the identities for
+  // that exact user, avoiding an account-switch race between separate calls.
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError || !userData.user) throw userError || new Error('Sign in to manage account security.');
+  return classifySignInMethods(userData.user.identities || [], userData.user.email || null);
+}
+
+export async function requestCurrentUserPasswordReset() {
+  const methods = await getCurrentSignInMethods();
+  if (!methods.hasPassword) {
+    if (methods.hasGoogle) throw new Error('This account uses Google Sign-In. Manage your Google password with Google.');
+    throw new Error('This account does not have an email/password sign-in method.');
+  }
+  if (!methods.email) throw new Error('No email address is available for this account.');
+  await requestPasswordReset(methods.email);
+  return methods;
 }
 
 export async function requestPhoneOtp(input: PhoneOtpRequestInput) {
