@@ -26,11 +26,16 @@ function providerFailure(body: unknown) {
   const source = record(body), nested = record(source.error);
   const status = String(nested.status || source.status || '').toUpperCase();
   const message = String(nested.message || source.error_message || '').toUpperCase();
-  if (/API(?: HAS)?[_ ]?NOT(?: BEEN)?[_ ]?ACTIVATED|SERVICE_DISABLED/.test(`${status} ${message}`)) return 'API_NOT_ACTIVATED';
-  if (/BILLING/.test(`${status} ${message}`)) return 'BILLING_NOT_ENABLED';
-  if (/REFER+ER|IP ADDRESS|API KEY.*RESTRICT/.test(message)) return 'API_KEY_RESTRICTION';
-  if (/OVER_QUERY_LIMIT|RESOURCE_EXHAUSTED|QUOTA/.test(`${status} ${message}`)) return 'QUOTA_EXCEEDED';
-  if (/REQUEST_DENIED|PERMISSION_DENIED|API_KEY_INVALID/.test(`${status} ${message}`)) return 'REQUEST_DENIED';
+  const details = JSON.stringify(nested.details || source.details || '').toUpperCase();
+  const diagnostic = `${status} ${message} ${details}`;
+  if (/API_KEY_SERVICE_BLOCKED/.test(diagnostic)) return 'API_KEY_SERVICE_BLOCKED';
+  if (/API_KEY_HTTP_REFERRER_BLOCKED/.test(diagnostic)) return 'API_KEY_HTTP_REFERRER_BLOCKED';
+  if (/API_KEY_IP_ADDRESS_BLOCKED/.test(diagnostic)) return 'API_KEY_IP_ADDRESS_BLOCKED';
+  if (/API(?: HAS)?[_ ]?NOT(?: BEEN)?[_ ]?ACTIVATED|SERVICE_DISABLED/.test(diagnostic)) return 'API_NOT_ACTIVATED';
+  if (/BILLING/.test(diagnostic)) return 'BILLING_NOT_ENABLED';
+  if (/REFER+ER|IP ADDRESS|API KEY.*RESTRICT/.test(diagnostic)) return 'API_KEY_RESTRICTION';
+  if (/OVER_QUERY_LIMIT|RESOURCE_EXHAUSTED|QUOTA/.test(diagnostic)) return 'QUOTA_EXCEEDED';
+  if (/REQUEST_DENIED|PERMISSION_DENIED|API_KEY_INVALID/.test(diagnostic)) return 'REQUEST_DENIED';
   return 'PROVIDER_UNAVAILABLE';
 }
 export function mapGooglePlaces(body: unknown) {

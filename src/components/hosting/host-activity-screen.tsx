@@ -139,7 +139,19 @@ function LocationSearch({ userId, onSelect, onClose }: { userId: string; onSelec
           </Pressable>
         </View>)}
       </View> : null}
-      <Text style={[s.small, { marginBottom: 12 }]}>{googleResults.status === 'disabled' ? 'Venue selection uses OpenStreetMap. Google Maps search is not enabled.' : googleResults.status === 'unavailable' ? 'Google Maps search is unavailable. You can still select an OpenStreetMap venue.' : 'OpenStreetMap venues'}</Text>
+      <Text style={[s.small, { marginBottom: 12 }]}>{googleResults.status === 'disabled'
+        ? 'Venue selection uses OpenStreetMap. Google Maps search is not enabled.'
+        : googleResults.status === 'unavailable'
+          ? googleResults.errorCode === 'API_KEY_SERVICE_BLOCKED'
+            ? 'Google Places is blocked by this API key\u2019s service restriction. OpenStreetMap remains available.'
+            : googleResults.errorCode === 'API_NOT_ACTIVATED'
+              ? 'Google Places (New) is not enabled for this Google Cloud project. OpenStreetMap remains available.'
+              : googleResults.errorCode === 'BILLING_NOT_ENABLED'
+                ? 'Google Places requires billing on this Google Cloud project. OpenStreetMap remains available.'
+                : googleResults.errorCode === 'QUOTA_EXCEEDED'
+                  ? 'Google Places quota is currently exhausted. OpenStreetMap remains available.'
+                  : 'Google Maps search is unavailable. You can still select an OpenStreetMap venue.'
+          : 'OpenStreetMap venues'}</Text>
       {results.map((r, i) => <Pressable key={`${r.label}:${r.latitude}:${r.longitude}:${i}`} accessibilityRole="button" onPress={() => onSelect({ ...r, source: 'openstreetmap' })} style={[s.option, { paddingHorizontal: 0, alignItems: 'flex-start' }]}><Glyph name="navigate-outline" size={18} /><View style={{ flex: 1, gap: 5, marginLeft: 9 }}><Text style={s.settingTitle}>{r.label}</Text><Text style={s.small}>{r.latitude.toFixed(6)}, {r.longitude.toFixed(6)}</Text></View></Pressable>)}{!busy && !error && search.trim().length >= 2 && !results.length ? <Text style={s.small}>No matching venues or addresses. Try a landmark, street, or PIN code.</Text> : null}</ScrollView>
     {googlePlacesEnabled ? <View style={{ alignItems: 'center', padding: 8, gap: 4 }}><Text style={s.small}>Search text is sent to Google Maps when its search is enabled.</Text><Text style={s.small} onPress={() => { void Linking.openURL('https://policies.google.com/privacy'); }}>Google Privacy Policy</Text><Text style={s.small} onPress={() => { void Linking.openURL('https://maps.google.com/help/terms_maps/'); }}>Google Maps Terms</Text></View> : null}
     <Text onPress={() => void Linking.openURL('https://www.openstreetmap.org/copyright')} style={[s.small, { textAlign: 'center', padding: 12 }]}>Location data © OpenStreetMap contributors</Text>

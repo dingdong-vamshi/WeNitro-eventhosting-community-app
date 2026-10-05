@@ -59,6 +59,10 @@ response = await handler()(request({ action: 'autocomplete', query: 'venue', ses
 assert.equal(response.status, 502); assert.equal((await response.json()).code, 'API_NOT_ACTIVATED');
 assert.doesNotMatch(await (await handler()(request({ action: 'autocomplete', query: 'venue', sessionToken: 'session-token' }))).text(), /server-test-key/);
 
+provider = async () => new Response(JSON.stringify({ error: { status: 'PERMISSION_DENIED', message: 'Requests to this API are blocked.', details: [{ reason: 'API_KEY_SERVICE_BLOCKED', metadata: { service: 'places.googleapis.com' } }] } }), { status: 403, headers: { 'Content-Type': 'application/json' } });
+response = await handler()(request({ action: 'autocomplete', query: 'venue', sessionToken: 'session-token' }));
+assert.equal(response.status, 502); assert.equal((await response.json()).code, 'API_KEY_SERVICE_BLOCKED');
+
 const clientSource = compile('src/services/google-places.ts');
 let session = { access_token: 'session-A', user: { id: 'account-A' } }, clientCalls = [], responseBody = { places: [{ id: 'test-place', title: 'Test Venue', address: 'Test street' }] };
 let fetchClient = async (url, options) => { clientCalls.push({ url, options }); return Response.json(responseBody); };
