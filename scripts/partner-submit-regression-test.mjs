@@ -27,6 +27,7 @@ new Function('exports', 'require', ts.transpile(
   fs.readFileSync('src/services/partner-account.ts', 'utf8'),
   { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 ))(exports, name => {
+  if (name === './content-moderation') return { moderatePublicContent: async () => ({ status: 'safe' }), moderationArrayValue: values => (values ?? []).join('\n') };
   assert.equal(name, '../lib/supabase');
   return { supabase: client };
 });

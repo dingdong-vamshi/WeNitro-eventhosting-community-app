@@ -1,6 +1,7 @@
 import { normalizeRegistrationQuestions, validateRegistrationQuestions, type RegistrationQuestionDraft } from "./registration-questions";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { moderatePublicContent, moderationArrayValue } from "./content-moderation";
 
 export type ActivityStatus =
   | "draft"
@@ -617,6 +618,42 @@ const buildPayload = (
   return payload;
 };
 
+const coverPathFromMedia = (media: unknown): string => {
+  if (typeof media === "string") {
+    try { return coverPathFromMedia(JSON.parse(media)); } catch { return media; }
+  }
+  const first = Array.isArray(media) ? media[0] : media;
+  if (!first || typeof first !== "object") return "";
+  const value = (first as Record<string, unknown>).url;
+  return typeof value === "string" ? value : "";
+};
+
+async function moderateRegistrationQuestions(questions: RegistrationQuestionDraft[] | undefined) {
+  if (!questions?.length) return;
+  const normalized = normalizeRegistrationQuestions(questions);
+  await moderatePublicContent({
+    scope: "registration_question",
+    fields: normalized.flatMap((question) => [
+      { field: "label", value: question.label },
+      { field: "options", value: moderationArrayValue(question.options) },
+    ]),
+  });
+}
+
+async function moderateActivityPayload(payload: DbRecord) {
+  const coverPath = typeof payload.cover_url === "string" ? payload.cover_url : coverPathFromMedia(payload.media);
+  await moderatePublicContent({
+    scope: "activity",
+    fields: [
+      { field: "title", value: typeof payload.title === "string" ? payload.title : "" },
+      { field: "description", value: typeof payload.description === "string" ? payload.description : "" },
+      { field: "location_instruction", value: typeof payload.location_instruction === "string" ? payload.location_instruction : "" },
+      { field: "display_location", value: typeof payload.display_location === "string" ? payload.display_location : "" },
+    ],
+    images: coverPath ? [{ field: "cover_path", value: coverPath, storageBucket: "activity-media", storagePath: coverPath }] : [],
+  });
+}
+
 const loadProfiles = async (ids: number[]) => {
   const profiles = new Map<number, DbRecord>();
   const unique = [...new Set(ids)];
@@ -830,6 +867,8 @@ async function writeActivity(
   await currentUserId();
   if (input.locationSource === "google") await (await import("./google-places")).resolveGooglePlace(input.googlePlaceId || "");
   const payload = buildPayload(input);
+  await moderateRegistrationQuestions(input.registrationQuestions);
+  if (status === "published" && (input.visibility ?? "public") === "public") await moderateActivityPayload(payload);
   const data = await callRpc<unknown>("create_activity", {
     p_payload: payload,
     p_status: status,
@@ -1179,6 +1218,17 @@ export const activitiesProductionService = {
     if (!Object.keys(patch).length) {
       throw new Error("No activity changes supplied.");
     }
+    await moderateRegistrationQuestions(input.registrationQuestions);
+    const moderationKeys = ["title", "description", "location_instruction", "display_location", "cover_url"];
+    const current = await supabase.from("tbl_events")
+      .select("title,description,location_instruction,display_location,media,status,visibility_type")
+      .eq("id", eventId).single();
+    if (current.error) throw current.error;
+    const targetPublic = (patch.status ?? current.data.status) === "published" && (patch.visibility_type ?? current.data.visibility_type) === "public";
+    const becamePublic = targetPublic && (current.data.status !== "published" || current.data.visibility_type !== "public");
+    if (targetPublic && (becamePublic || moderationKeys.some((key) => key in patch))) {
+      await moderateActivityPayload({ ...current.data, ...patch });
+    }
     const data = await callRpc<unknown>("update_activity", {
       p_event_id: eventId,
       p_patch: patch,
@@ -1257,10 +1307,12 @@ export const activitiesProductionService = {
 
   async addComment(activityId: string, body: string, parentId?: string) {
     const eventId = parseId(activityId, "Activity ID");
+    const cleaned = requiredText(body, "Comment");
+    await moderatePublicContent({ scope: "activity_comment", fields: [{ field: "body", value: cleaned }] });
     const row = firstRecord(
       await callRpc<unknown>("create_activity_comment", {
         p_event_id: eventId,
-        p_body: requiredText(body, "Comment"),
+        p_body: cleaned,
         p_parent_id: parentId ? parseId(parentId, "Parent comment ID") : null,
       }),
     );
@@ -1269,10 +1321,12 @@ export const activitiesProductionService = {
   },
 
   async updateComment(commentId: string, body: string) {
+    const cleaned = requiredText(body, "Comment");
+    await moderatePublicContent({ scope: "activity_comment", fields: [{ field: "body", value: cleaned }] });
     const row = firstRecord(
       await callRpc<unknown>("update_activity_comment", {
         p_comment_id: parseId(commentId, "Comment ID"),
-        p_body: requiredText(body, "Comment"),
+        p_body: cleaned,
       }),
     );
     if (!row) throw new Error("Activity comment could not be updated.");

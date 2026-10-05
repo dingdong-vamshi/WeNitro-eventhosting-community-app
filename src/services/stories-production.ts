@@ -1,6 +1,7 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { ContentModerationError, moderatePublicContent } from "./content-moderation";
 import {
   signedUrl as cachedSignedUrl,
   signedUrlMap,
@@ -299,25 +300,25 @@ export const storiesProductionService = {
         upsert: false,
       });
     if (uploadError) throw uploadError;
-
-    const { data, error } = await supabase
-      .from("tbl_stories")
-      .insert({
-        user_id: identity.legacyId,
-        media_url: path,
-        media_type: media.mediaType,
-        caption,
-      })
-      .select("id")
-      .single();
-    if (error) {
-      await supabase.storage.from(BUCKET).remove([path]);
+    try {
+      await moderatePublicContent({
+        scope: "story",
+        fields: [{ field: "caption", value: caption }],
+        images: media.mediaType === "image" ? [{ field: "media_path", value: path, storageBucket: "stories", storagePath: path }] : [],
+      });
+      const { data, error } = await supabase
+        .from("tbl_stories")
+        .insert({ user_id: identity.legacyId, media_url: path, media_type: media.mediaType, caption })
+        .select("id")
+        .single();
+      if (error) throw error;
+      return loadStoryById(positiveInteger(data.id, "story id"), identity.legacyId);
+    } catch (error) {
+      if (!(error instanceof ContentModerationError && error.status === "review")) {
+        await supabase.storage.from(BUCKET).remove([path]);
+      }
       throw error;
     }
-    return loadStoryById(
-      positiveInteger(data.id, "story id"),
-      identity.legacyId,
-    );
   },
 
   async markViewed(storyId: number | string): Promise<void> {

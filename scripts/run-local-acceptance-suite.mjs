@@ -30,7 +30,7 @@ async function check(name, command, args, cwd = appRoot, extraEnv = {}) {
 }
 save();
 for (const file of fs.readdirSync(path.join(appRoot, 'scripts')).filter(name => name.endsWith('-test.mjs') && name !== 'phone-otp-ui-test.mjs').sort()) await check(file.replace('.mjs', ''), process.execPath, ['scripts/' + file]);
-await check('edge-core-tests', 'deno', ['test', '--allow-env', 'supabase/functions/onboarding-date_test.ts', 'supabase/functions/community-media/handler.test.ts', 'supabase/functions/_shared/cashfree.test.ts']);
+await check('edge-core-tests', 'deno', ['test', '--allow-env', 'supabase/functions/onboarding-date_test.ts', 'supabase/functions/community-media/handler.test.ts', 'supabase/functions/_shared/cashfree.test.ts', 'supabase/functions/aadhaar-verification/handler_test.ts', 'supabase/functions/content-moderation/handler_test.ts']);
 await check('edge-sms-tests', 'deno', ['test', '--allow-env', '--config', 'supabase/functions/send-sms/deno.json', 'supabase/functions/send-sms/payload_test.ts']);
 await check('cashfree-edge-typecheck', 'deno', ['check', 'supabase/functions/cashfree-create-order/index.ts', 'supabase/functions/cashfree-verify-payment/index.ts', 'supabase/functions/cashfree-webhook/index.ts']);
 await check('app-typecheck', 'npm', ['run', 'typecheck']);

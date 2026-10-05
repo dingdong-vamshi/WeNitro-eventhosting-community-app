@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { moderatePublicContent, moderationArrayValue } from "./content-moderation";
 
 export type PartnerAccountStatus = "DRAFT" | "UNDER_REVIEW" | "APPROVED" | "SUSPENDED" | "REJECTED";
 
@@ -117,6 +118,17 @@ export const partnerAccountService = {
       account_number: input.account_number.replace(/[^A-Za-z0-9]/g, ""), ifsc: trimmed(input.ifsc).toUpperCase(),
       upi_id: trimmed(input.upi_id).toLowerCase(),
     };
+    await moderatePublicContent({
+      scope: "partner",
+      fields: [
+        { field: "business_name", value: application.business_name },
+        { field: "description", value: application.description },
+        { field: "city", value: application.city },
+        { field: "activity_types", value: moderationArrayValue(application.activity_types) },
+        { field: "activity_location", value: application.activity_location },
+        { field: "age_category", value: application.age_category },
+      ],
+    });
     // rpc uses the Supabase client receiver internally (this.rest).
     const { data, error } = await supabase.rpc("submit_partner_application", { p_application: application });
     if (error) throw new Error(error.message);

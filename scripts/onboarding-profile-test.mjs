@@ -137,6 +137,7 @@ function avatarHarness(switchAt) {
   new Function('require', 'exports', 'fetch', productionJs)((name) => {
     if (name === './category-catalog') return { listActiveCategories: async () => [] };
     if (name === '../domain/interest-categories') return { INTEREST_CATEGORIES: [] };
+    if (name === './content-moderation') return { ContentModerationError: class extends Error {}, moderatePublicContent: async () => ({ status: 'safe' }) };
     assert.equal(name, '../lib/supabase');
     return { isSupabaseConfigured: true, supabase: fakeBackend };
   }, exports, fakeFetch);

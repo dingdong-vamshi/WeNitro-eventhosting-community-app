@@ -5,6 +5,7 @@ import type {
 } from "@supabase/supabase-js";
 
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { ContentModerationError, moderatePublicContent, moderationArrayValue } from "./content-moderation";
 import { signedUrl, signedUrlMap } from "./storage-signed-urls";
 
 const VIBES_BUCKET = "vibes";
@@ -505,20 +506,28 @@ export async function createVibe(input: CreateVibeInput) {
   await currentLegacyUserId(true);
   const eventId = input.activityId ? integerId(input.activityId, "activityId") : null;
   const upload = await uploadVibeMedia(input.media, input.mediaType, input.contentType);
-  const { data, error } = await supabase.rpc("vibe_create", {
-    p_event_id: eventId,
-    p_media_path: upload.path,
-    p_media_type: input.mediaType,
-    p_caption: cleanCaption(input.caption),
-    p_hashtags: cleanHashtags(input.hashtags),
-    p_visibility: eventId ? "activity" : input.visibility ?? "public",
-    p_show_in_vibes: eventId ? input.showInVibes ?? true : true,
-  });
-  if (error) {
-    await supabase.storage.from(VIBES_BUCKET).remove([upload.path]);
+  try {
+    const visibility = eventId ? "activity" : input.visibility ?? "public";
+    const caption = cleanCaption(input.caption);
+    const hashtags = cleanHashtags(input.hashtags);
+    if (visibility === "public") await moderatePublicContent({
+      scope: "vibe",
+      fields: [{ field: "caption", value: caption }, { field: "hashtags", value: moderationArrayValue(hashtags) }],
+      images: input.mediaType === "image" ? [{ field: "media_path", value: upload.path, storageBucket: "vibes", storagePath: upload.path }] : [],
+    });
+    const { data, error } = await supabase.rpc("vibe_create", {
+      p_event_id: eventId, p_media_path: upload.path, p_media_type: input.mediaType,
+      p_caption: caption, p_hashtags: hashtags, p_visibility: visibility,
+      p_show_in_vibes: eventId ? input.showInVibes ?? true : true,
+    });
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    if (!(error instanceof ContentModerationError && error.status === "review")) {
+      await supabase.storage.from(VIBES_BUCKET).remove([upload.path]);
+    }
     throw error;
   }
-  return data;
 }
 
 export async function deleteVibe(vibeId: string) {
@@ -609,6 +618,7 @@ export async function createVibeComment(
   if (!cleanedBody || cleanedBody.length > MAX_COMMENT_LENGTH) {
     throw new Error("Comment must be 1-" + MAX_COMMENT_LENGTH + " characters.");
   }
+  await moderatePublicContent({ scope: "vibe_comment", fields: [{ field: "text", value: cleanedBody }] });
   const { data, error } = await supabase.rpc("vibe_create_comment", {
     p_vibe_id: integerId(vibeId, "vibeId"),
     p_body: cleanedBody,

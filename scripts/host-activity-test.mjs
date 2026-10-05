@@ -53,6 +53,7 @@ const writeSource=source.slice(source.indexOf('const writeActivityFromUi ='),sou
 async function writeCase(failure){
   const calls=[];let receipt=null;
   const deps={currentLegacyUserId:async()=>44,validateRegistrationQuestions:()=>null,normalizeRegistrationQuestions:x=>x,
+    moderatePublicContent:async()=>({status:'safe'}),moderationArrayValue:values=>(values??[]).join('\n'),ContentModerationError:class extends Error{},
     uploadMedia:async()=>({path:'qa/cover.jpg'}),supabase:{rpc:async(name,args)=>{calls.push({name,args});return failure==='rpc'?{error:new Error('rejected')}:{data:123,error:null};},storage:{from:()=>({remove:async paths=>{calls.push({removed:paths});}})}},
     activityIdFromRpc:x=>String(x),activitiesProductionService:{getDetails:async()=>{if(failure==='reload')throw new Error('connection lost');return{activity:{joinType:'approval'},viewerState:{participation:null}};}},activityForWorkspace:async activity=>activity};
   const fn=new Function(...Object.keys(deps),compile(writeSource)+';return writeActivityFromUi;')(...Object.values(deps));

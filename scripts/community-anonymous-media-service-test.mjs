@@ -23,6 +23,7 @@ const backend = {
 const api = {};
 new Function('exports', 'require', ts.transpile(fs.readFileSync('src/services/communities-production.ts', 'utf8'), { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }))(api, name => {
   if (name === '../lib/supabase') return { isSupabaseConfigured: true, supabase: backend };
+  if (name === './content-moderation') return { ContentModerationError: class extends Error {}, moderatePublicContent: async () => ({ status: 'safe' }), moderationArrayValue: values => (values ?? []).join('\n') };
   assert.equal(name, './storage-signed-urls');
   return { signedUrlMap: async (_bucket, paths) => { signed.push(paths); return new Map(paths.map(path => [path, `https://storage.invalid/${path}`])); }, signedUrl: async () => { throw Error('unexpected per-item signing'); } };
 });

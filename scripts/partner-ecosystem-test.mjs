@@ -32,6 +32,7 @@ assert.match(profile, /'Become a Partner'/);
 const compiled = ts.transpile(service, { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 });
 const serviceModule = { exports: {} };
 new Function('exports', 'require', compiled)(serviceModule.exports, name => {
+  if (name === './content-moderation') return { moderatePublicContent: async () => ({ status: 'safe' }), moderationArrayValue: values => (values ?? []).join('\n') };
   assert.equal(name, '../lib/supabase');
   return { supabase: {} };
 });

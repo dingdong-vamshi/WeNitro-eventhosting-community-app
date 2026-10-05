@@ -13,6 +13,7 @@ const sandbox = {
   require(name) {
     if (name === '../lib/supabase') return { isSupabaseConfigured: false, supabase: null };
     if (name === './storage-signed-urls') return { signedUrl: async () => null, signedUrlMap: async () => new Map() };
+    if (name === './content-moderation') return { ContentModerationError: class extends Error {}, moderatePublicContent: async () => ({ status: 'safe' }), moderationArrayValue: values => (values ?? []).join('\n') };
     assert.fail(`Unexpected runtime dependency: ${name}`);
   },
 };

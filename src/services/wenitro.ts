@@ -16,6 +16,7 @@ import { storiesProductionService } from "./stories-production";
 import { vibesProductionService } from "./vibes-production";
 import type { WorkspaceSection } from "../domain/workspace-refresh";
 import { withRequestDeadline } from "./request-deadline";
+import { ContentModerationError, moderatePublicContent, moderationArrayValue } from "./content-moderation";
 
 export type CommunityInput = {
   name: string;
@@ -1094,6 +1095,24 @@ const writeActivityFromUi = async (
       uploadedCoverPath = uploaded.path;
     }
     if (input.locationSource === "google") await (await import("./google-places")).resolveGooglePlace(input.googlePlaceId || "");
+    const normalizedQuestions = input.registrationQuestions ? normalizeRegistrationQuestions(input.registrationQuestions) : [];
+    if (normalizedQuestions.length) await moderatePublicContent({
+      scope: "registration_question",
+      fields: normalizedQuestions.flatMap((question) => [
+        { field: "label", value: question.label },
+        { field: "options", value: moderationArrayValue(question.options) },
+      ]),
+    });
+    if (status === "published" && input.visibility === "public") await moderatePublicContent({
+      scope: "activity",
+      fields: [
+        { field: "title", value: input.title.trim() },
+        { field: "description", value: input.description.trim() },
+        { field: "location_instruction", value: input.locationInstruction?.trim() ?? "" },
+        { field: "display_location", value: input.locationSource === "google" ? "Google Maps venue" : input.location.trim() },
+      ],
+      images: uploadedCoverPath ? [{ field: "cover_path", value: uploadedCoverPath, storageBucket: "activity-media", storagePath: uploadedCoverPath }] : [],
+    });
     const { data, error } = await supabase.rpc("create_activity", {
       p_payload: {
         title: input.title.trim(),
@@ -1117,7 +1136,7 @@ const writeActivityFromUi = async (
         community_id: input.communityId ? Number(input.communityId) : null,
         join_type: input.joinType,
         cover_url: uploadedCoverPath,
-        ...(input.registrationQuestions ? { registration_questions: normalizeRegistrationQuestions(input.registrationQuestions) } : {}),
+        ...(input.registrationQuestions ? { registration_questions: normalizedQuestions } : {}),
       },
       p_status: status,
     });
@@ -1155,7 +1174,7 @@ const writeActivityFromUi = async (
       0,
     );
   } catch (error) {
-    if (uploadedCoverPath && !committed) {
+    if (uploadedCoverPath && !committed && !(error instanceof ContentModerationError && error.status === "review")) {
       await supabase.storage
         .from("activity-media")
         .remove([uploadedCoverPath])
@@ -1240,7 +1259,9 @@ export const activityService = {
       }
       return await activityForWorkspace(activity, null, 0);
     } catch (error) {
-      if (uploadedCoverPath) await supabase.storage.from("activity-media").remove([uploadedCoverPath]).catch(() => undefined);
+      if (uploadedCoverPath && !(error instanceof ContentModerationError && error.status === "review")) {
+        await supabase.storage.from("activity-media").remove([uploadedCoverPath]).catch(() => undefined);
+      }
       throw error;
     }
   },

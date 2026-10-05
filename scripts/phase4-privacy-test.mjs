@@ -8,7 +8,7 @@ const calls = [];
 let row = { user_id: 44, profile_visibility: 'public', email_visibility: 'everyone', phone_visibility: 'none', message_visibility: 'friends', show_online_status: false };
 const backend = { rpc: async (name, args) => { calls.push({ name, args }); return { data: row, error: null }; }, auth: { getSession: async () => ({ data: { session: { user: { id: 'fake-test-identity' } } } }) } };
 const exports = {};
-new Function('exports', 'require', js)(exports, name => { if (name === './category-catalog') return { listActiveCategories: async () => [] }; if (name === '../domain/interest-categories') return { INTEREST_CATEGORIES: [] }; assert.equal(name, '../lib/supabase'); return { isSupabaseConfigured: true, supabase: backend }; });
+new Function('exports', 'require', js)(exports, name => { if (name === './category-catalog') return { listActiveCategories: async () => [] }; if (name === '../domain/interest-categories') return { INTEREST_CATEGORIES: [] }; if (name === './content-moderation') return { ContentModerationError: class extends Error {}, moderatePublicContent: async () => ({ status: 'safe' }) }; assert.equal(name, '../lib/supabase'); return { isSupabaseConfigured: true, supabase: backend }; });
 const service = exports.profileProductionService;
 const mapped = await service.getPrivacyPreferences();
 assert.equal(mapped.email_visibility, 'public');

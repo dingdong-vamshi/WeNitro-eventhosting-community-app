@@ -16,7 +16,7 @@ const valid = { ...host.newHostDraft(), category: 'Sports', location: google, da
 assert.equal(host.hostStepError(valid, 2, false), ''); assert.match(host.hostStepError({ ...valid, location: { ...google, googlePlaceId: 'bad\u0000id' } }, 2, false), /location/);
 const osm = { label: 'User selected OSM venue', latitude: 14, longitude: 75 };
 assert.deepEqual(host.persistedHostDraft({ ...valid, location: osm }).location, osm);
-const production = evaluate('src/services/activities-production.ts', { './registration-questions': { validateRegistrationQuestions: () => null }, '../lib/supabase': { isSupabaseConfigured: true, supabase: {} } }, ';exports.test={activityFromDb,buildPayload};');
+const production = evaluate('src/services/activities-production.ts', { './registration-questions': { validateRegistrationQuestions: () => null }, '../lib/supabase': { isSupabaseConfigured: true, supabase: {} }, './content-moderation': { moderatePublicContent: async () => ({ status: 'safe' }), moderationArrayValue: values => (values ?? []).join('\n') } }, ';exports.test={activityFromDb,buildPayload};');
 const { activityFromDb, buildPayload } = production.test;
 const row = { id: 1, created_by: 2, location_source: 'google', google_place_id: 'ChIJ_test', location: 'Google secret name', display_location: 'Google secret address', latitude: 14, longitude: 75, location_coordinates_expires_at: new Date(Date.now() + 86400000).toISOString() };
 let activity = activityFromDb(row, 'Sports'); assert.equal(activity.locationName, 'Google Maps venue'); assert.equal(activity.latitude, 14); assert.equal(activity.googlePlaceId, 'ChIJ_test');

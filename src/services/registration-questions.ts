@@ -1,5 +1,6 @@
 import { supabase } from "../lib/supabase";
 import { normalizeRegistrationQuestions, validateRegistrationQuestions, type RegistrationAnswer, type RegistrationQuestion, type RegistrationQuestionDraft } from "../domain/registration-questions";
+import { moderatePublicContent, moderationArrayValue } from "./content-moderation";
 export * from "../domain/registration-questions";
 export type RegistrationForm = { questions: RegistrationQuestion[]; answers: RegistrationAnswer[]; locked: boolean };
 function eventId(value: string | number): number {
@@ -17,7 +18,11 @@ export const registrationQuestionService = {
   async saveQuestions(activityId: string | number, questions: RegistrationQuestionDraft[]): Promise<RegistrationQuestion[]> {
     const validation = validateRegistrationQuestions(questions);
     if (validation) throw new Error(validation);
-    const { data, error } = await supabase.rpc("save_activity_registration_questions", { p_event_id: eventId(activityId), p_questions: normalizeRegistrationQuestions(questions) });
+    const normalized = normalizeRegistrationQuestions(questions);
+    await moderatePublicContent({ scope: "registration_question", fields: normalized.flatMap((question) => [
+      { field: "label", value: question.label }, { field: "options", value: moderationArrayValue(question.options) },
+    ]) });
+    const { data, error } = await supabase.rpc("save_activity_registration_questions", { p_event_id: eventId(activityId), p_questions: normalized });
     if (error) throw error;
     return data as RegistrationQuestion[];
   },

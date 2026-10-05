@@ -3,6 +3,7 @@ import type { AccountType } from "./auth-production";
 
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 import { listActiveCategories } from "./category-catalog";
+import { ContentModerationError, moderatePublicContent } from "./content-moderation";
 
 const AVATAR_BUCKET = "avatars";
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
@@ -634,6 +635,14 @@ export const profileProductionService = {
       throw new Error("No profile changes supplied.");
     }
     if (Object.keys(update).length) {
+      await moderatePublicContent({
+        scope: "profile",
+        fields: [
+          { field: "bio", value: typeof update.bio === "string" ? update.bio : "" },
+          { field: "about", value: typeof update.about === "string" ? update.about : "" },
+          { field: "occupation", value: typeof update.occupation === "string" ? update.occupation : "" },
+        ],
+      });
       const { error } = await supabase
         .from("tbl_users")
         .update(update)
@@ -709,17 +718,25 @@ export const profileProductionService = {
       .from(AVATAR_BUCKET)
       .getPublicUrl(path).data.publicUrl;
     await assertIdentity();
-    const updated = await supabase
-      .from("tbl_users")
-      .update({ profile_image: publicUrl })
-      .eq("id", userId)
-      .select("id")
-      .single()
-      .setHeader("Authorization", authorization);
-    if (updated.error) {
-      await assertIdentity();
-      await supabase.storage.from(AVATAR_BUCKET).remove([path]);
-      throw updated.error;
+    try {
+      await moderatePublicContent({
+        scope: "profile",
+        images: [{ field: "profile_image", value: publicUrl, storageBucket: "avatars", storagePath: path }],
+      });
+      const updated = await supabase
+        .from("tbl_users")
+        .update({ profile_image: publicUrl })
+        .eq("id", userId)
+        .select("id")
+        .single()
+        .setHeader("Authorization", authorization);
+      if (updated.error) throw updated.error;
+    } catch (error) {
+      if (!(error instanceof ContentModerationError && error.status === "review")) {
+        await assertIdentity();
+        await supabase.storage.from(AVATAR_BUCKET).remove([path]);
+      }
+      throw error;
     }
 
     const oldPath = ownedAvatarPath(

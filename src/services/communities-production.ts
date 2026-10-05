@@ -1,6 +1,7 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { ContentModerationError, moderatePublicContent, moderationArrayValue } from "./content-moderation";
 import { signedUrl, signedUrlMap } from "./storage-signed-urls";
 
 const COMMUNITY_BUCKET = "communities";
@@ -621,6 +622,22 @@ export async function createCommunity(input: CreateCommunityInput): Promise<stri
       ? await uploadCommunityImage(coverSource, authUserId, "cover")
       : null;
     if (cover) uploadedPaths.push(cover.path);
+    if ((input.visibility ?? "public") === "public") {
+      await moderatePublicContent({
+        scope: "community",
+        fields: [
+          { field: "title", value: input.name.trim() },
+          { field: "tagline", value: input.tagline?.trim() ?? "" },
+          { field: "description", value: input.description.trim() },
+          { field: "tags", value: moderationArrayValue(input.tags) },
+          { field: "rules", value: moderationArrayValue(input.rules) },
+        ],
+        images: [
+          ...(image ? [{ field: "image_path", value: image.path, storageBucket: "communities" as const, storagePath: image.path }] : []),
+          ...(cover ? [{ field: "cover_path", value: cover.path, storageBucket: "communities" as const, storagePath: cover.path }] : []),
+        ],
+      });
+    }
     const { data, error } = await supabase.rpc("community_create", {
       p_name: input.name.trim(),
       p_tagline: input.tagline?.trim() ?? "",
@@ -639,7 +656,9 @@ export async function createCommunity(input: CreateCommunityInput): Promise<stri
         : data;
     return String(id);
   } catch (error) {
-    await removeUploadedImages(uploadedPaths).catch(() => undefined);
+    if (!(error instanceof ContentModerationError && error.status === "review")) {
+      await removeUploadedImages(uploadedPaths).catch(() => undefined);
+    }
     throw error;
   }
 }
@@ -693,6 +712,17 @@ export async function createCommunityPost(input: {
       ? input.mediaType ?? (media.contentType === "video/mp4" ? "video" : "image")
       : null;
     uploadedPath = media?.path ?? null;
+    await moderatePublicContent({
+      scope: "community_post",
+      fields: [
+        { field: "title", value: input.title.trim() },
+        { field: "body", value: input.body?.trim() ?? "" },
+        { field: "category", value: input.category?.trim() || "General" },
+      ],
+      images: media && mediaType === "image"
+        ? [{ field: "media_path", value: media.path, storageBucket: "communities", storagePath: media.path }]
+        : [],
+    });
     const { data, error } = await supabase.rpc("community_create_post_v2", {
       p_room_id: integerId(input.communityId, "communityId"),
       p_title: input.title.trim(),
@@ -731,7 +761,9 @@ export async function createCommunityPost(input: {
       updatedAt: String(row.updated_at ?? row.created_at ?? new Date().toISOString()),
     };
   } catch (error) {
-    if (uploadedPath) await removeUploadedImages([uploadedPath]).catch(() => undefined);
+    if (uploadedPath && !(error instanceof ContentModerationError && error.status === "review")) {
+      await removeUploadedImages([uploadedPath]).catch(() => undefined);
+    }
     throw error;
   }
 }
@@ -792,6 +824,7 @@ export async function createPostComment(input: {
   parentId?: string;
 }): Promise<CommunityComment> {
   await currentLegacyUserId(true);
+  await moderatePublicContent({ scope: "community_comment", fields: [{ field: "body", value: input.body.trim() }] });
   const { data, error } = await supabase.rpc("community_create_post_comment", {
     p_post_id: integerId(input.postId, "postId"),
     p_body: input.body.trim(),
@@ -872,12 +905,26 @@ export async function editCommunity(id: string, input: { name: string; descripti
   try {
     if (input.avatar) path = (await uploadCommunityImage(input.avatar, await currentAuthUserId(), 'image')).path;
     if (input.cover) coverPath = (await uploadCommunityImage(input.cover, await currentAuthUserId(), 'cover')).path;
+    if ((input.visibility ?? 'public') === 'public') await moderatePublicContent({
+      scope: 'community',
+      fields: [{ field: 'title', value: input.name.trim() }, { field: 'description', value: input.description.trim() },
+        { field: 'rules', value: moderationArrayValue(input.rules) }],
+      images: [
+        ...(path ? [{ field: 'image_path', value: path, storageBucket: 'communities' as const, storagePath: path }] : []),
+        ...(coverPath ? [{ field: 'cover_path', value: coverPath, storageBucket: 'communities' as const, storagePath: coverPath }] : []),
+      ],
+    });
     await manageCommunity(id, 'edit', { name: input.name, description: input.description, category: input.category,
       ...(input.avatar === undefined ? {} : { image_path: path || '' }),
       ...(input.cover === undefined ? {} : { cover_path: coverPath || '' }),
       ...(input.rules === undefined ? {} : { rules: input.rules }),
       ...(input.visibility === undefined ? {} : { visibility: input.visibility }) });
-  } catch (error) { await removeUploadedImages([path, coverPath].filter((p): p is string => !!p)).catch(() => undefined); throw error; }
+  } catch (error) {
+    if (!(error instanceof ContentModerationError && error.status === 'review')) {
+      await removeUploadedImages([path, coverPath].filter((p): p is string => !!p)).catch(() => undefined);
+    }
+    throw error;
+  }
 }
 export type CommunityPoll = { id: number; message_id: number; question: string; created_by: number; created_at: string; my_option_id: number | null; total_votes: number; options: { id: number; text: string; votes: number; percentage: number }[] };
 export type CommunityPollVoter = { user_id: number; option_id: number; option_text: string; username: string; full_name: string | null; avatar_url: string | null; voted_at: string };

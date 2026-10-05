@@ -20,6 +20,7 @@ const api = {};
 const code = ts.transpile(fs.readFileSync('src/services/communities-production.ts', 'utf8'), { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 });
 new Function('exports', 'require', code)(api, name => {
   if (name === '../lib/supabase') return { isSupabaseConfigured: true, supabase: backend };
+  if (name === './content-moderation') return { ContentModerationError: class extends Error {}, moderatePublicContent: async () => ({ status: 'safe' }), moderationArrayValue: values => (values ?? []).join('\n') };
   assert.equal(name, './storage-signed-urls');
   return { signedUrlMap: async (bucket, paths, ttl) => { signing.push({ bucket, paths, ttl }); return new Map(paths.map(path => [path, `https://signed.invalid/${path}`])); } };
 });

@@ -84,6 +84,7 @@ const modules = {
   './vibes-production': { vibesProductionService: { listReels: async () => { calls.push({ name: 'vibes' }); return { reels: [] }; } } },
   './stories-production': { storiesProductionService: { listActive: async () => { calls.push({ name: 'stories' }); return []; } } },
   './registration-questions': {},
+  './content-moderation': { ContentModerationError: class extends Error {}, moderatePublicContent: async () => ({ status: 'safe' }), moderationArrayValue: values => (values ?? []).join('\n') },
   './realtime-chat': { realtimeChatService: {} },
 };
 const exports = {};

@@ -54,6 +54,7 @@ const exports = {};
 new Function('exports', 'require', compiled)(exports, name => {
   if (name === '../lib/supabase') return { supabase: backend, isSupabaseConfigured: true };
   if (name === './registration-questions') return {};
+  if (name === './content-moderation') return { moderatePublicContent: async () => ({ status: 'safe' }), moderationArrayValue: values => (values ?? []).join('\n') };
   throw new Error(`Unexpected dependency ${name}`);
 });
 const service = exports.activitiesProductionService;
