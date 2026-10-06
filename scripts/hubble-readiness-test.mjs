@@ -28,10 +28,12 @@ vm.runInNewContext(compile('src/services/hubble.ts'), {
   exports: module.exports,
   require(name) {
     if (name === '../lib/supabase') return { supabase };
+    if (name === './request-deadline') return { withRequestDeadline: task => task(new AbortController().signal) };
     throw new Error(`Unexpected dependency: ${name}`);
   },
   process: { env: {} },
   URL,
+  AbortController,
 });
 const { requestHubbleReadiness } = module.exports;
 

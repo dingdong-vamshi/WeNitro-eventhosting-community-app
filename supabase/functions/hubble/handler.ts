@@ -49,6 +49,7 @@ type Dependencies = {
     note: string | null;
   }) => Promise<HubbleLedgerResult>;
   now?: () => number;
+  log?: (entry: Record<string, unknown>) => void;
 };
 
 const corsHeaders = {
@@ -163,6 +164,9 @@ const note = (value: unknown) => {
   return parsed || null;
 };
 
+const referenceHint = (value: string) =>
+  value.length <= 8 ? "[masked]" : `${value.slice(0, 4)}…${value.slice(-4)}`;
+
 const routeName = (request: Request) => {
   const parts = new URL(request.url).pathname.split("/").filter(Boolean);
   const hubbleIndex = parts.lastIndexOf("hubble");
@@ -197,6 +201,25 @@ export function createHubbleHandler(deps: Dependencies) {
   return async (request: Request) => {
     if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
     const route = routeName(request);
+    const startedAt = performance.now();
+    const requestId = crypto.randomUUID();
+    let context: Record<string, unknown> = {};
+    const respond = (body: Record<string, unknown>, status = 200) => {
+      const entry = {
+        event: "hubble_request",
+        requestId,
+        route,
+        method: request.method,
+        status,
+        result: body.status,
+        failureReason: body.status === "FAILED" ? body.failureReason : undefined,
+        durationMs: Math.round(performance.now() - startedAt),
+        ...context,
+      };
+      if (deps.log) deps.log(entry);
+      else console.info(JSON.stringify(entry));
+      return json(body, status);
+    };
     try {
       const config = await deps.config();
       if (config.environment !== "staging" ||
@@ -205,62 +228,74 @@ export function createHubbleHandler(deps: Dependencies) {
       }
 
       if (route === "token") {
-        if (request.method !== "GET") return json({ status: "FAILED", failureReason: "Method not allowed" }, 405);
+        if (request.method !== "GET") return respond({ status: "FAILED", failureReason: "Method not allowed" }, 405);
         const authId = await deps.authenticate(request);
-        const context = await deps.tokenContext(authId);
-        if (context.environment !== "staging") throw new Error("Hubble staging is unavailable.");
+        const tokenContext = await deps.tokenContext(authId);
+        if (tokenContext.environment !== "staging") throw new Error("Hubble staging is unavailable.");
+        // Auth UUID, access token, phone and email are deliberately not logged.
+        context = { userId: tokenContext.userId };
         const issuedAt = Math.floor((deps.now?.() ?? Date.now()) / 1000);
-        const token = await signHubbleJwt(config, context, issuedAt);
-        return json({
+        const token = await signHubbleJwt(config, tokenContext, issuedAt);
+        return respond({
           status: "SUCCESS",
           token,
           clientId: config.clientId,
           appSecret: config.appSecret,
           sdkUrl: config.sdkUrl,
-          balance: context.balance,
-          eligible: context.eligible,
-          eligibilityPoints: context.eligibilityPoints,
-          minimumDebitPoints: context.minimumDebitPoints,
-          nitroToInr: context.nitroToInr,
-          paymentModel: context.paymentModel,
-          environment: context.environment,
+          balance: tokenContext.balance,
+          eligible: tokenContext.eligible,
+          eligibilityPoints: tokenContext.eligibilityPoints,
+          minimumDebitPoints: tokenContext.minimumDebitPoints,
+          nitroToInr: tokenContext.nitroToInr,
+          paymentModel: tokenContext.paymentModel,
+          environment: tokenContext.environment,
         });
       }
 
       const suppliedSecret = request.headers.get("X-Hubble-Secret") ?? "";
       if (!constantTimeEqual(suppliedSecret, config.sharedSecret)) {
-        return json({ status: "FAILED", failureReason: "Unauthorized" }, 401);
+        return respond({ status: "FAILED", failureReason: "Unauthorized" }, 401);
       }
 
       if (route === "balance") {
-        if (request.method !== "GET") return json({ status: "FAILED", failureReason: "Method not allowed" }, 405);
-        const result = await deps.balance(positiveUserId(new URL(request.url).searchParams.get("userId")));
-        return json({ status: "SUCCESS", ...result });
+        if (request.method !== "GET") return respond({ status: "FAILED", failureReason: "Method not allowed" }, 405);
+        const userId = positiveUserId(new URL(request.url).searchParams.get("userId"));
+        context = { userId };
+        const result = await deps.balance(userId);
+        context = { ...context, balance: result.totalCoins };
+        return respond({ status: "SUCCESS", ...result });
       }
 
       if (route === "debit" || route === "reverse") {
-        if (request.method !== "POST") return json({ status: "FAILED", failureReason: "Method not allowed" }, 405);
+        if (request.method !== "POST") return respond({ status: "FAILED", failureReason: "Method not allowed" }, 405);
         let body: Record<string, unknown>;
         try {
           body = await request.json() as Record<string, unknown>;
         } catch {
-          return json({ status: "FAILED", failureReason: "Invalid JSON body" }, 400);
+          return respond({ status: "FAILED", failureReason: "Invalid JSON body" }, 400);
         }
         const userId = positiveUserId(String(bodyValue(body, "userId") ?? ""));
         const requestReference = referenceId(bodyValue(body, "referenceId"));
         const requestNote = note(bodyValue(body, "note"));
+        const requestedCoins = route === "debit" ? wholeCoins(bodyValue(body, "coins")) : undefined;
+        context = {
+          userId,
+          reference: referenceHint(requestReference),
+          ...(requestedCoins ? { coins: requestedCoins } : {}),
+        };
         const result = route === "debit"
           ? await deps.debit({
             userId,
-            coins: wholeCoins(bodyValue(body, "coins")),
+            coins: requestedCoins!,
             referenceId: requestReference,
             note: requestNote,
           })
           : await deps.reverse({ userId, referenceId: requestReference, note: requestNote });
-        return json({ status: "SUCCESS", ...result });
+        context = { ...context, transactionId: result.transactionId, balance: result.balance, idempotent: result.idempotent };
+        return respond({ status: "SUCCESS", ...result });
       }
 
-      return json({ status: "FAILED", failureReason: "Not found" }, 404);
+      return respond({ status: "FAILED", failureReason: "Not found" }, 404);
     } catch (error) {
       const failureReason = safeFailure(error);
       const status = /Authentication required|Missing bearer token/.test(
@@ -269,7 +304,7 @@ export function createHubbleHandler(deps: Dependencies) {
         : /No user with this ID|Original debit not found/.test(failureReason) ? 404
         : failureReason === "Request failed" ? 500
         : 400;
-      return json({ status: "FAILED", failureReason }, status);
+      return respond({ status: "FAILED", failureReason }, status);
     }
   };
 }

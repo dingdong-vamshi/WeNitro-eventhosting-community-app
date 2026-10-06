@@ -87,6 +87,7 @@ Deno.test("RS256 SSO JWT is verifiable, fresh and expires in exactly 60 seconds"
 
 function fixture() {
   const calls: unknown[] = [];
+  const logs: Record<string, unknown>[] = [];
   const handler = createHubbleHandler({
     config: async () => config,
     authenticate: async request => {
@@ -111,12 +112,13 @@ function fixture() {
       return { transactionId: "nitro_txn_2", balance: 201, referenceId: args.referenceId, idempotent: false };
     },
     now: () => 1_800_000_000_000,
+    log: entry => logs.push(entry),
   });
   const request = async (path: string, init: RequestInit = {}) => {
     const response = await handler(new Request(`https://project.test/functions/v1/hubble/${path}`, init));
     return { status: response.status, headers: response.headers, body: await response.json() };
   };
-  return { calls, request };
+  return { calls, logs, request };
 }
 
 Deno.test("authenticated token response exposes SDK config but never callback secret or private key", async () => {
@@ -130,6 +132,9 @@ Deno.test("authenticated token response exposes SDK config but never callback se
   const serialized = JSON.stringify(result.body);
   assert.equal(serialized.includes(config.sharedSecret), false);
   assert.equal(serialized.includes("BEGIN PRIVATE KEY"), false);
+  assert.equal(JSON.stringify(f.logs).includes(config.sharedSecret), false);
+  assert.equal(f.logs.at(-1)?.route, "token");
+  assert.equal(f.logs.at(-1)?.userId, 42);
   const unauthenticated = await f.request("token");
   assert.equal(unauthenticated.status, 401);
   assert.equal(unauthenticated.body.failureReason, "Authentication required");
@@ -153,6 +158,11 @@ Deno.test("callback secret, input validation, debit and reverse contracts are en
   assert.equal(reverse.body.status, "SUCCESS");
   assert.equal(f.calls.filter(value => "debit" in (value as Record<string, unknown>)).length, 1);
   assert.equal(f.calls.filter(value => "reverse" in (value as Record<string, unknown>)).length, 1);
+  const debitLog = f.logs.find(row => row.route === "debit" && row.status === 200);
+  assert.equal(debitLog?.status, 200);
+  assert.equal(debitLog?.reference, "[masked]");
+  assert.equal(debitLog?.coins, 1);
+  assert.equal(JSON.stringify(f.logs).includes(config.sharedSecret), false);
 });
 
 Deno.test("production URL or environment cannot be enabled by accidental configuration drift", async () => {

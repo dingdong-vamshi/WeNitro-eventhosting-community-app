@@ -80,52 +80,39 @@ await assert.rejects(() => auth.requestCurrentUserEmailChange({ email: 'safe@exa
 returnedUserId = user.id;
 
 const phoneCalls = [];
-let phoneUpdateError = null;
-let phoneVerifyError = null;
-let phoneDeadlineError = null;
-let phoneAuthUser = { ...user, phone: null, phone_confirmed_at: null };
-const phoneSupabase = {
-  auth: {
-    getUser: async () => ({ data: { user: phoneAuthUser }, error: null }),
-    updateUser: async attributes => { phoneCalls.push({ method: 'updateUser', attributes }); return { data: { user: phoneAuthUser }, error: phoneUpdateError }; },
-    resend: async input => { phoneCalls.push({ method: 'resend', input }); return { data: {}, error: null }; },
-    verifyOtp: async input => {
-      phoneCalls.push({ method: 'verifyOtp', input });
-      if (!phoneVerifyError) phoneAuthUser = { ...phoneAuthUser, phone: input.phone, phone_confirmed_at: '2026-10-06T00:02:00Z' };
-      return { data: {}, error: phoneVerifyError };
-    },
-  },
-  rpc: async name => { phoneCalls.push({ method: 'rpc', name }); return { data: null, error: null }; },
+let phoneFailure = null;
+const phoneChangeService = {
+  request: async phone => { phoneCalls.push({ method: 'request', phone }); if (phoneFailure) throw phoneFailure; return phone; },
+  resend: async phone => { phoneCalls.push({ method: 'resend', phone }); if (phoneFailure) throw phoneFailure; return phone; },
+  verify: async (phone, token) => { phoneCalls.push({ method: 'verify', phone, token }); if (phoneFailure) throw phoneFailure; return phone; },
 };
 const reference = load('src/services/reference-delta.ts', {
-  '../lib/supabase': { supabase: phoneSupabase },
+  '../lib/supabase': { supabase: {} },
   './auth-production': auth,
   './profile-production': { profileProductionService: {} },
-  './request-deadline': { withRequestDeadline: task => phoneDeadlineError ? Promise.reject(phoneDeadlineError) : task() },
+  './phone-change': { phoneChangeService },
 }).referenceDeltaService;
 
 await assert.rejects(() => reference.requestPhoneChange('123'), /valid 10-digit/i);
 assert.equal(phoneCalls.length, 0, 'invalid phone must stop before Auth/provider');
 await reference.requestPhoneChange('9876543210');
-assert.equal(phoneCalls.at(-1).attributes.phone, '+919876543210');
+assert.equal(phoneCalls.at(-1).phone, '+919876543210');
 
-phoneUpdateError = { code: 'phone_exists', message: 'already registered' };
+phoneFailure = new Error('This phone number is already linked to another WeNitro account.');
 await assert.rejects(() => reference.requestPhoneChange('9876543210'), /another WeNitro account/i);
-phoneUpdateError = null;
-phoneDeadlineError = new Error('The OTP request took too long. Your phone was not verified. Please try again.');
+phoneFailure = new Error('The OTP request took too long. Your phone was not verified. Please try again.');
 await assert.rejects(() => reference.requestPhoneChange('9876543210'), /took too long.*not verified/i);
-phoneDeadlineError = null;
+phoneFailure = null;
 await reference.resendPhoneChange('9876543210');
-assert.equal(phoneCalls.at(-1).input.type, 'phone_change');
+assert.equal(phoneCalls.at(-1).method, 'resend');
 
-phoneVerifyError = { code: 'otp_expired', message: 'Token has expired' };
+phoneFailure = new Error('This OTP has expired. Request a new OTP and try again.');
 await assert.rejects(() => reference.verifyPhoneChange('9876543210', '123456'), /expired/i);
-phoneVerifyError = { code: 'otp_disabled', message: 'Token is invalid' };
+phoneFailure = new Error('That OTP is incorrect. Check the 6-digit code and try again.');
 await assert.rejects(() => reference.verifyPhoneChange('9876543210', '123456'), /incorrect/i);
-phoneVerifyError = null;
+phoneFailure = null;
 await reference.verifyPhoneChange('9876543210', '123456');
-assert.equal(phoneCalls.findLast(call => call.method === 'verifyOtp').input.type, 'phone_change');
-assert.deepEqual(phoneCalls.filter(call => call.method === 'rpc').slice(-2).map(call => call.name), ['sync_my_phone_verification', 'sync_my_verification']);
+assert.deepEqual(phoneCalls.at(-1), { method: 'verify', phone: '+919876543210', token: '123456' });
 
 const uiSource = fs.readFileSync('src/components/reconstruction/profile-utilities.tsx', 'utf8');
 for (const required of [

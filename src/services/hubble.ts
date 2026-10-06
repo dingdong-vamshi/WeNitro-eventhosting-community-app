@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { withRequestDeadline } from './request-deadline';
 
 export type HubbleSession = {
   status: 'SUCCESS';
@@ -52,8 +53,8 @@ export const hubbleSdkUrl = (session: HubbleSession) => {
 
 export async function requestHubbleReadiness(): Promise<HubbleReadiness> {
   const [auth, ledger] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.rpc('list_my_nitro_history'),
+    withRequestDeadline(() => supabase.auth.getUser(), 8_000, 'Your account took too long to respond. Please retry.'),
+    withRequestDeadline(async () => await supabase.rpc('list_my_nitro_history'), 8_000, 'Your Nitro balance took too long to respond. Please retry.'),
   ]);
   if (auth.error || !auth.data.user) throw new Error('Sign in to view your Nitro balance.');
   if (ledger.error) throw new Error('Your Nitro balance is temporarily unavailable.');
@@ -73,19 +74,24 @@ export async function requestHubbleReadiness(): Promise<HubbleReadiness> {
 }
 
 export async function requestHubbleSession(): Promise<HubbleSession> {
-  const current = await supabase.auth.getSession();
+  const current = await withRequestDeadline(
+    () => supabase.auth.getSession(),
+    8_000,
+    'Your session took too long to respond. Please retry.',
+  );
   const accessToken = current.data.session?.access_token;
   if (current.error || !accessToken) throw new Error('Sign in to open Hubble rewards.');
   if (!publicUrl || !publicKey) throw new Error('WeNitro rewards are not configured.');
-  const response = await fetch(new URL('/functions/v1/hubble/token', publicUrl), {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      apikey: publicKey,
-      'x-client-info': 'wenitro-expo/1.0.0',
-    },
-    cache: 'no-store',
-  });
+  const response = await withRequestDeadline(signal => fetch(new URL('/functions/v1/hubble/token', publicUrl), {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey: publicKey,
+        'x-client-info': 'wenitro-expo/1.0.0',
+      },
+      cache: 'no-store',
+      signal,
+    }), 15_000, 'Hubble sign-in took too long. Please retry.');
   const data = await response.json().catch(() => ({})) as Record<string, unknown>;
   if (!response.ok || !validSession(data)) {
     throw new Error(typeof data.failureReason === 'string'

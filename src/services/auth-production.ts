@@ -46,8 +46,11 @@ export function phoneOtpErrorMessage(error: unknown, createAccount: boolean) {
   if (existingAccountOnly) {
     return "No WeNitro account was found for this phone number. Create an account to continue.";
   }
-  if (source?.code === "phone_exists" || /phone number.*already.*registered/i.test(message ?? "")) {
+  if (source?.code === "phone_exists" || message === 'phone_exists' || /phone number.*already.*registered/i.test(message ?? "")) {
     return "This phone number is already linked to another WeNitro account.";
+  }
+  if (message === 'phone_change_in_progress') {
+    return "A phone verification for this number is already pending. Please try again later.";
   }
   if (source?.code === "over_sms_send_rate_limit" || /rate limit|security purposes.*seconds/i.test(message ?? "")) {
     return "Please wait before requesting another OTP.";
