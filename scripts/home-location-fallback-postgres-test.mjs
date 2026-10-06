@@ -38,7 +38,7 @@ try {
     ${fs.readFileSync('supabase/migrations/20261006170000_home_activity_location_fallback.sql', 'utf8')}
     insert into public.tbl_events(id,display_location,event_end_time) values
       (1,'Pune, Maharashtra, 411001, India',now()-interval '4 days'),
-      (2,'Banjara Hills, Hyderabad, Nampally mandal, Telangana, 500034, India',now()-interval '2 days'),
+      (2,'Bengaluru, Bangalore North, Karnataka, 560001, India',now()-interval '2 days'),
       (3,'Mumbai, Maharashtra, India',now()-interval '1 day'),
       (4,'Bengaluru, Karnataka, India',now()+interval '1 day'),
       (5,'QA Test Location',now()-interval '2 hours'),
@@ -55,7 +55,7 @@ try {
       (7,7,2,'approved','participant',now());
   `);
 
-  equal(last("select set_config('qa.user','1',false);select public.home_location_fallback()->>'locality'"), 'Hyderabad');
+  equal(last("select set_config('qa.user','1',false);select public.home_location_fallback()->>'locality'"), 'Bengaluru');
   equal(last("select set_config('qa.user','2',false);select public.home_location_fallback()->>'locality'"), 'Kochi');
   equal(last("select set_config('qa.user','3',false);select public.home_location_fallback() is null"), 't');
   equal(sql("select private.activity_location_city('Wakad, Tathawade, Mulshi Subdistrict, Maharashtra, 411057, India')"), 'Tathawade');

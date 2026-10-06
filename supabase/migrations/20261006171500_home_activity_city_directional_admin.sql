@@ -36,39 +36,4 @@ begin
 end
 $$;
 
-create or replace function public.home_location_fallback()
-returns jsonb
-language plpgsql
-stable
-security definer
-set search_path = ''
-as $$
-declare
-  me integer := public.get_current_app_user_id();
-  city text;
-begin
-  select private.activity_location_city(coalesce(event.display_location, event.location))
-  into city
-  from public.tbl_event_participants participant
-  join public.tbl_events event on event.id = participant.event_id
-  where participant.user_id = me
-    and participant.status = 'approved'
-    and not coalesce(event.is_deleted, false)
-    and not coalesce(event.is_cancelled, false)
-    and event.event_end_time is not null
-    and event.event_end_time <= now()
-    and private.activity_location_city(coalesce(event.display_location, event.location)) is not null
-  order by event.event_end_time desc, participant.joined_at desc nulls last, participant.id desc
-  limit 1;
-
-  if city is null then return null; end if;
-  return jsonb_build_object('locality', city, 'source', 'activity');
-end
-$$;
-
 revoke all on function private.activity_location_city(text) from public, anon, authenticated;
-revoke all on function public.home_location_fallback() from public, anon;
-grant execute on function public.home_location_fallback() to authenticated;
-
-comment on function public.home_location_fallback() is
-  'Returns only the current user''s most recent completed, approved participant activity city for the Home location fallback.';
