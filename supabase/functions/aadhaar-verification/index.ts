@@ -8,6 +8,7 @@ Deno.serve(createAadhaarHandler({
   return {authId:user.id,allowed:!identity.error&&Boolean(identity.data),syncVerified:async()=>await client.rpc('sync_my_verification')};
  },
  ledger:async(authId,args)=>await adminClient().rpc('aadhaar_session_service',{p_auth_id:authId,...args}),
+ legacyLedger:async(authId,args)=>await adminClient().rpc('aadhaar_otp_session_service',{p_auth_id:authId,...args}),
  secrets:async()=>{
   const {data,error}=await adminClient().rpc('provider_runtime_secrets');
   if(error||!data||typeof data!=='object')return {};

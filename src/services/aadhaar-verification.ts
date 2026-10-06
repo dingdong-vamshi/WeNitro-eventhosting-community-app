@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { AADHAAR_ACTIONS, type DigiLockerAction } from '../../supabase/functions/_shared/aadhaar-actions';
 
 export const AADHAAR_CONSENT_VERSION = 'wenitro-aadhaar-digilocker-sdk-v1';
 
@@ -16,13 +17,13 @@ const sessionPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]
 const publicKeyPattern = /^key_(?:live|test)_[A-Za-z0-9_-]{8,}$/;
 
 async function invoke(
-  action: 'availability' | 'begin' | 'refresh',
+  action: DigiLockerAction,
   consent = false,
 ): Promise<AadhaarVerificationState> {
   const { data, error } = await supabase.functions.invoke('aadhaar-verification', {
     body: {
       action,
-      ...(action === 'begin'
+      ...(action === AADHAAR_ACTIONS.begin
         ? { consent, consentVersion: AADHAAR_CONSENT_VERSION }
         : {}),
     },
@@ -47,7 +48,7 @@ async function invoke(
   ) {
     throw new Error('Aadhaar verification returned an invalid result.');
   }
-  if (action === 'begin' || data.sessionId !== undefined || data.publicApiKey !== undefined) {
+  if (action === AADHAAR_ACTIONS.begin || data.sessionId !== undefined || data.publicApiKey !== undefined) {
     if (
       typeof data.sessionId !== 'string' ||
       !sessionPattern.test(data.sessionId) ||
@@ -61,7 +62,7 @@ async function invoke(
 }
 
 export const aadhaarVerificationService = {
-  availability: () => invoke('availability'),
-  begin: (consent: boolean) => invoke('begin', consent),
-  refresh: () => invoke('refresh'),
+  availability: () => invoke(AADHAAR_ACTIONS.availability),
+  begin: (consent: boolean) => invoke(AADHAAR_ACTIONS.begin, consent),
+  refresh: () => invoke(AADHAAR_ACTIONS.refresh),
 };

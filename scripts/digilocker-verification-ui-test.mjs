@@ -80,9 +80,12 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
 {
   let reply = { available: true, verified: false, status: 'created', sessionId: '11111111-1111-4111-8111-111111111111', publicApiKey: 'key_live_public_mock' };
   const requests = [];
-  const client = compile(fs.readFileSync('src/services/aadhaar-verification.ts', 'utf8'), () => ({
-    supabase: { functions: { invoke: async (name, args) => { requests.push({ name, ...args }); return { data: reply, error: null }; } } },
-  })).aadhaarVerificationService;
+  const client = compile(fs.readFileSync('src/services/aadhaar-verification.ts', 'utf8'), name =>
+    name.includes('aadhaar-actions')
+      ? { AADHAAR_ACTIONS: { availability: 'availability', begin: 'begin', refresh: 'refresh' } }
+      : {
+        supabase: { functions: { invoke: async (functionName, args) => { requests.push({ name: functionName, ...args }); return { data: reply, error: null }; } } },
+      }).aadhaarVerificationService;
   await client.begin(true);
   eq(requests[0], {
     name: 'aadhaar-verification',
@@ -103,6 +106,11 @@ assert.match(cardSource, /event === 'completed'/); checks += 1;
 assert.match(cardSource, /void run\('refresh'\)/); checks += 1;
 assert.match(cardSource, /No verification was granted/); checks += 1;
 assert.doesNotMatch(cardSource, /setState\([^)]*verified:\s*true/); checks += 1;
+const contractSource = fs.readFileSync('supabase/functions/_shared/aadhaar-actions.ts', 'utf8');
+assert.match(contractSource, /legacySendOtp:\s*"sendOtp"/); checks += 1;
+assert.match(contractSource, /legacyVerifyOtp:\s*"verifyOtp"/); checks += 1;
+assert.match(fs.readFileSync('src/services/aadhaar-verification.ts', 'utf8'), /AADHAAR_ACTIONS\.begin/); checks += 1;
+assert.match(fs.readFileSync('supabase/functions/aadhaar-verification/handler.ts', 'utf8'), /isLegacyOkycAction/); checks += 1;
 
 console.log(JSON.stringify({
   status: 'PASS',
