@@ -114,6 +114,8 @@ const phoneModule = ({ verifyMode = 'success', preflight = 'ok' } = {}) => {
 
 const ui = fs.readFileSync('src/components/reconstruction/profile-utilities.tsx', 'utf8');
 pass(/Phone verified[\s\S]*void load\(\)\.catch/.test(ui), 'verified UI clears the submit operation before background reload');
+const verificationService = fs.readFileSync('src/services/verification-production.ts', 'utf8');
+pass(/phone_confirmed_at[\s\S]*sync_my_phone_verification[\s\S]*sync_my_verification/.test(verificationService), 'verified Auth phone self-heals the legacy profile projection on page load');
 const migration = fs.readFileSync('supabase/migrations/20261007120000_phone_change_cross_account_safety.sql', 'utf8');
 pass(/phone_change_in_progress/.test(migration) && /auth\.users[\s\S]*phone_change/.test(migration), 'migration blocks cross-account pending-phone ambiguity');
 

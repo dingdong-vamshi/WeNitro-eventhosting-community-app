@@ -150,6 +150,20 @@ async function discard(draftId: number) {
 
 export const verificationService = {
   async syncMethods(): Promise<VerificationMethods> {
+    // Supabase Auth is authoritative for phone confirmation. Older successful
+    // phone-change attempts could leave the legacy profile mirror behind when
+    // the browser stopped waiting after Auth committed. Repair that mirror on
+    // the next verification-page load without asking for another OTP.
+    const { data: sessionData } = await supabase.auth.getSession();
+    const authUser = sessionData.session?.user;
+    if (authUser?.phone && authUser.phone_confirmed_at) {
+      try {
+        await supabase.rpc('sync_my_phone_verification');
+      } catch {
+        // The Auth result remains authoritative; a later load can retry the
+        // legacy display projection without changing verification state.
+      }
+    }
     const { data, error } = await supabase.rpc('sync_my_verification');
     if (error) throw error;
     refreshVerifiedUsers();
