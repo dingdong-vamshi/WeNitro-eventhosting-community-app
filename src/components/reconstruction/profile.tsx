@@ -12,6 +12,7 @@ import { activitiesProductionService } from '../../services/activities-productio
 import { listReels, type VibeReel } from '../../services/vibes-production';
 import { realtimeChatService } from '../../services/realtime-chat';
 import { publicProfileImageUrl, referenceDeltaService, type ProfilePhoto } from '../../services/reference-delta';
+import { selectAboutProfilePhoto } from '../../services/profile-about';
 import { verificationService } from '../../services/verification-production';
 import { profileProductionService } from '../../services/profile-production';
 import { derivedTrustScore, trustScoreParts } from '../../domain/profile-signals';
@@ -71,13 +72,18 @@ const interestAppearance = (label: string): { icon: React.ComponentProps<typeof 
  return { icon: 'sparkles-outline', color: '#7765D5' };
 };
 
-/** Lightweight decorative landscape: no network request or downloaded stock art. */
-function ProfileLandscape() {
- return <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={s.landscape}>
-  <View style={s.landscapeSun} /><View style={[s.landscapeCloud, { top: 14, left: 17 }]} /><View style={[s.landscapeCloud, { top: 31, right: 9, width: 21 }]} />
-  <View style={[s.mountain, s.mountainBack]} /><View style={[s.mountain, s.mountainMiddle]} /><View style={[s.mountain, s.mountainFront]} />
-  <View style={s.landscapeGround} /><View style={s.landscapeTrail} />
-  <View style={[s.landscapeLeaf, { left: 8, bottom: 9, transform: [{ rotate: '-30deg' }] }]} /><View style={[s.landscapeLeaf, { left: 21, bottom: 7, transform: [{ rotate: '28deg' }] }]} />
+function ProfileAboutVisual({ uri }: { uri: string | null }) {
+ const c = usePalette();
+ const [loaded, setLoaded] = useState(false), [failed, setFailed] = useState(false);
+ useEffect(() => { setLoaded(false); setFailed(false); }, [uri]);
+ const showPhoto = Boolean(uri && !failed);
+ return <View accessible accessibilityLabel={showPhoto ? 'Profile photo shown beside About me' : 'About profile illustration'} style={[s.aboutVisual, { backgroundColor: c.isDark ? '#28214A' : '#F1EDFF' }]}>
+  <View pointerEvents="none" style={s.aboutFallback}>
+   <View style={[s.aboutFallbackHalo, { backgroundColor: c.isDark ? '#5D4BB1' : '#D8CCFA' }]} />
+   <Icon name="person-circle-outline" size={49} color={c.accent} />
+   <View style={s.aboutFallbackSpark}><Icon name="sparkles" size={14} color="#FFF" /></View>
+  </View>
+  {showPhoto ? <Image source={{ uri: uri! }} resizeMode="cover" onLoad={() => setLoaded(true)} onError={() => setFailed(true)} style={[StyleSheet.absoluteFill, s.aboutPhoto, { opacity: loaded ? 1 : 0 }]} /> : null}
  </View>;
 }
 
@@ -92,6 +98,7 @@ function ProfileLayout({ identity, summary, metrics, links, gallery, linksAvaila
  const rating = metrics?.rating ?? metrics?.karma;
  const score = owner ? metrics ? trustFrom(metrics, linksAvailable ? configured.length > 0 : undefined) : null : metrics?.trust_score ?? null;
  const photos = gallery.length ? gallery.slice(0, 3) : identity.avatar ? [{ uri: identity.avatar, position: 1 }] : [];
+ const aboutPhoto = selectAboutProfilePhoto(photos);
  const values = [
   { label: 'Activities', value: metrics?.activities, icon: 'calendar-outline' as const, color: '#9563D4', action: activities ?? (() => showTab('Activities')) },
   { label: 'Squad', value: metrics?.squad, icon: 'people-outline' as const, color: '#7769D0', action: squad },
@@ -156,7 +163,7 @@ function ProfileLayout({ identity, summary, metrics, links, gallery, linksAvaila
    <View style={[s.metrics, { backgroundColor: c.card, borderColor: c.border }]}>{values.map((item, index) => <Pressable key={item.label} accessibilityRole="button" accessibilityLabel={`${item.label}: ${item.value ?? 'unavailable'}`} onPress={item.action} style={[s.metric, { borderLeftWidth: index ? 1 : 0, borderColor: c.border }]}><Icon name={item.icon} color={item.color} size={21} /><Text style={[s.metricValue, { color: c.text }]}>{item.value ?? '—'}</Text><Text numberOfLines={1} style={[s.metricLabel, { color: c.muted }]}>{item.label}</Text></Pressable>)}</View>
    <View style={[s.aboutCard, { backgroundColor: c.card, borderColor: c.border }]}>
     <View style={{ flex: 1, gap: 6 }}><Text style={[s.sectionTitle, { color: c.text }]}>About me</Text><Text numberOfLines={aboutExpanded ? undefined : 3} style={[s.summaryText, { color: c.muted }]}>{summary?.about || (owner ? 'Tell people a little about yourself and the experiences you enjoy.' : 'This member has not added a bio yet.')}</Text>{summary?.about && summary.about.length > 110 ? <Pressable accessibilityRole="button" onPress={() => setAboutExpanded(!aboutExpanded)}><Text style={{ color: c.accent, fontSize: 11, fontWeight: '700' }}>{aboutExpanded ? 'Read less' : 'Read more'}</Text></Pressable> : !summary?.about && owner ? <Pressable accessibilityRole="button" onPress={editProfile}><Text style={{ color: c.accent, fontSize: 11, fontWeight: '700' }}>Add bio</Text></Pressable> : null}</View>
-    <ProfileLandscape />
+    <ProfileAboutVisual uri={aboutPhoto} />
    </View>
    <View style={[s.interestsCard, { backgroundColor: c.card, borderColor: c.border }]}><View style={s.sectionHeadingRow}><Text style={[s.sectionTitle, { color: c.text }]}>Interests</Text>{owner && <Pressable accessibilityRole="button" accessibilityLabel="Manage interests" onPress={editProfile}><Text style={{ color: c.accent, fontSize: 11, fontWeight: '700' }}>Manage</Text></Pressable>}</View>
     {summary?.interests?.length ? <View style={s.interestGrid}>{summary.interests.slice(0, interestsExpanded ? undefined : 5).map(interest => { const appearance = interestAppearance(interest); return <View key={interest} style={s.interestItem}><View style={[s.interestIcon, { backgroundColor: `${appearance.color}18` }]}><Icon name={appearance.icon} size={22} color={appearance.color} /></View><Text numberOfLines={2} style={{ color: c.muted, fontSize: 10, textAlign: 'center' }}>{interest}</Text></View>; })}{summary.interests.length > 5 ? <Pressable accessibilityRole="button" accessibilityLabel={interestsExpanded ? 'Show fewer interests' : 'Show all interests'} onPress={() => setInterestsExpanded(!interestsExpanded)} style={s.interestItem}><View style={[s.interestIcon, { backgroundColor: c.inset }]}>{interestsExpanded ? <Icon name="remove" size={18} color={c.text} /> : <Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>+{summary.interests.length - 5}</Text>}</View><Text style={{ color: c.muted, fontSize: 10 }}>{interestsExpanded ? 'Less' : 'More'}</Text></Pressable> : null}</View> : <Text style={[s.secondary, { color: c.muted }]}>{owner ? 'Add interests to find your people.' : 'No interests shared yet.'}</Text>}
@@ -424,16 +431,11 @@ const s = StyleSheet.create({
  interestGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, justifyContent: 'flex-start' },
  interestItem: { flex: 1, minWidth: 42, maxWidth: 62, alignItems: 'center', gap: 6 },
  interestIcon: { width: 35, height: 35, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
- landscape: { width: 108, height: 90, overflow: 'hidden', borderRadius: 12, backgroundColor: '#F1EDFF' },
- landscapeSun: { position: 'absolute', right: 14, top: 11, width: 18, height: 18, borderRadius: 9, backgroundColor: '#F8BC37', borderWidth: 3, borderColor: '#FFDA75' },
- landscapeCloud: { position: 'absolute', width: 16, height: 5, borderRadius: 5, backgroundColor: '#DCD3F7' },
- mountain: { position: 'absolute', width: 66, height: 66, transform: [{ rotate: '45deg' }], borderRadius: 4 },
- mountainBack: { left: 14, bottom: -12, backgroundColor: '#B49AF2' },
- mountainMiddle: { right: -11, bottom: -21, backgroundColor: '#8D63E2' },
- mountainFront: { left: -22, bottom: -32, backgroundColor: '#7141D3' },
- landscapeGround: { position: 'absolute', width: 140, height: 33, borderRadius: 60, right: -26, bottom: -9, backgroundColor: '#4925C5', transform: [{ rotate: '-15deg' }] },
- landscapeTrail: { position: 'absolute', height: 36, width: 7, backgroundColor: '#B497F7', bottom: -9, left: 62, transform: [{ rotate: '48deg' }] },
- landscapeLeaf: { position: 'absolute', height: 27, width: 13, borderRadius: 10, backgroundColor: '#9C75EC' },
+ aboutVisual: { width: 108, height: 90, overflow: 'hidden', borderRadius: 12 },
+ aboutPhoto: { width: '100%', height: '100%', borderRadius: 12 },
+ aboutFallback: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+ aboutFallbackHalo: { position: 'absolute', width: 75, height: 75, borderRadius: 38, opacity: .55 },
+ aboutFallbackSpark: { position: 'absolute', right: 14, top: 13, width: 25, height: 25, borderRadius: 13, backgroundColor: '#6B4BE6', alignItems: 'center', justifyContent: 'center' },
  achievements: { gap: 13, padding: 12, borderRadius: 14, overflow: 'hidden' }, sectionTitle: { fontSize: 13, fontWeight: '800' },
  badgeRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 4 },
  achievementItem: { flex: 1, alignItems: 'center', gap: 4 },
