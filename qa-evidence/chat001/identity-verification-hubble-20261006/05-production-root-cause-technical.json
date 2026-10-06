@@ -1,0 +1,41 @@
+{
+  "status": "VERIFIED",
+  "at": "2026-10-06T16:20:00.000Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "atharv": {
+    "profileId": 75,
+    "provider": "google",
+    "emailVerified": true,
+    "phoneVerified": false,
+    "nitro": {
+      "original": 10,
+      "testCredit": 240,
+      "final": 250,
+      "reason": "HUBBLE_STAGING_TEST_CREDIT — Atharv client staging preparation",
+      "ledgerEntryPresent": true,
+      "eligibilityThresholdMet": true
+    }
+  },
+  "phoneAttempt": {
+    "owner": {
+      "profileId": 78,
+      "provider": "phone",
+      "phoneVerified": true
+    },
+    "attemptCount": 5,
+    "httpStatus": 422,
+    "authErrorCode": "phone_exists",
+    "message": "A user with this phone number has already been registered",
+    "durationsMs": [61573, 4982, 11239, 148742, 5554],
+    "smsProviderCalled": false,
+    "conclusion": "Supabase Auth rejected the ownership conflict before SMS dispatch. No verification was granted."
+  },
+  "deployed": {
+    "appCommit": "9c0bfea",
+    "sendSmsEdgeVersion": 6,
+    "aadhaarEdgeVersion": 6,
+    "sendSmsDiagnosticsSanitized": true,
+    "aadhaarDiagnosticsSanitized": true
+  },
+  "privacy": "No phone number, OTP, Aadhaar number, token, IP address, or provider secret is included."
+}

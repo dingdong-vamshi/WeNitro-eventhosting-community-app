@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "at": "2026-10-06T16:13:03.176Z",
+  "target": "cxsznhrkzqndhseodcyy",
+  "scope": "Deployed Auth and Aadhaar Edge availability only. No Aadhaar number, OTP, document, provider session, phone SMS, Trust award or Nitro mutation.",
+  "checks": [
+    {
+      "name": "existing email/password authenticated Aadhaar availability",
+      "status": "PASS",
+      "detail": {
+        "available": true,
+        "status": "created"
+      }
+    },
+    {
+      "name": "Existing email/password state",
+      "status": "PASS",
+      "detail": {
+        "emailVerified": true,
+        "provider": "email"
+      }
+    },
+    {
+      "name": "new email/password authenticated Aadhaar availability",
+      "status": "PASS",
+      "detail": {
+        "available": true,
+        "status": "not_started"
+      }
+    },
+    {
+      "name": "New user initialized without a pre-created verification row",
+      "status": "PASS",
+      "detail": {
+        "accepted": true
+      }
+    },
+    {
+      "name": "phone-only authenticated Aadhaar availability",
+      "status": "PASS",
+      "detail": {
+        "available": true,
+        "status": "not_started"
+      }
+    },
+    {
+      "name": "Phone-only provider state",
+      "status": "PASS",
+      "detail": {
+        "phoneVerified": true,
+        "providers": [
+          "phone"
+        ]
+      }
+    },
+    {
+      "name": "linked phone/email authenticated Aadhaar availability",
+      "status": "PASS",
+      "detail": {
+        "available": true,
+        "status": "not_started"
+      }
+    },
+    {
+      "name": "Linked provider state",
+      "status": "PASS",
+      "detail": {
+        "emailVerified": true,
+        "phoneVerified": true,
+        "providers": [
+          "email",
+          "phone"
+        ]
+      }
+    },
+    {
+      "name": "Unauthenticated Aadhaar request rejected",
+      "status": "PASS",
+      "detail": {
+        "rejected": true
+      }
+    }
+  ]
+}
