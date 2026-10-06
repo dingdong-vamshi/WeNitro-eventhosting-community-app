@@ -132,9 +132,31 @@ export const referenceDeltaService = {
     const normalized = normalizeIndianPhone(phone);
     const cleanToken = token.replace(/\D/g, '');
     if (!/^\d{6}$/.test(cleanToken)) throw new Error('Enter the 6-digit OTP.');
+    const before = await supabase.auth.getUser();
+    if (before.error) throw before.error;
+    const alreadyConfirmed = before.data.user?.phone === normalized && Boolean(before.data.user?.phone_confirmed_at);
     const result = await supabase.auth.verifyOtp({ phone: normalized, token: cleanToken, type: 'phone_change' });
-    if (result.error) throw new Error(phoneOtpErrorMessage(result.error, true));
-    await rpc('sync_my_phone_verification');
+    if (result.error) {
+      // A network timeout can arrive after GoTrue committed the phone change.
+      // Reconcile once against the server, but never turn a pre-existing
+      // confirmed number or an unverified send-only state into OTP success.
+      const reconciled = await supabase.auth.getUser();
+      const committedAfterRequest = !alreadyConfirmed && !reconciled.error
+        && reconciled.data.user?.phone === normalized
+        && Boolean(reconciled.data.user?.phone_confirmed_at);
+      if (!committedAfterRequest) throw new Error(phoneOtpErrorMessage(result.error, true));
+    }
+    const confirmed = await supabase.auth.getUser();
+    if (confirmed.error || confirmed.data.user?.phone !== normalized || !confirmed.data.user?.phone_confirmed_at) {
+      throw new Error('Phone verification was not confirmed. Enter the newest OTP and try again.');
+    }
+    // Auth is authoritative. Legacy profile projection and idempotent reward
+    // reconciliation are best-effort follow-ups and cannot turn a genuine OTP
+    // success into a misleading red failure on the client.
+    await Promise.allSettled([
+      rpc('sync_my_phone_verification'),
+      rpc('sync_my_verification'),
+    ]);
     return normalized;
   },
   async listProfilePhotos(): Promise<ProfilePhoto[]> {

@@ -63,6 +63,10 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   const [creatingGroup, setCreatingGroup] = useState(false);
   const [groupName, setGroupName] = useState('');
   const [groupPhoto, setGroupPhoto] = useState<string | null>(null);
+  const [groupQuery, setGroupQuery] = useState('');
+  const [groupPeople, setGroupPeople] = useState<Awaited<ReturnType<typeof realtimeChatService.listEligibleGroupMembers>>>([]);
+  const [groupPeopleLoading, setGroupPeopleLoading] = useState(false);
+  const [groupPeopleError, setGroupPeopleError] = useState('');
   const { confirmUpload, uploadNotice } = useResponsibleUpload();
   const [groupMembers, setGroupMembers] = useState<string[]>([]);
   const [groupBusy, setGroupBusy] = useState(false);
@@ -112,14 +116,15 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   };
 
   useEffect(() => {
-    if (!creatingGroup || data.people.length || people.length) return;
-    void (async () => {
-      try {
-        const { data: result } = await supabase.rpc('list_discoverable_people', { p_limit: 50 });
-        if (Array.isArray(result)) setPeople(result.filter((p: any) => String(p.id) !== data.userId).map((p: any) => ({ id: Number(p.id), username: String(p.username || ''), fullname: String(p.fullname || p.username || ''), profile_image: String(p.profile_image || '') })));
-      } catch { /* The empty member picker remains a safe fallback. */ }
-    })();
-  }, [creatingGroup]);
+    if (!creatingGroup) return;
+    let active = true;
+    setGroupPeopleLoading(true); setGroupPeopleError(''); setGroupQuery(''); setGroupMembers([]);
+    void realtimeChatService.listEligibleGroupMembers()
+      .then(rows => { if (active) setGroupPeople(rows); })
+      .catch(caught => { if (active) { setGroupPeople([]); setGroupPeopleError(caught instanceof Error ? caught.message : 'Could not load your Squad.'); } })
+      .finally(() => { if (active) setGroupPeopleLoading(false); });
+    return () => { active = false; };
+  }, [creatingGroup, data.userId]);
 
   useEffect(() => { setQuery(''); setPage(1); setFilter('All'); }, [tab]);
   useEffect(() => { setPage(1); }, [query, filter, version, data.userId]);
@@ -222,14 +227,12 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
     Activities: eligibleConversations.filter(item => item.type === 'Groups').length,
     Communities: new Set([...data.communities.map(item => item.id), ...rows.map(item => item.id)]).size,
   };
-  const groupPeople = data.people.length
-    ? data.people.map((person) => ({ id: person.id, name: person.name, username: person.username, avatar: person.avatar }))
-    : people.map((person) => ({ id: String(person.id), name: person.fullname || person.username, username: person.username, avatar: person.profile_image }));
+  const matchingGroupPeople = groupPeople.filter(person => startsWithQuery(`${person.fullname || ''} ${person.username}`, groupQuery));
 
   const createGroup = async () => {
     if (!groupPhoto) return Alert.alert('Add a group photo', 'Choose a profile picture so this group is easy to recognize.');
     if (groupName.trim().length < 3 || groupMembers.length < 2) return Alert.alert('Add group details', 'Enter a group name and select at least two people.');
-    const memberIds = groupPeople.filter((person) => groupMembers.includes(person.id) && isBackendId(person.id)).map((person) => Number(person.id));
+    const memberIds = groupPeople.filter((person) => groupMembers.includes(String(person.id))).map((person) => person.id);
     if (isSupabaseConfigured && memberIds.length < 2) return Alert.alert('Real members required', 'Select at least two WeNitro members.');
     setGroupBusy(true);
     try {
@@ -445,14 +448,19 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
             <Text style={{ color: c.accent, fontSize: 12, fontWeight: '700' }}>{groupPhoto ? 'Change photo' : 'Add group photo'}</Text>
           </Pressable>
           <TextInput accessibilityLabel="Group name" value={groupName} onChangeText={setGroupName} placeholder="Group name" placeholderTextColor={c.muted} style={{ minHeight: 48, borderRadius: 12, borderWidth: 1, borderColor: c.border, backgroundColor: c.input, color: c.text, paddingHorizontal: 14 }} />
+          <View style={{ minHeight: 44, borderRadius: 12, borderWidth: 1, borderColor: c.border, backgroundColor: c.input, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 8 }}><Icon name="search-outline" color={c.muted} size={18} /><TextInput accessibilityLabel="Search Squad members" value={groupQuery} onChangeText={setGroupQuery} placeholder="Search your Squad" placeholderTextColor={c.muted} style={{ flex: 1, color: c.text, minHeight: 42 } as any} /></View>
+          <Text style={{ color: c.muted, fontSize: 11 }}>Only accepted members of your Squad can be added.</Text>
+          <ErrorLine text={groupPeopleError} />
           <ScrollView style={{ maxHeight: 360 }}>
-            {groupPeople.map((person) => {
-              const selected = groupMembers.includes(person.id);
+            {matchingGroupPeople.map((person) => {
+              const personId = String(person.id);
+              const selected = groupMembers.includes(personId);
+              const name = person.fullname || person.username || 'Squad member';
               return (
-                <Pressable key={person.id} accessibilityRole="checkbox" accessibilityState={{ checked: selected }} onPress={() => setGroupMembers((current) => selected ? current.filter((id) => id !== person.id) : [...current, person.id])} style={[ui.row, { paddingHorizontal: 0, minHeight: 64 }]}>
-                  <UserAvatar uri={mediaUri(person.avatar)} name={person.name} size={48} />
+                <Pressable key={person.id} accessibilityRole="checkbox" accessibilityState={{ checked: selected }} onPress={() => setGroupMembers((current) => selected ? current.filter((id) => id !== personId) : [...current, personId])} style={[ui.row, { paddingHorizontal: 0, minHeight: 64 }]}>
+                  <UserAvatar uri={mediaUri(person.profile_image)} name={name} identity={personId} size={48} />
                   <View style={{ flex: 1, gap: 3 }}>
-                    <Text style={{ color: c.text, fontSize: 14, fontWeight: '700' }}>{person.name} <VerifiedBadge userId={person.id} /></Text>
+                    <Text style={{ color: c.text, fontSize: 14, fontWeight: '700' }}>{name} <VerifiedBadge userId={personId} /></Text>
                     <Text style={{ color: c.muted, fontSize: 11 }}>{person.username}</Text>
                   </View>
                   <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: selected ? purple : c.border, backgroundColor: selected ? purple : 'transparent', alignItems: 'center', justifyContent: 'center' }}>
@@ -461,9 +469,10 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
                 </Pressable>
               );
             })}
-            {!groupPeople.length ? <Text style={{ color: c.muted, fontSize: 12, textAlign: 'center', padding: 18 }}>No people to add yet. Search chats for members first.</Text> : null}
+            {groupPeopleLoading ? <Text style={{ color: c.muted, fontSize: 12, textAlign: 'center', padding: 18 }}>Loading your Squad…</Text> : null}
+            {!groupPeopleLoading && !matchingGroupPeople.length ? <Text style={{ color: c.muted, fontSize: 12, textAlign: 'center', padding: 18 }}>{groupQuery.trim() ? 'No Squad members match this search.' : 'Add people to your Squad to create a group.'}</Text> : null}
           </ScrollView>
-          <Button label={`Create Group · ${groupMembers.length} selected`} busy={groupBusy} disabled={groupBusy} onPress={() => void createGroup()} />
+          <Button label={`Create Group · ${groupMembers.length} selected`} busy={groupBusy} disabled={groupBusy || groupPeopleLoading || groupMembers.length < 2} onPress={() => void createGroup()} />
         </Sheet>
       ) : null}
       {uploadNotice}

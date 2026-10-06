@@ -1,6 +1,31 @@
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, promises as fs } from "node:fs";
+import { createServer } from "node:http";
+import path from "node:path";
 import { chromium } from "playwright";
+
+let server;
+let baseUrl = process.env.QA_APP_BASE_URL;
+if (!baseUrl) {
+  const root = path.resolve("dist");
+  server = createServer(async (request, response) => {
+    const pathname = decodeURIComponent(new URL(request.url || "/", "http://localhost").pathname);
+    const requested = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+    const file = path.resolve(root, requested);
+    if (!file.startsWith(`${root}${path.sep}`) && file !== path.join(root, "index.html")) {
+      response.writeHead(403).end(); return;
+    }
+    try {
+      const body = await fs.readFile(file);
+      const contentType = file.endsWith(".html") ? "text/html" : file.endsWith(".js") ? "text/javascript" : file.endsWith(".css") ? "text/css" : "application/octet-stream";
+      response.writeHead(200, { "Content-Type": contentType }); response.end(body);
+    } catch {
+      response.writeHead(404).end();
+    }
+  });
+  await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+  baseUrl = `http://127.0.0.1:${server.address().port}`;
+}
 
 const systemChrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const browser = await chromium.launch({
@@ -24,7 +49,7 @@ try {
     await route.abort();
   });
 
-  await page.goto(`${process.env.QA_APP_BASE_URL || "http://localhost:8081"}/#/signup`);
+  await page.goto(`${baseUrl}/#/signup`);
   const skipIntro = page.getByText("Skip", { exact: true }).first();
   const phoneTab = page.getByText("Phone", { exact: true });
   await Promise.race([
@@ -67,4 +92,5 @@ try {
   console.log("Phone OTP signup UI transition passed");
 } finally {
   await browser.close();
+  if (server) await new Promise(resolve => server.close(resolve));
 }

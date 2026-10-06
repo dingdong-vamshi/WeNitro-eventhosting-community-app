@@ -9,6 +9,7 @@ import { CreateCommunitySheet } from './reference-community';
 import { UserAvatar } from '../user-avatar';
 import { requestInternalShare } from '../../services/internal-share';
 import { Action, Button, ErrorLine, Header, Icon, Page, SearchField, Sheet, Skeleton, ui, usePalette, purple, type ReferencePalette } from '../reconstruction/ui';
+import { SafetyReportDialog } from '../reconstruction/report-dialog';
 
 const errorText = (error: unknown) => error && typeof error === 'object' && 'message' in error ? String(error.message) : 'Please try again.';
 const roleLabel = (role: CommunityMemberRole, isOwner: boolean) => isOwner ? 'Creator' : role === 'admin' ? 'Co-Admin' : role === 'moderator' ? 'Moderator' : 'Member';
@@ -30,6 +31,7 @@ export function CommunityInfo({ id, back, openProfile, openChat, openPosts, onCh
   const [removeMember, setRemoveMember] = useState<ChatMember | null>(null);
   const [roleDraft, setRoleDraft] = useState<CommunityMemberRole>('member');
   const [permDraft, setPermDraft] = useState<CommunityMemberPermissions>(defaultPermissions('member'));
+  const [optionsOpen, setOptionsOpen] = useState(false), [reportOpen, setReportOpen] = useState(false);
   const refresh = async () => {
     const result = await communitiesProductionService.getCommunity(id);
     setCommunity(result);
@@ -77,8 +79,7 @@ export function CommunityInfo({ id, back, openProfile, openChat, openPosts, onCh
             <View style={s.heroBar}>
               <Pressable accessibilityRole="button" accessibilityLabel="Back to all communities" onPress={back} style={s.heroIcon}><Icon name="arrow-back" color="#FFF" /></Pressable>
               <Text style={s.heroTitle}>Community</Text>
-              <Pressable accessibilityRole="button" accessibilityLabel="Share community" onPress={() => requestInternalShare({ kind: 'community', id, title: community.name, preview: community.tagline || community.description, thumbnailUrl: community.imageUrl })} style={s.heroIcon}><Icon name="share-social-outline" color="#FFF" /></Pressable>
-              {canOpenSettings ? <Pressable accessibilityRole="button" accessibilityLabel="Community settings" onPress={() => setView('settings')} style={s.heroIcon}><Icon name="settings-outline" color="#FFF" /></Pressable> : null}
+              <Pressable accessibilityRole="button" accessibilityLabel="Community options" onPress={() => setOptionsOpen(true)} style={s.heroIcon}><Icon name="ellipsis-vertical" color="#FFF" /></Pressable>
             </View>
             <View style={s.coverActions}>
               <View style={s.categoryBadge}><Icon name="bicycle-outline" size={13} color="#FFF" /><Text numberOfLines={1} style={s.categoryText}>{community.category}</Text></View>
@@ -125,6 +126,13 @@ export function CommunityInfo({ id, back, openProfile, openChat, openPosts, onCh
       </> : requestsLoading ? <Skeleton count={2} /> : requests.length ? requests.map(request => <View key={request.user_id} style={s.requestCard}><View style={[s.memberAvatar, s.avatarFallback]}><Icon name="person-outline" size={21} color={c.iconMuted} /></View><Text style={[s.memberName, { flex: 1 }]}>{request.name}</Text><Pressable accessibilityRole="button" disabled={busy} onPress={() => void respond(request.user_id, 'reject')} style={s.rejectButton}><Icon name="close" size={18} color={c.danger} /></Pressable><Pressable accessibilityRole="button" disabled={busy} onPress={() => void respond(request.user_id, 'approve')} style={s.approveButton}><Icon name="checkmark" size={18} color="#FFF" /></Pressable></View>) : <View style={s.emptyState}><Icon name="people-outline" size={42} color={c.iconMuted} /><Text style={s.sectionTitle}>No pending requests</Text><Text style={s.empty}>New join requests will appear here.</Text></View>}
     </ScrollView>}
     {edit && community ? <CreateCommunitySheet initial={community} onClose={() => setEdit(false)} onCreated={() => { setEdit(false); void refresh().catch(error => setError(errorText(error))); }} /> : null}
+    {optionsOpen && community ? <Sheet title="Community options" close={() => setOptionsOpen(false)}>
+      <Pressable accessibilityRole="button" accessibilityLabel="Share Community" onPress={() => { setOptionsOpen(false); requestInternalShare({ kind: 'community', id, title: community.name, preview: community.tagline || community.description, thumbnailUrl: community.imageUrl }); }} style={[ui.row, { paddingHorizontal: 0 }]}><Icon name="share-social-outline" color={c.accent} /><Text style={{ color: c.text, flex: 1, fontWeight: '700' }}>Share Community</Text></Pressable>
+      {community.membership !== 'created' ? <Pressable accessibilityRole="button" accessibilityLabel="Report Community" onPress={() => { setOptionsOpen(false); setReportOpen(true); }} style={[ui.row, { paddingHorizontal: 0 }]}><Icon name="flag-outline" color={c.danger} /><Text style={{ color: c.text, flex: 1, fontWeight: '700' }}>Report Community</Text></Pressable> : null}
+      {canOpenSettings ? <Pressable accessibilityRole="button" accessibilityLabel="Community settings" onPress={() => { setOptionsOpen(false); setView('settings'); }} style={[ui.row, { paddingHorizontal: 0 }]}><Icon name="settings-outline" color={c.accent} /><Text style={{ color: c.text, flex: 1, fontWeight: '700' }}>Community settings</Text></Pressable> : null}
+      <Button label="Cancel" variant="outline" onPress={() => setOptionsOpen(false)} />
+    </Sheet> : null}
+    {reportOpen && community ? <SafetyReportDialog targetType="community" targetId={id} targetName={community.name} close={() => setReportOpen(false)} /> : null}
     {roleMember ? <Sheet title="Member role" close={() => { if (!busy) setRoleMember(null); }}>
       <Text style={{ color: c.muted, fontSize: 13, lineHeight: 20 }}>{roleMember.profiles?.full_name || roleMember.profiles?.username || 'Member'} can help run this community. Co-Admins share admin controls. Moderators get the permissions you turn on.</Text>
       {(['admin', 'moderator', 'member'] as const).filter(role => admin || role !== 'admin').map(role => <Pressable key={role} accessibilityRole="radio" accessibilityState={{ checked: roleDraft === role }} onPress={() => { setRoleDraft(role); setPermDraft(defaultPermissions(role)); }} style={{ minHeight: 52, borderRadius: 14, borderWidth: 1, borderColor: roleDraft === role ? c.accent : c.border, backgroundColor: roleDraft === role ? (c.isDark ? '#26214C' : '#F0ECFF') : c.card, paddingHorizontal: 14, justifyContent: 'center' }}><Text style={{ color: c.text, fontWeight: '800' }}>{roleLabel(role, false)}</Text></Pressable>)}

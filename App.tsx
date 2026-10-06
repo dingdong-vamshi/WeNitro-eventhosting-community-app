@@ -5877,7 +5877,7 @@ export function ChatScreen({
         {uploadNotice}
         {attachmentsOpen ? <ReferenceSheet title="Chat Options" close={() => setAttachmentsOpen(false)}>
           <Pressable accessibilityRole="button" onPress={() => void pickMessageMedia("images")} style={styles.optionRow}><Icon name="image-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Share Photo</Text></Pressable>
-          <Pressable accessibilityRole="button" onPress={() => { setAttachmentsOpen(false); setPollOpen(true); }} style={styles.optionRow}><Icon name="stats-chart-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Create Poll</Text></Pressable>
+          {selected.type === "Groups" ? <Pressable accessibilityRole="button" onPress={() => { setAttachmentsOpen(false); setPollOpen(true); }} style={styles.optionRow}><Icon name="stats-chart-outline" color="#9C8AFF" size={24} /><Text style={styles.optionText}>Create Poll</Text></Pressable> : null}
           {selected.type === "People" && selected.userId ? <Pressable accessibilityRole="button" onPress={async () => {
             const block = async () => {
               try {
@@ -5896,7 +5896,7 @@ export function ChatScreen({
           }} style={styles.optionRow}><Icon name="ban-outline" color="#F47786" size={24} /><Text style={[styles.optionText, { color: "#F47786" }]}>Block Chat</Text></Pressable> : null}
           <Pressable accessibilityRole="button" onPress={() => setAttachmentsOpen(false)} style={styles.optionCancel}><Text style={styles.optionText}>Cancel</Text></Pressable>
         </ReferenceSheet> : null}
-        {pollOpen ? <PollComposer roomId={selected.id} close={() => setPollOpen(false)} onPosted={async () => {
+        {pollOpen && selected.type === "Groups" ? <PollComposer roomId={selected.id} close={() => setPollOpen(false)} onPosted={async () => {
           setPollOpen(false);
           if (!isBackendId(selected.id)) return;
           const page = await realtimeChatService.loadMessagesPage(Number(selected.id));

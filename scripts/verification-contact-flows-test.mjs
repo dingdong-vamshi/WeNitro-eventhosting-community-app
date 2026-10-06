@@ -82,11 +82,17 @@ returnedUserId = user.id;
 const phoneCalls = [];
 let phoneUpdateError = null;
 let phoneVerifyError = null;
+let phoneAuthUser = { ...user, phone: null, phone_confirmed_at: null };
 const phoneSupabase = {
   auth: {
-    updateUser: async attributes => { phoneCalls.push({ method: 'updateUser', attributes }); return { data: { user }, error: phoneUpdateError }; },
+    getUser: async () => ({ data: { user: phoneAuthUser }, error: null }),
+    updateUser: async attributes => { phoneCalls.push({ method: 'updateUser', attributes }); return { data: { user: phoneAuthUser }, error: phoneUpdateError }; },
     resend: async input => { phoneCalls.push({ method: 'resend', input }); return { data: {}, error: null }; },
-    verifyOtp: async input => { phoneCalls.push({ method: 'verifyOtp', input }); return { data: {}, error: phoneVerifyError }; },
+    verifyOtp: async input => {
+      phoneCalls.push({ method: 'verifyOtp', input });
+      if (!phoneVerifyError) phoneAuthUser = { ...phoneAuthUser, phone: input.phone, phone_confirmed_at: '2026-10-06T00:02:00Z' };
+      return { data: {}, error: phoneVerifyError };
+    },
   },
   rpc: async name => { phoneCalls.push({ method: 'rpc', name }); return { data: null, error: null }; },
 };
@@ -113,8 +119,8 @@ phoneVerifyError = { code: 'otp_disabled', message: 'Token is invalid' };
 await assert.rejects(() => reference.verifyPhoneChange('9876543210', '123456'), /incorrect/i);
 phoneVerifyError = null;
 await reference.verifyPhoneChange('9876543210', '123456');
-assert.equal(phoneCalls.at(-2).input.type, 'phone_change');
-assert.equal(phoneCalls.at(-1).name, 'sync_my_phone_verification');
+assert.equal(phoneCalls.findLast(call => call.method === 'verifyOtp').input.type, 'phone_change');
+assert.deepEqual(phoneCalls.filter(call => call.method === 'rpc').slice(-2).map(call => call.name), ['sync_my_phone_verification', 'sync_my_verification']);
 
 const uiSource = fs.readFileSync('src/components/reconstruction/profile-utilities.tsx', 'utf8');
 for (const required of [

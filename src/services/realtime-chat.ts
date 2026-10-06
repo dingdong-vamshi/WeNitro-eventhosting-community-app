@@ -468,6 +468,39 @@ export async function uploadGroupPhoto(localUri: string) {
   }
 }
 
+export type EligibleGroupMember = {
+  id: number;
+  username: string;
+  fullname: string | null;
+  profile_image: string | null;
+  isverified: number | null;
+  connected_at: string;
+};
+
+export async function listEligibleGroupMembers(): Promise<EligibleGroupMember[]> {
+  const operation = "load eligible Squad members";
+  try {
+    await currentUserId(operation);
+    const { data, error } = await supabase.rpc("list_eligible_group_members");
+    if (error) throw error;
+    return (Array.isArray(data) ? data : []).flatMap((value) => {
+      const row = record(value);
+      const memberId = Number(row.id);
+      if (!Number.isSafeInteger(memberId) || memberId <= 0) return [];
+      return [{
+        id: memberId,
+        username: String(row.username ?? ""),
+        fullname: typeof row.fullname === "string" ? row.fullname : null,
+        profile_image: typeof row.profile_image === "string" ? row.profile_image : null,
+        isverified: row.isverified == null ? null : Number(row.isverified),
+        connected_at: String(row.connected_at ?? ""),
+      }];
+    });
+  } catch (error) {
+    throw chatError(error, operation);
+  }
+}
+
 export async function createGroupConversation(
   name: string,
   memberIds: number[],
@@ -481,7 +514,7 @@ export async function createGroupConversation(
       throw new Error("Group names must contain 3 to 80 characters.");
     }
     const members = [...new Set(memberIds)].filter((member) => member !== ownId);
-    if (!members.length) throw new Error("A group needs another member.");
+    if (members.length < 2) throw new Error("Select at least two Squad members.");
     members.forEach((member) => assertId(member, "memberId", operation));
     const { data, error } = await supabase.rpc(
       realtimeChatBridgeRpc.createGroupRoom,
@@ -956,6 +989,7 @@ export const realtimeChatService = {
   createDirectConversation,
   createGroupConversation,
   uploadGroupPhoto,
+  listEligibleGroupMembers,
   signedRoomImage,
   loadConversationMembers,
   loadMessagesPage,
