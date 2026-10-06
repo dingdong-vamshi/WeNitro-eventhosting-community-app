@@ -51,11 +51,12 @@ try {
     create function public.get_current_app_user_id() returns int language sql as $$select nullif(current_setting('qa.user',true),'')::int$$;
     create function qa_attempt(q text) returns text language plpgsql as $$begin execute q;return 'ACCEPTED';exception when others then return sqlstate||':'||sqlerrm;end$$;
     insert into auth.users(id,email,email_confirmed_at) values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','admin@example.test',now());
-    insert into public.tbl_users(id,auth_user_id,points,fullname) select n,('00000000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,(array[0,70,150,199,200,401,1])[n],'User '||n from generate_series(1,7)n;
+    insert into public.tbl_users(id,auth_user_id,points,fullname) select n,('00000000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,(array[0,70,150,199,200,401,1,10])[n],'User '||n from generate_series(1,8)n;
     insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) select auth_user_id,'u'||id||'@example.test',now(),'+91900000000'||id,now() from public.tbl_users;
     ${fs.readFileSync('supabase/migrations/20261006113000_hubble_nitro_redemption.sql','utf8')}
     ${fs.readFileSync('supabase/migrations/20261006121451_hubble_balance_eligibility.sql','utf8')}
     ${fs.readFileSync('supabase/migrations/20261006124557_hubble_staging_test_credit.sql','utf8')}
+    ${fs.readFileSync('supabase/migrations/20261006173500_hubble_staging_target_250.sql','utf8')}
   `);
 
   eq(sql("select has_table_privilege('authenticated','public.tbl_hubble_staging_test_credits','INSERT')"), 'f');
@@ -65,7 +66,7 @@ try {
   eq(json(service('select public.hubble_get_balance(4)')).consumptionEligibility.allowed, false);
   eq(json(service('select public.hubble_get_balance(5)')).consumptionEligibility.allowed, true);
   assert.match(attempt(member, "select public.admin_grant_hubble_staging_credit(1,200,'unauthorized try','10000000-0000-4000-8000-000000000001')"), /42501:WeNitro Admin access required/); checks += 1;
-  assert.match(attempt(admin, "select public.admin_grant_hubble_staging_credit(1,300,'bad target','10000000-0000-4000-8000-000000000002')"), /22023:Target balance must be 200 or 500 Nitro/); checks += 1;
+  assert.match(attempt(admin, "select public.admin_grant_hubble_staging_credit(1,300,'bad target','10000000-0000-4000-8000-000000000002')"), /22023:Target balance must be 200, 250, or 500 Nitro/); checks += 1;
 
   const grant0 = json(admin("select public.admin_grant_hubble_staging_credit(1,200,'Hubble client staging test','10000000-0000-4000-8000-000000000010')"));
   eq(grant0.granted, 200); eq(grant0.currentBalance, 200);
@@ -85,6 +86,10 @@ try {
 
   const target500 = json(admin("select public.admin_grant_hubble_staging_credit(6,500,'Controlled multi-transaction staging','10000000-0000-4000-8000-000000000060')"));
   eq(target500.granted, 99); eq(target500.currentBalance, 500);
+  const target250 = json(admin("select public.admin_grant_hubble_staging_credit(8,250,'Atharv staging preparation','10000000-0000-4000-8000-000000000080')"));
+  eq(target250.granted, 240); eq(target250.currentBalance, 250);
+  const target250Retry = json(admin("select public.admin_grant_hubble_staging_credit(8,250,'Safe idempotent retry','10000000-0000-4000-8000-000000000080')"));
+  eq(target250Retry.idempotent, true); eq(target250Retry.currentBalance, 250);
   const cleaned500 = json(admin(`select public.admin_reverse_hubble_staging_credit(${target500.creditId},'Staging test completed')`));
   eq(cleaned500.reversed, 99); eq(cleaned500.currentBalance, 401);
   const cleaned500Again = json(admin(`select public.admin_reverse_hubble_staging_credit(${target500.creditId},'Safe idempotent retry')`));
@@ -113,7 +118,7 @@ try {
   eq(json(service('select public.hubble_get_balance(5)')).consumptionEligibility.allowed, true);
   eq(json(service('select public.hubble_get_balance(6)')).consumptionEligibility.allowed, true);
 
-  console.log(JSON.stringify({ status: 'PASS', checks, scope: '0/1/199 blocked and 200 eligible; Admin-only exact staging credits for 0/70/150/199, no-op at 200, target 500, idempotent grant, Hubble allocation/reversal tracking, unused-credit cleanup, ledger audit, RLS and ordinary-user rejection' }));
+  console.log(JSON.stringify({ status: 'PASS', checks, scope: '0/1/199 blocked and 200 eligible; Admin-only exact staging credits for 0/70/150/199, no-op at 200, exact 10-to-250 top-up, target 500, idempotent grant, Hubble allocation/reversal tracking, unused-credit cleanup, ledger audit, RLS and ordinary-user rejection' }));
 } finally {
   if (started) run('pg_ctl', ['-D', `${dir}/db`, '-m', 'immediate', '-w', 'stop']);
   fs.rmSync(dir, { recursive: true, force: true });
