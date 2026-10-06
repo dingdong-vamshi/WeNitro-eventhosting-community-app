@@ -13,6 +13,7 @@ const run = (bin, args, input) => {
 };
 const sql = query => run('psql', ['-h', root, '-p', '55446', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-Atq'], query);
 const migration = fs.readFileSync('supabase/migrations/20261006150000_client_phone_groups_stories_polls_reports.sql', 'utf8');
+const rlsHardening = fs.readFileSync('supabase/migrations/20261006173000_report_and_verification_rls_hardening.sql', 'utf8');
 
 try {
   run('initdb', ['-D', `${root}/db`, '-A', 'trust', '--no-locale', '-E', 'UTF8']);
@@ -42,6 +43,7 @@ try {
     create table public.tbl_chat_polls(id serial primary key,room_id int references public.tbl_chat_rooms(id),question text default 'QA',created_by int default 1,client_id uuid);
     create table public.tbl_stories(id bigserial primary key,user_id int,media_url text,media_type text,caption text default '',created_at timestamptz default now(),expires_at timestamptz default now()+interval '24 hours',deleted_at timestamptz);
     create table public.tbl_user_reports(id serial primary key,target_user_id int,reporter_id int,reason text,description text,status text default 'open',created_at timestamptz default now());
+    create table public.tbl_user_verification(id serial primary key,user_id int,phone_verified boolean default false);
     create table public.tbl_event_reports(id serial primary key,event_id int,reporter_id int,reason text,description text,status text default 'open',created_at timestamptz default now());
     create table private.admin_operation_audit(id serial primary key,actor_id uuid,target_type text,target_id int,action text,reason text,previous_state jsonb,next_state jsonb,created_at timestamptz default now());
     create function private.protect_report_review_status() returns trigger language plpgsql security definer set search_path='' as $$ begin if not public.is_wenitro_admin() then if tg_op='INSERT' then new.status:='open'; elsif new.status is distinct from old.status then raise exception 'Only an administrator can review reports' using errcode='42501'; end if; end if; return new; end $$;
@@ -49,8 +51,19 @@ try {
     create function public.create_group_chat_room(p_title text,p_member_ids integer[]) returns int language sql security definer set search_path='' as $$ select private.create_group_chat_room_secure(p_title,p_member_ids,null) $$;
     create function public.create_group_chat_room(p_title text,p_member_ids integer[],p_image_path text) returns int language sql security definer set search_path='' as $$ select private.create_group_chat_room_secure(p_title,p_member_ids,p_image_path) $$;
     grant execute on function public.create_group_chat_room(text,integer[]),public.create_group_chat_room(text,integer[],text) to authenticated;
+    create function private.account_is_allowed() returns boolean language sql stable as $$ select true $$;
+    alter table public.tbl_user_reports enable row level security;
+    alter table public.tbl_user_verification enable row level security;
+    create policy admin_suspension_guard on public.tbl_user_reports for all to authenticated using ((select private.account_is_allowed())) with check ((select private.account_is_allowed()));
+    create policy admin_suspension_guard on public.tbl_user_verification for all to authenticated using ((select private.account_is_allowed())) with check ((select private.account_is_allowed()));
+    create policy member_report_read on public.tbl_user_reports for select to authenticated using (reporter_id=(select public.current_app_user_id()));
+    create policy report_admin_all on public.tbl_user_reports for all to authenticated using (public.is_wenitro_admin()) with check (public.is_wenitro_admin());
+    create policy own_verification on public.tbl_user_verification for select to authenticated using (user_id=public.current_app_user_id());
+    create policy verification_admin_all on public.tbl_user_verification for all to authenticated using (public.is_wenitro_admin()) with check (public.is_wenitro_admin());
+    grant select,insert,update,delete on public.tbl_user_reports,public.tbl_user_verification to authenticated;
   `);
   sql(migration);
+  sql(rlsHardening);
   const asUser = (id, query) => sql(`set role authenticated; select set_config('qa.uid','00000000-0000-0000-0000-${String(id).padStart(12, '0')}',false); ${query}`).trim().split('\n').at(-1);
   const denied = (id, query, expected) => assert.throws(() => asUser(id, query), expected);
 
@@ -83,7 +96,12 @@ try {
   assert.equal(JSON.parse(asUser(9, `select public.admin_review_report('community',${communityReport.id},'reviewing','QA Admin review')::text;`)).status, 'reviewing');
   assert.equal(sql(`select status from public.tbl_community_reports where id=${communityReport.id};`).trim(), 'reviewing');
 
-  console.log(JSON.stringify({ status: 'PASS', checks: 16, scope: 'Squad-only group candidates and server validation, blocked-member exclusion, personal poll rejection, exact 24-hour Story expiry, user/community report validation, duplicate protection, and Admin-only review.' }));
+  sql("insert into public.tbl_user_reports(target_user_id,reporter_id,reason,status) values(1,2,'QA private report','open'); insert into public.tbl_user_verification(user_id) values(1);");
+  assert.equal(asUser(1, 'select count(*) from public.tbl_user_reports where reporter_id=2;'), '0');
+  denied(1, "update public.tbl_user_reports set status='resolved';", /permission denied/);
+  denied(1, 'update public.tbl_user_verification set phone_verified=true where user_id=1;', /permission denied/);
+
+  console.log(JSON.stringify({ status: 'PASS', checks: 19, scope: 'Squad-only group candidates and server validation, blocked-member exclusion, personal poll rejection, exact 24-hour Story expiry, user/community report validation, duplicate protection, Admin-only review, report privacy, and server-authoritative verification writes.' }));
 } finally {
   if (started) run('pg_ctl', ['-D', `${root}/db`, '-m', 'immediate', '-w', 'stop']);
   fs.rmSync(root, { recursive: true, force: true });
