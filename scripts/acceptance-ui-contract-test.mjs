@@ -23,7 +23,8 @@ assert.match(source('src/components/onboarding/reference-screens.tsx'), /onInput
 assert.match(source('src/components/reconstruction/edit-profile.tsx'), /onInput:.*patch\('date_of_birth', e.currentTarget.value\)/);
 assert.doesNotMatch(app, /<LoginAnnouncements key=\{data.userId\}/);
 assert.match(source('src/components/reconstruction/edit-profile.tsx'), /setSuccess\(true\);\s*onSaved\(\);/);
-assert.match(source('src/components/reconstruction/settings.tsx'), /Redemption requires at least 200 Nitro Points/);
+assert.match(source('src/components/hubble-store.web.tsx'), /You need \{minimum\} Nitro Points to open rewards/);
+assert.match(source('src/services/hubble.ts'), /eligibilityPoints/);
 assert.match(source('src/components/reconstruction/settings.tsx'), /conversation\.map/);
 assert.match(source('src/services/activities-production.ts'), /order\("is_admin_pinned", \{ ascending: false \}\)/);
 console.log('PASS: Host identity/removal, upload-warning entry points, NitroBot turns, 200-point threshold and server-side pin ordering. Source contracts only; live UI verified separately.');

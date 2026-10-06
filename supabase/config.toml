@@ -30,3 +30,8 @@ verify_jwt = false
 
 [functions.aadhaar-verification]
 verify_jwt = true
+
+[functions.hubble]
+# The token route validates a Supabase bearer token in the handler. Hubble's
+# balance/debit/reverse callbacks authenticate with X-Hubble-Secret instead.
+verify_jwt = false

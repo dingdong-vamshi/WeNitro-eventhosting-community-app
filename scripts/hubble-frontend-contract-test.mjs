@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const service=fs.readFileSync('src/services/hubble.ts','utf8');
+const web=fs.readFileSync('src/components/hubble-store.web.tsx','utf8');
+const native=fs.readFileSync('src/components/hubble-store.tsx','utf8');
+const edge=fs.readFileSync('supabase/functions/hubble/handler.ts','utf8');
+let checks=0;const has=(value,pattern)=>{assert.match(value,pattern);checks+=1;};const lacks=(value,pattern)=>{assert.doesNotMatch(value,pattern);checks+=1;};
+has(service,/\/functions\/v1\/hubble\/token/);
+has(service,/Authorization: `Bearer \$\{accessToken\}`/);
+has(service,/cache: 'no-store'/);
+has(service,/https:\/\/sdk\.dev\.myhubble\.money\//);
+has(web,/event\.origin !== HUBBLE_ORIGIN/);
+has(web,/app_ready/);has(web,/name === 'close'/);has(web,/name === 'error'/);
+has(web,/session\?\.eligible/);has(web,/Earn \{remaining\} more/);
+has(web,/Staging only · no production or real-money redemption is enabled/);
+has(native,/available on WeNitro Web/);
+has(edge,/exp: nowSeconds \+ 60/);has(edge,/RSASSA-PKCS1-v1_5/);
+lacks(service,/HUBBLE_SECRET|PRIVATE_KEY/);lacks(web,/HUBBLE_SECRET|PRIVATE_KEY/);
+console.log(JSON.stringify({status:'PASS',checks,scope:'Hubble authenticated no-store token request, staging iframe, strict message origin, eligibility UX, native web-only guard, RS256 60-second contract, and no privileged secret in client source'}));

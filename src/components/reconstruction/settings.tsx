@@ -8,6 +8,7 @@ import { supabase } from '../../lib/supabase';
 import { Button, ErrorLine, Field, Header, Icon, Page, Sheet, Skeleton, ui, usePalette, purple } from './ui';
 import { WENITRO_LEGAL_URLS } from '../onboarding/reference-screens';
 import { AccountSecurityCard } from '../account-security-card';
+import { HubbleStore } from '../hubble-store';
 export function ReferenceSettings({ data, setData, back, go }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; back: () => void; go: (screen: Screen) => void }) {
  const c = usePalette(); const [confirm, setConfirm] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState('');
  const groups: [string, [string, string, () => void][]][] = [
@@ -81,14 +82,5 @@ export function ReferenceUtility({ screen, back, go }: { screen: Screen; back: (
  </ScrollView></Page>;
 }
 export function ReferenceStore({ points: _points, back }: { points: number; back: () => void }) {
- const c = usePalette(); const [balance, setBalance] = useState<number | null>(null), [loading, setLoading] = useState(true), [error, setError] = useState('');
- const lock = useRef(false), mounted = useRef(true);
- const check = async () => {
-  if (lock.current) return; lock.current = true; setLoading(true); setError('');
-  try { const result = await supabase.rpc('my_profile_metrics'); if (result.error) throw result.error; const current = Number(result.data?.nitro); if (!Number.isFinite(current)) throw new Error('Could not check your Nitro Points balance.'); if (mounted.current) setBalance(current); }
-  catch (e: any) { if (mounted.current) setError(e?.message || 'Could not load the store.'); }
-  finally { lock.current = false; if (mounted.current) setLoading(false); }
- };
- useEffect(() => { mounted.current = true; void check(); return () => { mounted.current = false; }; }, []);
- return <Page><Header title="Nitro Store" back={back} />{loading ? <Skeleton /> : <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 30, gap: 20 }}><Icon name={error ? 'alert-circle-outline' : 'lock-closed-outline'} size={49} color={error ? '#F47786' : purple} /><Text style={{ color: c.text, fontSize: 23, fontWeight: '700', textAlign: 'center' }}>{error ? 'Unable to Load Store' : 'FEATURE UNLOCKS SOON'}</Text><Text style={{ color: c.muted, fontSize: 13, lineHeight: 22, textAlign: 'center' }}>{error || `Your current balance is ${balance} Nitro Points. Redemption requires at least 200 Nitro Points.${balance != null && balance < 200 ? ` Earn ${200 - balance} more points to meet the minimum.` : ' You meet the points minimum.'} Hubble redemption is not enabled yet; no points will be deducted.`}</Text><View style={{ minWidth: 120 }}><Button label="Retry" onPress={() => void check()} /></View></View>}</Page>;
+ return <Page><Header title="Nitro Store" back={back} /><HubbleStore /></Page>;
 }
