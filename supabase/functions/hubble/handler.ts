@@ -168,6 +168,11 @@ const routeName = (request: Request) => {
 const safeFailure = (error: unknown) => {
   const message = error instanceof Error ? error.message : "Request failed";
   const allowed = [
+    "Authentication required",
+    "Missing bearer token",
+    "A verified phone number is required for Hubble rewards",
+    "A verified 10-digit phone number is required for Hubble rewards",
+    "Hubble staging is unavailable",
     "No user with this ID",
     "Insufficient balance",
     "Original debit not found",

@@ -109,7 +109,9 @@ Deno.test("authenticated token response exposes SDK config but never callback se
   const serialized = JSON.stringify(result.body);
   assert.equal(serialized.includes(config.sharedSecret), false);
   assert.equal(serialized.includes("BEGIN PRIVATE KEY"), false);
-  assert.equal((await f.request("token")).status, 401);
+  const unauthenticated = await f.request("token");
+  assert.equal(unauthenticated.status, 401);
+  assert.equal(unauthenticated.body.failureReason, "Authentication required");
 });
 
 Deno.test("callback secret, input validation, debit and reverse contracts are enforced", async () => {
