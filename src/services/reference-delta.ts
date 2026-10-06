@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase';
 import { normalizeIndianPhone, phoneOtpErrorMessage } from './auth-production';
 import { profileProductionService } from './profile-production';
+import { withRequestDeadline } from './request-deadline';
 
 export type EmergencyContact = {
   id?: number;
@@ -118,13 +119,21 @@ export const referenceDeltaService = {
   }),
   async requestPhoneChange(phone: string) {
     const normalized = normalizeIndianPhone(phone);
-    const result = await supabase.auth.updateUser({ phone: normalized });
+    const result = await withRequestDeadline(
+      () => supabase.auth.updateUser({ phone: normalized }),
+      20_000,
+      'The OTP request took too long. Your phone was not verified. Please try again.',
+    );
     if (result.error) throw new Error(phoneOtpErrorMessage(result.error, true));
     return normalized;
   },
   async resendPhoneChange(phone: string) {
     const normalized = normalizeIndianPhone(phone);
-    const result = await supabase.auth.resend({ type: 'phone_change', phone: normalized });
+    const result = await withRequestDeadline(
+      () => supabase.auth.resend({ type: 'phone_change', phone: normalized }),
+      20_000,
+      'The OTP resend took too long. Please try again.',
+    );
     if (result.error) throw new Error(phoneOtpErrorMessage(result.error, true));
     return normalized;
   },
@@ -135,8 +144,18 @@ export const referenceDeltaService = {
     const before = await supabase.auth.getUser();
     if (before.error) throw before.error;
     const alreadyConfirmed = before.data.user?.phone === normalized && Boolean(before.data.user?.phone_confirmed_at);
-    const result = await supabase.auth.verifyOtp({ phone: normalized, token: cleanToken, type: 'phone_change' });
-    if (result.error) {
+    let verificationError: unknown = null;
+    try {
+      const result = await withRequestDeadline(
+        () => supabase.auth.verifyOtp({ phone: normalized, token: cleanToken, type: 'phone_change' }),
+        20_000,
+        'Phone verification took too long. Checking the confirmed server state…',
+      );
+      verificationError = result.error;
+    } catch (error) {
+      verificationError = error;
+    }
+    if (verificationError) {
       // A network timeout can arrive after GoTrue committed the phone change.
       // Reconcile once against the server, but never turn a pre-existing
       // confirmed number or an unverified send-only state into OTP success.
@@ -144,7 +163,7 @@ export const referenceDeltaService = {
       const committedAfterRequest = !alreadyConfirmed && !reconciled.error
         && reconciled.data.user?.phone === normalized
         && Boolean(reconciled.data.user?.phone_confirmed_at);
-      if (!committedAfterRequest) throw new Error(phoneOtpErrorMessage(result.error, true));
+      if (!committedAfterRequest) throw new Error(phoneOtpErrorMessage(verificationError, true));
     }
     const confirmed = await supabase.auth.getUser();
     if (confirmed.error || confirmed.data.user?.phone !== normalized || !confirmed.data.user?.phone_confirmed_at) {

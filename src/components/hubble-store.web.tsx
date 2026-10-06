@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { hubbleSdkUrl, requestHubbleSession, type HubbleSession } from '../services/hubble';
+import { hubbleSdkUrl, requestHubbleReadiness, requestHubbleSession, type HubbleReadiness, type HubbleSession } from '../services/hubble';
 import { Button, ErrorLine, Icon, Skeleton, usePalette } from './reconstruction/ui';
 
 const HUBBLE_ORIGIN = 'https://sdk.dev.myhubble.money';
@@ -8,6 +8,7 @@ const HUBBLE_ORIGIN = 'https://sdk.dev.myhubble.money';
 export function HubbleStore() {
   const c = usePalette();
   const [session, setSession] = useState<HubbleSession | null>(null);
+  const [readiness, setReadiness] = useState<HubbleReadiness | null>(null);
   const [open, setOpen] = useState(false);
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -21,10 +22,17 @@ export function HubbleStore() {
     setLoading(true);
     setError('');
     try {
-      const current = await requestHubbleSession();
+      const current = await requestHubbleReadiness();
       if (!mounted.current) return;
-      setSession(current);
+      setReadiness(current);
+      if (launch && !current.phoneVerified) {
+        setError('Verify your phone in Profile → Verification before opening Hubble rewards.');
+        return;
+      }
       if (launch && current.eligible) {
+        const tokenSession = await requestHubbleSession();
+        if (!mounted.current) return;
+        setSession(tokenSession);
         setReady(false);
         setOpen(true);
       }
@@ -60,7 +68,7 @@ export function HubbleStore() {
   }, [load]);
 
   const sdk = useMemo(() => session && open ? hubbleSdkUrl(session) : null, [session, open]);
-  if (loading && !session) return <Skeleton />;
+  if (loading && !readiness) return <Skeleton />;
 
   if (sdk) return <View style={{ flex: 1, minHeight: 620, backgroundColor: c.bg }}>
     <View style={{ minHeight: 50, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 10, borderBottomWidth: 1, borderColor: c.border }}>
@@ -80,8 +88,8 @@ export function HubbleStore() {
     })}
   </View>;
 
-  const minimum = session?.eligibilityPoints ?? 200;
-  const balance = session?.balance ?? 0;
+  const minimum = readiness?.eligibilityPoints ?? 200;
+  const balance = readiness?.balance ?? 0;
   const remaining = Math.max(minimum - balance, 0);
   return <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 22, justifyContent: 'center', gap: 16 }}>
     <View style={{ backgroundColor: c.card, borderWidth: 1, borderColor: c.border, borderRadius: 20, padding: 20, gap: 14 }}>
@@ -92,14 +100,18 @@ export function HubbleStore() {
       <View style={{ backgroundColor: c.bg, borderRadius: 14, padding: 16, gap: 5 }}>
         <Text style={{ color: c.muted, fontSize: 12 }}>AVAILABLE BALANCE</Text>
         <Text style={{ color: c.text, fontSize: 30, fontWeight: '800' }}>{balance} <Text style={{ color: c.accent, fontSize: 16 }}>Nitro</Text></Text>
-        <Text style={{ color: c.muted, fontSize: 12 }}>1 Nitro Point = ₹{session?.nitroToInr ?? 1}</Text>
+        <Text style={{ color: c.muted, fontSize: 12 }}>1 Nitro Point = ₹1</Text>
       </View>
-      {session && !session.eligible ? <View style={{ flexDirection: 'row', gap: 10, padding: 13, borderRadius: 12, backgroundColor: '#F5B84B18' }}>
+      {readiness && !readiness.eligible ? <View style={{ flexDirection: 'row', gap: 10, padding: 13, borderRadius: 12, backgroundColor: '#F5B84B18' }}>
         <Icon name="lock-closed-outline" size={20} color="#E9A62C" />
         <Text style={{ color: c.text, fontSize: 13, lineHeight: 19, flex: 1 }}>You need {minimum} Nitro Points to open rewards. Earn {remaining} more.</Text>
       </View> : <Text style={{ color: c.muted, fontSize: 13, lineHeight: 20 }}>Choose a reward in Hubble. WeNitro deducts Nitro Points only after Hubble confirms the staging redemption.</Text>}
       <ErrorLine text={error} />
-      <Button label={session?.eligible ? 'Open Hubble Rewards' : 'Check Balance'} busy={loading} onPress={() => void load(Boolean(session?.eligible))} />
+      <Button
+        label={!readiness?.eligible ? 'Check Balance' : readiness.phoneVerified ? 'Open Hubble Rewards' : 'Verify Phone to Continue'}
+        busy={loading}
+        onPress={() => void load(Boolean(readiness?.eligible))}
+      />
     </View>
     <Text style={{ color: c.muted, textAlign: 'center', fontSize: 11, lineHeight: 17 }}>Staging only · no production or real-money redemption is enabled.</Text>
   </ScrollView>;

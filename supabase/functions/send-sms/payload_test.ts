@@ -85,6 +85,8 @@ Deno.test("accepts a signed Supabase Send SMS fixture and maps Fast2SMS fields",
     e164: "+919876543210",
     national: "9876543210",
   }, "normalized phone");
+  assertEquals(parsed.userId, null, "missing user ID remains null");
+  assertEquals(parsed.operation, "send_otp", "default operation");
   assertEquals(
     fast2SmsRequestBody(parsed.phone.national, parsed.otp, "otp-template", 5),
     {
@@ -113,6 +115,7 @@ Deno.test("uses sms.phone for a phone-change hook when the user has no confirmed
     e164: "+919876543210",
     national: "9876543210",
   }, "pending destination phone");
+  assertEquals(parsed.operation, "phone_change", "phone-change operation");
 });
 
 Deno.test("prefers sms.phone over the user's currently confirmed phone", () => {

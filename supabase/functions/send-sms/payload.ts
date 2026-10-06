@@ -6,15 +6,19 @@ export type IndianMobile = {
 export type ParsedSendSmsHookPayload = {
   phone: IndianMobile;
   otp: string;
+  userId: string | null;
+  operation: string;
 };
 
 type SendSmsHookPayload = {
   user?: {
+    id?: unknown;
     phone?: unknown;
   };
   sms?: {
     otp?: unknown;
     phone?: unknown;
+    sms_type?: unknown;
   };
 };
 
@@ -49,7 +53,15 @@ export function parseSendSmsHookPayload(
     return null;
   }
 
-  return { phone, otp };
+  const userId = typeof hook.user?.id === "string" &&
+      /^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(hook.user.id)
+    ? hook.user.id
+    : null;
+  const operation = typeof hook.sms?.sms_type === "string" &&
+      /^[a-z_]{2,40}$/.test(hook.sms.sms_type)
+    ? hook.sms.sms_type
+    : "send_otp";
+  return { phone, otp, userId, operation };
 }
 
 export function fast2SmsRequestBody(

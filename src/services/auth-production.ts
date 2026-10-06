@@ -494,14 +494,18 @@ export async function requestEmailVerification(input?: {
   if (!email) email = (await getValidatedUser()).email;
   if (!email) throw new Error("An email address is required for verification.");
 
-  const { data, error } = await supabase.auth.resend({
-    type: "signup",
-    email,
-    options: {
-      emailRedirectTo: input?.redirectTo ?? getAuthRedirectUrl(),
-    },
-  });
-  if (error) throw error;
+  const { data, error } = await withRequestDeadline(
+    () => supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: input?.redirectTo ?? getAuthRedirectUrl(),
+      },
+    }),
+    20_000,
+    "The verification email request took too long. Please try again.",
+  );
+  if (error) throw new Error(emailVerificationErrorMessage(error));
   return data;
 }
 
@@ -523,9 +527,13 @@ export async function requestCurrentUserEmailChange(input: {
     throw new Error("This email address is already verified on your account.");
   }
 
-  const { data, error } = await supabase.auth.updateUser(
-    { email },
-    { emailRedirectTo: input.redirectTo ?? getAuthRedirectUrl() },
+  const { data, error } = await withRequestDeadline(
+    () => supabase.auth.updateUser(
+      { email },
+      { emailRedirectTo: input.redirectTo ?? getAuthRedirectUrl() },
+    ),
+    20_000,
+    "The verification email request took too long. Please try again.",
   );
   if (error) throw new Error(emailVerificationErrorMessage(error));
   if (!data.user || data.user.id !== current.id) {
@@ -550,11 +558,15 @@ export async function resendCurrentUserEmailChange(input?: {
   if (!requested) throw new Error("Enter the email address you want to verify.");
   const email = validEmailOrThrow(requested);
 
-  const { error } = await supabase.auth.resend({
-    type: "email_change",
-    email,
-    options: { emailRedirectTo: input?.redirectTo ?? getAuthRedirectUrl() },
-  });
+  const { error } = await withRequestDeadline(
+    () => supabase.auth.resend({
+      type: "email_change",
+      email,
+      options: { emailRedirectTo: input?.redirectTo ?? getAuthRedirectUrl() },
+    }),
+    20_000,
+    "The verification email resend took too long. Please try again.",
+  );
   if (error) throw new Error(emailVerificationErrorMessage(error));
 
   return {

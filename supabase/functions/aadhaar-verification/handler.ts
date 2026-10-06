@@ -242,26 +242,49 @@ async function handleLegacyOkyc(
 
 export function createAadhaarHandler(deps: Dependencies) {
   return async function handleAadhaarVerification(request: Request) {
+    const startedAt = Date.now();
+    const rawRequestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
+    const requestId = /^[A-Za-z0-9_-]{1,100}$/.test(rawRequestId)
+      ? rawRequestId
+      : crypto.randomUUID();
+    let actorId: string | null = null;
+    let operation = "unknown";
+    const finish = (response: Response, code?: string) => {
+      console.info(JSON.stringify({
+        event: "verification_operation",
+        request_id: requestId,
+        user_id: actorId,
+        provider: "sandbox_aadhaar",
+        operation,
+        http_status: response.status,
+        code: code ?? null,
+        result: response.ok ? "accepted" : "rejected",
+        duration_ms: Date.now() - startedAt,
+      }));
+      return response;
+    };
     if (request.method === "OPTIONS") {
       return new Response("ok", { headers: corsHeaders });
     }
     if (request.method !== "POST") {
-      return jsonResponse({ error: "Method not allowed." }, 405);
+      return finish(jsonResponse({ error: "Method not allowed." }, 405), "method_not_allowed");
     }
     try {
       const actor = await deps.authenticate(request);
+      actorId = actor.authId;
       if (!actor.allowed) {
-        return jsonResponse({ error: "Account unavailable." }, 403);
+        return finish(jsonResponse({ error: "Account unavailable." }, 403), "account_unavailable");
       }
       let body: Record<string, unknown>;
       try {
         body = (await request.json()) as Record<string, unknown>;
       } catch {
-        return jsonResponse({ error: "Invalid verification request." }, 400);
+        return finish(jsonResponse({ error: "Invalid verification request." }, 400), "invalid_json");
       }
       const action = body.action;
+      operation = typeof action === "string" ? action : "invalid_action";
       if (!isAadhaarAction(action)) {
-        return jsonResponse({ error: "Invalid verification action." }, 400);
+        return finish(jsonResponse({ error: "Invalid verification action." }, 400), "invalid_action");
       }
       const runtimeSecrets = deps.secrets
         ? await deps.secrets().catch(() => ({} as Record<string, string>))
@@ -270,18 +293,18 @@ export function createAadhaarHandler(deps: Dependencies) {
         deps.env(name) ?? runtimeSecrets[name];
 
       if (isLegacyOkycAction(action)) {
-        return await handleLegacyOkyc(deps, actor, body, action, resolveEnv);
+        return finish(await handleLegacyOkyc(deps, actor, body, action, resolveEnv));
       }
 
       const config = digilockerConfiguration(resolveEnv);
       if (!config) {
-        return jsonResponse({
+        return finish(jsonResponse({
           available: false,
           verified: false,
           status: "unavailable",
           message:
             "DigiLocker verification is not enabled or its Sandbox credentials do not match the configured environment.",
-        });
+        }), "configuration_unavailable");
       }
       const ledger = async (
         args: Record<string, unknown>,
@@ -306,15 +329,15 @@ export function createAadhaarHandler(deps: Dependencies) {
           : {}),
       });
       if (action === AADHAAR_ACTIONS.availability || existing?.verified_at) {
-        return jsonResponse(publicStatus(existing));
+        return finish(jsonResponse(publicStatus(existing)));
       }
       const provider = createDigiLockerProvider(config, deps.fetcher);
 
       if (action === AADHAAR_ACTIONS.begin) {
         if (body.consent !== true || body.consentVersion !== CONSENT_VERSION) {
-          return jsonResponse({
+          return finish(jsonResponse({
             error: "Your explicit consent is required to continue.",
-          }, 400);
+          }, 400), "consent_required");
         }
         const session = await ledger({
           p_action: "begin",
@@ -331,12 +354,12 @@ export function createAadhaarHandler(deps: Dependencies) {
             p_status: "created",
             p_transaction_id: result.transactionId,
           });
-          return jsonResponse({
+          return finish(jsonResponse({
             ...publicStatus(recorded),
             status: "created",
             sessionId: result.providerId,
             publicApiKey: config.key,
-          });
+          }));
         } catch (error) {
           await ledger({
             p_action: "update",
@@ -352,19 +375,19 @@ export function createAadhaarHandler(deps: Dependencies) {
         !existing?.provider_session_id ||
         existing.environment !== config.environment
       ) {
-        return jsonResponse({
+        return finish(jsonResponse({
           error: "Start a new DigiLocker verification session.",
-        }, 400);
+        }, 400), "session_required");
       }
       if (
         new Date(existing.expires_at).getTime() <= Date.now() ||
         ["failed", "expired"].includes(existing.status)
       ) {
-        return jsonResponse({
+        return finish(jsonResponse({
           ...publicStatus(existing),
           status: "expired",
           verified: false,
-        });
+        }), "session_expired");
       }
       await ledger({ p_action: "claim_refresh", p_session_id: existing.id });
       const result = await provider.refresh(existing.provider_session_id);
@@ -390,21 +413,21 @@ export function createAadhaarHandler(deps: Dependencies) {
         : result.status === "failed" || result.status === "expired"
         ? "This DigiLocker session ended without verification. Start a new session."
         : "DigiLocker verification is still in progress.";
-      return jsonResponse({
+      return finish(jsonResponse({
         ...publicStatus(recorded),
         status: result.status,
         message,
-      });
+      }));
     } catch (error) {
       if (
         error instanceof DigiLockerProviderError ||
         error instanceof AadhaarProviderError
       ) {
-        return jsonResponse({
+        return finish(jsonResponse({
           error: error.message,
           code: error.code,
           retryable: error.retryable,
-        }, error.httpStatus);
+        }, error.httpStatus), error.code);
       }
       const candidate = error instanceof Error ? error.message : "";
       const message =
@@ -416,7 +439,7 @@ export function createAadhaarHandler(deps: Dependencies) {
         /Authentication required|Missing bearer token/.test(message)
           ? 401
           : 400;
-      return jsonResponse({ error: message }, status);
+      return finish(jsonResponse({ error: message }, status), "verification_failed");
     }
   };
 }

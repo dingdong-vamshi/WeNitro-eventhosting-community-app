@@ -15,6 +15,12 @@ type Fast2SmsResult = {
   status_code?: unknown;
 };
 
+type SmsProviderResult = {
+  sent: boolean;
+  httpStatus: number | null;
+  providerCode: number | null;
+};
+
 const FAST2SMS_URL = "https://www.fast2sms.com/dev/otp/send";
 const VERIPHONE_URL = "https://api.veriphone.io/v3/verify";
 const MAX_HOOK_BODY_BYTES = 20 * 1024;
@@ -65,7 +71,7 @@ async function sendFast2Sms(
   otp: string,
   apiKey: string,
   otpId: string,
-): Promise<boolean> {
+): Promise<SmsProviderResult> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 3_500);
 
@@ -101,16 +107,34 @@ async function sendFast2Sms(
         reason: code === 412 ? "invalid_authorization_key" : "provider_rejected",
       }));
     }
-    return sent;
+    return {
+      sent,
+      httpStatus: response.status,
+      providerCode: Number.isInteger(Number(result.status_code))
+        ? Number(result.status_code)
+        : null,
+    };
   } catch {
     console.warn(JSON.stringify({ event: "sms_provider_unavailable", provider: "fast2sms" }));
-    return false;
+    return { sent: false, httpStatus: null, providerCode: null };
   } finally {
     clearTimeout(timeout);
   }
 }
 
 Deno.serve(async (request: Request): Promise<Response> => {
+  const startedAt = Date.now();
+  const rawRequestId = request.headers.get("webhook-id") ?? crypto.randomUUID();
+  const requestId = /^[A-Za-z0-9_-]{1,100}$/.test(rawRequestId)
+    ? rawRequestId
+    : crypto.randomUUID();
+  const logResult = (input: Record<string, unknown>) => console.info(JSON.stringify({
+    event: "verification_operation",
+    request_id: requestId,
+    provider: "fast2sms",
+    duration_ms: Date.now() - startedAt,
+    ...input,
+  }));
   if (request.method !== "POST") {
     return hookError(405, "Method not allowed");
   }
@@ -150,6 +174,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
 
   const parsed = parseSendSmsHookPayload(payload);
   if (!parsed) {
+    logResult({ operation: "send_otp", result: "rejected", http_status: 400, code: "invalid_payload" });
     return hookError(400, "Invalid SMS hook payload");
   }
 
@@ -160,19 +185,34 @@ Deno.serve(async (request: Request): Promise<Response> => {
     );
     console.info(JSON.stringify({ event: "sms_phone_validation", provider: "veriphone", verdict: phoneVerdict }));
     if (phoneVerdict === "invalid") {
+      logResult({ user_id: parsed.userId, operation: parsed.operation, result: "rejected", http_status: 422, code: "invalid_phone" });
       return hookError(422, "Phone number is invalid");
     }
   }
 
-  const sent = await sendFast2Sms(
+  const providerResult = await sendFast2Sms(
     parsed.phone.national,
     parsed.otp,
     fast2SmsApiKey,
     fast2SmsOtpId,
   );
-  if (!sent) {
+  if (!providerResult.sent) {
+    logResult({
+      user_id: parsed.userId,
+      operation: parsed.operation,
+      result: "provider_rejected",
+      http_status: providerResult.httpStatus ?? 502,
+      provider_code: providerResult.providerCode,
+    });
     return hookError(502, "SMS provider rejected the request");
   }
 
+  logResult({
+    user_id: parsed.userId,
+    operation: parsed.operation,
+    result: "sent",
+    http_status: providerResult.httpStatus,
+    provider_code: providerResult.providerCode,
+  });
   return hookSuccess();
 });

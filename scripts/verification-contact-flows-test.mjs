@@ -82,6 +82,7 @@ returnedUserId = user.id;
 const phoneCalls = [];
 let phoneUpdateError = null;
 let phoneVerifyError = null;
+let phoneDeadlineError = null;
 let phoneAuthUser = { ...user, phone: null, phone_confirmed_at: null };
 const phoneSupabase = {
   auth: {
@@ -100,6 +101,7 @@ const reference = load('src/services/reference-delta.ts', {
   '../lib/supabase': { supabase: phoneSupabase },
   './auth-production': auth,
   './profile-production': { profileProductionService: {} },
+  './request-deadline': { withRequestDeadline: task => phoneDeadlineError ? Promise.reject(phoneDeadlineError) : task() },
 }).referenceDeltaService;
 
 await assert.rejects(() => reference.requestPhoneChange('123'), /valid 10-digit/i);
@@ -110,6 +112,9 @@ assert.equal(phoneCalls.at(-1).attributes.phone, '+919876543210');
 phoneUpdateError = { code: 'phone_exists', message: 'already registered' };
 await assert.rejects(() => reference.requestPhoneChange('9876543210'), /another WeNitro account/i);
 phoneUpdateError = null;
+phoneDeadlineError = new Error('The OTP request took too long. Your phone was not verified. Please try again.');
+await assert.rejects(() => reference.requestPhoneChange('9876543210'), /took too long.*not verified/i);
+phoneDeadlineError = null;
 await reference.resendPhoneChange('9876543210');
 assert.equal(phoneCalls.at(-1).input.type, 'phone_change');
 
@@ -131,6 +136,8 @@ for (const required of [
   'Resend OTP in ${resendIn}s',
   'resendPhoneChange',
   'Phone verified. Your Trust Score now includes +10 once.',
+  'setPhoneError',
+  'will not transfer a phone between accounts without verifying both identities',
 ]) assert.ok(uiSource.includes(required), `missing UI flow: ${required}`);
 
 console.log(JSON.stringify({

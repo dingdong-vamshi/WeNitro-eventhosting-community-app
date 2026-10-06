@@ -15,6 +15,15 @@ export type HubbleSession = {
   environment: 'staging';
 };
 
+export type HubbleReadiness = {
+  balance: number;
+  eligible: boolean;
+  eligibilityPoints: number;
+  phoneVerified: boolean;
+};
+
+export const HUBBLE_ELIGIBILITY_POINTS = 200;
+
 const publicUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
 const publicKey = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
 
@@ -40,6 +49,28 @@ export const hubbleSdkUrl = (session: HubbleSession) => {
   url.searchParams.set('token', session.token);
   return url.href;
 };
+
+export async function requestHubbleReadiness(): Promise<HubbleReadiness> {
+  const [auth, ledger] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.rpc('list_my_nitro_history'),
+  ]);
+  if (auth.error || !auth.data.user) throw new Error('Sign in to view your Nitro balance.');
+  if (ledger.error) throw new Error('Your Nitro balance is temporarily unavailable.');
+  const value = ledger.data && typeof ledger.data === 'object'
+    ? ledger.data as Record<string, unknown>
+    : {};
+  const balance = Number(value.balance);
+  if (!Number.isSafeInteger(balance) || balance < 0) {
+    throw new Error('Your Nitro balance returned an invalid result.');
+  }
+  return {
+    balance,
+    eligible: balance >= HUBBLE_ELIGIBILITY_POINTS,
+    eligibilityPoints: HUBBLE_ELIGIBILITY_POINTS,
+    phoneVerified: Boolean(auth.data.user.phone && auth.data.user.phone_confirmed_at),
+  };
+}
 
 export async function requestHubbleSession(): Promise<HubbleSession> {
   const current = await supabase.auth.getSession();

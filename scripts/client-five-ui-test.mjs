@@ -39,6 +39,7 @@ new Function('exports', 'require', ts.transpile(fs.readFileSync('src/services/re
     phoneOtpErrorMessage: error => error.message || 'Phone verification failed.',
   };
   if (name === './profile-production') return { profileProductionService: {} };
+  if (name === './request-deadline') return { withRequestDeadline: task => task() };
   throw new Error(`Unexpected import: ${name}`);
 });
 
