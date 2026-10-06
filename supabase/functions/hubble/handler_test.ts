@@ -80,7 +80,11 @@ function fixture() {
       calls.push({ tokenContext: authId });
       return context;
     },
-    balance: async userId => ({ userId, totalCoins: 201 }),
+    balance: async userId => ({
+      userId,
+      totalCoins: 201,
+      consumptionEligibility: { allowed: true },
+    }),
     debit: async args => {
       calls.push({ debit: args });
       return { transactionId: "nitro_txn_1", balance: 200, referenceId: args.referenceId, idempotent: false };
@@ -120,6 +124,7 @@ Deno.test("callback secret, input validation, debit and reverse contracts are en
   const headers = { "X-Hubble-Secret": config.sharedSecret, "Content-Type": "application/json" };
   assert.deepEqual((await f.request("balance?userId=42", { headers })).body, {
     status: "SUCCESS", userId: 42, totalCoins: 201,
+    consumptionEligibility: { allowed: true },
   });
   assert.equal((await f.request("balance?userId=bad", { headers })).status, 404);
   const invalid = await f.request("debit", { method: "POST", headers, body: JSON.stringify({ userId: "42", coins: 1.5, referenceId: "ref" }) });

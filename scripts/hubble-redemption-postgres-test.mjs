@@ -38,6 +38,7 @@ try{
   insert into public.tbl_users(id,auth_user_id,points,fullname) select n,('00000000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,(array[199,200,201,250,250])[n],'User '||n from generate_series(1,5)n;
   insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) select auth_user_id,'u'||id||'@example.test',now(),'+91900000000'||id,now() from public.tbl_users;
   ${fs.readFileSync('supabase/migrations/20261006113000_hubble_nitro_redemption.sql','utf8')}
+  ${fs.readFileSync('supabase/migrations/20261006121451_hubble_balance_eligibility.sql','utf8')}
  `);
 
  eq(sql("select has_function_privilege('anon','public.hubble_debit(integer,numeric,text,text)','EXECUTE')"),'f');
@@ -45,6 +46,9 @@ try{
  eq(sql("select has_function_privilege('service_role','public.hubble_debit(integer,numeric,text,text)','EXECUTE')"),'t');
  eq(sql("select has_table_privilege('authenticated','public.tbl_hubble_transactions','INSERT')"),'f');
  eq(sql("select has_table_privilege('authenticated','public.tbl_hubble_transactions','SELECT')"),'t');
+ eq(json('select public.hubble_get_balance(1)').consumptionEligibility.allowed,false);
+ eq(json('select public.hubble_get_balance(1)').consumptionEligibility.message,'At least 200 Nitro Points are required to redeem');
+ eq(json('select public.hubble_get_balance(2)').consumptionEligibility.allowed,true);
  eq(attempt("select public.hubble_debit(1,1,'below-200',null)"),'P0001:At least 200 Nitro Points are required to redeem');
  eq(json("select public.hubble_debit(2,1,'at-200','First redemption')").balance,199);
  const duplicate=json("select public.hubble_debit(2,1,'at-200','Changed retry note')");eq(duplicate.idempotent,true);eq(duplicate.balance,199);

@@ -12,6 +12,7 @@ has(service,/cache: 'no-store'/);
 has(service,/https:\/\/sdk\.dev\.myhubble\.money\//);
 has(web,/event\.origin !== HUBBLE_ORIGIN/);
 has(web,/app_ready/);has(web,/name === 'close'/);has(web,/name === 'error'/);
+has(web,/onLoad: \(\) => setReady\(true\)/);
 has(web,/session\?\.eligible/);has(web,/Earn \{remaining\} more/);
 has(web,/Staging only · no production or real-money redemption is enabled/);
 has(native,/available on WeNitro Web/);

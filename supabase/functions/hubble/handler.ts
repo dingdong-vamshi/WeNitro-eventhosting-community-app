@@ -32,7 +32,11 @@ type Dependencies = {
   config: () => Promise<HubbleConfig>;
   authenticate: (request: Request) => Promise<string>;
   tokenContext: (authId: string) => Promise<HubbleTokenContext>;
-  balance: (userId: number) => Promise<{ userId: number; totalCoins: number }>;
+  balance: (userId: number) => Promise<{
+    userId: number;
+    totalCoins: number;
+    consumptionEligibility?: { allowed: boolean; message?: string };
+  }>;
   debit: (args: {
     userId: number;
     coins: number;

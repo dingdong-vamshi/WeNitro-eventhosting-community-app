@@ -75,6 +75,7 @@ export function HubbleStore() {
       src: sdk,
       allow: 'payment; clipboard-write',
       referrerPolicy: 'strict-origin-when-cross-origin',
+      onLoad: () => setReady(true),
       style: { width: '100%', flex: 1, minHeight: 570, border: 0, background: '#fff' },
     })}
   </View>;
