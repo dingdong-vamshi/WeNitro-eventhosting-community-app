@@ -66,6 +66,23 @@ Deno.test("RS256 SSO JWT is verifiable, fresh and expires in exactly 60 seconds"
     new TextEncoder().encode(`${header}.${payload}`),
   );
   assert.equal(verified, true);
+
+  const wrongKeyPair = await crypto.subtle.generateKey(
+    { name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" },
+    true,
+    ["sign", "verify"],
+  );
+  const wrongKeyVerified = await crypto.subtle.verify(
+    "RSASSA-PKCS1-v1_5",
+    wrongKeyPair.publicKey,
+    Uint8Array.from(atob(raw + "=".repeat((4 - raw.length % 4) % 4)), character => character.charCodeAt(0)),
+    new TextEncoder().encode(`${header}.${payload}`),
+  );
+  assert.equal(wrongKeyVerified, false);
+
+  const expired = await signHubbleJwt(config, context, 1_799_999_900);
+  assert.equal(decode(expired.split(".")[1]).exp < 1_800_000_000, true);
+  assert.notEqual(decode(payload).iss, "wrong-client-id");
 });
 
 function fixture() {
