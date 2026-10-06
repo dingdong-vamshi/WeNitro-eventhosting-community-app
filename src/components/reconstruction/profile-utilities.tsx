@@ -9,6 +9,7 @@ import { profileProductionService } from '../../services/profile-production';
 import { referenceDeltaService, type EmergencyContact, type NitroLedgerRow } from '../../services/reference-delta';
 import { supabase } from '../../lib/supabase';
 import { verificationService, type VerificationMethods } from '../../services/verification-production';
+import { requestCurrentUserEmailChange, requestEmailVerification, resendCurrentUserEmailChange } from '../../services/auth-production';
 import { derivedTrustScore, trustScoreParts } from '../../domain/profile-signals';
 import { activityHistoryParticipationLabel, confirmedActivityParticipation } from '../../domain/profile-activity-history';
 import { prepareReferenceActivities } from './feed-search';
@@ -24,6 +25,12 @@ export function ReferenceVerification({ back }: { back: () => void }) {
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [email, setEmail] = useState('');
+  const [emailDraft, setEmailDraft] = useState('');
+  const [pendingEmail, setPendingEmail] = useState('');
+  const [emailEditing, setEmailEditing] = useState(false);
+  const [emailNotice, setEmailNotice] = useState('');
+  const [phoneNotice, setPhoneNotice] = useState('');
+  const [resendIn, setResendIn] = useState(0);
   const [methods, setMethods] = useState<VerificationMethods | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);
   const alive = useRef(true);
@@ -62,12 +69,22 @@ export function ReferenceVerification({ back }: { back: () => void }) {
     const preview = state.live_photo_verified || state.live_photo_pending ? await verificationService.previewLivePhoto().catch(() => null) : null;
     if (!alive.current) return;
     setPhoneVerified(state.phone_verified); setEmailVerified(state.email_verified);
-    setEmail(auth.data.user?.email || ''); setMethods(state); setMetrics(combinedMetrics);
+    const authEmail = auth.data.user?.email || '';
+    const nextEmail = auth.data.user?.new_email || '';
+    setEmail(authEmail); setPendingEmail(nextEmail);
+    setEmailDraft(value => value || nextEmail || authEmail);
+    if (state.email_verified) { setPendingEmail(''); setEmailEditing(false); }
+    setMethods(state); setMetrics(combinedMetrics);
     setTrustScore(Number.isFinite(authoritativeScore) ? authoritativeScore : fallbackScore);
     setPhone(auth.data.user?.phone?.replace(/^\+91/, '') || '');
     setSelfiePreview(preview);
   };
   useEffect(() => { alive.current = true; void load().catch(e => alive.current && setError(e.message)).finally(() => alive.current && setLoading(false)); return () => { alive.current = false; }; }, []);
+  useEffect(() => {
+    if (resendIn <= 0) return;
+    const timer = setTimeout(() => setResendIn(value => Math.max(0, value - 1)), 1000);
+    return () => clearTimeout(timer);
+  }, [resendIn]);
   const run = async (action: () => Promise<unknown>) => { if (lock.current) return; lock.current = true; setBusy(true); setError(''); try { await action(); } catch (e: any) { if (alive.current) setError(e.message || 'Verification could not continue.'); } finally { lock.current = false; if (alive.current) setBusy(false); } };
   const openCamera = async () => {
     if (cameraRequest.current || busy) return;
@@ -97,10 +114,34 @@ export function ReferenceVerification({ back }: { back: () => void }) {
   });
   return <Page><Header title="Verify Your Account" back={back} />{loading ? <Skeleton /> : <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 18, gap: 18, paddingBottom: 40 }}>
     <View style={{ borderRadius: 18, padding: 18, backgroundColor: c.card, borderWidth: 1, borderColor: c.border, flexDirection: 'row', alignItems: 'center', gap: 16 }}><View style={{ width: 70, height: 70, borderRadius: 36, borderWidth: 6, borderColor: phoneVerified ? '#52BE86' : c.border, alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: c.text, fontSize: 22, fontWeight: '800' }}>{trustScore ?? 0}</Text><Text style={{ color: c.muted, fontSize: 12 }}>/100</Text></View><View style={{ flex: 1, gap: 5 }}><Text style={{ color: c.text, fontSize: 17, fontWeight: '700' }}>Trust Score</Text><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18 }}>Verification stages + 4+ rating + activities joined. Rating below 4 gives 0 for that part.</Text></View></View>
-    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 8 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: emailVerified ? '#D8F7E7' : c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name={emailVerified ? 'checkmark' : 'mail-outline'} color={emailVerified ? '#198457' : c.muted} size={17} /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{emailVerified ? 'Email Verified' : 'Email Not Verified'}</Text><Text numberOfLines={1} style={{ color: c.muted, fontSize: 12 }}>{email || 'No email address is attached to this account.'}</Text></View><Text style={{ color: emailVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View></View>
+    <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 10 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: emailVerified ? '#D8F7E7' : c.inset, alignItems: 'center', justifyContent: 'center' }}><Icon name={emailVerified ? 'checkmark' : 'mail-outline'} color={emailVerified ? '#198457' : c.muted} size={17} /></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{emailVerified ? 'Email Verified' : 'Email Not Verified'}</Text><Text numberOfLines={1} style={{ color: c.muted, fontSize: 12 }}>{email || pendingEmail || 'No email address is attached to this account.'}</Text></View><Text style={{ color: emailVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View>
+      {!emailVerified && <>
+        {!emailEditing && !pendingEmail ? <Button label="Add & Verify Email" variant="outline" disabled={busy} onPress={() => { setEmailEditing(true); setEmailNotice(''); }} /> : null}
+        {emailEditing ? <><Field accessibilityLabel="Email address" keyboardType="email-address" autoCapitalize="none" value={emailDraft} onChangeText={setEmailDraft} placeholder="you@example.com" /><Button label="Send verification email" busy={busy} disabled={!emailDraft.trim()} onPress={() => void run(async () => {
+          const requested = emailDraft.trim();
+          if (email && requested.toLowerCase() === email.toLowerCase()) {
+            await requestEmailVerification({ email: requested });
+          } else {
+            const result = await requestCurrentUserEmailChange({ email: requested });
+            if (!alive.current) return;
+            setPendingEmail(result.email);
+          }
+          if (!alive.current) return;
+          setEmailEditing(false);
+          setEmailNotice('Verification email sent. Open the confirmation link, then return here and refresh.');
+        })} /></> : null}
+        {pendingEmail || emailNotice ? <><Text accessibilityRole="alert" style={{ color: '#2D9666', fontSize: 12, lineHeight: 18 }}>{emailNotice || 'Confirmation pending. Open the verification link sent to your email.'}</Text><Button label="Resend verification email" variant="outline" busy={busy} onPress={() => void run(async () => {
+          if (pendingEmail) await resendCurrentUserEmailChange({ email: pendingEmail });
+          else await requestEmailVerification({ email });
+          if (alive.current) setEmailNotice('Verification email resent. Open the newest confirmation link.');
+        })} /><Button label="Use a different email" variant="outline" disabled={busy} onPress={() => { setEmailEditing(true); setEmailNotice(''); }} /></> : null}
+      </>}
+    </View>
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 13 }}><View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><View style={{ width: 30, height: 30, borderRadius: 16, backgroundColor: phoneVerified ? '#D8F7E7' : '#ECE9FF', alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: phoneVerified ? '#198457' : purple, fontWeight: '800' }}>{phoneVerified ? '✓' : '1'}</Text></View><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{phoneVerified ? 'Number Verified' : 'Number Not Verified'}</Text><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18 }}>{phoneVerified ? 'Verified · +10 Trust Score. No Nitro reward.' : 'Verify with a one-time password · +10 Trust Score'}</Text></View><Text style={{ color: phoneVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View>
-      {!phoneVerified && <><View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><View style={{ minHeight: 46, justifyContent: 'center', paddingHorizontal: 13, borderWidth: 1, borderColor: c.border, borderRadius: 9, backgroundColor: c.bg }}><Text style={{ color: c.text }}>+91</Text></View><Field accessibilityLabel="Phone number" keyboardType="phone-pad" maxLength={10} value={phone} onChangeText={value => setPhone(value.replace(/\D/g, '').slice(0, 10))} placeholder="10-digit mobile number" style={{ flex: 1 }} /></View>{otpSent && <Field accessibilityLabel="Phone OTP" keyboardType="number-pad" maxLength={6} value={otp} onChangeText={value => setOtp(value.replace(/\D/g, '').slice(0, 6))} placeholder="6-digit OTP" />}
-      <Button label={otpSent ? 'Verify Phone' : 'Add & Verify Phone'} busy={busy} disabled={otpSent ? otp.length !== 6 : phone.length !== 10} onPress={() => void run(async () => { if (!otpSent) { await referenceDeltaService.requestPhoneChange(phone); if (alive.current) setOtpSent(true); } else { await referenceDeltaService.verifyPhoneChange(phone, otp); if (!alive.current) return; setOtpSent(false); setOtp(''); await load(); } })} /></>}
+      {!phoneVerified && <><View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><View style={{ minHeight: 46, justifyContent: 'center', paddingHorizontal: 13, borderWidth: 1, borderColor: c.border, borderRadius: 9, backgroundColor: c.bg }}><Text style={{ color: c.text }}>+91</Text></View><Field accessibilityLabel="Phone number" keyboardType="phone-pad" maxLength={10} value={phone} editable={!otpSent} onChangeText={value => setPhone(value.replace(/\D/g, '').slice(0, 10))} placeholder="10-digit mobile number" style={{ flex: 1 }} /></View>{otpSent && <><Field accessibilityLabel="Phone OTP" keyboardType="number-pad" maxLength={6} value={otp} onChangeText={value => setOtp(value.replace(/\D/g, '').slice(0, 6))} placeholder="6-digit OTP" /><Text accessibilityRole="alert" style={{ color: phoneNotice ? '#2D9666' : c.muted, fontSize: 12, lineHeight: 18 }}>{phoneNotice || 'OTP sent. Enter the 6-digit code from the SMS.'}</Text></>}
+      <Button label={otpSent ? 'Verify Phone' : 'Add & Verify Phone'} busy={busy} disabled={otpSent ? otp.length !== 6 : phone.length !== 10} onPress={() => void run(async () => { if (!otpSent) { await referenceDeltaService.requestPhoneChange(phone); if (alive.current) { setOtpSent(true); setResendIn(30); setPhoneNotice('OTP sent. Enter the 6-digit code from the SMS.'); } } else { await referenceDeltaService.verifyPhoneChange(phone, otp); if (!alive.current) return; setOtpSent(false); setOtp(''); setPhoneNotice('Phone verified. Your Trust Score now includes +10 once.'); await load(); } })} />
+      {otpSent ? <><Button label={resendIn > 0 ? `Resend OTP in ${resendIn}s` : 'Resend OTP'} variant="outline" busy={busy} disabled={resendIn > 0} onPress={() => void run(async () => { await referenceDeltaService.resendPhoneChange(phone); if (alive.current) { setResendIn(30); setPhoneNotice('A new OTP was sent. Use the newest code.'); } })} /><Button label="Change phone number" variant="outline" disabled={busy} onPress={() => { setOtpSent(false); setOtp(''); setPhoneNotice(''); setResendIn(0); }} /></> : null}</>}
     </View>
     <View style={{ backgroundColor: c.card, borderRadius: 16, padding: 17, borderWidth: 1, borderColor: c.border, gap: 13 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}><Icon name={photoVerified ? 'checkmark-circle' : 'camera-outline'} color={photoVerified ? '#2D9666' : c.accent} /><View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 15, fontWeight: '700' }}>{photoVerified ? 'Selfie Approved' : methods?.live_photo_pending ? 'Selfie Awaiting Review' : 'Upload Selfie'}</Text><Text style={{ color: c.muted, fontSize: 12, lineHeight: 18, marginTop: 4 }}>{photoVerified ? '+10 Trust Score after Admin review. No Nitro reward.' : 'Take a selfie with the camera. Admin review is required before +10 Trust Score.'}</Text></View><Text style={{ color: photoVerified ? '#198457' : c.muted, fontSize: 12, fontWeight: '700' }}>+10</Text></View>

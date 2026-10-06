@@ -98,6 +98,33 @@ Deno.test("accepts a signed Supabase Send SMS fixture and maps Fast2SMS fields",
   );
 });
 
+Deno.test("uses sms.phone for a phone-change hook when the user has no confirmed phone", async () => {
+  const secret = btoa("wenitro-sanitized-hook-test-key");
+  const body = JSON.stringify({
+    user: { phone: "" },
+    sms: { phone: "+919876543210", otp: "123456", sms_type: "phone_change" },
+  });
+  const headers = await signedHeaders(secret, body);
+  const verified = new Webhook(secret).verify(body, headers);
+  const parsed = parseSendSmsHookPayload(verified);
+
+  assert(parsed, "phone-change fixture should satisfy the Send SMS contract");
+  assertEquals(parsed.phone, {
+    e164: "+919876543210",
+    national: "9876543210",
+  }, "pending destination phone");
+});
+
+Deno.test("prefers sms.phone over the user's currently confirmed phone", () => {
+  const parsed = parseSendSmsHookPayload({
+    user: { phone: "+919111111111" },
+    sms: { phone: "+919876543210", otp: "123456" },
+  });
+
+  assert(parsed, "phone-change payload should be accepted");
+  assertEquals(parsed.phone.e164, "+919876543210", "new phone destination");
+});
+
 Deno.test("rejects an invalid hook signature", async () => {
   const secret = btoa("wenitro-sanitized-hook-test-key");
   const body = JSON.stringify({

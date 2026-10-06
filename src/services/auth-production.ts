@@ -46,6 +46,21 @@ export function phoneOtpErrorMessage(error: unknown, createAccount: boolean) {
   if (existingAccountOnly) {
     return "No WeNitro account was found for this phone number. Create an account to continue.";
   }
+  if (source?.code === "phone_exists" || /phone number.*already.*registered/i.test(message ?? "")) {
+    return "This phone number is already linked to another WeNitro account.";
+  }
+  if (source?.code === "over_sms_send_rate_limit" || /rate limit|security purposes.*seconds/i.test(message ?? "")) {
+    return "Please wait before requesting another OTP.";
+  }
+  if (source?.code === "otp_expired" || /expired/i.test(message ?? "")) {
+    return "This OTP has expired. Request a new OTP and try again.";
+  }
+  if (
+    /invalid.*otp|token.*invalid/i.test(message ?? "") ||
+    (source?.code === "otp_disabled" && !/signups? not allowed for otp/i.test(message ?? ""))
+  ) {
+    return "That OTP is incorrect. Check the 6-digit code and try again.";
+  }
   if (
     (source?.status ?? 0) >= 500 ||
     /^hook_/.test(source?.code ?? "") ||
@@ -54,6 +69,21 @@ export function phoneOtpErrorMessage(error: unknown, createAccount: boolean) {
     return "Unable to send OTP right now. Please try again shortly.";
   }
   return message || "Could not send OTP.";
+}
+
+export function emailVerificationErrorMessage(error: unknown) {
+  const source = error as { code?: string; message?: string; status?: number } | null;
+  const message = source?.message?.trim();
+  if (source?.code === "email_exists" || /email.*already.*registered/i.test(message ?? "")) {
+    return "This email address is already linked to another WeNitro account.";
+  }
+  if (source?.code === "over_email_send_rate_limit" || /rate limit|security purposes.*seconds/i.test(message ?? "")) {
+    return "Please wait before requesting another verification email.";
+  }
+  if ((source?.status ?? 0) >= 500) {
+    return "Unable to send the verification email right now. Please try again shortly.";
+  }
+  return message || "Could not send the verification email.";
 }
 
 export type GoogleOAuthOptions = {
@@ -475,6 +505,66 @@ export async function requestEmailVerification(input?: {
   return data;
 }
 
+export type CurrentUserEmailChange = {
+  userId: string;
+  email: string;
+  pending: boolean;
+  sentAt: string | null;
+};
+
+export async function requestCurrentUserEmailChange(input: {
+  email: string;
+  redirectTo?: string;
+}): Promise<CurrentUserEmailChange> {
+  requireBackend();
+  const email = validEmailOrThrow(input.email);
+  const current = await getValidatedUser();
+  if (current.email_confirmed_at && current.email?.toLowerCase() === email) {
+    throw new Error("This email address is already verified on your account.");
+  }
+
+  const { data, error } = await supabase.auth.updateUser(
+    { email },
+    { emailRedirectTo: input.redirectTo ?? getAuthRedirectUrl() },
+  );
+  if (error) throw new Error(emailVerificationErrorMessage(error));
+  if (!data.user || data.user.id !== current.id) {
+    throw new Error("Your signed-in account changed. Please sign in again.");
+  }
+
+  return {
+    userId: data.user.id,
+    email,
+    pending: !data.user.email_confirmed_at || data.user.email?.toLowerCase() !== email,
+    sentAt: data.user.email_change_sent_at ?? null,
+  };
+}
+
+export async function resendCurrentUserEmailChange(input?: {
+  email?: string;
+  redirectTo?: string;
+}): Promise<CurrentUserEmailChange> {
+  requireBackend();
+  const current = await getValidatedUser();
+  const requested = input?.email ?? current.new_email;
+  if (!requested) throw new Error("Enter the email address you want to verify.");
+  const email = validEmailOrThrow(requested);
+
+  const { error } = await supabase.auth.resend({
+    type: "email_change",
+    email,
+    options: { emailRedirectTo: input?.redirectTo ?? getAuthRedirectUrl() },
+  });
+  if (error) throw new Error(emailVerificationErrorMessage(error));
+
+  return {
+    userId: current.id,
+    email,
+    pending: true,
+    sentAt: new Date().toISOString(),
+  };
+}
+
 export async function getVerificationStatus(): Promise<VerificationStatus> {
   const user = await getValidatedUser();
   const { data: profile, error } = await supabase
@@ -509,5 +599,7 @@ export const authProductionService = {
   logout,
   onAuthStateChange,
   requestEmailVerification,
+  requestCurrentUserEmailChange,
+  resendCurrentUserEmailChange,
   getVerificationStatus,
 };

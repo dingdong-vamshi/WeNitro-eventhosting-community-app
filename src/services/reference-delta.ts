@@ -122,12 +122,18 @@ export const referenceDeltaService = {
     if (result.error) throw new Error(phoneOtpErrorMessage(result.error, true));
     return normalized;
   },
+  async resendPhoneChange(phone: string) {
+    const normalized = normalizeIndianPhone(phone);
+    const result = await supabase.auth.resend({ type: 'phone_change', phone: normalized });
+    if (result.error) throw new Error(phoneOtpErrorMessage(result.error, true));
+    return normalized;
+  },
   async verifyPhoneChange(phone: string, token: string) {
     const normalized = normalizeIndianPhone(phone);
     const cleanToken = token.replace(/\D/g, '');
     if (!/^\d{6}$/.test(cleanToken)) throw new Error('Enter the 6-digit OTP.');
     const result = await supabase.auth.verifyOtp({ phone: normalized, token: cleanToken, type: 'phone_change' });
-    if (result.error) throw result.error;
+    if (result.error) throw new Error(phoneOtpErrorMessage(result.error, true));
     await rpc('sync_my_phone_verification');
     return normalized;
   },

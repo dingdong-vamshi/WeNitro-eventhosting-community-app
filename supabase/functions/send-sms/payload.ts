@@ -14,6 +14,7 @@ type SendSmsHookPayload = {
   };
   sms?: {
     otp?: unknown;
+    phone?: unknown;
   };
 };
 
@@ -38,7 +39,11 @@ export function parseSendSmsHookPayload(
   }
 
   const hook = payload as SendSmsHookPayload;
-  const phone = normalizeIndianMobile(hook.user?.phone);
+  // GoTrue puts the destination for phone-change OTPs in sms.phone while
+  // user.phone remains the user's currently confirmed phone (or is empty).
+  // Prefer the requested destination and keep user.phone as a compatibility
+  // fallback for older signup-hook payloads.
+  const phone = normalizeIndianMobile(hook.sms?.phone ?? hook.user?.phone);
   const otp = hook.sms?.otp;
   if (!phone || typeof otp !== "string" || !/^[0-9]{6}$/.test(otp)) {
     return null;
