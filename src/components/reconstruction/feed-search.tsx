@@ -167,7 +167,7 @@ export function ReferenceFeed({ data, setData, go, openActivity, openCommunity, 
     let active = true;
     if (!data.userId) return () => { active = false; controller.abort(); };
     void resolveHomeLocality(data.userId, controller.signal).then(result => {
-      if (active && result?.locality) setHomeLocality(result.locality);
+      if (active && result?.locality) setHomeLocality(result.source === 'activity' ? `${result.locality} · recent activity` : result.locality);
     });
     return () => { active = false; controller.abort(); };
   }, [data.userId]);

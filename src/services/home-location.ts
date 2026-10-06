@@ -1,12 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { Platform } from 'react-native';
+import { supabase } from '../lib/supabase';
 import { googlePlacesEnabled, reverseGeocodeGoogle, type GoogleLocationBias } from './google-places';
 
 const CACHE_PREFIX = 'wenitro:web-home-locality:v1:';
 const CACHE_MS = 24 * 60 * 60 * 1000;
 type CachedHomeLocation = GoogleLocationBias & { locality: string; resolvedAt: number };
-const currentAttempts = new Map<string, Promise<CachedHomeLocation | null>>();
+export type ResolvedHomeLocation =
+  | (CachedHomeLocation & { source: 'live' | 'cache' })
+  | { locality: string; source: 'activity' };
+const currentAttempts = new Map<string, Promise<ResolvedHomeLocation | null>>();
 const memoryCache = new Map<string, CachedHomeLocation>();
 
 function validCache(value: unknown): value is CachedHomeLocation {
@@ -45,26 +49,54 @@ async function currentCoordinates() {
   } finally { clearTimeout(timer); }
 }
 
-export async function resolveHomeLocality(userId: string, signal = new AbortController().signal) {
-  if (Platform.OS !== 'web' || !googlePlacesEnabled) return null;
+function distanceKm(first: GoogleLocationBias, second: GoogleLocationBias) {
+  const radians = Math.PI / 180;
+  const latitudeDelta = (second.latitude - first.latitude) * radians;
+  const longitudeDelta = (second.longitude - first.longitude) * radians;
+  const latitudeA = first.latitude * radians;
+  const latitudeB = second.latitude * radians;
+  const a = Math.sin(latitudeDelta / 2) ** 2 + Math.cos(latitudeA) * Math.cos(latitudeB) * Math.sin(longitudeDelta / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(Math.max(0, 1 - a)));
+}
+
+async function recentActivityLocality(signal: AbortSignal) {
+  try {
+    const { data, error } = await supabase.rpc('home_location_fallback').abortSignal(signal);
+    if (error || signal.aborted || !data || typeof data !== 'object') return null;
+    const locality = String((data as { locality?: unknown }).locality || '').trim();
+    return locality && locality.length <= 80 ? { locality, source: 'activity' as const } : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function resolveHomeLocality(userId: string, signal = new AbortController().signal): Promise<ResolvedHomeLocation | null> {
   if (!userId.trim()) return null;
-  const cached = await readCache(userId);
-  if (cached) return cached;
   const pending = currentAttempts.get(userId);
   if (pending) return pending;
   const currentAttempt = (async () => {
     try {
-      const position = await currentCoordinates();
-      if (!position || signal.aborted) return null;
-      const { latitude, longitude } = position.coords;
-      const result = await reverseGeocodeGoogle(latitude, longitude, signal);
-      if (!result.locality || signal.aborted) return null;
-      const value = { locality: result.locality, latitude, longitude, resolvedAt: Date.now() };
-      const key = cacheKey(userId);
-      memoryCache.set(key, value);
-      await AsyncStorage.setItem(key, JSON.stringify(value)).catch(() => undefined);
-      return value;
-    } catch { return null; }
+      const cached = await readCache(userId);
+      if (Platform.OS === 'web' && googlePlacesEnabled) {
+        const position = await currentCoordinates();
+        if (position && !signal.aborted) {
+          const current = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+          if (cached && distanceKm(current, cached) <= 2) return { ...cached, source: 'live' as const };
+          const result = await reverseGeocodeGoogle(current.latitude, current.longitude, signal);
+          if (result.locality && !signal.aborted) {
+            const value: CachedHomeLocation = { locality: result.locality, ...current, resolvedAt: Date.now() };
+            const key = cacheKey(userId);
+            memoryCache.set(key, value);
+            await AsyncStorage.setItem(key, JSON.stringify(value)).catch(() => undefined);
+            return { ...value, source: 'live' as const };
+          }
+        }
+      }
+      if (cached && !signal.aborted) return { ...cached, source: 'cache' as const };
+      return await recentActivityLocality(signal);
+    } catch {
+      return signal.aborted ? null : recentActivityLocality(signal);
+    }
   })().finally(() => { currentAttempts.delete(userId); });
   currentAttempts.set(userId, currentAttempt);
   return currentAttempt;
