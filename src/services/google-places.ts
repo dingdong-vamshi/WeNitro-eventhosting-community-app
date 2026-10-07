@@ -17,6 +17,19 @@ type GooglePayload =
   | { action: 'details'; placeId: string; sessionToken?: string }
   | { action: 'reverseGeocode'; latitude: number; longitude: number };
 
+const reportedUnavailable = new Set<string>();
+function reportGooglePlacesUnavailable(errorCode = 'UNKNOWN') {
+  const code = errorCode.trim().slice(0, 80) || 'UNKNOWN';
+  if (reportedUnavailable.has(code)) return;
+  reportedUnavailable.add(code);
+  console.info('[location]', {
+    event: 'location_provider_google_places_unavailable',
+    provider: 'google_places',
+    errorCode: code,
+    fallbackProvider: 'openstreetmap',
+  });
+}
+
 function validSuggestions(value: unknown): value is GooglePlaceSuggestion[] {
   return Array.isArray(value) && value.every(place => place && typeof place.id === 'string' && typeof place.title === 'string' && typeof place.address === 'string');
 }
@@ -36,7 +49,10 @@ async function requestGooglePlaces(payload: GooglePayload, signal: AbortSignal):
   const { data, error } = await supabase.auth.getSession();
   if (signal.aborted) throw new Error('Location request cancelled.');
   const session = data.session;
-  if (error || !session?.access_token) return { places: [], status: 'unavailable' };
+  if (error || !session?.access_token) {
+    reportGooglePlacesUnavailable('AUTH_UNAVAILABLE');
+    return { places: [], status: 'unavailable' };
+  }
   const controller = new AbortController();
   const abort = () => controller.abort();
   signal.addEventListener('abort', abort, { once: true });
@@ -50,17 +66,25 @@ async function requestGooglePlaces(payload: GooglePayload, signal: AbortSignal):
     });
     if (signal.aborted) throw new Error('Location request cancelled.');
     const body = await response.json().catch(() => ({}));
-    if (!response.ok) return { places: [], status: response.status === 503 ? 'disabled' : 'unavailable', errorCode: typeof body.code === 'string' ? body.code : undefined };
+    if (!response.ok) {
+      const errorCode = typeof body.code === 'string' ? body.code : `HTTP_${response.status}`;
+      reportGooglePlacesUnavailable(errorCode);
+      return { places: [], status: response.status === 503 ? 'disabled' : 'unavailable', errorCode };
+    }
     const latest = await supabase.auth.getSession();
     if (signal.aborted) throw new Error('Location request cancelled.');
-    if (latest.error || latest.data.session?.user.id !== session.user.id) return { places: [], status: 'unavailable' };
+    if (latest.error || latest.data.session?.user.id !== session.user.id) {
+      reportGooglePlacesUnavailable('SESSION_CHANGED');
+      return { places: [], status: 'unavailable' };
+    }
     const places = body.places ?? [];
-    if (payload.action === 'autocomplete' && !validSuggestions(places)) return { places: [], status: 'unavailable' };
-    if (payload.action === 'details' && !validDetails(places)) return { places: [], status: 'unavailable' };
-    if (payload.action === 'reverseGeocode' && typeof body.locality !== 'string') return { places: [], status: 'unavailable' };
+    if (payload.action === 'autocomplete' && !validSuggestions(places)) { reportGooglePlacesUnavailable('INVALID_AUTOCOMPLETE_RESPONSE'); return { places: [], status: 'unavailable' }; }
+    if (payload.action === 'details' && !validDetails(places)) { reportGooglePlacesUnavailable('INVALID_DETAILS_RESPONSE'); return { places: [], status: 'unavailable' }; }
+    if (payload.action === 'reverseGeocode' && typeof body.locality !== 'string') { reportGooglePlacesUnavailable('INVALID_REVERSE_RESPONSE'); return { places: [], status: 'unavailable' }; }
     return { places, status: 'ready', ...(body.coordinateReceipt ? { coordinateReceipt: body.coordinateReceipt } : {}), ...(body.locality ? { locality: body.locality } : {}) };
   } catch (caught) {
     if (signal.aborted) throw caught;
+    reportGooglePlacesUnavailable(controller.signal.aborted ? 'TIMEOUT' : 'REQUEST_FAILED');
     return { places: [], status: 'unavailable' };
   } finally {
     clearTimeout(timeout);

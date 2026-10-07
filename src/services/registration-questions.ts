@@ -3,6 +3,21 @@ import { normalizeRegistrationQuestions, validateRegistrationQuestions, type Reg
 import { moderatePublicContent, moderationArrayValue } from "./content-moderation";
 export * from "../domain/registration-questions";
 export type RegistrationForm = { questions: RegistrationQuestion[]; answers: RegistrationAnswer[]; locked: boolean };
+export type ManagedRegistrationAnswer = {
+  question_id: number;
+  label: string;
+  type: RegistrationQuestion["type"];
+  value: RegistrationAnswer["value"];
+};
+export type ManagedRegistrationResponse = {
+  participant_id: number;
+  user_id: number;
+  display_name: string;
+  username: string;
+  status: string;
+  role: string;
+  answers: ManagedRegistrationAnswer[];
+};
 function eventId(value: string | number): number {
   const id = Number(value);
   if (!Number.isSafeInteger(id) || id <= 0) throw new Error("Invalid activity ID.");
@@ -32,5 +47,11 @@ export const registrationQuestionService = {
     const row: unknown = Array.isArray(data) ? data[0] : data;
     if (!row || typeof row !== "object" || !("status" in row) || typeof row.status !== "string") throw new Error("Registration could not be saved.");
     return row as { status: string; [key: string]: unknown };
+  },
+  async getManagedResponses(activityId: string | number): Promise<ManagedRegistrationResponse[]> {
+    const { data, error } = await supabase.rpc("get_activity_registration_responses", { p_event_id: eventId(activityId) });
+    if (error) throw error;
+    if (!Array.isArray(data)) throw new Error("Participant responses could not load.");
+    return data as ManagedRegistrationResponse[];
   },
 };

@@ -38,6 +38,7 @@ assert.equal(Date.parse(refreshed.end)-Date.parse(refreshed.start),3600000);
 assert.equal(refreshed.deadline,refreshed.start);
 assert.equal(hasMeaningfulHostDraft(newHostDraft(now)),false);
 assert.equal(hasMeaningfulHostDraft({...newHostDraft(now),title:'Saved title'}),true);
+assert.equal(hasMeaningfulHostDraft({...newHostDraft(now),registrationQuestions:[{label:'Dietary needs',type:'short_text',required:false,display_order:0,options:[]}]}),true);
 assert.equal(scheduleFieldErrors({...valid,deadline:localDateTime(now)},+now).deadline,'');
 assert.match(scheduleFieldErrors({...valid,deadline:localDateTime(new Date(+now-60000))},+now).deadline,/before/);
 assert.equal(scheduleFieldErrors({...valid,end:localDateTime(new Date(Date.parse(valid.start)+3600000))},+now).end,'');
@@ -57,10 +58,10 @@ async function writeCase(failure){
     uploadMedia:async()=>({path:'qa/cover.jpg'}),supabase:{rpc:async(name,args)=>{calls.push({name,args});return failure==='rpc'?{error:new Error('rejected')}:{data:123,error:null};},storage:{from:()=>({remove:async paths=>{calls.push({removed:paths});}})}},
     activityIdFromRpc:x=>String(x),activitiesProductionService:{getDetails:async()=>{if(failure==='reload')throw new Error('connection lost');return{activity:{joinType:'approval'},viewerState:{participation:null}};}},activityForWorkspace:async activity=>activity};
   const fn=new Function(...Object.keys(deps),compile(writeSource)+';return writeActivityFromUi;')(...Object.values(deps));
-  const input={title:'QA',description:'QA',category:'Education',location:'Pune',startsAt:null,capacity:null,priceInr:250,visibility:'squad',joinType:'approval',verifiedOnly:true,ageMin:20,ageMax:45,genderPreference:'female',latitude:18.52,longitude:73.85,locationInstruction:'Entrance',coverMedia:{uri:'local'},onCommitted:async id=>{receipt=id;}};
+  const input={title:'QA',description:'QA',category:'Education',location:'Pune',startsAt:null,capacity:null,priceInr:250,visibility:'squad',joinType:'approval',verifiedOnly:true,ageMin:20,ageMax:45,genderPreference:'female',latitude:18.52,longitude:73.85,locationInstruction:'Entrance',registrationQuestions:[{label:'Dietary needs',type:'short_text',required:false,display_order:0,options:[]}],coverMedia:{uri:'local'},onCommitted:async id=>{receipt=id;}};
   if(failure)await assert.rejects(fn(input,'published'));else await fn(input,'published');
   assert.equal(calls.filter(c=>c.name==='create_activity').length,1);
-  const payload=calls[0].args.p_payload;assert.equal(payload.max_participants,null);assert.equal(payload.event_start_time,null);assert.equal(payload.verified_only,true);assert.equal(payload.age_max,45);assert.equal(payload.location_instruction,'Entrance');assert.equal(payload.price_inr,250);assert.equal(payload.is_paid,true);
+  const payload=calls[0].args.p_payload;assert.equal(payload.max_participants,null);assert.equal(payload.event_start_time,null);assert.equal(payload.verified_only,true);assert.equal(payload.age_max,45);assert.equal(payload.location_instruction,'Entrance');assert.equal(payload.price_inr,250);assert.equal(payload.is_paid,true);assert.equal(payload.registration_questions[0].label,'Dietary needs');
   assert.equal(receipt,failure==='rpc'?null:'123');
   assert.equal(calls.some(c=>c.removed),failure==='rpc','Committed cover must survive detail-reload failure');
 }
@@ -73,7 +74,7 @@ function locationService(gps,fetch){
   return result.activityLocationService;
 }
 const baseGps={Accuracy:{Balanced:3},getLastKnownPositionAsync:async()=>null,reverseGeocodeAsync:async()=>[]};
-await assert.rejects(locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:false}),getCurrentPositionAsync:async()=>null},async()=>{throw new Error('unexpected');}).current(),/denied/);
+await assert.rejects(locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:false}),getCurrentPositionAsync:async()=>null},async()=>{throw new Error('unexpected');}).current(),/permission is off/i);
 const primaryFetch=async url=>({ok:true,json:async()=>url.includes('/reverse?')?{features:[{geometry:{coordinates:[73.85,18.52]},properties:{name:'A venue',city:'Pune'}}]}:url.includes('nominatim')?[]:{features:[{geometry:{coordinates:[73.85,18.52]},properties:{name:'A venue',city:'Pune'}}]}});
 const primary=locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:true}),getCurrentPositionAsync:async()=>({coords:{latitude:18.52,longitude:73.85}})},primaryFetch);
 assert.deepEqual(await primary.current(),{label:'A venue, Pune',latitude:18.52,longitude:73.85});assert.equal((await primary.search('Pune')).length,1);
@@ -83,6 +84,11 @@ const fallbackRows=await providerFallback.search('Fallback Hall');assert.equal(f
 const lastKnown=locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:true}),getCurrentPositionAsync:async()=>{throw new Error('GPS cold start');},getLastKnownPositionAsync:async()=>({coords:{latitude:12.97,longitude:77.59}}),reverseGeocodeAsync:async()=>[{name:'Town Hall',street:'MG Road',city:'Bengaluru',region:'Karnataka',country:'India'}]},async()=>({ok:false,json:async()=>({})}));
 assert.deepEqual(await lastKnown.current(),{label:'Town Hall, MG Road, Bengaluru, Karnataka, India',latitude:12.97,longitude:77.59});
 const coordinates=locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:true}),getCurrentPositionAsync:async()=>({coords:{latitude:1.23456,longitude:2.34567}}),reverseGeocodeAsync:async()=>{throw new Error('offline');}},async()=>{throw new Error('offline');});
-assert.deepEqual(await coordinates.current(),{label:'1.23456, 2.34567',latitude:1.23456,longitude:2.34567});
+await assert.rejects(coordinates.current(),/couldn.t name your current location/i);
 const unavailable=locationService(baseGps,async()=>({ok:false,json:async()=>({})}));await assert.rejects(unavailable.search('Nowhere'),/unavailable/);
-console.log('PASS: host validation/default boundaries, single paid classification payloads, edit hydration, nullable scheduling/capacity, save recovery, and location provider/GPS fallbacks. No remote data written.');
+const hostScreen=fs.readFileSync('src/components/hosting/host-activity-screen.tsx','utf8');
+assert.match(hostScreen,/RegistrationQuestionEditor value=\{draft\.registrationQuestions\}/);
+assert.match(hostScreen,/registrationQuestions: draft\.registrationQuestions/);
+for(const technicalMessage of ['API_KEY_SERVICE_BLOCKED','API_NOT_ACTIVATED','BILLING_NOT_ENABLED','QUOTA_EXCEEDED','requires billing','API key'])assert.equal(hostScreen.includes(technicalMessage),false);
+assert.equal(hostScreen.includes('r.latitude.toFixed'),false);
+console.log('PASS: Host form restoration, question payload/draft validation, clean provider-neutral location UI, validation/default boundaries, edit hydration, nullable scheduling/capacity, save recovery, and named location provider/GPS fallbacks. No remote data written.');

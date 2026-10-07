@@ -45,7 +45,7 @@ import { validateOnboardingGender } from "./src/utils/onboarding";
 import { PartnerDashboard } from "./src/components/partner-dashboard";
 import { PartnerRegistrationFormScreen } from "./src/components/partner-registration-form-screen";
 import { RegistrationQuestionEditor, RegistrationAnswerForm } from "./src/components/registration-questions";
-import { registrationQuestionService, validateRegistrationQuestions, validateRegistrationAnswers, type RegistrationQuestionDraft, type RegistrationForm, type RegistrationAnswer } from "./src/services/registration-questions";
+import { registrationQuestionService, validateRegistrationQuestions, validateRegistrationAnswers, type RegistrationQuestionDraft, type RegistrationForm, type RegistrationAnswer, type ManagedRegistrationResponse } from "./src/services/registration-questions";
 import { cashfreeCheckoutAvailability, createActivityPayment, launchCashfreeCheckout, listActivityEntryCategories, verifyActivityPayment, type ActivityEntryCategory } from "./src/services/payments";
 import type { AccountType } from "./src/services/auth-production";
 import {
@@ -310,6 +310,12 @@ type ActivityParticipantView = {
   respondedAt: string | null;
   rating: number | null;
 };
+
+function registrationAnswerText(value: RegistrationAnswer["value"]) {
+  if (Array.isArray(value)) return value.join(", ");
+  if (typeof value === "boolean") return value ? "Agreed" : "No";
+  return value;
+}
 
 type ActivityCommentView = {
   id: string;
@@ -4178,6 +4184,10 @@ export function ActivityDetailScreen({
   const [feedbackComment, setFeedbackComment] = useState("");
   const [feedbackBusy, setFeedbackBusy] = useState(false);
   const [participantTab, setParticipantTab] = useState('All');
+  const [managedRegistrationResponses, setManagedRegistrationResponses] = useState<ManagedRegistrationResponse[]>([]);
+  const [managedResponsesLoading, setManagedResponsesLoading] = useState(false);
+  const [managedResponsesError, setManagedResponsesError] = useState("");
+  const canManageActivity = isHost || isCohost || String(activity.ownerId || "") === String(data.userId || "");
   const reactionId = activityReactionId(activity.id);
   const liked = data.likedIds.includes(reactionId);
   const saved = data.savedIds.includes(reactionId);
@@ -4324,6 +4334,23 @@ export function ActivityDetailScreen({
       void supabase.removeChannel(channel);
     };
   }, [activity.id]);
+  useEffect(() => {
+    if (!participantsOpen || !canManageActivity || !isSupabaseConfigured || !isBackendId(activity.id)) {
+      setManagedRegistrationResponses([]);
+      setManagedResponsesError("");
+      setManagedResponsesLoading(false);
+      return;
+    }
+    let active = true;
+    setManagedResponsesLoading(true);
+    setManagedResponsesError("");
+    void registrationQuestionService.getManagedResponses(activity.id).then(rows => {
+      if (active) setManagedRegistrationResponses(rows);
+    }).catch(caught => {
+      if (active) setManagedResponsesError(caught instanceof Error ? caught.message : "Registration responses could not load.");
+    }).finally(() => { if (active) setManagedResponsesLoading(false); });
+    return () => { active = false; };
+  }, [participantsOpen, canManageActivity, activity.id]);
   const join = async (leaveConfirmed = false) => {
     if (joining) return;
     if (registrationClosed) {
@@ -4620,7 +4647,7 @@ export function ActivityDetailScreen({
   const reactionCounts = feedback.reduce<Record<string, number>>((counts, item) => {
     const key = item.reaction || "Feedback"; counts[key] = (counts[key] || 0) + 1; return counts;
   }, {});
-  const canHost = isHost || isCohost || String(activity.ownerId || "") === String(data.userId || "");
+  const canHost = canManageActivity;
   const canComment = canHost || joined;
   const shareActivity = async () => {
     const isCurrentShare = captureShareScope();
@@ -4667,12 +4694,14 @@ export function ActivityDetailScreen({
     <View style={{ maxWidth, width:'100%', alignSelf:'center', minHeight:61, borderBottomWidth:1, borderColor:palette.border, flexDirection:'row', alignItems:'center' }}><Pressable accessibilityRole="button" accessibilityLabel="Back to Activity" onPress={() => setParticipantsOpen(false)} style={styles.chatHeaderButton}><Icon name="arrow-back" color={palette.text} /></Pressable><Text style={{ color:palette.text,fontSize:20,fontWeight:'800',flex:1 }}>Manage Participants</Text></View>
     <View style={{ maxWidth,width:'100%',alignSelf:'center' }}><View style={{ flexDirection:'row',gap:7,padding:14 }}>{['All','Pending','Approved','Rejected'].map(tab=><Pressable accessibilityRole="tab" accessibilityState={{selected:participantTab===tab}} key={tab} onPress={()=>setParticipantTab(tab)} style={{ flex:1,minHeight:42,borderRadius:21,backgroundColor:participantTab===tab?'#5948EA':palette.card,alignItems:'center',justifyContent:'center' }}><Text style={{ color:participantTab===tab?'#FFF':palette.muted,fontSize:11,fontWeight:'700' }}>{tab}</Text></Pressable>)}</View></View>
     <ScrollView contentContainerStyle={{ width: "100%", maxWidth, alignSelf: "center", padding: 16, paddingBottom: 36, gap: 14 }}>
+      {managedResponsesLoading ? <View style={{ padding: 12 }}><ActivityIndicator color={palette.accent} /></View> : null}
+      {managedResponsesError ? <Text accessibilityRole="alert" style={{ color: palette.danger, fontSize: 12 }}>{managedResponsesError}</Text> : null}
       <Pressable accessibilityRole="button" accessibilityLabel={`Open original Host ${activity.host}'s profile`} disabled={!activity.ownerId} onPress={() => activity.ownerId && openProfile(activity.ownerId)} style={{ borderRadius:18, backgroundColor:palette.card, borderWidth:1, borderColor:'#7967F5', padding:16, flexDirection:'row', alignItems:'center', gap:12 }}>
         <UserAvatar uri={activity.hostAvatar} name={activity.host} size={54} />
         <View style={{ flex:1, gap:6 }}><Text style={{ color:palette.text, fontSize:17, fontWeight:'800' }}>{activity.host}</Text><Text style={{ color:'#A899FF', fontSize:11, fontWeight:'800' }}>HOST · ORIGINAL CREATOR</Text></View>
         <VerifiedBadge userId={activity.ownerId} />
       </Pressable>
-      {filteredParticipants.filter(participant => participant.userId !== activity.ownerId).map(participant => { const approved=['approved','going','paid'].includes(participant.status); const cohost = participant.role === 'cohost'; return <View key={participant.id} style={{ borderRadius:18,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,padding:16,gap:13 }}><Pressable accessibilityRole="button" accessibilityLabel={`Open ${participant.name}'s profile`} onPress={()=>openProfile(participant.userId)} style={{ flexDirection:'row',alignItems:'center',gap:12 }}><UserAvatar uri={participant.avatarUrl} name={participant.name} size={54} /><View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:17,fontWeight:'800'}}>{participant.name} <VerifiedBadge userId={participant.userId} /></Text><Text style={{color:palette.muted,fontSize:12}}>@{participant.username}{cohost ? ' · Co-host' : ''}</Text></View><View style={{paddingHorizontal:10,paddingVertical:7,borderRadius:8,backgroundColor:approved?'#D7F8E6':participant.status==='rejected'?'#FDE5E8':palette.inset}}><Text style={{color:approved?'#187A56':participant.status==='rejected'?'#C93D51':'#9A771A',fontSize:9,fontWeight:'800'}}>{cohost ? 'CO-HOST' : participantStatus(participant.status)}</Text></View></Pressable><View style={{height:1,backgroundColor:palette.border}}/><View style={{flexDirection:'row',gap:16}}><Text style={{color:palette.text,fontSize:11}}>⭐ {participant.rating==null?'—':participant.rating.toFixed(1)} Global</Text><Text style={{color:palette.muted,fontSize:11}}>{new Date(participant.joinedAt).toLocaleDateString([],{day:'numeric',month:'short'})} Joined</Text></View>{canHost&&!activityEnded&&participant.status==='pending'?<View style={{flexDirection:'row',gap:10}}><View style={{flex:1}}><Button label="Approve" onPress={()=>void respondToParticipant(participant,'approved')}/></View><View style={{flex:1}}><Button label="Reject" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')}/></View></View>:null}{isHost&&!activityEnded&&approved&&participant.userId!==activity.ownerId?<Button label={cohost ? 'Remove Co-Host' : 'Make Co-Host'} variant="outline" onPress={()=>void setParticipantCohost(participant, !cohost)} />:null}{canHost&&!activityEnded&&approved&&!cohost&&participant.userId!==String(data.userId)&&participant.userId!==activity.ownerId?<Button label="Remove Participant" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')} />:null}</View>; })}
+      {filteredParticipants.filter(participant => participant.userId !== activity.ownerId).map(participant => { const approved=['approved','going','paid'].includes(participant.status); const cohost = participant.role === 'cohost'; const response = managedRegistrationResponses.find(item => String(item.user_id) === String(participant.userId)); return <View key={participant.id} style={{ borderRadius:18,backgroundColor:palette.card,borderWidth:1,borderColor:palette.border,padding:16,gap:13 }}><Pressable accessibilityRole="button" accessibilityLabel={`Open ${participant.name}'s profile`} onPress={()=>openProfile(participant.userId)} style={{ flexDirection:'row',alignItems:'center',gap:12 }}><UserAvatar uri={participant.avatarUrl} name={participant.name} size={54} /><View style={{flex:1,gap:4}}><Text style={{color:palette.text,fontSize:17,fontWeight:'800'}}>{participant.name} <VerifiedBadge userId={participant.userId} /></Text><Text style={{color:palette.muted,fontSize:12}}>@{participant.username}{cohost ? ' · Co-host' : ''}</Text></View><View style={{paddingHorizontal:10,paddingVertical:7,borderRadius:8,backgroundColor:approved?'#D7F8E6':participant.status==='rejected'?'#FDE5E8':palette.inset}}><Text style={{color:approved?'#187A56':participant.status==='rejected'?'#C93D51':'#9A771A',fontSize:9,fontWeight:'800'}}>{cohost ? 'CO-HOST' : participantStatus(participant.status)}</Text></View></Pressable><View style={{height:1,backgroundColor:palette.border}}/><View style={{flexDirection:'row',gap:16}}><Text style={{color:palette.text,fontSize:11}}>⭐ {participant.rating==null?'—':participant.rating.toFixed(1)} Global</Text><Text style={{color:palette.muted,fontSize:11}}>{new Date(participant.joinedAt).toLocaleDateString([],{day:'numeric',month:'short'})} Joined</Text></View>{response?.answers.length ? <View style={{ gap: 9, padding: 12, borderRadius: 12, backgroundColor: palette.inset }}><Text style={{ color: palette.text, fontSize: 12, fontWeight: '800' }}>Registration responses</Text>{response.answers.map(answer => <View key={answer.question_id} style={{ gap: 2 }}><Text style={{ color: palette.muted, fontSize: 11 }}>{answer.label}</Text><Text selectable style={{ color: palette.text, fontSize: 12, fontWeight: '600' }}>{registrationAnswerText(answer.value)}</Text></View>)}</View> : null}{canHost&&!activityEnded&&participant.status==='pending'?<View style={{flexDirection:'row',gap:10}}><View style={{flex:1}}><Button label="Approve" onPress={()=>void respondToParticipant(participant,'approved')}/></View><View style={{flex:1}}><Button label="Reject" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')}/></View></View>:null}{isHost&&!activityEnded&&approved&&participant.userId!==activity.ownerId?<Button label={cohost ? 'Remove Co-Host' : 'Make Co-Host'} variant="outline" onPress={()=>void setParticipantCohost(participant, !cohost)} />:null}{canHost&&!activityEnded&&approved&&!cohost&&participant.userId!==String(data.userId)&&participant.userId!==activity.ownerId?<Button label="Remove Participant" variant="outline" onPress={()=>void respondToParticipant(participant,'rejected')} />:null}</View>; })}
       {!filteredParticipants.length?<View style={{alignItems:'center',paddingTop:80,gap:10}}><Icon name="people-outline" color={palette.muted} size={48}/><Text style={{color:palette.text,fontWeight:'700'}}>No participants in this tab</Text></View>:null}
     </ScrollView>
   </SafeAreaView>;

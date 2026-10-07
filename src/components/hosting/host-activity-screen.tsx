@@ -13,7 +13,9 @@ import { GoogleVenue } from '../google-venue';
 import { createGooglePlacesSessionToken, googlePlacesEnabled, resolveGooglePlace, searchGooglePlaces, type GoogleLocationBias, type GooglePlacesResult } from '../../services/google-places';
 import { getCachedHomeLocationBias } from '../../services/home-location';
 import { listActivityEntryCategories } from '../../services/payments';
+import { registrationQuestionService, validateRegistrationQuestions } from '../../services/registration-questions';
 import { AGE_PRESETS, GENDER_OPTIONS, ageError, draftFromActivity, hasMeaningfulHostDraft, hostStepError, localDateTime, newHostDraft, scheduleFieldErrors, withFreshHostSchedule, type HostActivitySource, persistedHostDraft, GOOGLE_VENUE_LABEL, type CoordinateLocation, type HostDraft, type HostLocation } from '../../domain/host-activity';
+import { RegistrationQuestionEditor } from '../registration-questions';
 import CoverEditor from './cover-editor';
 import { MOBILE_APP_MAX_WIDTH, MobileOverlayFrame } from '../mobile-app-shell';
 import { BrandBar, usePalette as useReferencePalette } from '../reconstruction/ui';
@@ -139,20 +141,8 @@ function LocationSearch({ userId, onSelect, onClose }: { userId: string; onSelec
           </Pressable>
         </View>)}
       </View> : null}
-      <Text style={[s.small, { marginBottom: 12 }]}>{googleResults.status === 'disabled'
-        ? 'Venue selection uses OpenStreetMap. Google Maps search is not enabled.'
-        : googleResults.status === 'unavailable'
-          ? googleResults.errorCode === 'API_KEY_SERVICE_BLOCKED'
-            ? 'Google Places is blocked by this API key\u2019s service restriction. OpenStreetMap remains available.'
-            : googleResults.errorCode === 'API_NOT_ACTIVATED'
-              ? 'Google Places (New) is not enabled for this Google Cloud project. OpenStreetMap remains available.'
-              : googleResults.errorCode === 'BILLING_NOT_ENABLED'
-                ? 'Google Places requires billing on this Google Cloud project. OpenStreetMap remains available.'
-                : googleResults.errorCode === 'QUOTA_EXCEEDED'
-                  ? 'Google Places quota is currently exhausted. OpenStreetMap remains available.'
-                  : 'Google Maps search is unavailable. You can still select an OpenStreetMap venue.'
-          : 'OpenStreetMap venues'}</Text>
-      {results.map((r, i) => <Pressable key={`${r.label}:${r.latitude}:${r.longitude}:${i}`} accessibilityRole="button" onPress={() => onSelect({ ...r, source: 'openstreetmap' })} style={[s.option, { paddingHorizontal: 0, alignItems: 'flex-start' }]}><Glyph name="navigate-outline" size={18} /><View style={{ flex: 1, gap: 5, marginLeft: 9 }}><Text style={s.settingTitle}>{r.label}</Text><Text style={s.small}>{r.latitude.toFixed(6)}, {r.longitude.toFixed(6)}</Text></View></Pressable>)}{!busy && !error && search.trim().length >= 2 && !results.length ? <Text style={s.small}>No matching venues or addresses. Try a landmark, street, or PIN code.</Text> : null}</ScrollView>
+      {search.trim().length >= 2 ? <Text style={[s.small, { marginBottom: 12 }]}>Location results</Text> : null}
+      {results.map((r, i) => <Pressable key={`${r.label}:${r.latitude}:${r.longitude}:${i}`} accessibilityRole="button" onPress={() => onSelect({ ...r, source: 'openstreetmap' })} style={[s.option, { paddingHorizontal: 0, alignItems: 'flex-start' }]}><Glyph name="navigate-outline" size={18} /><View style={{ flex: 1, gap: 5, marginLeft: 9 }}><Text style={s.settingTitle}>{r.label}</Text><Text style={[s.small, { color: c.purple }]}>Select this location</Text></View></Pressable>)}{!busy && !error && search.trim().length >= 2 && !results.length ? <Text style={s.small}>No matching venues or addresses. Try a landmark, street, or PIN code.</Text> : null}</ScrollView>
     {googlePlacesEnabled ? <View style={{ alignItems: 'center', padding: 8, gap: 4 }}><Text style={s.small}>Search text is sent to Google Maps when its search is enabled.</Text><Text style={s.small} onPress={() => { void Linking.openURL('https://policies.google.com/privacy'); }}>Google Privacy Policy</Text><Text style={s.small} onPress={() => { void Linking.openURL('https://maps.google.com/help/terms_maps/'); }}>Google Maps Terms</Text></View> : null}
     <Text onPress={() => void Linking.openURL('https://www.openstreetmap.org/copyright')} style={[s.small, { textAlign: 'center', padding: 12 }]}>Location data © OpenStreetMap contributors</Text>
   </SafeAreaView></MobileOverlayFrame></Modal>;
@@ -183,6 +173,8 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
   const [locationOpen, setLocationOpen] = useState(false), [cropUri, setCropUri] = useState('');
   const [hostResponsibilityOpen, setHostResponsibilityOpen] = useState(!existing);
   const [uploadResponsibilityOpen, setUploadResponsibilityOpen] = useState(false);
+  const [registrationQuestionsLocked, setRegistrationQuestionsLocked] = useState(false);
+  const [registrationQuestionsLoading, setRegistrationQuestionsLoading] = useState(Boolean(existing?.id));
   const [ageMin, setAgeMin] = useState(''), [ageMax, setAgeMax] = useState('');
   const [error, setError] = useState(''), [saving, setSaving] = useState(false), [draftNotice, setDraftNotice] = useState('');
   const draftLoaded = useRef(false), completed = useRef(false), restoredDraft = useRef(false), scheduleInitialized = useRef(Boolean(existing));
@@ -207,6 +199,22 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     }).catch(e => active && setDraftNotice(e instanceof Error ? e.message : 'Entry categories could not be loaded.'));
     return () => { active = false; };
   }, [existing?.id, platformPayment]);
+  useEffect(() => {
+    if (!existing?.id) { setRegistrationQuestionsLoading(false); return; }
+    let active = true;
+    setRegistrationQuestionsLoading(true);
+    void registrationQuestionService.getForm(existing.id).then(form => {
+      if (!active) return;
+      setDraft(current => ({ ...current, registrationQuestions: form.questions }));
+      setRegistrationQuestionsLocked(form.locked);
+    }).catch(caught => {
+      if (active) {
+        setRegistrationQuestionsLocked(true);
+        setDraftNotice(caught instanceof Error ? caught.message : 'Registration questions could not be loaded.');
+      }
+    }).finally(() => { if (active) setRegistrationQuestionsLoading(false); });
+    return () => { active = false; };
+  }, [existing?.id]);
   useEffect(() => { alive.current = true; let active = true;
     if (existing) {
       committedId.current = existing.id;
@@ -269,14 +277,17 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     activityType: 'meetup',
     visibility: draft.visibility,
     joinType: draft.approval ? 'approval' : 'direct',
+    registrationQuestions: draft.registrationQuestions,
     coverMedia: draft.coverUri && draft.coverUri !== persistedCoverUri.current ? { uri: draft.coverUri, contentType: draft.coverContentType } : undefined,
   } as const);
   const saveDraft = async () => {
     if (lock.current) return;
+    if (registrationQuestionsLoading) { setDraftNotice('Registration questions are still loading.'); return; }
     const invalid = [0, 1, 2].map(i => hostStepError(draft, i, platformPayment)).find(Boolean);
-    if (invalid) {
+    const questionError = validateRegistrationQuestions(draft.registrationQuestions);
+    if (invalid || questionError) {
       await store();
-      setDraftNotice('Draft saved on this device. Complete the required fields to add it to Profile.');
+      setDraftNotice(questionError || 'Draft saved on this device. Complete the required fields to add it to Profile.');
       return;
     }
     lock.current = true; setSaving(true); setError('');
@@ -301,7 +312,11 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
   };
   const submit = async () => {
     if (lock.current || hostResponsibilityOpen) return;
-    const invalid = [0, 1, 2].map(i => hostStepError(draft, i, platformPayment)).find(Boolean); if (invalid && !committedId.current) { setError(invalid); return; }
+    if (registrationQuestionsLoading) { setError('Registration questions are still loading.'); return; }
+    const invalid = [0, 1, 2].map(i => hostStepError(draft, i, platformPayment)).find(Boolean);
+    const questionError = validateRegistrationQuestions(draft.registrationQuestions);
+    if (questionError) { setError(questionError); return; }
+    if (invalid && !committedId.current) { setError(invalid); return; }
     lock.current = true; setSaving(true); setError('');
     try {
       const input = activityInput(async id => { committedId.current = id; committedStatus.current = 'published'; persistedCoverUri.current = draft.coverUri; setCreatedId(id); await store(); });
@@ -315,7 +330,7 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
     finally { lock.current = false; if (alive.current) setSaving(false); }
   };
   if (!loaded) return <View style={[s.root, { justifyContent: 'center' }]}><ActivityIndicator color={c.purple} /></View>;
-  const invalid = createdId && !existing ? '' : hostStepError(draft, step, platformPayment);
+  const invalid = registrationQuestionsLoading ? 'Registration questions are still loading.' : createdId && !existing ? '' : hostStepError(draft, step, platformPayment) || (step === 1 ? validateRegistrationQuestions(draft.registrationQuestions) || '' : '');
   const timeErrors = scheduleFieldErrors(draft);
   const applyStart = (start: string) => {
     scheduleInitialized.current = true;
@@ -347,6 +362,9 @@ export function HostActivityScreen({ userId, isPartner, existing, onBack, onCrea
         <View style={{ marginTop: 14 }}><ChoiceRow label="Age Restriction" value={draft.ageLabel} onPress={() => setDialog('age')} />
         {draft.ageLabel === 'Custom range' ? <View style={[s.inline, { alignItems: 'flex-start' }]}>{(['ageMin', 'ageMax'] as const).map((key, i) => <View key={key} style={{ flex: 1, gap: 8 }}><Text style={s.small}>{i ? 'Maximum Age' : 'Minimum Age'}</Text><Control label={i ? 'Maximum Age' : 'Minimum Age'} value={draft[key]} keyboardType="number-pad" onChangeText={value => patch({ [key]: value })} /></View>)}</View> : null}
         <ChoiceRow label="Gender Preference" value={GENDER_OPTIONS.find(o => o.value === draft.gender)?.label || 'Open to All'} onPress={() => setDialog('gender')} /></View>
+        <View style={{ marginTop: 30, paddingTop: 24, borderTopWidth: 1, borderTopColor: c.border }}>
+          {registrationQuestionsLoading ? <ActivityIndicator color={c.purple} /> : <RegistrationQuestionEditor value={draft.registrationQuestions} onChange={registrationQuestions => patch({ registrationQuestions })} locked={registrationQuestionsLocked} disabled={saving} dark={c.isDark} />}
+        </View>
       </View>}
       {step === 2 && <View style={{ marginTop: 30, gap: 28 }}>
         <Pressable accessibilityRole="button" accessibilityLabel="Choose category" onPress={() => setCategoryOpen(v => !v)} style={[s.inputShell, categoryOpen && { borderColor: c.purple }]}><Text style={[s.body, { flex: 1 }, !draft.category && { color: c.muted }]}>{draft.category || 'Search and select categories...'}</Text><Glyph name="chevron-down" size={16} color={c.muted} /></Pressable>

@@ -1,4 +1,5 @@
 export { INTEREST_CATEGORIES as HOST_CATEGORIES } from "./interest-categories";
+import type { RegistrationQuestionDraft } from "./registration-questions";
 export const AGE_PRESETS = [
   { label: '15+ only', min: '15', max: '' }, { label: '18-25 years', min: '18', max: '25' },
   { label: '25-35 years', min: '25', max: '35' }, { label: '35-50 years', min: '35', max: '50' },
@@ -25,6 +26,7 @@ export type HostDraft = {
   isPaid: boolean; price: string; category: string; location: HostLocation | null;
   locationInstruction: string; externalUrl: string; dateLater: boolean; start: string; end: string; deadline: string;
   entryCategories: HostEntryCategory[];
+  registrationQuestions: RegistrationQuestionDraft[];
 };
 export function localDateTime(date: Date) {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
@@ -34,13 +36,13 @@ export function newHostDraft(now = new Date()): HostDraft {
   const start = new Date(minimumStart);
   return { title: '', description: '', coverUri: '', coverContentType: 'image/jpeg', visibility: 'public', approval: false,
     verifiedOnly: false, capacity: '', ageLabel: '15+ only', ageMin: '15', ageMax: '', gender: '', isPaid: false, price: '',
-    category: '', location: null, locationInstruction: '', externalUrl: '', entryCategories: [{ name: 'General Admission', price: '', capacity: '' }], dateLater: false,
+    category: '', location: null, locationInstruction: '', externalUrl: '', entryCategories: [{ name: 'General Admission', price: '', capacity: '' }], registrationQuestions: [], dateLater: false,
     start: localDateTime(start), end: localDateTime(new Date(start.getTime() + 3600000)), deadline: localDateTime(start) };
 }
 export function hasMeaningfulHostDraft(draft: HostDraft) {
   return Boolean(
     draft.title.trim() || draft.description.trim() || draft.coverUri || draft.category || draft.location ||
-    draft.locationInstruction.trim() || draft.externalUrl.trim() || draft.entryCategories.some(item => item.price || item.name !== 'General Admission' || item.capacity) || draft.capacity || draft.price || draft.isPaid || draft.approval ||
+    draft.locationInstruction.trim() || draft.externalUrl.trim() || draft.entryCategories.some(item => item.price || item.name !== 'General Admission' || item.capacity) || draft.registrationQuestions.length > 0 || draft.capacity || draft.price || draft.isPaid || draft.approval ||
     draft.verifiedOnly || draft.visibility !== 'public' || draft.ageLabel !== '15+ only' ||
     draft.ageMin !== '15' || draft.ageMax || draft.gender || draft.dateLater
   );

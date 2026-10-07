@@ -164,7 +164,7 @@ async function reverseNominatim(latitude: number, longitude: number, signal: Abo
 async function currentPosition(signal?: AbortSignal) {
   const permission = await Location.requestForegroundPermissionsAsync();
   if (signal?.aborted) throw new Error('Location request cancelled.');
-  if (!permission.granted) throw new Error('Location permission was denied. Search for your venue instead.');
+  if (!permission.granted) throw new Error('Location permission is off. Search for a location instead.');
 
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
@@ -240,8 +240,8 @@ export const activityLocationService = {
       const label = deviceRows[0] ? deviceLabel(deviceRows[0]) : '';
       if (label) return { label, latitude, longitude };
     } catch {
-      // Coordinates remain a reliable selectable fallback when reverse geocoding is unavailable.
+      // A coordinate without a readable place name is not useful in the Host form.
     }
-    return { label: `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`, latitude, longitude };
+    throw new Error("We couldn’t name your current location. Search for a location instead.");
   },
 };
