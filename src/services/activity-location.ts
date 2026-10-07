@@ -3,7 +3,20 @@ import type { CoordinateLocation as HostLocation } from '../domain/host-activity
 
 const photon = process.env.EXPO_PUBLIC_PHOTON_URL?.trim() || 'https://photon.komoot.io';
 const nominatim = process.env.EXPO_PUBLIC_NOMINATIM_URL?.trim() || 'https://nominatim.openstreetmap.org';
+const locationRequestTimeoutMs = Math.max(50, Number(process.env.EXPO_PUBLIC_LOCATION_REQUEST_TIMEOUT_MS) || 12000);
 const cache = new Map<string, HostLocation[]>();
+
+async function withDeadline<T>(request: Promise<T>, message: string, timeoutMs = locationRequestTimeoutMs) {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      request,
+      new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(message)), timeoutMs); }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 function uniqueParts(parts: unknown[]) {
   const seen = new Set<string>();
@@ -162,27 +175,29 @@ async function reverseNominatim(latitude: number, longitude: number, signal: Abo
 }
 
 async function currentPosition(signal?: AbortSignal) {
-  const permission = await Location.requestForegroundPermissionsAsync();
+  const permission = await withDeadline(
+    Location.requestForegroundPermissionsAsync(),
+    'Location permission is taking too long. Search for a location instead.',
+  );
   if (signal?.aborted) throw new Error('Location request cancelled.');
   if (!permission.granted) throw new Error('Location permission is off. Search for a location instead.');
 
-  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    return await Promise.race([
+    return await withDeadline(
       Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }),
-      new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error('Current location timed out.')), 12000);
-      }),
-    ]);
+      'Current location timed out.',
+    );
   } catch (currentError) {
     if (signal?.aborted) throw new Error('Location request cancelled.');
-    const lastKnown = await Location.getLastKnownPositionAsync({ maxAge: 5 * 60 * 1000, requiredAccuracy: 1000 });
+    const lastKnown = await withDeadline(
+      Location.getLastKnownPositionAsync({ maxAge: 5 * 60 * 1000, requiredAccuracy: 1000 }),
+      'Current location is unavailable. Search for your venue instead.',
+      Math.min(4000, locationRequestTimeoutMs),
+    );
     if (lastKnown) return lastKnown;
     throw currentError instanceof Error
       ? new Error(`${currentError.message} Check location permission or search for your venue.`)
       : new Error('Current location is unavailable. Search for your venue instead.');
-  } finally {
-    clearTimeout(timer);
   }
 }
 

@@ -70,11 +70,14 @@ await writeCase();await writeCase('rpc');await writeCase('reload');
 const locationSource=compile(fs.readFileSync('src/services/activity-location.ts','utf8'));
 function locationService(gps,fetch){
   const result={};
-  new Function('exports','require','fetch','process',locationSource)(result,name=>{assert.equal(name,'expo-location');return gps;},fetch,{env:{}});
+  new Function('exports','require','fetch','process',locationSource)(result,name=>{assert.equal(name,'expo-location');return gps;},fetch,{env:{EXPO_PUBLIC_LOCATION_REQUEST_TIMEOUT_MS:'30'}});
   return result.activityLocationService;
 }
 const baseGps={Accuracy:{Balanced:3},getLastKnownPositionAsync:async()=>null,reverseGeocodeAsync:async()=>[]};
 await assert.rejects(locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:false}),getCurrentPositionAsync:async()=>null},async()=>{throw new Error('unexpected');}).current(),/permission is off/i);
+const permissionHangStarted=Date.now();
+await assert.rejects(locationService({...baseGps,requestForegroundPermissionsAsync:async()=>new Promise(()=>{}),getCurrentPositionAsync:async()=>null},async()=>{throw new Error('unexpected');}).current(),/taking too long.*search/i);
+assert.ok(Date.now()-permissionHangStarted<500,'A stalled browser permission prompt must recover promptly');
 const primaryFetch=async url=>({ok:true,json:async()=>url.includes('/reverse?')?{features:[{geometry:{coordinates:[73.85,18.52]},properties:{name:'A venue',city:'Pune'}}]}:url.includes('nominatim')?[]:{features:[{geometry:{coordinates:[73.85,18.52]},properties:{name:'A venue',city:'Pune'}}]}});
 const primary=locationService({...baseGps,requestForegroundPermissionsAsync:async()=>({granted:true}),getCurrentPositionAsync:async()=>({coords:{latitude:18.52,longitude:73.85}})},primaryFetch);
 assert.deepEqual(await primary.current(),{label:'A venue, Pune',latitude:18.52,longitude:73.85});assert.equal((await primary.search('Pune')).length,1);
