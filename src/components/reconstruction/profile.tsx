@@ -16,6 +16,7 @@ import { selectAboutProfilePhoto } from '../../services/profile-about';
 import { verificationService } from '../../services/verification-production';
 import { profileProductionService } from '../../services/profile-production';
 import { derivedTrustScore, trustScoreParts } from '../../domain/profile-signals';
+import { resolveHomeLocality } from '../../services/home-location';
 import { safeSocialUrl, SOCIAL_PLATFORMS, type SocialLinks } from '../../domain/social-profiles';
 import { SocialPlatformIcon } from './social-profiles';
 import { Button, ErrorLine, Icon, Page, Sheet, Skeleton, usePalette } from './ui';
@@ -31,6 +32,12 @@ type ProfileSummary = { location?: string | null; about?: string | null; interes
 type ProfileReview = { id: number; rating: number; comment?: string | null; created_at?: string | null; event_title?: string | null; is_anonymous: boolean; rater_id?: number | null; rater_username?: string | null; rater_name?: string | null; rater_avatar?: string | null };
 type ProfileCommunity = { id?: string; name: string; image?: string };
 const completed = (a: Activity) => a.status === 'completed' || Boolean(a.endsAt && new Date(a.endsAt).getTime() < Date.now());
+
+const profileLocality = (value?: string | null) => {
+ const location = value?.trim();
+ if (!location || /^(?:in|india)$/i.test(location) || /^-?\d+(?:\.\d+)?\s*,\s*-?\d+(?:\.\d+)?$/.test(location)) return null;
+ return location.split(',').map(part => part.trim()).find(Boolean) || null;
+};
 
 function trustFrom(metrics: Metrics | null, socialLinked?: boolean) {
   return derivedTrustScore({
@@ -174,7 +181,7 @@ function ProfileLayout({ identity, summary, metrics, links, gallery, linksAvaila
   </ScrollView>
   {trustOpen && <Sheet title="Trust Score" close={() => setTrustOpen(false)}><TrustCard metrics={metrics} socialLinked={linksAvailable ? configured.length > 0 : undefined} owner={owner} /></Sheet>}
   {pointsOpen && <Sheet title="Nitro Points" close={() => setPointsOpen(false)}><Text style={{ color: c.text, fontSize: 24, fontWeight: '800' }}>{metrics?.nitro ?? '—'}</Text><Text style={{ color: c.muted }}>This member’s public Nitro Points balance. Their points history and reward redemptions are private.</Text></Sheet>}
-  {verificationNotice && <Sheet title="Verification status" close={() => setVerificationNotice(false)}><Text style={{ color: c.text }}>{metrics?.verified ? 'This profile has earned its verified badge through WeNitro’s verification system.' : 'This profile has not earned a verified badge yet.'}</Text><Text style={{ color: c.muted }}>Private verification details are not shared. Aadhaar verification is currently unavailable.</Text></Sheet>}
+  {verificationNotice && <Sheet title="Verification status" close={() => setVerificationNotice(false)}><Text style={{ color: c.text }}>{metrics?.verified ? 'This profile has earned its verified badge through WeNitro’s verification system.' : 'This profile has not earned a verified badge yet.'}</Text><Text style={{ color: c.muted }}>Private verification details are not shared. Aadhaar verification results are provider-backed and remain private.</Text></Sheet>}
  </Page>;
 }
 
@@ -247,7 +254,7 @@ async function pickProfileImage() {
 export function ReferenceProfile({ data, setData, go, openActivity, openDraft, openVibe, openSquad, openCommunity, openProfile }: { data: AppData; setData: React.Dispatch<React.SetStateAction<AppData>>; go: (screen: Screen) => void; openActivity: (id: string) => void; openDraft: () => void; openVibe: (id: string) => void; openSquad: () => void; openCommunity: (id: string) => void; openProfile: (id: string) => void }) {
  const { confirmUpload, uploadNotice } = useResponsibleUpload();
  const [metrics, setMetrics] = useState<Metrics | null>(null), [links, setLinks] = useState<SocialLinks>({});
- const [summary, setSummary] = useState<ProfileSummary>({ location: data.location, about: data.bio, interests: data.interests });
+ const [summary, setSummary] = useState<ProfileSummary>({ location: profileLocality(data.location), about: data.bio, interests: data.interests });
  const [tab, setTab] = useState<Tab>('Activities'), [error, setError] = useState(''), [loading, setLoading] = useState(true), [vibes, setVibes] = useState<VibeReel[]>([]), [activities, setActivities] = useState<Activity[]>([]), [cursor, setCursor] = useState<string | null>(null), [contact, setContact] = useState<{ email?: string; phone?: string } | null>(null);
  const [photos, setPhotos] = useState<ProfilePhoto[]>([]), [reviews, setReviews] = useState<ProfileReview[]>([]), [activePhoto, setActivePhoto] = useState<GalleryItem | null>(null), [photoBusy, setPhotoBusy] = useState(false);
  const request = useRef(0);
@@ -268,9 +275,19 @@ export function ReferenceProfile({ data, setData, go, openActivity, openDraft, o
   setLinks(l.data || {});
   setReviews(Array.isArray(reviewResult.data) ? reviewResult.data as ProfileReview[] : []);
   setPhotos(gallery.filter(photo => photo.position <= 3));
-  if (details) setSummary({ location: details.profile.location, about: details.profile.about || details.profile.bio, interests: details.interests.map(item => item.name) });
+  if (details) setSummary(current => ({ location: current.location || profileLocality(details.profile.location), about: details.profile.about || details.profile.bio, interests: details.interests.map(item => item.name) }));
  });
  useEffect(() => { let active = true; void refreshMetrics().catch(e => { if (active) setError(e.message); }); return () => { active = false; }; }, [data.userId]);
+ useEffect(() => {
+  const controller = new AbortController();
+  let active = true;
+  if (!data.userId) return () => { active = false; controller.abort(); };
+  void resolveHomeLocality(data.userId, controller.signal).then(result => {
+   const locality = profileLocality(result?.locality);
+   if (active && locality) setSummary(current => ({ ...current, location: locality }));
+  });
+  return () => { active = false; controller.abort(); };
+ }, [data.userId]);
  const load = async (more = false) => { const token = ++request.current; setLoading(true); setError(''); try {
   if (tab === 'Reviews' || tab === 'Communities') return;
   if (tab === 'My Vibes') { const page = await listReels({ ownOnly: true, cursor: more ? cursor : null, pageSize: 20 }); if (token !== request.current) return; setVibes(current => more ? [...current, ...page.reels] : page.reels); setCursor(page.nextCursor); }
@@ -376,7 +393,7 @@ export function ReferenceMemberProfile({ id, back, onConversation, onOpenActivit
  const profileCommunities: ProfileCommunity[] = Array.isArray(person.community_links)
   ? person.community_links.filter((room: any) => /^[1-9]\d*$/.test(String(room?.id)) && typeof room?.name === 'string').map((room: any) => ({ id: String(room.id), name: room.name }))
   : communities.map((name: string) => ({ name }));
- return <><ProfileLayout identity={{ id, name: person.fullname, username: person.username || '', avatar: publicProfileImageUrl(person.profile_image), bio: person.bio }} summary={{ location: person.location, about: person.about || person.bio, interests: Array.isArray(person.interests) ? person.interests : [], communities }} metrics={metrics} links={links} gallery={gallery} linksAvailable={person.social_links != null} back={back} options={() => setOptionsOpen(true)} contact={() => setContact(true)} message={person.can_message ? message : undefined} busy={busy} squad={() => onOpenSquad(id)} tab={tab} setTab={setTab} onPhoto={photo => setPreview(photo.uri)}><ErrorLine text={error} /><ErrorLine text={tabError} />{tabError ? <View style={{ padding: 10 }}><Button label="Retry profile content" onPress={() => { if (tab === 'My Vibes' && vibesLoaded) void moreVibes(); else setTabRetry(value => value + 1); }} /></View> : null}<Content tab={tab} loading={tab === 'My Vibes' || tab === 'Reviews' ? tabLoading || (!tabError && !(tab === 'My Vibes' ? vibesLoaded : reviewsLoaded)) : loading} vibes={vibes} rows={hosted.filter(a => a.status !== 'draft')} reviews={reviews} communities={profileCommunities} openCommunity={onOpenCommunity} openVibe={onOpenVibe} openActivity={onOpenActivity} openProfile={onOpenProfile} />{tab === 'Activities' && activityNextPage ? <View style={{ padding: 10 }}><Button label={error ? 'Retry activities' : 'Load more activities'} busy={activityMoreLoading} onPress={() => void moreActivities()} /></View> : null}{tab === 'My Vibes' && vibeCursor ? <View style={{ padding: 10 }}><Button label="Load more vibes" busy={tabLoading} onPress={() => void moreVibes()} /></View> : null}</ProfileLayout>
+ return <><ProfileLayout identity={{ id, name: person.fullname, username: person.username || '', avatar: publicProfileImageUrl(person.profile_image), bio: person.bio }} summary={{ location: profileLocality(person.location), about: person.about || person.bio, interests: Array.isArray(person.interests) ? person.interests : [], communities }} metrics={metrics} links={links} gallery={gallery} linksAvailable={person.social_links != null} back={back} options={() => setOptionsOpen(true)} contact={() => setContact(true)} message={person.can_message ? message : undefined} busy={busy} squad={() => onOpenSquad(id)} tab={tab} setTab={setTab} onPhoto={photo => setPreview(photo.uri)}><ErrorLine text={error} /><ErrorLine text={tabError} />{tabError ? <View style={{ padding: 10 }}><Button label="Retry profile content" onPress={() => { if (tab === 'My Vibes' && vibesLoaded) void moreVibes(); else setTabRetry(value => value + 1); }} /></View> : null}<Content tab={tab} loading={tab === 'My Vibes' || tab === 'Reviews' ? tabLoading || (!tabError && !(tab === 'My Vibes' ? vibesLoaded : reviewsLoaded)) : loading} vibes={vibes} rows={hosted.filter(a => a.status !== 'draft')} reviews={reviews} communities={profileCommunities} openCommunity={onOpenCommunity} openVibe={onOpenVibe} openActivity={onOpenActivity} openProfile={onOpenProfile} />{tab === 'Activities' && activityNextPage ? <View style={{ padding: 10 }}><Button label={error ? 'Retry activities' : 'Load more activities'} busy={activityMoreLoading} onPress={() => void moreActivities()} /></View> : null}{tab === 'My Vibes' && vibeCursor ? <View style={{ padding: 10 }}><Button label="Load more vibes" busy={tabLoading} onPress={() => void moreVibes()} /></View> : null}</ProfileLayout>
  {preview ? <Sheet title="Profile photo" close={() => setPreview(null)}><Image source={{ uri: preview }} style={{ width: '100%', height: 280, borderRadius: 14 }} /></Sheet> : null}
  {contact && <ContactSheet contact={person} close={() => setContact(false)} />}
  {optionsOpen ? <Sheet title="Profile options" close={() => setOptionsOpen(false)}><Pressable accessibilityRole="button" accessibilityLabel="Report User" onPress={() => { setOptionsOpen(false); setReportOpen(true); }} style={{ minHeight: 52, borderRadius: 13, borderWidth: 1, borderColor: '#F47786', paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', gap: 10 }}><Icon name="flag-outline" color="#F47786" /><Text style={{ color: '#F47786', fontWeight: '800', flex: 1 }}>Report User</Text></Pressable><Button label="Cancel" variant="outline" onPress={() => setOptionsOpen(false)} /></Sheet> : null}

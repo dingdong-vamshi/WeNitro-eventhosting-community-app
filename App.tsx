@@ -7255,12 +7255,12 @@ export function CommunitiesScreen({
     } catch (error) { Alert.alert("Membership not synced", error instanceof Error ? error.message : "Please try again."); }
   };
   return (
-    <SafeAreaView style={[styles.communitySafe, { backgroundColor: palette.bg }]}>
+    <Page>
+      <BrandBar location="" notificationCount={notifications} go={next => next === 'search' ? setSearchOpen(true) : go(next)} />
       <ScrollView
         contentContainerStyle={[styles.communityListScreen, { backgroundColor: palette.bg }]}
         keyboardShouldPersistTaps="handled"
       >
-        <BrandBar location="" notificationCount={notifications} go={next => next === 'search' ? setSearchOpen(true) : go(next)} />
         {searchOpen ? <View style={{ gap: 8 }}>
           <View style={[styles.communitySearch, { backgroundColor: palette.input, borderWidth: 1, borderColor: palette.border }]}>
             <Pressable accessibilityRole="button" accessibilityLabel="Close community search" onPress={() => { setSearchOpen(false); setFiltersOpen(false); setQuery(''); setCategory('All'); }} hitSlop={8}><Icon name="arrow-back" color={palette.icon} size={22} /></Pressable>
@@ -7310,6 +7310,9 @@ export function CommunitiesScreen({
           {["All", "Joined", "Created"].map((item) => (
             <Pressable
               key={item}
+              accessibilityRole="button"
+              accessibilityLabel={`Show ${item} communities`}
+              accessibilityState={{ selected: filter === item }}
               onPress={() => setFilter(item)}
               style={[
                 styles.communityFilter,
@@ -7412,14 +7415,16 @@ export function CommunitiesScreen({
         {!visible.length ? (
           <View style={styles.communityEmpty}>
             <Icon name="search-outline" color="#805CFF" size={38} />
-            <Text style={[styles.communityEmptyTitle, { color: palette.text }]}>No communities found</Text>
+            <Text style={[styles.communityEmptyTitle, { color: palette.text }]}>
+              {filter === "Joined" ? "No joined communities yet" : filter === "Created" ? "No communities created yet" : "No communities found"}
+            </Text>
             <Text style={[styles.communityEmptyText, { color: palette.muted }]}>
-              Try another search or create a community for this interest.
+              {filter === "Joined" ? "Communities you join will appear here." : filter === "Created" ? "Create a community to see it here." : "Try another search or create a community for this interest."}
             </Text>
           </View>
         ) : null}
       </ScrollView>
-    </SafeAreaView>
+    </Page>
   );
 }
 
@@ -13609,10 +13614,9 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth,
     alignSelf: "center",
-    minHeight: "100%",
     backgroundColor: "#06111F",
     padding: 18,
-    paddingTop: 24,
+    paddingTop: 16,
     paddingBottom: 104,
     gap: 16,
   },
@@ -13797,7 +13801,7 @@ const styles = StyleSheet.create({
   },
   communityJoinedText: { color: "#39E6AC" },
   communityEmpty: {
-    minHeight: 220,
+    paddingVertical: 28,
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
