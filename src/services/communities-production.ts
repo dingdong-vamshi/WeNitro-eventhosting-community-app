@@ -456,6 +456,7 @@ export async function discoverCommunities(
       { count: "exact" },
     )
     .eq("room_type", "community")
+    .eq("admin_moderation_status", "active")
     .order("created_at", { ascending: false });
   const search = options.query ? cleanFilterValue(options.query) : "";
   if (search) query = query.or("title.ilike.%" + search + "%,description.ilike.%" + search + "%");
@@ -506,6 +507,7 @@ export async function getCommunity(communityId: string): Promise<CommunityDetail
     )
     .eq("id", roomId)
     .eq("room_type", "community")
+    .eq("admin_moderation_status", "active")
     .single();
   if (error) throw error;
   const room = data as LegacyRoom;

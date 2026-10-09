@@ -852,6 +852,7 @@ const getActivity = async (eventId: number, signal?: AbortSignal) => {
     .from("tbl_events")
     .select(EVENT_SELECT)
     .eq("id", eventId)
+    .eq("admin_moderation_status", "active")
     .eq("is_deleted", false);
   if (signal) query = query.abortSignal(signal);
   const { data, error } = await query.maybeSingle();
@@ -962,6 +963,7 @@ export const activitiesProductionService = {
       .from("tbl_events")
       .select(EVENT_SELECT, { count: "exact" })
       .eq("status", "published")
+      .eq("admin_moderation_status", "active")
       .eq("is_cancelled", false)
       .eq("is_deleted", false);
     const search = input.search?.trim();
@@ -1080,6 +1082,7 @@ export const activitiesProductionService = {
       .from("tbl_events")
       .select(EVENT_SELECT, { count: "exact" })
       .eq("created_by", userId)
+      .eq("admin_moderation_status", "active")
       .eq("is_deleted", false)
       .order("event_start_time", { ascending: false })
       .order("id", { ascending: true })
@@ -1117,7 +1120,7 @@ export const activitiesProductionService = {
     const owner = parseId(ownerId, "Profile owner ID");
     const window = pagination(input.page, input.pageSize);
     let query = supabase.from("tbl_events").select(EVENT_SELECT, { count: "exact" })
-      .eq("created_by", owner).eq("is_deleted", false).eq("is_cancelled", false)
+      .eq("created_by", owner).eq("admin_moderation_status", "active").eq("is_deleted", false).eq("is_cancelled", false)
       .in("status", ["published", "completed"])
       .order("event_start_time", { ascending: false }).order("id", { ascending: true })
       .range(window.from, window.to);
@@ -1156,7 +1159,7 @@ export const activitiesProductionService = {
     const page = { page: window.page, pageSize: window.pageSize, total, hasMore: window.from + rows.length < total };
     if (!ids.length) return { ...page, items: [] };
     let events = supabase.from("tbl_events").select(EVENT_SELECT)
-      .in("id", ids).neq("created_by", userId).eq("is_deleted", false).neq("status", "draft")
+      .in("id", ids).neq("created_by", userId).eq("admin_moderation_status", "active").eq("is_deleted", false).neq("status", "draft")
       .order("event_start_time", { ascending: false }).order("id", { ascending: true });
     if (input.signal) events = events.abortSignal(input.signal);
     const result = await events;

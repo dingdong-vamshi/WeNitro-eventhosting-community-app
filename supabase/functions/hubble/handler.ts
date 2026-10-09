@@ -20,13 +20,18 @@ export type HubbleLedgerResult = {
 };
 
 export type HubbleConfig = {
-  environment: "staging";
+  environment: "staging" | "production";
   clientId: string;
   appSecret: string;
   sharedSecret: string;
   privateKey: string;
-  sdkUrl: "https://sdk.dev.myhubble.money/";
+  sdkUrl: "https://sdk.dev.myhubble.money/" | "https://sdk.myhubble.money/";
 };
+
+const expectedSdkUrl = (environment: HubbleConfig["environment"]): HubbleConfig["sdkUrl"] =>
+  environment === "production"
+    ? "https://sdk.myhubble.money/"
+    : "https://sdk.dev.myhubble.money/";
 
 type Dependencies = {
   config: () => Promise<HubbleConfig>;
@@ -180,7 +185,7 @@ const safeFailure = (error: unknown) => {
     "Missing bearer token",
     "A verified phone number is required for Hubble rewards",
     "A verified 10-digit phone number is required for Hubble rewards",
-    "Hubble staging is unavailable",
+    "Hubble rewards are unavailable",
     "No user with this ID",
     "Insufficient balance",
     "Original debit not found",
@@ -222,16 +227,17 @@ export function createHubbleHandler(deps: Dependencies) {
     };
     try {
       const config = await deps.config();
-      if (config.environment !== "staging" ||
-          config.sdkUrl !== "https://sdk.dev.myhubble.money/") {
-        throw new Error("Hubble staging is unavailable.");
+      if (config.sdkUrl !== expectedSdkUrl(config.environment)) {
+        throw new Error("Hubble rewards are unavailable.");
       }
 
       if (route === "token") {
         if (request.method !== "GET") return respond({ status: "FAILED", failureReason: "Method not allowed" }, 405);
         const authId = await deps.authenticate(request);
         const tokenContext = await deps.tokenContext(authId);
-        if (tokenContext.environment !== "staging") throw new Error("Hubble staging is unavailable.");
+        if (tokenContext.environment !== config.environment) {
+          throw new Error("Hubble rewards are unavailable.");
+        }
         // Auth UUID, access token, phone and email are deliberately not logged.
         context = { userId: tokenContext.userId };
         const issuedAt = Math.floor((deps.now?.() ?? Date.now()) / 1000);

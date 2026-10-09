@@ -6,14 +6,14 @@ export type HubbleSession = {
   token: string;
   clientId: string;
   appSecret: string;
-  sdkUrl: 'https://sdk.dev.myhubble.money/';
+  sdkUrl: 'https://sdk.dev.myhubble.money/' | 'https://sdk.myhubble.money/';
   balance: number;
   eligible: boolean;
   eligibilityPoints: number;
   minimumDebitPoints: number;
   nitroToInr: number;
   paymentModel: 'coins_only' | 'mixed';
-  environment: 'staging';
+  environment: 'staging' | 'production';
 };
 
 export type HubbleReadiness = {
@@ -35,12 +35,13 @@ const validSession = (value: unknown): value is HubbleSession => {
     typeof row.token === 'string' && row.token.length > 20 &&
     typeof row.clientId === 'string' && Boolean(row.clientId) &&
     typeof row.appSecret === 'string' && Boolean(row.appSecret) &&
-    row.sdkUrl === 'https://sdk.dev.myhubble.money/' &&
+    ((row.environment === 'staging' && row.sdkUrl === 'https://sdk.dev.myhubble.money/') ||
+      (row.environment === 'production' && row.sdkUrl === 'https://sdk.myhubble.money/')) &&
     Number.isFinite(Number(row.balance)) &&
     typeof row.eligible === 'boolean' &&
     Number.isFinite(Number(row.eligibilityPoints)) &&
     Number.isFinite(Number(row.nitroToInr)) &&
-    row.environment === 'staging';
+    (row.environment === 'staging' || row.environment === 'production');
 };
 
 export const hubbleSdkUrl = (session: HubbleSession) => {

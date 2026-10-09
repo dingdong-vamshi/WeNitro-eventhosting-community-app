@@ -46,12 +46,17 @@ const configuration = async (): Promise<HubbleConfig> => {
   const values = await secrets();
   const environment = required(values, "HUBBLE_ENVIRONMENT");
   const sdkUrl = required(values, "HUBBLE_SDK_URL");
-  if (environment !== "staging" || sdkUrl !== "https://sdk.dev.myhubble.money/") {
-    throw new Error("Hubble staging is unavailable.");
+  const expectedSdkUrl = environment === "production"
+    ? "https://sdk.myhubble.money/"
+    : environment === "staging"
+      ? "https://sdk.dev.myhubble.money/"
+      : "";
+  if (!expectedSdkUrl || sdkUrl !== expectedSdkUrl) {
+    throw new Error("Hubble rewards are unavailable.");
   }
   return {
-    environment,
-    sdkUrl,
+    environment: environment as HubbleConfig["environment"],
+    sdkUrl: sdkUrl as HubbleConfig["sdkUrl"],
     clientId: required(values, "HUBBLE_CLIENT_ID"),
     appSecret: required(values, "HUBBLE_APP_SECRET"),
     sharedSecret: required(values, "HUBBLE_SECRET"),

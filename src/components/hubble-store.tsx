@@ -7,6 +7,6 @@ export function HubbleStore() {
   return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 28, gap: 14 }}>
     <Icon name="globe-outline" size={46} color={c.accent} />
     <Text style={{ color: c.text, fontSize: 20, fontWeight: '800', textAlign: 'center' }}>Hubble rewards are available on WeNitro Web</Text>
-    <Text style={{ color: c.muted, fontSize: 13, lineHeight: 20, textAlign: 'center' }}>This staging rollout is currently limited to the browser version.</Text>
+    <Text style={{ color: c.muted, fontSize: 13, lineHeight: 20, textAlign: 'center' }}>Open the browser version to access the rewards catalogue.</Text>
   </View>;
 }

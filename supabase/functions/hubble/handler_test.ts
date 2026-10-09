@@ -165,15 +165,33 @@ Deno.test("callback secret, input validation, debit and reverse contracts are en
   assert.equal(JSON.stringify(f.logs).includes(config.sharedSecret), false);
 });
 
-Deno.test("production URL or environment cannot be enabled by accidental configuration drift", async () => {
+Deno.test("production environment accepts only the production SDK URL", async () => {
+  const productionContext = { ...context, environment: "production" as const };
+  const productionConfig: HubbleConfig = {
+    ...config,
+    environment: "production",
+    sdkUrl: "https://sdk.myhubble.money/",
+  };
+  const productionHandler = createHubbleHandler({
+    config: async () => productionConfig,
+    authenticate: async () => "auth",
+    tokenContext: async () => productionContext,
+    balance: async () => ({ userId: 1, totalCoins: 1 }),
+    debit: async () => ({ transactionId: "x", balance: 0, referenceId: "x", idempotent: false }),
+    reverse: async () => ({ transactionId: "x", balance: 0, referenceId: "x", idempotent: false }),
+  });
+  const success = await productionHandler(new Request("https://project.test/functions/v1/hubble/token", { headers: { Authorization: "Bearer valid" } }));
+  assert.equal(success.status, 200);
+  assert.equal((await success.json()).environment, "production");
+
   for (const bad of [
-    { ...config, environment: "production" },
+    { ...productionConfig, sdkUrl: "https://sdk.dev.myhubble.money/" },
     { ...config, sdkUrl: "https://sdk.myhubble.money/" },
   ]) {
     const handler = createHubbleHandler({
       config: async () => bad as HubbleConfig,
       authenticate: async () => "auth",
-      tokenContext: async () => context,
+      tokenContext: async () => bad.environment === "production" ? productionContext : context,
       balance: async () => ({ userId: 1, totalCoins: 1 }),
       debit: async () => ({ transactionId: "x", balance: 0, referenceId: "x", idempotent: false }),
       reverse: async () => ({ transactionId: "x", balance: 0, referenceId: "x", idempotent: false }),

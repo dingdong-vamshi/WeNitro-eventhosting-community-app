@@ -358,6 +358,7 @@ export async function listReels(
     .select(
       "id,event_id,user_id,media_url,media_type,caption,hashtags,visibility,created_at,updated_at,likes_count",
     )
+    .eq("admin_moderation_status", "active")
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .limit(pageSize + 1);
@@ -472,6 +473,7 @@ export async function getReel(vibeId: string): Promise<VibeReel> {
     .from("tbl_activity_vibes")
     .select("id,event_id,user_id,media_url,media_type,caption,hashtags,visibility,created_at,updated_at,likes_count")
     .eq("id", numericVibeId)
+    .eq("admin_moderation_status", "active")
     .maybeSingle();
   if (error) throw error;
   if (!data) throw new Error("This Vibe is unavailable or no longer visible to you.");

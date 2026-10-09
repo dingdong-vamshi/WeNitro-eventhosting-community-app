@@ -201,6 +201,7 @@ const loadStoryById = async (
     .from("tbl_stories")
     .select(selectStory)
     .eq("id", storyId)
+    .eq("admin_moderation_status", "active")
     .is("deleted_at", null)
     .single();
   if (error) throw error;
@@ -225,6 +226,7 @@ export const storiesProductionService = {
     let stories = supabase
       .from("tbl_stories")
       .select(selectStory)
+      .eq("admin_moderation_status", "active")
       .is("deleted_at", null)
       .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false })
@@ -266,6 +268,7 @@ export const storiesProductionService = {
       .from("tbl_stories")
       .select(selectStory)
       .eq("user_id", legacyId)
+      .eq("admin_moderation_status", "active")
       .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .limit(limit);

@@ -4,8 +4,6 @@ import { hubbleSdkUrl, requestHubbleReadiness, requestHubbleSession, type Hubble
 import { isHubbleTerminalEvent, parseHubbleSdkEvent } from '../services/hubble-events';
 import { Button, ErrorLine, Icon, Skeleton, usePalette } from './reconstruction/ui';
 
-const HUBBLE_ORIGIN = 'https://sdk.dev.myhubble.money';
-
 export function HubbleStore() {
   const c = usePalette();
   const [session, setSession] = useState<HubbleSession | null>(null);
@@ -19,6 +17,7 @@ export function HubbleStore() {
   const inFlight = useRef(false);
   const terminalInFlight = useRef(false);
   const balanceBeforeOpen = useRef<number | null>(null);
+  const hubbleOrigin = useMemo(() => session ? new URL(session.sdkUrl).origin : null, [session]);
 
   const load = useCallback(async (launch = false) => {
     if (inFlight.current) return;
@@ -97,7 +96,7 @@ export function HubbleStore() {
 
   useEffect(() => {
     const receive = (event: MessageEvent) => {
-      if (event.origin !== HUBBLE_ORIGIN || !event.data || typeof event.data !== 'object') return;
+      if (!hubbleOrigin || event.origin !== hubbleOrigin || !event.data || typeof event.data !== 'object') return;
       const sdkEvent = parseHubbleSdkEvent(event.data);
       if (!sdkEvent) return;
       if (sdkEvent.kind === 'action' && sdkEvent.name === 'app_ready') setReady(true);
@@ -109,7 +108,7 @@ export function HubbleStore() {
       if (sdkEvent.kind === 'action' && sdkEvent.name === 'error') {
         setOpen(false);
         setReady(false);
-        setError('Hubble could not load this staging session. Please retry.');
+        setError('Hubble could not load this rewards session. Please retry.');
       }
       if (isHubbleTerminalEvent(sdkEvent)) {
         setNotice({ tone: 'info', text: 'Checking the final Hubble result and Nitro balance…' });
@@ -118,7 +117,7 @@ export function HubbleStore() {
     };
     window.addEventListener('message', receive);
     return () => window.removeEventListener('message', receive);
-  }, [load, reconcileTerminalEvent]);
+  }, [hubbleOrigin, load, reconcileTerminalEvent]);
 
   const sdk = useMemo(() => session && open ? hubbleSdkUrl(session) : null, [session, open]);
 
@@ -138,7 +137,7 @@ export function HubbleStore() {
       <Pressable accessibilityRole="button" accessibilityLabel="Close Hubble rewards" onPress={() => { setOpen(false); setReady(false); void load(); }} style={{ width: 38, height: 38, alignItems: 'center', justifyContent: 'center' }}>
         <Icon name="close" size={25} color={c.text} />
       </Pressable>
-      <Text style={{ color: c.text, fontWeight: '800', flex: 1 }}>Hubble Rewards · Staging</Text>
+      <Text style={{ color: c.text, fontWeight: '800', flex: 1 }}>Hubble Rewards</Text>
       <Text accessibilityLiveRegion="polite" style={{ color: ready ? '#51B979' : c.muted, fontSize: 12 }}>{ready ? 'Ready' : 'Loading…'}</Text>
     </View>
     {notice ? <View accessibilityRole="alert" style={{ paddingHorizontal: 14, paddingVertical: 9, backgroundColor: notice.tone === 'success' ? '#17392B' : notice.tone === 'error' ? '#46242B' : '#253451' }}><Text style={{ color: '#FFFFFF', fontSize: 12, lineHeight: 17 }}>{notice.text}</Text></View> : null}
@@ -159,7 +158,7 @@ export function HubbleStore() {
     <View style={{ backgroundColor: c.card, borderWidth: 1, borderColor: c.border, borderRadius: 20, padding: 20, gap: 14 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         <View style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: '#6D5BED22', alignItems: 'center', justifyContent: 'center' }}><Icon name="gift-outline" size={25} color={c.accent} /></View>
-        <View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 18, fontWeight: '800' }}>Redeem Nitro Points</Text><Text style={{ color: c.muted, fontSize: 12, marginTop: 3 }}>Powered by Hubble · Staging</Text></View>
+        <View style={{ flex: 1 }}><Text style={{ color: c.text, fontSize: 18, fontWeight: '800' }}>Redeem Nitro Points</Text><Text style={{ color: c.muted, fontSize: 12, marginTop: 3 }}>Powered by Hubble</Text></View>
       </View>
       <View style={{ backgroundColor: c.bg, borderRadius: 14, padding: 16, gap: 5 }}>
         <Text style={{ color: c.muted, fontSize: 12 }}>AVAILABLE BALANCE</Text>
@@ -169,7 +168,7 @@ export function HubbleStore() {
       {readiness && !readiness.eligible ? <View style={{ flexDirection: 'row', gap: 10, padding: 13, borderRadius: 12, backgroundColor: '#F5B84B18' }}>
         <Icon name="lock-closed-outline" size={20} color="#E9A62C" />
         <Text style={{ color: c.text, fontSize: 13, lineHeight: 19, flex: 1 }}>You need {minimum} Nitro Points to open rewards. Earn {remaining} more.</Text>
-      </View> : <Text style={{ color: c.muted, fontSize: 13, lineHeight: 20 }}>Choose a reward in Hubble. WeNitro deducts Nitro Points only after Hubble confirms the staging redemption.</Text>}
+      </View> : <Text style={{ color: c.muted, fontSize: 13, lineHeight: 20 }}>Choose a reward in Hubble. WeNitro deducts Nitro Points only after Hubble confirms the redemption.</Text>}
       <ErrorLine text={error} />
       <Button
         label={!readiness?.eligible ? 'Check Balance' : readiness.phoneVerified ? 'Open Hubble Rewards' : 'Verify Phone to Continue'}
@@ -177,6 +176,6 @@ export function HubbleStore() {
         onPress={() => void load(Boolean(readiness?.eligible))}
       />
     </View>
-    <Text style={{ color: c.muted, textAlign: 'center', fontSize: 11, lineHeight: 17 }}>Staging only · no production or real-money redemption is enabled.</Text>
+    <Text style={{ color: c.muted, textAlign: 'center', fontSize: 11, lineHeight: 17 }}>Nitro Points are deducted only after a confirmed reward redemption.</Text>
   </ScrollView>;
 }
