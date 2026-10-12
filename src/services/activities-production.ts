@@ -1185,6 +1185,8 @@ export const activitiesProductionService = {
     const eventId = parseId(activityId, "Activity ID");
     // Establish availability before dependent RPCs can obscure a deleted-row result.
     const activity = await getActivity(eventId, options.signal);
+    // Host Delete uses cancellation so membership/audit history remains intact.
+    if (activity.status === "cancelled") throw new Error("This Activity is no longer available.");
     const [comments, states] = await Promise.all([
       listComments(activityId, {
         page: options.commentPage,

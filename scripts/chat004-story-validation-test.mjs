@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import ts from 'typescript';
+const target={};const source=fs.readFileSync('src/services/stories-production.ts','utf8')+'\nexport const storyValidationTest = { readMedia };';
+new Function('exports','require',ts.transpile(source,{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}))(target,n=>n.includes('supabase')?{supabase:{},isSupabaseConfigured:true}:{});
+const read=target.storyValidationTest.readMedia;
+const file=(bytes,type)=>({uri:'data:'+type+';base64,'+Buffer.from(bytes).toString('base64'),contentType:type});
+const png=fs.readFileSync('assets/onboarding/reference-social-impact.png');assert.equal((await read(file(png,'image/png'))).mediaType,'image');
+const mp4=Buffer.from([0,0,0,12,102,116,121,112,105,115,111,109]);assert.equal((await read(file(mp4,'video/mp4'))).mediaType,'video');
+await assert.rejects(()=>read(file(Buffer.from('not an image'),'text/plain')),/JPEG, PNG, WebP, or MP4/);
+await assert.rejects(()=>read({...file(png,'image/png'),contentType:'image/jpeg'}),/MIME/);
+const big=Buffer.alloc(21*1024*1024);png.subarray(0,8).copy(big);await assert.rejects(()=>read(file(big,'image/png')),/20 MB/);
+await assert.rejects(()=>read(file(Buffer.alloc(51*1024*1024),'video/mp4')),/50 MB/);
+console.log('PASS: real Story validator accepts PNG and MP4 signatures and rejects invalid bytes, MIME mismatch, oversized photo and oversized video.');
