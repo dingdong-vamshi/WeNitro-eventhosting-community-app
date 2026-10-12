@@ -73,6 +73,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   const [avatars, setAvatars] = useState<Record<string, string>>({});
   const [storyPreview, setStoryPreview] = useState<AppData['stories'][number] | null>(null);
   const [markingStories, setMarkingStories] = useState(false);
+  const [storyError, setStoryError] = useState('');
   const [storyBusy, setStoryBusy] = useState(false);
   const [storyUploadWarning, setStoryUploadWarning] = useState(false);
   const storyGroups = Array.from(data.stories.slice()
@@ -87,6 +88,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
 
   const addStory = async () => {
     if (storyBusy) return;
+    setStoryError('');
     try {
       const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permission.granted) throw new Error('Allow photo access to choose a story.');
@@ -97,7 +99,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
       const created = await storiesProductionService.create({ uri: asset.uri, contentType: asset.mimeType || undefined });
       setData(current => ({ ...current, stories: [{ id: String(created.id), name: 'Your Story', image: created.mediaUrl, mediaType: created.mediaType, text: created.caption, viewed: false, mine: true, authorId: String(created.userId), authorAvatar: current.avatarUri, createdAt: created.createdAt }, ...current.stories] }));
     } catch (caught) {
-      Alert.alert('Story not uploaded', caught instanceof Error ? caught.message : 'Please try again.');
+      setStoryError(caught instanceof Error ? caught.message : 'Story could not be uploaded. Please try again.');
     } finally { setStoryBusy(false); }
   };
   const deleteStory = async () => {
@@ -348,6 +350,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
           })}
         </ScrollView>
       </View>}
+      <ErrorLine text={storyError} />
       <ErrorLine text={error} />
       {tab === 'Communities' && inboxError ? <View style={{ paddingHorizontal: 14, paddingBottom: 8 }}><ErrorLine text={inboxError} /><Pressable accessibilityRole="button" onPress={() => setVersion(value => value + 1)}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '600' }}>Retry message previews</Text></Pressable></View> : null}
       {tab === 'Communities' && loading && page === 1 ? <Skeleton count={5} /> : (

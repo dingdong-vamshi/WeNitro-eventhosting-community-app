@@ -33,6 +33,13 @@ const scopes = new Set<ModerationScope>([
 const allowedImageBuckets = new Set(["activity-media", "communities", "vibes", "stories", "avatars"]);
 const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 const decoder = new TextDecoder();
+const serviceUnavailable = "Safety check is temporarily unavailable. Please try again. Your content has not been published.";
+const safetyRejected = "This content couldn’t be published because it may violate WeNitro’s safety guidelines.";
+// Product rule: WeNitro is not a sexual-partner marketplace. Health/education
+// discussions are not rejected merely for containing the word “sex”.
+const sexualSolicitation = (inputs: TextInput[]) => inputs.some(({ value }) =>
+  /\b(?:sex(?:ual)?[\s_-]+partners?|looking\s+for\s+(?:casual\s+)?sex|sex\s+for\s+money)\b/iu.test(value.normalize("NFKC")));
+
 
 const object = (value: unknown): Record<string, unknown> | null =>
   value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
@@ -114,6 +121,7 @@ async function callOpenAi(
   const categoryScores: Record<string, number> = {};
   let flagged = false;
   for (const result of results) {
+    if (typeof result.flagged !== "boolean" || !object(result.categories) || !object(result.category_scores)) throw new Error("provider_invalid_response");
     flagged ||= result.flagged === true;
     const resultCategories = object(result.categories) ?? {};
     const resultScores = object(result.category_scores) ?? {};
@@ -146,7 +154,8 @@ export function createContentModerationHandler(deps: Dependencies) {
       if (typeof scope !== "string" || !scopes.has(scope as ModerationScope)) return jsonResponse({ error: "Invalid moderation scope." }, 400);
       const textInputs = parseTextInputs(body?.fields);
       const imageInputs = parseImageInputs(body?.images);
-      if (!textInputs.length && !imageInputs.length) return jsonResponse({ status: "safe", message: "No public content required moderation." });
+      const videoInputs = parseImageInputs(body?.videos);
+      if (!textInputs.length && !imageInputs.length && !videoInputs.length) return jsonResponse({ status: "safe", message: "No public content required moderation." });
 
       const loadedImages: LoadedImage[] = [];
       for (const image of imageInputs) {
@@ -157,9 +166,19 @@ export function createContentModerationHandler(deps: Dependencies) {
         }
         loadedImages.push({ ...image, ...loaded });
       }
+      const loadedVideos: LoadedImage[] = [];
+      for (const video of videoInputs) {
+        if (!video.storagePath.startsWith(`${authId}/`)) throw new Error("Image ownership could not be verified.");
+        const loaded = await deps.loadImage(authId, video);
+        if (loaded.contentType !== "video/mp4" || loaded.bytes.length < 12 || loaded.bytes.length > 50 * 1024 * 1024 ||
+          String.fromCharCode(...loaded.bytes.slice(4, 8)) !== "ftyp") throw new Error("Only MP4 videos up to 50 MB can be reviewed.");
+        loadedVideos.push({ ...video, ...loaded });
+      }
+      const videosWithHash = await Promise.all(loadedVideos.map(async video => ({ ...video, contentHash: await sha256(video.bytes) })));
       const imagesWithHash = await Promise.all(loadedImages.map(async (image) => ({ ...image, contentHash: await sha256(image.bytes) })));
       const items: Record<string, unknown>[] = [
         ...textInputs.map((item) => ({ ...item, kind: "text" })),
+        ...videosWithHash.map(({ bytes: _bytes, contentType: _contentType, ...item }) => ({ ...item, kind: "video" })),
         ...imagesWithHash.map(({ bytes: _bytes, contentType: _contentType, ...item }) => ({ ...item, kind: "image" })),
       ];
       const started = await deps.begin(authId, scope as ModerationScope, items);
@@ -170,6 +189,7 @@ export function createContentModerationHandler(deps: Dependencies) {
       const cachedImages = Array.isArray(envelope?.cachedImages) ? envelope.cachedImages.map(object).filter(Boolean) as Record<string, unknown>[] : [];
       const cachedByHash = new Map(cachedImages.map((item) => [String(item.contentHash), String(item.status)]));
       const uncachedImages = imagesWithHash.filter((image) => !cachedByHash.has(image.contentHash));
+      const unreviewedVideo = videosWithHash.some(video => cachedByHash.get(video.contentHash) !== "safe");
       const cachedUnsafe = cachedImages.some((item) => item.status === "unsafe");
 
       const fixture = runtimeValue("MODERATION_QA_FIXTURES_ENABLED") === "true" &&
@@ -190,7 +210,9 @@ export function createContentModerationHandler(deps: Dependencies) {
       let attempts = 0;
       let decision: ProviderDecision | null = null;
       let lastError = "provider_unavailable";
-      if (cachedUnsafe) {
+      if (sexualSolicitation(textInputs)) {
+        decision = { flagged: true, categories: { sexual_solicitation: true }, categoryScores: {}, requestId: null };
+      } else if (cachedUnsafe) {
         decision = { flagged: true, categories: { cached_image_unsafe: true }, categoryScores: {}, requestId: null };
       } else if (!textInputs.length && !uncachedImages.length) {
         decision = { flagged: false, categories: { cached_image_safe: true }, categoryScores: {}, requestId: null };
@@ -212,22 +234,23 @@ export function createContentModerationHandler(deps: Dependencies) {
           p_status: "review", p_model: "omni-moderation-latest", p_attempt_count: Math.max(attempts, 1),
           p_categories: {}, p_error_code: lastError.replace(/[^a-z0-9_]/gi, "_").toLowerCase().slice(0, 80), p_image_results: [],
         });
-        return jsonResponse({ requestId, status: "review", message: "Safety checks are temporarily unavailable. This content is not public and has been sent to Admin Review." }, 202);
+        return jsonResponse({ requestId, status: "review", code: "safety_service_unavailable", message: serviceUnavailable }, 202);
       }
-      const status = decision.flagged ? "unsafe" : "safe";
+      const needsReview = unreviewedVideo || (!decision.flagged && (decision.categoryScores.sexual ?? 0) >= 0.1);
+      const status = decision.flagged ? "unsafe" : needsReview ? "review" : "safe";
       const categories = { categories: decision.categories, scores: decision.categoryScores };
-      const imageResults = uncachedImages.map((image) => ({ contentHash: image.contentHash, status, categories }));
+      const imageResults = status === "review" ? [] : uncachedImages.map((image) => ({ contentHash: image.contentHash, status, categories }));
       const resolved = await deps.resolve(authId, requestId, {
         p_status: status, p_model: "omni-moderation-latest", p_attempt_count: Math.max(attempts, 1),
         p_categories: categories, p_provider_request_id: decision.requestId, p_error_code: null,
         p_image_results: imageResults,
       });
-      if (resolved.error) throw new Error("Moderation result could not be saved.");
+      if (resolved.error || object(resolved.data)?.status !== status) throw new Error("Moderation result could not be saved.");
       return jsonResponse({
         requestId,
         status,
-        message: status === "safe" ? "Safety check passed." : "This content cannot be published because it did not pass safety checks.",
-      }, status === "safe" ? 200 : 422);
+        message: status === "safe" ? "Safety check passed." : status === "unsafe" ? safetyRejected : "Your content needs an Admin safety review and has not been published. After approval, you can upload it again.",
+      }, status === "safe" ? 200 : status === "review" ? 202 : 422);
     } catch (error) {
       if (requestId && authId) {
         await deps.resolve(authId, requestId, {
@@ -236,10 +259,10 @@ export function createContentModerationHandler(deps: Dependencies) {
         }).catch(() => ({ data: null, error: { message: "unavailable" } }));
       }
       const candidate = error instanceof Error ? error.message : "";
-      const publicMessage = /^(Invalid moderation|Image ownership|Only JPEG|Account unavailable|Authentication required|Missing bearer token|Moderation session)/.test(candidate)
-        ? candidate : "Safety checks could not complete. The content was not published.";
+      const publicMessage = /^(Invalid moderation|Image ownership|Only JPEG|Account unavailable|Authentication required|Missing bearer token|Only MP4)/.test(candidate)
+        ? candidate : serviceUnavailable;
       const status = /^(Authentication required|Missing bearer token)/.test(publicMessage) ? 401 : requestId ? 202 : 400;
-      return jsonResponse({ requestId: requestId || undefined, status: requestId ? "review" : "error", error: publicMessage }, status);
+      return jsonResponse({ requestId: requestId || undefined, status: requestId ? "review" : "error", code: "safety_service_unavailable", error: publicMessage }, status);
     }
   };
 }

@@ -721,6 +721,7 @@ export async function createCommunityPost(input: {
         { field: "body", value: input.body?.trim() ?? "" },
         { field: "category", value: input.category?.trim() || "General" },
       ],
+      videos: media && mediaType === "video" ? [{ field: "media_path", value: media.path, storageBucket: "communities", storagePath: media.path }] : [],
       images: media && mediaType === "image"
         ? [{ field: "media_path", value: media.path, storageBucket: "communities", storagePath: media.path }]
         : [],

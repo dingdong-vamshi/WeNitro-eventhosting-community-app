@@ -295,6 +295,20 @@ export function FirstFeedWelcome({ onExplore }: { onExplore: () => void }) {
   </ScrollView></SafeAreaView></LinearGradient>;
 }
 
+export function ActivityUnavailableScreen({ error, onRetry, onActivities, onHome }: { error?: string; onRetry: () => void; onActivities: () => void; onHome: () => void }) {
+  const c = usePalette();
+  const unavailable = error === "This Activity is no longer available.";
+  return <SafeAreaView style={[s.full, { backgroundColor: c.bg }]} edges={["top", "bottom"]}>
+    <View style={s.skeletonContent}>
+      <View style={s.brandRow}><Image source={c.isDark ? logoWhite : logoBlue} accessibilityLabel="WeNitro" style={{ width: 28, height: 28 }} /><Text style={[s.artBrand, { color: c.text }]}>WeNitro</Text></View>
+      {error ? <Text accessibilityRole="alert" style={{ color: c.text, fontSize: 20, lineHeight: 28 }}>{error}</Text> : <ActivityIndicator accessibilityLabel="Loading Activity" color={c.accent} />}
+      {error && !unavailable ? <GradientButton label="Try again" onPress={onRetry} /> : null}
+      <GradientButton label="Back to Activities" onPress={onActivities} />
+      <Pressable accessibilityRole="button" onPress={onHome} style={{ minHeight: 44, justifyContent: "center" }}><Text style={[s.legalLink, { color: c.accent }]}>Home</Text></Pressable>
+    </View>
+  </SafeAreaView>;
+}
+
 export function FeedLoadingScreen({ error, onRetry, onLogout }: { error?: string; onRetry?: () => void; onLogout?: () => void }) {
   const fade = useRef(new Animated.Value(.45)).current;
   const reduced = useReducedMotion();

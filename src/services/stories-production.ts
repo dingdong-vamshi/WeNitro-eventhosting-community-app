@@ -139,6 +139,7 @@ const readMedia = async (input: CreateStoryInput) => {
     throw new Error("Story media must be non-empty and no larger than 50 MB.");
   }
   const detected = detectMedia(new Uint8Array(body));
+  if (detected.mediaType === "image" && body.byteLength > 20 * 1024 * 1024) throw new Error("Story photos must be no larger than 20 MB.");
   const requested = input.contentType?.split(";")[0]?.trim().toLowerCase();
   if (requested && requested !== detected.contentType) {
     throw new Error("Story media contents do not match the selected MIME type.");
@@ -307,6 +308,7 @@ export const storiesProductionService = {
       await moderatePublicContent({
         scope: "story",
         fields: [{ field: "caption", value: caption }],
+        videos: media.mediaType === "video" ? [{ field: "media_path", value: path, storageBucket: "stories", storagePath: path }] : [],
         images: media.mediaType === "image" ? [{ field: "media_path", value: path, storageBucket: "stories", storagePath: path }] : [],
       });
       const { data, error } = await supabase

@@ -40,15 +40,17 @@ export async function moderatePublicContent(input: {
   scope: ModerationScope;
   fields?: ModerationText[];
   images?: ModerationImage[];
+  videos?: ModerationImage[];
   qaOutcome?: "blocked" | "review";
 }): Promise<{ status: "safe"; requestId?: string }> {
   const fields = (input.fields ?? []).filter((item) => typeof item.value === "string" && item.value.trim().length > 0)
     .map((item) => ({ field: item.field, value: item.value as string }));
   const images = input.images ?? [];
-  if (!fields.length && !images.length) return { status: "safe" };
+  const videos = input.videos ?? [];
+  if (!fields.length && !images.length && !videos.length) return { status: "safe" };
   const qaOutcome = input.qaOutcome ?? qaOutcomeFromFields(fields);
   const { data, error } = await supabase.functions.invoke("content-moderation", {
-    body: { scope: input.scope, fields, images, ...(qaOutcome ? { qaOutcome } : {}) },
+    body: { scope: input.scope, fields, images, videos, ...(qaOutcome ? { qaOutcome } : {}) },
   });
   const payload = (data && typeof data === "object" ? data : await responseBody(error)) as Record<string, unknown> | null;
   const status = payload?.status;
@@ -56,10 +58,10 @@ export async function moderatePublicContent(input: {
     : typeof payload?.error === "string" ? payload.error
     : error ? "Safety checks could not complete. The content was not published." : "Invalid safety response.";
   const requestId = typeof payload?.requestId === "string" ? payload.requestId : undefined;
-  if (status === "safe") return { status: "safe", requestId };
+  if (status === "safe" && !error) return { status: "safe", requestId };
   if (status === "review") throw new ContentModerationError("review", message, requestId);
   if (status === "unsafe") throw new ContentModerationError("unsafe", message, requestId);
-  throw new Error(message);
+  throw new Error("Safety check is temporarily unavailable. Please try again. Your content has not been published.");
 }
 
 export const moderationArrayValue = (values: readonly string[] | null | undefined) =>

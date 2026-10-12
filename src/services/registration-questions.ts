@@ -26,7 +26,7 @@ function eventId(value: string | number): number {
 export const registrationQuestionService = {
   async getForm(activityId: string | number): Promise<RegistrationForm> {
     const { data, error } = await supabase.rpc("get_activity_registration_form", { p_event_id: eventId(activityId) });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     if (!data || !Array.isArray(data.questions) || !Array.isArray(data.answers)) throw new Error("Registration form could not load.");
     return data as RegistrationForm;
   },
@@ -38,19 +38,19 @@ export const registrationQuestionService = {
       { field: "label", value: question.label }, { field: "options", value: moderationArrayValue(question.options) },
     ]) });
     const { data, error } = await supabase.rpc("save_activity_registration_questions", { p_event_id: eventId(activityId), p_questions: normalized });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     return data as RegistrationQuestion[];
   },
   async submit(activityId: string | number, answers: RegistrationAnswer[], status = "going"): Promise<{ status: string; [key: string]: unknown }> {
     const { data, error } = await supabase.rpc("submit_activity_registration", { p_event_id: eventId(activityId), p_answers: answers, p_status: status });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     const row: unknown = Array.isArray(data) ? data[0] : data;
     if (!row || typeof row !== "object" || !("status" in row) || typeof row.status !== "string") throw new Error("Registration could not be saved.");
     return row as { status: string; [key: string]: unknown };
   },
   async getManagedResponses(activityId: string | number): Promise<ManagedRegistrationResponse[]> {
     const { data, error } = await supabase.rpc("get_activity_registration_responses", { p_event_id: eventId(activityId) });
-    if (error) throw error;
+    if (error) throw new Error(error.message);
     if (!Array.isArray(data)) throw new Error("Participant responses could not load.");
     return data as ManagedRegistrationResponse[];
   },

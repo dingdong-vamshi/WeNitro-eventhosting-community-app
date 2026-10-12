@@ -10,13 +10,13 @@ const providerResponse = (flagged = false) => new Response(JSON.stringify({
   results: [{ flagged, categories: { violence: flagged }, category_scores: { violence: flagged ? 0.99 : 0.001 } }],
 }), { status: 200, headers: { "Content-Type": "application/json", "x-request-id": "req_test" } });
 
-function fixture(options: { fetcher?: typeof fetch; beginData?: Record<string, unknown>; env?: Record<string, string>; image?: Uint8Array } = {}) {
+function fixture(options: { fetcher?: typeof fetch; beginData?: Record<string, unknown>; env?: Record<string, string>; image?: Uint8Array; contentType?: string; beginError?: boolean; resolveError?: boolean } = {}) {
   const calls = { fetch: 0, begin: [] as Record<string, unknown>[][], resolve: [] as Record<string, unknown>[], load: 0, sleeps: 0 };
   const handler = createContentModerationHandler({
     authenticate: async () => ({ authId: "00000000-0000-4000-8000-000000000001", allowed: true }),
-    loadImage: async () => { calls.load += 1; return { bytes: options.image ?? new Uint8Array([1, 2, 3]), contentType: "image/png" }; },
-    begin: async (_authId, _scope, items) => { calls.begin.push(items); return { data: options.beginData ?? { requestId: "10000000-0000-4000-8000-000000000001", cachedImages: [] }, error: null }; },
-    resolve: async (_authId, _requestId, result) => { calls.resolve.push(result); return { data: { status: result.p_status }, error: null }; },
+    loadImage: async () => { calls.load += 1; return { bytes: options.image ?? new Uint8Array([1, 2, 3]), contentType: options.contentType ?? "image/png" }; },
+    begin: async (_authId, _scope, items) => { calls.begin.push(items); return { data: options.beginData ?? { requestId: "10000000-0000-4000-8000-000000000001", cachedImages: [] }, error: options.beginError ? { message: "SQL internal detail" } : null }; },
+    resolve: async (_authId, _requestId, result) => { calls.resolve.push(result); return { data: { status: result.p_status }, error: options.resolveError ? { message: "write failed" } : null }; },
     env: (name) => options.env?.[name] ?? (name === "OPENAI_API_KEY" ? "server-test-key" : undefined),
     fetcher: (async (...args: Parameters<typeof fetch>) => { calls.fetch += 1; return options.fetcher ? options.fetcher(...args) : providerResponse(false); }) as typeof fetch,
     sleep: async () => { calls.sleeps += 1; },
@@ -104,4 +104,43 @@ Deno.test("missing bearer token is returned as an authentication failure", async
   const body = await json(response);
   assert(response.status === 401 && body.error === "Missing bearer token.");
   assert(handler instanceof Function);
+});
+
+Deno.test("CHAT004 sexual solicitation is blocked even when generic provider would allow it", async () => {
+  const { handler, calls } = fixture();
+  const response = await handler(request({ scope: "activity", fields: [{ field: "title", value: "Sex partner" }] }));
+  const body = await json(response);
+  assert(response.status === 422 && body.status === "unsafe" && calls.fetch === 0);
+  assert(calls.resolve[0].p_status === "unsafe");
+});
+Deno.test("CHAT004 sex education is not classified as solicitation", async () => {
+  const { handler } = fixture();
+  const body = await json(await handler(request({ scope: "activity", fields: [{ field: "title", value: "Sex education and wellness workshop" }] })));
+  assert(body.status === "safe");
+});
+Deno.test("CHAT004 malformed provider success cannot authorize publication", async () => {
+  const { handler, calls } = fixture({ fetcher: async () => new Response(JSON.stringify({results:[{}]})) });
+  const response = await handler(request({scope:"story", fields:[{field:"caption",value:"Hello"}]}));
+  const body = await json(response);
+  assert(body.status === "review" && body.code === "safety_service_unavailable");
+  assert(!calls.resolve.some(call => call.p_status === "safe"));
+});
+Deno.test("CHAT004 session and persistence errors have service-failure messaging", async () => {
+  for (const options of [{beginError:true}, {resolveError:true}]) {
+    const { handler } = fixture(options);
+    const body = await json(await handler(request({scope:"story", fields:[{field:"caption",value:"Hello"}]})));
+    assert(body.status !== "safe" && body.code === "safety_service_unavailable");
+    assert(body.error.includes("temporarily unavailable") && !body.error.includes("violate") && !body.error.includes("SQL"));
+  }
+});
+Deno.test("CHAT004 an unreviewed MP4 stays private, approved bytes can publish", async () => {
+  const owner = "00000000-0000-4000-8000-000000000001";
+  const bytes = new Uint8Array([0,0,0,12,102,116,121,112,105,115,111,109]);
+  const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))).map(x=>x.toString(16).padStart(2,"0")).join("");
+  const input = { scope:"story", videos:[{field:"media_path", value:owner+"/qa.mp4", storageBucket:"stories", storagePath:owner+"/qa.mp4"}] };
+  const pending = fixture({image:bytes,contentType:"video/mp4"});
+  assert((await json(await pending.handler(request(input)))).status === "review");
+  assert(pending.calls.begin[0][0].kind === "video" && pending.calls.fetch === 0);
+  const approved = fixture({image:bytes,contentType:"video/mp4",beginData:{requestId:"qa",cachedImages:[{contentHash:hash,status:"safe"}]}});
+  assert((await json(await approved.handler(request(input)))).status === "safe");
 });

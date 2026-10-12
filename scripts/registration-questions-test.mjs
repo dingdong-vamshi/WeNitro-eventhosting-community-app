@@ -32,3 +32,16 @@ assert.match(answersValid(questions, [...valid, { question_id: 5, value: ["C"] }
 const reordered = normalizeRegistrationQuestions([questions[1], questions[0]]);
 assert.deepEqual(reordered.map(item => [item.id, item.display_order]), [[2, 0], [1, 1]]);
 console.log("Registration question validation: 21 assertions passed (required fields, all five types, invalid choices, limits, duplicate isolation, ordering).");
+
+// CHAT 004: editable blank lines never become persisted options.
+for (const type of ["single_choice", "multiple_choice"]) {
+  for (const options of [["", " Yes ", "No", ""], ["  ", "Yes", "", "No", "\t"], ["Yes", "No"]]) {
+    const draft = question(9, type, true, options);
+    assert.equal(questionsValid([draft]), null);
+    assert.deepEqual(normalizeRegistrationQuestions([draft])[0].options, ["Yes", "No"]);
+  }
+  assert.match(questionsValid([question(9, type, true, ["", " "])]), /2–30/);
+  assert.match(questionsValid([question(9, type, true, ["Yes", " Yes ", " "])]), /unique/);
+}
+assert.deepEqual(normalizeRegistrationQuestions([question(1, "short_text", false, ["Yes", "No"])])[0].options, []);
+console.log("CHAT004 choice whitespace, empty lines, type-switch normalization regressions passed.");

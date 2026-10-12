@@ -25,7 +25,7 @@ export function validateRegistrationQuestions(questions: RegistrationQuestionDra
       ids.add(question.id);
     }
     if (question.type === "single_choice" || question.type === "multiple_choice") {
-      const options = question.options.map(option => option.trim());
+      const options = question.options.map(option => option.trim()).filter(Boolean);
       if (options.length < 2 || options.length > registrationLimits.options || options.some(option => !option || option.length > registrationLimits.option)) return `${prefix}: enter 2–30 options, each up to 160 characters.`;
       if (new Set(options).size !== options.length) return `${prefix}: options must be unique.`;
     }
@@ -35,7 +35,7 @@ export function validateRegistrationQuestions(questions: RegistrationQuestionDra
 
 export function normalizeRegistrationQuestions(questions: RegistrationQuestionDraft[]): RegistrationQuestionDraft[] {
   return questions.map((question, display_order) => ({ ...question, label: question.label.trim(), display_order,
-    options: question.type === "single_choice" || question.type === "multiple_choice" ? question.options.map(option => option.trim()) : [],
+    options: question.type === "single_choice" || question.type === "multiple_choice" ? question.options.map(option => option.trim()).filter(Boolean) : [],
   }));
 }
 

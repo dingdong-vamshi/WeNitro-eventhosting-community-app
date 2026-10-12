@@ -857,7 +857,7 @@ const getActivity = async (eventId: number, signal?: AbortSignal) => {
   if (signal) query = query.abortSignal(signal);
   const { data, error } = await query.maybeSingle();
   if (error) throw error;
-  if (!data) throw new Error("Activity not found or not accessible.");
+  if (!data) throw new Error("This Activity is no longer available.");
   return (await hydrateActivities([data as DbRecord]))[0];
 };
 
@@ -1183,8 +1183,9 @@ export const activitiesProductionService = {
   ): Promise<ActivityDetails> {
     requireBackend();
     const eventId = parseId(activityId, "Activity ID");
-    const [activity, comments, states] = await Promise.all([
-      getActivity(eventId, options.signal),
+    // Establish availability before dependent RPCs can obscure a deleted-row result.
+    const activity = await getActivity(eventId, options.signal);
+    const [comments, states] = await Promise.all([
       listComments(activityId, {
         page: options.commentPage,
         pageSize: options.commentPageSize,

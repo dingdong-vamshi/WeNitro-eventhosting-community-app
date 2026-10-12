@@ -20,10 +20,11 @@ const submitStart=app.indexOf('  const submitRegistration = async (answers: Regi
 const submitUI=compile(app.slice(submitStart,app.indexOf('  const toggleLike = async',submitStart))+'\nsubmitRegistration([{question_id:134,value:"Buyer"}]);');
 for(const failed of [false,true]){
  const sequence=[],forms=[],joined=[],errors=[];
- await vm.runInNewContext(submitUI,{Error,exports:{},activity:{id:'297'},requiresPlatformPayment:true,
+ const submission = vm.runInNewContext(submitUI,{Error,exports:{},activity:{id:'297'},requiresPlatformPayment:true,
   setJoining:()=>{},setJoinError:v=>errors.push(v),setViewerStatus:()=>{},setJoined:v=>joined.push(v),setRegistrationForm:v=>forms.push(v),
   registrationQuestionService:{submit:async()=>{sequence.push('save');if(failed)throw Error('Answer was not saved');return {status:'payment_required'};}},
   startPayment:async()=>sequence.push('checkout'),refreshDetails:async()=>{},Alert:{alert:()=>{}}});
+ if (failed) await assert.rejects(submission,/Answer was not saved/); else await submission;
  assert.deepEqual(sequence,failed?['save']:['save','checkout']);assert.equal(forms.length,failed?0:1);assert(!joined.includes(true));checks+=3;
  if(failed){assert.equal(errors.at(-1),'Answer was not saved');checks++;}
 }

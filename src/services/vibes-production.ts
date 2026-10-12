@@ -512,9 +512,10 @@ export async function createVibe(input: CreateVibeInput) {
     const visibility = eventId ? "activity" : input.visibility ?? "public";
     const caption = cleanCaption(input.caption);
     const hashtags = cleanHashtags(input.hashtags);
-    if (visibility === "public") await moderatePublicContent({
+    await moderatePublicContent({
       scope: "vibe",
       fields: [{ field: "caption", value: caption }, { field: "hashtags", value: moderationArrayValue(hashtags) }],
+      videos: input.mediaType === "video" ? [{ field: "media_path", value: upload.path, storageBucket: "vibes", storagePath: upload.path }] : [],
       images: input.mediaType === "image" ? [{ field: "media_path", value: upload.path, storageBucket: "vibes", storagePath: upload.path }] : [],
     });
     const { data, error } = await supabase.rpc("vibe_create", {

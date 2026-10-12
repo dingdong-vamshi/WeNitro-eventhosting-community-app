@@ -38,7 +38,7 @@ import type { PartnerBusinessProfile } from "./src/services/partner-account";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoogleSignInButton from "./src/components/onboarding/GoogleSignInButton";
-import { SplashScreen, IntroScreen, WelcomeScreen, ProfileCompletionScreen, FirstFeedWelcome, FeedLoadingScreen, WENITRO_LEGAL_URLS, type ProfileSetupValues } from "./src/components/onboarding/reference-screens";
+import { SplashScreen, IntroScreen, WelcomeScreen, ProfileCompletionScreen, FirstFeedWelcome, ActivityUnavailableScreen, FeedLoadingScreen, WENITRO_LEGAL_URLS, type ProfileSetupValues } from "./src/components/onboarding/reference-screens";
 import { validateEmail, validateFullName } from "./src/utils/validation";
 import { profileOnboardingService, type ProfileOnboardingState } from "./src/services/profile-onboarding";
 import { validateOnboardingGender } from "./src/utils/onboarding";
@@ -4202,6 +4202,10 @@ export function ActivityDetailScreen({
       const details = await activityService.getDetails(activity.id, data.userId);
       applyDetails(details);
     } catch (caught) {
+      if (caught instanceof Error && caught.message === "This Activity is no longer available.") {
+        setData(current => ({ ...current, activities: current.activities.filter(item => item.id !== activity.id) }));
+        return;
+      }
       Alert.alert(
         "Activity details could not load",
         caught instanceof Error ? caught.message : "Please try again.",
@@ -4329,8 +4333,14 @@ export function ActivityDetailScreen({
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => void refreshDetails(), 180);
     });
+    // RLS can suppress a realtime UPDATE once an Activity becomes hidden.
+    // Recheck on return and periodically while this detail screen is mounted.
+    const foreground = subscribeToAppForeground(() => void refreshDetails());
+    const availability = setInterval(() => void refreshDetails(), 30_000);
     return () => {
       if (timer) clearTimeout(timer);
+      clearInterval(availability);
+      foreground();
       void supabase.removeChannel(channel);
     };
   }, [activity.id]);
@@ -4440,7 +4450,8 @@ export function ActivityDetailScreen({
       await refreshDetails();
     } catch (caught) {
       const text = caught instanceof Error ? caught.message : "Registration could not be submitted.";
-      setJoinError(text); Alert.alert("Registration not submitted", text);
+      setJoinError(text);
+      throw new Error(text);
     } finally { setJoining(false); }
   };
   const toggleLike = async () => {
@@ -9970,7 +9981,7 @@ export default function App() {
             onEdit={() => { setEditingActivityId(selectedActivity.id); go("createActivity"); }}
           />
         );
-      return <FeedLoadingScreen error={activityRouteError} onRetry={() => setActivityRouteRetry((value) => value + 1)} onLogout={() => void authService.signOut()} />;
+      return <ActivityUnavailableScreen error={activityRouteError} onRetry={() => setActivityRouteRetry((value) => value + 1)} onActivities={() => go("activities")} onHome={() => go("feed")} />;
     }
     if (screen === "postVibe") return <PostVibeEntry {...props} initialActivityId={postVibeDraft?.activityId} initialMedia={postVibeDraft?.asset} />;
     if (screen === "createCommunity") return <>

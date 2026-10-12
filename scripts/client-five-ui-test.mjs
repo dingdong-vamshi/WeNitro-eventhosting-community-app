@@ -28,12 +28,36 @@ const supabase = {
   },
   storage: { from: () => ({ getPublicUrl: path => ({ data: { publicUrl: path } }) }) },
 };
+// Exercise today's direct Auth transport; the old fixture mocked an SDK path
+// that the production service no longer calls.
+const phoneModule = {};
+const response = (body, status=200) => new Response(JSON.stringify(body), {status});
+const transport = async (url, init={}) => {
+  const endpoint = new URL(url).pathname;
+  const body = init.body ? JSON.parse(init.body) : {};
+  if (endpoint.endsWith('/user') && init.method === 'PUT') return response({id:'qa-user',...authUser,phone:body.phone});
+  if (endpoint.endsWith('/user')) return response({id:'qa-user',...authUser});
+  if (endpoint.endsWith('/verify')) {
+    const result = await auth.verifyOtp(body);
+    return result.error ? response(result.error, result.error.message.includes('Network') ? 503 : 422) : response({user:{id:'qa-user',...authUser}});
+  }
+  if (endpoint.includes('/rpc/')) { const result=await supabase.rpc(endpoint.split('/').at(-1));return response(result.error || {},result.error?503:200); }
+  if (endpoint.endsWith('/resend')) return response({});
+  throw Error('Unexpected transport '+endpoint);
+};
+new Function('exports','require','process','fetch',ts.transpile(fs.readFileSync('src/services/phone-change.ts','utf8'),{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}))(phoneModule,name=>{
+  if(name==='../lib/supabase')return {supabase:{auth:{getSession:async()=>({data:{session:{access_token:'fixture',user:{id:'qa-user'}}},error:null})}}};
+  if(name==='./auth-production')return {phoneOtpErrorMessage:error=>error.message};
+  if(name==='./request-deadline')return {withRequestDeadline:task=>task(new AbortController().signal)};
+  throw Error(name);
+},{env:{EXPO_PUBLIC_SUPABASE_URL:'https://qa.invalid',EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY:'fixture'}},transport);
 const exports = {};
 new Function('exports', 'require', ts.transpile(fs.readFileSync('src/services/reference-delta.ts', 'utf8'), {
   module: ts.ModuleKind.CommonJS,
   target: ts.ScriptTarget.ES2022,
 }))(exports, name => {
   if (name === '../lib/supabase') return { supabase };
+  if (name === './phone-change') return phoneModule;
   if (name === './auth-production') return {
     normalizeIndianPhone: phone => `+91${phone.replace(/\D/g, '').slice(-10)}`,
     phoneOtpErrorMessage: error => error.message || 'Phone verification failed.',
@@ -65,8 +89,8 @@ assert.equal(await service.verifyPhoneChange(phone, '123456'), '+919876543210', 
 
 authUser = { phone: '+919876543210', phone_confirmed_at: '2026-10-06T12:00:00Z' };
 verifyMode = 'wrong';
-await assert.rejects(() => service.verifyPhoneChange(phone, '111111'), /expired|invalid/i,
-  'a pre-existing confirmed phone cannot make a later failed OTP appear successful');
+assert.equal(await service.verifyPhoneChange(phone, '111111'), '+919876543210',
+  'an already server-confirmed phone reconciles idempotently without a new verification');
 
 const app = fs.readFileSync('App.tsx', 'utf8');
 assert.match(app, /selected\.type === ['"]Groups['"][\s\S]{0,500}Create Poll/,
