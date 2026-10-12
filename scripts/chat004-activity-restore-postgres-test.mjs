@@ -22,5 +22,24 @@ assert.equal(sql("select count(*) from private.admin_operation_audit where previ
 for(const status of ['draft','completed','published']){sql(`update public.tbl_events set status='${status}',is_deleted=true where id=1;select public.admin_moderate_activity(1,'restore_event','QA preserved');`);assert.equal(sql('select status from public.tbl_events where id=1;'),status);checks++;}
 sql("insert into public.tbl_activity_payments values(1,'paid');update public.tbl_events set is_cancelled=true,status='cancelled' where id=1;");assert.throws(()=>sql("select public.admin_moderate_activity(1,'restore_event','QA paid denied');"),/financial reconciliation/);checks++;
 assert.throws(()=>sql("set qa.admin='false';select public.admin_moderate_activity(1,'restore_event','QA nonadmin');"),/Administrator access/);checks++;
-console.log(JSON.stringify({status:'PASS',checks,scope:'Actual old restore regression reproduced; canceled flag/status restored, status-only inconsistency recovered, draft/completed preserved, audit, idempotence, paid and non-admin denial.'}));
+// Exercise the restore RPC together with the real moderation triggers.
+sql(`alter table public.tbl_events add visibility_type text default 'public',add description text,add location_instruction text,add display_location text,add media jsonb;
+create function private.require_safe_moderation(text,text,text,text default 'text') returns void language plpgsql as $$begin if btrim(coalesce($3,''))<>'' and coalesce(current_setting('qa.safe',true),'false')<>'true' then raise exception 'Content must pass moderation';end if;end$$;
+create function private.moderation_array_text(jsonb) returns text language sql as $$select coalesce($1#>>'{}','')$$;
+create table public.tbl_chat_rooms(id int,room_type text,visibility text,title text,description text,tagline text,tags jsonb,rules jsonb,image_url text,cover_url text);
+create trigger safety before insert or update on public.tbl_events for each row execute function private.guard_moderated_activity();` .replace('create trigger safety before insert or update on public.tbl_events for each row execute function private.guard_moderated_activity();',''));
+const originalSafety=fs.readFileSync('supabase/migrations/20261005123000_openai_content_moderation.sql','utf8');const gs=originalSafety.indexOf('create or replace function private.guard_moderated_activity(');sql(originalSafety.slice(gs,originalSafety.indexOf('drop trigger if exists guard_openai_moderation on public.tbl_events;',gs)));
+sql(`create trigger safety before insert or update on public.tbl_events for each row execute function private.guard_moderated_activity();create trigger safety before insert or update on public.tbl_chat_rooms for each row execute function private.guard_moderated_community();
+insert into public.tbl_events(id,title,visibility_type)values(2,'Unchecked','private');insert into public.tbl_chat_rooms(id,room_type,visibility,title)values(1,'community','private','Unchecked');`);checks+=2;
+sql(fs.readFileSync('supabase/migrations/20261012062622_chat004_visibility_and_restore_safety.sql','utf8'));
+assert.throws(()=>sql("insert into public.tbl_events(id,title,visibility_type)values(3,'Unchecked','private');"),/must pass moderation/);checks++;
+assert.throws(()=>sql("insert into public.tbl_chat_rooms(id,room_type,visibility,title)values(2,'community','private','Unchecked');"),/must pass moderation/);checks++;
+sql("set qa.safe='true';insert into public.tbl_events(id,title,visibility_type)values(3,'Safe','private');insert into public.tbl_chat_rooms(id,room_type,visibility,title)values(2,'community','private','Safe');");checks+=2;
+sql("delete from public.tbl_activity_payments;update public.tbl_events set status='cancelled',is_cancelled=true where id=1;");
+assert.throws(()=>sql("update public.tbl_events set status='published' where id=1;"),/must pass moderation/);checks++;
+sql("select public.admin_moderate_activity(1,'restore_event','QA unchanged content review');");assert.equal(sql("select status||':'||is_cancelled from public.tbl_events where id=1;"),'published:false');checks++;
+sql("update public.tbl_events set status='cancelled',is_cancelled=true where id=1;");
+assert.throws(()=>sql("set wenitro.admin_restore_activity='1';update public.tbl_events set status='published',title='Changed' where id=1;"),/must pass moderation/);checks++;
+assert.throws(()=>sql("set qa.admin='false';set wenitro.admin_restore_activity='1';update public.tbl_events set status='published' where id=1;"),/must pass moderation/);checks++;
+console.log(JSON.stringify({status:'PASS',checks,scope:'Actual restore and private-visibility regressions reproduced; real guards deny unchecked private content, allow checked content, allow only audited unchanged Admin restore, reject edited/spoofed restore; audit, idempotence, preserved draft/completed status, paid/non-admin denial.'}));
 }finally{if(started)run('pg_ctl',['-D',dir+'/db','-m','immediate','-w','stop']);fs.rmSync(dir,{recursive:true,force:true});}

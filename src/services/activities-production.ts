@@ -869,7 +869,7 @@ async function writeActivity(
   if (input.locationSource === "google") await (await import("./google-places")).resolveGooglePlace(input.googlePlaceId || "");
   const payload = buildPayload(input);
   await moderateRegistrationQuestions(input.registrationQuestions);
-  if (status === "published" && (input.visibility ?? "public") === "public") await moderateActivityPayload(payload);
+  if (status === "published") await moderateActivityPayload(payload);
   const data = await callRpc<unknown>("create_activity", {
     p_payload: payload,
     p_status: status,
@@ -1230,7 +1230,7 @@ export const activitiesProductionService = {
       .select("title,description,location_instruction,display_location,media,status,visibility_type")
       .eq("id", eventId).single();
     if (current.error) throw current.error;
-    const targetPublic = (patch.status ?? current.data.status) === "published" && (patch.visibility_type ?? current.data.visibility_type) === "public";
+    const targetPublic = (patch.status ?? current.data.status) === "published";
     const becamePublic = targetPublic && (current.data.status !== "published" || current.data.visibility_type !== "public");
     if (targetPublic && (becamePublic || moderationKeys.some((key) => key in patch))) {
       await moderateActivityPayload({ ...current.data, ...patch });

@@ -624,7 +624,7 @@ export async function createCommunity(input: CreateCommunityInput): Promise<stri
       ? await uploadCommunityImage(coverSource, authUserId, "cover")
       : null;
     if (cover) uploadedPaths.push(cover.path);
-    if ((input.visibility ?? "public") === "public") {
+    {
       await moderatePublicContent({
         scope: "community",
         fields: [
@@ -908,7 +908,7 @@ export async function editCommunity(id: string, input: { name: string; descripti
   try {
     if (input.avatar) path = (await uploadCommunityImage(input.avatar, await currentAuthUserId(), 'image')).path;
     if (input.cover) coverPath = (await uploadCommunityImage(input.cover, await currentAuthUserId(), 'cover')).path;
-    if ((input.visibility ?? 'public') === 'public') await moderatePublicContent({
+    await moderatePublicContent({
       scope: 'community',
       fields: [{ field: 'title', value: input.name.trim() }, { field: 'description', value: input.description.trim() },
         { field: 'rules', value: moderationArrayValue(input.rules) }],
