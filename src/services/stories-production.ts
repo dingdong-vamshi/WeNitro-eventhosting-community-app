@@ -31,6 +31,8 @@ export type Story = {
   expiresAt: string;
   viewed: boolean;
   isMine: boolean;
+  moderationStatus: string;
+  moderationReason: string | null;
   author: StoryAuthor;
 };
 
@@ -182,6 +184,8 @@ const mapStory = async (
     expiresAt: String(row.expires_at ?? ""),
     viewed: viewedIds.has(id),
     isMine: userId === currentUserId,
+    moderationStatus: String(row.admin_moderation_status || 'active'),
+    moderationReason: nullableText(row.admin_moderation_reason),
     author: {
       id: positiveInteger(author.id ?? userId, "story author id"),
       username: String(author.username ?? ""),
@@ -192,7 +196,7 @@ const mapStory = async (
 };
 
 const selectStory =
-  "id,user_id,media_url,media_type,caption,created_at,expires_at,author:tbl_users!tbl_stories_user_id_fkey(id,username,fullname,profile_image)";
+  "id,user_id,media_url,media_type,caption,created_at,expires_at,admin_moderation_status,admin_moderation_reason,author:tbl_users!tbl_stories_user_id_fkey(id,username,fullname,profile_image)";
 
 const loadStoryById = async (
   storyId: number,
@@ -269,7 +273,7 @@ export const storiesProductionService = {
       .from("tbl_stories")
       .select(selectStory)
       .eq("user_id", legacyId)
-      .eq("admin_moderation_status", "active")
+      .in("admin_moderation_status", ["active", "pending_review", "rejected"])
       .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -319,9 +323,13 @@ export const storiesProductionService = {
       if (error) throw error;
       return loadStoryById(positiveInteger(data.id, "story id"), identity.legacyId);
     } catch (error) {
-      if (!(error instanceof ContentModerationError && error.status === "review")) {
-        await supabase.storage.from(BUCKET).remove([path]);
+      if (error instanceof ContentModerationError && error.status === "review" && error.requestId) {
+        // The safety service retains the SAME private upload for Admin review.
+        const pending = await supabase.from('tbl_stories').select(selectStory).eq('moderation_request_id', error.requestId).eq('user_id', identity.legacyId).single();
+        if (pending.error) throw new Error('Your Story has not been published. Could not load its safety review status. Please refresh My Story status.');
+        return mapStory(pending.data, identity.legacyId, new Set());
       }
+      await supabase.storage.from(BUCKET).remove([path]);
       throw error;
     }
   },

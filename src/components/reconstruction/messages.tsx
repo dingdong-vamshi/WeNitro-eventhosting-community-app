@@ -9,7 +9,7 @@ import type { AppData } from '../../../App';
 import { communitiesProductionService, type CommunitySummary } from '../../services/communities-production';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { realtimeChatService } from '../../services/realtime-chat';
-import { storiesProductionService } from '../../services/stories-production';
+import { storiesProductionService, type Story } from '../../services/stories-production';
 import { subscribeToAppForeground } from '../../services/app-freshness';
 import { Action, Button, ErrorLine, Icon, Page, Sheet, Skeleton, ui, usePalette, purple } from './ui';
 import { useResponsibleUpload } from './responsible-upload';
@@ -73,9 +73,22 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
   const [avatars, setAvatars] = useState<Record<string, string>>({});
   const [storyPreview, setStoryPreview] = useState<AppData['stories'][number] | null>(null);
   const [markingStories, setMarkingStories] = useState(false);
+  const [markingChats, setMarkingChats] = useState(false);
   const [storyError, setStoryError] = useState('');
   const [storyBusy, setStoryBusy] = useState(false);
   const [storyUploadWarning, setStoryUploadWarning] = useState(false);
+  const [privateStories, setPrivateStories] = useState<Story[]>([]);
+  const [storyNotice, setStoryNotice] = useState('');
+  useEffect(() => {
+    let active = true;
+    const refresh = () => { void storiesProductionService.listMine().then(rows => {
+      if (active) setPrivateStories(rows.filter(row => row.moderationStatus !== 'active'));
+    }).catch(error => { if (active) setStoryError(error.message || 'Could not load your Story status.'); }); };
+    setPrivateStories([]); refresh();
+    const stopForeground = subscribeToAppForeground(refresh);
+    const subscription = storiesProductionService.subscribe(refresh);
+    return () => { active = false; stopForeground(); void supabase.removeChannel(subscription); };
+  }, [data.userId, version]);
   const storyGroups = Array.from(data.stories.slice()
     .sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')))
     .reduce((groups, story) => {
@@ -97,6 +110,12 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
       if (!asset) return;
       setStoryBusy(true);
       const created = await storiesProductionService.create({ uri: asset.uri, contentType: asset.mimeType || undefined });
+      if (created.moderationStatus !== 'active') {
+        setPrivateStories(current => [created, ...current.filter(story => story.id !== created.id)]);
+        setStoryNotice('');
+        return;
+      }
+      setStoryNotice('Story uploaded.');
       setData(current => ({ ...current, stories: [{ id: String(created.id), name: 'Your Story', image: created.mediaUrl, mediaType: created.mediaType, text: created.caption, viewed: false, mine: true, authorId: String(created.userId), authorAvatar: current.avatarUri, createdAt: created.createdAt }, ...current.stories] }));
     } catch (caught) {
       setStoryError(caught instanceof Error ? caught.message : 'Story could not be uploaded. Please try again.');
@@ -286,6 +305,24 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
     setMarkingStories(false);
   };
 
+  const markAllChatsSeen = async () => {
+    if (markingChats) return;
+    // Snapshot this tab's scope and cutoff: later arrivals must stay unread.
+    const targets = conversations.filter(row => row.unread > 0 && isBackendId(row.id));
+    const readAt = new Date();
+    setMarkingChats(true); setError('');
+    try {
+      const results = await Promise.allSettled(targets.map(row => realtimeChatService.markConversationRead(Number(row.id), readAt)));
+      const saved = new Set(targets.filter((_, index) => results[index].status === 'fulfilled').map(row => row.id));
+      const fresh = await supabase.rpc('list_chat_inbox', { p_message_limit: 1 });
+      if (fresh.error) throw fresh.error;
+      const unread = new Map((fresh.data || []).map((row: any) => [String(row.id || row.room_id), Number(row.unread_count || 0)]));
+      setData(current => current.userId !== data.userId ? current : ({ ...current, conversations: current.conversations.map(row => saved.has(row.id) && unread.has(row.id) ? { ...row, unread: unread.get(row.id) as number } : row) }));
+      if (results.some(result => result.status === 'rejected')) setError('Some conversations could not be marked seen. Please retry.');
+    } catch (caught) { setError(caught instanceof Error ? caught.message : 'Could not refresh chat read status. Please retry.'); }
+    finally { setMarkingChats(false); }
+  };
+
   return (
     <Page>
       <View style={{ height: 52, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -340,7 +377,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
         </View>
       )}
       {<View style={{ paddingHorizontal: 14, paddingBottom: 8, gap: 8 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}><Text style={{ flex: 1, color: c.text, fontSize: 15, fontWeight: '700' }}>Stories</Text><Pressable accessibilityRole="button" disabled={markingStories || !data.stories.some((story) => !story.viewed)} onPress={() => void markAllStoriesSeen()}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '700', opacity: data.stories.some((story) => !story.viewed) ? 1 : .5 }}>{markingStories ? 'Saving…' : 'Mark all seen'}</Text></Pressable></View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}><Text style={{ flex: 1, color: c.text, fontSize: 15, fontWeight: '700' }}>Stories</Text><Pressable accessibilityRole="button" disabled={markingStories || !data.stories.some((story) => !story.viewed)} onPress={() => void markAllStoriesSeen()}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '700', opacity: data.stories.some((story) => !story.viewed) ? 1 : .5 }}>{markingStories ? 'Saving…' : 'Mark stories seen'}</Text></Pressable></View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
           <Pressable accessibilityRole="button" accessibilityLabel="Add story" disabled={storyBusy} onPress={() => setStoryUploadWarning(true)} style={{ alignItems: 'center', gap: 4, width: 58 }}><Icon name="add-circle-outline" size={50} color={c.accent} /><Text style={{ color: c.muted, fontSize: 9 }}>{storyBusy ? 'Uploading…' : 'Add story'}</Text></Pressable>
           {storyGroups.map(([authorId, stories]) => {
@@ -351,6 +388,8 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
         </ScrollView>
       </View>}
       <ErrorLine text={storyError} />
+      {storyNotice ? <Text accessibilityLiveRegion="polite" style={{ color: c.muted, paddingHorizontal: 14, paddingBottom: 8 }}>{storyNotice}</Text> : null}
+      {privateStories.length ? <View style={{ paddingHorizontal: 14, paddingBottom: 8, gap: 6 }}><View style={{ flexDirection: 'row', justifyContent: 'space-between' }}><Text style={{ color: c.text, fontWeight: '700' }}>My Story status</Text><Pressable accessibilityRole="button" accessibilityLabel="Refresh Story status" onPress={() => setVersion(value => value + 1)}><Text style={{ color: c.accent }}>Refresh</Text></Pressable></View>{privateStories.map(story => <View key={story.id} style={{ padding: 10, borderRadius: 10, backgroundColor: c.inset }}><Text style={{ color: c.text, fontWeight: '600' }}>Story #{story.id} · {story.moderationStatus === 'rejected' ? 'Rejected' : 'Pending Review'}</Text><Text style={{ color: c.muted, fontSize: 12 }}>{story.moderationStatus === 'rejected' ? 'This Story couldn’t be published because it may violate WeNitro’s safety guidelines.' : /error|unavailable|timeout|failed/i.test(story.moderationReason || '') ? 'Safety check is temporarily unavailable. Please try again. Your Story has not been published.' : 'Your Story is being reviewed for safety. It will appear automatically if approved.'}</Text></View>)}</View> : null}
       <ErrorLine text={error} />
       {tab === 'Communities' && inboxError ? <View style={{ paddingHorizontal: 14, paddingBottom: 8 }}><ErrorLine text={inboxError} /><Pressable accessibilityRole="button" onPress={() => setVersion(value => value + 1)}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '600' }}>Retry message previews</Text></Pressable></View> : null}
       {tab === 'Communities' && loading && page === 1 ? <Skeleton count={5} /> : (
@@ -379,7 +418,7 @@ export function ReferenceMessages({ data, tab, setTab, filter, setFilter, openCo
             );
           }) : (
             <>
-              {conversations.length ? <Text style={[ui.section, { color: c.muted, marginTop: 6, marginBottom: 4, fontSize: 10 }]}>ACTIVE CONVERSATIONS</Text> : null}
+              {conversations.length ? <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 6 }}><Text style={[ui.section, { color: c.muted, fontSize: 10 }]}>ACTIVE CONVERSATIONS</Text><Pressable accessibilityRole="button" accessibilityLabel="Mark all chats seen" disabled={markingChats || !conversations.some(row => row.unread > 0)} onPress={() => void markAllChatsSeen()}><Text style={{ color: c.accent, fontSize: 12, fontWeight: '700', opacity: conversations.some(row => row.unread > 0) ? 1 : .5 }}>{markingChats ? 'Saving…' : 'Mark all seen'}</Text></Pressable></View> : null}
               {conversations.map((conv) => {
                 const last = conv.messages[conv.messages.length - 1];
                 const at = conv.lastMessageAt || last?.createdAt;
