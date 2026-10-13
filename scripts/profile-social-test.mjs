@@ -40,7 +40,7 @@ assert.match(profile, /Public signals only/);
 assert.match(profile, /const displayedTotal = owner \? total : metrics\?\.trust_score \?\? null/);
 assert.match(profile, /\+\{check\.earned\}/);
 assert.doesNotMatch(profile, /check\.earned \|\| check\.points/);
-assert.match(profile, /summary=\{\{ location: person\.location, about: person\.about \|\| person\.bio, interests:/);
+assert.match(profile, /summary=\{\{ location: profileLocality\(person\.location\), bio: person\.bio, occupation: person\.occupation, about: person\.about, interests:/);
 assert.match(profile, /profile_reviews/);
 assert.match(profile, /\['going', 'approved', 'paid'\]/);
 const editor = fs.readFileSync('src/components/reconstruction/social-profiles.tsx', 'utf8');

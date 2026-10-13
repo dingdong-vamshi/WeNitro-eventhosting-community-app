@@ -22,6 +22,7 @@ const react = {
   },
 };
 const backend = {
+  removeChannel: async () => {},
   rpc(name) {
     assert.equal(name, 'list_chat_inbox');
     const request = { ...deferred(), signal: null }; inboxCalls.push(request);
@@ -39,7 +40,7 @@ const dependencies = {
   'expo-video': { VideoView: noop, useVideoPlayer: noop },
   '../../services/communities-production': { communitiesProductionService: { discover(input) { const request = { ...deferred(), input }; discoveries.push(request); return request.promise; } } },
   '../../lib/supabase': { isSupabaseConfigured: true, supabase: backend },
-  '../../services/realtime-chat': {}, '../../services/stories-production': { storiesProductionService: { markViewed(id) { const request = { ...deferred(), id }; seenRequests.push(request); return request.promise; } } },
+  '../../services/realtime-chat': {}, '../../services/stories-production': { storiesProductionService: { listMine: async () => [], subscribe: () => ({}), markViewed(id) { const request = { ...deferred(), id }; seenRequests.push(request); return request.promise; } } },
   '../../services/app-freshness': { subscribeToAppForeground(callback) { foreground = callback; return () => { foreground = undefined; }; } },
   './ui': ui,
   // This harness exercises inbox effects; destructive consent is declined. The
@@ -143,7 +144,7 @@ console.log('PASS: actual Chats All=People+Groups filters/counts, duplicate/comm
 
 // A mark-all request may race another incoming story or an account change.
 props.tab = 'Chats'; props.data = { ...props.data, stories: [{ id: '81', authorId: '70', name: 'Alpha', viewed: false }, { id: '82', authorId: '71', name: 'Beta', viewed: false }] }; dirty = true; await flush();
-const markAll = () => find(tree, node => node.type === 'Pressable' && find(node, child => child.type === 'Text' && child.children.includes('Mark all seen')));
+const markAll = () => find(tree, node => node.type === 'Pressable' && find(node, child => child.type === 'Text' && child.children.includes('Mark stories seen')));
 markAll().props.onPress(); await flush();
 assert.deepEqual(seenRequests.map(request => request.id), ['81', '82']);
 props.data = { ...props.data, stories: [...props.data.stories, { id: '83', authorId: '71', name: 'New arrival', viewed: false }] }; dirty = true; await flush();
@@ -153,4 +154,4 @@ markAll().props.onPress(); await flush();
 props.data = { ...props.data, userId: '999', stories: [{ id: '82', authorId: '71', name: 'Other viewer', viewed: false }] }; dirty = true; await flush();
 seenRequests[2].resolve(); seenRequests[3].resolve(); await flush();
 assert.equal(props.data.stories[0].viewed, false, 'Old account mark-all cannot update new account state');
-console.log('PASS actual Mark all seen: persisted successes only, failure retry, incoming-story race and account isolation.');
+console.log('PASS actual Mark stories seen: persisted successes only, failure retry, incoming-story race and account isolation.');
