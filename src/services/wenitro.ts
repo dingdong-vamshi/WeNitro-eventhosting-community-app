@@ -1103,7 +1103,9 @@ const writeActivityFromUi = async (
         { field: "options", value: moderationArrayValue(question.options) },
       ]),
     });
-    if (status === "published" && input.visibility === "public") await moderatePublicContent({
+    // The database requires approval for every published activity, including
+    // private/squad meetups. Match the shared Activity service's contract.
+    if (status === "published") await moderatePublicContent({
       scope: "activity",
       fields: [
         { field: "title", value: input.title.trim() },

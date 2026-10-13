@@ -51,21 +51,22 @@ assert.equal(freeEdit.isPaid,false);assert.equal(freeEdit.price,'');
 // Execute the actual shared write function with mock transport; no network or uploads.
 const source=fs.readFileSync('src/services/wenitro.ts','utf8');
 const writeSource=source.slice(source.indexOf('const writeActivityFromUi ='),source.indexOf('export const activityService ='));
-async function writeCase(failure){
-  const calls=[];let receipt=null;
+async function writeCase(failure,visibility='squad'){
+  const calls=[];let receipt=null,moderationCalls=0;
   const deps={currentLegacyUserId:async()=>44,validateRegistrationQuestions:()=>null,normalizeRegistrationQuestions:x=>x,
-    moderatePublicContent:async()=>({status:'safe'}),moderationArrayValue:values=>(values??[]).join('\n'),ContentModerationError:class extends Error{},
+    moderatePublicContent:async()=>{moderationCalls++;return{status:'safe'};},moderationArrayValue:values=>(values??[]).join('\n'),ContentModerationError:class extends Error{},
     uploadMedia:async()=>({path:'qa/cover.jpg'}),supabase:{rpc:async(name,args)=>{calls.push({name,args});return failure==='rpc'?{error:new Error('rejected')}:{data:123,error:null};},storage:{from:()=>({remove:async paths=>{calls.push({removed:paths});}})}},
     activityIdFromRpc:x=>String(x),activitiesProductionService:{getDetails:async()=>{if(failure==='reload')throw new Error('connection lost');return{activity:{joinType:'approval'},viewerState:{participation:null}};}},activityForWorkspace:async activity=>activity};
   const fn=new Function(...Object.keys(deps),compile(writeSource)+';return writeActivityFromUi;')(...Object.values(deps));
-  const input={title:'QA',description:'QA',category:'Education',location:'Pune',startsAt:null,capacity:null,priceInr:250,visibility:'squad',joinType:'approval',verifiedOnly:true,ageMin:20,ageMax:45,genderPreference:'female',latitude:18.52,longitude:73.85,locationInstruction:'Entrance',registrationQuestions:[{label:'Dietary needs',type:'short_text',required:false,display_order:0,options:[]}],coverMedia:{uri:'local'},onCommitted:async id=>{receipt=id;}};
+  const input={title:'QA',description:'QA',category:'Education',location:'Pune',startsAt:null,capacity:null,priceInr:250,visibility,joinType:'approval',verifiedOnly:true,ageMin:20,ageMax:45,genderPreference:'female',latitude:18.52,longitude:73.85,locationInstruction:'Entrance',registrationQuestions:[{label:'Dietary needs',type:'short_text',required:false,display_order:0,options:[]}],coverMedia:{uri:'local'},onCommitted:async id=>{receipt=id;}};
   if(failure)await assert.rejects(fn(input,'published'));else await fn(input,'published');
   assert.equal(calls.filter(c=>c.name==='create_activity').length,1);
+  assert.equal(moderationCalls,2,'All published visibilities moderate both registration questions and activity content before the database write');
   const payload=calls[0].args.p_payload;assert.equal(payload.max_participants,null);assert.equal(payload.event_start_time,null);assert.equal(payload.verified_only,true);assert.equal(payload.age_max,45);assert.equal(payload.location_instruction,'Entrance');assert.equal(payload.price_inr,250);assert.equal(payload.is_paid,true);assert.equal(payload.registration_questions[0].label,'Dietary needs');
   assert.equal(receipt,failure==='rpc'?null:'123');
   assert.equal(calls.some(c=>c.removed),failure==='rpc','Committed cover must survive detail-reload failure');
 }
-await writeCase();await writeCase('rpc');await writeCase('reload');
+for(const visibility of ['public','private','squad'])await writeCase(undefined,visibility);await writeCase('rpc');await writeCase('reload');
 // Use the real location service with controlled GPS/provider boundaries.
 const locationSource=compile(fs.readFileSync('src/services/activity-location.ts','utf8'));
 function locationService(gps,fetch){
