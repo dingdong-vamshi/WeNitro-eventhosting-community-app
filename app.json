@@ -33,7 +33,15 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow WeNitro to share profile photos, stories, and chat images."
+          "photosPermission": "Allow WeNitro to access only the photos and videos you choose for your profile, stories, communities, Vibes, and chat attachments.",
+          "cameraPermission": "Allow WeNitro to use the camera only when you choose to capture a profile photo or other media.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow WeNitro to use your location while you choose a nearby activity or your current meeting location."
         }
       ],
       "expo-secure-store",

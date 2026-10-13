@@ -208,6 +208,11 @@ export const privacyBridgeRpc = {
   update: "update_user_privacy_settings",
 } as const;
 
+export const dataSubjectBridgeRpc = {
+  submit: "submit_data_subject_request",
+  list: "list_my_data_subject_requests",
+} as const;
+
 const requireBackend = () => {
   if (!isSupabaseConfigured) {
     throw new Error("Supabase is not configured for this build.");
@@ -264,6 +269,29 @@ const asRecord = (value: unknown): Row =>
 
 const relationRecord = (value: unknown): Row =>
   Array.isArray(value) ? asRecord(value[0]) : asRecord(value);
+
+const mapDataSubjectRequest = (value: unknown): DataSubjectRequest => {
+  const row = asRecord(value);
+  const requestType = String(row.request_type ?? "") as DataSubjectRequestType;
+  const status = String(row.status ?? "") as DataSubjectRequest["status"];
+  if (!["access", "correction", "erasure", "grievance"].includes(requestType)) {
+    throw new Error("Data request returned an invalid request type.");
+  }
+  if (!["submitted", "in_review", "completed", "rejected"].includes(status)) {
+    throw new Error("Data request returned an invalid status.");
+  }
+  return {
+    id: positiveInteger(row.id, "data request id"),
+    user_id: positiveInteger(row.user_id, "data request user id"),
+    request_type: requestType,
+    details: String(row.details ?? ""),
+    status,
+    due_at: String(row.due_at ?? ""),
+    resolved_at: nullableText(row.resolved_at),
+    created_at: String(row.created_at ?? ""),
+    updated_at: String(row.updated_at ?? ""),
+  };
+};
 
 const nullableText = (value: unknown): string | null =>
   typeof value === "string" && value.length > 0 ? value : null;
@@ -982,16 +1010,38 @@ export const profileProductionService = {
   },
 
   async submitDataSubjectRequest(
-    _requestType: DataSubjectRequestType,
-    _details = "",
+    requestType: DataSubjectRequestType,
+    details = "",
   ): Promise<DataSubjectRequest> {
-    return unsupported("Data-subject requests");
+    requireBackend();
+    await currentUser();
+    const cleaned = cleanText(details, "Request details", 4000) ?? "";
+    const { data, error } = await supabase.rpc(dataSubjectBridgeRpc.submit, {
+      p_request_type: requestType,
+      p_details: cleaned,
+    });
+    if (error) throw error;
+    return mapDataSubjectRequest(data);
   },
 
   async listDataSubjectRequests(
-    _options: CursorOptions = {},
+    options: CursorOptions = {},
   ): Promise<CursorPage<DataSubjectRequest>> {
-    return unsupported("Data-subject request history");
+    requireBackend();
+    await currentUser();
+    const limit = pageSize(options.limit);
+    const before = validatedCursor(options.before);
+    const { data, error } = await supabase.rpc(dataSubjectBridgeRpc.list, {
+      p_limit: limit + 1,
+      p_before: before ?? null,
+    });
+    if (error) throw error;
+    const rows = Array.isArray(data) ? data : [];
+    const items = rows.slice(0, limit).map(mapDataSubjectRequest);
+    return {
+      items,
+      nextCursor: rows.length > limit ? items.at(-1)?.created_at ?? null : null,
+    };
   },
 };
 
