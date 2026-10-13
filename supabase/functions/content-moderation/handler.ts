@@ -249,7 +249,7 @@ export function createContentModerationHandler(deps: Dependencies) {
       return jsonResponse({
         requestId,
         status,
-        message: status === "safe" ? "Safety check passed." : status === "unsafe" ? safetyRejected : "Your content needs an Admin safety review and has not been published. After approval, you can upload it again.",
+        message: status === "safe" ? "Safety check passed." : status === "unsafe" ? safetyRejected : scope === "story" ? "Your Story is being reviewed for safety. It will appear automatically if approved." : "Your content needs an Admin safety review and has not been published. After approval, you can upload it again.",
       }, status === "safe" ? 200 : status === "review" ? 202 : 422);
     } catch (error) {
       if (requestId && authId) {
