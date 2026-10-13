@@ -9,14 +9,14 @@ const memberships = Array.from({ length: 125 }, (_, index) => ({
 memberships.push({ id: 9000, event_id: 9000, user_id: 77, status: 'approved' });
 const events = Array.from({ length: 125 }, (_, index) => ({
   id: index + 1, created_by: 77, title: `Joined event ${index + 1}`, status: 'completed', visibility_type: 'private',
-  event_start_time: '2025-01-01T09:00:00Z', event_end_time: '2025-01-01T10:00:00Z', is_deleted: false, is_cancelled: false,
+  event_start_time: '2025-01-01T09:00:00Z', event_end_time: '2025-01-01T10:00:00Z', is_deleted: false, is_cancelled: false, admin_moderation_status: 'active',
 }));
 // Sparse first page: deleted records/owner activity must not suppress later pages.
 events.at(-1).is_deleted = true;
 events.at(-2).created_by = 44;
 events.push(...Array.from({ length: 140 }, (_, index) => ({
   id: index + 10000, created_by: 77, title: 'Unrelated discovery event', status: 'published',
-  event_start_time: '2026-09-24T09:00:00Z', is_deleted: false, is_cancelled: false,
+  event_start_time: '2026-09-24T09:00:00Z', is_deleted: false, is_cancelled: false, admin_moderation_status: 'active',
 })));
 let failMemberships = false;
 const backend = {

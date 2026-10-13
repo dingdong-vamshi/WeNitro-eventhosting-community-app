@@ -10,7 +10,7 @@ assert.ok(component);
 const state = []; let cursor = 0; let tree;
 const React = { createElement: (type, props, ...children) => ({ type, props: props || {}, children }), useContext: () => ({ notifications: 3 }) };
 const useState = initial => { const key = cursor++; if (!(key in state)) state[key] = initial; return [state[key], next => { state[key] = typeof next === 'function' ? next(state[key]) : next; }]; };
-const symbols = Object.fromEntries(['SafeAreaView','ScrollView','View','Text','TextInput','Pressable','Icon','Image','UserAvatar','BrandBar','LinearGradient'].map(name => [name, name]));
+const symbols = Object.fromEntries(['Page','SafeAreaView','ScrollView','View','Text','TextInput','Pressable','Icon','Image','UserAvatar','BrandBar','LinearGradient'].map(name => [name, name]));
 const props = { data: { communities: [
   { id: '1', name: 'Camera Crew', category: 'Creative', tags: ['photo'], membership: 'joined', memberCount: 2 },
   { id: '2', name: 'Morning Runners', category: 'Fitness', tags: ['run'], membership: 'created', memberCount: 3 },

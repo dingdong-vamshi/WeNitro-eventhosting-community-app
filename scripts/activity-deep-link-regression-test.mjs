@@ -16,9 +16,10 @@ assert.match(
 );
 assert.match(
   app,
-  /return <FeedLoadingScreen error=\{activityRouteError\} onRetry=/,
+  /return <ActivityUnavailableScreen error=\{activityRouteError\} onRetry=/,
   'An unresolved Activity route must show a retryable loading/error state instead of falling through to another screen.',
 );
+assert.match(app, /onActivities=\{\(\) => go\("activities"\)\} onHome=\{\(\) => go\("feed"\)\}/, 'Unavailable Activities keep useful authenticated navigation.');
 assert.match(app, /initialWebRoute\?\.screen === "activityDetail"/, 'Direct Activity bootstrap must be route aware.');
 assert.match(app, /bootstrapSections\.splice\(index, 1\)/, 'Direct Activity bootstrap must skip the full discovery list.');
 

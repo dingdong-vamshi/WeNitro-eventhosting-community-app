@@ -211,6 +211,7 @@ const readWebRoute = (): WebRoute | null => {
   if (name === "squad") return { screen: "squad", entityId };
   if (name === "partnerDashboard" || name === "partnerRegistrationForm") return { screen: name, entityId };
   if (name === "chat") return { screen: "chat", entityId };
+  if (name === "search") return { screen: "search", entityId };
   if (routableScreens.has(name as Screen)) return { screen: name as Screen };
   return null;
 };
@@ -236,6 +237,7 @@ const webHashFor = (screen: Screen, entityId?: string) => {
   if (screen === "communityDetail") return `#/community${encodedId}`;
   if (screen === "profile") return `#/profile${encodedId}`;
   if (screen === "squad") return `#/squad${encodedId}`;
+  if (screen === "search") return `#/search${encodedId}`;
     if (screen === "chat") return `#/chat${encodedId}`;
     if (screen === "vibes" && entityId) return `#/vibe${encodedId}`;
   return `#/${screen}`;
@@ -9207,6 +9209,7 @@ export default function App() {
   const [activityRouteError, setActivityRouteError] = useState("");
   const [activityRouteRetry, setActivityRouteRetry] = useState(0);
   const [activityCategoryFilter, setActivityCategoryFilter] = useState("");
+  const [initialSearchScope, setInitialSearchScope] = useState(initialWebRoute?.screen === "search" ? initialWebRoute.entityId : undefined);
   const [editingActivityId, setEditingActivityId] = useState<string | null>(null);
   const [postVibeDraft, setPostVibeDraft] = useState<{ activityId: string; asset?: ImagePicker.ImagePickerAsset } | null>(null);
   const [selectedCommunityId, setSelectedCommunityId] = useState<string | null>(
@@ -9325,6 +9328,7 @@ export default function App() {
       setSelectedConversationId(route.screen === "chat" ? route.entityId ?? null : null);
       if (route.screen === "partnerDashboard" || route.screen === "partnerRegistrationForm") setPartnerActivityId(route.entityId);
       setSelectedVibeId(route.screen === "vibes" ? route.entityId ?? null : null);
+      setInitialSearchScope(route.screen === "search" ? route.entityId : undefined);
     };
     window.addEventListener("popstate", restoreRoute);
     window.addEventListener("hashchange", restoreRoute);
@@ -9638,6 +9642,7 @@ export default function App() {
   }, [data.mode, data.onboarded, screen]);
 
   const go = (next: Screen, entityId?: string) => {
+    if (next === "search") setInitialSearchScope(entityId);
     setHistory((items) => [...items, screen]);
     if (next === "chat") setLegacyMessages(false);
     if (next !== "activityDetail" && next !== "chat") setSelectedActivityId(null);
@@ -9873,7 +9878,7 @@ export default function App() {
       );
     if (screen === 'squad') return <ReferenceSquad ownerId={selectedSquadOwnerId || data.userId || ''} back={back} openProfile={openProfile} />;
     if (screen === 'profile') return selectedProfileId ? <ReferenceMemberProfile key={selectedProfileId} id={selectedProfileId} back={back} onOpenCommunity={openCommunity} onOpenProfile={openProfile} onOpenActivity={activity => { setData(current => ({ ...current, activities: [activity, ...current.activities.filter(a => a.id !== activity.id)] })); openActivity(activity.id); }} onOpenVibe={id => { setSelectedVibeId(id); go('vibes', id); }} onOpenSquad={openSquad} onConversation={(id, person) => { setData(current => ({ ...current, conversations: current.conversations.some(c => c.id === id) ? current.conversations : [...current.conversations, { id, name: person.fullname || person.username, type: 'People', roomType: 'personal', avatar: person.profile_image || '', memberCount: 2, online: false, unread: 0, userId: String(person.id), messages: [] }] })); setSelectedConversationId(id); go('chat', id); }} /> : <ReferenceProfile openCommunity={openCommunity} openProfile={openProfile} data={data} setData={setData} go={go} openActivity={openActivity} openDraft={() => go('createActivity')} openVibe={id => { setSelectedVibeId(id); go('vibes', id); }} openSquad={() => openSquad(data.userId || '')} />;
-    if (screen === 'search') return <ReferenceSearch back={back} setData={setData} openActivity={openActivity} openProfile={openProfile} openCommunity={openCommunity} />;
+    if (screen === 'search') return <ReferenceSearch key={initialSearchScope || 'Activities'} initialScope={initialSearchScope} back={back} setData={setData} openActivity={openActivity} openProfile={openProfile} openCommunity={openCommunity} />;
     if (screen === 'shop') return <ReferenceStore points={data.nitro} back={back} />;
     if (screen === 'nitroHistory') return <ReferenceNitroHistory back={back} />;
     if (screen === 'activityHistory') return <ReferenceActivityHistory userId={data.userId || ''} back={back} openActivity={openActivity} />;
@@ -10017,7 +10022,7 @@ export default function App() {
         go={go}
       />
     );
-  }, [routeScreen, data, history, partnerActivityId, selectedActivityId, selectedCommunityId, selectedProfileId, selectedSquadOwnerId, selectedConversationId, selectedVibeId, activityCategoryFilter, introSeen, welcomeError, profileSetup, communitySuccess, messagesTab, messagesFilter, legacyMessages, communityPostsOpen, phoneSignupHandoff, activityRouteError]);
+  }, [routeScreen, data, history, partnerActivityId, selectedActivityId, selectedCommunityId, selectedProfileId, selectedSquadOwnerId, selectedConversationId, selectedVibeId, activityCategoryFilter, initialSearchScope, introSeen, welcomeError, profileSetup, communitySuccess, messagesTab, messagesFilter, legacyMessages, communityPostsOpen, phoneSignupHandoff, activityRouteError]);
 
   if (splashVisible || !fontsLoaded || !introChecked) return <SafeAreaProvider><View style={{ flex: 1, backgroundColor: "#6860F2" }}><StatusBar style="light" /><SplashScreen /></View></SafeAreaProvider>;
   if (!sessionChecked || authLoading || authError) return <SafeAreaProvider><ReferenceTheme.Provider value={data.theme}><ThemeContext.Provider value={data.theme}><View style={{ flex: 1, backgroundColor: data.theme === "dark" ? "#101824" : "#F7F7FB" }}><StatusBar style={data.theme === "dark" ? "light" : "dark"} /><FeedLoadingScreen error={authError} onRetry={() => void refreshAuthRef.current()} onLogout={() => void authService.signOut()} />{authIdentityRef.current && profileSetup?.profile.onboarding_completed && !authError ? <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"><TabBar active="feed" go={() => undefined} /></View> : null}</View></ThemeContext.Provider></ReferenceTheme.Provider></SafeAreaProvider>;

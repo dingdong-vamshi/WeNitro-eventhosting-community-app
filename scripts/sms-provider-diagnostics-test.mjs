@@ -17,7 +17,7 @@ function load(name) {
     exports: module.exports, module,
     require: name => name === 'standardwebhooks' ? { Webhook: class { verify(body) { return JSON.parse(body); } } } : load(name.replace('./', '')),
     Deno: { env: { get: name => secrets[name] }, serve: fn => { handler = fn; } },
-    Request, Response, URL, TextEncoder, AbortController, setTimeout, clearTimeout,
+    Request, Response, URL, TextEncoder, AbortController, setTimeout, clearTimeout, crypto,
     console: { warn: line => logs.push(JSON.parse(line)), info: line => logs.push(JSON.parse(line)) },
     fetch: async (url, options) => {
       requests.push({ url: String(url), options });
@@ -34,7 +34,10 @@ assert.equal(response.status, 502);
 assert.equal(requests[1].url, 'https://www.fast2sms.com/dev/otp/send');
 assert.equal(requests[1].options.headers.Authorization, secrets.FAST2SMS_API_KEY);
 assert.equal(JSON.parse(requests[1].options.body).otp_id, secrets.FAST2SMS_OTP_ID);
-assert.deepEqual(logs.at(-1), { event: 'sms_provider_rejected', provider: 'fast2sms', http_status: 401, provider_code: 412, reason: 'invalid_authorization_key' });
+assert.deepEqual(logs.find(log => log.event === 'sms_provider_rejected'), { event: 'sms_provider_rejected', provider: 'fast2sms', http_status: 401, provider_code: 412, reason: 'invalid_authorization_key' });
+assert.equal(logs.at(-1).event, 'verification_operation');
+assert.equal(logs.at(-1).http_status, 401, 'Audit preserves the provider response, while the hook returns 502');
+assert.equal(logs.at(-1).result, 'provider_rejected');
 const serialized = JSON.stringify(logs);
 for (const sensitive of [...Object.values(secrets), '9876543210', '123456', 'must-not-log']) assert.ok(!serialized.includes(sensitive));
 console.log('PASS provider 401/412 traced to hook 502; exact authorization header; sanitized diagnostics only (mocked)');
