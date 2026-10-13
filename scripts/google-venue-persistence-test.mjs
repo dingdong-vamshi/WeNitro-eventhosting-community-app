@@ -28,12 +28,14 @@ assert.deepEqual(buildPayload({ locationSource: 'openstreetmap', locationName: '
 // Actual create wrapper used by Host, with malicious extra provider label/coordinates.
 const source = fs.readFileSync('src/services/wenitro.ts', 'utf8');
 const writeSource = source.slice(source.indexOf('const writeActivityFromUi ='), source.indexOf('export const activityService ='));
-const writes = [], resolutions = [];
+const writes = [], resolutions = [], moderationInputs = [];
 const deps = { require: name => { assert.equal(name, './google-places'); return { resolveGooglePlace: async id => { resolutions.push(id); } }; }, currentLegacyUserId: async () => 10, validateRegistrationQuestions: () => null, normalizeRegistrationQuestions: x => x,
+ moderatePublicContent: async input => { moderationInputs.push(input); return { status: 'safe' }; },
  supabase: { rpc: async (name, args) => { writes.push({ name, args }); return { data: 5, error: null }; } }, activityIdFromRpc: String,
  activitiesProductionService: { getDetails: async () => ({ activity: {}, viewerState: {} }) }, activityForWorkspace: async value => value };
 const write = new Function(...Object.keys(deps), compile(writeSource) + ';return writeActivityFromUi;')(...Object.values(deps));
 await write({ title: 'Meetup', description: 'User description', category: 'Sports', location: 'Provider secret address', locationSource: 'google', googlePlaceId: 'ChIJ_test', latitude: 14, longitude: 75, priceInr: 0 }, 'published');
+assert.equal(moderationInputs.length, 1); assert.doesNotMatch(JSON.stringify(moderationInputs), /Provider secret address|latitude|longitude/);
 assert.deepEqual(resolutions, ['ChIJ_test']); assert.equal(writes[0].args.p_payload.location, 'Google Maps venue'); assert.equal(writes[0].args.p_payload.google_place_id, 'ChIJ_test'); assert.equal(writes[0].args.p_payload.latitude, undefined); assert.equal(writes[0].args.p_payload.longitude, undefined);
 // Execute the actual nearby query segment, asserting freshness is a server predicate.
 const serviceSource = fs.readFileSync('src/services/activities-production.ts', 'utf8');
