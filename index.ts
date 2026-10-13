@@ -1,3 +1,4 @@
+import '@expo/metro-runtime';
 import { registerRootComponent } from 'expo';
 import React from 'react';
 import { Platform } from 'react-native';

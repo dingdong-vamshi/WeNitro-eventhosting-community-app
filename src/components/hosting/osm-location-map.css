@@ -1,0 +1,9 @@
+.wenitro-osm-map { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.wenitro-osm-map .leaflet-container { font-family: inherit; }
+.wenitro-osm-map .leaflet-control-attribution { font-size: 10px; }
+.wenitro-osm-map p { font-size: 12px; line-height: 18px; margin: 8px 0; }
+.wenitro-map-marker { background: transparent; border: 0; }
+.wenitro-map-marker span { display: block; width: 28px; height: 28px; background: #6145ed; border: 3px solid white; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 2px 6px #0005; box-sizing: border-box; }
+.wenitro-map-marker span::after { content: ''; display: block; width: 8px; height: 8px; margin: 7px; background: white; border-radius: 50%; }
+.wenitro-map-center { width: 100%; min-height: 40px; margin-top: 8px; border: 1px solid #b9acf7; border-radius: 10px; color: #4930bb; background: #f3f0ff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.wenitro-map-center:focus-visible, .wenitro-osm-map .leaflet-container:focus-visible { outline: 3px solid #6145ed; outline-offset: 2px; }

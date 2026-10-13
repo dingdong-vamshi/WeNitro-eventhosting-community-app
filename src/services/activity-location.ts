@@ -214,6 +214,17 @@ async function reversePhoton(latitude: number, longitude: number, signal: AbortS
 let lastBias: { latitude: number; longitude: number } | undefined;
 
 export const activityLocationService = {
+  async reverse(latitude: number, longitude: number, signal?: AbortSignal): Promise<HostLocation> {
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || Math.abs(latitude) > 90 || Math.abs(longitude) > 180) throw new Error('Choose valid map coordinates.');
+    const controller = signal ?? new AbortController().signal;
+    if (controller.aborted) throw new Error('Location request cancelled.');
+    // Photon returns the nearby feature's coordinates. Use its name only: the
+    // user's chosen meeting point must never snap to that feature's centroid.
+    const providers = await Promise.allSettled([reversePhoton(latitude, longitude, controller), reverseNominatim(latitude, longitude, controller)]);
+    if (controller.aborted) throw new Error('Location request cancelled.');
+    const rows = mergePlaces(providers.flatMap(result => result.status === 'fulfilled' ? [result.value] : []));
+    return { label: rows[0]?.label || `Map pin (${latitude.toFixed(6)}, ${longitude.toFixed(6)})`, latitude, longitude };
+  },
   async search(text: string, signal?: AbortSignal) {
     const query = text.trim();
     if (query.length < 2) return [];
@@ -249,7 +260,8 @@ export const activityLocationService = {
       reverseNominatim(latitude, longitude, controller),
     ]);
     const rows = mergePlaces(providers.flatMap(result => result.status === 'fulfilled' ? [result.value] : []));
-    if (rows[0]) return rows[0];
+    if (signal?.aborted) throw new Error('Location request cancelled.');
+    if (rows[0]) return { ...rows[0], latitude, longitude };
     try {
       const deviceRows = await Location.reverseGeocodeAsync({ latitude, longitude });
       const label = deviceRows[0] ? deviceLabel(deviceRows[0]) : '';
